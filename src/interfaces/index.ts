@@ -13,13 +13,18 @@ export interface Abstraction {
 export interface Relationship {
   sourceElementId: string;
   targetElementId: string;
-  technologies: Array<string>;
+  title?: string;
+  technologies?: Array<string>;
 }
 
 export interface Diagram {
   diagramId: string;
-  scope: Abstraction;
+  scope?: Abstraction;
   primaryElements: Array<Abstraction>;
   supportingElements: Array<Abstraction>;
   relationships: Array<Relationship>;
+}
+
+export interface DiagramLayout {
+  [key: string]: { x: number; y: number };
 }

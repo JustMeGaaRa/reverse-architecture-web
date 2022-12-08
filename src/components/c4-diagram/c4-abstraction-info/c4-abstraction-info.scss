@@ -1,0 +1,30 @@
+.c4-abstraction-info {
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  &.center {
+    align-items: center;
+  }
+
+  &.left {
+    align-items: flex-start;
+  }
+
+  &.right {
+    align-items: flex-end;
+  }
+
+  .c4-abs-title {
+    font-size: 18px;
+  }
+
+  .c4-abs-type {
+    font-size: 12px;
+  }
+
+  .c4-abs-description {
+    font-size: 14px;
+  }
+}

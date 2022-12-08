@@ -4,3 +4,12 @@
   text-align: center;
   height: 98vh;
 }
+
+html,
+body,
+#root {
+  background-color: white;
+  font-family: sans-serif;
+  text-align: center;
+  height: 98vh;
+}

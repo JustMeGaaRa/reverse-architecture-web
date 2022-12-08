@@ -1,43 +1,45 @@
 {
-  "diagramId": "diagram-1",
+  "diagramId": "diagram-2",
   "scope": {
     "id": "software-system-1",
     "type": "Software System",
     "title": "Reverse Architecture",
-    "technologies": [".NET 6"],
-    "description": "Description"
+    "technologies": [".NET 6"]
   },
   "primaryElements": [
     {
       "id": "container-1",
       "type": "Container",
       "title": "Reverse Architecture App",
-      "technologies": ["React.js", "TypeScript"],
-      "description": "Description"
+      "technologies": ["React.js", "TypeScript"]
     },
     {
       "id": "container-2",
       "type": "Container",
       "title": "Reverse Architecture Api",
-      "technologies": ["ASP.NET 6"],
-      "description": "Description"
+      "technologies": ["ASP.NET 6"]
+    },
+    {
+      "id": "database-1",
+      "type": "Database",
+      "title": "Database"
     }
   ],
   "supportingElements": [
     {
-      "id": "container-3",
+      "id": "software-system-3",
       "type": "Software System",
       "title": "Hosting OS File System",
       "description": "Persist the source code for the projects being scanned"
     },
     {
-      "id": "container-4",
+      "id": "software-system-4",
       "type": "Software System",
       "title": "Neo4j Graph Database",
       "description": "Generates a graph of dependencies and allows to analyze it"
     },
     {
-      "id": "container-5",
+      "id": "software-system-5",
       "type": "Software System",
       "title": "GitHub",
       "description": "The repository for the statically generated C4 diagrams as documentation"
@@ -47,22 +49,31 @@
     {
       "sourceElementId": "container-1",
       "targetElementId": "container-2",
-      "technologies": []
+      "title": "Sends rquests to",
+      "technologies": ["JSON", "HTTPS", "WebSocket"]
     },
     {
       "sourceElementId": "container-2",
-      "targetElementId": "container-3",
-      "technologies": []
+      "targetElementId": "database-1",
+      "title": "Save artifacts to"
     },
     {
       "sourceElementId": "container-2",
-      "targetElementId": "container-4",
-      "technologies": []
+      "targetElementId": "software-system-3",
+      "title": "Sends rquests to",
+      "technologies": ["JSON", "HTTPS"]
     },
     {
       "sourceElementId": "container-2",
-      "targetElementId": "container-5",
-      "technologies": []
+      "targetElementId": "software-system-4",
+      "title": "Sends rquests to",
+      "technologies": ["JSON", "HTTPS"]
+    },
+    {
+      "sourceElementId": "container-2",
+      "targetElementId": "software-system-5",
+      "title": "Sends rquests to",
+      "technologies": ["JSON", "HTTPS"]
     }
   ]
 }

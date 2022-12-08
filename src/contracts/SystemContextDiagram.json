@@ -1,0 +1,51 @@
+{
+  "diagramId": "diagram-1",
+  "primaryElements": [
+    {
+      "id": "software-system-1",
+      "type": "Software System",
+      "title": "Reverse Architecture",
+      "technologies": [".NET 6"]
+    }
+  ],
+  "supportingElements": [
+    {
+      "id": "software-system-3",
+      "type": "Software System",
+      "title": "Hosting OS File System",
+      "description": "Persist the source code for the projects being scanned"
+    },
+    {
+      "id": "software-system-4",
+      "type": "Software System",
+      "title": "Neo4j Graph Database",
+      "description": "Generates a graph of dependencies and allows to analyze it"
+    },
+    {
+      "id": "software-system-5",
+      "type": "Software System",
+      "title": "GitHub",
+      "description": "The repository for the statically generated C4 diagrams as documentation"
+    }
+  ],
+  "relationships": [
+    {
+      "sourceElementId": "software-system-1",
+      "targetElementId": "software-system-3",
+      "title": "Sends rquests to",
+      "technologies": ["JSON", "HTTPS"]
+    },
+    {
+      "sourceElementId": "software-system-1",
+      "targetElementId": "software-system-4",
+      "title": "Sends rquests to",
+      "technologies": ["JSON", "HTTPS"]
+    },
+    {
+      "sourceElementId": "software-system-1",
+      "targetElementId": "software-system-5",
+      "title": "Sends rquests to",
+      "technologies": ["JSON", "HTTPS"]
+    }
+  ]
+}

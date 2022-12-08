@@ -1,12 +1,22 @@
-import "./App.css";
+import "./app.css";
 
-import { C4Diagram } from "../c4-diagram";
-import Diagram from "../contracts/ContainerDiagram.json";
+import { ReactFlowProvider } from "reactflow";
+import { C4Diagram } from "../components";
+import SystemContextDiagram from "../contracts/SystemContextDiagram.json";
+import SystemContextDiagramLayout from "../contracts/SystemContextDiagram.layout.json";
+import ContainerDiagram from "../contracts/ContainerDiagram.json";
+import ContainerDiagramLayout from "../contracts/ContainerDiagram.layout.json";
 
-export default function App() {
+const ReactFlowWrapper = (props: any) => {
   return (
-    <div className="App">
-      <C4Diagram diagram={Diagram} />
-    </div>
+    <ReactFlowProvider>
+      <C4Diagram
+        {...props}
+        diagram={SystemContextDiagram}
+        layout={SystemContextDiagramLayout}
+      />
+    </ReactFlowProvider>
   );
-}
+};
+
+export default ReactFlowWrapper;
