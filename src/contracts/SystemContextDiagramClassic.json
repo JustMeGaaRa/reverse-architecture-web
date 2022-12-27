@@ -1,0 +1,76 @@
+{
+  "diagramId": "bbeace60-65cd-48ac-9dff-a0ccaf50c372",
+  "primaryElements": [
+    {
+      "abstractionId": "software-system-1",
+      "type": {
+        "code": "abstraction.types.software-system",
+        "name": "Software System"
+      },
+      "title": "Internet Banking System",
+      "description": "Allows customers to view information about their bank accounts, and make payments."
+    }
+  ],
+  "supportingElements": [
+    {
+      "abstractionId": "software-system-3",
+      "type": {
+        "code": "abstraction.types.software-system",
+        "name": "Software System"
+      },
+      "title": "E-mail System",
+      "description": "The internal Microsoft Exchange e-mail system."
+    },
+    {
+      "abstractionId": "software-system-4",
+      "type": {
+        "code": "abstraction.types.software-system",
+        "name": "Software System"
+      },
+      "title": "Mainframe Banking System",
+      "description": "Stores all of the core banking information about customers, accounts, transactions, etc."
+    },
+    {
+      "abstractionId": "person-1",
+      "type": {
+        "code": "abstraction.types.software-system",
+        "name": "Person"
+      },
+      "title": "Personal Banking Customer",
+      "description": "A customer of the bank, with personal bank accounts."
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipId": "person-1_software-system-1",
+      "sourceElementId": "person-1",
+      "targetElementId": "software-system-1",
+      "title": "Views account balances, and makes payments using"
+    },
+    {
+      "relationshipId": "software-system-3_person-1",
+      "sourceElementId": "software-system-3",
+      "targetElementId": "person-1",
+      "title": "Sends e-mails to"
+    },
+    {
+      "relationshipId": "software-system-1_software-system-3",
+      "sourceElementId": "software-system-1",
+      "targetElementId": "software-system-3",
+      "title": "Sends e-mails using"
+    },
+    {
+      "relationshipId": "software-system-1_software-system-4",
+      "sourceElementId": "software-system-1",
+      "targetElementId": "software-system-4",
+      "title": "Gets account information from, and makespayments using"
+    }
+  ],
+  "positions": {
+    "person-1": { "x": 0, "y": 0 },
+    "software-system-1": { "x": 0, "y": 300 },
+    "software-system-3": { "x": 350, "y": 300 },
+    "software-system-4": { "x": 0, "y": 600 }
+  }
+}
+  

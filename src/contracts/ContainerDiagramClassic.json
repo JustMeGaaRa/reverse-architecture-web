@@ -1,0 +1,170 @@
+{
+  "diagramId": "c5c38d61-6daf-4170-9faf-40870bcc03e5",
+  "scope": {
+    "abstractionId": "software-system-1",
+    "type": {
+      "code": "abstraction.types.software-system",
+      "name": "Software System"
+    },
+    "title": "Internet Banking System"
+  },
+  "primaryElements": [
+    {
+      "abstractionId": "container-1",
+      "type": {
+        "code": "abstraction.types.container",
+        "name": "Container"
+      },
+      "title": "Web Application",
+      "technologies": ["Java", "Spring MVC"],
+      "description": "Delivers the static content and the Internet banking single page application."
+    },
+    {
+      "abstractionId": "container-2",
+      "type": {
+        "code": "abstraction.types.container",
+        "name": "Container"
+      },
+      "title": "Single-Page Application",
+      "technologies": ["JavaScript", "Angular"],
+      "description": "Provides all of the Internet banking functionality to customers via their web browser."
+    },
+    {
+      "abstractionId": "container-3",
+      "type": {
+        "code": "abstraction.types.container",
+        "name": "Container"
+      },
+      "title": "Mobile App",
+      "technologies": ["Xamarin"],
+      "description": "Provides limited subset of the Internet banking functionality to the customers via their mobile device."
+    },
+    {
+      "abstractionId": "container-4",
+      "type": {
+        "code": "abstraction.types.container",
+        "name": "Container"
+      },
+      "title": "API Application",
+      "technologies": ["Java", "Spring MVC"],
+      "description": "Provides Internet banking functionality via a JSON/HTTPS API."
+    },
+    {
+      "abstractionId": "database-1",
+      "type": {
+        "code": "abstraction.types.container",
+        "name": "Container"
+      },
+      "title": "Database",
+      "technologies": ["Oracle Database Schema"],
+      "description": "Stores user registration information, hashed authentication credential, access logs, etc."
+    }
+  ],
+  "supportingElements": [
+    {
+      "abstractionId": "software-system-3",
+      "type": {
+        "code": "abstraction.types.software-system",
+        "name": "Software System"
+      },
+      "title": "E-mail System",
+      "description": "The internal Microsoft Exchange e-mail system."
+    },
+    {
+      "abstractionId": "software-system-4",
+      "type": {
+        "code": "abstraction.types.software-system",
+        "name": "Software System"
+      },
+      "title": "Mainframe Banking System",
+      "description": "Stores all of the core banking information about customers, accounts, transactions, etc."
+    },
+    {
+      "abstractionId": "person-1",
+      "type": {
+        "code": "abstraction.types.person",
+        "name": "Person"
+      },
+      "title": "Personal Banking Customer",
+      "description": "A customer of the bank, with personal bank accounts."
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipId": "person-1_container-1",
+      "sourceElementId": "person-1",
+      "targetElementId": "container-1",
+      "title": "Visits bigbank.com/id using",
+      "technologies": ["HTTPS"]
+    },
+    {
+      "relationshipId": "person-1_container-2",
+      "sourceElementId": "person-1",
+      "targetElementId": "container-2",
+      "title": "Views account balances, and makes payments using"
+    },
+    {
+      "relationshipId": "person-1_container-3",
+      "sourceElementId": "person-1",
+      "targetElementId": "container-3",
+      "title": "Views account balances, and makes payments using"
+    },
+    {
+      "relationshipId": "software-system-3_person-1",
+      "sourceElementId": "software-system-3",
+      "targetElementId": "person-1",
+      "title": "Sends e-mails to"
+    },
+    {
+      "relationshipId": "container-1_container-2",
+      "sourceElementId": "container-1",
+      "targetElementId": "container-2",
+      "title": "Delivers to the customer's web browser"
+    },
+    {
+      "relationshipId": "container-2_container-4",
+      "sourceElementId": "container-2",
+      "targetElementId": "container-4",
+      "title": "Makes API calls to",
+      "technologies": ["JSON", "HTTPS"]
+    },
+    {
+      "relationshipId": "container-3_container-4",
+      "sourceElementId": "container-3",
+      "targetElementId": "container-4",
+      "title": "Makes API calls to",
+      "technologies": ["JSON", "HTTPS"]
+    },
+    {
+      "relationshipId": "container-4_database-1",
+      "sourceElementId": "container-4",
+      "targetElementId": "database-1",
+      "title": "Reads from and writes to",
+      "technologies": ["JDBC"]
+    },
+    {
+      "relationshipId": "container-4_software-system-3",
+      "sourceElementId": "container-4",
+      "targetElementId": "software-system-3",
+      "title": "Sends e-mails using"
+    },
+    {
+      "relationshipId": "container-4_software-system-4",
+      "sourceElementId": "container-4",
+      "targetElementId": "software-system-4",
+      "title": "Makes API calls to",
+      "technologies": ["XML", "HTTPS"]
+    }
+  ],
+  "positions": {
+    "software-system-1": { "x": 0, "y": 250 },
+    "container-1": { "x": 50, "y": 50 },
+    "container-2": { "x": 450, "y": 50 },
+    "container-3": { "x": 750, "y": 50 },
+    "container-4": { "x": 600, "y": 350 },
+    "database-1": { "x": 50, "y": 350 },
+    "person-1": { "x": 600, "y": 0 },
+    "software-system-3": { "x": 1170, "y": 300 },
+    "software-system-4": { "x": 1170, "y": 600 }
+  }
+}
