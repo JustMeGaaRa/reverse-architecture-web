@@ -7,6 +7,7 @@ import {
   Position,
   internalsSymbol
 } from "reactflow";
+import { Box } from "@chakra-ui/react";
 import { C4RelationshipInfo } from "../info/C4RelationshipInfo";
 
 function getNodeCenter(node) {
@@ -94,21 +95,14 @@ export const C4FloatingEdge: FC<EdgeProps<any>> = ({
   markerEnd,
   data
 }) => {
-  const sourceNode = useStore(
-    useCallback((store) => store.nodeInternals.get(source), [source])
-  );
-  const targetNode = useStore(
-    useCallback((store) => store.nodeInternals.get(target), [target])
-  );
+  const sourceNode = useStore(useCallback((store) => store.nodeInternals.get(source), [source]));
+  const targetNode = useStore(useCallback((store) => store.nodeInternals.get(target), [target]));
 
   if (!sourceNode || !targetNode) {
     return null;
   }
 
-  const { sx, sy, tx, ty, sourcePos, targetPos } = getEdgeParams(
-    sourceNode,
-    targetNode
-  );
+  const { sx, sy, tx, ty, sourcePos, targetPos } = getEdgeParams(sourceNode, targetNode);
 
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX: sx,
@@ -126,18 +120,20 @@ export const C4FloatingEdge: FC<EdgeProps<any>> = ({
       d={edgePath}
       markerStart={markerStart}
       markerEnd={markerEnd}
+      style={{
+        zIndex: 9999
+      }}
     >
       <EdgeLabelRenderer>
-        <div
-          style={{
-            position: "absolute",
-            transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
-            background: "#ffffff",
-            padding: 4,
-            borderRadius: 5,
-            zIndex: 99
-          }}
+        <Box
+          background={"white"}
+          boxShadow={"lg"}
+          borderRadius={"lg"}
           className="nodrag nopan"
+          padding={1}
+          position={"absolute"}
+          transform={`translate(-50%, -50%) translate(${labelX}px,${labelY}px)`}
+          zIndex={9999}
         >
           <C4RelationshipInfo
             data={data}
@@ -145,7 +141,7 @@ export const C4FloatingEdge: FC<EdgeProps<any>> = ({
             showTechnologies
             showTitle
           />
-        </div>
+        </Box>
       </EdgeLabelRenderer>
     </path>
   );

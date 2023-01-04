@@ -32,9 +32,9 @@ export const MARKER_END_COLOR = "#000000";
 export const getDiagramNodes = (diagram: Diagram) => {
   if (diagram === null) return Array.of<Node<IAbstractionProps>>();
   
-  const getScopeElement = (element: Abstraction) => createScope(element, diagram.positions[element.abstractionId]);
-  const getPrimaryElement = (element: Abstraction) => createNode(element, diagram.positions[element.abstractionId], diagram.scope?.abstractionId);
-  const getSupportingElement = (element: Abstraction) => createNode(element, diagram.positions[element.abstractionId]);
+  const getScopeElement = (element) => createScope(element, diagram.positions[element.abstractionId]);
+  const getPrimaryElement = (element) => createNode(element, diagram.positions[element.abstractionId], diagram.scope?.abstractionId);
+  const getSupportingElement = (element) => createNode(element, diagram.positions[element.abstractionId]);
 
   const nodes =
     diagram.scope === undefined
@@ -61,7 +61,7 @@ export const getAbstractionName = (code: AbstractionTypeCode) => {
   return names[code];
 }
 
-export function getAbstractionBgColor(code: AbstractionTypeCode) {
+export function getAbstractionBgColor(code: string) {
   const nodesBgColors = {
     [AbstractionTypeCode.SoftwareSystem]: "#6A00FF",
     [AbstractionTypeCode.Container]: "#0050EF",
@@ -71,7 +71,7 @@ export function getAbstractionBgColor(code: AbstractionTypeCode) {
   return nodesBgColors[code];
 }
 
-export function getNodeType(code: AbstractionTypeCode) {
+export function getNodeType(code: string) {
   const nodesTypes = {
     [AbstractionTypeCode.SoftwareSystem]: NodeType.Block,
     [AbstractionTypeCode.Container]: NodeType.Block,
@@ -156,7 +156,28 @@ export const createEdge = (relationship: Relationship): Edge<Relationship> => {
     source: relationship.sourceElementId,
     target: relationship.targetElementId,
     style: edgeDefaultStyle,
-    markerEnd: markerEndStyle,
-    animated: true
+    markerEnd: markerEndStyle
   };
 };
+
+export const createEmptyDiagram = (): Diagram => {
+  const abstractionId = v4();
+  return {
+      diagramId: v4(),
+      title: "Diagram 1",
+      scope: {
+          abstractionId: abstractionId,
+          type: {
+              code: AbstractionTypeCode.SoftwareSystem,
+              name: getAbstractionName(AbstractionTypeCode.SoftwareSystem)
+          },
+          title: getAbstractionName(AbstractionTypeCode.SoftwareSystem)
+      },
+      primaryElements: [],
+      supportingElements: [],
+      relationships: [],
+      positions: {
+          [abstractionId]: { x: 0, y: 0 }
+      }
+  };
+}

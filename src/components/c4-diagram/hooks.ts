@@ -2,7 +2,6 @@ import { Dispatch, useEffect, useReducer } from "react";
 import { v4 } from "uuid";
 import { Diagram } from "./types";
 import { reduceDiagram } from "./reducers";
-import { createEmptyDiagram } from "./actions";
 
 export const useDiagramsApi = (): [Diagram, Dispatch<any>] => {
     const [diagram, dispatch] = useReducer(reduceDiagram, null);
@@ -10,13 +9,14 @@ export const useDiagramsApi = (): [Diagram, Dispatch<any>] => {
     useEffect(() => {
         const emptyDiagram: Diagram = {
             diagramId: v4(),
+            title: "Diagram 1",
             primaryElements: [],
             supportingElements: [],
             relationships: [],
             positions: {}
         };
         
-        dispatch(createEmptyDiagram({ diagram: emptyDiagram }));
+        // dispatch(createEmptyDiagram({ diagram: emptyDiagram }));
         
         const apiUrl = "https://api.reversearchitecture.dev";
         // const diagramService = new DiagramService({ apiUrl });

@@ -2,14 +2,13 @@ import {
     FC,
     useCallback,
     useMemo,
-    useRef
+    useRef,
+    useState
 } from "react";
-import { Link } from "react-router-dom";
 import ReactFlow, {
     Node,
     ConnectionMode,
     Background,
-    MiniMap,
     Controls,
     Panel,
     useNodesState,
@@ -18,12 +17,22 @@ import ReactFlow, {
     useReactFlow,
     BackgroundVariant,
     ControlButton,
+    ReactFlowJsonObject,
 } from "reactflow";
-import { FaArrowLeft } from "react-icons/fa";
-import { AvatarGroup, HStack, IconButton } from "@chakra-ui/react";
+import { FaAngleDoubleRight, FaFileExport, FaFileImport } from "react-icons/fa";
+import {
+    IconButton,
+    Popover,
+    PopoverBody,
+    PopoverCloseButton,
+    PopoverContent,
+    PopoverHeader,
+    PopoverTrigger,
+    Text
+} from "@chakra-ui/react";
 
 import { C4ScopeNode } from "./nodes/C4ScopeNode";
-import { C4RectangleNode } from "./nodes/C4RectangleNode";
+import { C4RectangleNode, IAbstractionProps } from "./nodes/C4RectangleNode";
 import { C4FloatingEdge } from "./edges/C4FloatingEdge";
 import { C4AbstractionDraggable } from "./nodes/C4AbstractionDraggable";
 import {
@@ -42,14 +51,19 @@ import {
     createRelationship,
     getDiagramNodes,
     getDiagramEdges,
-    getAbstractionBgColor,
     getAbstractionName,
     NODE_WIDTH,
     NODE_HEIGHT,
 } from "./utils";
+import { EditorPanel } from "../EditorPanel";
+import { RelationshipEditor } from "../RelationshipEditor";
+import { AbstractionEditor } from "../AbstractionEditor";
+import { Logo } from "../Logo";
+import { ControlPanel } from "../ControlPanel";
 
 export interface IC4DiagramProps {
     diagram: Diagram;
+    technologies: Array<string>;
     onNodeAdded?: (node: Abstraction, position: Position) => void;
     onNodeDeleted?: (node: Abstraction) => void;
     onNodePositionChanged?: (node: Node, positon: Position) => void;
@@ -59,12 +73,14 @@ export interface IC4DiagramProps {
     onEdgeStateChanged?: (edge: Relationship) => void;
 }
 
-export const C4Diagram: FC<IC4DiagramProps> = ({ diagram }) => {
+export const C4Diagram: FC<IC4DiagramProps> = ({ diagram, technologies }) => {
     const [nodes, setNodes, onNodesChange] = useNodesState(getDiagramNodes(diagram));
     const [edges, setEdges, onEdgesChange] = useEdgesState(getDiagramEdges(diagram));
+    const [selectedNode, setSelectedNode] = useState(null);
+    const [selectedEdge, setSelectedEdge] = useState(null);
 
     const reactFlowRef = useRef<HTMLDivElement>(null);
-    const { getIntersectingNodes, project } = useReactFlow<Abstraction, Relationship>();
+    const { getIntersectingNodes, project, toObject, setViewport } = useReactFlow<Abstraction, Relationship>();
 
     const nodeTypes = useMemo(() => ({
         [NodeType.Block]: C4RectangleNode,
@@ -84,33 +100,80 @@ export const C4Diagram: FC<IC4DiagramProps> = ({ diagram }) => {
     ];
 
     const onNodeDrag = useCallback((event, draggedNode) => {
+        // NOTE: only allow to update nodes that are dragged and are not of type scope
         if (draggedNode.type === "scope") return;
-
-        const intersections = getIntersectingNodes(draggedNode);
-        const draggedOverScope = intersections.some(node => node.type === "scope");
         
-        setNodes(nodes => nodes.map(node => ({
-            ...node,
-            data: {
-                ...node.data,
-                draggedOver: intersections.some(i => i.id === node.id) && draggedOverScope
+        const intersections = getIntersectingNodes(draggedNode).filter(node => node.type === "scope");
+        const draggedOverScope = intersections.length > 0;
+
+        setNodes(nodes => nodes.map(node => {
+            if (node.type === "scope") {
+                return {
+                    ...node,
+                    data: {
+                        ...node.data,
+                        draggedOver: draggedOverScope
+                    }
+                };
             }
-        })));
+
+            return node;
+        }));
     }, [setNodes, getIntersectingNodes]);
 
     const onNodeDragStop = useCallback((event, draggedNode) => {
+        // NOTE: only allow to update nodes that are dragged and are not of type scope
         if (draggedNode.type === "scope") return;
+        
+        const intersections = getIntersectingNodes(draggedNode).filter(node => node.type === "scope");
+        const draggedOverScope = intersections.length > 0;
+        const wasInsideScope = draggedNode.parentNode !== undefined;
+        
+        setNodes(nodes => nodes.map(node => {
+            if (node.type === "scope") {
+                return {
+                    ...node,
+                    data: {
+                        ...node.data,
+                        draggedOver: false
+                    }
+                };
+            }
 
-        const intersections = getIntersectingNodes(draggedNode);
-        const draggedOverScope = intersections.some(node => node.type === "scope");
+            if (node.id === draggedNode.id && wasInsideScope && !draggedOverScope) {
+                const reactFlowBounds = reactFlowRef.current.getBoundingClientRect();
+                const outsideScopePosition = project({
+                    x: event.clientX - reactFlowBounds.left - NODE_WIDTH / 2,
+                    y: event.clientY - reactFlowBounds.top - NODE_HEIGHT / 2
+                });
+                return {
+                    ...node,
+                    position: outsideScopePosition,
+                    parentNode: undefined
+                };
+            }
 
-        setNodes(nodes => nodes.map(node => ({
-            ...node,
-            parentNode: node.id === draggedNode.id && draggedOverScope
-                ? intersections[0].id
-                : undefined
-        })));
-    }, [setNodes, getIntersectingNodes])
+            if (node.id === draggedNode.id && !wasInsideScope && draggedOverScope) {
+                const scope = intersections[0];
+                const insideScopePosition = {
+                    x: node.position.x - scope.position.x,
+                    y: node.position.y - scope.position.y
+                };
+                return {
+                    ...node,
+                    position: insideScopePosition,
+                    parentNode: scope.id
+                };
+            }
+
+            return node;
+        }));
+    }, [setNodes, getIntersectingNodes, project]);
+
+    const onNodeClick = useCallback((event, node) => {
+        setSelectedNode(node.data.abstraction);
+        setSelectedEdge(null);
+    }, []);
 
     const onNodeDelete = useCallback((abstraction: Abstraction) => {
         setNodes((nodes) => nodes.filter(node => node.id !== abstraction.abstractionId));
@@ -122,6 +185,11 @@ export const C4Diagram: FC<IC4DiagramProps> = ({ diagram }) => {
         const edge = createEdge(relationship);
         setEdges((edges) => edges.concat(edge));
     }, [setEdges]);
+
+    const onEdgeClick = useCallback((event, edge) => {
+        setSelectedNode(null);
+        setSelectedEdge(edge.data);
+    }, []);
 
     const onEdgeUpdate = useCallback((oldEdge, newConnection) => {
         setEdges((edges) => updateEdge(oldEdge, newConnection, edges));
@@ -152,6 +220,85 @@ export const C4Diagram: FC<IC4DiagramProps> = ({ diagram }) => {
         const node = createNode(abstraction, abstractionPosition, undefined, onNodeDelete);
         setNodes((nodes) => nodes.concat(node));
     }, [setNodes, onNodeDelete, project]);
+    
+    const onBlur = useCallback(() => {
+        setSelectedNode(null);
+        setSelectedEdge(null);
+    }, [setSelectedNode, setSelectedEdge]);
+
+    const restoreFlow = useCallback((flow: ReactFlowJsonObject<IAbstractionProps, Relationship>) => {
+        if (flow) {
+            const { x = 0, y = 0, zoom = 1 } = flow.viewport;
+            const { nodes = [], edges = [] } = flow;
+            setNodes(nodes);
+            setEdges(edges);
+            setViewport({ x, y, zoom });
+        }
+    }, [setNodes, setEdges, setViewport]);
+
+    const [shapePanelOpened, setShapePanelOpened] = useState(false);
+    const onShapesClick = useCallback(() => {
+        setShapePanelOpened(!shapePanelOpened);
+    }, [setShapePanelOpened, shapePanelOpened]);
+
+    const flowKey = "c4-diagram-sandbox";
+
+    const onExportClick = useCallback(() => {
+        const flow = toObject();
+        const flowString = JSON.stringify(flow);
+        localStorage.setItem(flowKey, flowString);
+    }, [toObject]);
+
+    const onImportClick = useCallback(() => {
+        const flowString = localStorage.getItem(flowKey);
+        const flow = JSON.parse(flowString);
+        restoreFlow(flow);
+    }, [restoreFlow]);
+
+    const onAbstractionChange = useCallback((abstraction) => {
+        setSelectedNode(abstraction);
+    }, []);
+
+    const onAbstractionSave = useCallback(() => {
+        setNodes((nodes) => nodes.map(node => {
+            if (node.data.abstraction.abstractionId === selectedNode.abstractionId) {
+                const updatedNode = {
+                    ...node,
+                    data: {
+                        ...node.data,
+                        abstraction: selectedNode
+                    }
+                };
+                return updatedNode;
+            }
+            return node;
+        }))
+    }, [setNodes, selectedNode]);
+
+    const onAbstractionCancel = useCallback(() => {
+        setSelectedNode(null);
+    }, []);   
+
+    const onRelationshipChange = useCallback((relationship) => {
+        setSelectedEdge(relationship);
+    }, []); 
+
+    const onRelationshipSave = useCallback(() => {
+        setEdges((edges) => edges.map(edge => {
+            if (edge.data.relationshipId === selectedEdge.relationshipId) {
+                const updatedEdge = {
+                    ...edge,
+                    data: selectedEdge
+                };
+                return updatedEdge;
+            }
+            return edge;
+        }))
+    }, [setEdges, selectedEdge]);
+
+    const onRelationshipCancel = useCallback(() => {
+        setSelectedEdge(null);
+    }, []);
 
     return (
         <ReactFlow
@@ -160,13 +307,16 @@ export const C4Diagram: FC<IC4DiagramProps> = ({ diagram }) => {
             onNodesChange={onNodesChange}
             onNodeDrag={onNodeDrag}
             onNodeDragStop={onNodeDragStop}
+            onNodeClick={onNodeClick}
             edges={edges}
             edgeTypes={edgeTypes}
             onEdgesChange={onEdgesChange}
-            onConnect={onConnect}
+            onEdgeClick={onEdgeClick}
             onEdgeUpdate={onEdgeUpdate}
+            onConnect={onConnect}
             onDragOver={onDragOver}
             onDrop={onDrop}
+            onBlur={onBlur}
             ref={reactFlowRef}
             connectionMode={ConnectionMode.Loose}
             proOptions={{ hideAttribution: true }}
@@ -179,44 +329,79 @@ export const C4Diagram: FC<IC4DiagramProps> = ({ diagram }) => {
                 gap={[25, 25]}
             />
             <Controls>
-                <ControlButton>S</ControlButton>
-                <ControlButton>R</ControlButton>
+                <ControlButton title={"shapes"} onClick={onShapesClick}>
+                    <Popover
+                        isOpen={shapePanelOpened}
+                        placement={"right-end"}
+                    >
+                        <PopoverTrigger>
+                            <IconButton
+                                aria-label={"ads"}
+                                icon={<FaAngleDoubleRight />}
+                                variant={"link"}
+                                onClick={onShapesClick}
+                            />
+                        </PopoverTrigger>
+                        <PopoverContent width={"56"}>
+                            <PopoverCloseButton />
+                            <PopoverHeader>
+                                Abstraction Shapes
+                            </PopoverHeader>
+                            <PopoverBody display={"flex"} flexDirection={"column"} gap={2}>
+                                {abstractionCodes.map(type => (
+                                    <C4AbstractionDraggable
+                                        key={type}
+                                        typeCode={type}
+                                        title={getAbstractionName(type)}
+                                        onDragStart={onDragStart}
+                                    />
+                                ))}
+                            </PopoverBody>
+                        </PopoverContent>
+                    </Popover>
+                </ControlButton>
+                <ControlButton title={"export"} onClick={onExportClick}>
+                    <FaFileExport />
+                </ControlButton>
+                <ControlButton title={"import"} onClick={onImportClick}>
+                    <FaFileImport />
+                </ControlButton>
             </Controls>
-            <MiniMap
-                nodeColor={(node) => getAbstractionBgColor(node.data.abstraction.type.code)}
-                zoomable
-                pannable
-            />
             <Panel position={"top-left"}>
-                <HStack>
-                    <IconButton
-                    icon={<FaArrowLeft />}
-                    aria-label={"Back"}
-                    as={Link}
-                    to={"/"}
-                    />
-                </HStack>
-            </Panel>
-            <Panel position={"top-center"}>
-                <HStack>
-                    {abstractionCodes.map(type => (
-                    <C4AbstractionDraggable
-                        key={type}
-                        typeCode={type}
-                        title={getAbstractionName(type)}
-                        onDragStart={onDragStart}
-                    />
-                    ))}
-                </HStack>
+                <ControlPanel direction={"row"} divider>
+                    <Logo />
+                    {diagram.title && (
+                        <Text as={"b"}>
+                            {diagram.title}
+                        </Text>
+                    )}
+                </ControlPanel>
             </Panel>
             <Panel position={"top-right"}>
-                <HStack>
-                    <AvatarGroup size={"sm"} max={3}>
-                    {/* {users && users.map(user => (
-                        <Avatar key={user} name={user} />
-                    ))} */}
-                    </AvatarGroup>
-                </HStack>
+                {selectedNode && (
+                    <EditorPanel
+                        onSave={onAbstractionSave}
+                        onCancel={onAbstractionCancel}
+                    >
+                        <AbstractionEditor
+                            data={selectedNode}
+                            options={{ technologies }}
+                            onChange={onAbstractionChange}
+                        />
+                    </EditorPanel>
+                )}
+                {selectedEdge && (
+                    <EditorPanel
+                        onSave={onRelationshipSave}
+                        onCancel={onRelationshipCancel}
+                    >
+                        <RelationshipEditor
+                            data={selectedEdge}
+                            options={{ technologies }}
+                            onChange={onRelationshipChange}
+                        />
+                    </EditorPanel>
+                )}
             </Panel>
         </ReactFlow>
     );

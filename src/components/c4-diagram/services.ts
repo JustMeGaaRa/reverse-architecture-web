@@ -24,6 +24,7 @@ export class DiagramService {
     createDiagram(type: string): Promise<Diagram> {
         const diagram: Diagram = {
             diagramId: uuidv4(),
+            title: "Diagram 1",
             primaryElements: [],
             supportingElements: [],
             relationships: [],

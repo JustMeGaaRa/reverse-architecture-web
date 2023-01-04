@@ -2,8 +2,9 @@ import { FC } from "react";
 import { Handle, NodeProps, NodeToolbar, Position } from "reactflow";
 import { FaTrash } from "react-icons/fa";
 import { Flex, ButtonGroup, IconButton } from "@chakra-ui/react";
-import { AbstractioInfo } from "../info/C4AbstractionInfo";
+import { C4AbstractioInfo } from "../info/C4AbstractionInfo";
 import { Abstraction } from "../types";
+import { ControlPanel } from "../../ControlPanel";
 
 export interface IAbstractionProps {
   abstraction: Abstraction;
@@ -23,21 +24,24 @@ export const C4RectangleNode: FC<NodeProps<IAbstractionProps>> = ({ data }) => {
       width={240}
       height={150}
     >
-      <AbstractioInfo
+      <C4AbstractioInfo
         data={data.abstraction}
         align={"center"}
         showTechnologies
         showDescription
       />
       <NodeToolbar>
-        <ButtonGroup size={"sm"} isAttached>
-          <IconButton
-            colorScheme={"red"}
-            aria-label={"Delete"}
-            icon={<FaTrash />}
-            onClick={() => data.onDelete && data.onDelete(data.abstraction)}
-          />
-        </ButtonGroup>
+        <ControlPanel direction={"row"} padding={1}>
+          <ButtonGroup size={"sm"} isAttached>
+            <IconButton
+              aria-label={"Delete"}
+              colorScheme={"red"}
+              icon={<FaTrash />}
+              variant={"ghost"}
+              onClick={() => data.onDelete && data.onDelete(data.abstraction)}
+            />
+          </ButtonGroup>
+        </ControlPanel>
       </NodeToolbar>
       <Handle position={Position.Left} id="a" type={"source"} />
       <Handle position={Position.Top} id="b" type={"source"} />

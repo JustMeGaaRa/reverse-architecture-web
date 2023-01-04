@@ -2,21 +2,24 @@ import { FC } from "react";
 import { VStack, Text } from "@chakra-ui/react";
 import { Relationship } from "../types";
 
-interface RelationshipInfoProps {
+export interface IRelationshipInfoProps {
   data: Relationship;
   align: "start" | "center" | "end";
   showTitle?: boolean;
   showTechnologies?: boolean;
 }
 
-export const C4RelationshipInfo: FC<RelationshipInfoProps> = ({
+export const C4RelationshipInfo: FC<IRelationshipInfoProps> = ({
   data,
   align,
   showTechnologies,
   showTitle
 }) => {
   return (
-    <VStack align={align} spacing={1}>
+    <VStack
+      align={align}
+      spacing={1}
+    >
       {data.title && showTitle && (
           <Text
             fontSize={"xs"}

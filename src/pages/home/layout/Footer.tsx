@@ -1,4 +1,4 @@
-import { FaGithub, FaTwitter, FaMediumM } from "react-icons/fa";
+import { FaGithub, FaTwitter, FaMediumM, FaLinkedinIn } from "react-icons/fa";
 import {
   Box,
   Container,
@@ -37,6 +37,9 @@ export function Footer() {
           </SocialButton>
           <SocialButton label={"GitHub"} href={"https://code.justmegaara.me"}>
             <FaGithub />
+          </SocialButton>
+          <SocialButton label={"CV"} href={"https://cv.justmegaara.me"}>
+            <FaLinkedinIn />
           </SocialButton>
         </Stack>
       </Container>

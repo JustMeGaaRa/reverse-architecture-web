@@ -9,14 +9,17 @@ export interface IAbstractionInfoProps {
   showDescription?: boolean;
 }
 
-export const AbstractioInfo: FC<IAbstractionInfoProps> = ({
+export const C4AbstractioInfo: FC<IAbstractionInfoProps> = ({
   data,
   align,
   showTechnologies,
   showDescription
 }) => {
   return (
-    <VStack align={align} spacing={0}>
+    <VStack
+      align={align}
+      spacing={0}
+    >
       <Text
         as={"b"}
         fontSize={"md"}

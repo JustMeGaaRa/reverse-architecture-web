@@ -38,10 +38,6 @@ export type ActionTypes =
     | RelationshipAddAction
     | RelationshipDeleteAction;
 
-export const createEmptyDiagram = createAction<ActionTypes, {
-    diagram: Diagram
-}>("CREATE_EMPTY_DIAGRAM");
-
 export const addPrimaryAbstraction = createAction<ActionTypes, {
     abstraction: Abstraction,
     position: Position

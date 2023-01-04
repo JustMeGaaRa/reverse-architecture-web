@@ -10,7 +10,7 @@ export enum AbstractionTypeCode {
 }
 
 export interface AbstractionType {
-    code: AbstractionTypeCode;
+    code: string;
     name: string;
 }
 
@@ -41,9 +41,15 @@ export interface AbstractionPositions {
 
 export interface Diagram {
     diagramId: string;
+    title: string;
+    description?: string;
     scope?: Abstraction;
     primaryElements: Array<Abstraction>;
     supportingElements: Array<Abstraction>;
     relationships: Array<Relationship>;
     positions: AbstractionPositions;
 }
+
+export type AbstractionCallback = (abstraction: Abstraction) => void;
+
+export type RelationshipCallback = (relationship: Relationship) => void;

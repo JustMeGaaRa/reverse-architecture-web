@@ -4,6 +4,7 @@ import { Abstraction, Diagram, Position, Relationship } from "./types";
 
 const emptyDiagram: Diagram = {
     diagramId: v4(),
+    title: "Diagram 1",
     primaryElements: [],
     supportingElements: [],
     relationships: [],

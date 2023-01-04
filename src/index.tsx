@@ -1,12 +1,10 @@
-import React from "react";
-import { createRoot } from "react-dom/client";
-import { ChakraProvider } from "@chakra-ui/react";
-
-import "./app.css";
 import "reactflow/dist/style.css";
 
-import { Home, Sandbox } from "./pages";
+import React from "react";
+import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { ChakraProvider } from "@chakra-ui/react";
+import { Home, Sandbox } from "./pages";
 
 const router = createBrowserRouter([
   {
