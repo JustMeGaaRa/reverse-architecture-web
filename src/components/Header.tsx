@@ -19,7 +19,7 @@ import {
   useColorModeValue
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
-import { Logo } from "../../../components";
+import { Logo } from ".";
 
 const Links = ["Sanbox", "Features", "GitHub"];
 
@@ -44,7 +44,7 @@ export function Header() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
+    <Box bg={useColorModeValue("white.900", "gray.900")} px={4}>
       <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
         <IconButton
           size={"md"}

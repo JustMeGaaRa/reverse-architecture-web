@@ -19,21 +19,27 @@ import ReactFlow, {
     ControlButton,
     ReactFlowJsonObject,
 } from "reactflow";
-import { FaAngleDoubleRight, FaFileExport, FaFileImport } from "react-icons/fa";
+import { FaFileExport, FaFileImport, FaTrash } from "react-icons/fa";
+import { DragHandleIcon } from "@chakra-ui/icons";
 import {
+    ButtonGroup,
+    Editable,
+    EditableInput,
+    EditablePreview,
     IconButton,
+    Input,
     Popover,
     PopoverBody,
-    PopoverCloseButton,
     PopoverContent,
     PopoverHeader,
     PopoverTrigger,
-    Text
+    useColorModeValue
 } from "@chakra-ui/react";
+import FileSaver from "file-saver";
 
 import { C4ScopeNode } from "./nodes/C4ScopeNode";
 import { C4RectangleNode, IAbstractionProps } from "./nodes/C4RectangleNode";
-import { C4FloatingEdge } from "./edges/C4FloatingEdge";
+import { C4FloatingEdge, IRelationshipProps } from "./edges/C4FloatingEdge";
 import { C4AbstractionDraggable } from "./nodes/C4AbstractionDraggable";
 import {
     Abstraction,
@@ -74,13 +80,14 @@ export interface IC4DiagramProps {
 }
 
 export const C4Diagram: FC<IC4DiagramProps> = ({ diagram, technologies }) => {
+    
     const [nodes, setNodes, onNodesChange] = useNodesState(getDiagramNodes(diagram));
     const [edges, setEdges, onEdgesChange] = useEdgesState(getDiagramEdges(diagram));
     const [selectedNode, setSelectedNode] = useState(null);
     const [selectedEdge, setSelectedEdge] = useState(null);
 
     const reactFlowRef = useRef<HTMLDivElement>(null);
-    const { getIntersectingNodes, project, toObject, setViewport } = useReactFlow<Abstraction, Relationship>();
+    const reactFlow = useReactFlow();
 
     const nodeTypes = useMemo(() => ({
         [NodeType.Block]: C4RectangleNode,
@@ -103,7 +110,7 @@ export const C4Diagram: FC<IC4DiagramProps> = ({ diagram, technologies }) => {
         // NOTE: only allow to update nodes that are dragged and are not of type scope
         if (draggedNode.type === "scope") return;
         
-        const intersections = getIntersectingNodes(draggedNode).filter(node => node.type === "scope");
+        const intersections = reactFlow.getIntersectingNodes(draggedNode).filter(node => node.type === "scope");
         const draggedOverScope = intersections.length > 0;
 
         setNodes(nodes => nodes.map(node => {
@@ -119,13 +126,13 @@ export const C4Diagram: FC<IC4DiagramProps> = ({ diagram, technologies }) => {
 
             return node;
         }));
-    }, [setNodes, getIntersectingNodes]);
+    }, [setNodes, reactFlow]);
 
     const onNodeDragStop = useCallback((event, draggedNode) => {
         // NOTE: only allow to update nodes that are dragged and are not of type scope
         if (draggedNode.type === "scope") return;
         
-        const intersections = getIntersectingNodes(draggedNode).filter(node => node.type === "scope");
+        const intersections = reactFlow.getIntersectingNodes(draggedNode).filter(node => node.type === "scope");
         const draggedOverScope = intersections.length > 0;
         const wasInsideScope = draggedNode.parentNode !== undefined;
         
@@ -142,7 +149,7 @@ export const C4Diagram: FC<IC4DiagramProps> = ({ diagram, technologies }) => {
 
             if (node.id === draggedNode.id && wasInsideScope && !draggedOverScope) {
                 const reactFlowBounds = reactFlowRef.current.getBoundingClientRect();
-                const outsideScopePosition = project({
+                const outsideScopePosition = reactFlow.project({
                     x: event.clientX - reactFlowBounds.left - NODE_WIDTH / 2,
                     y: event.clientY - reactFlowBounds.top - NODE_HEIGHT / 2
                 });
@@ -168,16 +175,18 @@ export const C4Diagram: FC<IC4DiagramProps> = ({ diagram, technologies }) => {
 
             return node;
         }));
-    }, [setNodes, getIntersectingNodes, project]);
+    }, [setNodes, reactFlow]);
 
     const onNodeClick = useCallback((event, node) => {
+        console.log(node.data.abstraction)
         setSelectedNode(node.data.abstraction);
         setSelectedEdge(null);
     }, []);
 
-    const onNodeDelete = useCallback((abstraction: Abstraction) => {
-        setNodes((nodes) => nodes.filter(node => node.id !== abstraction.abstractionId));
-    }, [setNodes]);
+    const onNodeDelete = useCallback(() => {
+        console.log(selectedNode)
+        setNodes((nodes) => nodes.filter(node => node.data.abstraction.abstractionId !== selectedNode.abstractionId));
+    }, [setNodes, selectedNode]);
 
     const onConnect = useCallback((params) => {
         if (!params.source || !params.target) return;
@@ -190,6 +199,10 @@ export const C4Diagram: FC<IC4DiagramProps> = ({ diagram, technologies }) => {
         setSelectedNode(null);
         setSelectedEdge(edge.data);
     }, []);
+
+    const onEdgeDelete = useCallback(() => {
+        setEdges((edges) => edges.filter(edge => edge.data.relationship.relationshipId !== selectedEdge.relationshipId));
+    }, [setEdges, selectedEdge]);
 
     const onEdgeUpdate = useCallback((oldEdge, newConnection) => {
         setEdges((edges) => updateEdge(oldEdge, newConnection, edges));
@@ -211,48 +224,49 @@ export const C4Diagram: FC<IC4DiagramProps> = ({ diagram, technologies }) => {
 
         const reactFlowBounds = reactFlowRef.current.getBoundingClientRect();
         const abstractionCode = event.dataTransfer.getData("application/reactflow");
-        const abstractionPosition = project({
+        const abstractionPosition = reactFlow.project({
             x: event.clientX - reactFlowBounds.left - NODE_WIDTH / 2,
             y: event.clientY - reactFlowBounds.top - NODE_HEIGHT / 2
         });
 
         const abstraction = createAbstraction(abstractionCode);
-        const node = createNode(abstraction, abstractionPosition, undefined, onNodeDelete);
+        const node = createNode(abstraction, abstractionPosition);
         setNodes((nodes) => nodes.concat(node));
-    }, [setNodes, onNodeDelete, project]);
+    }, [setNodes, reactFlow]);
     
     const onBlur = useCallback(() => {
         setSelectedNode(null);
         setSelectedEdge(null);
     }, [setSelectedNode, setSelectedEdge]);
 
-    const restoreFlow = useCallback((flow: ReactFlowJsonObject<IAbstractionProps, Relationship>) => {
-        if (flow) {
-            const { x = 0, y = 0, zoom = 1 } = flow.viewport;
-            const { nodes = [], edges = [] } = flow;
-            setNodes(nodes);
-            setEdges(edges);
-            setViewport({ x, y, zoom });
-        }
-    }, [setNodes, setEdges, setViewport]);
-
     const [shapePanelOpened, setShapePanelOpened] = useState(false);
     const onShapesClick = useCallback(() => {
         setShapePanelOpened(!shapePanelOpened);
     }, [setShapePanelOpened, shapePanelOpened]);
 
-    const flowKey = "c4-diagram-sandbox";
+    const importFileRef = useRef<HTMLInputElement>(null);
+
+    const restoreFlow = useCallback((flow: ReactFlowJsonObject<IAbstractionProps, IRelationshipProps>) => {
+        if (flow) {
+            setNodes(flow.nodes);
+            setEdges(flow.edges);
+            reactFlow.setViewport(flow.viewport);
+        }
+    }, [setNodes, setEdges, reactFlow]);
 
     const onExportClick = useCallback(() => {
-        const flow = toObject();
-        const flowString = JSON.stringify(flow);
-        localStorage.setItem(flowKey, flowString);
-    }, [toObject]);
+        const filename = `${diagram.title}.json`;
+        const reactFlowObject = reactFlow.toObject();
+        const json = JSON.stringify(reactFlowObject);
+        const file = new File([json], filename, { type: "application/json" });
+        FileSaver.saveAs(file);
+    }, [reactFlow, diagram]);
 
-    const onImportClick = useCallback(() => {
-        const flowString = localStorage.getItem(flowKey);
-        const flow = JSON.parse(flowString);
-        restoreFlow(flow);
+    const onImportClick = useCallback((event) => {
+        const file = event.target.files[0];
+        const fileReader = new FileReader();
+        fileReader.onload = (event) => restoreFlow(JSON.parse(event.target.result as string));
+        fileReader.readAsText(file);
     }, [restoreFlow]);
 
     const onAbstractionChange = useCallback((abstraction) => {
@@ -285,7 +299,7 @@ export const C4Diagram: FC<IC4DiagramProps> = ({ diagram, technologies }) => {
 
     const onRelationshipSave = useCallback(() => {
         setEdges((edges) => edges.map(edge => {
-            if (edge.data.relationshipId === selectedEdge.relationshipId) {
+            if (edge.data.relationship.relationshipId === selectedEdge.relationshipId) {
                 const updatedEdge = {
                     ...edge,
                     data: selectedEdge
@@ -329,21 +343,18 @@ export const C4Diagram: FC<IC4DiagramProps> = ({ diagram, technologies }) => {
                 gap={[25, 25]}
             />
             <Controls>
-                <ControlButton title={"shapes"} onClick={onShapesClick}>
+                <ControlButton
+                    title={"shapes"}
+                    onClick={onShapesClick}
+                >
                     <Popover
                         isOpen={shapePanelOpened}
                         placement={"right-end"}
                     >
                         <PopoverTrigger>
-                            <IconButton
-                                aria-label={"ads"}
-                                icon={<FaAngleDoubleRight />}
-                                variant={"link"}
-                                onClick={onShapesClick}
-                            />
+                            <DragHandleIcon />
                         </PopoverTrigger>
                         <PopoverContent width={"56"}>
-                            <PopoverCloseButton />
                             <PopoverHeader>
                                 Abstraction Shapes
                             </PopoverHeader>
@@ -360,22 +371,69 @@ export const C4Diagram: FC<IC4DiagramProps> = ({ diagram, technologies }) => {
                         </PopoverContent>
                     </Popover>
                 </ControlButton>
-                <ControlButton title={"export"} onClick={onExportClick}>
+                <ControlButton
+                    title={"export"}
+                    onClick={onExportClick}
+                >
                     <FaFileExport />
                 </ControlButton>
-                <ControlButton title={"import"} onClick={onImportClick}>
+                <ControlButton
+                    title={"import"}
+                    onClick={() => importFileRef && importFileRef.current.click()}
+                >
+                    <Input
+                        accept={".json"}
+                        hidden
+                        ref={importFileRef}
+                        type={"file"}
+                        onChange={onImportClick}
+                    />
                     <FaFileImport />
                 </ControlButton>
             </Controls>
             <Panel position={"top-left"}>
                 <ControlPanel direction={"row"} divider>
                     <Logo />
-                    {diagram.title && (
-                        <Text as={"b"}>
-                            {diagram.title}
-                        </Text>
-                    )}
+                    <Editable
+                        defaultValue={diagram.title}
+                        isPreviewFocusable={true}
+                    >
+                        <EditablePreview
+                            py={2}
+                            px={4}
+                            _hover={{
+                                background: useColorModeValue("gray.100", "gray.700")
+                            }}
+                        />
+                        <Input py={2} px={4} as={EditableInput} />
+                    </Editable>
                 </ControlPanel>
+            </Panel>
+            <Panel position={"top-center"}>
+                {false && <ControlPanel direction={"row"}>
+                    <ButtonGroup size={"sm"} isAttached>
+                        {selectedNode && (
+                            <IconButton
+                                aria-label={"Delete Abstraction"}
+                                colorScheme={"red"}
+                                icon={<FaTrash />}
+                                variant={"ghost"}
+                                disabled={selectedNode === null}
+                                onClick={onNodeDelete}
+                            />
+                        )}
+                        {selectedEdge && (
+                            <IconButton
+                                aria-label={"Delete Relationship"}
+                                colorScheme={"red"}
+                                icon={<FaTrash />}
+                                variant={"ghost"}
+                                onClick={onEdgeDelete}
+                            />
+                        )}
+                    </ButtonGroup>
+                </ControlPanel>
+                }
             </Panel>
             <Panel position={"top-right"}>
                 {selectedNode && (

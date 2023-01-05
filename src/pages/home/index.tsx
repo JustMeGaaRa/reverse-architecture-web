@@ -1,20 +1,21 @@
 import { FC } from "react";
-import { Box } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 
-import { Header, Footer } from "./layout";
-import { HeroSection, FeatureSection } from "./sections";
+import { Header, Footer } from "../../components";
+import { HeroSection } from "./HeroSection";
+import { FeatureSection } from "./FeatureSection";
 
 export const Home: FC = () => {
-  return (
-    <>
-      <Header />
+    return (
+        <>
+            <Header />
 
-      <Box p={4}>
-        <HeroSection />
-        <FeatureSection />
-      </Box>
+            <Flex direction={"column"} p={4}>
+                <HeroSection />
+                <FeatureSection />
+            </Flex>
 
-      <Footer />
-    </>
-  );
+            <Footer />
+        </>
+    );
 }

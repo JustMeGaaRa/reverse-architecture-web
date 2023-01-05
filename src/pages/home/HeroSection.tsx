@@ -12,7 +12,7 @@ import { HeroIllustration } from "./HeroIllustration";
 
 export function HeroSection() {
   return (
-    <Container maxW={"5xl"}>
+    <Container maxW={"5xl"} height={"80vh"}>
       <Stack
         textAlign={"center"}
         align={"center"}
@@ -20,6 +20,7 @@ export function HeroSection() {
         py={{ base: 20, md: 28 }}
       >
         <Heading
+          as={"h1"}
           fontWeight={600}
           fontSize={{ base: "3xl", sm: "4xl", md: "6xl" }}
           lineHeight={"110%"}

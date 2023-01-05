@@ -5,6 +5,7 @@ import {
   MarkerType
 } from "reactflow";
 import { v4 } from "uuid";
+import { IRelationshipProps } from "./edges/C4FloatingEdge";
 import { IAbstractionProps } from "./nodes/C4RectangleNode";
 import { IScopeProps } from "./nodes/C4ScopeNode";
 import {
@@ -27,14 +28,26 @@ export enum EdgeType {
 
 export const NODE_WIDTH = 240;
 export const NODE_HEIGHT = 150;
-export const MARKER_END_COLOR = "#000000";
 
 export const getDiagramNodes = (diagram: Diagram) => {
   if (diagram === null) return Array.of<Node<IAbstractionProps>>();
   
-  const getScopeElement = (element) => createScope(element, diagram.positions[element.abstractionId]);
-  const getPrimaryElement = (element) => createNode(element, diagram.positions[element.abstractionId], diagram.scope?.abstractionId);
-  const getSupportingElement = (element) => createNode(element, diagram.positions[element.abstractionId]);
+  const getScopeElement = (element) => {
+    return createScope(
+      element,
+      diagram.positions[element.abstractionId])
+  };
+  const getPrimaryElement = (element) => {
+    return createNode(
+      element,
+      diagram.positions[element.abstractionId],
+      diagram.scope?.abstractionId);
+  };
+  const getSupportingElement = (element) => {
+    return createNode(
+      element,
+      diagram.positions[element.abstractionId]);
+  };
 
   const nodes =
     diagram.scope === undefined
@@ -47,8 +60,8 @@ export const getDiagramNodes = (diagram: Diagram) => {
 };
 
 export const getDiagramEdges = (diagram: Diagram) => {
-  if (diagram === null) return Array.of<Edge<Relationship>>();
-  return diagram.relationships.map<Edge<Relationship>>(createEdge);
+  if (diagram === null) return Array.of<Edge<IRelationshipProps>>();
+  return diagram.relationships.map<Edge<IRelationshipProps>>(createEdge);
 };
 
 export const getAbstractionName = (code: AbstractionTypeCode) => {
@@ -108,16 +121,14 @@ export const createRelationship = (
 export const createNode = (
   abstraction: Abstraction,
   abstractionPosition: XYPosition,
-  parentId?: string,
-  onDelete?: (a: Abstraction) => void
+  parentId?: string
 ): Node<IAbstractionProps> => {
   return {
     id: abstraction.abstractionId,
     type: getNodeType(abstraction.type.code),
     data: {
       abstraction: abstraction,
-      bgColor: getAbstractionBgColor(abstraction.type.code),
-      onDelete: onDelete
+      bgColor: getAbstractionBgColor(abstraction.type.code)
     },
     position: abstractionPosition,
     parentNode: parentId
@@ -132,31 +143,29 @@ export const createScope = (
     id: abstraction.abstractionId,
     type: NodeType.Scope,
     data: {
-      abstraction: abstraction
+      abstraction
     },
-    position: scopePosition
+    position: scopePosition,
+    style: {
+      zIndex: -1
+    }
   };
 };
 
-export const createEdge = (relationship: Relationship): Edge<Relationship> => {
-  const markerEndStyle = {
-    type: MarkerType.ArrowClosed,
-    color: MARKER_END_COLOR,
-    width: 10,
-    height: 10
-  };
-  const edgeDefaultStyle = {
-    strokeWidth: 2
-  };
-
+export const createEdge = (
+  relationship: Relationship
+): Edge<IRelationshipProps> => {
   return {
     id: relationship.relationshipId,
     type: EdgeType.Floating,
-    data: relationship,
+    data: {
+      relationship,
+    },
     source: relationship.sourceElementId,
     target: relationship.targetElementId,
-    style: edgeDefaultStyle,
-    markerEnd: markerEndStyle
+    markerEnd: {
+      type: MarkerType.Arrow
+    }
   };
 };
 
