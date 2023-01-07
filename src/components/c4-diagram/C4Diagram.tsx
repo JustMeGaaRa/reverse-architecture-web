@@ -66,6 +66,7 @@ import { RelationshipEditor } from "../RelationshipEditor";
 import { AbstractionEditor } from "../AbstractionEditor";
 import { Logo } from "../Logo";
 import { ControlPanel } from "../ControlPanel";
+import { exportToDrawio } from "./DrawioExporter";
 
 export interface IC4DiagramProps {
     diagram: Diagram;
@@ -255,11 +256,11 @@ export const C4Diagram: FC<IC4DiagramProps> = ({ diagram, technologies }) => {
     }, [setNodes, setEdges, reactFlow]);
 
     const onExportClick = useCallback(() => {
-        const filename = `${diagram.title}.json`;
-        const reactFlowObject = reactFlow.toObject();
-        const json = JSON.stringify(reactFlowObject);
-        const file = new File([json], filename, { type: "application/json" });
-        FileSaver.saveAs(file);
+        FileSaver.saveAs(new File(
+            [exportToDrawio(reactFlow.toObject())],
+            `${diagram.title}.drawio`,
+            { type: "application/xml" }
+        ));
     }, [reactFlow, diagram]);
 
     const onImportClick = useCallback((event) => {
@@ -377,19 +378,21 @@ export const C4Diagram: FC<IC4DiagramProps> = ({ diagram, technologies }) => {
                 >
                     <FaFileExport />
                 </ControlButton>
-                <ControlButton
-                    title={"import"}
-                    onClick={() => importFileRef && importFileRef.current.click()}
-                >
-                    <Input
-                        accept={".json"}
-                        hidden
-                        ref={importFileRef}
-                        type={"file"}
-                        onChange={onImportClick}
-                    />
-                    <FaFileImport />
-                </ControlButton>
+                {false && (
+                    <ControlButton
+                        title={"import"}
+                        onClick={() => importFileRef && importFileRef.current.click()}
+                    >
+                        <Input
+                            accept={".json"}
+                            hidden
+                            ref={importFileRef}
+                            type={"file"}
+                            onChange={onImportClick}
+                        />
+                        <FaFileImport />
+                    </ControlButton>
+                )}
             </Controls>
             <Panel position={"top-left"}>
                 <ControlPanel direction={"row"} divider>
@@ -410,30 +413,31 @@ export const C4Diagram: FC<IC4DiagramProps> = ({ diagram, technologies }) => {
                 </ControlPanel>
             </Panel>
             <Panel position={"top-center"}>
-                {false && <ControlPanel direction={"row"}>
-                    <ButtonGroup size={"sm"} isAttached>
-                        {selectedNode && (
-                            <IconButton
-                                aria-label={"Delete Abstraction"}
-                                colorScheme={"red"}
-                                icon={<FaTrash />}
-                                variant={"ghost"}
-                                disabled={selectedNode === null}
-                                onClick={onNodeDelete}
-                            />
-                        )}
-                        {selectedEdge && (
-                            <IconButton
-                                aria-label={"Delete Relationship"}
-                                colorScheme={"red"}
-                                icon={<FaTrash />}
-                                variant={"ghost"}
-                                onClick={onEdgeDelete}
-                            />
-                        )}
-                    </ButtonGroup>
-                </ControlPanel>
-                }
+                {false && (
+                    <ControlPanel direction={"row"}>
+                        <ButtonGroup size={"sm"} isAttached>
+                            {selectedNode && (
+                                <IconButton
+                                    aria-label={"Delete Abstraction"}
+                                    colorScheme={"red"}
+                                    icon={<FaTrash />}
+                                    variant={"ghost"}
+                                    disabled={selectedNode === null}
+                                    onClick={onNodeDelete}
+                                />
+                            )}
+                            {selectedEdge && (
+                                <IconButton
+                                    aria-label={"Delete Relationship"}
+                                    colorScheme={"red"}
+                                    icon={<FaTrash />}
+                                    variant={"ghost"}
+                                    onClick={onEdgeDelete}
+                                />
+                            )}
+                        </ButtonGroup>
+                    </ControlPanel>
+                )}
             </Panel>
             <Panel position={"top-right"}>
                 {selectedNode && (

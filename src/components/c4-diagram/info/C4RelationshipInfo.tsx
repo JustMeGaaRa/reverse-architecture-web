@@ -2,6 +2,10 @@ import { FC } from "react";
 import { VStack, Text } from "@chakra-ui/react";
 import { Relationship } from "../types";
 
+export const formatEdgeTechnologies = (data: Relationship) => {
+    return data?.technologies && `[${data.technologies.join(" / ")}]`;
+};
+
 export interface IRelationshipInfoProps {
     data: Relationship;
     align: "start" | "center" | "end";
@@ -30,13 +34,13 @@ export const C4RelationshipInfo: FC<IRelationshipInfoProps> = ({
                     {data.title}
                 </Text>
             )}
-            {showTechnologies && data.technologies && (
+            {showTechnologies && (
                 <Text
                     fontSize={"x-small"}
                     noOfLines={1}
                     textAlign={"center"}
                 >
-                    {`[${data.technologies.join(" / ")}]`}
+                    {formatEdgeTechnologies(data)}
                 </Text>
             )}
         </VStack>

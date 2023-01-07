@@ -2,6 +2,12 @@ import { FC } from "react";
 import { VStack, Text } from "@chakra-ui/react";
 import { Abstraction } from "../types";
 
+export const formatNodeTechnologies = (data: Abstraction) => {
+    return data.technologies
+        ? `[${data.type.name}: ${data.technologies.join(", ")}]`
+        : `[${data.type.name}]`;
+};
+
 export interface IAbstractionInfoProps {
     data: Abstraction;
     align: "start" | "center" | "end";
@@ -33,10 +39,7 @@ export const C4AbstractioInfo: FC<IAbstractionInfoProps> = ({
             noOfLines={1}
             textAlign={"center"}
         >
-            {showTechnologies && data.technologies
-                ? `[${data.type.name}: ${data.technologies.join(", ")}]`
-                : `[${data.type.name}]`
-            }
+            {showTechnologies && formatNodeTechnologies(data)}
         </Text>
         {showDescription && data.description && (
             <Text

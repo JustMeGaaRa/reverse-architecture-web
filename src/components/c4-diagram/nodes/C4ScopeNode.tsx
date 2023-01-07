@@ -34,6 +34,7 @@ export const C4ScopeNode: FC<NodeProps<IScopeProps>> = ({ data, selected }) => {
             <C4AbstractioInfo
                 data={data.abstraction}
                 align={"start"}
+                showTechnologies
             />
             <NodeResizer
                 isVisible={selected}
