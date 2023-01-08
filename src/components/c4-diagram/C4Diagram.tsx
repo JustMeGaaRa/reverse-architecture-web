@@ -179,13 +179,11 @@ export const C4Diagram: FC<IC4DiagramProps> = ({ diagram, technologies }) => {
     }, [setNodes, reactFlow]);
 
     const onNodeClick = useCallback((event, node) => {
-        console.log(node.data.abstraction)
         setSelectedNode(node.data.abstraction);
         setSelectedEdge(null);
     }, []);
 
     const onNodeDelete = useCallback(() => {
-        console.log(selectedNode)
         setNodes((nodes) => nodes.filter(node => node.data.abstraction.abstractionId !== selectedNode.abstractionId));
     }, [setNodes, selectedNode]);
 
@@ -258,8 +256,7 @@ export const C4Diagram: FC<IC4DiagramProps> = ({ diagram, technologies }) => {
     const onExportClick = useCallback(() => {
         FileSaver.saveAs(new File(
             [exportToDrawio(reactFlow.toObject())],
-            `${diagram.title}.drawio`,
-            { type: "application/xml" }
+            `${diagram.title}.drawio`
         ));
     }, [reactFlow, diagram]);
 

@@ -22,8 +22,8 @@ export const RelationshipEditor: FC<IRelationshipEditorProps> = ({
     return data && (
         <Flex direction={"column"} gap={4}>
             <Textarea
-                placeholder={"Enter the title of the relationship"}
                 value={data.title}
+                placeholder={"Enter the title of the relationship"}
                 onChange={(event) => {
                     onChange && onChange({
                         ...data,
@@ -34,8 +34,8 @@ export const RelationshipEditor: FC<IRelationshipEditorProps> = ({
             <Select
                 closeMenuOnSelect={false}
                 isMulti
-                options={options.technologies.map(t => ({ label: t, value: t }))}
                 placeholder={"Select a list of technologies"}
+                options={options.technologies.map(t => ({ label: t, value: t }))}
                 value={data.technologies && data.technologies.map(t => ({ label: t, value: t }))}
                 onChange={(event) => {
                     onChange && onChange({

@@ -28,8 +28,7 @@ export const EditorPanel: FC<PropsWithChildren<IEditorPanelProps>> = ({
                     Save
                 </Button>
                 <Button
-                    leftIcon={<FaTimes />}
-                    colorScheme={"red"}
+                    variant={"ghost"}
                     onClick={onCancel}
                 >
                     Cancel

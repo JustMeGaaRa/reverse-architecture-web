@@ -8,7 +8,7 @@ import {
     useStore,
     getBezierPath,
 } from "reactflow";
-import { Box } from "@chakra-ui/react";
+import { Box, useColorModeValue } from "@chakra-ui/react";
 import { C4RelationshipInfo } from "../info/C4RelationshipInfo";
 import { Relationship } from "../types";
 
@@ -97,6 +97,7 @@ export const C4FloatingEdge: FC<EdgeProps<IRelationshipProps>> = ({
     markerEnd,
     data
 }) => {
+    const background = useColorModeValue("whiteAlpha.900", "gray.700");
     const sourceNode = useStore(useCallback((store) => store.nodeInternals.get(source), [source]));
     const targetNode = useStore(useCallback((store) => store.nodeInternals.get(target), [target]));
 
@@ -119,7 +120,7 @@ export const C4FloatingEdge: FC<EdgeProps<IRelationshipProps>> = ({
         >
             <EdgeLabelRenderer>
                 <Box
-                    background={"whiteAlpha.900"}
+                    background={background}
                     boxShadow={"lg"}
                     borderRadius={"lg"}
                     className="nodrag nopan"

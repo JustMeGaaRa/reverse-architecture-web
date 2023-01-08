@@ -26,31 +26,31 @@ export const C4AbstractioInfo: FC<IAbstractionInfoProps> = ({
             align={align}
             spacing={0}
         >
-        <Text
-            as={"b"}
-            fontSize={"md"}
-            noOfLines={1}
-            textAlign={"center"}
-        >
-            {data.title}
-        </Text>
-        <Text
-            fontSize={"x-small"}
-            noOfLines={1}
-            textAlign={"center"}
-        >
-            {showTechnologies && formatNodeTechnologies(data)}
-        </Text>
-        {showDescription && data.description && (
             <Text
-                fontSize={"xs"}
-                noOfLines={3}
-                paddingTop={4}
+                as={"b"}
+                fontSize={"md"}
+                noOfLines={1}
                 textAlign={"center"}
             >
-                {data.description}
+                {data.title}
             </Text>
-        )}
+            <Text
+                fontSize={"x-small"}
+                noOfLines={1}
+                textAlign={"center"}
+            >
+                {showTechnologies && formatNodeTechnologies(data)}
+            </Text>
+            {showDescription && data.description && (
+                <Text
+                    fontSize={"xs"}
+                    noOfLines={3}
+                    paddingTop={4}
+                    textAlign={"center"}
+                >
+                    {data.description}
+                </Text>
+            )}
         </VStack>
     );
 };

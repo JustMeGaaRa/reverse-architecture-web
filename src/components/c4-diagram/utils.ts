@@ -169,24 +169,26 @@ export const createEdge = (
   };
 };
 
-export const createEmptyDiagram = (): Diagram => {
-  const abstractionId = v4();
+export const createEmptyDiagram = (isSystemContext: boolean): Diagram => {
+  const scopeId = v4();
+  const scope = {
+    abstractionId: scopeId,
+    type: {
+      code: AbstractionTypeCode.SoftwareSystem,
+      name: getAbstractionName(AbstractionTypeCode.SoftwareSystem)
+    },
+    title: getAbstractionName(AbstractionTypeCode.SoftwareSystem)
+  };
+  const scopePosition = {
+    [scopeId]: { x: 0, y: 0 }
+  }
   return {
-      diagramId: v4(),
-      title: "Diagram 1",
-      scope: {
-          abstractionId: abstractionId,
-          type: {
-              code: AbstractionTypeCode.SoftwareSystem,
-              name: getAbstractionName(AbstractionTypeCode.SoftwareSystem)
-          },
-          title: getAbstractionName(AbstractionTypeCode.SoftwareSystem)
-      },
-      primaryElements: [],
-      supportingElements: [],
-      relationships: [],
-      positions: {
-          [abstractionId]: { x: 0, y: 0 }
-      }
+    diagramId: v4(),
+    title: "Diagram 1",
+    scope: isSystemContext ? undefined : scope,
+    primaryElements: [],
+    supportingElements: [],
+    relationships: [],
+    positions: isSystemContext ? {} : scopePosition
   };
 }

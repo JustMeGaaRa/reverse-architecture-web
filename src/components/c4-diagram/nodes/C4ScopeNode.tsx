@@ -3,7 +3,7 @@ import "@reactflow/node-resizer/dist/style.css";
 import { FC, useCallback, useState } from "react";
 import { NodeProps } from "reactflow";
 import { NodeResizer } from "@reactflow/node-resizer";
-import { Flex } from "@chakra-ui/react";
+import { Flex, useColorModeValue } from "@chakra-ui/react";
 import { C4AbstractioInfo } from "../info/C4AbstractionInfo";
 import { Abstraction } from "../types";
 
@@ -13,6 +13,8 @@ export interface IScopeProps {
 }
 
 export const C4ScopeNode: FC<NodeProps<IScopeProps>> = ({ data, selected }) => {
+    const defaultBgColor = useColorModeValue("gray.100", "gray.700");
+    const draggedOverBgColor = useColorModeValue("gray.200", "gray.600");
     const [size, setSize] = useState([1040, 600]);
 
     const onResize = useCallback((event, params) => {
@@ -21,7 +23,7 @@ export const C4ScopeNode: FC<NodeProps<IScopeProps>> = ({ data, selected }) => {
 
     return (
         <Flex
-            bgColor={data.draggedOver ? "gray.200" : "gray.100"}
+            bgColor={data.draggedOver ? draggedOverBgColor : defaultBgColor}
             border={"dashed"}
             borderWidth={2}
             borderColor={data.draggedOver || selected ? "blue.500" : "blackAlpha.500"}
@@ -29,7 +31,6 @@ export const C4ScopeNode: FC<NodeProps<IScopeProps>> = ({ data, selected }) => {
             padding={2}
             width={size[0]}
             height={size[1]}
-            textColor={"blackAlpha.900"}
         >
             <C4AbstractioInfo
                 data={data.abstraction}

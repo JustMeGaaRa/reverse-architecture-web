@@ -25,7 +25,7 @@ export const AbstractionEditor: FC<IAbstractionEditorProps> = ({
             <Input
                 placeholder={"Enter the name of the abstraction"}
                 value={data.title}
-                variant={"filled"}
+                onFocusCapture={(event) => event.preventDefault()}
                 onChange={(event) => {
                     onChange && onChange({
                         ...data,
@@ -36,10 +36,11 @@ export const AbstractionEditor: FC<IAbstractionEditorProps> = ({
             <Select
                 closeMenuOnSelect={false}
                 isMulti
-                options={options.technologies.map(t => ({ label: t, value: t }))}
+                isClearable={false}
+                useBasicStyles
                 placeholder={"Select a list of technologies"}
+                options={options.technologies.map(t => ({ label: t, value: t }))}
                 value={data.technologies && data.technologies.map(t => ({ label: t, value: t }))}
-                variant={"filled"}
                 onChange={(event) => {
                     onChange({
                         ...data,
@@ -50,7 +51,6 @@ export const AbstractionEditor: FC<IAbstractionEditorProps> = ({
             <Textarea
                 placeholder={"Enter the description for the abstraction"}
                 value={data.description}
-                variant={"filled"}
                 onChange={(event) => {
                     onChange && onChange({
                         ...data,
