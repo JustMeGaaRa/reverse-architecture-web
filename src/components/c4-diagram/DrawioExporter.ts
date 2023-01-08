@@ -64,14 +64,6 @@ type EdgeStyle = {
     html: boolean;
     rounded: boolean;
     flowAnimation: boolean;
-    entryX: number;
-    entryY: number;
-    entryDx: number;
-    entryDy: number;
-    exitX: number;
-    exitY: number;
-    exitDx: number;
-    exitDy: number;
     labelBackgroundColor: string;
     dashed: boolean;
     edgeStyle: EdgeStyleType;
@@ -108,14 +100,6 @@ const formatEdgeStyle = (style: Partial<EdgeStyle>) => {
         html: true,
         rounded: false,
         flowAnimation: false,
-        entryX: 0.25,
-        entryY: 0,
-        entryDx: 0,
-        entryDy: 0,
-        exitX: 0.5,
-        exitY: 1,
-        exitDx: 0,
-        exitDy: 0,
         labelBackgroundColor: "#FFFFFF",
         dashed: true,
         edgeStyle: EdgeStyleType.OrthogonalEdgeStyle,
@@ -281,7 +265,9 @@ export function exportToDrawio(
     );
     const xml = new XMLBuilder({
         ignoreAttributes: false,
-        attributeNamePrefix: "_"
+        attributeNamePrefix: "_",
+        format: true,
+        suppressEmptyNode: true
     });
     
     return xml.build(drawio);
