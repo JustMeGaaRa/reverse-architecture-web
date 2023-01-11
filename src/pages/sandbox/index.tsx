@@ -4,13 +4,13 @@ import {
     Box,
     useDisclosure
 } from "@chakra-ui/react";
-import { C4Diagram, Diagram, IDiagramTemplate, TemplateSelectorModal } from "../../components";
+import { C4DiagramRenderer, Diagram, IDiagramTemplate, TemplateSelectorModal } from "../../components";
 import { NavigationPanel } from "../../components/panels/NavigationPanel";
 import { CollaborationPanel } from "../../components/panels/CollaborationPanel";
 import { Templates } from "./Templates";
 
 import Users from "../../contracts/Users.json"
-import ContainerDiagram from "../../contracts/ContainerDiagramClassic.json";
+import ContainerDiagram from "../../contracts/ContainerDiagram.json";
 import Technologies from "../../contracts/Technologies.json";
 
 export const Sandbox: FC = () => {
@@ -31,7 +31,7 @@ export const Sandbox: FC = () => {
     return (
         <ReactFlowProvider>
             <Box height="100vh">
-                <C4Diagram
+                <C4DiagramRenderer
                     diagram={diagram}
                     technologies={Technologies}
                 />

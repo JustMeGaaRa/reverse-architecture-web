@@ -160,12 +160,12 @@
   ],
   "positions": {
     "software-system-1": { "x": 0, "y": 250 },
-    "container-1": { "x": 50, "y": 50 },
-    "container-2": { "x": 550, "y": 50 },
+    "container-1": { "x": 60, "y": 50 },
+    "container-2": { "x": 560, "y": 50 },
     "container-3": { "x": 900, "y": 50 },
-    "container-4": { "x": 725, "y": 350 },
-    "database-1": { "x": 50, "y": 350 },
-    "person-1": { "x": 725, "y": 0 },
+    "container-4": { "x": 720, "y": 350 },
+    "database-1": { "x": 60, "y": 350 },
+    "person-1": { "x": 720, "y": 0 },
     "software-system-3": { "x": 1300, "y": 300 },
     "software-system-4": { "x": 1300, "y": 600 }
   }

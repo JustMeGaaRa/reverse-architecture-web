@@ -9,8 +9,8 @@ import {
     getBezierPath,
 } from "reactflow";
 import { Box, useColorModeValue } from "@chakra-ui/react";
-import { C4RelationshipInfo } from "../info/C4RelationshipInfo";
-import { Relationship } from "../types";
+import { C4RelationshipInfo } from "./LabelTypes";
+import { Relationship } from "./types";
 
 function getNodeCenter(node: Node) {
     return {

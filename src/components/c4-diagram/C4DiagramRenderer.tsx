@@ -30,10 +30,15 @@ import {
 } from "@chakra-ui/react";
 import FileSaver from "file-saver";
 
-import { C4ScopeNode } from "./nodes/C4ScopeNode";
-import { C4RectangleNode, C4RectangleProps } from "./nodes/C4RectangleNode";
-import { C4FloatingEdge, C4FloatingEdgeProps } from "./edges/C4FloatingEdge";
-import { C4RectangleDraggable } from "./nodes/C4RectangleDraggable";
+import {
+    C4RectangleNode,
+    C4RectangleProps,
+    C4ScopeNode,
+    C4RectangleDraggable } from "./NodeTypes";
+import {
+    C4FloatingEdge,
+    C4FloatingEdgeProps,
+} from "./EdgeTypes";
 import {
     Abstraction,
     Relationship,
@@ -58,7 +63,7 @@ import { RelationshipEditor } from "../panels/RelationshipEditor";
 import { AbstractionEditor } from "../panels/AbstractionEditor";
 import { exportToDrawio } from "./export/DrawioExporter";
 
-export type C4DiagramProps = {
+export type C4DiagramRendererProps = {
     diagram: Diagram;
     technologies: Array<string>;
     onNodeAdded?: (node: Abstraction, position: Position) => void;
@@ -70,7 +75,7 @@ export type C4DiagramProps = {
     onEdgeStateChanged?: (edge: Relationship) => void;
 }
 
-export const C4Diagram: FC<C4DiagramProps> = ({ diagram, technologies }) => {
+export const C4DiagramRenderer: FC<C4DiagramRendererProps> = ({ diagram, technologies }) => {
     
     const [nodes, setNodes, onNodesChange] = useNodesState(getDiagramNodes(diagram));
     const [edges, setEdges, onEdgesChange] = useEdgesState(getDiagramEdges(diagram));
@@ -323,17 +328,17 @@ export const C4Diagram: FC<C4DiagramProps> = ({ diagram, technologies }) => {
             onConnect={onConnect}
             onDragOver={onDragOver}
             onDrop={onDrop}
-            onBlur={onBlur}
+            // onBlur={onBlur}
             ref={reactFlowRef}
             connectionMode={ConnectionMode.Loose}
             proOptions={{ hideAttribution: true }}
-            snapGrid={[25, 25]}
+            snapGrid={[20, 20]}
             snapToGrid
             fitView
         >
             <Background
                 variant={BackgroundVariant.Dots}
-                gap={[25, 25]}
+                gap={[20, 20]}
             />
             <Controls position={"bottom-right"}>
                 <ControlButton

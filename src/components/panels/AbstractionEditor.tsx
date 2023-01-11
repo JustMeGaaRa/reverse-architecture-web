@@ -28,7 +28,7 @@ export const AbstractionEditor: FC<AbstractionEditorProps> = ({
             onSave={onSave}
             onCancel={onCancel}
         >
-            <Flex direction={"column"} gap={4}>
+            <Flex direction={"column"} gap={4} width={["xs"]}>
                 <Input
                     placeholder={"Enter the name of the abstraction"}
                     value={data.title}
@@ -56,6 +56,7 @@ export const AbstractionEditor: FC<AbstractionEditorProps> = ({
                     }}
                 />
                 <Textarea
+                    height={[150]}
                     placeholder={"Enter the description for the abstraction"}
                     value={data.description}
                     onChange={(event) => {

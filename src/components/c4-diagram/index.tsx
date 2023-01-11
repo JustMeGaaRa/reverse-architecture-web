@@ -1,3 +1,3 @@
-export * from "./C4Diagram";
+export * from "./C4DiagramRenderer";
 export * from "./types";
 export * from "./utils";

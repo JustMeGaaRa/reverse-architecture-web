@@ -5,9 +5,9 @@ import {
   MarkerType
 } from "reactflow";
 import { v4 } from "uuid";
-import { C4FloatingEdgeProps } from "./edges/C4FloatingEdge";
-import { C4RectangleProps } from "./nodes/C4RectangleNode";
-import { C4ScopeProps } from "./nodes/C4ScopeNode";
+import { C4FloatingEdgeProps } from "./EdgeTypes";
+import { C4RectangleProps } from "./NodeTypes";
+import { C4ScopeProps } from "./NodeTypes";
 import {
   Abstraction,
   AbstractionTypeCode,
@@ -168,27 +168,3 @@ export const createEdge = (
     }
   };
 };
-
-export const createEmptyDiagram = (isSystemContext: boolean): Diagram => {
-  const scopeId = v4();
-  const scope = {
-    abstractionId: scopeId,
-    type: {
-      code: AbstractionTypeCode.SoftwareSystem,
-      name: getAbstractionName(AbstractionTypeCode.SoftwareSystem)
-    },
-    title: getAbstractionName(AbstractionTypeCode.SoftwareSystem)
-  };
-  const scopePosition = {
-    [scopeId]: { x: 0, y: 0 }
-  }
-  return {
-    diagramId: v4(),
-    title: "Diagram 1",
-    scope: isSystemContext ? undefined : scope,
-    primaryElements: [],
-    supportingElements: [],
-    relationships: [],
-    positions: isSystemContext ? {} : scopePosition
-  };
-}

@@ -1,18 +1,20 @@
 import { FC } from "react";
 import {
-    Heading,
     Modal,
     ModalBody,
     ModalCloseButton,
     ModalContent,
-    ModalFooter,
     ModalHeader,
     ModalOverlay
 } from "@chakra-ui/react";
-import { TemplateSelector, IDiagramTemplate } from "./TemplateSelector";
+import {
+    TemplateSelector,
+    IDiagramTemplate,
+    IDiagramTemplateGroup
+} from "./TemplateSelector";
 
 type TemplateSelectorModalProps = {
-    templates: Array<IDiagramTemplate>;
+    templates: Array<IDiagramTemplateGroup>;
     isOpen: boolean;
     onClose: () => void;
     onSelect: (template: IDiagramTemplate) => void;
@@ -32,6 +34,7 @@ export const TemplateSelectorModal: FC<TemplateSelectorModalProps> = ({
             onClose={onClose}
             closeOnEsc={false}
             closeOnOverlayClick={false}
+            scrollBehavior={"inside"}
         >
             <ModalOverlay
                 backdropFilter={"auto"}
@@ -41,16 +44,11 @@ export const TemplateSelectorModal: FC<TemplateSelectorModalProps> = ({
                 <ModalHeader>Select Diagram Template</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                    <Heading as={"h2"} fontSize={["sm"]} pb={4}>
-                        C4 Blank Templates
-                    </Heading>
                     <TemplateSelector
                         templates={templates}
                         onSelect={onSelect}
                     />
                 </ModalBody>
-                <ModalFooter justifyContent={"center"}>
-                </ModalFooter>
             </ModalContent>
         </Modal>
     );

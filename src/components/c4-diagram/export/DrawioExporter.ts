@@ -3,14 +3,9 @@ import { v4 } from "uuid";
 import { XMLBuilder } from "fast-xml-parser";
 import { bold, br, font, html, text } from "../../../utils/HtmlBuilder";
 import { MXGeometryAs, MXCell, MXPointAs, Drawio } from "../../../utils/MxFile";
-import { formatNodeTechnologies } from "../info/C4AbstractionInfo";
-import { formatEdgeTechnologies } from "../info/C4RelationshipInfo";
-import { C4RectangleProps } from "../nodes/C4RectangleNode";
-import { C4FloatingEdgeProps } from "../edges/C4FloatingEdge";
-
-interface IExporter<TResult, TNodeData = any, TEdgeData = any> {
-    (flow: ReactFlowJsonObject<TNodeData, TEdgeData>): TResult;
-}
+import { formatNodeTechnologies, formatEdgeTechnologies } from "../LabelTypes";
+import { C4RectangleProps } from "../NodeTypes";
+import { C4FloatingEdgeProps } from "../EdgeTypes";
 
 enum NodeHorizontalAlign {
     Left = "left",

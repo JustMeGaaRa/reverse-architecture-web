@@ -1,5 +1,6 @@
 import { FC } from "react";
 import {
+    Box,
     Card,
     CardBody,
     CardFooter,
@@ -17,9 +18,12 @@ export interface IDiagramTemplate {
     payload: string;
 }
 
-type TemplateItemProps = {
+export interface IDiagramTemplateGroup {
     header: string;
-    description: string;
+    templates: Array<IDiagramTemplate>;
+}
+
+type TemplateItemProps = Omit<IDiagramTemplate, "payload"> & {
     onClick: () => void;
 };
 
@@ -67,8 +71,37 @@ const TemplateItem: FC<TemplateItemProps> = ({
     );
 }
 
+type TemplateGroupProps = IDiagramTemplateGroup & {
+    onSelect: (template: IDiagramTemplate) => void;
+}
+
+const TemplateGroup: FC<TemplateGroupProps> = ({
+    header,
+    templates,
+    onSelect
+}) => {
+    return (
+        <Box py={5}>
+            <Heading as={"h2"} fontSize={["sm"]} pb={4}>
+                {header}
+            </Heading>
+            <Wrap>
+                {templates.map(template => (
+                    <WrapItem key={template.header}>
+                        <TemplateItem
+                            header={template.header}
+                            description={template.description}
+                            onClick={() => onSelect(template)}
+                        />
+                    </WrapItem>
+                ))}
+            </Wrap>
+        </Box>
+    );
+}
+
 type TemplateSelectorProps = {
-    templates: Array<IDiagramTemplate>;
+    templates: Array<IDiagramTemplateGroup>;
     onSelect: (template: IDiagramTemplate) => void;
 }
 
@@ -77,16 +110,15 @@ export const TemplateSelector: FC<TemplateSelectorProps> = ({
     onSelect
 }) => {
     return (
-        <Wrap>
-            {templates.map(template => (
-                <WrapItem key={template.header}>
-                    <TemplateItem
-                        header={template.header}
-                        description={template.description}
-                        onClick={() => onSelect(template)}
-                    />
-                </WrapItem>
+        <>
+            {templates.map(group => (
+                <TemplateGroup
+                    key={group.header}
+                    header={group.header}
+                    templates={group.templates}
+                    onSelect={onSelect}
+                />
             ))}
-        </Wrap>
+        </>
     );
 }

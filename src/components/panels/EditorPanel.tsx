@@ -17,7 +17,7 @@ export const EditorPanel: FC<PropsWithChildren<EditorPanelProps>> = ({
     onCancel
 }) => {
     return (
-        <Panel dock={"right-center"}>
+        <Panel dock={"right-center"} zIndex={9999}>
             {children}
             <ButtonGroup size={"sm"} justifyContent={"center"}>
                 <Button

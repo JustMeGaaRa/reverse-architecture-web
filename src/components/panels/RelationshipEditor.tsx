@@ -27,8 +27,9 @@ export const RelationshipEditor: FC<RelationshipEditorProps> = ({
             onSave={onSave}
             onCancel={onCancel}
         >
-            <Flex direction={"column"} gap={4}>
+            <Flex direction={"column"} gap={4} width={["xs"]}>
                 <Textarea
+                    height={[100]}
                     value={data.title}
                     placeholder={"Enter the title of the relationship"}
                     onChange={(event) => {

@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { VStack, Text } from "@chakra-ui/react";
-import { Abstraction } from "../types";
+import { Abstraction, Relationship } from "./types";
 
 export const formatNodeTechnologies = (data: Abstraction) => {
     return data.technologies
@@ -49,6 +49,51 @@ export const C4AbstractioInfo: FC<C4AbstractionInfoProps> = ({
                     textAlign={"center"}
                 >
                     {data.description}
+                </Text>
+            )}
+        </VStack>
+    );
+};
+
+export const formatEdgeTechnologies = (data: Relationship) => {
+    return data?.technologies && `[${data.technologies.join(" / ")}]`;
+};
+
+export type C4RelationshipInfoProps = {
+    data: Relationship;
+    align: "start" | "center" | "end";
+    showTitle?: boolean;
+    showTechnologies?: boolean;
+}
+
+export const C4RelationshipInfo: FC<C4RelationshipInfoProps> = ({
+    data,
+    align,
+    showTechnologies,
+    showTitle
+}) => {
+    return (
+        <VStack
+            align={align}
+            spacing={1}
+        >
+            {showTitle && data.title && (
+                <Text
+                    fontSize={"xs"}
+                    noOfLines={3}
+                    textAlign={"center"}
+                    maxW={150}
+                >
+                    {data.title}
+                </Text>
+            )}
+            {showTechnologies && (
+                <Text
+                    fontSize={"x-small"}
+                    noOfLines={1}
+                    textAlign={"center"}
+                >
+                    {formatEdgeTechnologies(data)}
                 </Text>
             )}
         </VStack>
