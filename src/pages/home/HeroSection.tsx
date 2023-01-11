@@ -12,7 +12,7 @@ import { HeroIllustration } from "./HeroIllustration";
 
 export function HeroSection() {
   return (
-    <Container maxW={"5xl"} height={"80vh"}>
+    <Container maxW={"5xl"}>
       <Stack
         textAlign={"center"}
         align={"center"}

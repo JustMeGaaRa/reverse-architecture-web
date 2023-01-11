@@ -12,14 +12,11 @@ import {
     Text,
     useColorModeValue
 } from "@chakra-ui/react";
-import { Logo, SocialButton } from ".";
+import { Logo, SocialButton } from "..";
 
 export const Footer: FC = () => {
     return (
-        <Box
-            bg={useColorModeValue("blackAlpha.900", "whiteAlpha.900")}
-            color={useColorModeValue("whiteAlpha.900", "blackAlpha.900")}
-        >
+        <Box bg={useColorModeValue("whiteAlpha.900", "gray.900")}>
             <Container
                 as={Stack}
                 maxW={"6xl"}

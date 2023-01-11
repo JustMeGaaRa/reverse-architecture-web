@@ -6,14 +6,14 @@ export const formatEdgeTechnologies = (data: Relationship) => {
     return data?.technologies && `[${data.technologies.join(" / ")}]`;
 };
 
-export interface IRelationshipInfoProps {
+export type C4RelationshipInfoProps = {
     data: Relationship;
     align: "start" | "center" | "end";
     showTitle?: boolean;
     showTechnologies?: boolean;
 }
 
-export const C4RelationshipInfo: FC<IRelationshipInfoProps> = ({
+export const C4RelationshipInfo: FC<C4RelationshipInfoProps> = ({
     data,
     align,
     showTechnologies,

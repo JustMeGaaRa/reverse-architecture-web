@@ -1,12 +1,12 @@
 import { Edge, Node, ReactFlowJsonObject } from "reactflow";
 import { v4 } from "uuid";
 import { XMLBuilder } from "fast-xml-parser";
-import { bold, br, font, html, text } from "../../utils/HtmlBuilder";
-import { MXGeometryAs, MXCell, MXPointAs, Drawio } from "../../utils/MxFile";
-import { formatNodeTechnologies } from "./info/C4AbstractionInfo";
-import { formatEdgeTechnologies } from "./info/C4RelationshipInfo";
-import { IAbstractionProps } from "./nodes/C4RectangleNode";
-import { IRelationshipProps } from "./edges/C4FloatingEdge";
+import { bold, br, font, html, text } from "../../../utils/HtmlBuilder";
+import { MXGeometryAs, MXCell, MXPointAs, Drawio } from "../../../utils/MxFile";
+import { formatNodeTechnologies } from "../info/C4AbstractionInfo";
+import { formatEdgeTechnologies } from "../info/C4RelationshipInfo";
+import { C4RectangleProps } from "../nodes/C4RectangleNode";
+import { C4FloatingEdgeProps } from "../edges/C4FloatingEdge";
 
 interface IExporter<TResult, TNodeData = any, TEdgeData = any> {
     (flow: ReactFlowJsonObject<TNodeData, TEdgeData>): TResult;
@@ -227,10 +227,10 @@ export function fromReactFlow<TNodeData = any, TEdgeData = any>(
 }
 
 export function exportToDrawio(
-    flow: ReactFlowJsonObject<IAbstractionProps, IRelationshipProps>
+    flow: ReactFlowJsonObject<C4RectangleProps, C4FloatingEdgeProps>
 ): string {
     
-    const nodeDataSerializer = (node: Node<IAbstractionProps>) => {
+    const nodeDataSerializer = (node: Node<C4RectangleProps>) => {
         const htmlObject = html(
             bold(
                 text(node.data.abstraction.title)
@@ -246,7 +246,7 @@ export function exportToDrawio(
         );
         return htmlObject.toHtml();
     };
-    const edgeDataSerializer = (edge: Edge<IRelationshipProps>) => {
+    const edgeDataSerializer = (edge: Edge<C4FloatingEdgeProps>) => {
         const htmlObject = html(
             text(edge.data.relationship.title),
             br(),

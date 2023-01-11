@@ -1,42 +1,39 @@
-import { FC, PropsWithChildren, ReactNode } from "react";
+import { FC, PropsWithChildren } from "react";
 import {
     Flex,
     Stack,
     Button,
     Box,
-    Avatar,
     HStack,
-    Link,
     IconButton,
+    Link,
+    Avatar,
     Menu,
     MenuButton,
     MenuList,
     MenuItem,
     MenuDivider,
-    Text,
     useDisclosure,
-    useBreakpointValue,
     useColorModeValue,
     useColorMode
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
-import { Logo } from ".";
+import { Logo } from "..";
 
-const Links = ["Sanbox", "Features", "GitHub"];
-
-const NavLink: FC<PropsWithChildren<{ text: string }>> = ({
+const NavLink: FC<PropsWithChildren<{ to: string }>> = ({
+    to,
     children,
-    text
 }) => (
     <Link
+        as={Link}
         px={2}
         py={1}
         rounded={"md"}
         _hover={{
             textDecoration: "none",
-            bg: useColorModeValue("gray.200", "gray.700")
+            background: "whiteAlpha.200"
         }}
-        href={`#${text}`}
+        href={to}
     >
         {children}
     </Link>
@@ -48,7 +45,7 @@ export function Header() {
 
     return (
         <Box
-            bg={useColorModeValue("white.900", "gray.900")}
+            bg={useColorModeValue("whiteAlpha.900", "gray.900")}
             px={4}
         >
             <Flex
@@ -70,9 +67,9 @@ export function Header() {
                         spacing={4}
                         display={{ base: "none", md: "flex" }}
                     >
-                        {Links.map((link) => (
-                            <NavLink key={link} text={link}>{link}</NavLink>
-                        ))}
+                        <NavLink to={"/sandbox"}>Sandbox</NavLink>
+                        <NavLink to={"/#features"}>Features</NavLink>
+                        <NavLink to={"https://github.com/JustMeGaaRa/reverse-architecture-web"}>GitHub</NavLink>
                     </HStack>
                 </HStack>
                 <Flex align={"center"} gap={4}>
@@ -83,7 +80,7 @@ export function Header() {
                         rounded={"full"}
                         onClick={toggleColorMode}
                     />
-                    <Menu>
+                    {/* <Menu>
                         <MenuButton
                             as={Button}
                             rounded={"full"}
@@ -101,16 +98,19 @@ export function Header() {
                             <MenuDivider />
                             <MenuItem>Sign Out</MenuItem>
                         </MenuList>
-                    </Menu>
+                    </Menu> */}
+                    <Button>
+                        Sign In
+                    </Button>
                 </Flex>
             </Flex>
 
             {isOpen && (
                 <Box pb={4} display={{ md: "none" }}>
                     <Stack as={"nav"} spacing={4}>
-                        {Links.map((link) => (
-                            <NavLink key={link} text={link}>{link}</NavLink>
-                        ))}
+                        <NavLink to={"/sandbox"}>Sandbox</NavLink>
+                        <NavLink to={"/#features"}>Features</NavLink>
+                        <NavLink to={"https://github.com/JustMeGaaRa/reverse-architecture-web"}>GitHub</NavLink>
                     </Stack>
                 </Box>
             )}

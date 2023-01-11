@@ -7,40 +7,33 @@ import {
 } from "react";
 import ReactFlow, {
     Node,
+    ReactFlowJsonObject,
     ConnectionMode,
     Background,
+    BackgroundVariant,
     Controls,
-    Panel,
+    ControlButton,
+    updateEdge,
     useNodesState,
     useEdgesState,
-    updateEdge,
     useReactFlow,
-    BackgroundVariant,
-    ControlButton,
-    ReactFlowJsonObject,
 } from "reactflow";
-import { FaFileExport, FaFileImport, FaTrash } from "react-icons/fa";
+import { FaFileExport, FaFileImport } from "react-icons/fa";
 import { DragHandleIcon } from "@chakra-ui/icons";
 import {
-    ButtonGroup,
-    Editable,
-    EditableInput,
-    EditablePreview,
-    IconButton,
     Input,
     Popover,
     PopoverBody,
     PopoverContent,
     PopoverHeader,
-    PopoverTrigger,
-    useColorModeValue
+    PopoverTrigger
 } from "@chakra-ui/react";
 import FileSaver from "file-saver";
 
 import { C4ScopeNode } from "./nodes/C4ScopeNode";
-import { C4RectangleNode, IAbstractionProps } from "./nodes/C4RectangleNode";
-import { C4FloatingEdge, IRelationshipProps } from "./edges/C4FloatingEdge";
-import { C4AbstractionDraggable } from "./nodes/C4AbstractionDraggable";
+import { C4RectangleNode, C4RectangleProps } from "./nodes/C4RectangleNode";
+import { C4FloatingEdge, C4FloatingEdgeProps } from "./edges/C4FloatingEdge";
+import { C4RectangleDraggable } from "./nodes/C4RectangleDraggable";
 import {
     Abstraction,
     Relationship,
@@ -61,14 +54,11 @@ import {
     NODE_WIDTH,
     NODE_HEIGHT,
 } from "./utils";
-import { EditorPanel } from "../EditorPanel";
-import { RelationshipEditor } from "../RelationshipEditor";
-import { AbstractionEditor } from "../AbstractionEditor";
-import { Logo } from "../Logo";
-import { ControlPanel } from "../ControlPanel";
-import { exportToDrawio } from "./DrawioExporter";
+import { RelationshipEditor } from "../panels/RelationshipEditor";
+import { AbstractionEditor } from "../panels/AbstractionEditor";
+import { exportToDrawio } from "./export/DrawioExporter";
 
-export interface IC4DiagramProps {
+export type C4DiagramProps = {
     diagram: Diagram;
     technologies: Array<string>;
     onNodeAdded?: (node: Abstraction, position: Position) => void;
@@ -80,7 +70,7 @@ export interface IC4DiagramProps {
     onEdgeStateChanged?: (edge: Relationship) => void;
 }
 
-export const C4Diagram: FC<IC4DiagramProps> = ({ diagram, technologies }) => {
+export const C4Diagram: FC<C4DiagramProps> = ({ diagram, technologies }) => {
     
     const [nodes, setNodes, onNodesChange] = useNodesState(getDiagramNodes(diagram));
     const [edges, setEdges, onEdgesChange] = useEdgesState(getDiagramEdges(diagram));
@@ -111,7 +101,9 @@ export const C4Diagram: FC<IC4DiagramProps> = ({ diagram, technologies }) => {
         // NOTE: only allow to update nodes that are dragged and are not of type scope
         if (draggedNode.type === "scope") return;
         
-        const intersections = reactFlow.getIntersectingNodes(draggedNode).filter(node => node.type === "scope");
+        const intersections = reactFlow
+            .getIntersectingNodes(draggedNode)
+            .filter(node => node.type === "scope");
         const draggedOverScope = intersections.length > 0;
 
         setNodes(nodes => nodes.map(node => {
@@ -133,7 +125,9 @@ export const C4Diagram: FC<IC4DiagramProps> = ({ diagram, technologies }) => {
         // NOTE: only allow to update nodes that are dragged and are not of type scope
         if (draggedNode.type === "scope") return;
         
-        const intersections = reactFlow.getIntersectingNodes(draggedNode).filter(node => node.type === "scope");
+        const intersections = reactFlow
+            .getIntersectingNodes(draggedNode)
+            .filter(node => node.type === "scope");
         const draggedOverScope = intersections.length > 0;
         const wasInsideScope = draggedNode.parentNode !== undefined;
         
@@ -196,7 +190,7 @@ export const C4Diagram: FC<IC4DiagramProps> = ({ diagram, technologies }) => {
 
     const onEdgeClick = useCallback((event, edge) => {
         setSelectedNode(null);
-        setSelectedEdge(edge.data);
+        setSelectedEdge(edge.data.relationship);
     }, []);
 
     const onEdgeDelete = useCallback(() => {
@@ -207,8 +201,9 @@ export const C4Diagram: FC<IC4DiagramProps> = ({ diagram, technologies }) => {
         setEdges((edges) => updateEdge(oldEdge, newConnection, edges));
     }, [setEdges]);
 
+    const MediaFormat = "application/reactflow";
     const onDragStart = useCallback((event, abstractionTypeCode) => {
-        event.dataTransfer.setData("application/reactflow", abstractionTypeCode);
+        event.dataTransfer.setData(MediaFormat, abstractionTypeCode);
         event.dataTransfer.effectAllowed = "move";
     }, []);
 
@@ -222,7 +217,7 @@ export const C4Diagram: FC<IC4DiagramProps> = ({ diagram, technologies }) => {
         event.preventDefault();
 
         const reactFlowBounds = reactFlowRef.current.getBoundingClientRect();
-        const abstractionCode = event.dataTransfer.getData("application/reactflow");
+        const abstractionCode = event.dataTransfer.getData(MediaFormat);
         const abstractionPosition = reactFlow.project({
             x: event.clientX - reactFlowBounds.left - NODE_WIDTH / 2,
             y: event.clientY - reactFlowBounds.top - NODE_HEIGHT / 2
@@ -245,7 +240,7 @@ export const C4Diagram: FC<IC4DiagramProps> = ({ diagram, technologies }) => {
 
     const importFileRef = useRef<HTMLInputElement>(null);
 
-    const restoreFlow = useCallback((flow: ReactFlowJsonObject<IAbstractionProps, IRelationshipProps>) => {
+    const restoreFlow = useCallback((flow: ReactFlowJsonObject<C4RectangleProps, C4FloatingEdgeProps>) => {
         if (flow) {
             setNodes(flow.nodes);
             setEdges(flow.edges);
@@ -284,7 +279,7 @@ export const C4Diagram: FC<IC4DiagramProps> = ({ diagram, technologies }) => {
                 return updatedNode;
             }
             return node;
-        }))
+        }));
     }, [setNodes, selectedNode]);
 
     const onAbstractionCancel = useCallback(() => {
@@ -305,7 +300,7 @@ export const C4Diagram: FC<IC4DiagramProps> = ({ diagram, technologies }) => {
                 return updatedEdge;
             }
             return edge;
-        }))
+        }));
     }, [setEdges, selectedEdge]);
 
     const onRelationshipCancel = useCallback(() => {
@@ -340,7 +335,7 @@ export const C4Diagram: FC<IC4DiagramProps> = ({ diagram, technologies }) => {
                 variant={BackgroundVariant.Dots}
                 gap={[25, 25]}
             />
-            <Controls>
+            <Controls position={"bottom-right"}>
                 <ControlButton
                     title={"shapes"}
                     onClick={onShapesClick}
@@ -358,7 +353,7 @@ export const C4Diagram: FC<IC4DiagramProps> = ({ diagram, technologies }) => {
                             </PopoverHeader>
                             <PopoverBody display={"flex"} flexDirection={"column"} gap={2}>
                                 {abstractionCodes.map(type => (
-                                    <C4AbstractionDraggable
+                                    <C4RectangleDraggable
                                         key={type}
                                         typeCode={type}
                                         title={getAbstractionName(type)}
@@ -391,77 +386,20 @@ export const C4Diagram: FC<IC4DiagramProps> = ({ diagram, technologies }) => {
                     </ControlButton>
                 )}
             </Controls>
-            <Panel position={"top-left"}>
-                <ControlPanel direction={"row"} divider>
-                    <Logo />
-                    <Editable
-                        defaultValue={diagram.title}
-                        isPreviewFocusable={true}
-                    >
-                        <EditablePreview
-                            py={2}
-                            px={4}
-                            _hover={{
-                                background: useColorModeValue("gray.100", "gray.700")
-                            }}
-                        />
-                        <Input py={2} px={4} as={EditableInput} />
-                    </Editable>
-                </ControlPanel>
-            </Panel>
-            <Panel position={"top-center"}>
-                {false && (
-                    <ControlPanel direction={"row"}>
-                        <ButtonGroup size={"sm"} isAttached>
-                            {selectedNode && (
-                                <IconButton
-                                    aria-label={"Delete Abstraction"}
-                                    colorScheme={"red"}
-                                    icon={<FaTrash />}
-                                    variant={"ghost"}
-                                    disabled={selectedNode === null}
-                                    onClick={onNodeDelete}
-                                />
-                            )}
-                            {selectedEdge && (
-                                <IconButton
-                                    aria-label={"Delete Relationship"}
-                                    colorScheme={"red"}
-                                    icon={<FaTrash />}
-                                    variant={"ghost"}
-                                    onClick={onEdgeDelete}
-                                />
-                            )}
-                        </ButtonGroup>
-                    </ControlPanel>
-                )}
-            </Panel>
-            <Panel position={"top-right"}>
-                {selectedNode && (
-                    <EditorPanel
-                        onSave={onAbstractionSave}
-                        onCancel={onAbstractionCancel}
-                    >
-                        <AbstractionEditor
-                            data={selectedNode}
-                            options={{ technologies }}
-                            onChange={onAbstractionChange}
-                        />
-                    </EditorPanel>
-                )}
-                {selectedEdge && (
-                    <EditorPanel
-                        onSave={onRelationshipSave}
-                        onCancel={onRelationshipCancel}
-                    >
-                        <RelationshipEditor
-                            data={selectedEdge}
-                            options={{ technologies }}
-                            onChange={onRelationshipChange}
-                        />
-                    </EditorPanel>
-                )}
-            </Panel>
+            <AbstractionEditor
+                data={selectedNode}
+                options={{ technologies }}
+                onChange={onAbstractionChange}
+                onSave={onAbstractionSave}
+                onCancel={onAbstractionCancel}
+            />
+            <RelationshipEditor
+                data={selectedEdge}
+                options={{ technologies }}
+                onChange={onRelationshipChange}
+                onSave={onRelationshipSave}
+                onCancel={onRelationshipCancel}
+            />
         </ReactFlow>
     );
 };

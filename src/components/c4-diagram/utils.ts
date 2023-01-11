@@ -5,9 +5,9 @@ import {
   MarkerType
 } from "reactflow";
 import { v4 } from "uuid";
-import { IRelationshipProps } from "./edges/C4FloatingEdge";
-import { IAbstractionProps } from "./nodes/C4RectangleNode";
-import { IScopeProps } from "./nodes/C4ScopeNode";
+import { C4FloatingEdgeProps } from "./edges/C4FloatingEdge";
+import { C4RectangleProps } from "./nodes/C4RectangleNode";
+import { C4ScopeProps } from "./nodes/C4ScopeNode";
 import {
   Abstraction,
   AbstractionTypeCode,
@@ -30,7 +30,7 @@ export const NODE_WIDTH = 240;
 export const NODE_HEIGHT = 150;
 
 export const getDiagramNodes = (diagram: Diagram) => {
-  if (diagram === null) return Array.of<Node<IAbstractionProps>>();
+  if (diagram === null) return Array.of<Node<C4RectangleProps>>();
   
   const getScopeElement = (element) => {
     return createScope(
@@ -51,8 +51,8 @@ export const getDiagramNodes = (diagram: Diagram) => {
 
   const nodes =
     diagram.scope === undefined
-      ? Array.of<Node<IAbstractionProps>>()
-      : Array.of<Node<IAbstractionProps>>(getScopeElement(diagram.scope));
+      ? Array.of<Node<C4RectangleProps>>()
+      : Array.of<Node<C4RectangleProps>>(getScopeElement(diagram.scope));
 
   return nodes
     .concat(diagram.primaryElements.map(getPrimaryElement))
@@ -60,8 +60,8 @@ export const getDiagramNodes = (diagram: Diagram) => {
 };
 
 export const getDiagramEdges = (diagram: Diagram) => {
-  if (diagram === null) return Array.of<Edge<IRelationshipProps>>();
-  return diagram.relationships.map<Edge<IRelationshipProps>>(createEdge);
+  if (diagram === null) return Array.of<Edge<C4FloatingEdgeProps>>();
+  return diagram.relationships.map<Edge<C4FloatingEdgeProps>>(createEdge);
 };
 
 export const getAbstractionName = (code: AbstractionTypeCode) => {
@@ -76,10 +76,10 @@ export const getAbstractionName = (code: AbstractionTypeCode) => {
 
 export function getAbstractionBgColor(code: string) {
   const nodesBgColors = {
-    [AbstractionTypeCode.SoftwareSystem]: "#6A00FF",
-    [AbstractionTypeCode.Container]: "#0050EF",
-    [AbstractionTypeCode.Component]: "#1BA1E2",
-    [AbstractionTypeCode.Person]: "#60A917"
+    [AbstractionTypeCode.SoftwareSystem]: "purple.600",
+    [AbstractionTypeCode.Container]: "blue.500",
+    [AbstractionTypeCode.Component]: "blue.200",
+    [AbstractionTypeCode.Person]: "green.500"
   };
   return nodesBgColors[code];
 }
@@ -122,7 +122,7 @@ export const createNode = (
   abstraction: Abstraction,
   abstractionPosition: XYPosition,
   parentId?: string
-): Node<IAbstractionProps> => {
+): Node<C4RectangleProps> => {
   return {
     id: abstraction.abstractionId,
     type: getNodeType(abstraction.type.code),
@@ -138,7 +138,7 @@ export const createNode = (
 export const createScope = (
   abstraction: Abstraction,
   scopePosition: XYPosition
-): Node<IScopeProps> => {
+): Node<C4ScopeProps> => {
   return {
     id: abstraction.abstractionId,
     type: NodeType.Scope,
@@ -154,7 +154,7 @@ export const createScope = (
 
 export const createEdge = (
   relationship: Relationship
-): Edge<IRelationshipProps> => {
+): Edge<C4FloatingEdgeProps> => {
   return {
     id: relationship.relationshipId,
     type: EdgeType.Floating,

@@ -1,0 +1,21 @@
+{
+    "diagramId": "d47a1f99-a05b-4752-b7eb-165daf9c970a",
+    "title": "Component Diagram",
+    "scope": {
+      "abstractionId": "dab269dc-92eb-40ea-b27e-754f04d10b57",
+      "type": {
+        "code": "component",
+        "name": "Component"
+      },
+      "title": "Component"
+    },
+    "primaryElements": [],
+    "supportingElements": [],
+    "relationships": [],
+    "positions": {
+      "dab269dc-92eb-40ea-b27e-754f04d10b57": {
+        "x": 0,
+        "y": 0
+      }
+    }
+}

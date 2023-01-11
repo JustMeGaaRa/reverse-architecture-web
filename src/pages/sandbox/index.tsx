@@ -1,74 +1,49 @@
-import { FC } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import { ReactFlowProvider } from "reactflow";
 import {
     Box,
-    Button,
-    ButtonGroup,
-    Modal,
-    ModalBody,
-    ModalCloseButton,
-    ModalContent,
-    ModalFooter,
-    ModalHeader,
-    ModalOverlay,
-    SimpleGrid,
     useDisclosure
 } from "@chakra-ui/react";
-import { FaCheck } from "react-icons/fa";
-import { C4Diagram } from "../../components";
+import { C4Diagram, Diagram, IDiagramTemplate, TemplateSelectorModal } from "../../components";
+import { NavigationPanel } from "../../components/panels/NavigationPanel";
+import { CollaborationPanel } from "../../components/panels/CollaborationPanel";
+import { Templates } from "./Templates";
 
+import Users from "../../contracts/Users.json"
 import ContainerDiagram from "../../contracts/ContainerDiagramClassic.json";
 import Technologies from "../../contracts/Technologies.json";
 
 export const Sandbox: FC = () => {
-    const { isOpen, onClose } = useDisclosure({ isOpen: false });
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const [diagram, setDiagram] = useState<Diagram>(ContainerDiagram);
+
+    const onSelect = useCallback((template: IDiagramTemplate) => {
+        setDiagram(template.payload
+            ? JSON.parse(template.payload)
+            : ContainerDiagram);
+        onClose();
+    }, [setDiagram, onClose]);
+
+    useEffect(() => {
+        onOpen();
+    }, [onOpen]);
 
     return (
         <ReactFlowProvider>
             <Box height="100vh">
                 <C4Diagram
-                    diagram={ContainerDiagram}
+                    diagram={diagram}
                     technologies={Technologies}
                 />
-            </Box>
-            <Modal
-                isOpen={isOpen}
-                isCentered
-                onClose={onClose}
-            >
-                <ModalOverlay
-                    backdropFilter={"auto"}
-                    backdropBlur={"2px"}
+                <NavigationPanel diagram={diagram} />
+                <CollaborationPanel users={Users} />
+                <TemplateSelectorModal
+                    templates={Templates}
+                    isOpen={isOpen}
+                    onClose={onClose}
+                    onSelect={onSelect}
                 />
-                <ModalContent>
-                    <ModalHeader>Select Diagram</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
-                        <SimpleGrid>
-                            <Box>System Context</Box>
-                            <Box>Container</Box>
-                            <Box>Component</Box>
-                        </SimpleGrid>
-                    </ModalBody>
-                    <ModalFooter justifyContent={"center"}>
-                        <ButtonGroup>
-                            <Button
-                                leftIcon={<FaCheck />}
-                                colorScheme={"blue"}
-                                onClick={onClose}
-                            >
-                                Okay
-                            </Button>
-                            <Button
-                                variant={"ghost"}
-                                onClick={onClose}
-                            >
-                                Close
-                            </Button>
-                        </ButtonGroup>
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
+            </Box>
         </ReactFlowProvider>
     );
 };

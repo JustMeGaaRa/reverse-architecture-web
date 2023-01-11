@@ -85,19 +85,23 @@ export function getEdgeParams(source: Node, target: Node) {
     };
 }
 
-export interface IRelationshipProps {
+export type C4FloatingEdgeProps = {
     relationship: Relationship;
 }
 
-export const C4FloatingEdge: FC<EdgeProps<IRelationshipProps>> = ({
+export const C4FloatingEdge: FC<EdgeProps<C4FloatingEdgeProps>> = ({
     id,
     source,
     target,
     markerStart,
     markerEnd,
+    selected,
     data
 }) => {
-    const background = useColorModeValue("whiteAlpha.900", "gray.700");
+    const defaultBackground = useColorModeValue("whiteAlpha.900", "gray.900");
+    const highlightBackground = useColorModeValue("whiteAlpha.900", "gray.900");
+    const defaultBorderColor = useColorModeValue("blackAlpha.200", "whiteAlpha.200");
+    const highlightBorderColor = useColorModeValue("blackAlpha.400", "whiteAlpha.400");
     const sourceNode = useStore(useCallback((store) => store.nodeInternals.get(source), [source]));
     const targetNode = useStore(useCallback((store) => store.nodeInternals.get(target), [target]));
 
@@ -120,8 +124,16 @@ export const C4FloatingEdge: FC<EdgeProps<IRelationshipProps>> = ({
         >
             <EdgeLabelRenderer>
                 <Box
-                    background={background}
+                    background={selected
+                        ? defaultBackground
+                        : highlightBackground
+                    }
                     boxShadow={"lg"}
+                    border={selected
+                        ? defaultBorderColor
+                        : highlightBorderColor
+                    }
+                    borderWidth={1}
                     borderRadius={"lg"}
                     className="nodrag nopan"
                     padding={1}

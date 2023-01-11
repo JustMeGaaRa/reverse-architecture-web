@@ -1,21 +1,23 @@
 import { FC } from "react";
 import { Handle, NodeProps, Position } from "reactflow";
-import { Flex } from "@chakra-ui/react";
+import { Flex, useColorModeValue } from "@chakra-ui/react";
 import { C4AbstractioInfo } from "../info/C4AbstractionInfo";
 import { Abstraction } from "../types";
 
-export interface IAbstractionProps {
+export type C4RectangleProps = {
     abstraction: Abstraction;
     bgColor?: string;
 }
 
-export const C4RectangleNode: FC<NodeProps<IAbstractionProps>> = ({ data, selected }) => {
+export const C4RectangleNode: FC<NodeProps<C4RectangleProps>> = ({ data, selected }) => {
+    const defaultBorderColor = useColorModeValue("blackAlpha.400", "whiteAlpha.400");
+    const highlightBorderColor = useColorModeValue("blackAlpha.800", "whiteAlpha.800");
+
     return (
         <Flex
             bgColor={data.bgColor}
-            border={"dashed"}
-            borderWidth={2}
-            borderColor={selected ? "whiteAlpha.500" : "whiteAlpha.100"}
+            borderWidth={1}
+            borderColor={selected ? highlightBorderColor : defaultBorderColor}
             borderRadius={"2xl"}
             align={"center"}
             justify={"center"}

@@ -8,14 +8,14 @@ export const formatNodeTechnologies = (data: Abstraction) => {
         : `[${data.type.name}]`;
 };
 
-export interface IAbstractionInfoProps {
+export type C4AbstractionInfoProps = {
     data: Abstraction;
     align: "start" | "center" | "end";
     showTechnologies?: boolean;
     showDescription?: boolean;
 }
 
-export const C4AbstractioInfo: FC<IAbstractionInfoProps> = ({
+export const C4AbstractioInfo: FC<C4AbstractionInfoProps> = ({
     data,
     align,
     showTechnologies,

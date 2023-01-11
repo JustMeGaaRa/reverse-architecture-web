@@ -3,21 +3,21 @@ import {
     Button,
     ButtonGroup
 } from "@chakra-ui/react";
-import { FaCheck, FaTimes } from "react-icons/fa";
-import { ControlPanel } from "./ControlPanel";
+import { FaCheck } from "react-icons/fa";
+import { Panel } from "./Panel";
 
-export interface IEditorPanelProps {
+export type EditorPanelProps = {
     onSave?: MouseEventHandler;
     onCancel?: MouseEventHandler;
 }
 
-export const EditorPanel: FC<PropsWithChildren<IEditorPanelProps>> = ({
+export const EditorPanel: FC<PropsWithChildren<EditorPanelProps>> = ({
     children,
     onSave,
     onCancel
 }) => {
     return (
-        <ControlPanel direction={"column"}>
+        <Panel dock={"right-center"}>
             {children}
             <ButtonGroup size={"sm"} justifyContent={"center"}>
                 <Button
@@ -34,6 +34,6 @@ export const EditorPanel: FC<PropsWithChildren<IEditorPanelProps>> = ({
                     Cancel
                 </Button>
             </ButtonGroup>
-        </ControlPanel>
-    )
+        </Panel>
+    );
 }

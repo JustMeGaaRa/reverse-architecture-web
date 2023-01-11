@@ -1,4 +1,4 @@
-import { FC, ReactElement } from "react";
+import { FC, PropsWithChildren, ReactElement } from "react";
 import {
     Container,
     SimpleGrid,
@@ -9,14 +9,20 @@ import {
     Heading
 } from "@chakra-ui/react";
 import { FcCheckmark, FcSynchronize, FcWorkflow } from "react-icons/fc";
+import { Lorem } from "../../components/Lorem";
 
 interface IFeatureProps {
     title: string;
-    text: string;
+    text?: string;
     icon: ReactElement;
 }
 
-const Feature: FC<IFeatureProps> = ({ title, text, icon }) => {
+const Feature: FC<PropsWithChildren<IFeatureProps>> = ({
+    title,
+    text,
+    icon,
+    children
+}) => {
     return (
         <Stack>
             <Flex
@@ -35,19 +41,17 @@ const Feature: FC<IFeatureProps> = ({ title, text, icon }) => {
                 {title}
             </Text>
             <Text color={"gray.600"}>
-                {text}
+                {text ?? children}
             </Text>
         </Stack>
     );
 };
 
 export function FeatureSection() {
-    const defaultFeatureText = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore...";
-
     return (
         <Container maxW={"5xl"}>
-            <Heading as={"h2"} id={"Features"}>
-                Features
+            <Heading as={"h2"} id={"features"} textAlign={"center"}>
+                Feature Overview
             </Heading>
             <SimpleGrid
                 py={{ base: 20, md: 28 }}
@@ -57,18 +61,21 @@ export function FeatureSection() {
                 <Feature
                     icon={<Icon as={FcSynchronize} w={10} h={10} />}
                     title={"Real-time Collaboration"}
-                    text={defaultFeatureText}
-                />
+                >
+                    <Lorem noOfLines={3} />
+                </Feature>
                 <Feature
                     icon={<Icon as={FcCheckmark} w={10} h={10} />}
                     title={"Peer Review"}
-                    text={defaultFeatureText}
-                />
+                >
+                    <Lorem noOfLines={3} />
+                </Feature>
                 <Feature
                     icon={<Icon as={FcWorkflow} w={10} h={10} />}
                     title={"Diagram Standard"}
-                    text={defaultFeatureText}
-                />
+                >
+                    <Lorem noOfLines={3} />
+                </Feature>
             </SimpleGrid>
         </Container>
     );
