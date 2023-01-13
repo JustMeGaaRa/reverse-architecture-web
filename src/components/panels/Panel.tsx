@@ -73,15 +73,15 @@ export type PanelProps = HTMLChakraProps<"div"> & {
 };
 
 export const Panel: FC<PropsWithChildren<PanelProps>> = (props) => {
-    const defaultBackground = useColorModeValue("whiteAlpha.900", "gray.900");
-
     return (
         <Box
-            background={defaultBackground}
-            shadow={"lg"}
+            background={useColorModeValue("whiteAlpha.900", "gray.900")}
+            borderColor={useColorModeValue("blackAlpha.100", "whiteAlpha.100")}
+            borderWidth={1}
             borderRadius={"md"}
-            padding={4}
             margin={15}
+            shadow={"lg"}
+            zIndex={9}
             {...getDockStyle(props.dock)}
             {...props}
         >

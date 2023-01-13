@@ -1,11 +1,10 @@
-import { Edge, Node, ReactFlowJsonObject } from "reactflow";
 import { v4 } from "uuid";
 import { XMLBuilder } from "fast-xml-parser";
+import { Abstraction, Diagram, Relationship } from "../types";
+import { NODE_HEIGHT, NODE_WIDTH } from "../utils";
 import { bold, br, font, html, text } from "../../../utils/HtmlBuilder";
 import { MXGeometryAs, MXCell, MXPointAs, Drawio } from "../../../utils/MxFile";
 import { formatNodeTechnologies, formatEdgeTechnologies } from "../LabelTypes";
-import { C4RectangleProps } from "../NodeTypes";
-import { C4FloatingEdgeProps } from "../EdgeTypes";
 
 enum NodeHorizontalAlign {
     Left = "left",
@@ -48,10 +47,10 @@ enum EdgeArrowType {
 }
 
 enum EdgeStyleType {
+    StraightEdgeStyle = "straightEdgeStyle",
     OrthogonalEdgeStyle = "orthogonalEdgeStyle",
     ElbowEdgeStyle = "elbowEdgeStyle",
     IsometricEdgeStyle = "isometricEdgeStyle"
-
 }
 
 type EdgeStyle = {
@@ -71,7 +70,9 @@ const formatStyle = <T>(defaultStyle: T, style: Partial<T>) => {
         ...style
     };
     const formatType = (value) => typeof value == "boolean" ? value ? "1" : "0" : value
-    return Object.keys(updatedStyle).map(key => `${key}=${formatType(updatedStyle[key])}`).join(";");
+    return Object.keys(updatedStyle)
+        .map(key => `${key}=${formatType(updatedStyle[key])}`)
+        .join(";");
 }
 
 const formatNodeStyle = (style: Partial<NodeStyle>) => {
@@ -97,15 +98,26 @@ const formatEdgeStyle = (style: Partial<EdgeStyle>) => {
         flowAnimation: false,
         labelBackgroundColor: "#FFFFFF",
         dashed: true,
-        edgeStyle: EdgeStyleType.OrthogonalEdgeStyle,
+        edgeStyle: EdgeStyleType.StraightEdgeStyle,
         curved: true
     }, style);
 }
 
-export function fromReactFlow<TNodeData = any, TEdgeData = any>(
-    flow: ReactFlowJsonObject<TNodeData, TEdgeData>,
-    serializeNodeData?: (node: Node<TNodeData>) => string,
-    serializeEdgeData?: (edge: Edge<TEdgeData>) => string
+const getAbstractionBgColor = (code: string) => {
+    const nodesBgColors = {
+        ["software-system"]: "#6A00FF",
+        ["container"]: "#0050EF",
+        ["component"]: "#1BA1E2",
+        ["database"]: "#60A917",
+        ["person"]: "#60A917"
+    };
+    return nodesBgColors[code];
+}
+
+export function fromDiagram(
+    diagram: Diagram,
+    serializeNodeData?: (node: Abstraction) => string,
+    serializeEdgeData?: (edge: Relationship) => string
 ): Drawio {
     const defaultParent: MXCell = {
         _id: v4()
@@ -115,60 +127,77 @@ export function fromReactFlow<TNodeData = any, TEdgeData = any>(
         _id: v4(),
         _parent: defaultParent._id
     };
-    
-    const fromNode = (node: Node): MXCell => {
+
+    const fromScope = (node: Abstraction): MXCell => {
         return {
-            _id: node.id,
+            _id: node.abstractionId,
             _parent: defaultParent1._id,
             _value: serializeNodeData
                 ? serializeNodeData(node)
-                : JSON.stringify(node.data),
-            _style: node.type === "scope"
-                ? formatNodeStyle({
+                : JSON.stringify(node),
+            _style: formatNodeStyle({
                     fillColor: "#F5F5F5",
                     fontColor: "#333333",
                     strokeColor: "#666666",
                     align: NodeHorizontalAlign.Left,
                     verticalAlign: NodeVerticalAlign.Bottom,
                     rounded: false
-                })
-                : formatNodeStyle({
-                    fillColor: node.data.bgColor
                 }),
             _vertex: "1",
             mxGeometry: {
-                _x: node.positionAbsolute.x.toString(),
-                _y: node.positionAbsolute.y.toString(),
-                _width: node.width?.toString() ?? (node.style?.width?.toString() ?? ""),
-                _height: node.height?.toString() ?? (node.style?.height?.toString() ?? ""),
+                _x: diagram.positions[node.abstractionId].x.toString(),
+                _y: diagram.positions[node.abstractionId].y.toString(),
+                _width: NODE_WIDTH.toString(),
+                _height: NODE_HEIGHT.toString(),
+                _as: MXGeometryAs.Geometry
+            }
+        };
+    }
+    
+    const fromNode = (node: Abstraction): MXCell => {
+        return {
+            _id: node.abstractionId,
+            _parent: defaultParent1._id,
+            _value: serializeNodeData
+                ? serializeNodeData(node)
+                : JSON.stringify(node),
+            _style: formatNodeStyle({
+                    fillColor: getAbstractionBgColor(node.type.code)
+                }),
+            _vertex: "1",
+            mxGeometry: {
+                _x: diagram.positions[node.abstractionId].x.toString(),
+                _y: diagram.positions[node.abstractionId].y.toString(),
+                _width: NODE_WIDTH.toString(),
+                _height: NODE_HEIGHT.toString(),
                 _as: MXGeometryAs.Geometry
             }
         };
     };
 
-    const fromEdge = (edge: Edge): MXCell => {
+    const fromEdge = (edge: Relationship): MXCell => {
         return {
-            _id: edge.id,
+            _id: edge.relationshipId,
             _parent: defaultParent1._id,
             _value: serializeEdgeData
                 ? serializeEdgeData(edge)
-                : JSON.stringify(edge.data),
+                : JSON.stringify(edge),
             _style: formatEdgeStyle({
-                    flowAnimation: true
+                    flowAnimation: false
                 }),
             _edge: "1",
-            _source: edge.source,
-            _target: edge.target,
+            _source: edge.sourceElementId,
+            _target: edge.targetElementId,
             mxGeometry: {
                 mxPoint: [
                     {
-                        _x: edge.sourceNode?.position.x.toString() ?? "",
-                        _y: edge.sourceNode?.position.y.toString() ?? "",
+                        _x: diagram.positions[edge.sourceElementId].x.toString() ?? "",
+                        _y: diagram.positions[edge.sourceElementId].y.toString() ?? "",
                         _as: MXPointAs.SourcePoint
                     },
                     {
-                        _x: edge.targetNode?.position.x.toString() ?? "",
-                        _y: edge.targetNode?.position.y.toString() ?? "",
+                        _x: diagram.positions[edge.targetElementId].x.toString() ?? "",
+                        _y: diagram.positions[edge.targetElementId].y.toString() ?? "",
                         _as: MXPointAs.TargetPoint
                     }
                 ],
@@ -208,8 +237,10 @@ export function fromReactFlow<TNodeData = any, TEdgeData = any>(
                             mxCell: [
                                 defaultParent,
                                 defaultParent1,
-                                ...flow.nodes.map(fromNode),
-                                ...flow.edges.map(fromEdge)
+                                fromScope(diagram.scope),
+                                ...diagram.primaryElements.map(fromNode),
+                                ...diagram.supportingElements.map(fromNode),
+                                ...diagram.relationships.map(fromEdge)
                             ]
                         }
                     }
@@ -221,40 +252,38 @@ export function fromReactFlow<TNodeData = any, TEdgeData = any>(
     return drawio;
 }
 
-export function exportToDrawio(
-    flow: ReactFlowJsonObject<C4RectangleProps, C4FloatingEdgeProps>
-): string {
+export function exportToDrawio(diagram: Diagram): string {
     
-    const nodeDataSerializer = (node: Node<C4RectangleProps>) => {
+    const nodeDataSerializer = (node: Abstraction) => {
         const htmlObject = html(
             bold(
-                text(node.data.abstraction.title)
+                text(node.title)
             ),
             br(),
             font(
                 { fontSize: 10 },
-                text(formatNodeTechnologies(node.data.abstraction)),
+                text(formatNodeTechnologies(node)),
                 br(),
                 br(),
-                text(node.data.abstraction.description)
+                text(node.description)
             )
         );
         return htmlObject.toHtml();
     };
-    const edgeDataSerializer = (edge: Edge<C4FloatingEdgeProps>) => {
+    const edgeDataSerializer = (edge: Relationship) => {
         const htmlObject = html(
-            text(edge.data.relationship.title),
+            text(edge.title),
             br(),
             font(
                 { fontSize: 10 },
-                text(formatEdgeTechnologies(edge.data.relationship))
+                text(formatEdgeTechnologies(edge))
             )
         );
         return htmlObject.toHtml();
     };
 
-    const drawio = fromReactFlow(
-        flow,
+    const drawio = fromDiagram(
+        diagram,
         nodeDataSerializer,
         edgeDataSerializer
     );

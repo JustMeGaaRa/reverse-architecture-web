@@ -1,12 +1,14 @@
+import { v4 } from "uuid";
+
 export interface Technology {
     name: string;
 }
 
 export enum AbstractionTypeCode {
-    SoftwareSystem = "abstraction.types.software-system",
-    Container = "abstraction.types.container",
-    Component = "abstraction.types.component",
-    Person = "abstraction.types.person"
+    SoftwareSystem = "software-system",
+    Container = "container",
+    Component = "component",
+    Person = "person"
 }
 
 export interface AbstractionType {
@@ -49,6 +51,40 @@ export interface Diagram {
     relationships: Array<Relationship>;
     positions: AbstractionPositions;
 }
+
+export const getAbstractionName = (code: AbstractionTypeCode) => {
+    const names = {
+        [AbstractionTypeCode.SoftwareSystem]: "Software System",
+        [AbstractionTypeCode.Container]: "Container",
+        [AbstractionTypeCode.Component]: "Component",
+        [AbstractionTypeCode.Person]: "Person"
+    };
+    return names[code];
+}
+
+export const createAbstraction = (
+  abstractionTypeCode: AbstractionTypeCode
+) => {
+    return {
+        abstractionId: v4(),
+        title: getAbstractionName(abstractionTypeCode),
+        type: {
+            code: abstractionTypeCode,
+            name: getAbstractionName(abstractionTypeCode)
+        }
+    };
+};
+
+export const createRelationship = (
+  sourceId: string,
+  targetId: string
+): Relationship => {
+  return {
+    relationshipId: v4(),
+    sourceElementId: sourceId,
+    targetElementId: targetId
+  };
+};
 
 export type AbstractionCallback = (abstraction: Abstraction) => void;
 

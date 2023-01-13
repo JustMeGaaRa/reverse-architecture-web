@@ -109,6 +109,7 @@ export const C4RectangleDraggable: FC<C4RectangleDraggableProps> = ({
         <Box
             borderRadius={"md"}
             bgColor={getAbstractionBgColor(typeCode)}
+            cursor={"pointer"}
             draggable
             fontSize={"xs"}
             padding={2}

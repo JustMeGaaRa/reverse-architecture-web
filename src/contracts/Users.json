@@ -13,5 +13,10 @@
         "username": "bob.dylan",
         "fullname": "Bob Dylan",
         "avatarUrl": ""
+    },
+    {
+        "username": "louis.armstrong",
+        "fullname": "Louis Armstrong",
+        "avatarUrl": ""
     }
 ]

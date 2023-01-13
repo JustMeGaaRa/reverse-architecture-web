@@ -5,7 +5,7 @@
   "scope": {
     "abstractionId": "software-system-1",
     "type": {
-      "code": "abstraction.types.software-system",
+      "code": "software-system",
       "name": "Software System"
     },
     "title": "Internet Banking System"
@@ -14,7 +14,7 @@
     {
       "abstractionId": "container-1",
       "type": {
-        "code": "abstraction.types.container",
+        "code": "container",
         "name": "Container"
       },
       "title": "Web Application",
@@ -24,7 +24,7 @@
     {
       "abstractionId": "container-2",
       "type": {
-        "code": "abstraction.types.container",
+        "code": "container",
         "name": "Container"
       },
       "title": "Single-Page Application",
@@ -34,7 +34,7 @@
     {
       "abstractionId": "container-3",
       "type": {
-        "code": "abstraction.types.container",
+        "code": "container",
         "name": "Container"
       },
       "title": "Mobile App",
@@ -44,7 +44,7 @@
     {
       "abstractionId": "container-4",
       "type": {
-        "code": "abstraction.types.container",
+        "code": "container",
         "name": "Container"
       },
       "title": "API Application",
@@ -54,7 +54,7 @@
     {
       "abstractionId": "database-1",
       "type": {
-        "code": "abstraction.types.container",
+        "code": "container",
         "name": "Container"
       },
       "title": "Database",
@@ -66,7 +66,7 @@
     {
       "abstractionId": "software-system-3",
       "type": {
-        "code": "abstraction.types.software-system",
+        "code": "software-system",
         "name": "Software System"
       },
       "title": "E-mail System",
@@ -75,7 +75,7 @@
     {
       "abstractionId": "software-system-4",
       "type": {
-        "code": "abstraction.types.software-system",
+        "code": "software-system",
         "name": "Software System"
       },
       "title": "Mainframe Banking System",
@@ -84,7 +84,7 @@
     {
       "abstractionId": "person-1",
       "type": {
-        "code": "abstraction.types.person",
+        "code": "person",
         "name": "Person"
       },
       "title": "Personal Banking Customer",

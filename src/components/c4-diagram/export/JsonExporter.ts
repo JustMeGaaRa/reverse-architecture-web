@@ -1,10 +1,6 @@
-import { ReactFlowJsonObject } from "reactflow";
-import { C4RectangleProps } from "../NodeTypes";
-import { C4FloatingEdgeProps } from "../EdgeTypes";
+import { Diagram } from "../types";
 
-export function exportToJson(
-    flow: ReactFlowJsonObject<C4RectangleProps, C4FloatingEdgeProps>
-): string {
-    const json = JSON.stringify(flow);
+export function exportToJson(diagram: Diagram): string {
+    const json = JSON.stringify(diagram);
     return json;
 }

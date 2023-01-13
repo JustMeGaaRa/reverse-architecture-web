@@ -6,7 +6,7 @@
     {
       "abstractionId": "software-system-1",
       "type": {
-        "code": "abstraction.types.software-system",
+        "code": "software-system",
         "name": "Software System"
       },
       "title": "Internet Banking System",
@@ -17,7 +17,7 @@
     {
       "abstractionId": "software-system-3",
       "type": {
-        "code": "abstraction.types.software-system",
+        "code": "software-system",
         "name": "Software System"
       },
       "title": "E-mail System",
@@ -26,7 +26,7 @@
     {
       "abstractionId": "software-system-4",
       "type": {
-        "code": "abstraction.types.software-system",
+        "code": "software-system",
         "name": "Software System"
       },
       "title": "Mainframe Banking System",
@@ -35,7 +35,7 @@
     {
       "abstractionId": "person-1",
       "type": {
-        "code": "abstraction.types.software-system",
+        "code": "software-system",
         "name": "Person"
       },
       "title": "Personal Banking Customer",
