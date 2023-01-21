@@ -14,12 +14,10 @@ import {
     MenuItemProps,
     useColorModeValue,
 } from "@chakra-ui/react";
-import { Logo } from "../Logo";
+import { Logo } from "./Logo";
 
 export type NavigationPanelProps = {
-    diagram: {
-        title: string;
-    };
+    title: string;
     exporters: {
         onExportDrawio: () => void;
         onExportJson: () => void;
@@ -29,7 +27,7 @@ export type NavigationPanelProps = {
 }
 
 export const NavigationPanel: FC<NavigationPanelProps> = ({
-    diagram,
+    title,
     exporters,
     onTitleChange
 }) => {
@@ -44,14 +42,6 @@ export const NavigationPanel: FC<NavigationPanelProps> = ({
     };
     const {  onExportDrawio, onExportJson, onExportImage } = exporters;
 
-    // const importFileRef = useRef<HTMLInputElement>(null);
-    // const onImportClick = useCallback((event) => {
-    //     const file = event.target.files[0];
-    //     const fileReader = new FileReader();
-    //     fileReader.onload = (event) => restoreFlow(JSON.parse(event.target.result as string));
-    //     fileReader.readAsText(file);
-    // }, [restoreFlow]);
-
     return (
         <HStack
             borderRadius={"lg"}
@@ -61,7 +51,7 @@ export const NavigationPanel: FC<NavigationPanelProps> = ({
             <Logo />
             
             <Editable
-                value={diagram.title}
+                value={title}
                 isPreviewFocusable={true}
             >
                 <EditablePreview
@@ -96,20 +86,6 @@ export const NavigationPanel: FC<NavigationPanelProps> = ({
                     </MenuItem>
                 </MenuList>
             </Menu>
-
-            {/* <Button
-                title={"import"}
-                onClick={() => importFileRef && importFileRef.current.click()}
-            >
-                <Input
-                    accept={".json"}
-                    hidden
-                    ref={importFileRef}
-                    type={"file"}
-                    onChange={onImportClick}
-                />
-                <FaFileImport />
-            </Button> */}
         </HStack>
     );
 }

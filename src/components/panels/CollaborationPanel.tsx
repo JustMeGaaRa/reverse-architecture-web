@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, PropsWithChildren } from "react";
 import {
     Avatar,
     AvatarGroup,
@@ -17,7 +17,8 @@ export type CollaborationPanelProps = Partial<Pick<PanelProps, "dock">> & {
     users: Array<User>;
 };
 
-export const CollaborationPanel: FC<CollaborationPanelProps> = ({
+export const CollaborationPanel: FC<PropsWithChildren<CollaborationPanelProps>> = ({
+    children,
     dock,
     users
 }) => {
@@ -26,7 +27,7 @@ export const CollaborationPanel: FC<CollaborationPanelProps> = ({
             <HStack
                 borderRadius={"lg"}
                 gap={2}
-                >
+            >
                 <AvatarGroup size={"sm"} max={3}>
                     {users && users.map(user => (
                         <Avatar
@@ -39,6 +40,7 @@ export const CollaborationPanel: FC<CollaborationPanelProps> = ({
                 <Button>
                     Share
                 </Button>
+                {children}
             </HStack>
         </Panel>
     );

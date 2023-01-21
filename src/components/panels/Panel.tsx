@@ -76,7 +76,7 @@ export const Panel: FC<PropsWithChildren<PanelProps>> = (props) => {
     return (
         <Box
             background={useColorModeValue("whiteAlpha.900", "gray.900")}
-            borderColor={useColorModeValue("blackAlpha.100", "whiteAlpha.100")}
+            borderColor={useColorModeValue("blackAlpha.300", "whiteAlpha.100")}
             borderWidth={1}
             borderRadius={"md"}
             margin={15}

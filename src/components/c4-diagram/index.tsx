@@ -1,3 +1,3 @@
-export * from "./C4DiagramRenderer";
-export * from "./types";
-export * from "./utils";
+export * from "./components/C4DiagramRenderer";
+export * from "./types/Diagram";
+export * from "./utils/Graph";

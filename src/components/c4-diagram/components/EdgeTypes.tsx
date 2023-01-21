@@ -1,4 +1,4 @@
-import { FC, useCallback } from "react";
+import { FC, PropsWithChildren, CSSProperties, useCallback } from "react";
 import {
     Node,
     EdgeProps,
@@ -10,7 +10,49 @@ import {
 } from "reactflow";
 import { Box, useColorModeValue } from "@chakra-ui/react";
 import { C4RelationshipInfo } from "./LabelTypes";
-import { Relationship } from "./types";
+import { Relationship } from "../types/Diagram";
+
+export type BaseEdgeProps = {
+    path: string,
+    labelX: number,
+    labelY: number,
+    style: CSSProperties,
+    markerEnd?: string,
+    markerStart?: string,
+    interactionWidth: number,
+}
+
+export const BaseEdge: FC<PropsWithChildren<BaseEdgeProps>> = ({
+    children,
+    path,
+    style,
+    markerEnd,
+    markerStart,
+    interactionWidth = 20,
+}) => {
+    return (
+        <>
+            <path
+                className="react-flow__edge-path"
+                d={path}
+                fill="none"
+                style={style}
+                markerEnd={markerEnd}
+                markerStart={markerStart}
+            />
+            {interactionWidth && (
+                <path
+                    className="react-flow__edge-interaction"
+                    d={path}
+                    fill="none"
+                    strokeOpacity={0}
+                    strokeWidth={interactionWidth}
+                />
+            )}
+            {children}
+        </>
+    )
+}
 
 function getNodeCenter(node: Node) {
     return {
@@ -85,54 +127,53 @@ export function getEdgeParams(source: Node, target: Node) {
     };
 }
 
-export type C4FloatingEdgeProps = {
-    relationship: Relationship;
-}
+export type C4FloatingEdgeProps = Relationship;
 
 export const C4FloatingEdge: FC<EdgeProps<C4FloatingEdgeProps>> = ({
-    id,
     source,
     target,
-    markerStart,
-    markerEnd,
     selected,
-    data
+    data,
+    style,
+    markerEnd,
+    markerStart,
+    interactionWidth
 }) => {
-    const defaultBackground = useColorModeValue("whiteAlpha.900", "gray.900");
-    const highlightBackground = useColorModeValue("whiteAlpha.900", "gray.900");
-    const defaultBorderColor = useColorModeValue("blackAlpha.200", "whiteAlpha.200");
-    const highlightBorderColor = useColorModeValue("blackAlpha.400", "whiteAlpha.400");
+    const backgroundDefault = useColorModeValue("whiteAlpha.900", "gray.900");
+    const backgroundHighlight = useColorModeValue("whiteAlpha.900", "gray.900");
+    const background = selected
+        ? backgroundDefault
+        : backgroundHighlight;
+
+    const borderDefault = useColorModeValue("blackAlpha.200", "whiteAlpha.200");
+    const borderHightlight = useColorModeValue("blackAlpha.400", "whiteAlpha.400");
+    const border = selected
+        ? borderDefault
+        : borderHightlight;
+        
     const sourceNode = useStore(useCallback((store) => store.nodeInternals.get(source), [source]));
     const targetNode = useStore(useCallback((store) => store.nodeInternals.get(target), [target]));
 
     if (!sourceNode || !targetNode) return null;
 
     const edgeParams = getEdgeParams(sourceNode, targetNode);
-    const [edgePath, labelX, labelY] = getBezierPath(edgeParams);
+    const [path, labelX, labelY] = getBezierPath(edgeParams);
 
     return (
-        <path
-            id={id}
-            d={edgePath}
-            style={{
-                stroke: "#b1b1b7",
-                strokeWidth: 2,
-                fill: "none"
-            }}
-            markerStart={markerStart}
+        <BaseEdge
+            path={path}
+            labelX={labelX}
+            labelY={labelY}
+            style={style}
             markerEnd={markerEnd}
+            markerStart={markerStart}
+            interactionWidth={interactionWidth}
         >
             <EdgeLabelRenderer>
                 <Box
-                    background={selected
-                        ? defaultBackground
-                        : highlightBackground
-                    }
+                    background={background}
                     boxShadow={"lg"}
-                    border={selected
-                        ? defaultBorderColor
-                        : highlightBorderColor
-                    }
+                    border={border}
                     borderWidth={1}
                     borderRadius={"lg"}
                     className="nodrag nopan"
@@ -141,13 +182,13 @@ export const C4FloatingEdge: FC<EdgeProps<C4FloatingEdgeProps>> = ({
                     transform={`translate(-50%, -50%) translate(${labelX}px,${labelY}px)`}
                 >
                     <C4RelationshipInfo
-                        data={data.relationship}
+                        data={data}
                         align="center"
                         showTechnologies
                         showTitle
                     />
                 </Box>
             </EdgeLabelRenderer>
-        </path>
+        </BaseEdge>
     );
 };

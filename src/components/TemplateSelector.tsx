@@ -12,18 +12,18 @@ import {
     WrapItem
 } from "@chakra-ui/react";
 
-export interface IDiagramTemplate {
+export type DiagramTemplate = {
     header: string;
     description: string;
     payload: string;
 }
 
-export interface IDiagramTemplateGroup {
+export type DiagramTemplateGroup = {
     header: string;
-    templates: Array<IDiagramTemplate>;
+    templates: Array<DiagramTemplate>;
 }
 
-type TemplateItemProps = Omit<IDiagramTemplate, "payload"> & {
+type TemplateItemProps = Omit<DiagramTemplate, "payload"> & {
     onClick: () => void;
 };
 
@@ -47,32 +47,28 @@ const TemplateItem: FC<TemplateItemProps> = ({
             }}
             onClick={onClick}
         >
-            <CardHeader>
+            <CardBody>
                 <Heading
                     as={"h2"}
                     size={"sm"}
                 >
                     {header}
                 </Heading>
-            </CardHeader>
-            <CardBody>
                 <Text
                     fontSize={"sm"}
-                    noOfLines={6}
+                    noOfLines={5}
                     pt={4}
+                    title={description}
                 >
                     {description}
                 </Text>
             </CardBody>
-            <CardFooter>
-
-            </CardFooter>
         </Card>
     );
 }
 
-type TemplateGroupProps = IDiagramTemplateGroup & {
-    onSelect: (template: IDiagramTemplate) => void;
+type TemplateGroupProps = DiagramTemplateGroup & {
+    onSelect: (template: DiagramTemplate) => void;
 }
 
 const TemplateGroup: FC<TemplateGroupProps> = ({
@@ -101,8 +97,8 @@ const TemplateGroup: FC<TemplateGroupProps> = ({
 }
 
 type TemplateSelectorProps = {
-    templates: Array<IDiagramTemplateGroup>;
-    onSelect: (template: IDiagramTemplate) => void;
+    templates: Array<DiagramTemplateGroup>;
+    onSelect: (template: DiagramTemplate) => void;
 }
 
 export const TemplateSelector: FC<TemplateSelectorProps> = ({

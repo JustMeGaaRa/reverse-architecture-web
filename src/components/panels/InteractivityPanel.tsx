@@ -1,12 +1,18 @@
-import { FC } from "react";
+import { FC, PropsWithChildren } from "react";
 import { FaExpand, FaLock, FaLockOpen, FaMinus, FaPlus } from "react-icons/fa";
+import {
+    ReactFlowState,
+    useReactFlow,
+    useStore,
+    useStoreApi
+} from "reactflow";
 import { ButtonGroup, IconButton } from "@chakra-ui/react";
 import { Panel, PanelProps } from "./Panel";
-import { ReactFlowState, useReactFlow, useStore, useStoreApi } from "reactflow";
 
 export type InteractivityPanelProps = Partial<Pick<PanelProps, "dock">>;
 
-export const InteractivityPanel: FC<InteractivityPanelProps> = ({
+export const InteractivityPanel: FC<PropsWithChildren<InteractivityPanelProps>> = ({
+    children,
     dock
 }) => {
     const isInteractiveSelector = (flowState: ReactFlowState) => {
@@ -27,7 +33,7 @@ export const InteractivityPanel: FC<InteractivityPanelProps> = ({
     };
 
     return (
-        <Panel dock={dock ?? "bottom-right"}>
+        <Panel dock={dock ?? "bottom-left"}>
             <ButtonGroup
                 isAttached
                 orientation={"vertical"}
@@ -50,7 +56,7 @@ export const InteractivityPanel: FC<InteractivityPanelProps> = ({
                     aria-label={"fit view"}
                     icon={<FaExpand />}
                     title={"fit view"}
-                    onClick={() => fitView()}
+                    onClick={() => fitView({ padding: 0.2 })}
                 />
                 <IconButton
                     aria-label={"toggle interactivity"}
@@ -58,6 +64,7 @@ export const InteractivityPanel: FC<InteractivityPanelProps> = ({
                     title={"toggle interacivity"}
                     onClick={() => toggleInteractivity()}
                 />
+                {children}
             </ButtonGroup>
         </Panel>
     );

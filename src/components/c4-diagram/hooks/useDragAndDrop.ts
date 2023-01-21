@@ -1,9 +1,8 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 
-export const useDragAndDrop = (
-    mediaFormat: string,
-    onDropHandler: (positon, data) => void
-) => {
+export const useDragAndDrop = (mediaFormat: string) => {
+    const [onDropHandler, setOnDropHandler] = useState(null);
+
     const onDragStart = useCallback((event, data) => {
         event.dataTransfer.setData(mediaFormat, data);
         event.dataTransfer.effectAllowed = "move";
@@ -18,12 +17,14 @@ export const useDragAndDrop = (
         event.preventDefault();
         const position = { x: event.clientX, y: event.clientY };
         const data = event.dataTransfer.getData(mediaFormat);
-        onDropHandler(position, data);
+        if (onDropHandler && position)
+            onDropHandler(position, data);
     }, [onDropHandler, mediaFormat]);
     
     return {
         onDragStart,
         onDragOver,
-        onDrop
+        onDrop,
+        setOnDropHandler
     }
 }

@@ -1,15 +1,288 @@
 {
   "diagramId": "e7d25700-c765-4ccb-8f11-bd5e6d7dfb47",
+  "type": "Component",
   "title": "Internet Banking System - API Application",
-  "description": "",
   "scope": {
+    "id": "container-4",
+    "type": "Container",
+    "position": { "x": 0, "y": 250 },
+    "width": 1320,
+    "height": 600,
+    "data": {
+      "elementId": "container-4",
+      "type": "Container",
+      "name": "API Application",
+      "technology": ["Java", "Spring MVC"],
+      "description": "Provides Internet banking functionality via a JSON/HTTPS API."
+    }
   },
   "primaryElements": [
+    {
+      "id": "component-1",
+      "parentId": "container-4",
+      "type": "Component",
+      "position": { "x": 60, "y": 50 },
+      "data": {
+        "elementId": "component-1",
+        "type": "Component",
+        "name": "Sign-In Controller",
+        "technology": ["Spring MVC REST Controller"],
+        "description": "Allows user to sign-in in to the Internat Banking System."
+      }
+    },
+    {
+      "id": "component-2",
+      "parentId": "container-4",
+      "type": "Component",
+      "position": { "x": 540, "y": 50 },
+      "data": {
+        "elementId": "component-2",
+        "type": "Component",
+        "name": "Reset Password Controller",
+        "technology": ["Spring MVC REST Controller"],
+        "description": "Allows user to reset their password with a single use URL."
+      }
+    },
+    {
+      "id": "component-3",
+      "parentId": "container-4",
+      "type": "Component",
+      "position": { "x": 1020, "y": 50 },
+      "data": {
+        "elementId": "component-3",
+        "type": "Component",
+        "name": "Accounts Summary Controller",
+        "technology": ["Spring MVC REST Controller"],
+        "description": "Provides customers with a summary of their bank accouts."
+      }
+    },
+    {
+      "id": "component-4",
+      "parentId": "container-4",
+      "type": "Component",
+      "position": { "x": 60, "y": 350 },
+      "data": {
+        "elementId": "component-4",
+        "type": "Component",
+        "name": "Security Component",
+        "technology": ["Spring Bean"],
+        "description": "Provides functionality related to signing in, changing passwords, etc."
+      }
+    },
+    {
+      "id": "component-5",
+      "parentId": "container-4",
+      "type": "Component",
+      "position": { "x": 540, "y": 350 },
+      "data": {
+        "elementId": "component-5",
+        "type": "Component",
+        "name": "E-mail Component",
+        "technology": ["Spring Bean"],
+        "description": "Sends e-mails to users."
+      }
+    },
+    {
+      "id": "component-6",
+      "parentId": "container-4",
+      "type": "Component",
+      "position": { "x": 1020, "y": 350 },
+      "data": {
+        "elementId": "component-6",
+        "type": "Component",
+        "name": "Mainframe Baning System Facade",
+        "technology": ["Spring Bean"],
+        "description": "A facade onto the mainframe banking system."
+      }
+    }
   ],
   "supportingElements": [
+    {
+      "id": "container-2",
+      "type": "Container",
+      "position": { "x": 300, "y": 0 },
+      "data": {
+        "elementId": "container-2",
+        "type": "Container",
+        "name": "Single-Page Application",
+        "technology": ["JavaScript", "Angular"],
+        "description": "Provides all of the Internet banking functionality to customers via their web browser."
+      }
+    },
+    {
+      "id": "container-3",
+      "type": "Container",
+      "position": { "x": 800, "y": 0 },
+      "data": {
+        "elementId": "container-3",
+        "type": "Container",
+        "name": "Mobile App",
+        "technology": ["Xamarin"],
+        "description": "Provides limited subset of the Internet banking functionality to the customers via their mobile device."
+      }
+    },
+    {
+      "id": "database-1",
+      "type": "Container",
+      "position": { "x": 60, "y": 960 },
+      "data": {
+        "elementId": "database-1",
+        "type": "Container",
+        "name": "Database",
+        "technology": ["Oracle Database Schema"],
+        "description": "Stores user registration information, hashed authentication credential, access logs, etc."
+      }
+    },
+    {
+      "id": "software-system-3",
+      "type": "Software System",
+      "position": { "x": 540, "y": 960 },
+      "data": {
+        "elementId": "software-system-3",
+        "type": "Software System",
+        "name": "E-mail System",
+        "description": "The internal Microsoft Exchange e-mail system.",
+        "location": "External"
+      }
+    },
+    {
+      "id": "software-system-4",
+      "type": "Software System",
+      "position": { "x": 1020, "y": 960 },
+      "data": {
+        "elementId": "software-system-4",
+        "type": "Software System",
+        "name": "Mainframe Banking System",
+        "description": "Stores all of the core banking information about customers, accounts, transactions, etc.",
+        "location": "External"
+      }
+    }
   ],
   "relationships": [
-  ],
-  "positions": {
-  }
+    {
+      "id": "container-2_component-1",
+      "source": "container-2",
+      "target": "component-1",
+      "data": {
+        "relationshipId": "container-2_component-1",
+        "description": "Makes API calls to",
+        "technology": ["JSON", "HTTPS"]
+      }
+    },
+    {
+      "id": "container-2_component-2",
+      "source": "container-2",
+      "target": "component-2",
+      "data": {
+        "relationshipId": "container-2_component-2",
+        "description": "Makes API calls to",
+        "technology": ["JSON", "HTTPS"]
+      }
+    },
+    {
+      "id": "container-2_component-3",
+      "source": "container-2",
+      "target": "component-3",
+      "data": {
+        "relationshipId": "container-2_component-3",
+        "description": "Makes API calls to",
+        "technology": ["JSON", "HTTPS"]
+      }
+    },
+    {
+      "id": "container-3_component-1",
+      "source": "container-3",
+      "target": "component-1",
+      "data": {
+        "relationshipId": "container-3_component-1",
+        "description": "Makes API calls to",
+        "technology": ["JSON", "HTTPS"]
+      }
+    },
+    {
+      "id": "container-3_component-2",
+      "source": "container-3",
+      "target": "component-2",
+      "data": {
+        "relationshipId": "container-3_component-2",
+        "description": "Makes API calls to",
+        "technology": ["JSON", "HTTPS"]
+      }
+    },
+    {
+      "id": "container-3_component-3",
+      "source": "container-3",
+      "target": "component-3",
+      "data": {
+        "relationshipId": "container-3_component-3",
+        "description": "Makes API calls to",
+        "technology": ["JSON", "HTTPS"]
+      }
+    },
+    {
+      "id": "component-1_component-4",
+      "source": "component-1",
+      "target": "component-4",
+      "data": {
+        "relationshipId": "component-1_component-4",
+        "description": "Uses"
+      }
+    },
+    {
+      "id": "component-2_component-4",
+      "source": "component-2",
+      "target": "component-4",
+      "data": {
+        "relationshipId": "component-2_component-4",
+        "description": "Uses"
+      }
+    },
+    {
+      "id": "component-2_component-5",
+      "source": "component-2",
+      "target": "component-5",
+      "data": {
+        "relationshipId": "component-2_component-5",
+        "description": "Uses"
+      }
+    },
+    {
+      "id": "component-3_component-6",
+      "source": "component-3",
+      "target": "component-6",
+      "data": {
+        "relationshipId": "component-3_component-6",
+        "description": "Uses"
+      }
+    },
+    {
+      "id": "component-4_database-1",
+      "source": "component-4",
+      "target": "database-1",
+      "data": {
+        "relationshipId": "component-4_database-1",
+        "description": "Reads from and writes to",
+        "technology": ["jDBC"]
+      }
+    },
+    {
+      "id": "component-5_software-system-3",
+      "source": "component-5",
+      "target": "software-system-3",
+      "data": {
+        "relationshipId": "component-5_software-system-3",
+        "description": "Sends e-mails using"
+      }
+    },
+    {
+      "id": "component-6_software-system-4",
+      "source": "component-6",
+      "target": "software-system-4",
+      "data": {
+        "relationshipId": "component-6_software-system-4",
+        "description": "Makes API calls to",
+        "technology": ["XML", "HTTPS"]
+      }
+    }
+  ]
 }

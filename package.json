@@ -13,12 +13,14 @@
     "@chakra-ui/react": "2.4.3",
     "@emotion/react": "11.10.5",
     "@emotion/styled": "11.10.5",
-    "@reactflow/node-resizer": "1.1.0",
+    "@reactflow/node-resizer": "^1.2.2",
+    "@sniptt/monads": "^0.5.10",
     "chakra-react-select": "^4.4.3",
     "classnames": "2.3.2",
     "fast-xml-parser": "^4.0.13",
     "file-saver": "^2.0.5",
     "framer-motion": "7.9.1",
+    "html-to-image": "^1.11.4",
     "jotai": "https://pkg.csb.dev/pmndrs/jotai/commit/2d0d4ad9/jotai",
     "node-sass": "8.0.0",
     "react": "^18.0.0",
@@ -27,9 +29,9 @@
     "react-router": "6.4.5",
     "react-router-dom": "6.4.5",
     "react-scripts": "5.0.1",
-    "reactflow": "11.3.3",
+    "reactflow": "11.4.2",
     "uuid": "9.0.0",
-    "zustand": "^4.1.5"
+    "zustand": "^4.3.2"
   },
   "devDependencies": {
     "@types/file-saver": "^2.0.5",

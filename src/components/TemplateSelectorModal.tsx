@@ -9,15 +9,15 @@ import {
 } from "@chakra-ui/react";
 import {
     TemplateSelector,
-    IDiagramTemplate,
-    IDiagramTemplateGroup
+    DiagramTemplate,
+    DiagramTemplateGroup
 } from "./TemplateSelector";
 
 type TemplateSelectorModalProps = {
-    templates: Array<IDiagramTemplateGroup>;
+    templates: Array<DiagramTemplateGroup>;
     isOpen: boolean;
     onClose: () => void;
-    onSelect: (template: IDiagramTemplate) => void;
+    onSelect: (template: DiagramTemplate) => void;
 }
 
 export const TemplateSelectorModal: FC<TemplateSelectorModalProps> = ({

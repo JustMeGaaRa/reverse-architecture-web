@@ -1,15 +1,17 @@
+import '@reactflow/node-resizer/dist/style.css';
+
 import { FC, useCallback, useState } from "react";
 import { Handle, NodeProps, Position } from "reactflow";
 import { NodeResizer } from "@reactflow/node-resizer";
 import { Box, Flex, Text, useColorModeValue } from "@chakra-ui/react";
 import { C4AbstractioInfo } from "./LabelTypes";
-import { Abstraction, AbstractionTypeCode } from "./types";
-import { getAbstractionBgColor } from "./utils";
+import { Element, ElementType } from "../types/Diagram";
+import { ElementBgColors } from "../utils/Graph";
 
-export type C4RectangleProps = {
-    abstraction: Abstraction;
-    bgColor?: string;
-}
+export type C4RectangleProps = Element & {
+    width?: number;
+    height?: number;
+};
 
 export const C4RectangleNode: FC<NodeProps<C4RectangleProps>> = ({ data, selected }) => {
     const defaultBorderColor = useColorModeValue("blackAlpha.400", "whiteAlpha.400");
@@ -17,7 +19,7 @@ export const C4RectangleNode: FC<NodeProps<C4RectangleProps>> = ({ data, selecte
 
     return (
         <Flex
-            bgColor={data.bgColor}
+            background={ElementBgColors[data.type]}
             borderWidth={1}
             borderColor={selected ? highlightBorderColor : defaultBorderColor}
             borderRadius={"2xl"}
@@ -29,7 +31,7 @@ export const C4RectangleNode: FC<NodeProps<C4RectangleProps>> = ({ data, selecte
             textColor={"whiteAlpha.900"}
         >
             <C4AbstractioInfo
-                data={data.abstraction}
+                data={data}
                 align={"center"}
                 showTechnologies
                 showDescription
@@ -42,8 +44,9 @@ export const C4RectangleNode: FC<NodeProps<C4RectangleProps>> = ({ data, selecte
     );
 };
 
-export type C4ScopeProps = {
-    abstraction: Abstraction;
+export type C4ScopeProps = Element & {
+    width?: number;
+    height?: number;
     draggedOver?: boolean;
 }
 
@@ -54,7 +57,7 @@ export const C4ScopeNode: FC<NodeProps<C4ScopeProps>> = ({ data, selected }) => 
     const defaultBorderColor = useColorModeValue("blackAlpha.200", "whiteAlpha.200");
     const highlightBorderColor = useColorModeValue("blackAlpha.400", "whiteAlpha.400");
 
-    const [size, setSize] = useState([1200, 600]);
+    const [size, setSize] = useState([data.width, data.height]);
 
     const onResize = useCallback((event, params) => {
         setSize([params.width, params.height]);
@@ -62,7 +65,7 @@ export const C4ScopeNode: FC<NodeProps<C4ScopeProps>> = ({ data, selected }) => 
 
     return (
         <Flex
-            bgColor={data.draggedOver || selected
+            background={data.draggedOver || selected
                 ? highlightBgColor
                 : defaultBgColor
             }
@@ -77,7 +80,7 @@ export const C4ScopeNode: FC<NodeProps<C4ScopeProps>> = ({ data, selected }) => 
             height={size[1]}
         >
             <C4AbstractioInfo
-                data={data.abstraction}
+                data={data}
                 align={"start"}
                 showTechnologies
             />
@@ -95,20 +98,20 @@ export const C4ScopeNode: FC<NodeProps<C4ScopeProps>> = ({ data, selected }) => 
 
 
 export type C4RectangleDraggableProps = {
-    typeCode: AbstractionTypeCode,
-    title: string,
+    type: ElementType,
+    name: string,
     onDragStart: (event: any, typeCode: string) => void
 }
 
 export const C4RectangleDraggable: FC<C4RectangleDraggableProps> = ({
-    typeCode,
-    title,
+    type,
+    name,
     onDragStart
 }) => {
     return (
         <Box
+            background={ElementBgColors[type]}
             borderRadius={"md"}
-            bgColor={getAbstractionBgColor(typeCode)}
             cursor={"pointer"}
             draggable
             fontSize={"xs"}
@@ -116,9 +119,9 @@ export const C4RectangleDraggable: FC<C4RectangleDraggableProps> = ({
             textColor={"whiteAlpha.900"}
             textAlign={"center"}
             _hover={{ opacity: .7 }}
-            onDragStart={(event) => onDragStart(event, typeCode)}
+            onDragStart={(event) => onDragStart(event, type)}
         >
-            <Text>{title}</Text>
+            <Text>{name}</Text>
         </Box>
     );
 };

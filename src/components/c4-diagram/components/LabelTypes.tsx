@@ -1,15 +1,15 @@
 import { FC } from "react";
 import { VStack, Text } from "@chakra-ui/react";
-import { Abstraction, Relationship } from "./types";
+import { Element, Relationship } from "../types/Diagram";
 
-export const formatNodeTechnologies = (data: Abstraction) => {
-    return data.technologies
-        ? `[${data.type.name}: ${data.technologies.join(", ")}]`
-        : `[${data.type.name}]`;
+export const formatNodeTechnologies = (data: Element) => {
+    return data.technology
+        ? `[${data.type}: ${data.technology.join(", ")}]`
+        : `[${data.type}]`;
 };
 
 export type C4AbstractionInfoProps = {
-    data: Abstraction;
+    data: Element;
     align: "start" | "center" | "end";
     showTechnologies?: boolean;
     showDescription?: boolean;
@@ -32,7 +32,7 @@ export const C4AbstractioInfo: FC<C4AbstractionInfoProps> = ({
                 noOfLines={1}
                 textAlign={"center"}
             >
-                {data.title}
+                {data.name}
             </Text>
             <Text
                 fontSize={"x-small"}
@@ -56,7 +56,7 @@ export const C4AbstractioInfo: FC<C4AbstractionInfoProps> = ({
 };
 
 export const formatEdgeTechnologies = (data: Relationship) => {
-    return data?.technologies && `[${data.technologies.join(" / ")}]`;
+    return data?.technology && `[${data.technology.join(" / ")}]`;
 };
 
 export type C4RelationshipInfoProps = {
@@ -77,14 +77,14 @@ export const C4RelationshipInfo: FC<C4RelationshipInfoProps> = ({
             align={align}
             spacing={1}
         >
-            {showTitle && data.title && (
+            {showTitle && data.description && (
                 <Text
                     fontSize={"xs"}
                     noOfLines={3}
                     textAlign={"center"}
                     maxW={150}
                 >
-                    {data.title}
+                    {data.description}
                 </Text>
             )}
             {showTechnologies && (

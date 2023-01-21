@@ -7,12 +7,15 @@ import { ChakraProvider } from "@chakra-ui/react";
 
 import { routes } from "./routes";
 import { theme } from "./theme";
+import { ReactFlowProvider } from "reactflow";
 
 const root = createRoot(document.getElementById("root"));
 root.render(
     <React.StrictMode>
         <ChakraProvider resetCSS theme={theme}>
-            <RouterProvider router={createBrowserRouter(routes)} />
+            <ReactFlowProvider>
+                <RouterProvider router={createBrowserRouter(routes)} />
+            </ReactFlowProvider>
         </ChakraProvider>
     </React.StrictMode>
 );

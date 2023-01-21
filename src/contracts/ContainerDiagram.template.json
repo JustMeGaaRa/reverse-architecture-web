@@ -1,21 +1,18 @@
 {
     "diagramId": "d47a1f99-a05b-4752-b7eb-165daf9c970a",
+    "type": "Container",
     "title": "Container Diagram",
     "scope": {
-      "abstractionId": "dab269dc-92eb-40ea-b27e-754f04d10b57",
-      "type": {
-        "code": "container",
+      "id": "dab269dc-92eb-40ea-b27e-754f04d10b57",
+      "type": "Container",
+      "data": {
+        "elementId": "dab269dc-92eb-40ea-b27e-754f04d10b57",
+        "type": "Container",
         "name": "Container"
       },
-      "title": "Container"
+      "position": { "x": 0, "y": 0 }
     },
     "primaryElements": [],
     "supportingElements": [],
-    "relationships": [],
-    "positions": {
-      "dab269dc-92eb-40ea-b27e-754f04d10b57": {
-        "x": 0,
-        "y": 0
-      }
-    }
+    "relationships": []
 }
