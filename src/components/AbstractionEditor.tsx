@@ -1,13 +1,13 @@
-import { FC, MouseEventHandler } from "react";
-import { FaCheck } from "react-icons/fa";
+import { FC, MouseEventHandler, useCallback, useRef } from "react";
+import { useReactFlow } from "@reactflow/core";
 import {
-    Button,
-    ButtonGroup,
     Flex,
+    FormControl,
+    FormLabel,
     Input,
     Textarea
 } from "@chakra-ui/react";
-import { Select } from "chakra-react-select";
+import { Select, SelectInstance } from "chakra-react-select";
 import { Element, ElementCallback } from "./c4-diagram";
 
 export type AbstractionEditorProps = {
@@ -22,85 +22,59 @@ export const AbstractionEditor: FC<AbstractionEditorProps> = ({
     data,
     technologies
 }) => {
-    // const onNodeDataChange = useCallback((abstraction) => {
-    //     setSelectedNode(abstraction);
-    // }, [setSelectedNode]);
+    const selectRef = useRef<SelectInstance>(null);
+    const { setNodes } = useReactFlow();
 
-    // const onNodeDataSave = useCallback(() => {
-    //     setNodes(getNodes().map(node => {
-    //         if (node.id === selectedNode.id) {
-    //             const updatedNode = {
-    //                 ...node,
-    //                 data: {
-    //                     ...node.data,
-    //                     ...selectedNode,
-    //                     abstraction: { ...selectedNode.data }
-    //                 }
-    //             };
-    //             return updatedNode;
-    //         }
-    //         return node;
-    //     }));
-    // }, [getNodes, setNodes, selectedNode]);
+    const setNodeChanges = useCallback((changes: Partial<Element>) => {
+        setNodes(nodes => nodes.map(node => {
+            if (node.data.elementId !== data.elementId) {
+                return node;
+            }
 
-    // const onNodeDataCancel = useCallback(() => {
-    //     setSelectedNode(null);
-    // }, [setSelectedNode]); 
+            return {
+                ...node,
+                data: {
+                    ...node.data,
+                    ...changes
+                }
+            };
+        }));
+    }, [setNodes, data]);
 
     return data && (
         <Flex direction={"column"} gap={4} width={["xs"]}>
-            <Input
-                placeholder={"Enter the name of the abstraction"}
-                value={data.name}
-                onFocusCapture={(event) => event.preventDefault()}
-                // onChange={(event) => {
-                //     onChange && onChange({
-                //         ...data,
-                //         title: event.target.value
-                //     })
-                // }}
-            />
-            <Select
-                closeMenuOnSelect={false}
-                isMulti
-                isClearable={false}
-                useBasicStyles
-                placeholder={"Select a list of technologies"}
-                options={technologies.map(t => ({ label: t, value: t }))}
-                value={data.technology && data.technology.map(t => ({ label: t, value: t }))}
-                // onChange={(event) => {
-                //     onChange({
-                //         ...data,
-                //         technologies: event.map(x => x.value)
-                //     })
-                // }}
-            />
-            <Textarea
-                height={[150]}
-                placeholder={"Enter the description for the abstraction"}
-                value={data.description}
-                // onChange={(event) => {
-                //     onChange && onChange({
-                //         ...data,
-                //         description: event.target.value
-                //     })
-                // }}
-            />
-            <ButtonGroup size={"sm"} justifyContent={"center"}>
-                <Button
-                    leftIcon={<FaCheck />}
-                    colorScheme={"blue"}
-                    // onClick={onSave}
-                >
-                    Save
-                </Button>
-                <Button
-                    variant={"ghost"}
-                    // onClick={onCancel}
-                >
-                    Cancel
-                </Button>
-            </ButtonGroup>
+            <FormControl isRequired>
+                <FormLabel>Name</FormLabel>
+                <Input
+                    placeholder={"Enter the element name"}
+                    defaultValue={data.name}
+                    onBlur={(event) => setNodeChanges({ name: event.target.value })}
+                />
+            </FormControl>
+            <FormControl>
+                <FormLabel>Technology</FormLabel>
+                <Select
+                    ref={selectRef}
+                    closeMenuOnSelect={false}
+                    isClearable={false}
+                    isMulti
+                    useBasicStyles
+                    placeholder={"Select technology"}
+                    options={technologies.map(t => ({ label: t, value: t }))}
+                    defaultValue={data.technology && data.technology.map(t => ({ label: t, value: t }))}
+                    onBlur={() => setNodeChanges({
+                        technology: selectRef.current.getValue().map(option => option["value"])
+                    })}
+                />
+            </FormControl>
+            <FormControl>
+                <FormLabel>Description</FormLabel>
+                <Textarea
+                    placeholder={"Enter the element description"}
+                    defaultValue={data.description}
+                    onBlur={(event) => setNodeChanges({ description: event.target.value })}
+                />
+            </FormControl>
         </Flex>
     );
 }

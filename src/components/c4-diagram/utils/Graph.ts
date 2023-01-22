@@ -3,10 +3,11 @@ import {
     Edge,
     MarkerType,
     ReactFlowJsonObject
-} from "reactflow";
-import { v4 } from "uuid";
+} from "@reactflow/core";
 import { Result, Ok, Err } from "@sniptt/monads";
+import { v4 } from "uuid";
 import {
+    C4ElementPlaceholder,
     C4RectangleNode,
     C4RectangleProps,
     C4ScopeNode,
@@ -23,7 +24,8 @@ export enum NodeType {
     Block = "block",
     Person = "person",
     Cylinder = "cylinder",
-    Scope = "scope"
+    Scope = "scope",
+    Placeholder = "placeholder"
 };
 
 export enum EdgeType {
@@ -46,7 +48,8 @@ export const NodeTypes = {
     [NodeType.Block]: C4RectangleNode,
     [NodeType.Person]: C4RectangleNode,
     [NodeType.Cylinder]: C4RectangleNode,
-    [NodeType.Scope]: C4ScopeNode
+    [NodeType.Scope]: C4ScopeNode,
+    [NodeType.Placeholder]: C4ElementPlaceholder
 }
 
 export const EdgeTypes = {
@@ -122,11 +125,12 @@ export const getDiagramEdges = (diagram: C4.C4Diagram) => {
 
 export const createNode = (
     element: C4.Element,
-    position?: C4.Position
+    position?: C4.Position,
+    type?: string
 ): Node<C4RectangleProps> => {
     return {
         id: v4(),
-        type: NodeType.Block,
+        type: type ?? NodeType.Block,
         data: element,
         position: position,
         parentNode: undefined

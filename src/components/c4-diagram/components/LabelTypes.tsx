@@ -2,20 +2,20 @@ import { FC } from "react";
 import { VStack, Text } from "@chakra-ui/react";
 import { Element, Relationship } from "../types/Diagram";
 
-export const formatNodeTechnologies = (data: Element) => {
-    return data.technology
+const formatNodeTechnology = (data: Element) => {
+    return data?.technology && data?.technology.length > 0
         ? `[${data.type}: ${data.technology.join(", ")}]`
         : `[${data.type}]`;
 };
 
-export type C4AbstractionInfoProps = {
+type C4ElementInfoProps = {
     data: Element;
     align: "start" | "center" | "end";
     showTechnologies?: boolean;
     showDescription?: boolean;
 }
 
-export const C4AbstractioInfo: FC<C4AbstractionInfoProps> = ({
+const C4ElementInfo: FC<C4ElementInfoProps> = ({
     data,
     align,
     showTechnologies,
@@ -39,7 +39,7 @@ export const C4AbstractioInfo: FC<C4AbstractionInfoProps> = ({
                 noOfLines={1}
                 textAlign={"center"}
             >
-                {showTechnologies && formatNodeTechnologies(data)}
+                {showTechnologies && formatNodeTechnology(data)}
             </Text>
             {showDescription && data.description && (
                 <Text
@@ -55,18 +55,18 @@ export const C4AbstractioInfo: FC<C4AbstractionInfoProps> = ({
     );
 };
 
-export const formatEdgeTechnologies = (data: Relationship) => {
+const formatEdgeTechnology = (data: Relationship) => {
     return data?.technology && `[${data.technology.join(" / ")}]`;
 };
 
-export type C4RelationshipInfoProps = {
+type C4RelationshipInfoProps = {
     data: Relationship;
     align: "start" | "center" | "end";
     showTitle?: boolean;
     showTechnologies?: boolean;
 }
 
-export const C4RelationshipInfo: FC<C4RelationshipInfoProps> = ({
+const C4RelationshipInfo: FC<C4RelationshipInfoProps> = ({
     data,
     align,
     showTechnologies,
@@ -93,9 +93,18 @@ export const C4RelationshipInfo: FC<C4RelationshipInfoProps> = ({
                     noOfLines={1}
                     textAlign={"center"}
                 >
-                    {formatEdgeTechnologies(data)}
+                    {formatEdgeTechnology(data)}
                 </Text>
             )}
         </VStack>
     );
 };
+
+export {
+    formatNodeTechnology,
+    formatEdgeTechnology,
+    C4ElementInfo,
+    C4RelationshipInfo,
+    C4ElementInfoProps,
+    C4RelationshipInfoProps
+}

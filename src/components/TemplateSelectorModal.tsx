@@ -17,14 +17,14 @@ type TemplateSelectorModalProps = {
     templates: Array<DiagramTemplateGroup>;
     isOpen: boolean;
     onClose: () => void;
-    onSelect: (template: DiagramTemplate) => void;
+    onSelected: (template: DiagramTemplate) => void;
 }
 
 export const TemplateSelectorModal: FC<TemplateSelectorModalProps> = ({
     templates,
     isOpen,
     onClose,
-    onSelect,
+    onSelected,
 }) => {
     return (
         <Modal
@@ -46,7 +46,7 @@ export const TemplateSelectorModal: FC<TemplateSelectorModalProps> = ({
                 <ModalBody>
                     <TemplateSelector
                         templates={templates}
-                        onSelect={onSelect}
+                        onSelected={onSelected}
                     />
                 </ModalBody>
             </ModalContent>

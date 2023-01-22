@@ -1,11 +1,10 @@
-import { ReactFlowJsonObject, Node, Edge } from "reactflow";
-import { useToken } from "@chakra-ui/react";
-import { C4RectangleProps } from "../components/NodeTypes";
-import { C4FloatingEdgeProps } from "../components/EdgeTypes";
-import { formatNodeTechnologies, formatEdgeTechnologies } from "../components/LabelTypes";
-import { Element, Relationship } from "../types/Diagram";
+import { ReactFlowJsonObject, Node, Edge } from "@reactflow/core";
 import { v4 } from "uuid";
 import { XMLBuilder } from "fast-xml-parser";
+import { C4RectangleProps } from "../components/NodeTypes";
+import { C4FloatingEdgeProps } from "../components/EdgeTypes";
+import { formatNodeTechnology, formatEdgeTechnology } from "../components/LabelTypes";
+import { Element, Relationship } from "../types/Diagram";
 import { bold, br, font, html, text } from "../../../utils/HtmlBuilder";
 import { MXGeometryAs, MXCell, MXPointAs, Drawio } from "../../../utils/MxFile";
 
@@ -267,7 +266,7 @@ export function exportToDrawio(
             br(),
             font(
                 { fontSize: 10 },
-                text(formatNodeTechnologies(node)),
+                text(formatNodeTechnology(node)),
                 br(),
                 br(),
                 text(node.description)
@@ -281,7 +280,7 @@ export function exportToDrawio(
             br(),
             font(
                 { fontSize: 10 },
-                text(formatEdgeTechnologies(edge))
+                text(formatEdgeTechnology(edge))
             )
         );
         return htmlObject.toHtml();

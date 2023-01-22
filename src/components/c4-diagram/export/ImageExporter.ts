@@ -1,4 +1,4 @@
-import { ReactFlowJsonObject } from "reactflow";
+import { ReactFlowJsonObject } from "@reactflow/core";
 import { C4FloatingEdgeProps } from "../components/EdgeTypes";
 import { C4RectangleProps } from "../components/NodeTypes";
 import * as HtmlToImage from "html-to-image";

@@ -31,11 +31,11 @@ export const CollaborationPanel: FC<PropsWithChildren<CollaborationPanelProps>> 
                 <AvatarGroup size={"sm"} max={3}>
                     {users && users.map(user => (
                         <Avatar
-                        key={user.username}
-                        name={user.fullname}
-                        src={user.avatarUrl}
+                            key={user.username}
+                            name={user.fullname}
+                            src={user.avatarUrl}
                         />
-                        ))}
+                    ))}
                 </AvatarGroup>
                 <Button>
                     Share

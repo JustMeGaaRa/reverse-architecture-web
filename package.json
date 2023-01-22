@@ -13,6 +13,8 @@
     "@chakra-ui/react": "2.4.3",
     "@emotion/react": "11.10.5",
     "@emotion/styled": "11.10.5",
+    "@reactflow/background": "^11.1.2",
+    "@reactflow/core": "^11.4.2",
     "@reactflow/node-resizer": "^1.2.2",
     "@sniptt/monads": "^0.5.10",
     "chakra-react-select": "^4.4.3",
@@ -29,7 +31,6 @@
     "react-router": "6.4.5",
     "react-router-dom": "6.4.5",
     "react-scripts": "5.0.1",
-    "reactflow": "11.4.2",
     "uuid": "9.0.0",
     "zustand": "^4.3.2"
   },

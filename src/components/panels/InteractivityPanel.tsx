@@ -1,71 +1,62 @@
 import { FC, PropsWithChildren } from "react";
-import { FaExpand, FaLock, FaLockOpen, FaMinus, FaPlus } from "react-icons/fa";
+import { useReactFlow } from "@reactflow/core";
 import {
-    ReactFlowState,
-    useReactFlow,
-    useStore,
-    useStoreApi
-} from "reactflow";
+    FaExpand,
+    FaMinus,
+    FaPlus
+} from "react-icons/fa";
 import { ButtonGroup, IconButton } from "@chakra-ui/react";
 import { Panel, PanelProps } from "./Panel";
 
-export type InteractivityPanelProps = Partial<Pick<PanelProps, "dock">>;
+type InteractivityPanelProps = Partial<Pick<PanelProps, "dock">> & {
+    showZoom?: boolean;
+    showFitView?: boolean;
+};
 
-export const InteractivityPanel: FC<PropsWithChildren<InteractivityPanelProps>> = ({
+const InteractivityPanel: FC<PropsWithChildren<InteractivityPanelProps>> = ({
     children,
-    dock
+    dock = "bottom-left",
+    showZoom = true,
+    showFitView = true
 }) => {
-    const isInteractiveSelector = (flowState: ReactFlowState) => {
-        return flowState.nodesDraggable
-            && flowState.nodesConnectable
-            && flowState.elementsSelectable;
-    };
-    const store = useStoreApi();
-    const isInteractive = useStore(isInteractiveSelector);
     const { zoomIn, zoomOut, fitView } = useReactFlow();
 
-    const toggleInteractivity = () => {
-        store.setState({
-            nodesDraggable: !isInteractive,
-            nodesConnectable: !isInteractive,
-            elementsSelectable: !isInteractive,
-        });
-    };
-
     return (
-        <Panel dock={dock ?? "bottom-left"}>
+        <Panel dock={dock}>
             <ButtonGroup
                 isAttached
                 orientation={"vertical"}
                 size={"md"}
                 variant={"ghost"}
             >
-                <IconButton
-                    aria-label={"zoom in"}
-                    icon={<FaPlus />}
-                    title={"zoom in"}
-                    onClick={() => zoomIn()}
-                />
-                <IconButton
-                    aria-label={"zoom out"}
-                    icon={<FaMinus />}
-                    title={"zoom out"}
-                    onClick={() => zoomOut()}
-                />
-                <IconButton
-                    aria-label={"fit view"}
-                    icon={<FaExpand />}
-                    title={"fit view"}
-                    onClick={() => fitView({ padding: 0.2 })}
-                />
-                <IconButton
-                    aria-label={"toggle interactivity"}
-                    icon={isInteractive ? <FaLockOpen /> : <FaLock />}
-                    title={"toggle interacivity"}
-                    onClick={() => toggleInteractivity()}
-                />
+                {showZoom && (
+                    <IconButton
+                        aria-label={"zoom in"}
+                        icon={<FaPlus />}
+                        title={"zoom in"}
+                        onClick={() => zoomIn()}
+                    />
+                )}
+                {showZoom && (
+                    <IconButton
+                        aria-label={"zoom out"}
+                        icon={<FaMinus />}
+                        title={"zoom out"}
+                        onClick={() => zoomOut()}
+                    />
+                )}
+                {showFitView && (
+                    <IconButton
+                        aria-label={"fit view"}
+                        icon={<FaExpand />}
+                        title={"fit view"}
+                        onClick={() => fitView({ padding: 0.2 })}
+                    />
+                )}
                 {children}
             </ButtonGroup>
         </Panel>
     );
 }
+
+export { InteractivityPanel };

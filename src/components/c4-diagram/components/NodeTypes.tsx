@@ -1,19 +1,20 @@
 import '@reactflow/node-resizer/dist/style.css';
 
 import { FC, useCallback, useState } from "react";
-import { Handle, NodeProps, Position } from "reactflow";
+import { Handle, NodeProps, Position } from "@reactflow/core";
 import { NodeResizer } from "@reactflow/node-resizer";
-import { Box, Flex, Text, useColorModeValue } from "@chakra-ui/react";
-import { C4AbstractioInfo } from "./LabelTypes";
-import { Element, ElementType } from "../types/Diagram";
+import { Flex, useColorModeValue } from "@chakra-ui/react";
+import { FaPlus } from 'react-icons/fa';
+import { C4ElementInfo } from "./LabelTypes";
+import { Element } from "../types/Diagram";
 import { ElementBgColors } from "../utils/Graph";
 
-export type C4RectangleProps = Element & {
+type C4RectangleProps = Element & {
     width?: number;
     height?: number;
 };
 
-export const C4RectangleNode: FC<NodeProps<C4RectangleProps>> = ({ data, selected }) => {
+const C4RectangleNode: FC<NodeProps<C4RectangleProps>> = ({ data, selected }) => {
     const defaultBorderColor = useColorModeValue("blackAlpha.400", "whiteAlpha.400");
     const highlightBorderColor = useColorModeValue("blackAlpha.800", "whiteAlpha.800");
 
@@ -30,27 +31,47 @@ export const C4RectangleNode: FC<NodeProps<C4RectangleProps>> = ({ data, selecte
             height={150}
             textColor={"whiteAlpha.900"}
         >
-            <C4AbstractioInfo
+            <C4ElementInfo
                 data={data}
                 align={"center"}
                 showTechnologies
                 showDescription
             />
-            <Handle position={Position.Left} id="a" type={"source"} />
-            <Handle position={Position.Top} id="b" type={"source"} />
-            <Handle position={Position.Right} id="c" type={"source"} />
-            <Handle position={Position.Bottom} id="d" type={"source"} />
+            <Handle id="a" type={"source"} position={Position.Left} />
+            <Handle id="b" type={"source"} position={Position.Top} />
+            <Handle id="c" type={"source"} position={Position.Right} />
+            <Handle id="d" type={"source"} position={Position.Bottom} />
         </Flex>
     );
 };
 
-export type C4ScopeProps = Element & {
+type C4ElementPlaceholderProps = unknown;
+
+const C4ElementPlaceholder: FC<NodeProps<C4ElementPlaceholderProps>> = () => {
+    return (
+        <Flex
+            borderWidth={2}
+            border={"dashed"}
+            borderColor={"whiteAlpha.700"}
+            borderRadius={"2xl"}
+            align={"center"}
+            justify={"center"}
+            padding={2}
+            width={240}
+            height={150}
+        >
+            <FaPlus size={"30"} />
+        </Flex>
+    )
+}
+
+type C4ScopeProps = Element & {
     width?: number;
     height?: number;
     draggedOver?: boolean;
 }
 
-export const C4ScopeNode: FC<NodeProps<C4ScopeProps>> = ({ data, selected }) => {
+const C4ScopeNode: FC<NodeProps<C4ScopeProps>> = ({ data, selected }) => {
     const defaultBgColor = useColorModeValue("blackAlpha.300", "blackAlpha.400");
     const highlightBgColor = useColorModeValue("blackAlpha.400", "blackAlpha.500");
     
@@ -79,7 +100,7 @@ export const C4ScopeNode: FC<NodeProps<C4ScopeProps>> = ({ data, selected }) => 
             width={size[0]}
             height={size[1]}
         >
-            <C4AbstractioInfo
+            <C4ElementInfo
                 data={data}
                 align={"start"}
                 showTechnologies
@@ -96,32 +117,11 @@ export const C4ScopeNode: FC<NodeProps<C4ScopeProps>> = ({ data, selected }) => 
     );
 };  
 
-
-export type C4RectangleDraggableProps = {
-    type: ElementType,
-    name: string,
-    onDragStart: (event: any, typeCode: string) => void
+export {
+    C4RectangleNode,
+    C4ScopeNode,
+    C4ElementPlaceholder,
+    C4RectangleProps,
+    C4ScopeProps,
+    C4ElementPlaceholderProps
 }
-
-export const C4RectangleDraggable: FC<C4RectangleDraggableProps> = ({
-    type,
-    name,
-    onDragStart
-}) => {
-    return (
-        <Box
-            background={ElementBgColors[type]}
-            borderRadius={"md"}
-            cursor={"pointer"}
-            draggable
-            fontSize={"xs"}
-            padding={2}
-            textColor={"whiteAlpha.900"}
-            textAlign={"center"}
-            _hover={{ opacity: .7 }}
-            onDragStart={(event) => onDragStart(event, type)}
-        >
-            <Text>{name}</Text>
-        </Box>
-    );
-};

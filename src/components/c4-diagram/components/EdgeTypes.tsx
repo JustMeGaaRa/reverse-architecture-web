@@ -7,12 +7,12 @@ import {
     internalsSymbol,
     useStore,
     getBezierPath,
-} from "reactflow";
+} from "@reactflow/core";
 import { Box, useColorModeValue } from "@chakra-ui/react";
 import { C4RelationshipInfo } from "./LabelTypes";
 import { Relationship } from "../types/Diagram";
 
-export type BaseEdgeProps = {
+type BaseEdgeProps = {
     path: string,
     labelX: number,
     labelY: number,
@@ -22,7 +22,7 @@ export type BaseEdgeProps = {
     interactionWidth: number,
 }
 
-export const BaseEdge: FC<PropsWithChildren<BaseEdgeProps>> = ({
+const BaseEdge: FC<PropsWithChildren<BaseEdgeProps>> = ({
     children,
     path,
     style,
@@ -113,7 +113,7 @@ function getParams(nodeA: Node, nodeB: Node) {
 }
 
 // returns the parameters (sx, sy, tx, ty, sourcePos, targetPos) you need to create an edge
-export function getEdgeParams(source: Node, target: Node) {
+function getEdgeParams(source: Node, target: Node) {
     const [sourceX, sourceY, sourcePosition] = getParams(source, target);
     const [targetX, targetY, targetPosition] = getParams(target, source);
 
@@ -127,9 +127,9 @@ export function getEdgeParams(source: Node, target: Node) {
     };
 }
 
-export type C4FloatingEdgeProps = Relationship;
+type C4FloatingEdgeProps = Relationship;
 
-export const C4FloatingEdge: FC<EdgeProps<C4FloatingEdgeProps>> = ({
+const C4FloatingEdge: FC<EdgeProps<C4FloatingEdgeProps>> = ({
     source,
     target,
     selected,
@@ -192,3 +192,8 @@ export const C4FloatingEdge: FC<EdgeProps<C4FloatingEdgeProps>> = ({
         </BaseEdge>
     );
 };
+
+export {
+    C4FloatingEdge,
+    C4FloatingEdgeProps
+}

@@ -3,8 +3,6 @@ import {
     Box,
     Card,
     CardBody,
-    CardFooter,
-    CardHeader,
     Heading,
     Text,
     useColorModeValue,
@@ -68,13 +66,13 @@ const TemplateItem: FC<TemplateItemProps> = ({
 }
 
 type TemplateGroupProps = DiagramTemplateGroup & {
-    onSelect: (template: DiagramTemplate) => void;
+    onSelected: (template: DiagramTemplate) => void;
 }
 
 const TemplateGroup: FC<TemplateGroupProps> = ({
     header,
     templates,
-    onSelect
+    onSelected
 }) => {
     return (
         <Box py={5}>
@@ -87,7 +85,7 @@ const TemplateGroup: FC<TemplateGroupProps> = ({
                         <TemplateItem
                             header={template.header}
                             description={template.description}
-                            onClick={() => onSelect(template)}
+                            onClick={() => onSelected(template)}
                         />
                     </WrapItem>
                 ))}
@@ -98,12 +96,12 @@ const TemplateGroup: FC<TemplateGroupProps> = ({
 
 type TemplateSelectorProps = {
     templates: Array<DiagramTemplateGroup>;
-    onSelect: (template: DiagramTemplate) => void;
+    onSelected: (template: DiagramTemplate) => void;
 }
 
 export const TemplateSelector: FC<TemplateSelectorProps> = ({
     templates,
-    onSelect
+    onSelected
 }) => {
     return (
         <>
@@ -112,7 +110,7 @@ export const TemplateSelector: FC<TemplateSelectorProps> = ({
                     key={group.header}
                     header={group.header}
                     templates={group.templates}
-                    onSelect={onSelect}
+                    onSelected={onSelected}
                 />
             ))}
         </>

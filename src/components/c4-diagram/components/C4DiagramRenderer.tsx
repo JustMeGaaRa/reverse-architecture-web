@@ -1,18 +1,21 @@
+import "@reactflow/core/dist/style.css";
+
 import {
     FC,
     PropsWithChildren,
     useCallback,
-    useRef
+    useRef,
+    useState
 } from "react";
-import ReactFlow, {
+import {
+    ReactFlow,
     ConnectionMode,
-    Background,
-    BackgroundVariant,
     useReactFlow,
     useNodesState,
     useEdgesState,
     Connection,
-} from "reactflow";
+} from "@reactflow/core";
+import { Background, BackgroundVariant } from "@reactflow/background";
 import { C4Diagram, createElement, createRelationship } from "../types/Diagram";
 import {
     NODE_WIDTH,
@@ -124,7 +127,7 @@ export const C4DiagramRenderer: FC<PropsWithChildren<C4DiagramRendererProps>> = 
             y: position.y - reactFlowBounds.top - NODE_HEIGHT / 2
         });
 
-        const node = createNode(createElement(type), relativePosition);
+        const node = createNode(createElement(type), relativePosition, type);
         setNodes(nodes => nodes.concat(node));
     }, [setNodes, reactFlow]);
 
@@ -132,6 +135,26 @@ export const C4DiagramRenderer: FC<PropsWithChildren<C4DiagramRendererProps>> = 
         onDragOver,
         onDrop
     } = useDragAndDrop("application/reactflow");
+
+    const [isAddingElement, setIsAddingElement] = useState(false);
+    const onMouseDown = useCallback((event) => {
+        console.log("onMouseDown")
+        setIsAddingElement(true);
+        addNode({ x: event.clientX, y: event.clientY }, "placeholder");
+    }, [setIsAddingElement, addNode]);
+
+    const onMouseUp = useCallback(() => {
+        console.log("onMouseUp")
+        setIsAddingElement(false);
+        setNodes(nodes => nodes.filter(node => node.type !== "placeholder"))
+    }, [setIsAddingElement, setNodes]);
+
+    const onMouseMove = useCallback(() => {
+        console.log("onMouseMove")
+        if(!isAddingElement) return;
+
+
+    }, [isAddingElement]);
 
     return (
         <ReactFlow

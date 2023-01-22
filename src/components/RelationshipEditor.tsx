@@ -1,12 +1,12 @@
-import { FC, MouseEventHandler } from "react";
-import { FaCheck } from "react-icons/fa";
+import { FC, MouseEventHandler, useCallback, useRef } from "react";
+import { useReactFlow } from "@reactflow/core";
 import {
-    Button,
-    ButtonGroup,
     Flex,
+    FormControl,
+    FormLabel,
     Textarea
 } from "@chakra-ui/react";
-import { Select } from "chakra-react-select";
+import { Select, SelectInstance } from "chakra-react-select";
 import { Relationship, RelationshipCallback } from "./c4-diagram";
 
 export type RelationshipEditorProps = {
@@ -21,69 +21,51 @@ export const RelationshipEditor: FC<RelationshipEditorProps> = ({
     data,
     technologies
 }) => {
-    // const onEdgeDataChange = useCallback((relationship) => {
-    //     setSelectedEdge(relationship);
-    // }, [setSelectedEdge]); 
+    const selectRef = useRef<SelectInstance>(null);
+    const { setEdges } = useReactFlow();
 
-    // const onEdgeDataSave = useCallback(() => {
-    //     setEdges(getEdges().map(edge => {
-    //         if (edge.id === selectedEdge.id) {
-    //             const updatedEdge = {
-    //                 ...edge,
-    //                 ...selectedEdge,
-    //                 data: { ...selectedEdge.data }
-    //             };
-    //             return updatedEdge;
-    //         }
-    //         return edge;
-    //     }));
-    // }, [getEdges, setEdges, selectedEdge]);
+    const setEdgeChanges = useCallback((changes: Partial<Relationship>) => {
+        setEdges(edges => edges.map(edge => {
+            if (edge.data.relationshipId !== data.relationshipId) {
+                return edge;
+            }
 
-    // const onEdgeDataCancel = useCallback(() => {
-    //     setSelectedEdge(null);
-    // }, [setSelectedEdge]);
+            return {
+                ...edge,
+                data: {
+                    ...edge.data,
+                    ...changes
+                }
+            };
+        }));
+    }, [setEdges, data]);
 
     return data && (
         <Flex direction={"column"} gap={4} width={["xs"]}>
-            <Textarea
-                height={[100]}
-                value={data.description}
-                placeholder={"Enter the title of the relationship"}
-                // onChange={(event) => {
-                //     onChange && onChange({
-                //         ...data,
-                //         title: event.target.value
-                //     })
-                // }}
-            />
-            <Select
-                closeMenuOnSelect={false}
-                isMulti
-                placeholder={"Select a list of technologies"}
-                options={technologies.map(t => ({ label: t, value: t }))}
-                value={data.technology && data.technology.map(t => ({ label: t, value: t }))}
-                // onChange={(event) => {
-                //     onChange && onChange({
-                //         ...data,
-                //         technologies: event.map(x => x.value)
-                //     })
-                // }}
-            />
-            <ButtonGroup size={"sm"} justifyContent={"center"}>
-                <Button
-                    leftIcon={<FaCheck />}
-                    colorScheme={"blue"}
-                    // onClick={onSave}
-                >
-                    Save
-                </Button>
-                <Button
-                    variant={"ghost"}
-                    // onClick={onCancel}
-                >
-                    Cancel
-                </Button>
-            </ButtonGroup>
+            <FormControl isRequired>
+                <FormLabel>Description</FormLabel>
+                <Textarea
+                    value={data.description}
+                    placeholder={"Enter the relationship description"}
+                    onBlur={(event) => setEdgeChanges({ description: event.target.value })}
+                />
+            </FormControl>
+            <FormControl>
+                <FormLabel>Technology</FormLabel>
+                <Select
+                    ref={selectRef}
+                    closeMenuOnSelect={false}
+                    isClearable={false}
+                    isMulti
+                    useBasicStyles
+                    placeholder={"Select technology"}
+                    options={technologies.map(t => ({ label: t, value: t }))}
+                    defaultValue={data.technology && data.technology.map(t => ({ label: t, value: t }))}
+                    onBlur={() => setEdgeChanges({
+                        technology: selectRef.current.getValue().map(option => option["value"])
+                    })}
+                />
+            </FormControl>
         </Flex>
     );
 }
