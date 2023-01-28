@@ -1,36 +1,31 @@
-import { FC, useCallback, useEffect, useState } from "react";
+import { FC, PropsWithChildren, useCallback, useEffect, useState } from "react";
+import { useDisclosure, useToast } from "@chakra-ui/react";
 import { useStore } from "@reactflow/core";
 import {
-    Box,
-    useDisclosure,
-    useToast
-} from "@chakra-ui/react";
-import { saveAs } from "file-saver";
-import {
-    C4DiagramRenderer,
-    TemplateSelectorModal,
-    ExportMenu,
-    Panel,
-    ControlsPanel,
-    CollaborationPanel,
-    InteractivityPanel,
     AbstractionEditor,
-    RelationshipEditor,
+    C4DiagramRenderer,
+    CollaborationPanel,
+    ControlsPanel,
+    DiagramTemplate,
+    ExportMenu,
+    InteractivityPanel,
     NavigationPanel,
+    Panel,
     parseReactFlow,
-    DiagramTemplate
-} from "../../components";
-import { selectedEdgeSelector, selectedNodeSelector } from "../../components/c4-view-builder";
-import { useC4Diagram } from "../../components/c4-view-renderer/hooks";
-import { exportToDrawio, exportToJson } from "../../services/export";
+    RelationshipEditor,
+    selectedEdgeSelector,
+    selectedNodeSelector,
+    useC4Diagram
+} from "../../..";
+import saveAs from "file-saver";
+import { exportToDrawio, exportToJson } from "../../../../services/export";
 
-import Templates from "../../contracts/Templates.json";
-import Users from "../../contracts/Users.json"
-import Technologies from "../../contracts/Technologies.json";
+import Users from "../../../../contracts/Users.json"
+import Technologies from "../../../../contracts/Technologies.json";
 
 const SupportedFileTypes = new Set(["application/json"]);
 
-export const Sandbox: FC = () => {
+const C4ViewBuilder: FC<PropsWithChildren> = (props) => {
     const { title, setTitle, fromDiagram, fromObject, toObject } = useC4Diagram();
     const selectedNode = useStore(selectedNodeSelector);
     const selectedEdge = useStore(selectedEdgeSelector);
@@ -119,52 +114,40 @@ export const Sandbox: FC = () => {
     }, [onClose, fromDiagram, setTitle]);
     
     useEffect(() => onOpen(), [onOpen]);
-
+    
     return (
-        <Box
-            height="100vh"
-            onDragOver={onDragOver}
-            onDragEnd={onDragEnd}
-            onDrop={onDrop}
-        >
-            <C4DiagramRenderer>
-                <CollaborationPanel users={Users} />
-                <ControlsPanel />
-                <InteractivityPanel />
-                <Panel
-                    dock={"top-left"}
-                    paddingX={4}
-                    paddingY={2}
+        <C4DiagramRenderer>
+            <CollaborationPanel users={Users} />
+            <ControlsPanel />
+            <InteractivityPanel />
+            <Panel
+                dock={"top-left"}
+                paddingX={4}
+                paddingY={2}
+            >
+                <NavigationPanel
+                    title={title}
+                    onTitleChange={setTitle}
                 >
-                    <NavigationPanel
-                        title={title}
-                        onTitleChange={setTitle}
-                    >
-                        <ExportMenu items={exports} />
-                    </NavigationPanel>
-                </Panel>
-                <Panel
-                    dock={"right-center"}
-                    padding={4}
-                    visibility={noneSelected ? "hidden" : "visible"}
-                >
-                    <AbstractionEditor
-                        data={selectedNode?.data}
-                        technologies={Technologies}
-                    />
-                    <RelationshipEditor
-                        data={selectedEdge?.data}
-                        technologies={Technologies}
-                    />
-                </Panel>
-            </C4DiagramRenderer>
-                
-            <TemplateSelectorModal
-                templates={Templates}
-                isOpen={isOpen}
-                onClose={onClose}
-                onSelected={onSelected}
-            />
-        </Box>
+                    <ExportMenu items={exports} />
+                </NavigationPanel>
+            </Panel>
+            <Panel
+                dock={"right-center"}
+                padding={4}
+                visibility={noneSelected ? "hidden" : "visible"}
+            >
+                <AbstractionEditor
+                    data={selectedNode?.data}
+                    technologies={Technologies}
+                />
+                <RelationshipEditor
+                    data={selectedEdge?.data}
+                    technologies={Technologies}
+                />
+            </Panel>
+        </C4DiagramRenderer>
     );
-};
+}
+
+export { C4ViewBuilder };

@@ -7,7 +7,7 @@ import {
     Textarea
 } from "@chakra-ui/react";
 import { Select, SelectInstance } from "chakra-react-select";
-import { Relationship, RelationshipCallback } from "./c4-diagram";
+import { Relationship, RelationshipCallback } from "./structurizr-dsl";
 
 export type RelationshipEditorProps = {
     data: Relationship;

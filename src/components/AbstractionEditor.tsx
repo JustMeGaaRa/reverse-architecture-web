@@ -8,7 +8,7 @@ import {
     Textarea
 } from "@chakra-ui/react";
 import { Select, SelectInstance } from "chakra-react-select";
-import { Element, ElementCallback } from "./c4-diagram";
+import { Element, ElementCallback } from "./structurizr-dsl";
 
 export type AbstractionEditorProps = {
     data: Element;
