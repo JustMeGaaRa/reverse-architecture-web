@@ -1,53 +1,52 @@
-import { FC } from "react";
-import { FaDownload } from "react-icons/fa";
+import { DownloadIcon } from "@chakra-ui/icons";
 import {
     IconButton,
     Menu,
     MenuButton,
     MenuList,
     MenuItem,
-    MenuItemProps,
     useColorModeValue,
 } from "@chakra-ui/react";
+import { FC } from "react";
 
 type ExportMenuProps = {
+    filename: string;
     items: Array<{
-        name: string;
-        export: () => void;
+        title: string;
+        export: (filename: string) => void;
     }>;
 }
 
-const ExportMenu: FC<ExportMenuProps> = ({
+export const ExportMenu: FC<ExportMenuProps> = ({
+    filename,
     items
 }) => {
     const menuBgColor = useColorModeValue("whiteAlpha.900", "gray.900");
-    const menuItemProps: MenuItemProps = {
-        background: menuBgColor,
-        _hover: {
-            background: useColorModeValue("blackAlpha.200", "whiteAlpha.200")
-        }
-    };
+    const menuItemBgColor = useColorModeValue("blackAlpha.200", "whiteAlpha.200");
     
     return (
-        <Menu closeOnBlur closeOnSelect>
+        <Menu
+            closeOnBlur={true}
+            placement={"bottom-start"}
+            closeOnSelect={true}
+        >
             <MenuButton
                 as={IconButton}
-                icon={<FaDownload />}
+                icon={<DownloadIcon />}
                 variant={"ghost"}
             />
             <MenuList background={menuBgColor}>
                 {items.map(item => (
                     <MenuItem
-                        key={item.name}
-                        {...menuItemProps}
-                        onClick={() => item.export()}
+                        key={item.title}
+                        background={menuBgColor}
+                        _hover={{ background: menuItemBgColor }}
+                        onClick={() => item.export(filename)}
                     >
-                        {item.name}
+                        {item.title}
                     </MenuItem>
                 ))}
             </MenuList>
         </Menu>
     );
 }
-
-export { ExportMenu }

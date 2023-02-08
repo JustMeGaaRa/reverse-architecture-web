@@ -11,7 +11,7 @@ import {
 import { Box, useColorModeValue } from "@chakra-ui/react";
 import { BaseEdge } from "./BaseEdge";
 import { RelationshipLabel } from "../Labels/RelationshipLabel";
-import { Relationship } from "../../../structurizr-dsl/Diagram";
+import { Relationship } from "../../store/Diagram";
 
 function getNodeCenter(node: Node) {
     return {

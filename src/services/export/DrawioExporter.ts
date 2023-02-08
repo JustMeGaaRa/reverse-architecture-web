@@ -5,7 +5,7 @@ import { ElementNodeProps } from "../../components/c4-view-renderer/components/N
 import { RelationshipEdgeProps } from "../../components/c4-view-renderer/components/Edges/RelationshipEdge";
 import { formatElementTechnology } from "../../components/c4-view-renderer/components/Labels/ElementLabel";
 import { formatRelationshipTechnology } from "../../components/c4-view-renderer/components/Labels/RelationshipLabel";
-import { Element, Relationship } from "../../components/structurizr-dsl/Diagram";
+import { Element, Relationship } from "../../components/c4-view-renderer/store/Diagram";
 import { bold, br, font, html, text } from "../../utils/HtmlBuilder";
 import { MXGeometryAs, MXCell, MXPointAs, Drawio } from "../../utils/MxFile";
 
@@ -109,10 +109,10 @@ const formatEdgeStyle = (style: Partial<EdgeStyle>) => {
 const getElementBgColor = (type: string) => {
     const nodesBgColors = {
         ["Scope"]: "#F5F5F5",
-        ["Person"]: "#60A917",
-        ["Software System"]: "#6A00FF",
-        ["Container"]: "#0050EF",
-        ["Component"]: "#1BA1E2",
+        ["Person"]: "#38A169",
+        ["Software System"]: "#6B46C1",
+        ["Container"]: "#3182ce",
+        ["Component"]: "#90cdf4",
     };
     return nodesBgColors[type];
 }

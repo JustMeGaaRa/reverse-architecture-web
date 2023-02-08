@@ -5,8 +5,31 @@ import { Handle, NodeProps, Position } from "@reactflow/core";
 import { NodeResizer } from "@reactflow/node-resizer";
 import { Expanded, RoundedBox } from '../Shapes';
 import { ElementLabel } from "../Labels/ElementLabel";
-import { ElementBgColors } from "../../utils/Graph";
-import { Element } from "../../../structurizr-dsl/Diagram";
+import { Element } from "../../store/Diagram";
+
+const ViewStyle = {
+    element: {
+        ["Person"]: {
+            shape: "Person",
+            background: "#38A169"
+        },
+        ["Software System"]: {
+            shape: "RoundedBox",
+            background: "#6B46C1"
+        },
+        ["Container"]: {
+            shape: "RoundedBox",
+            background: "#3182ce"
+        },
+        ["Component"]: {
+            shape: "RoundedBox",
+            background: "#90cdf4"
+        },
+    },
+    relationship: {
+
+    }
+}
 
 export type ElementNodeProps = Element & {
     expanded?: boolean;
@@ -34,7 +57,6 @@ export const ElementNode: FC<NodeProps<ElementNodeProps>> = ({
             <ElementLabel
                 data={data}
                 align={"start"}
-                showTechnologies
             />
             <NodeResizer
                 isVisible={selected}
@@ -48,7 +70,7 @@ export const ElementNode: FC<NodeProps<ElementNodeProps>> = ({
     )
     : (
         <RoundedBox
-            background={ElementBgColors[data.type]}
+            background={ViewStyle.element[data.type].background}
             width={size.width}
             height={size.height}
             selected={data.draggedOver || selected}

@@ -57,7 +57,7 @@ export type ViewType =
     | "Code"
     | string;
 
-export interface C4Diagram {
+export interface Diagram {
     diagramId: string;
     type: ViewType;
     title: string;
@@ -67,25 +67,3 @@ export interface C4Diagram {
     supportingElements: Array<Node<Element>>;
     relationships: Array<Edge<Relationship>>;
 }
-
-export const createElement = (
-    type: string
-): Element => {
-    return {
-        elementId: v4(),
-        name: type,
-        type: type
-    };
-};
-
-export const createRelationship = (
-
-): Relationship => {
-    return {
-        relationshipId: v4()
-    };
-};
-
-export type ElementCallback = (element: Element) => void;
-
-export type RelationshipCallback = (relationship: Relationship) => void;

@@ -1,11 +1,21 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { NodeProps } from "@reactflow/core";
 import { Flex } from "@chakra-ui/react";
 import { FaPlus } from "react-icons/fa";
 
-export type ElementPlaceholderProps = unknown;
+export type ElementPlaceholderProps = {
+    width?: number;
+    height?: number;
+};
 
-export const ElementPlaceholder: FC<NodeProps<ElementPlaceholderProps>> = () => {
+export const ElementPlaceholder: FC<NodeProps<ElementPlaceholderProps>> = ({
+    data
+}) => {
+    const [size] = useState({
+        width: data.width ?? 240,
+        height: data.height ?? 150
+    });
+
     return (
         <Flex
             borderWidth={2}
@@ -15,8 +25,8 @@ export const ElementPlaceholder: FC<NodeProps<ElementPlaceholderProps>> = () => 
             align={"center"}
             justify={"center"}
             padding={2}
-            width={240}
-            height={150}
+            width={size.width}
+            height={size.height}
         >
             <FaPlus size={"30"} />
         </Flex>

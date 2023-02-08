@@ -1,12 +1,6 @@
 import "@reactflow/core/dist/style.css";
 
-import {
-    FC,
-    PropsWithChildren,
-    useCallback,
-    useRef,
-    useState
-} from "react";
+import { Background, BackgroundVariant } from "@reactflow/background";
 import {
     ReactFlow,
     ConnectionMode,
@@ -14,36 +8,95 @@ import {
     useNodesState,
     useEdgesState,
     Connection,
+    MarkerType
 } from "@reactflow/core";
-import { Background, BackgroundVariant } from "@reactflow/background";
-import { C4Diagram, createElement, createRelationship } from "../../../structurizr-dsl/Diagram";
 import {
-    NODE_WIDTH,
-    NODE_HEIGHT,
-    createNode,
-    createEdge,
-    NodeTypes,
-    EdgeTypes
-} from "../../utils/Graph";
-import { useDragAndDrop } from "../../hooks/useDragAndDrop";
+    CSSProperties,
+    FC,
+    PropsWithChildren,
+    useCallback,
+    useRef,
+    useState
+} from "react";
+import { ElementNode } from "../Nodes/ElementNode";
+import { ElementPlaceholder } from "../Nodes/ElementPlaceholder";
+import { RelationshipEdge } from "../Edges/RelationshipEdge";
+import { CollaborationPanel, InteractivityPanel, NavigationPanel } from "../Panels";
+import { v4 } from "uuid";
+import { useC4BuilderStore } from "../../store";
+import { parseReactFlow } from "../../utils";
 
-export type C4ViewRendererProps = {
-    view?: C4Diagram;
+const NodeTypes = {
+    default: ElementNode,
+    box: ElementNode,
+    cylinder: ElementNode,
+    hexagon: ElementNode,
+    person: ElementNode,
+    pipe: ElementNode,
+    roundedBox: ElementNode,
+    placeholder: ElementPlaceholder
 }
 
-export const C4DiagramRenderer: FC<PropsWithChildren<C4ViewRendererProps>> = ({
+const EdgeTypes = {
+    default: RelationshipEdge,
+    straight: RelationshipEdge,
+    step: RelationshipEdge,
+    smoothstep: RelationshipEdge,
+    simplebezier: RelationshipEdge,
+    floating: RelationshipEdge
+}
+
+const SupportedFileTypes = new Set(["application/json"]);
+
+type C4DiagramRendererProps = {
+    onImport?: (result: any) => void;
+    onExport?: (result: any) => void;
+}
+
+export const C4DiagramRenderer: FC<PropsWithChildren<C4DiagramRendererProps>> = ({
     children,
+    onImport
 }) => {
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
+    const { addElement, addRelationship } = useC4BuilderStore();
     const reactFlowRef = useRef<HTMLDivElement>(null);
-    const reactFlow = useReactFlow();
+    const reactFlow = useReactFlow();    
+    
+    const addNode = useCallback((position, type) => {
+        const reactFlowBounds = reactFlowRef.current.getBoundingClientRect();
+        const relativePosition = reactFlow.project({
+            x: position.x - reactFlowBounds.left,
+            y: position.y - reactFlowBounds.top
+        });
+        const node = {
+            id: v4(),
+            type: type ?? "roundedBox",
+            data: addElement(type),
+            position: relativePosition,
+            parentNode: undefined
+        };
+        setNodes(nodes => nodes.concat(node));
+    }, [setNodes, addElement, reactFlow]);
+    const addEdge = useCallback((connection) => {
+        const relationship = addRelationship("");
+        const edge = {
+            id: v4(),
+            type: "default",
+            label: relationship.description,
+            data: relationship,
+            source: connection.source,
+            target: connection.target,
+            markerEnd: { type: MarkerType.Arrow }
+        };
+        setEdges(edges => edges.concat(edge));
+    }, [setEdges, addRelationship])
 
     const onConnect = useCallback((connection: Connection) => {
         if (!connection.source || !connection.target) return;
-        setEdges(edges => edges.concat(createEdge(connection.source, connection.target, createRelationship())));
-    }, [setEdges]);
+        addEdge(connection);
+    }, [addEdge]);
 
     const onNodeDrag = useCallback((event, draggedNode) => {
         // NOTE: only allow to update nodes that are dragged and are not of type scope
@@ -93,8 +146,8 @@ export const C4DiagramRenderer: FC<PropsWithChildren<C4ViewRendererProps>> = ({
             if (node.id === draggedNode.id && wasInsideScope && !draggedOverScope) {
                 const reactFlowBounds = reactFlowRef.current.getBoundingClientRect();
                 const outsideScopePosition = reactFlow.project({
-                    x: event.clientX - reactFlowBounds.left - NODE_WIDTH / 2,
-                    y: event.clientY - reactFlowBounds.top - NODE_HEIGHT / 2
+                    x: event.clientX - reactFlowBounds.left,
+                    y: event.clientY - reactFlowBounds.top
                 });
                 return {
                     ...node,
@@ -119,68 +172,68 @@ export const C4DiagramRenderer: FC<PropsWithChildren<C4ViewRendererProps>> = ({
             return node;
         }));
     }, [setNodes, reactFlow]);
-    
-    const addNode = useCallback((position, type) => {
-        const reactFlowBounds = reactFlowRef.current.getBoundingClientRect();
-        const relativePosition = reactFlow.project({
-            x: position.x - reactFlowBounds.left - NODE_WIDTH / 2,
-            y: position.y - reactFlowBounds.top - NODE_HEIGHT / 2
+
+    const defaultStyle: CSSProperties = {
+        border: "dashed 3px transparent",
+        boxSizing: "border-box"
+    }
+    const dropStyle: CSSProperties = {
+        background: "#0064ff33",
+        border: "dashed 3px #009fff",
+        boxSizing: "border-box"
+    };
+    const [isDragOver, setIsDragOver] = useState(false);
+
+    const onDrop = useCallback((event: React.DragEvent<HTMLDivElement>) => {
+        setIsDragOver(false);
+        
+        const draggedFiles = Array
+            .from(event.dataTransfer.files)
+            .filter(file => SupportedFileTypes.has(file.type));
+
+        const restoreFromJson = (json: string) => {
+            onImport(parseReactFlow(json));
+        };
+
+        draggedFiles.forEach(file => {
+            const fileReader = new FileReader();
+            fileReader.onload = (event) => restoreFromJson(event.target.result as string);
+            fileReader.readAsText(file);
         });
-
-        const node = createNode(createElement(type), relativePosition, type);
-        setNodes(nodes => nodes.concat(node));
-    }, [setNodes, reactFlow]);
-
-    const {
-        onDragOver,
-        onDrop
-    } = useDragAndDrop("application/reactflow");
-
-    const [isAddingElement, setIsAddingElement] = useState(false);
-    const onMouseDown = useCallback((event) => {
-        console.log("onMouseDown")
-        setIsAddingElement(true);
-        addNode({ x: event.clientX, y: event.clientY }, "placeholder");
-    }, [setIsAddingElement, addNode]);
-
-    const onMouseUp = useCallback(() => {
-        console.log("onMouseUp")
-        setIsAddingElement(false);
-        setNodes(nodes => nodes.filter(node => node.type !== "placeholder"))
-    }, [setIsAddingElement, setNodes]);
-
-    const onMouseMove = useCallback(() => {
-        console.log("onMouseMove")
-        if(!isAddingElement) return;
-
-
-    }, [isAddingElement]);
+    }, [onImport]);
 
     return (
         <ReactFlow
-            ref={reactFlowRef}
-            nodes={nodes}
-            nodeTypes={NodeTypes}
+            connectionMode={ConnectionMode.Loose}
+            fitView
+            fitViewOptions={{ padding: 0.2, duration: 500 }}
             edges={edges}
             edgeTypes={EdgeTypes}
-            onNodesChange={onNodesChange}
-            onNodeDrag={onNodeDrag}
-            onNodeDragStop={onNodeDragStop}
-            onConnect={onConnect}
-            onEdgesChange={onEdgesChange}
-            onDragOver={onDragOver}
-            onDrop={onDrop}
-            connectionMode={ConnectionMode.Loose}
+            nodes={nodes}
+            nodeTypes={NodeTypes}
             proOptions={{ hideAttribution: true }}
+            ref={reactFlowRef}
             snapGrid={[20, 20]}
             snapToGrid
-            fitView
-            fitViewOptions={{ padding: 0.2 }}
+            onConnect={onConnect}
+            onNodeDrag={onNodeDrag}
+            onNodeDragStop={onNodeDragStop}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onDragOver={() => setIsDragOver(true)}
+            onDragExit={() => setIsDragOver(false)}
+            onDrop={onDrop}
+            style={isDragOver ? dropStyle : defaultStyle}
         >
             <Background
                 variant={BackgroundVariant.Dots}
                 gap={[20, 20]}
             />
+            
+            <CollaborationPanel />
+            <InteractivityPanel />
+            <NavigationPanel />
+            
             {children}
         </ReactFlow>
     );

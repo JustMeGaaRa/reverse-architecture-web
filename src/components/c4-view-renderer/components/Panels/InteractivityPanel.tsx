@@ -50,7 +50,7 @@ const InteractivityPanel: FC<PropsWithChildren<InteractivityPanelProps>> = ({
                         aria-label={"fit view"}
                         icon={<FaExpand />}
                         title={"fit view"}
-                        onClick={() => fitView({ padding: 0.2 })}
+                        onClick={() => fitView({ padding: 0.2, duration: 500 })}
                     />
                 )}
                 {children}

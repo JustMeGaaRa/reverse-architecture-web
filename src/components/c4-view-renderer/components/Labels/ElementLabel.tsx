@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { VStack, Text } from "@chakra-ui/react";
-import { Element } from "../../../structurizr-dsl/Diagram";
+import { Element } from "../../store/Diagram";
 
 export const formatElementTechnology = (data: Element, showTechnologies?: boolean) => {
     return showTechnologies && data?.technology && data?.technology.length > 0
