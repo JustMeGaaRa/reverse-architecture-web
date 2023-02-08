@@ -3,6 +3,7 @@ import {
     Node,
     EdgeProps,
     EdgeLabelRenderer,
+    MarkerType,
     Position,
     internalsSymbol,
     useStore,
@@ -11,7 +12,8 @@ import {
 import { Box, useColorModeValue } from "@chakra-ui/react";
 import { BaseEdge } from "./BaseEdge";
 import { RelationshipLabel } from "../Labels/RelationshipLabel";
-import { Relationship } from "../../store/Diagram";
+import { Relationship } from "../../store/C4Diagram";
+import { defaultRelationshipStyle, RelationshipStyleProperties } from "../../store/C4Diagram";
 
 function getNodeCenter(node: Node) {
     return {
@@ -86,30 +88,31 @@ function getEdgeParams(source: Node, target: Node) {
     };
 }
 
-export type RelationshipEdgeProps = Relationship;
+export type RelationshipEdgeProps = {
+    data: Relationship;
+    style?: Partial<RelationshipStyleProperties>;
+    selected?: boolean;
+}
 
-export const RelationshipEdge: FC<EdgeProps<RelationshipEdgeProps>> = ({
-    source,
-    target,
-    selected,
+export const RelationshipEdge: FC<RelationshipEdgeProps> = ({
     data,
-    style,
-    markerEnd,
-    markerStart,
-    interactionWidth
+    style = defaultRelationshipStyle,
+    selected = false,
 }) => {
     const backgroundDefault = useColorModeValue("whiteAlpha.900", "gray.900");
     const backgroundHighlight = useColorModeValue("whiteAlpha.900", "gray.900");
     const background = selected
         ? backgroundDefault
         : backgroundHighlight;
-
+    
     const borderDefault = useColorModeValue("blackAlpha.200", "whiteAlpha.200");
     const borderHightlight = useColorModeValue("blackAlpha.400", "whiteAlpha.400");
     const border = selected
         ? borderDefault
         : borderHightlight;
-        
+    
+    const source = data.sourceIdentifier;
+    const target = data.targetIdentifier;
     const sourceNode = useStore(useCallback((store) => store.nodeInternals.get(source), [source]));
     const targetNode = useStore(useCallback((store) => store.nodeInternals.get(target), [target]));
 
@@ -123,10 +126,11 @@ export const RelationshipEdge: FC<EdgeProps<RelationshipEdgeProps>> = ({
             path={path}
             labelX={labelX}
             labelY={labelY}
-            style={style}
-            markerEnd={markerEnd}
-            markerStart={markerStart}
-            interactionWidth={interactionWidth}
+            style={{
+                width: style.thikness
+            }}
+            interactionWidth={style.thikness * 2}
+            // markerEnd={{ type: MarkerType.Arrow }}
         >
             <EdgeLabelRenderer>
                 <Box
@@ -151,3 +155,21 @@ export const RelationshipEdge: FC<EdgeProps<RelationshipEdgeProps>> = ({
         </BaseEdge>
     );
 };
+
+export type RelationshipEdgeWrapperProps = {
+    relationship: Relationship;
+    style?: Partial<RelationshipStyleProperties>;
+}
+
+export const RelationshipEdgeWrapper: FC<EdgeProps<RelationshipEdgeWrapperProps>> = ({
+    data,
+    selected
+}) => {
+    return (
+        <RelationshipEdge
+            data={data.relationship}
+            style={data.style ?? defaultRelationshipStyle}
+            selected={selected}
+        />
+    );
+}

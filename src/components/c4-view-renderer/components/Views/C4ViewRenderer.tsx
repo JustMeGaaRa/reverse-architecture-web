@@ -7,8 +7,7 @@ import {
     useReactFlow,
     useNodesState,
     useEdgesState,
-    Connection,
-    MarkerType
+    Connection
 } from "@reactflow/core";
 import {
     CSSProperties,
@@ -18,32 +17,32 @@ import {
     useRef,
     useState
 } from "react";
-import { ElementNode } from "../Nodes/ElementNode";
+import { ElementNodeWrapper } from "../Nodes/ElementNode";
 import { ElementPlaceholder } from "../Nodes/ElementPlaceholder";
-import { RelationshipEdge } from "../Edges/RelationshipEdge";
+import { RelationshipEdgeWrapper } from "../Edges/RelationshipEdge";
 import { CollaborationPanel, InteractivityPanel, NavigationPanel } from "../Panels";
 import { v4 } from "uuid";
 import { useC4BuilderStore } from "../../store";
 import { parseReactFlow } from "../../utils";
 
 const NodeTypes = {
-    default: ElementNode,
-    box: ElementNode,
-    cylinder: ElementNode,
-    hexagon: ElementNode,
-    person: ElementNode,
-    pipe: ElementNode,
-    roundedBox: ElementNode,
+    default: ElementNodeWrapper,
+    box: ElementNodeWrapper,
+    cylinder: ElementNodeWrapper,
+    hexagon: ElementNodeWrapper,
+    person: ElementNodeWrapper,
+    pipe: ElementNodeWrapper,
+    roundedBox: ElementNodeWrapper,
     placeholder: ElementPlaceholder
 }
 
 const EdgeTypes = {
-    default: RelationshipEdge,
-    straight: RelationshipEdge,
-    step: RelationshipEdge,
-    smoothstep: RelationshipEdge,
-    simplebezier: RelationshipEdge,
-    floating: RelationshipEdge
+    default: RelationshipEdgeWrapper,
+    straight: RelationshipEdgeWrapper,
+    step: RelationshipEdgeWrapper,
+    smoothstep: RelationshipEdgeWrapper,
+    simplebezier: RelationshipEdgeWrapper,
+    floating: RelationshipEdgeWrapper
 }
 
 const SupportedFileTypes = new Set(["application/json"]);
@@ -73,22 +72,24 @@ export const C4DiagramRenderer: FC<PropsWithChildren<C4DiagramRendererProps>> = 
         const node = {
             id: v4(),
             type: type ?? "roundedBox",
-            data: addElement(type),
+            data: {
+                element: addElement(type)
+            },
             position: relativePosition,
             parentNode: undefined
         };
         setNodes(nodes => nodes.concat(node));
     }, [setNodes, addElement, reactFlow]);
     const addEdge = useCallback((connection) => {
-        const relationship = addRelationship("");
+        const { source, target } = connection;
         const edge = {
             id: v4(),
             type: "default",
-            label: relationship.description,
-            data: relationship,
-            source: connection.source,
-            target: connection.target,
-            markerEnd: { type: MarkerType.Arrow }
+            data: {
+                relationship: addRelationship(source, target)
+            },
+            source: source,
+            target: target,
         };
         setEdges(edges => edges.concat(edge));
     }, [setEdges, addRelationship])

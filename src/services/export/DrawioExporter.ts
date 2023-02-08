@@ -1,11 +1,11 @@
 import { ReactFlowJsonObject, Node, Edge } from "@reactflow/core";
 import { v4 } from "uuid";
 import { XMLBuilder } from "fast-xml-parser";
-import { ElementNodeProps } from "../../components/c4-view-renderer/components/Nodes/ElementNode";
-import { RelationshipEdgeProps } from "../../components/c4-view-renderer/components/Edges/RelationshipEdge";
+import { ElementNodeProps, ElementNodeWrapperProps } from "../../components/c4-view-renderer/components/Nodes/ElementNode";
+import { RelationshipEdgeProps, RelationshipEdgeWrapperProps } from "../../components/c4-view-renderer/components/Edges/RelationshipEdge";
 import { formatElementTechnology } from "../../components/c4-view-renderer/components/Labels/ElementLabel";
 import { formatRelationshipTechnology } from "../../components/c4-view-renderer/components/Labels/RelationshipLabel";
-import { Element, Relationship } from "../../components/c4-view-renderer/store/Diagram";
+import { Element, Relationship } from "../../components/c4-view-renderer/store/C4Diagram";
 import { bold, br, font, html, text } from "../../utils/HtmlBuilder";
 import { MXGeometryAs, MXCell, MXPointAs, Drawio } from "../../utils/MxFile";
 
@@ -106,6 +106,7 @@ const formatEdgeStyle = (style: Partial<EdgeStyle>) => {
     }, style);
 }
 
+// TODO: replace this mapping with Style object
 const getElementBgColor = (type: string) => {
     const nodesBgColors = {
         ["Scope"]: "#F5F5F5",
@@ -118,7 +119,7 @@ const getElementBgColor = (type: string) => {
 }
 
 export function fromDiagram(
-    flow: ReactFlowJsonObject<ElementNodeProps, RelationshipEdgeProps>,
+    flow: ReactFlowJsonObject<ElementNodeWrapperProps, RelationshipEdgeWrapperProps>,
     serializeNodeData?: (node: Element) => string,
     serializeEdgeData?: (edge: Relationship) => string
 ): Drawio {
@@ -132,13 +133,13 @@ export function fromDiagram(
         _parent: defaultParent._id
     };
 
-    const fromScope = (node: Node<ElementNodeProps>): MXCell => {
+    const fromScope = (node: Node<ElementNodeWrapperProps>): MXCell => {
         return {
             _id: node.id,
             _parent: defaultParent1._id,
             _value: serializeNodeData
-                ? serializeNodeData(node.data)
-                : JSON.stringify(node.data),
+                ? serializeNodeData(node.data.element)
+                : JSON.stringify(node.data.element),
             _style: formatNodeStyle({
                     fillColor: getElementBgColor("Scope"),
                     fontColor: "#333333",
@@ -158,15 +159,15 @@ export function fromDiagram(
         };
     }
     
-    const fromNode = (node: Node<ElementNodeProps>): MXCell => {
+    const fromNode = (node: Node<ElementNodeWrapperProps>): MXCell => {
         return {
             _id: node.id,
             _parent: defaultParent1._id,
             _value: serializeNodeData
-                ? serializeNodeData(node.data)
-                : JSON.stringify(node.data),
+                ? serializeNodeData(node.data.element)
+                : JSON.stringify(node.data.element),
             _style: formatNodeStyle({
-                    fillColor: getElementBgColor(node.data.type)
+                    fillColor: getElementBgColor(node.data.element.tags[1].name)
                 }),
             _vertex: "1",
             mxGeometry: {
@@ -179,13 +180,13 @@ export function fromDiagram(
         };
     };
 
-    const fromEdge = (edge: Edge<RelationshipEdgeProps>): MXCell => {
+    const fromEdge = (edge: Edge<RelationshipEdgeWrapperProps>): MXCell => {
         return {
             _id: edge.id,
             _parent: defaultParent1._id,
             _value: serializeEdgeData
-                ? serializeEdgeData(edge.data)
-                : JSON.stringify(edge.data),
+                ? serializeEdgeData(edge.data.relationship)
+                : JSON.stringify(edge.data.relationship),
             _style: formatEdgeStyle({
                     flowAnimation: false
                 }),
@@ -257,7 +258,7 @@ export function fromDiagram(
 
 export function exportToDrawio(
     filename: string,
-    flow: ReactFlowJsonObject<ElementNodeProps, RelationshipEdgeProps>
+    flow: ReactFlowJsonObject<ElementNodeWrapperProps, RelationshipEdgeWrapperProps>
 ): File {
     const nodeDataSerializer = (node: Element) => {
         const htmlObject = html(

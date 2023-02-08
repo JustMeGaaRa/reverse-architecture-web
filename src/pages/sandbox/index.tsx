@@ -2,7 +2,7 @@ import { Box, useDisclosure, useToast } from "@chakra-ui/react";
 import { FC, useCallback, useEffect } from "react";
 import { C4DiagramRenderer, TemplateSelectorModal } from "../../components";
 import { useC4Diagram } from "../../components/c4-view-renderer/hooks";
-import Templates from "../../contracts/Templates.json";
+import { templates } from "../../contracts/Templates";
 
 
 export const Sandbox: FC = () => {
@@ -47,7 +47,7 @@ export const Sandbox: FC = () => {
             />
                 
             <TemplateSelectorModal
-                templates={Templates}
+                templates={templates}
                 isOpen={isOpen}
                 onClose={onClose}
                 onSelected={onSelected}

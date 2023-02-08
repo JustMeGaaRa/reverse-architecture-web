@@ -5,54 +5,34 @@ import { Handle, NodeProps, Position } from "@reactflow/core";
 import { NodeResizer } from "@reactflow/node-resizer";
 import { Expanded, RoundedBox } from '../Shapes';
 import { ElementLabel } from "../Labels/ElementLabel";
-import { Element } from "../../store/Diagram";
+import { Element } from "../../store/C4Diagram";
+import { defaultElementStyle, ElementStyleProperties } from '../../store/C4Diagram';
 
-const ViewStyle = {
-    element: {
-        ["Person"]: {
-            shape: "Person",
-            background: "#38A169"
-        },
-        ["Software System"]: {
-            shape: "RoundedBox",
-            background: "#6B46C1"
-        },
-        ["Container"]: {
-            shape: "RoundedBox",
-            background: "#3182ce"
-        },
-        ["Component"]: {
-            shape: "RoundedBox",
-            background: "#90cdf4"
-        },
-    },
-    relationship: {
-
-    }
-}
-
-export type ElementNodeProps = Element & {
-    expanded?: boolean;
+export type ElementNodeProps = {
+    data: Element,
+    style?: Partial<ElementStyleProperties>;
     width?: number;
     height?: number;
-    draggedOver?: boolean;
-};
+    selected?: boolean;
+    expanded?: boolean;
+}
 
-export const ElementNode: FC<NodeProps<ElementNodeProps>> = ({
+export const ElementNode: FC<ElementNodeProps> = ({
     data,
-    selected
+    style = defaultElementStyle,
+    width = 240,
+    height = 150,
+    selected = false,
+    expanded = false
 }) => {
-    const [size, setSize] = useState({
-        width: data.width ?? 240,
-        height: data.height ?? 150
-    });
+    const [size, setSize] = useState({ width, height });
     const onResize = useCallback((event, params) => setSize({ ...params }), []);
-
-    return data.expanded ? (
+    
+    return expanded ? (
         <Expanded
             width={size.width}
             height={size.height}
-            selected={data.draggedOver || selected}
+            selected={selected}
         >
             <ElementLabel
                 data={data}
@@ -70,10 +50,10 @@ export const ElementNode: FC<NodeProps<ElementNodeProps>> = ({
     )
     : (
         <RoundedBox
-            background={ViewStyle.element[data.type].background}
+            background={style.background}
             width={size.width}
             height={size.height}
-            selected={data.draggedOver || selected}
+            selected={selected}
         >
             <ElementLabel
                 data={data}
@@ -86,5 +66,30 @@ export const ElementNode: FC<NodeProps<ElementNodeProps>> = ({
             <Handle id={"c"} type={"source"} position={Position.Right} />
             <Handle id={"d"} type={"source"} position={Position.Bottom} />
         </RoundedBox>
+    );
+}
+
+export type ElementNodeWrapperProps = {
+    element: Element;
+    style?: Partial<ElementStyleProperties>;
+    width?: number;
+    height?: number;
+    expanded?: boolean;
+    draggedOver?: boolean;
+}
+
+export const ElementNodeWrapper: FC<NodeProps<ElementNodeWrapperProps>> = ({
+    data,
+    selected
+}) => {
+    return (
+        <ElementNode
+            data={data.element}
+            style={data.style ?? defaultElementStyle}
+            width={data.width}
+            height={data.height}
+            selected={data.draggedOver || selected}
+            expanded={data.expanded}
+        />
     );
 }

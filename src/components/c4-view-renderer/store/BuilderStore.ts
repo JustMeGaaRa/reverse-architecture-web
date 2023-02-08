@@ -1,7 +1,7 @@
 import { ReactFlowState } from "@reactflow/core";
 import { v4 } from "uuid";
 import { create } from "zustand";
-import * as C4 from "./Diagram";
+import * as C4 from "./C4Diagram";
 
 type C4ElementChanges = 
     "change position"
@@ -23,7 +23,7 @@ type C4BuilderActions = {
     setElements: (elements: C4.Element[]) => void;
     setRelationships: (relationships: C4.Relationship[]) => void;
     addElement: (type: string) => C4.Element;
-    addRelationship: (type: string) => C4.Relationship;
+    addRelationship: (source: string, target: string) => C4.Relationship;
     applyElementChanges: (changes: C4ElementChanges[]) => void;
     applyRelationshipChanges: (changes: C4RelatonshipChanges[]) => void;
     deleteElements: (elements: C4.Element[]) => void;
@@ -36,17 +36,24 @@ type C4BuilderActions = {
 
 type C4BuilderStore = C4BuilderState & C4BuilderActions;
 
-const createElement = (type: string): C4.Element => {
+const createElement = (type): C4.Element => {
     return {
-        elementId: v4(),
-        name: type,
-        type: type
+        identifier: v4(),
+        name: "Element",
+        tags: [
+            { name: "Element" },
+            { name: type }
+        ]
     };
 };
 
-const createRelationship = (): C4.Relationship => {
+const createRelationship = (source, target): C4.Relationship => {
     return {
-        relationshipId: v4()
+        sourceIdentifier: source,
+        targetIdentifier: target,
+        tags: [
+            { name: "Relationship" }
+        ]
     };
 };
 
@@ -69,8 +76,8 @@ const useC4BuilderStore = create<C4BuilderStore>((set, get) => ({
         set({ elements: [...get().elements, element] });
         return element;
     },
-    addRelationship: (type) => {
-        const relationship = createRelationship();
+    addRelationship: (source, target) => {
+        const relationship = createRelationship(source, target);
         set({ relationships: [...get().relationships, relationship] });
         return relationship;
     },
@@ -81,11 +88,14 @@ const useC4BuilderStore = create<C4BuilderStore>((set, get) => ({
         console.log("add elements")
     },
     deleteElements: (elements) => {
-        const filtered = get().elements.filter(x => elements.some(y => y.elementId === x.elementId));
+        const filtered = get().elements.filter(x => elements.some(y => y.identifier === x.identifier));
         set({ elements: [...filtered] });
     },
     deleteRelationships: (relationships) => {
-        const filtered = get().relationships.filter(x => relationships.some(y => y.relationshipId === x.relationshipId));
+        const filtered = get().relationships.filter(x => 
+            relationships.some(y => 
+                y.sourceIdentifier === x.sourceIdentifier
+                && y.targetIdentifier === x.targetIdentifier));
         set({ relationships: [...filtered] });
     },
     undo: () => {

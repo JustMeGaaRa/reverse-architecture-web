@@ -1,70 +1,77 @@
 import {
     Node,
     Edge,
-    MarkerType,
     FitViewOptions,
     ReactFlowJsonObject,
     useReactFlow
 } from "@reactflow/core";
 import { useCallback } from "react";
-import { ElementNodeProps } from "../components/Nodes/ElementNode";
-import { RelationshipEdgeProps } from "../components/Edges/RelationshipEdge";
+import { ElementNodeWrapperProps } from "../components/Nodes/ElementNode";
+import { RelationshipEdgeWrapperProps } from "../components/Edges/RelationshipEdge";
 import { useC4BuilderStore } from "../store";
-import * as C4 from "../store/Diagram";
+import { defaultElementStyle, defaultRelationshipStyle } from "../store/C4Diagram";
+import * as C4 from "../store/C4Diagram";
 
-const getDiagramNodes = (diagram: C4.Diagram) => {
-    if (diagram === null) return Array.of<Node<ElementNodeProps>>();
+const getDiagramNodes = (diagram: C4.View) => {
+    if (diagram === null) return Array.of<Node<ElementNodeWrapperProps>>();
     
     const NODE_WIDTH = 240;
     const NODE_HEIGHT = 150;
     
     const fromNode = (
-        node: C4.Node<C4.Element>,
+        node: C4.Element,
         expanded?: boolean
-    ): Node<ElementNodeProps> => {
+    ): Node<ElementNodeWrapperProps> => {
         return {
-            id: node.id,
+            id: node.identifier,
             type: "roundedBox",
             data: {
-                ...node.data,
+                element: node,
+                style: diagram.style.element[node.tags[1].name] ?? defaultElementStyle,
+                width: NODE_WIDTH,
+                height: NODE_HEIGHT,
                 expanded: expanded,
-                width: node.width ?? NODE_WIDTH,
-                height: node.height ?? NODE_HEIGHT
             },
-            position: node.position,
-            parentNode: node.parentId,
-            style: node.parentId ? undefined : { zIndex: -1 }
+            position: diagram.layout[node.identifier],
+            // parentNode: node.parentId,
+            // style: node.parentId ? undefined : { zIndex: -1 }
         };
     }
 
-    const nodes =
-        diagram.scope === undefined
-            ? Array.of<Node<ElementNodeProps>>()
-            : Array.of<Node<ElementNodeProps>>(fromNode(diagram.scope, true));
+    // const nodes =
+    //     diagram.scope === undefined
+    //         ? Array.of<Node<ElementNodeWrapperProps>>()
+    //         : Array.of<Node<ElementNodeWrapperProps>>(fromNode(diagram.scope, true));
 
-    return nodes
-        .concat(diagram.primaryElements.map(node => fromNode(node)))
-        .concat(diagram.supportingElements.map(node => fromNode(node)));
+    // return nodes
+    //     .concat(diagram.primaryElements.map(node => fromNode(node)))
+    //     .concat(diagram.supportingElements.map(node => fromNode(node)));
+    // TODO: handle all the elements, not just software systems
+    return diagram.model.softwareSystems.map(node => fromNode(node));
 }
 
-const getDiagramEdges = (diagram: C4.Diagram) => {
-    if (diagram === null) return Array.of<Edge<RelationshipEdgeProps>>();
+const getDiagramEdges = (diagram: C4.View) => {
+    if (diagram === null) return Array.of<Edge<RelationshipEdgeWrapperProps>>();
 
     const fromEdge = (
-        edge: C4.Edge<C4.Relationship>
-    ): Edge<RelationshipEdgeProps> => {
+        edge: C4.Relationship
+    ): Edge<RelationshipEdgeWrapperProps> => {
         return {
-            id: edge.id,
+            id: `${edge.sourceIdentifier}_${edge.targetIdentifier}`,
             type: "default",
-            label: edge.data.description,
-            data: edge.data,
-            source: edge.source,
-            target: edge.target,
-            markerEnd: { type: MarkerType.Arrow }
+            label: edge.description,
+            data: {
+                relationship: edge,
+                // TODO: handle tags corectly
+                style: diagram.style.relationship[edge.tags[1].name] ?? defaultRelationshipStyle,
+            },
+            source: edge.sourceIdentifier,
+            target: edge.targetIdentifier
         };
     }
 
-    return diagram.relationships.map<Edge<RelationshipEdgeProps>>(fromEdge);
+    // return diagram.relationships.map<Edge<RelationshipEdgeWrapperProps>>(fromEdge);
+    return diagram.model.relationships.map(edge => fromEdge(edge));
 }
 
 export const useC4Diagram = () => {
@@ -72,7 +79,7 @@ export const useC4Diagram = () => {
     const c4Diagram = useC4BuilderStore();
 
     const fromDiagram = useCallback((
-        diagram: C4.Diagram,
+        diagram: C4.View,
         fitViewOptions?: FitViewOptions
     ) => {
         const elements = getDiagramNodes(diagram);

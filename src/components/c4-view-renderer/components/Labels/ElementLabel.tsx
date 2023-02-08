@@ -1,11 +1,13 @@
 import { FC } from "react";
 import { VStack, Text } from "@chakra-ui/react";
-import { Element } from "../../store/Diagram";
+import { Element } from "../../store/C4Diagram";
 
 export const formatElementTechnology = (data: Element, showTechnologies?: boolean) => {
+    // TODO: handle tags corectly
+    const type = data.tags.filter(x => x.name !== "Element").at(0);
     return showTechnologies && data?.technology && data?.technology.length > 0
-        ? `[${data.type}: ${data.technology.join(", ")}]`
-        : `[${data.type}]`;
+        ? `[${type.name}: ${data.technology.join(", ")}]`
+        : `[${type.name}]`;
 };
 
 export type ElementLabelProps = {
