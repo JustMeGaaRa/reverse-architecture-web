@@ -1,8 +1,9 @@
 import { HStack, StackDivider, useColorModeValue } from "@chakra-ui/react";
 import { FC } from "react";
-import { Panel, Logo, TitleEditable, ExportMenu } from "../../..";
+import { Panel } from "./Panel";
 import { useExports } from "../../hooks/useExports";
 import { useC4BuilderStore } from "../../store";
+import { Logo, TitleEditable, ExportMenu } from "../../..";
 
 export type NavigationPanelProps = unknown;
 

@@ -48,8 +48,8 @@ const EdgeTypes = {
 const SupportedFileTypes = new Set(["application/json"]);
 
 type C4DiagramRendererProps = {
-    onImport?: (result: any) => void;
-    onExport?: (result: any) => void;
+    onImport?: (result) => void;
+    onExport?: (result) => void;
 }
 
 export const C4DiagramRenderer: FC<PropsWithChildren<C4DiagramRendererProps>> = ({
@@ -59,27 +59,27 @@ export const C4DiagramRenderer: FC<PropsWithChildren<C4DiagramRendererProps>> = 
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
-    const { addElement, addRelationship } = useC4BuilderStore();
+    const { addRelationship } = useC4BuilderStore();
     const reactFlowRef = useRef<HTMLDivElement>(null);
     const reactFlow = useReactFlow();    
     
-    const addNode = useCallback((position, type) => {
-        const reactFlowBounds = reactFlowRef.current.getBoundingClientRect();
-        const relativePosition = reactFlow.project({
-            x: position.x - reactFlowBounds.left,
-            y: position.y - reactFlowBounds.top
-        });
-        const node = {
-            id: v4(),
-            type: type ?? "roundedBox",
-            data: {
-                element: addElement(type)
-            },
-            position: relativePosition,
-            parentNode: undefined
-        };
-        setNodes(nodes => nodes.concat(node));
-    }, [setNodes, addElement, reactFlow]);
+    // const addNode = useCallback((position, type) => {
+    //     const reactFlowBounds = reactFlowRef.current.getBoundingClientRect();
+    //     const relativePosition = reactFlow.project({
+    //         x: position.x - reactFlowBounds.left,
+    //         y: position.y - reactFlowBounds.top
+    //     });
+    //     const node = {
+    //         id: v4(),
+    //         type: type ?? "roundedBox",
+    //         data: {
+    //             element: addElement(type)
+    //         },
+    //         position: relativePosition,
+    //         parentNode: undefined
+    //     };
+    //     setNodes(nodes => nodes.concat(node));
+    // }, [setNodes, addElement, reactFlow]);
 
     const addEdge = useCallback((connection) => {
         const { source, target } = connection;

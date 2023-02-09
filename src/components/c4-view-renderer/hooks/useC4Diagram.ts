@@ -88,7 +88,7 @@ export const useC4Diagram = () => {
         // c4Diagram.setRelationships(relationships);
         reactFlow.setNodes([]);
         reactFlow.setEdges([]);
-    }, [c4Diagram, reactFlow]);
+    }, [reactFlow]);
 
     const fromView = useCallback((
         diagram: View,

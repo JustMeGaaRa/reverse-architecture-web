@@ -10,7 +10,8 @@ import {
     ButtonGroup,
     IconButton,
 } from "@chakra-ui/react";
-import { Panel, PanelProps, useC4Diagram } from "../../..";
+import { Panel, PanelProps } from "./Panel";
+import { useC4Diagram } from "../../hooks";
 import { selectedNodeSelector, selectedEdgeSelector, useC4BuilderStore } from "../../store/BuilderStore";
 
 type ControlsPanelProps = Partial<Pick<PanelProps, "dock">> & {

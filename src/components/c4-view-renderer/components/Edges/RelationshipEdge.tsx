@@ -3,7 +3,6 @@ import {
     Node,
     EdgeProps,
     EdgeLabelRenderer,
-    MarkerType,
     Position,
     internalsSymbol,
     useStore,
@@ -56,7 +55,7 @@ function getHandleCoordsByPosition(node: Node, handlePosition: Position) {
 }
 
 // returns the position (top,right,bottom or right) passed node compared to
-function getParams(nodeA: Node, nodeB: Node) {
+function getParams(nodeA: Node, nodeB: Node): [number, number, Position] {
     const centerA = getNodeCenter(nodeA);
     const centerB = getNodeCenter(nodeB);
 
@@ -65,7 +64,7 @@ function getParams(nodeA: Node, nodeB: Node) {
 
     // when the horizontal difference between the nodes is bigger, we use Position.Left or Position.Right for the handle
     // here the vertical difference between the nodes is bigger, so we use Position.Top or Position.Bottom for the handle
-    const position: any = horizontalDiff > verticalDiff
+    const position = horizontalDiff > verticalDiff
         ? (centerA.x > centerB.x ? Position.Left : Position.Right)
         : (centerA.y > centerB.y ? Position.Top : Position.Bottom);
     

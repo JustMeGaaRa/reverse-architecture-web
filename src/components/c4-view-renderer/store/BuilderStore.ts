@@ -82,10 +82,10 @@ const useC4BuilderStore = create<C4BuilderStore>((set, get) => ({
         return relationship;
     },
     applyElementChanges: (changes) => {
-        console.log("add elements")
+        console.log(changes)
     },
     applyRelationshipChanges: (changes) => {
-        console.log("add elements")
+        console.log(changes)
     },
     deleteElements: (elements) => {
         const filtered = get().elements.filter(x => 
