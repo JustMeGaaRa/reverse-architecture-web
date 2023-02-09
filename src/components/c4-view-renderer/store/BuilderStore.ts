@@ -88,7 +88,8 @@ const useC4BuilderStore = create<C4BuilderStore>((set, get) => ({
         console.log("add elements")
     },
     deleteElements: (elements) => {
-        const filtered = get().elements.filter(x => elements.some(y => y.identifier === x.identifier));
+        const filtered = get().elements.filter(x => 
+            elements.some(y => y.identifier === x.identifier));
         set({ elements: [...filtered] });
     },
     deleteRelationships: (relationships) => {

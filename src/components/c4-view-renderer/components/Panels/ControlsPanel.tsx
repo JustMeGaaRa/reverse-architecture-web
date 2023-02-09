@@ -4,13 +4,14 @@ import {
     FaTrash,
     FaRedoAlt,
     FaUndoAlt,
+    FaFile,
 } from "react-icons/fa";
 import {
     ButtonGroup,
     IconButton,
 } from "@chakra-ui/react";
-import { Panel, PanelProps } from "../../..";
-import { selectedNodeSelector, selectedEdgeSelector } from "../../store/BuilderStore";
+import { Panel, PanelProps, useC4Diagram } from "../../..";
+import { selectedNodeSelector, selectedEdgeSelector, useC4BuilderStore } from "../../store/BuilderStore";
 
 type ControlsPanelProps = Partial<Pick<PanelProps, "dock">> & {
     showDelete?: boolean;
@@ -24,6 +25,8 @@ const ControlsPanel: FC<PropsWithChildren<ControlsPanelProps>> = ({
     showUndoRedo = true
 }) => {
     const { deleteElements } = useReactFlow();
+    const { undo, redo } = useC4BuilderStore();
+    const { clearView } = useC4Diagram();
     const selectedNode = useStore(selectedNodeSelector);
     const selectedEdge = useStore(selectedEdgeSelector);
     const noneSelected = selectedNode === undefined && selectedEdge === undefined;
@@ -56,7 +59,7 @@ const ControlsPanel: FC<PropsWithChildren<ControlsPanelProps>> = ({
                         aria-label={"undo last change"}
                         icon={<FaUndoAlt />}
                         title={"undo last change"}
-                        isDisabled={true}
+                        onClick={() => undo()}
                     />
                 )}
                 {showUndoRedo && (
@@ -64,9 +67,15 @@ const ControlsPanel: FC<PropsWithChildren<ControlsPanelProps>> = ({
                         aria-label={"redo last change"}
                         icon={<FaRedoAlt />}
                         title={"redo last change"}
-                        isDisabled={true}
+                        onClick={() => redo()}
                     />
-                )}                
+                )}
+                <IconButton
+                    aria-label={"start blank"}
+                    title={"start blank"}
+                    icon={<FaFile />}
+                    onClick={() => clearView()}
+                />
                 {children}
             </ButtonGroup>
         </Panel>

@@ -174,8 +174,15 @@ export interface Position {
     y: number;
 }
 
+export interface Size {
+    width: number;
+    height: number;
+}
+
+export type Dimension = Position & Partial<Size>;
+
 export interface Layout {
-    [identifier: Identifier]: Position;
+    [identifier: Identifier]: Dimension;
 }
 
 export interface View {

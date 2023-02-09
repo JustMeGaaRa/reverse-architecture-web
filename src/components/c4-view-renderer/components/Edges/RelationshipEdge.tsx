@@ -130,6 +130,7 @@ export const RelationshipEdge: FC<RelationshipEdgeProps> = ({
                 width: style.thikness
             }}
             interactionWidth={style.thikness * 2}
+            // TODO: resolve marker end style
             // markerEnd={{ type: MarkerType.Arrow }}
         >
             <EdgeLabelRenderer>

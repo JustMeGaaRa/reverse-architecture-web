@@ -80,6 +80,7 @@ export const C4DiagramRenderer: FC<PropsWithChildren<C4DiagramRendererProps>> = 
         };
         setNodes(nodes => nodes.concat(node));
     }, [setNodes, addElement, reactFlow]);
+
     const addEdge = useCallback((connection) => {
         const { source, target } = connection;
         const edge = {

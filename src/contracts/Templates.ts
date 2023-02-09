@@ -41,17 +41,17 @@ export const templates: DiagramTemplateGroup[] = [
             {
                 header: "System Landscape Diagram",
                 description: "Essentially this is a high-level map of the software systems at the enterprise level, with a C4 drill-down for each software system of interest. From a practical perspective, a system landscape diagram is really just a system context diagram without a specific focus on a particular software system.",
-                payload: JSON.stringify(systemContextViewTemplate)
+                payload: JSON.stringify(emptyViewTemplate)
             },
             {
                 header: "Dynamic Diagram",
                 description: "A dynamic diagram can be useful when you want to show how elements in a static model collaborate at runtime to implement a user story, use case, feature, etc. This dynamic diagram is based upon a UML communication diagram.",
-                payload: JSON.stringify(systemContextViewTemplate)
+                payload: JSON.stringify(emptyViewTemplate)
             },
             {
                 header: "Deployment Diagram",
                 description: "A deployment diagram allows you to illustrate how software systems and/or containers in the static model are mapped to infrastructure. This deployment diagram is based upon a UML deployment diagram, although simplified slightly to show the mapping between containers and deployment nodes.",
-                payload: JSON.stringify(systemContextViewTemplate)
+                payload: JSON.stringify(emptyViewTemplate)
             }
         ]
     }

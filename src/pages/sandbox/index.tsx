@@ -6,7 +6,7 @@ import { templates } from "../../contracts/Templates";
 
 
 export const Sandbox: FC = () => {
-    const { fromDiagram, fromObject } = useC4Diagram();
+    const { fromView, fromObject } = useC4Diagram();
 
     const toast = useToast();
     const onImport = useCallback((result) => {
@@ -35,8 +35,8 @@ export const Sandbox: FC = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const onSelected = useCallback((template) => {
         onClose();
-        fromDiagram(JSON.parse(template.payload), { padding: 0.2 });
-    }, [onClose, fromDiagram]);
+        fromView(JSON.parse(template.payload), { padding: 0.2 });
+    }, [onClose, fromView]);
     
     useEffect(() => onOpen(), [onOpen]);
 

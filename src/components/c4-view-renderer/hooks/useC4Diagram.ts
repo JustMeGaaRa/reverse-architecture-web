@@ -9,17 +9,20 @@ import { useCallback } from "react";
 import { ElementNodeWrapperProps } from "../components/Nodes/ElementNode";
 import { RelationshipEdgeWrapperProps } from "../components/Edges/RelationshipEdge";
 import { useC4BuilderStore } from "../store";
-import { defaultElementStyle, defaultRelationshipStyle } from "../store/C4Diagram";
-import * as C4 from "../store/C4Diagram";
+import {
+    defaultElementStyle,
+    defaultRelationshipStyle,
+    View,
+    Element,
+    Relationship
+} from "../store/C4Diagram";
 
-const getDiagramNodes = (diagram: C4.View) => {
+const getDiagramNodes = (diagram: View) => {
     if (diagram === null) return Array.of<Node<ElementNodeWrapperProps>>();
     
-    const NODE_WIDTH = 240;
-    const NODE_HEIGHT = 150;
-    
     const fromNode = (
-        node: C4.Element,
+        node: Element,
+        parentNode?: string,
         expanded?: boolean
     ): Node<ElementNodeWrapperProps> => {
         return {
@@ -27,34 +30,36 @@ const getDiagramNodes = (diagram: C4.View) => {
             type: "roundedBox",
             data: {
                 element: node,
+                // TODO: handle tags corectly
                 style: diagram.style.element[node.tags[1].name] ?? defaultElementStyle,
-                width: NODE_WIDTH,
-                height: NODE_HEIGHT,
+                width: diagram.layout[node.identifier].width,
+                height: diagram.layout[node.identifier].height,
                 expanded: expanded,
             },
             position: diagram.layout[node.identifier],
-            // parentNode: node.parentId,
-            // style: node.parentId ? undefined : { zIndex: -1 }
+            parentNode: parentNode,
+            style: parentNode ? undefined : { zIndex: -1 }
         };
     }
 
-    // const nodes =
-    //     diagram.scope === undefined
-    //         ? Array.of<Node<ElementNodeWrapperProps>>()
-    //         : Array.of<Node<ElementNodeWrapperProps>>(fromNode(diagram.scope, true));
-
-    // return nodes
-    //     .concat(diagram.primaryElements.map(node => fromNode(node)))
-    //     .concat(diagram.supportingElements.map(node => fromNode(node)));
-    // TODO: handle all the elements, not just software systems
-    return diagram.model.softwareSystems.map(node => fromNode(node));
+    return [
+        ...diagram.model.people.map(person => fromNode(person)),
+        ...diagram.model.softwareSystems.flatMap(system => [
+            fromNode(system, undefined, system.containers?.length > 0),
+            ...system.containers?.flatMap(container => [
+                fromNode(container, system.identifier, container.components?.length > 0),
+                ...container.components?.map(component => 
+                    fromNode(component, container.identifier)) ?? []
+            ]) ?? []
+        ])
+    ];
 }
 
-const getDiagramEdges = (diagram: C4.View) => {
+const getDiagramEdges = (diagram: View) => {
     if (diagram === null) return Array.of<Edge<RelationshipEdgeWrapperProps>>();
 
     const fromEdge = (
-        edge: C4.Relationship
+        edge: Relationship
     ): Edge<RelationshipEdgeWrapperProps> => {
         return {
             id: `${edge.sourceIdentifier}_${edge.targetIdentifier}`,
@@ -63,14 +68,13 @@ const getDiagramEdges = (diagram: C4.View) => {
             data: {
                 relationship: edge,
                 // TODO: handle tags corectly
-                style: diagram.style.relationship[edge.tags[1].name] ?? defaultRelationshipStyle,
+                style: diagram.style.relationship[edge.tags[0].name] ?? defaultRelationshipStyle,
             },
             source: edge.sourceIdentifier,
             target: edge.targetIdentifier
         };
     }
 
-    // return diagram.relationships.map<Edge<RelationshipEdgeWrapperProps>>(fromEdge);
     return diagram.model.relationships.map(edge => fromEdge(edge));
 }
 
@@ -78,14 +82,23 @@ export const useC4Diagram = () => {
     const reactFlow = useReactFlow();
     const c4Diagram = useC4BuilderStore();
 
-    const fromDiagram = useCallback((
-        diagram: C4.View,
+    const clearView = useCallback(() => {
+        // TODO: clear elements and relationships
+        // c4Diagram.setElements(elements);
+        // c4Diagram.setRelationships(relationships);
+        reactFlow.setNodes([]);
+        reactFlow.setEdges([]);
+    }, [c4Diagram, reactFlow]);
+
+    const fromView = useCallback((
+        diagram: View,
         fitViewOptions?: FitViewOptions
     ) => {
         const elements = getDiagramNodes(diagram);
         const relationships = getDiagramEdges(diagram);
 
         c4Diagram.setTitle(diagram.title);
+        // TODO: set elements and relationships
         // c4Diagram.setElements(elements);
         // c4Diagram.setRelationships(relationships);
         reactFlow.setNodes(elements);
@@ -103,7 +116,8 @@ export const useC4Diagram = () => {
     }, [reactFlow]);
 
     return {
-        fromDiagram,
-        fromObject
+        fromView,
+        fromObject,
+        clearView
     };
 }
