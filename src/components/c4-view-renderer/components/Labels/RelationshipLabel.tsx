@@ -3,28 +3,22 @@ import { VStack, Text } from "@chakra-ui/react";
 import { Relationship } from "../../store/C4Diagram";
 
 export const formatRelationshipTechnology = (data: Relationship) => {
-    return data?.technology && `[${data.technology.join(" / ")}]`;
+    return data?.technology && `[${data.technology.map(x => x.name).join(" / ")}]`;
 };
 
 export type RelationshipLabelProps = {
     data: Relationship;
-    align: "start" | "center" | "end";
-    showDescription?: boolean;
-    showTechnologies?: boolean;
 }
 
 export const RelationshipLabel: FC<RelationshipLabelProps> = ({
-    data,
-    align,
-    showDescription,
-    showTechnologies
+    data
 }) => {
     return (
         <VStack
-            align={align}
+            align={"center"}
             spacing={1}
         >
-            {showDescription && data.description && (
+            {data.description && (
                 <Text
                     fontSize={"xs"}
                     noOfLines={3}
@@ -34,7 +28,7 @@ export const RelationshipLabel: FC<RelationshipLabelProps> = ({
                     {data.description}
                 </Text>
             )}
-            {showTechnologies && (
+            {data.technology && (
                 <Text
                     fontSize={"x-small"}
                     noOfLines={1}

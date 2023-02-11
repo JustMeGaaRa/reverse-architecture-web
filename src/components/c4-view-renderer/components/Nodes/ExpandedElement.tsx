@@ -1,18 +1,25 @@
-import { FC, PropsWithChildren  } from "react";
 import { Flex, useColorModeValue } from "@chakra-ui/react";
+import { FC, PropsWithChildren  } from "react";
+import { defaultElementStyle, ElementStyleProperties } from "../../store/C4Diagram";
 
-export type ExpandedProps = {
+export type ExpandedElementProps = {
+    style?: Partial<ElementStyleProperties>;
     width?: number;
     height?: number;
     selected?: boolean,
 }
 
-export const Expanded: FC<PropsWithChildren<ExpandedProps>> = ({
+export const ExpandedElement: FC<PropsWithChildren<ExpandedElementProps>> = ({
     children,
+    style,
     width,
     height,
     selected
 }) => {
+    const mergedStyle = {
+        ...defaultElementStyle,
+        ...style
+    }
     const parentBgColor = useColorModeValue("blackAlpha.300", "blackAlpha.400");
     const parentHighlightBgColor = useColorModeValue("blackAlpha.400", "blackAlpha.500");
     
@@ -25,7 +32,8 @@ export const Expanded: FC<PropsWithChildren<ExpandedProps>> = ({
                 ? parentHighlightBgColor
                 : parentBgColor
             }
-            borderWidth={1}
+            border={"dashed"}
+            borderWidth={2}
             borderColor={selected
                 ? parentHighlightBorderColor
                 : parentBorderColor

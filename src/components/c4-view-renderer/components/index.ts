@@ -1,4 +1,4 @@
-export * from "./Views/C4ViewRenderer";
+export * from "./Labels/ElementLabel";
 export * from "./Nodes/ElementNode";
 export * from "./Edges/RelationshipEdge";
-export * from "./Labels/ElementLabel";
+export * from "./Views/C4ViewRenderer";

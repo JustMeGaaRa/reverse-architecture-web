@@ -1,8 +1,9 @@
 import { FC, PropsWithChildren } from "react";
 import { Flex, useColorModeValue } from "@chakra-ui/react";
+import { ElementStyleProperties } from "../../store/C4Diagram";
 
 export type RoundedBoxProps = {
-    background?: string;
+    style: ElementStyleProperties;
     width?: number;
     height?: number;
     selected?: boolean,
@@ -10,7 +11,7 @@ export type RoundedBoxProps = {
 
 export const RoundedBox: FC<PropsWithChildren<RoundedBoxProps>> = ({
     children,
-    background,
+    style,
     width,
     height,
     selected
@@ -20,7 +21,7 @@ export const RoundedBox: FC<PropsWithChildren<RoundedBoxProps>> = ({
 
     return (
         <Flex
-            background={background}
+            background={style.background}
             borderWidth={1}
             borderColor={selected
                 ? elementHighlightBorderColor

@@ -1,4 +1,4 @@
-import { View } from "../components/c4-view-renderer/store/C4Diagram";
+import { View } from "../../../components/c4-view-renderer/store/C4Diagram";
 
 export const systemContextViewTemplate: View = {
     title: "Internet Banking System",

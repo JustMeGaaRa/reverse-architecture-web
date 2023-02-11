@@ -18,7 +18,6 @@ import {
     useState
 } from "react";
 import { ElementNodeWrapper } from "../Nodes/ElementNode";
-import { ElementPlaceholder } from "../Nodes/ElementPlaceholder";
 import { RelationshipEdgeWrapper } from "../Edges/RelationshipEdge";
 import { CollaborationPanel, InteractivityPanel, NavigationPanel } from "../Panels";
 import { v4 } from "uuid";
@@ -32,8 +31,7 @@ const NodeTypes = {
     hexagon: ElementNodeWrapper,
     person: ElementNodeWrapper,
     pipe: ElementNodeWrapper,
-    roundedBox: ElementNodeWrapper,
-    placeholder: ElementPlaceholder
+    roundedBox: ElementNodeWrapper
 }
 
 const EdgeTypes = {
@@ -218,8 +216,8 @@ export const C4DiagramRenderer: FC<PropsWithChildren<C4DiagramRendererProps>> = 
             snapGrid={[20, 20]}
             snapToGrid
             onConnect={onConnect}
-            onNodeDrag={onNodeDrag}
-            onNodeDragStop={onNodeDragStop}
+            // onNodeDrag={onNodeDrag}
+            // onNodeDragStop={onNodeDragStop}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onDragOver={() => setIsDragOver(true)}

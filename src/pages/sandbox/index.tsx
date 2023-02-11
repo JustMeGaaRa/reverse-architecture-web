@@ -2,8 +2,7 @@ import { Box, useDisclosure, useToast } from "@chakra-ui/react";
 import { FC, useCallback, useEffect } from "react";
 import { C4DiagramRenderer, TemplateSelectorModal } from "../../components";
 import { useC4Diagram } from "../../components/c4-view-renderer/hooks";
-import { templates } from "../../contracts/Templates";
-
+import { templates } from "./Templates";
 
 export const Sandbox: FC = () => {
     const { fromView, fromObject } = useC4Diagram();

@@ -1,6 +1,7 @@
-import { DiagramTemplateGroup } from "../components";
+import { DiagramTemplateGroup } from "../../../components";
 import { componentViewTemplate } from "./ComponentViewTemplate";
 import { containerViewTemplate } from "./ContainerViewTemplate";
+import { deploymentViewTemplate } from "./DeploymentViewTemplate";
 import { emptyViewTemplate } from "./EmptyViewTemplate";
 import { systemContextViewTemplate } from "./SystemContextViewTemplate";
 
@@ -51,7 +52,7 @@ export const templates: DiagramTemplateGroup[] = [
             {
                 header: "Deployment Diagram",
                 description: "A deployment diagram allows you to illustrate how software systems and/or containers in the static model are mapped to infrastructure. This deployment diagram is based upon a UML deployment diagram, although simplified slightly to show the mapping between containers and deployment nodes.",
-                payload: JSON.stringify(emptyViewTemplate)
+                payload: JSON.stringify(deploymentViewTemplate)
             }
         ]
     }

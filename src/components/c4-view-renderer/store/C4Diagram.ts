@@ -2,8 +2,23 @@ export interface Technology {
     name: string;
 }
 
-export interface Tag {
-    name: string;
+export class Tag {
+    constructor(name: string) {
+        this.name = name;
+    }
+
+    name!: string;
+
+    static Element = new Tag("Element");
+    static Person = new Tag("Person");
+    static SoftwareSystem = new Tag("Software System");
+    static Container = new Tag("Container");
+    static Component = new Tag("Component");
+    static DeploymentNode = new Tag("Deployment Node");
+    static InfrastructureNode = new Tag("Infrastructure Node");
+    static SoftwareSystemInstance = new Tag("Software System Instance");
+    static ContainerInstance = new Tag("Container Instance");
+    static Relationship = new Tag("Relationship");
 }
 
 export type Identifier = string;
@@ -38,12 +53,20 @@ export interface InfrastructureNode extends Element {
     identifier: Identifier;
 }
 
-export type Abstraction = SoftwareSystem | Container | DeploymentNode | InfrastructureNode;
+export interface SoftwareSystemInstance {
+    softwareSystemIdentifier: Identifier;
+}
+
+export interface ContainerInstance {
+    containerIdentifier: Identifier;
+}
 
 export interface DeploymentNode extends Omit<Element, "description"> {
     identifier: Identifier;
     instances?: number;
-    elements: Abstraction[];
+    softwareSystemInstances?: SoftwareSystemInstance[];
+    containerInstances?: ContainerInstance[];
+    infrastructureNodes?: InfrastructureNode[];
     deploymentNodes?: DeploymentNode[];
 }
 
@@ -160,7 +183,7 @@ export const defaultElementStyle: ElementStyleProperties = {
 
 export const defaultRelationshipStyle: RelationshipStyleProperties = {
     thikness: 1,
-    color: "##898989",
+    color: "#898989",
     style: LineStyle.Solid,
     routing: RoutingStyle.Direct,
     fontSize: 14,

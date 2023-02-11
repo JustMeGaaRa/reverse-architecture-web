@@ -144,12 +144,7 @@ export const RelationshipEdge: FC<RelationshipEdgeProps> = ({
                     position={"absolute"}
                     transform={`translate(-50%, -50%) translate(${labelX}px,${labelY}px)`}
                 >
-                    <RelationshipLabel
-                        data={data}
-                        align="center"
-                        showDescription
-                        showTechnologies
-                    />
+                    <RelationshipLabel data={data} />
                 </Box>
             </EdgeLabelRenderer>
         </BaseEdge>

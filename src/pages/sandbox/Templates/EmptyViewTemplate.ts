@@ -1,4 +1,4 @@
-import { View } from "../components/c4-view-renderer/store/C4Diagram";
+import { View } from "../../../components/c4-view-renderer/store/C4Diagram";
 
 export const emptyViewTemplate: View = {
     title: "Diagram",

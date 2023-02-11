@@ -14,7 +14,9 @@ import {
     defaultRelationshipStyle,
     View,
     Element,
-    Relationship
+    Relationship,
+    DeploymentNode,
+    Identifier
 } from "../store/C4Diagram";
 
 const getDiagramNodes = (diagram: View) => {
@@ -38,10 +40,32 @@ const getDiagramNodes = (diagram: View) => {
             },
             position: diagram.layout[node.identifier],
             parentNode: parentNode,
+            extent: "parent",
             style: parentNode ? undefined : { zIndex: -1 }
         };
     }
 
+    const findSoftwareSystem = (identifier: Identifier) => {
+        return diagram.model.softwareSystems
+            .find(x => x.identifier === identifier);
+    }
+
+    const findContainer = (identifier: Identifier) => {
+        return diagram.model.softwareSystems
+            .flatMap(x => x.containers ?? [])
+            .find(x => x.identifier === identifier);
+    }
+
+    const flatMapDeploymentNode = (deploymentNode: DeploymentNode, parentNode?: string) => {
+        return [
+            fromNode(deploymentNode, parentNode, deploymentNode.deploymentNodes?.length > 0),
+            ...deploymentNode.softwareSystemInstances?.flatMap(ss => fromNode(findSoftwareSystem(ss.softwareSystemIdentifier), deploymentNode.identifier)) ?? [],
+            ...deploymentNode.containerInstances?.flatMap(c => fromNode(findContainer(c.containerIdentifier), deploymentNode.identifier)) ?? [],
+            ...deploymentNode.deploymentNodes?.flatMap(dn => flatMapDeploymentNode(dn, deploymentNode.identifier)) ?? []
+        ];
+    }
+    
+    // TODO: map the nodes based on the type of view (SystemContext, Container, Component, Deployment, etc.)
     return [
         ...diagram.model.people.map(person => fromNode(person)),
         ...diagram.model.softwareSystems.flatMap(system => [
@@ -51,7 +75,8 @@ const getDiagramNodes = (diagram: View) => {
                 ...container.components?.map(component => 
                     fromNode(component, container.identifier)) ?? []
             ]) ?? []
-        ])
+        ]),
+        ...diagram.model.deploymentEnvironments[0].deploymentNodes.flatMap(dn => flatMapDeploymentNode(dn))
     ];
 }
 
