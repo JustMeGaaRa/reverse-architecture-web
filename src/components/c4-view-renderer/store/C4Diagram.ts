@@ -215,3 +215,36 @@ export interface View {
     layout: Layout;
     style: Style;
 }
+
+export interface GenericView {
+    key?: string;
+    title?: string;
+    description?: string;
+    layout: Layout;
+    style: Style;
+}
+
+export interface SystemContextView extends GenericView {
+    softwareSystemIdentifier: Identifier;
+    people: Person[];
+    softwareSystems: SoftwareSystem[];
+}
+
+export interface ContainerView extends GenericView {
+    containers: Container[];
+    people: Person[];
+    softwareSystems: SoftwareSystem[];
+}
+
+export interface ComponentView extends GenericView {
+    softwareSystemIdentifier: Identifier;
+    containerIdentifier: Identifier;
+    components: Component[];
+    people: Person[];
+    softwareSystems: SoftwareSystem[];
+    containers: Container[];
+}
+
+export interface DeploymentView extends GenericView {
+    deploymentNodes: DeploymentNode[];
+}

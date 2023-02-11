@@ -56,6 +56,7 @@ const getDiagramNodes = (diagram: View) => {
             .find(x => x.identifier === identifier);
     }
 
+    // TODO: fix the issue with instances references only being displayed once
     const flatMapDeploymentNode = (deploymentNode: DeploymentNode, parentNode?: string) => {
         return [
             fromNode(deploymentNode, parentNode, deploymentNode.deploymentNodes?.length > 0),
@@ -76,7 +77,9 @@ const getDiagramNodes = (diagram: View) => {
                     fromNode(component, container.identifier)) ?? []
             ]) ?? []
         ]),
-        ...diagram.model.deploymentEnvironments[0].deploymentNodes.flatMap(dn => flatMapDeploymentNode(dn))
+        ...diagram.model.deploymentEnvironments?.flatMap(de => 
+            de.deploymentNodes.flatMap(dn => flatMapDeploymentNode(dn))
+        ) ?? []
     ];
 }
 
