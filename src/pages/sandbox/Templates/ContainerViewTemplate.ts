@@ -5,7 +5,7 @@ export const containerViewTemplate: View = {
     model: {
         people: [
             {
-                identifier: "person-1",
+                identifier: "pn-banking-customer",
                 name: "Personal Banking Customer",
                 description: "A customer of the bank, with personal bank accounts.",
                 tags: [
@@ -16,7 +16,7 @@ export const containerViewTemplate: View = {
         ],
         softwareSystems: [
             {
-                identifier: "software-system-1",
+                identifier: "ss-internet-banking",
                 name: "Internet Banking System",
                 tags: [
                     { name: "Element" },
@@ -24,7 +24,7 @@ export const containerViewTemplate: View = {
                 ],
                 containers: [
                     {
-                        identifier: "container-1",
+                        identifier: "con-web-app",
                         name: "Web Application",
                         technology: [
                             { name: "Java" },
@@ -37,7 +37,7 @@ export const containerViewTemplate: View = {
                         ]
                     },
                     {
-                        identifier: "container-2",
+                        identifier: "con-single-page-app",
                         name: "Single-Page Application",
                         technology: [
                             { name: "JavaScript" },
@@ -50,7 +50,7 @@ export const containerViewTemplate: View = {
                         ]
                     },
                     {
-                        identifier: "container-3",
+                        identifier: "con-mobile-app",
                         name: "Mobile App",
                         technology: [
                             { name: "Xamarin" }
@@ -62,7 +62,7 @@ export const containerViewTemplate: View = {
                         ]
                     },
                     {
-                        identifier: "container-4",
+                        identifier: "con-api-application",
                         name: "API Application",
                         technology: [
                             { name: "Java" },
@@ -75,7 +75,7 @@ export const containerViewTemplate: View = {
                         ]
                     },
                     {
-                        identifier: "database-1",
+                        identifier: "db-database-1",
                         name: "Database",
                         technology: [
                             { name: "Oracle Database Schema" }
@@ -89,7 +89,7 @@ export const containerViewTemplate: View = {
                 ]
             },
             {
-                identifier: "software-system-3",
+                identifier: "ss-email-system",
                 name: "E-mail System",
                 description: "The internal Microsoft Exchange e-mail system.",
                 tags: [
@@ -99,7 +99,7 @@ export const containerViewTemplate: View = {
                 ]
             },
             {
-                identifier: "software-system-4",
+                identifier: "ss-mainframe-banking",
                 name: "Mainframe Banking System",
                 description: "Stores all of the core banking information about customers, accounts, transactions, etc.",
                 tags: [
@@ -112,8 +112,8 @@ export const containerViewTemplate: View = {
         deploymentEnvironments: [],
         relationships: [
             {
-                sourceIdentifier: "person-1",
-                targetIdentifier: "container-1",
+                sourceIdentifier: "pn-banking-customer",
+                targetIdentifier: "con-web-app",
                 description: "Visits bigbank.com/id using",
                 technology: [
                     { name: "HTTPS" }
@@ -123,40 +123,40 @@ export const containerViewTemplate: View = {
                 ]
             },
             {
-                sourceIdentifier: "person-1",
-                targetIdentifier: "container-2",
+                sourceIdentifier: "pn-banking-customer",
+                targetIdentifier: "con-single-page-app",
                 description: "Views account balances, and makes payments using",
                 tags: [
                     { name: "Relationship" }
                 ]
             },
             {
-                sourceIdentifier: "person-1",
-                targetIdentifier: "container-3",
+                sourceIdentifier: "pn-banking-customer",
+                targetIdentifier: "con-mobile-app",
                 description: "Views account balances, and makes payments using",
                 tags: [
                     { name: "Relationship" }
                 ]
             },
             {
-                sourceIdentifier: "software-system-3",
-                targetIdentifier: "person-1",
+                sourceIdentifier: "ss-email-system",
+                targetIdentifier: "pn-banking-customer",
                 description: "Sends e-mails to",
                 tags: [
                     { name: "Relationship" }
                 ]
             },
             {
-                sourceIdentifier: "container-1",
-                targetIdentifier: "container-2",
+                sourceIdentifier: "con-web-app",
+                targetIdentifier: "con-single-page-app",
                 description: "Delivers to the customer's web browser",
                 tags: [
                     { name: "Relationship" }
                 ]
             },
             {
-                sourceIdentifier: "container-2",
-                targetIdentifier: "container-4",
+                sourceIdentifier: "con-single-page-app",
+                targetIdentifier: "con-api-application",
                 description: "Makes API calls to",
                 technology: [
                     { name: "JSON" },
@@ -167,8 +167,8 @@ export const containerViewTemplate: View = {
                 ]
             },
             {
-                sourceIdentifier: "container-3",
-                targetIdentifier: "container-4",
+                sourceIdentifier: "con-mobile-app",
+                targetIdentifier: "con-api-application",
                 description: "Makes API calls to",
                 technology: [
                     { name: "JSON" },
@@ -179,8 +179,8 @@ export const containerViewTemplate: View = {
                 ]
             },
             {
-                sourceIdentifier: "container-4",
-                targetIdentifier: "database-1",
+                sourceIdentifier: "con-api-application",
+                targetIdentifier: "db-database-1",
                 description: "Reads from and writes to",
                 technology: [
                     { name: "JDBC" }
@@ -190,16 +190,16 @@ export const containerViewTemplate: View = {
                 ]
             },
             {
-                sourceIdentifier: "container-4",
-                targetIdentifier: "software-system-3",
+                sourceIdentifier: "con-api-application",
+                targetIdentifier: "ss-email-system",
                 description: "Sends e-mails using",
                 tags: [
                     { name: "Relationship" }
                 ]
             },
             {
-                sourceIdentifier: "container-4",
-                targetIdentifier: "software-system-4",
+                sourceIdentifier: "con-api-application",
+                targetIdentifier: "ss-mainframe-banking",
                 description: "Makes API calls to",
                 technology: [
                     { name: "XML" },
@@ -212,15 +212,15 @@ export const containerViewTemplate: View = {
         ]
     },
     layout: {
-        ["person-1"]: { "x": 720, "y": 0 },
-        ["software-system-1"]: { "x": 0, "y": 250, width: 1200, height: 600 },
-        ["software-system-3"]: { "x": 1300, "y": 300 },
-        ["software-system-4"]: { "x": 1300, "y": 600 },
-        ["container-1"]: { "x": 60, "y": 50 },
-        ["container-2"]: { "x": 560, "y": 50 },
-        ["container-3"]: { "x": 900, "y": 50 },
-        ["container-4"]: { "x": 720, "y": 350 },
-        ["database-1"]: { "x": 60, "y": 350 },
+        ["pn-banking-customer"]: { x: 800, y: 0 },
+        ["ss-internet-banking"]: { x: 0, y: 380, width: 1320, height: 720 },
+        ["ss-email-system"]: { x: 1500, y: 420 },
+        ["ss-mainframe-banking"]: { x: 1500, y: 820 },
+        ["con-web-app"]: { x: 40, y: 40 },
+        ["con-single-page-app"]: { x: 640, y: 40 },
+        ["con-mobile-app"]: { x: 980, y: 40 },
+        ["con-api-application"]: { x: 800, y: 440 },
+        ["db-database-1"]: { x: 40, y: 440 },
     },
     style: {
         element: {
@@ -236,6 +236,9 @@ export const containerViewTemplate: View = {
             ["Component"]: {
                 background: "#90cdf4"
             },
+            ["External"]: {
+                background: "#999999"
+            }
         },
         relationship: {}
     }

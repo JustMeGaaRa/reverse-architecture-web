@@ -6,7 +6,7 @@ export const deploymentViewTemplate: View = {
         people: [],
         softwareSystems: [
             {
-                identifier: "software-system-1",
+                identifier: "ss-internet-banking",
                 name: "Internet Banking System",
                 tags: [
                     { name: "Element" },
@@ -14,7 +14,7 @@ export const deploymentViewTemplate: View = {
                 ],
                 containers: [
                     {
-                        identifier: "container-1",
+                        identifier: "con-web-app",
                         name: "Web Application",
                         technology: [
                             { name: "Java" },
@@ -27,7 +27,7 @@ export const deploymentViewTemplate: View = {
                         ]
                     },
                     {
-                        identifier: "container-2",
+                        identifier: "con-single-page-app",
                         name: "Single-Page Application",
                         technology: [
                             { name: "JavaScript" },
@@ -40,7 +40,7 @@ export const deploymentViewTemplate: View = {
                         ]
                     },
                     {
-                        identifier: "container-3",
+                        identifier: "con-mobile-app",
                         name: "Mobile App",
                         technology: [
                             { name: "Xamarin" }
@@ -52,7 +52,7 @@ export const deploymentViewTemplate: View = {
                         ]
                     },
                     {
-                        identifier: "container-4",
+                        identifier: "con-api-application",
                         name: "API Application",
                         technology: [
                             { name: "Java" },
@@ -65,7 +65,7 @@ export const deploymentViewTemplate: View = {
                         ]
                     },
                     {
-                        identifier: "database-1",
+                        identifier: "db-database-1",
                         name: "Database",
                         technology: [
                             { name: "Oracle Database Schema" }
@@ -79,7 +79,7 @@ export const deploymentViewTemplate: View = {
                 ]
             },
             {
-                identifier: "software-system-4",
+                identifier: "ss-mainframe-banking",
                 name: "Mainframe Banking System",
                 description: "Stores all of the core banking information about customers, accounts, transactions, etc.",
                 tags: [
@@ -97,6 +97,9 @@ export const deploymentViewTemplate: View = {
                     {
                         identifier: "dn-customers-computer",
                         name: "Customer's Computer",
+                        technology: [
+                            { name: "Microsoft Windows or Apple macOS" }
+                        ],
                         tags: [
                             { name: "Element" },
                             { name: "Deployment Node" }
@@ -105,13 +108,16 @@ export const deploymentViewTemplate: View = {
                             {
                                 identifier: "dn-web-browser",
                                 name: "Web Browser",
+                                technology: [
+                                    { name: "Chrome, Firefox, Safari, or Edge" }
+                                ],
                                 tags: [
                                     { name: "Element" },
                                     { name: "Deployment Node" }
                                 ],
                                 containerInstances: [
                                     {
-                                        containerIdentifier: "container-2"
+                                        containerIdentifier: "con-single-page-app"
                                     }
                                 ]
                             }
@@ -120,19 +126,25 @@ export const deploymentViewTemplate: View = {
                     {
                         identifier: "dn-customers-mobile",
                         name: "Customer's Mobile Device",
+                        technology: [
+                            { name: "Apple iOS or Android" }
+                        ],
                         tags: [
                             { name: "Element" },
                             { name: "Deployment Node" }
                         ],
                         containerInstances: [
                             {
-                                containerIdentifier: "container-3"
+                                containerIdentifier: "con-mobile-app"
                             }
                         ]
                     },
                     {
                         identifier: "dn-big-bank-plc",
                         name: "Big Bank plc",
+                        technology: [
+                            { name: "Big Bank plc data center" }
+                        ],
                         tags:[
                             { name: "Element" },
                             { name: "Deployment Node" }
@@ -142,6 +154,9 @@ export const deploymentViewTemplate: View = {
                                 identifier: "dn-bigbank-web",
                                 name: "bigbank-web***",
                                 instances: 4,
+                                technology: [
+                                    { name: "Ubuntu 16.04 LTS" }
+                                ],
                                 tags: [
                                     { name: "Element" },
                                     { name: "Deployment Node" }
@@ -150,13 +165,16 @@ export const deploymentViewTemplate: View = {
                                     {
                                         identifier: "dn-apache-tomcat-1",
                                         name: "Apache Tomcat",
+                                        technology: [
+                                            { name: "Apache Tomcat 8.x" }
+                                        ],
                                         tags: [
                                             { name: "Element" },
                                             { name: "Deployment Node" }
                                         ],
                                         containerInstances: [
                                             {
-                                                containerIdentifier: "container-1"
+                                                containerIdentifier: "con-web-app"
                                             }
                                         ]
                                     }
@@ -166,6 +184,9 @@ export const deploymentViewTemplate: View = {
                                 identifier: "dn-bigbank-api",
                                 name: "bigbank-api***",
                                 instances: 8,
+                                technology: [
+                                    { name: "Ubuntu 16.04.LTS" }
+                                ],
                                 tags: [
                                     { name: "Element" },
                                     { name: "Deployment Node" }
@@ -174,13 +195,16 @@ export const deploymentViewTemplate: View = {
                                     {
                                         identifier: "dn-apache-tomcat-2",
                                         name: "Apache Tomcat",
+                                        technology: [
+                                            { name: "Apache Tomcat 8.x" }
+                                        ],
                                         tags: [
                                             { name: "Element" },
                                             { name: "Deployment Node" }
                                         ],
                                         containerInstances: [
                                             {
-                                                containerIdentifier: "container-4"
+                                                containerIdentifier: "con-api-application"
                                             }
                                         ]
                                     }
@@ -189,6 +213,9 @@ export const deploymentViewTemplate: View = {
                             {
                                 identifier: "dn-bigbank-db01",
                                 name: "bigbank-db01",
+                                technology: [
+                                    { name: "Ubuntu 16.04 LTS" }
+                                ],
                                 tags: [
                                     { name: "Element" },
                                     { name: "Deployment Node" }
@@ -197,13 +224,16 @@ export const deploymentViewTemplate: View = {
                                     {
                                         identifier: "dn-oracle-primary",
                                         name: "Oracle - Primary",
+                                        technology: [
+                                            { name: "Oracle 12c" }
+                                        ],
                                         tags: [
                                             { name: "Element" },
                                             { name: "Deployment Node" }
                                         ],
                                         containerInstances: [
                                             {
-                                                containerIdentifier: "database-1"
+                                                containerIdentifier: "db-database-1"
                                             }
                                         ]
                                     }
@@ -212,6 +242,9 @@ export const deploymentViewTemplate: View = {
                             {
                                 identifier: "dn-bigbank-db02",
                                 name: "bigbank-db02",
+                                technology: [
+                                    { name: "Ubuntu 16.04 LTS" }
+                                ],
                                 tags: [
                                     { name: "Element" },
                                     { name: "Deployment Node" },
@@ -220,14 +253,17 @@ export const deploymentViewTemplate: View = {
                                 deploymentNodes: [
                                     {
                                         identifier: "dn-oracle-secondary",
-                                        name: "Web Browser",
+                                        name: "Oracle - Secondary",
+                                        technology: [
+                                            { name: "Oracle 12c" }
+                                        ],
                                         tags: [
                                             { name: "Element" },
                                             { name: "Deployment Node" }
                                         ],
                                         containerInstances: [
                                             {
-                                                containerIdentifier: "database-1"
+                                                containerIdentifier: "db-database-1"
                                             }
                                         ]
                                     }
@@ -242,7 +278,7 @@ export const deploymentViewTemplate: View = {
                                 ],
                                 softwareSystemInstances: [
                                     {
-                                        softwareSystemIdentifier: "software-system-4"
+                                        softwareSystemIdentifier: "ss-mainframe-banking"
                                     }
                                 ]
                             }
@@ -253,51 +289,16 @@ export const deploymentViewTemplate: View = {
         ],
         relationships: [
             {
-                sourceIdentifier: "person-1",
-                targetIdentifier: "container-1",
-                description: "Visits bigbank.com/id using",
-                technology: [
-                    { name: "HTTPS" }
-                ],
-                tags: [
-                    { name: "Relationship" }
-                ]
-            },
-            {
-                sourceIdentifier: "person-1",
-                targetIdentifier: "container-2",
-                description: "Views account balances, and makes payments using",
-                tags: [
-                    { name: "Relationship" }
-                ]
-            },
-            {
-                sourceIdentifier: "person-1",
-                targetIdentifier: "container-3",
-                description: "Views account balances, and makes payments using",
-                tags: [
-                    { name: "Relationship" }
-                ]
-            },
-            {
-                sourceIdentifier: "software-system-3",
-                targetIdentifier: "person-1",
-                description: "Sends e-mails to",
-                tags: [
-                    { name: "Relationship" }
-                ]
-            },
-            {
-                sourceIdentifier: "container-1",
-                targetIdentifier: "container-2",
+                sourceIdentifier: "con-web-app",
+                targetIdentifier: "con-single-page-app",
                 description: "Delivers to the customer's web browser",
                 tags: [
                     { name: "Relationship" }
                 ]
             },
             {
-                sourceIdentifier: "container-2",
-                targetIdentifier: "container-4",
+                sourceIdentifier: "con-single-page-app",
+                targetIdentifier: "con-api-application",
                 description: "Makes API calls to",
                 technology: [
                     { name: "JSON" },
@@ -308,8 +309,8 @@ export const deploymentViewTemplate: View = {
                 ]
             },
             {
-                sourceIdentifier: "container-3",
-                targetIdentifier: "container-4",
+                sourceIdentifier: "con-mobile-app",
+                targetIdentifier: "con-api-application",
                 description: "Makes API calls to",
                 technology: [
                     { name: "JSON" },
@@ -320,8 +321,8 @@ export const deploymentViewTemplate: View = {
                 ]
             },
             {
-                sourceIdentifier: "container-4",
-                targetIdentifier: "database-1",
+                sourceIdentifier: "con-api-application",
+                targetIdentifier: "db-database-1",
                 description: "Reads from and writes to",
                 technology: [
                     { name: "JDBC" }
@@ -331,16 +332,8 @@ export const deploymentViewTemplate: View = {
                 ]
             },
             {
-                sourceIdentifier: "container-4",
-                targetIdentifier: "software-system-3",
-                description: "Sends e-mails using",
-                tags: [
-                    { name: "Relationship" }
-                ]
-            },
-            {
-                sourceIdentifier: "container-4",
-                targetIdentifier: "software-system-4",
+                sourceIdentifier: "con-api-application",
+                targetIdentifier: "ss-mainframe-banking",
                 description: "Makes API calls to",
                 technology: [
                     { name: "XML" },
@@ -349,31 +342,38 @@ export const deploymentViewTemplate: View = {
                 tags: [
                     { name: "Relationship" }
                 ]
+            },
+            {
+                sourceIdentifier: "dn-oracle-primary",
+                targetIdentifier: "dn-oracle-secondary",
+                description: "Replicates data to",
+                tags: [
+                    { name: "Relationship" }
+                ]
             }
         ]
     },
     layout: {
-        ["software-system-1"]: { x: 80, y: 80 },
-        ["software-system-4"]: { x: 40, y: 40 },
-        ["container-1"]: { x: 40, y: 40 },
-        ["container-2"]: { x: 40, y: 40 },
-        ["container-3"]: { x: 40, y: 40 },
-        ["container-4"]: { x: 40, y: 40 },
-        ["database-1"]: { x: 40, y: 40 },
-
-        ["dn-customers-computer"]: { x: 0, y: 40, width: 400, height: 400 },
-        ["dn-web-browser"]: { x: 40, y: 40, width: 320, height: 280 },
-        ["dn-customers-mobile"]: { x: 40, y: 740, width: 320, height: 280 },
-        ["dn-big-bank-plc"]: { x: 800, y: 0, width: 1240, height: 1760 },
-        ["dn-bigbank-web"]: { x: 40, y: 40, width: 400, height: 400 },
-        ["dn-apache-tomcat-1"]: { x: 40, y: 40, width: 320, height: 280 },
-        ["dn-bigbank-api"]: { x: 40, y: 700, width: 400, height: 400 },
-        ["dn-apache-tomcat-2"]: { x: 40, y: 40, width: 320, height: 280 },
-        ["dn-bigbank-db01"]: { x: 800, y: 40, width: 400, height: 400 },
-        ["dn-oracle-primary"]: { x: 40, y: 40, width: 320, height: 280 },
-        ["dn-bigbank-db02"]: { x: 800, y: 700, width: 400, height: 400 },
-        ["dn-oracle-secondary"]: { x: 40, y: 40, width: 320, height: 280 },
-        ["dn-bigbank-prod001"]: { x: 840, y: 1400, width: 320, height: 280 },
+        ["ss-internet-banking"]: { x: 80, y: 80 },
+        ["ss-mainframe-banking"]: { x: 40, y: 40 },
+        ["con-web-app"]: { x: 40, y: 40 },
+        ["con-single-page-app"]: { x: 40, y: 40 },
+        ["con-mobile-app"]: { x: 40, y: 40 },
+        ["con-api-application"]: { x: 40, y: 40 },
+        ["db-database-1"]: { x: 40, y: 40 },
+        ["dn-customers-computer"]: { x: 0, y: 40, width: 460, height: 420 },
+        ["dn-web-browser"]: { x: 40, y: 40, width: 380, height: 320 },
+        ["dn-customers-mobile"]: { x: 40, y: 740, width: 380, height: 320 },
+        ["dn-big-bank-plc"]: { x: 800, y: 0, width: 1300, height: 1800 },
+        ["dn-bigbank-web"]: { x: 40, y: 40, width: 460, height: 420 },
+        ["dn-apache-tomcat-1"]: { x: 40, y: 40, width: 380, height: 320 },
+        ["dn-bigbank-api"]: { x: 40, y: 700, width: 460, height: 420 },
+        ["dn-apache-tomcat-2"]: { x: 40, y: 40, width: 380, height: 320 },
+        ["dn-bigbank-db01"]: { x: 800, y: 40, width: 460, height: 420 },
+        ["dn-oracle-primary"]: { x: 40, y: 40, width: 380, height: 320 },
+        ["dn-bigbank-db02"]: { x: 800, y: 700, width: 460, height: 420 },
+        ["dn-oracle-secondary"]: { x: 40, y: 40, width: 380, height: 320 },
+        ["dn-bigbank-prod001"]: { x: 840, y: 1400, width: 380, height: 320 },
     },
     style: {
         element: {
@@ -388,6 +388,12 @@ export const deploymentViewTemplate: View = {
             },
             ["Component"]: {
                 background: "#90cdf4"
+            },
+            ["Deployment Node"]: {
+                strokeWidth: 1
+            },
+            ["External"]: {
+                background: "#999999"
             },
             ["Secondary"]: {
                 opacity: 25

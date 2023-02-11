@@ -55,8 +55,8 @@ export type ElementNodeProps = ShapeshiftElementProps & {
 export const ElementNode: FC<ElementNodeProps> = ({
     data,
     style,
-    width = 240,
-    height = 150,
+    width = 300,
+    height = 200,
     selected = false,
     expanded = false
 }) => {
@@ -66,11 +66,20 @@ export const ElementNode: FC<ElementNodeProps> = ({
     if (data.tags.some(x => x.name === Tag.DeploymentNode.name)) {
         return (
             <DeploymentNode
+                style={style}
                 width={size.width}
                 height={size.height}
                 selected={selected}
             >
                 <DeploymentNodeLabel data={data} />
+                <NodeResizer
+                    isVisible={selected}
+                    minWidth={380}
+                    minHeight={320}
+                    handleStyle={{ width: 7, height: 7 }}
+                    lineStyle={{ borderWidth: 0 }}
+                    onResize={onResize}
+                />
             </DeploymentNode>
         );
     }
@@ -86,8 +95,8 @@ export const ElementNode: FC<ElementNodeProps> = ({
                 <ExpandedElementLabel data={data} />
                 <NodeResizer
                     isVisible={selected}
-                    minWidth={280}
-                    minHeight={200}
+                    minWidth={380}
+                    minHeight={320}
                     handleStyle={{ width: 7, height: 7 }}
                     lineStyle={{ borderWidth: 0 }}
                     onResize={onResize}

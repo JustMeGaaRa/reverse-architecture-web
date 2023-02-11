@@ -16,8 +16,27 @@ import {
     Element,
     Relationship,
     DeploymentNode,
-    Identifier
+    Identifier,
+    Tag,
 } from "../store/C4Diagram";
+
+function aggrerateStyles<TStyle, TTagStyles>(style: TStyle, tagStyles: TTagStyles, tags: Tag[]) {
+    if (tags?.length > 0) {
+        const nextTag = tags.pop();
+        const nextStyle = tagStyles[nextTag.name];
+
+        const appliedStyle: TStyle = {
+            ...style,
+            ...nextStyle
+        }
+
+        return nextStyle
+            ? aggrerateStyles(appliedStyle, tagStyles, tags)
+            : aggrerateStyles(style, tagStyles, tags);
+    }
+
+    return style;
+}
 
 const getDiagramNodes = (diagram: View) => {
     if (diagram === null) return Array.of<Node<ElementNodeWrapperProps>>();
@@ -32,8 +51,11 @@ const getDiagramNodes = (diagram: View) => {
             type: "roundedBox",
             data: {
                 element: node,
-                // TODO: handle tags corectly
-                style: diagram.style.element[node.tags[1].name] ?? defaultElementStyle,
+                style: aggrerateStyles(
+                    defaultElementStyle,
+                    diagram.style.element,
+                    [...node.tags].reverse()
+                ),
                 width: diagram.layout[node.identifier].width,
                 height: diagram.layout[node.identifier].height,
                 expanded: expanded,
@@ -60,9 +82,9 @@ const getDiagramNodes = (diagram: View) => {
     const flatMapDeploymentNode = (deploymentNode: DeploymentNode, parentNode?: string) => {
         return [
             fromNode(deploymentNode, parentNode, deploymentNode.deploymentNodes?.length > 0),
+            ...deploymentNode.deploymentNodes?.flatMap(dn => flatMapDeploymentNode(dn, deploymentNode.identifier)) ?? [],
             ...deploymentNode.softwareSystemInstances?.flatMap(ss => fromNode(findSoftwareSystem(ss.softwareSystemIdentifier), deploymentNode.identifier)) ?? [],
             ...deploymentNode.containerInstances?.flatMap(c => fromNode(findContainer(c.containerIdentifier), deploymentNode.identifier)) ?? [],
-            ...deploymentNode.deploymentNodes?.flatMap(dn => flatMapDeploymentNode(dn, deploymentNode.identifier)) ?? []
         ];
     }
     
@@ -77,8 +99,8 @@ const getDiagramNodes = (diagram: View) => {
                     fromNode(component, container.identifier)) ?? []
             ]) ?? []
         ]),
-        ...diagram.model.deploymentEnvironments?.flatMap(de => 
-            de.deploymentNodes.flatMap(dn => flatMapDeploymentNode(dn))
+        ...diagram.model.deploymentEnvironments?.flatMap(deployment => 
+            deployment.deploymentNodes.flatMap(dn => flatMapDeploymentNode(dn))
         ) ?? []
     ];
 }
@@ -95,8 +117,11 @@ const getDiagramEdges = (diagram: View) => {
             label: edge.description,
             data: {
                 relationship: edge,
-                // TODO: handle tags corectly
-                style: diagram.style.relationship[edge.tags[0].name] ?? defaultRelationshipStyle,
+                style: aggrerateStyles(
+                    defaultRelationshipStyle,
+                    diagram.style.relationship,
+                    [...edge.tags].reverse()
+                ),
             },
             source: edge.sourceIdentifier,
             target: edge.targetIdentifier

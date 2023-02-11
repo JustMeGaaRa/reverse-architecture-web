@@ -6,7 +6,7 @@ export const componentViewTemplate: View = {
         people: [],
         softwareSystems: [
             {
-                identifier: "software-system-1",
+                identifier: "ss-internet-banking",
                 name: "Internet Banking System",
                 tags: [
                     { name: "Element" },
@@ -14,7 +14,7 @@ export const componentViewTemplate: View = {
                 ],
                 containers: [
                     {
-                        identifier: "container-4",
+                        identifier: "con-api-application",
                         name: "API Application",
                         technology: [
                             { name: "Java" },
@@ -27,7 +27,7 @@ export const componentViewTemplate: View = {
                         ],
                         components: [
                             {
-                                identifier: "component-1",
+                                identifier: "cmp-signin-ctrl",
                                 name: "Sign-In Controller",
                                 technology: [
                                     { name: "Spring MVC REST Controller" }
@@ -39,7 +39,7 @@ export const componentViewTemplate: View = {
                                 ]
                             },
                             {
-                                identifier: "component-2",
+                                identifier: "cmp-reset-pwd-ctrl",
                                 name: "Reset Password Controller",
                                 technology: [
                                     { name: "Spring MVC REST Controller" }
@@ -51,7 +51,7 @@ export const componentViewTemplate: View = {
                                 ]
                             },
                             {
-                                identifier: "component-3",
+                                identifier: "cmp-accounts-summary-ctrl",
                                 name: "Accounts Summary Controller",
                                 technology: [
                                     { name: "Spring MVC REST Controller" }
@@ -63,7 +63,7 @@ export const componentViewTemplate: View = {
                                 ]
                             },
                             {
-                                identifier: "component-4",
+                                identifier: "cmp-security-component",
                                 name: "Security Component",
                                 technology: [
                                     { name: "Spring Bean" }
@@ -75,7 +75,7 @@ export const componentViewTemplate: View = {
                                 ]
                             },
                             {
-                                identifier: "component-5",
+                                identifier: "cmp-email-component",
                                 name: "E-mail Component",
                                 technology: [
                                     { name: "Spring Bean" }
@@ -87,8 +87,8 @@ export const componentViewTemplate: View = {
                                 ]
                             },
                             {
-                                identifier: "component-6",
-                                name: "Mainframe Baning System Facade",
+                                identifier: "cmp-mainframe-facade",
+                                name: "Mainframe Banking System Facade",
                                 technology: [
                                     { name: "Spring Bean" }
                                 ],
@@ -101,7 +101,7 @@ export const componentViewTemplate: View = {
                         ]
                     },
                     {
-                        identifier: "container-2",
+                        identifier: "con-single-page-app",
                         name: "Single-Page Application",
                         technology: [
                             { name: "JavaScript" },
@@ -114,7 +114,7 @@ export const componentViewTemplate: View = {
                         ]
                     },
                     {
-                        identifier: "container-3",
+                        identifier: "con-mobile-app",
                         name: "Mobile App",
                         technology: [
                             { name: "Xamarin" }
@@ -126,7 +126,7 @@ export const componentViewTemplate: View = {
                         ]
                     },
                     {
-                        identifier: "database-1",
+                        identifier: "db-database-1",
                         name: "Database",
                         technology: [
                             { name: "Oracle Database Schema" }
@@ -140,7 +140,7 @@ export const componentViewTemplate: View = {
                 ]
             },
             {
-                identifier: "software-system-3",
+                identifier: "ss-email-system",
                 name: "E-mail System",
                 description: "The internal Microsoft Exchange e-mail system.",
                 tags: [
@@ -150,7 +150,7 @@ export const componentViewTemplate: View = {
                 ]
             },
             {
-                identifier: "software-system-4",
+                identifier: "ss-mainframe-banking",
                 name: "Mainframe Banking System",
                 description: "Stores all of the core banking information about customers, accounts, transactions, etc.",
                 tags: [
@@ -163,8 +163,8 @@ export const componentViewTemplate: View = {
         deploymentEnvironments: [],
         relationships: [
             {
-                sourceIdentifier: "container-2",
-                targetIdentifier: "component-1",
+                sourceIdentifier: "con-single-page-app",
+                targetIdentifier: "cmp-signin-ctrl",
                 description: "Makes API calls to",
                 technology: [
                     { name: "JSON" },
@@ -175,8 +175,8 @@ export const componentViewTemplate: View = {
                 ]
             },
             {
-                sourceIdentifier: "container-2",
-                targetIdentifier: "component-2",
+                sourceIdentifier: "con-single-page-app",
+                targetIdentifier: "cmp-reset-pwd-ctrl",
                 description: "Makes API calls to",
                 technology: [
                     { name: "JSON" },
@@ -187,8 +187,8 @@ export const componentViewTemplate: View = {
                 ]
             },
             {
-                sourceIdentifier: "container-2",
-                targetIdentifier: "component-3",
+                sourceIdentifier: "con-single-page-app",
+                targetIdentifier: "cmp-accounts-summary-ctrl",
                 description: "Makes API calls to",
                 technology: [
                     { name: "JSON" },
@@ -199,8 +199,8 @@ export const componentViewTemplate: View = {
                 ]
             },
             {
-                sourceIdentifier: "container-3",
-                targetIdentifier: "component-1",
+                sourceIdentifier: "con-mobile-app",
+                targetIdentifier: "cmp-signin-ctrl",
                 description: "Makes API calls to",
                 technology: [
                     { name: "JSON" },
@@ -211,8 +211,8 @@ export const componentViewTemplate: View = {
                 ]
             },
             {
-                sourceIdentifier: "container-3",
-                targetIdentifier: "component-2",
+                sourceIdentifier: "con-mobile-app",
+                targetIdentifier: "cmp-reset-pwd-ctrl",
                 description: "Makes API calls to",
                 technology: [
                     { name: "JSON" },
@@ -223,8 +223,8 @@ export const componentViewTemplate: View = {
                 ]
             },
             {
-                sourceIdentifier: "container-3",
-                targetIdentifier: "component-3",
+                sourceIdentifier: "con-mobile-app",
+                targetIdentifier: "cmp-accounts-summary-ctrl",
                 description: "Makes API calls to",
                 technology: [
                     { name: "JSON" },
@@ -235,40 +235,40 @@ export const componentViewTemplate: View = {
                 ]
             },
             {
-                sourceIdentifier: "component-1",
-                targetIdentifier: "component-4",
+                sourceIdentifier: "cmp-signin-ctrl",
+                targetIdentifier: "cmp-security-component",
                 description: "Uses",
                 tags: [
                     { name: "Relationship" }
                 ]
             },
             {
-                sourceIdentifier: "component-2",
-                targetIdentifier: "component-4",
+                sourceIdentifier: "cmp-reset-pwd-ctrl",
+                targetIdentifier: "cmp-security-component",
                 description: "Uses",
                 tags: [
                     { name: "Relationship" }
                 ]
             },
             {
-                sourceIdentifier: "component-2",
-                targetIdentifier: "component-5",
+                sourceIdentifier: "cmp-reset-pwd-ctrl",
+                targetIdentifier: "cmp-email-component",
                 description: "Uses",
                 tags: [
                     { name: "Relationship" }
                 ]
             },
             {
-                sourceIdentifier: "component-3",
-                targetIdentifier: "component-6",
+                sourceIdentifier: "cmp-accounts-summary-ctrl",
+                targetIdentifier: "cmp-mainframe-facade",
                 description: "Uses",
                 tags: [
                     { name: "Relationship" }
                 ]
             },
             {
-                sourceIdentifier: "component-4",
-                targetIdentifier: "database-1",
+                sourceIdentifier: "cmp-security-component",
+                targetIdentifier: "db-database-1",
                 description: "Reads from and writes to",
                 technology: [
                     { name: "JDBC" }
@@ -278,16 +278,16 @@ export const componentViewTemplate: View = {
                 ]
             },
             {
-                sourceIdentifier: "component-5",
-                targetIdentifier: "software-system-3",
+                sourceIdentifier: "cmp-email-component",
+                targetIdentifier: "ss-email-system",
                 description: "Sends e-mails using",
                 tags: [
                     { name: "Relationship" }
                 ]
             },
             {
-                sourceIdentifier: "component-6",
-                targetIdentifier: "software-system-4",
+                sourceIdentifier: "cmp-mainframe-facade",
+                targetIdentifier: "ss-mainframe-banking",
                 description: "Makes API calls to",
                 technology: [
                     { name: "XML" },
@@ -300,19 +300,19 @@ export const componentViewTemplate: View = {
         ]
     },
     layout: {
-        ["software-system-1"]: { "x": 0, "y": 0, width: 1440, height: 1260 },
-        ["software-system-3"]: { "x": 600, "y": 1020 },
-        ["software-system-4"]: { "x": 1080, "y": 1020 },
-        ["container-2"]: { "x": 360, "y": 60 },
-        ["container-3"]: { "x": 860, "y": 60 },
-        ["container-4"]: { "x": 60, "y": 320, width: 1320, height: 600 },
-        ["database-1"]: { "x": 120, "y": 1020 },
-        ["component-1"]: { "x": 60, "y": 60 },
-        ["component-2"]: { "x": 540, "y": 60 },
-        ["component-3"]: { "x": 1020, "y": 60 },
-        ["component-4"]: { "x": 60, "y": 360 },
-        ["component-5"]: { "x": 540, "y": 360 },
-        ["component-6"]: { "x": 1020, "y": 360 },
+        ["ss-internet-banking"]: { x: 0, y: 0, width: 1660, height: 1380 },
+        ["ss-email-system"]: { x: 680, y: 1100 },
+        ["ss-mainframe-banking"]: { x: 1280, y: 1100 },
+        ["con-single-page-app"]: { x: 380, y: 40 },
+        ["con-mobile-app"]: { x: 980, y: 40 },
+        ["con-api-application"]: { x: 40, y: 380, width: 1580, height: 600 },
+        ["db-database-1"]: { x: 80, y: 1100 },
+        ["cmp-signin-ctrl"]: { x: 40, y: 40 },
+        ["cmp-reset-pwd-ctrl"]: { x: 640, y: 40 },
+        ["cmp-accounts-summary-ctrl"]: { x: 1240, y: 40 },
+        ["cmp-security-component"]: { x: 40, y: 320 },
+        ["cmp-email-component"]: { x: 640, y: 320 },
+        ["cmp-mainframe-facade"]: { x: 1240, y: 320 },
     },
     style: {
         element: {
@@ -328,6 +328,9 @@ export const componentViewTemplate: View = {
             ["Component"]: {
                 background: "#90cdf4"
             },
+            ["External"]: {
+                background: "#999999"
+            }
         },
         relationship: {}
     }

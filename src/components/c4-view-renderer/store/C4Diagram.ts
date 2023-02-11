@@ -172,11 +172,11 @@ export const defaultElementStyle: ElementStyleProperties = {
     height: 150,
     background: "#DDDDDD",
     color: "#000000",
-    stroke: "#D8D8D8",
-    strokeWidth: 1,
+    stroke: "#C3C3C3",
+    strokeWidth: 0,
     fontSize: 14,
     border: LineStyle.Solid,
-    opacity: 1.0,
+    opacity: 100,
     metadata: false,
     description: true
 }
@@ -189,7 +189,7 @@ export const defaultRelationshipStyle: RelationshipStyleProperties = {
     fontSize: 14,
     width: 1,
     position: 1,
-    opacity: 1.0
+    opacity: 100
 }
 
 export interface Position {

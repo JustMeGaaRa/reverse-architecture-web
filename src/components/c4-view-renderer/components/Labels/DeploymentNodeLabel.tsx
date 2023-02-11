@@ -19,7 +19,7 @@ export const DeploymentNodeLabel: FC<DeploymentNodeLabelProps> = ({
             <ExpandedElementLabel data={data} />
             {data.instances && (
                 <Text
-                    fontSize={"2xl"}
+                    fontSize={"xx-large"}
                     lineHeight={1}
                 >
                     {`x${data.instances}`}

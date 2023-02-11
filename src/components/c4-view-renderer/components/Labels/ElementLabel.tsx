@@ -2,10 +2,10 @@ import { FC } from "react";
 import { VStack, Text } from "@chakra-ui/react";
 import { Element } from "../../store/C4Diagram";
 
-export const formatElementTechnology = (data: Element, showTechnologies?: boolean) => {
+export const formatElementTechnology = (data: Element) => {
     // TODO: handle tags corectly
     const type = data.tags.filter(x => x.name !== "Element").at(0);
-    return showTechnologies && data?.technology && data?.technology.length > 0
+    return data?.technology && data?.technology.length > 0
         ? `[${type.name}: ${data.technology.map(x => x.name).join(", ")}]`
         : `[${type.name}]`;
 };
@@ -26,14 +26,14 @@ export const ElementLabel: FC<ElementLabelProps> = ({
         >
             <Text
                 as={"b"}
-                fontSize={"md"}
+                fontSize={"larger"}
                 noOfLines={1}
                 textAlign={"center"}
             >
                 {data.name}
             </Text>
             <Text
-                fontSize={"x-small"}
+                fontSize={"small"}
                 noOfLines={1}
                 textAlign={"center"}
             >
@@ -41,7 +41,7 @@ export const ElementLabel: FC<ElementLabelProps> = ({
             </Text>
             {showDescription && data.description && (
                 <Text
-                    fontSize={"xs"}
+                    fontSize={"medium"}
                     noOfLines={3}
                     paddingTop={4}
                     textAlign={"center"}

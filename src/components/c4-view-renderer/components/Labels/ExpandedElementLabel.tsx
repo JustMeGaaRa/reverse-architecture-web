@@ -23,15 +23,14 @@ export const ExpandedElementLabel: FC<ExpandedElementLabelProps> = ({
             spacing={0}
         >
             <Text
-                as={"b"}
-                fontSize={"md"}
+                fontSize={"medium"}
                 noOfLines={1}
                 textAlign={"center"}
             >
                 {data.name}
             </Text>
             <Text
-                fontSize={"x-small"}
+                fontSize={"small"}
                 noOfLines={1}
                 textAlign={"center"}
             >

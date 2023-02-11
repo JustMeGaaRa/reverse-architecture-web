@@ -5,7 +5,7 @@ export const systemContextViewTemplate: View = {
     model: {
         people: [
             {
-                identifier: "person-1",
+                identifier: "pn-banking-customer",
                 name: "Personal Banking Customer",
                 description: "A customer of the bank, with personal bank accounts.",
                 tags: [{ name: "Element" }, { name: "Person" }]
@@ -13,57 +13,57 @@ export const systemContextViewTemplate: View = {
         ],
         softwareSystems: [
             {
-                identifier: "software-system-1",
+                identifier: "ss-internet-banking",
                 name: "Internet Banking System",
                 description: "Allows customers to view information about their bank accounts, and make payments.",
                 tags: [{ name: "Element" }, { name: "Software System" }]
             },
             {
-                identifier: "software-system-4",
+                identifier: "ss-mainframe-banking",
                 name: "Mainframe Banking System",
                 description: "Stores all of the core banking information about customers, accounts, transactions, etc.",
-                tags: [{ name: "Element" }, { name: "Software System" }]
+                tags: [{ name: "Element" }, { name: "Software System" }, { name: "External" }]
             },
             {
-                identifier: "software-system-3",
+                identifier: "ss-email-system",
                 name: "E-mail System",
                 description: "The internal Microsoft Exchange e-mail system.",
-                tags: [{ name: "Element" }, { name: "Software System" }]
+                tags: [{ name: "Element" }, { name: "Software System" }, { name: "External" }]
             }
         ],
         deploymentEnvironments: [],
         relationships: [
             {
-                sourceIdentifier: "person-1",
-                targetIdentifier: "software-system-1",
+                sourceIdentifier: "pn-banking-customer",
+                targetIdentifier: "ss-internet-banking",
                 description: "Views account balances, and makes payments using",
                 tags: [{ name: "Element" }, { name: "Relationship" }]
             },
             {
-                sourceIdentifier: "software-system-3",
-                targetIdentifier: "person-1",
+                sourceIdentifier: "ss-email-system",
+                targetIdentifier: "pn-banking-customer",
                 description: "Sends e-mails to",
                 tags: [{ name: "Element" }, { name: "Relationship" }]
             },
             {
-                sourceIdentifier: "software-system-1",
-                targetIdentifier: "software-system-3",
+                sourceIdentifier: "ss-internet-banking",
+                targetIdentifier: "ss-email-system",
                 description: "Sends e-mails using",
                 tags: [{ name: "Element" }, { name: "Relationship" }]
             },
             {
-                sourceIdentifier: "software-system-1",
-                targetIdentifier: "software-system-4",
+                sourceIdentifier: "ss-internet-banking",
+                targetIdentifier: "ss-mainframe-banking",
                 description: "Gets account information from, and makes payments using",
                 tags: [{ name: "Element" }, { name: "Relationship" }]
             }
         ]
     },
     layout: {
-        ["person-1"]: { "x": 0, "y": 0 },
-        ["software-system-1"]: { "x": 0, "y": 300 },
-        ["software-system-3"]: { "x": 480, "y": 300 },
-        ["software-system-4"]: { "x": 0, "y": 600 }
+        ["pn-banking-customer"]: { x: 0, y: 0 },
+        ["ss-internet-banking"]: { x: 0, y: 400 },
+        ["ss-email-system"]: { x: 480, y: 400 },
+        ["ss-mainframe-banking"]: { x: 0, y: 800 }
     },
     style: {
         element: {
@@ -79,6 +79,9 @@ export const systemContextViewTemplate: View = {
             ["Component"]: {
                 background: "#90cdf4"
             },
+            ["External"]: {
+                background: "#999999"
+            }
         },
         relationship: {}
     }

@@ -1,4 +1,4 @@
-import { Flex, useColorModeValue } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { FC, PropsWithChildren } from "react";
 import { defaultElementStyle, ElementStyleProperties } from "../../store/C4Diagram";
 
@@ -20,22 +20,18 @@ export const DeploymentNode: FC<PropsWithChildren<DeploymentNodeProps>> = ({
         ...defaultElementStyle,
         ...style
     }
-    const parentBorderColor = useColorModeValue("blackAlpha.200", "whiteAlpha.400");
-    const parentHighlightBorderColor = useColorModeValue("blackAlpha.400", "whiteAlpha.400");
 
     return (
         <Flex
-            borderWidth={2}
-            borderColor={selected
-                ? parentHighlightBorderColor
-                : parentBorderColor
-            }
+            background={mergedStyle.background}
+            borderWidth={mergedStyle.strokeWidth}
+            borderColor={mergedStyle.stroke}
             align={"end"}
             justify={"start"}
             padding={2}
             width={width}
             height={height}
-            textColor={"whiteAlpha.900"}
+            textColor={mergedStyle.color}
         >
             {children}
         </Flex>
