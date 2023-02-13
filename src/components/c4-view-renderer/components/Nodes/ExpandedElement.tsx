@@ -1,6 +1,6 @@
 import { Flex } from "@chakra-ui/react";
 import { FC, PropsWithChildren  } from "react";
-import { defaultElementStyle, ElementStyleProperties } from "../../store/C4Diagram";
+import { defaultElementStyle, ElementStyleProperties } from "../../../../dsl";
 
 export type ExpandedElementProps = {
     style?: Partial<ElementStyleProperties>;

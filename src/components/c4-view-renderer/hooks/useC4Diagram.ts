@@ -5,159 +5,218 @@ import {
     ReactFlowJsonObject,
     useReactFlow
 } from "@reactflow/core";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { ElementNodeWrapperProps } from "../components/Nodes/ElementNode";
 import { RelationshipEdgeWrapperProps } from "../components/Edges/RelationshipEdge";
-import { useC4BuilderStore } from "../store";
 import {
     defaultElementStyle,
     defaultRelationshipStyle,
-    View,
     Element,
+    Layout,
     Relationship,
     DeploymentNode,
     Identifier,
-    Tag,
-} from "../store/C4Diagram";
+    aggrerateStyles,
+    Workspace,
+    findSoftwareSystem,
+    findContainer
+} from "../../../dsl";
 
-function aggrerateStyles<TStyle, TTagStyles>(style: TStyle, tagStyles: TTagStyles, tags: Tag[]) {
-    if (tags?.length > 0) {
-        const nextTag = tags.pop();
-        const nextStyle = tagStyles[nextTag.name];
+export const useC4Diagram = () => {
+    const reactFlow = useReactFlow();
+    // const c4Diagram = useC4BuilderStore();
+    const [workspace, setWorkspace] = useState<Workspace>(null);
 
-        const appliedStyle: TStyle = {
-            ...style,
-            ...nextStyle
-        }
-
-        return nextStyle
-            ? aggrerateStyles(appliedStyle, tagStyles, tags)
-            : aggrerateStyles(style, tagStyles, tags);
+    type FromNodeParams = {
+        node: Element;
+        parentNode?: string;
+        expanded?: boolean;
+        layout?: Layout;
     }
 
-    return style;
-}
-
-const getDiagramNodes = (diagram: View) => {
-    if (diagram === null) return Array.of<Node<ElementNodeWrapperProps>>();
-    
-    const fromNode = (
-        node: Element,
-        parentNode?: string,
-        expanded?: boolean
-    ): Node<ElementNodeWrapperProps> => {
+    const fromNode = useCallback((params: FromNodeParams): Node<ElementNodeWrapperProps> => {
+        const { node, parentNode, expanded, layout } = params;
         return {
             id: node.identifier,
-            type: "roundedBox",
+            type: "element",
             data: {
                 element: node,
                 style: aggrerateStyles(
                     defaultElementStyle,
-                    diagram.style.element,
+                    workspace.views.styles.element,
                     [...node.tags].reverse()
                 ),
-                width: diagram.layout[node.identifier].width,
-                height: diagram.layout[node.identifier].height,
+                width: layout[node.identifier].width,
+                height: layout[node.identifier].height,
                 expanded: expanded,
             },
-            position: diagram.layout[node.identifier],
+            position: layout[node.identifier],
             parentNode: parentNode,
             extent: "parent",
             style: parentNode ? undefined : { zIndex: -1 }
-        };
-    }
-
-    const findSoftwareSystem = (identifier: Identifier) => {
-        return diagram.model.softwareSystems
-            .find(x => x.identifier === identifier);
-    }
-
-    const findContainer = (identifier: Identifier) => {
-        return diagram.model.softwareSystems
-            .flatMap(x => x.containers ?? [])
-            .find(x => x.identifier === identifier);
-    }
-
-    // TODO: fix the issue with instances references only being displayed once
-    const flatMapDeploymentNode = (deploymentNode: DeploymentNode, parentNode?: string) => {
-        return [
-            fromNode(deploymentNode, parentNode, deploymentNode.deploymentNodes?.length > 0),
-            ...deploymentNode.deploymentNodes?.flatMap(dn => flatMapDeploymentNode(dn, deploymentNode.identifier)) ?? [],
-            ...deploymentNode.softwareSystemInstances?.flatMap(ss => fromNode(findSoftwareSystem(ss.softwareSystemIdentifier), deploymentNode.identifier)) ?? [],
-            ...deploymentNode.containerInstances?.flatMap(c => fromNode(findContainer(c.containerIdentifier), deploymentNode.identifier)) ?? [],
-        ];
-    }
+        }
+    }, [workspace]);
     
-    // TODO: map the nodes based on the type of view (SystemContext, Container, Component, Deployment, etc.)
-    return [
-        ...diagram.model.people.map(person => fromNode(person)),
-        ...diagram.model.softwareSystems.flatMap(system => [
-            fromNode(system, undefined, system.containers?.length > 0),
-            ...system.containers?.flatMap(container => [
-                fromNode(container, system.identifier, container.components?.length > 0),
-                ...container.components?.map(component => 
-                    fromNode(component, container.identifier)) ?? []
-            ]) ?? []
-        ]),
-        ...diagram.model.deploymentEnvironments?.flatMap(deployment => 
-            deployment.deploymentNodes.flatMap(dn => flatMapDeploymentNode(dn))
-        ) ?? []
-    ];
-}
-
-const getDiagramEdges = (diagram: View) => {
-    if (diagram === null) return Array.of<Edge<RelationshipEdgeWrapperProps>>();
-
-    const fromEdge = (
+    const fromEdge = useCallback((
         edge: Relationship
     ): Edge<RelationshipEdgeWrapperProps> => {
         return {
             id: `${edge.sourceIdentifier}_${edge.targetIdentifier}`,
-            type: "default",
+            type: "relationship",
             label: edge.description,
             data: {
                 relationship: edge,
                 style: aggrerateStyles(
                     defaultRelationshipStyle,
-                    diagram.style.relationship,
+                    workspace.views.styles.relationship,
                     [...edge.tags].reverse()
                 ),
             },
             source: edge.sourceIdentifier,
             target: edge.targetIdentifier
         };
-    }
+    }, [workspace]);
 
-    return diagram.model.relationships.map(edge => fromEdge(edge));
-}
+    const relationshipExists = useCallback((
+        sourceIdentifier: Identifier,
+        targetIdentifier: Identifier
+    ) => {
+        return workspace?.model.relationships.some(x => 
+            x.sourceIdentifier === sourceIdentifier && x.targetIdentifier === targetIdentifier
+            || x.sourceIdentifier === targetIdentifier && x.targetIdentifier === sourceIdentifier
+        )
+    }, [workspace]);
 
-export const useC4Diagram = () => {
-    const reactFlow = useReactFlow();
-    const c4Diagram = useC4BuilderStore();
+    const getDiagramEdges = useCallback((workspace: Workspace) => {
+        if (workspace === null) return Array.of<Edge<RelationshipEdgeWrapperProps>>();
+    
+        // TODO: filter edges only for nodes that will be rendered
+        return workspace.model.relationships.map(edge => fromEdge(edge));
+    }, [fromEdge]);
 
     const clearView = useCallback(() => {
-        // TODO: clear elements and relationships
-        // c4Diagram.setElements(elements);
-        // c4Diagram.setRelationships(relationships);
         reactFlow.setNodes([]);
         reactFlow.setEdges([]);
     }, [reactFlow]);
 
-    const fromView = useCallback((
-        diagram: View,
-        fitViewOptions?: FitViewOptions
-    ) => {
-        const elements = getDiagramNodes(diagram);
-        const relationships = getDiagramEdges(diagram);
+    const renderSystemContextView = useCallback((softwareSystemIdentifier: Identifier) => {
+        const getSystemContextViewNodes = (softwareSystemIdentifier: Identifier, workspace: Workspace) => {
+            if (!workspace) return [];
 
-        c4Diagram.setTitle(diagram.title);
-        // TODO: set elements and relationships
-        // c4Diagram.setElements(elements);
-        // c4Diagram.setRelationships(relationships);
-        reactFlow.setNodes(elements);
-        reactFlow.setEdges(relationships);
-        reactFlow.fitView(fitViewOptions);
-    }, [c4Diagram, reactFlow]);
+            const softwareSystem = findSoftwareSystem(workspace, softwareSystemIdentifier);
+            const layout = workspace?.views.systemContexts
+                .find(view => view.softwareSystemIdentifier === softwareSystemIdentifier)?.layout;
+            
+            return [
+                fromNode({ node: softwareSystem, layout }),
+                ...workspace.model.people
+                    .filter(x => relationshipExists(softwareSystem.identifier, x.identifier))
+                    .map(node => fromNode({ node, layout })),
+                ...workspace.model.softwareSystems
+                    .filter(x => relationshipExists(softwareSystem.identifier, x.identifier))
+                    .map(node => fromNode({ node, layout }))
+            ];
+        };
+
+        reactFlow.setNodes(getSystemContextViewNodes(softwareSystemIdentifier, workspace));
+        reactFlow.setEdges(getDiagramEdges(workspace));
+    }, [reactFlow, workspace, fromNode, getDiagramEdges, relationshipExists]);
+
+    const renderContainerView = useCallback((softwareSystemIdentifier: Identifier) => {
+        const getContainerViewNodes = (softwareSystemIdentifier: Identifier, workspace: Workspace) => {
+            if (!workspace) return [];
+    
+            const softwareSystem = findSoftwareSystem(workspace, softwareSystemIdentifier);
+            const layout = workspace?.views.containers
+                .find(view => view.softwareSystemIdentifier === softwareSystemIdentifier)?.layout;
+    
+            return [
+                fromNode({ node: softwareSystem, expanded: true, layout }),
+                ...softwareSystem?.containers
+                    ?.map(node => fromNode({ node, parentNode: softwareSystem.identifier, layout })) ?? [],
+                ...workspace.model.people
+                    .filter(x => softwareSystem.containers.some(container => relationshipExists(container.identifier, x.identifier)))
+                    .map(node => fromNode({ node, layout })),
+                ...workspace.model.softwareSystems
+                    .filter(x => softwareSystem.containers.some(container => relationshipExists(container.identifier, x.identifier)))
+                    .filter(system => system.identifier !== softwareSystem?.identifier)
+                    .map(node => fromNode({ node, layout })),
+            ];
+        }
+
+        reactFlow.setNodes(getContainerViewNodes(softwareSystemIdentifier, workspace));
+        reactFlow.setEdges(getDiagramEdges(workspace));
+    }, [reactFlow, workspace, fromNode, getDiagramEdges, relationshipExists]);
+
+    const renderComponentView = useCallback((containerIdentifier: Identifier) => {
+        const getComponentViewNodes = (containerIdentifier: Identifier, workspace: Workspace) => {
+            if (!workspace) return [];
+            
+            const container = findContainer(workspace, containerIdentifier);
+            const layout = workspace?.views.components
+                .find(view => view.containerIdentifier === containerIdentifier)?.layout;
+    
+            return [
+                fromNode({ node: container, expanded: true, layout }),
+                ...container?.components
+                    ?.map(node => fromNode({ node, parentNode: container.identifier, layout })) ?? [],
+                ...workspace.model.people
+                    .filter(x => container.components.some(component => relationshipExists(component.identifier, x.identifier)))
+                    .map(node => fromNode({ node, layout })),
+                ...workspace.model.softwareSystems
+                    .flatMap(system => system.containers)
+                    .filter(x => container.components.some(component => relationshipExists(component.identifier, x.identifier)))
+                    .map(node => fromNode({ node, layout })),
+                ...workspace.model.softwareSystems
+                    .filter(x => container.components.some(component => relationshipExists(component.identifier, x.identifier)))
+                    .map(node => fromNode({ node, layout })),
+            ];
+        }
+
+        reactFlow.setNodes(getComponentViewNodes(containerIdentifier, workspace));
+        reactFlow.setEdges(getDiagramEdges(workspace));
+    }, [reactFlow, workspace, fromNode, getDiagramEdges, relationshipExists]);
+
+    const renderDeploymentView = useCallback((softwareSystemIdentifier: Identifier) => {
+        const getDeploymentViewNodes = (softwareSystemIdentifier: Identifier, workspace: Workspace) => {
+            if (!workspace) return [];
+    
+            const layout = workspace?.views.deployments
+                .find(view => view.softwareSystemIdentifier === softwareSystemIdentifier)?.layout;
+    
+            const flatMapDeploymentNode = (parentDeploymentNode: DeploymentNode, parentNode?: string) => {
+                // TODO: fix the issue with instances references only being displayed once
+                return [
+                    fromNode({ node: parentDeploymentNode, parentNode, layout }),
+                    ...parentDeploymentNode.deploymentNodes
+                        ?.flatMap(childDeploymentNode => flatMapDeploymentNode(
+                            childDeploymentNode,
+                            parentDeploymentNode.identifier
+                        )) ?? [],
+                    ...parentDeploymentNode.softwareSystemInstances
+                        ?.flatMap(instance => fromNode({
+                            node: findSoftwareSystem(workspace, instance.softwareSystemIdentifier),
+                            parentNode: parentDeploymentNode.identifier,
+                            layout
+                        })) ?? [],
+                    ...parentDeploymentNode.containerInstances
+                        ?.flatMap(instance => fromNode({
+                            node: findContainer(workspace, instance.containerIdentifier),
+                            parentNode: parentDeploymentNode.identifier,
+                            layout
+                        })) ?? [],
+                ];
+            }
+
+            // TODO: filter deployment nodes by softwareSystem identifier
+            return workspace.model.deploymentEnvironments?.flatMap(deployment => 
+                deployment.deploymentNodes.flatMap(dn => flatMapDeploymentNode(dn))
+            ) ?? [];
+        }
+
+        reactFlow.setNodes(getDeploymentViewNodes(softwareSystemIdentifier, workspace));
+        reactFlow.setEdges(getDiagramEdges(workspace));
+    }, [reactFlow, workspace, fromNode, getDiagramEdges]);
 
     const fromObject = useCallback((
         flow: ReactFlowJsonObject,
@@ -169,7 +228,12 @@ export const useC4Diagram = () => {
     }, [reactFlow]);
 
     return {
-        fromView,
+        // fromView,
+        setWorkspace,
+        renderSystemContextView,
+        renderContainerView,
+        renderComponentView,
+        renderDeploymentView,
         fromObject,
         clearView
     };

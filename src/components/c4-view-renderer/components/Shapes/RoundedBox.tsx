@@ -1,6 +1,6 @@
 import { Flex } from "@chakra-ui/react";
 import { FC, PropsWithChildren } from "react";
-import { ElementStyleProperties } from "../../store/C4Diagram";
+import { ElementStyleProperties } from "../../../../dsl";
 
 export type RoundedBoxProps = {
     style: ElementStyleProperties;

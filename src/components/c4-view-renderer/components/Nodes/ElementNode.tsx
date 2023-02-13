@@ -9,8 +9,7 @@ import { DefaultBox, RoundedBox } from '../Shapes';
 import { ExpandedElementLabel } from "../Labels/ExpandedElementLabel";
 import { ElementLabel } from "../Labels/ElementLabel";
 import { DeploymentNodeLabel } from "../Labels/DeploymentNodeLabel";
-import { Element, ElementShape, Tag } from "../../store/C4Diagram";
-import { defaultElementStyle, ElementStyleProperties } from '../../store/C4Diagram';
+import { defaultElementStyle, Element, ElementStyleProperties, ShapeType, Tag } from '../../../../dsl';
 
 type ShapeshiftElementProps = {
     style?: Partial<ElementStyleProperties>;
@@ -38,9 +37,9 @@ const ShapeshiftElement: FC<PropsWithChildren<ShapeshiftElementProps>> = ({
     }
 
     switch (mergedStyle.shape) {
-        case ElementShape.RoundedBox:
+        case ShapeType.RoundedBox:
             return (<RoundedBox {...mergedProps}>{children}</RoundedBox>);
-        case ElementShape.Box:
+        case ShapeType.Box:
             return (<DefaultBox {...mergedProps}>{children}</DefaultBox>);
         default:
             return (<RoundedBox {...mergedProps}>{children}</RoundedBox>);

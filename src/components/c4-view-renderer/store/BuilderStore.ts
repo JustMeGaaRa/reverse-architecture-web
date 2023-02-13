@@ -1,7 +1,7 @@
 import { ReactFlowState } from "@reactflow/core";
 import { v4 } from "uuid";
 import { create } from "zustand";
-import * as C4 from "./C4Diagram";
+import { Workspace } from "../../../dsl";
 
 type C4ElementChanges = 
     "change position"
@@ -14,20 +14,20 @@ type C4RelatonshipChanges =
 
 type C4BuilderState = {
     title: string;
-    elements: C4.Element[];
-    relationships: C4.Relationship[];
+    // elements: C4.Element[];
+    // relationships: C4.Relationship[];
 }
 
 type C4BuilderActions = {
     setTitle: (title: string) => void;
-    setElements: (elements: C4.Element[]) => void;
-    setRelationships: (relationships: C4.Relationship[]) => void;
-    addElement: (type: string) => C4.Element;
-    addRelationship: (source: string, target: string) => C4.Relationship;
-    applyElementChanges: (changes: C4ElementChanges[]) => void;
-    applyRelationshipChanges: (changes: C4RelatonshipChanges[]) => void;
-    deleteElements: (elements: C4.Element[]) => void;
-    deleteRelationships: (relationships: C4.Relationship[]) => void;
+    // setElements: (elements: C4.Element[]) => void;
+    // setRelationships: (relationships: Relationship[]) => void;
+    // addElement: (type: string) => C4.Element;
+    // addRelationship: (source: string, target: string) => C4.Relationship;
+    // applyElementChanges: (changes: C4ElementChanges[]) => void;
+    // applyRelationshipChanges: (changes: C4RelatonshipChanges[]) => void;
+    // deleteElements: (elements: C4.Element[]) => void;
+    // deleteRelationships: (relationships: C4.Relationship[]) => void;
     undo: () => void;
     redo: () => void;
     shareLink: () => void;
@@ -36,26 +36,26 @@ type C4BuilderActions = {
 
 type C4BuilderStore = C4BuilderState & C4BuilderActions;
 
-const createElement = (type): C4.Element => {
-    return {
-        identifier: v4(),
-        name: "Element",
-        tags: [
-            { name: "Element" },
-            { name: type }
-        ]
-    };
-};
+// const createElement = (type): C4.Element => {
+//     return {
+//         identifier: v4(),
+//         name: "Element",
+//         tags: [
+//             { name: "Element" },
+//             { name: type }
+//         ]
+//     };
+// };
 
-const createRelationship = (source, target): C4.Relationship => {
-    return {
-        sourceIdentifier: source,
-        targetIdentifier: target,
-        tags: [
-            { name: "Relationship" }
-        ]
-    };
-};
+// const createRelationship = (source, target): C4.Relationship => {
+//     return {
+//         sourceIdentifier: source,
+//         targetIdentifier: target,
+//         tags: [
+//             { name: "Relationship" }
+//         ]
+//     };
+// };
 
 const useC4BuilderStore = create<C4BuilderStore>((set, get) => ({
     title: "Diagram",
@@ -65,40 +65,40 @@ const useC4BuilderStore = create<C4BuilderStore>((set, get) => ({
     setTitle: (title) => {
         set({ title });
     },
-    setElements: (elements) => {
-        set({ elements });
-    },
-    setRelationships: (relationships) => {
-        set({ relationships });
-    },
-    addElement: (type) => {
-        const element = createElement(type);
-        set({ elements: [...get().elements, element] });
-        return element;
-    },
-    addRelationship: (source, target) => {
-        const relationship = createRelationship(source, target);
-        set({ relationships: [...get().relationships, relationship] });
-        return relationship;
-    },
-    applyElementChanges: (changes) => {
-        console.log(changes)
-    },
-    applyRelationshipChanges: (changes) => {
-        console.log(changes)
-    },
-    deleteElements: (elements) => {
-        const filtered = get().elements.filter(x => 
-            elements.some(y => y.identifier === x.identifier));
-        set({ elements: [...filtered] });
-    },
-    deleteRelationships: (relationships) => {
-        const filtered = get().relationships.filter(x => 
-            relationships.some(y => 
-                y.sourceIdentifier === x.sourceIdentifier
-                && y.targetIdentifier === x.targetIdentifier));
-        set({ relationships: [...filtered] });
-    },
+    // setElements: (elements) => {
+    //     set({ elements });
+    // },
+    // setRelationships: (relationships) => {
+    //     set({ relationships });
+    // },
+    // addElement: (type) => {
+    //     const element = createElement(type);
+    //     set({ elements: [...get().elements, element] });
+    //     return element;
+    // },
+    // addRelationship: (source, target) => {
+    //     const relationship = createRelationship(source, target);
+    //     set({ relationships: [...get().relationships, relationship] });
+    //     return relationship;
+    // },
+    // applyElementChanges: (changes) => {
+    //     console.log(changes)
+    // },
+    // applyRelationshipChanges: (changes) => {
+    //     console.log(changes)
+    // },
+    // deleteElements: (elements) => {
+    //     const filtered = get().elements.filter(x => 
+    //         elements.some(y => y.identifier === x.identifier));
+    //     set({ elements: [...filtered] });
+    // },
+    // deleteRelationships: (relationships) => {
+    //     const filtered = get().relationships.filter(x => 
+    //         relationships.some(y => 
+    //             y.sourceIdentifier === x.sourceIdentifier
+    //             && y.targetIdentifier === x.targetIdentifier));
+    //     set({ relationships: [...filtered] });
+    // },
     undo: () => {
         console.log("undo changes")
     },

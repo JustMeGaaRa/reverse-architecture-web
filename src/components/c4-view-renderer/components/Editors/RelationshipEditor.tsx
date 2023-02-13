@@ -9,8 +9,8 @@ import { FC, useCallback, useRef } from "react";
 import { Select, SelectInstance } from "chakra-react-select";
 import { Panel } from "../Panels";
 import { selectedEdgeSelector } from "../../store/BuilderStore";
-import { Relationship } from "../../store/C4Diagram";
 import Technologies from "../../contracts/Technologies.json";
+import { Relationship } from "../../../../dsl";
 
 export type RelationshipEditorProps = unknown;
 

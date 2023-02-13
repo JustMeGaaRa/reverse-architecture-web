@@ -25,7 +25,7 @@ import { useC4BuilderStore } from "../../store";
 import { parseReactFlow } from "../../utils";
 
 const NodeTypes = {
-    default: ElementNodeWrapper,
+    element: ElementNodeWrapper,
     box: ElementNodeWrapper,
     cylinder: ElementNodeWrapper,
     hexagon: ElementNodeWrapper,
@@ -35,12 +35,11 @@ const NodeTypes = {
 }
 
 const EdgeTypes = {
-    default: RelationshipEdgeWrapper,
+    relationship: RelationshipEdgeWrapper,
     straight: RelationshipEdgeWrapper,
     step: RelationshipEdgeWrapper,
     smoothstep: RelationshipEdgeWrapper,
-    simplebezier: RelationshipEdgeWrapper,
-    floating: RelationshipEdgeWrapper
+    simplebezier: RelationshipEdgeWrapper
 }
 
 const SupportedFileTypes = new Set(["application/json"]);
@@ -57,7 +56,6 @@ export const C4DiagramRenderer: FC<PropsWithChildren<C4DiagramRendererProps>> = 
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
-    const { addRelationship } = useC4BuilderStore();
     const reactFlowRef = useRef<HTMLDivElement>(null);
     const reactFlow = useReactFlow();    
     
@@ -79,24 +77,24 @@ export const C4DiagramRenderer: FC<PropsWithChildren<C4DiagramRendererProps>> = 
     //     setNodes(nodes => nodes.concat(node));
     // }, [setNodes, addElement, reactFlow]);
 
-    const addEdge = useCallback((connection) => {
-        const { source, target } = connection;
-        const edge = {
-            id: v4(),
-            type: "default",
-            data: {
-                relationship: addRelationship(source, target)
-            },
-            source: source,
-            target: target,
-        };
-        setEdges(edges => edges.concat(edge));
-    }, [setEdges, addRelationship])
+    // const addEdge = useCallback((connection) => {
+    //     const { source, target } = connection;
+    //     const edge = {
+    //         id: v4(),
+    //         type: "default",
+    //         data: {
+    //             relationship: addRelationship(source, target)
+    //         },
+    //         source: source,
+    //         target: target,
+    //     };
+    //     setEdges(edges => edges.concat(edge));
+    // }, [setEdges, addRelationship])
 
-    const onConnect = useCallback((connection: Connection) => {
-        if (!connection.source || !connection.target) return;
-        addEdge(connection);
-    }, [addEdge]);
+    // const onConnect = useCallback((connection: Connection) => {
+    //     if (!connection.source || !connection.target) return;
+    //     addEdge(connection);
+    // }, [addEdge]);
 
     const onNodeDrag = useCallback((event, draggedNode) => {
         // NOTE: only allow to update nodes that are dragged and are not of type scope
@@ -215,7 +213,7 @@ export const C4DiagramRenderer: FC<PropsWithChildren<C4DiagramRendererProps>> = 
             ref={reactFlowRef}
             snapGrid={[20, 20]}
             snapToGrid
-            onConnect={onConnect}
+            // onConnect={onConnect}
             // onNodeDrag={onNodeDrag}
             // onNodeDragStop={onNodeDragStop}
             onNodesChange={onNodesChange}

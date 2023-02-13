@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { VStack, Text } from "@chakra-ui/react";
-import { Relationship } from "../../store/C4Diagram";
+import { Relationship } from "../../../../dsl";
 
 export const formatRelationshipTechnology = (data: Relationship) => {
     return data?.technology && `[${data.technology.map(x => x.name).join(" / ")}]`;

@@ -10,7 +10,7 @@ import { FC, useCallback, useRef } from "react";
 import { Select, SelectInstance } from "chakra-react-select";
 import { Panel } from "../Panels";
 import { selectedNodeSelector } from "../../store/BuilderStore";
-import { Element } from "../../store/C4Diagram";
+import { Element } from "../../../../dsl";
 import Technologies from "../../contracts/Technologies.json";
 
 export type AbstractionEditorProps = unknown;

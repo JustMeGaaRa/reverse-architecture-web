@@ -1,13 +1,13 @@
 import { ReactFlowJsonObject, Node, Edge } from "@reactflow/core";
 import { v4 } from "uuid";
 import { XMLBuilder } from "fast-xml-parser";
-import { ElementNodeProps, ElementNodeWrapperProps } from "../../components/c4-view-renderer/components/Nodes/ElementNode";
-import { RelationshipEdgeProps, RelationshipEdgeWrapperProps } from "../../components/c4-view-renderer/components/Edges/RelationshipEdge";
+import { ElementNodeWrapperProps } from "../../components/c4-view-renderer/components/Nodes/ElementNode";
+import { RelationshipEdgeWrapperProps } from "../../components/c4-view-renderer/components/Edges/RelationshipEdge";
 import { formatElementTechnology } from "../../components/c4-view-renderer/components/Labels/ElementLabel";
 import { formatRelationshipTechnology } from "../../components/c4-view-renderer/components/Labels/RelationshipLabel";
-import { Element, Relationship } from "../../components/c4-view-renderer/store/C4Diagram";
 import { bold, br, font, html, text } from "../../utils/HtmlBuilder";
 import { MXGeometryAs, MXCell, MXPointAs, Drawio } from "../../utils/MxFile";
+import { Element, Relationship } from "../../dsl";
 
 enum NodeHorizontalAlign {
     Left = "left",

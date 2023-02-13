@@ -3,9 +3,17 @@ import { FC, useCallback, useEffect } from "react";
 import { C4DiagramRenderer, TemplateSelectorModal } from "../../components";
 import { useC4Diagram } from "../../components/c4-view-renderer/hooks";
 import { templates } from "./Templates";
+import { workspaceTemplate } from "./Templates/Workspace";
 
 export const Sandbox: FC = () => {
-    const { fromView, fromObject } = useC4Diagram();
+    const {
+        setWorkspace,
+        renderSystemContextView,
+        renderContainerView,
+        renderComponentView,
+        renderDeploymentView,
+        fromObject
+    } = useC4Diagram();
 
     const toast = useToast();
     const onImport = useCallback((result) => {
@@ -34,10 +42,35 @@ export const Sandbox: FC = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const onSelected = useCallback((template) => {
         onClose();
-        fromView(JSON.parse(template.payload), { padding: 0.2 });
-    }, [onClose, fromView]);
+
+        const { type, identifier } = JSON.parse(template.payload);
+
+        switch (type) {
+            case "Software Context":
+                renderSystemContextView(identifier);
+                break;
+            case "Container":
+                renderContainerView(identifier);
+                break;
+            case "Component":
+                renderComponentView(identifier);
+                break;
+            case "Deployment":
+                renderDeploymentView(identifier);
+                break;
+        }
+    }, [
+        onClose,
+        renderSystemContextView,
+        renderContainerView,
+        renderComponentView,
+        renderDeploymentView
+    ]);
     
-    useEffect(() => onOpen(), [onOpen]);
+    useEffect(() => {
+        onOpen();
+        setWorkspace(workspaceTemplate);
+    }, [onOpen, setWorkspace]);
 
     return (
         <Box height={"100vh"}>

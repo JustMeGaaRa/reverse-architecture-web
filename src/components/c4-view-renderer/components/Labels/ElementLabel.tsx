@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { VStack, Text } from "@chakra-ui/react";
-import { Element } from "../../store/C4Diagram";
+import { Element } from "../../../../dsl";
 
 export const formatElementTechnology = (data: Element) => {
     // TODO: handle tags corectly

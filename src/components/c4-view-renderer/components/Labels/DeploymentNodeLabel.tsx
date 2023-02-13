@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Flex, Text } from "@chakra-ui/react";
 import { ExpandedElementLabel } from "./ExpandedElementLabel";
-import { DeploymentNode } from "../../store/C4Diagram";
+import { DeploymentNode } from "../../../../dsl";
 
 export type DeploymentNodeLabelProps = {
     data: DeploymentNode
