@@ -25,8 +25,8 @@ export class ElementStyleProperties {
 export const defaultElementStyle: ElementStyleProperties = {
     shape: ShapeType.RoundedBox,
     icon: "",
-    width: 240,
-    height: 150,
+    width: 300,
+    height: 200,
     background: "#DDDDDD",
     color: "#000000",
     stroke: "#C3C3C3",

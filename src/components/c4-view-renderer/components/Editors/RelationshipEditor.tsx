@@ -1,21 +1,14 @@
-import {
-    Flex,
-    FormControl,
-    FormLabel,
-    Textarea
-} from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { useReactFlow, useStore } from "@reactflow/core";
-import { FC, useCallback, useRef } from "react";
-import { Select, SelectInstance } from "chakra-react-select";
-import { Panel } from "../Panels";
+import { FC, useCallback } from "react";
+import { MultiselectInputControl, TextareaControl } from "../Controls";
 import { selectedEdgeSelector } from "../../store/BuilderStore";
-import Technologies from "../../contracts/Technologies.json";
 import { Relationship } from "../../../../dsl";
+import Technologies from "../../contracts/Technologies.json";
 
 export type RelationshipEditorProps = unknown;
 
 export const RelationshipEditor: FC<RelationshipEditorProps> = () => {
-    const selectRef = useRef<SelectInstance>(null);
     const { setEdges } = useReactFlow();
     const selectedEdge = useStore(selectedEdgeSelector);
 
@@ -35,37 +28,24 @@ export const RelationshipEditor: FC<RelationshipEditorProps> = () => {
         }));
     }, [setEdges, selectedEdge]);
 
-    return selectedEdge?.data && (
-        <Panel
-            dock={"right-center"}
-            padding={4}
-        >
-            <Flex direction={"column"} gap={4} width={["xs"]}>
-                <FormControl isRequired>
-                    <FormLabel>Description</FormLabel>
-                    <Textarea
-                        placeholder={"Enter the relationship description"}
-                        value={selectedEdge?.data.description}
-                        onChange={(event) => setEdgeChanges({ description: event.target.value })}
-                    />
-                </FormControl>
-                <FormControl>
-                    <FormLabel>Technology</FormLabel>
-                    <Select
-                        ref={selectRef}
-                        closeMenuOnSelect={false}
-                        isClearable={false}
-                        isMulti
-                        useBasicStyles
-                        placeholder={"Select technology"}
-                        options={Technologies.map(t => ({ label: t, value: t }))}
-                        value={selectedEdge?.data.technology && selectedEdge?.data.technology.map(t => ({ label: t, value: t }))}
-                        onChange={() => setEdgeChanges({
-                            technology: selectRef.current.getValue().map(option => option["value"])
-                        })}
-                    />
-                </FormControl>
-            </Flex>
-        </Panel>
+    return (
+        <Flex direction={"column"} gap={4}>
+            <TextareaControl
+                placeholder={"Enter the relationship description"}
+                name={"Description"}
+                value={selectedEdge?.data.description}
+                isRequired={true}
+                // onChange={(event) => setEdgeChanges({ description: event.target.value })}
+            />
+            <MultiselectInputControl
+                placeholder={"Select technology"}
+                name={"Technology"}
+                value={selectedEdge?.data.technology && selectedEdge?.data.technology.map(t => ({ name: t, value: t }))}
+                options={Technologies.map(t => ({ name: t, value: t }))}
+                // onChange={() => setEdgeChanges({
+                //     technology: selectRef.current.getValue().map(option => option["value"])
+                // })}
+            />
+        </Flex>
     );
 }
