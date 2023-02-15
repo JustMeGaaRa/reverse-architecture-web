@@ -1,18 +1,22 @@
-import { FC, PropsWithChildren, useCallback } from "react";
+import {
+    ButtonGroup,
+    IconButton,
+} from "@chakra-ui/react";
 import { useReactFlow, useStore } from "@reactflow/core";
+import { FC, PropsWithChildren, useCallback } from "react";
 import {
     FaTrash,
     FaRedoAlt,
     FaUndoAlt,
     FaFile,
 } from "react-icons/fa";
-import {
-    ButtonGroup,
-    IconButton,
-} from "@chakra-ui/react";
 import { Panel, PanelProps } from "./Panel";
-import { useC4Diagram } from "../../hooks";
-import { selectedNodeSelector, selectedEdgeSelector, useC4BuilderStore } from "../../store/BuilderStore";
+import { useC4Diagram } from "../c4-view-renderer/hooks";
+import {
+    selectedNodeSelector,
+    selectedEdgeSelector,
+    useC4BuilderStore
+} from "../c4-view-renderer/store/BuilderStore";
 
 type ControlsPanelProps = Partial<Pick<PanelProps, "dock">> & {
     showDelete?: boolean;

@@ -5,5 +5,7 @@ export * from "./ExportMenu";
 export * from "./TitleEditable";
 export * from "./Layouts/Header";
 export * from "./Layouts/Footer";
+export * from "./OnlineUsers";
+export * from "./SharePopover";
 export * from "./TemplateSelector";
 export * from "./TemplateSelectorModal";

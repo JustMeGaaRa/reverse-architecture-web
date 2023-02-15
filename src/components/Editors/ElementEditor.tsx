@@ -1,14 +1,18 @@
 import { Flex } from "@chakra-ui/react";
 import { useReactFlow, useStore } from "@reactflow/core";
 import { FC, useCallback } from "react";
-import { MultiselectInputControl, StringInputControl, TextareaControl } from "../Controls";
-import { selectedNodeSelector } from "../../store/BuilderStore";
-import { Element } from "../../../../dsl";
-import Technologies from "../../contracts/Technologies.json";
+import {
+    MultiselectInputControl,
+    StringInputControl,
+    TextareaControl
+} from "../Controls";
+import { Element } from "../../dsl";
+import { selectedNodeSelector } from "../c4-view-renderer/store/BuilderStore";
+import Technologies from "../c4-view-renderer/contracts/Technologies.json";
 
-export type AbstractionEditorProps = unknown;
+export type ElementEditorProps = unknown;
 
-export const AbstractionEditor: FC<AbstractionEditorProps> = () => {
+export const ElementEditor: FC<ElementEditorProps> = () => {
     const { setNodes } = useReactFlow();
     const selectedNode = useStore(selectedNodeSelector);
 

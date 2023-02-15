@@ -10,7 +10,7 @@ import {
     ElementStyleProperties,
     LineStyle,
     ShapeType
-} from "../../../../dsl";
+} from "../../dsl";
 
 type ElementStyleEditorProps = {
     properties: ElementStyleProperties;

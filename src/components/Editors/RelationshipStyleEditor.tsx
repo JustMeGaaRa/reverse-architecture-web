@@ -10,7 +10,7 @@ import {
     LineStyle,
     RelationshipStyleProperties,
     RoutingStyle
-} from "../../../../dsl";
+} from "../../dsl";
 
 type RelatioshipStyleEditorProps = {
     properties: RelationshipStyleProperties;

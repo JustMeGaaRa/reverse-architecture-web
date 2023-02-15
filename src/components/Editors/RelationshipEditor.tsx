@@ -1,10 +1,13 @@
 import { Flex } from "@chakra-ui/react";
 import { useReactFlow, useStore } from "@reactflow/core";
 import { FC, useCallback } from "react";
-import { MultiselectInputControl, TextareaControl } from "../Controls";
-import { selectedEdgeSelector } from "../../store/BuilderStore";
-import { Relationship } from "../../../../dsl";
-import Technologies from "../../contracts/Technologies.json";
+import {
+    MultiselectInputControl,
+    TextareaControl
+} from "../Controls";
+import { Relationship } from "../../dsl";
+import { selectedEdgeSelector } from "../c4-view-renderer/store/BuilderStore";
+import Technologies from "../c4-view-renderer/contracts/Technologies.json";
 
 export type RelationshipEditorProps = unknown;
 

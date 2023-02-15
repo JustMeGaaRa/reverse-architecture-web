@@ -6,8 +6,7 @@ import {
     ConnectionMode,
     useReactFlow,
     useNodesState,
-    useEdgesState,
-    Connection
+    useEdgesState
 } from "@reactflow/core";
 import {
     CSSProperties,
@@ -19,9 +18,6 @@ import {
 } from "react";
 import { ElementNodeWrapper } from "../Nodes/ElementNode";
 import { RelationshipEdgeWrapper } from "../Edges/RelationshipEdge";
-import { CollaborationPanel, InteractivityPanel, NavigationPanel } from "../Panels";
-import { v4 } from "uuid";
-import { useC4BuilderStore } from "../../store";
 import { parseReactFlow } from "../../utils";
 
 const NodeTypes = {
@@ -227,10 +223,6 @@ export const C4DiagramRenderer: FC<PropsWithChildren<C4DiagramRendererProps>> = 
                 variant={BackgroundVariant.Dots}
                 gap={[20, 20]}
             />
-            
-            <CollaborationPanel />
-            <InteractivityPanel />
-            <NavigationPanel />
             
             {children}
         </ReactFlow>

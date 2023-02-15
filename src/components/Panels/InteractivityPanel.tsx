@@ -1,11 +1,11 @@
-import { FC, PropsWithChildren } from "react";
+import { ButtonGroup, IconButton } from "@chakra-ui/react";
 import { useReactFlow } from "@reactflow/core";
+import { FC, PropsWithChildren } from "react";
 import {
     FaExpand,
     FaMinus,
     FaPlus
 } from "react-icons/fa";
-import { ButtonGroup, IconButton } from "@chakra-ui/react";
 import { Panel, PanelProps } from "./Panel";
 
 type InteractivityPanelProps = Partial<Pick<PanelProps, "dock">> & {

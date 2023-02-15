@@ -1,10 +1,9 @@
 import { HStack } from "@chakra-ui/react";
 import { FC } from "react";
 import { Panel, PanelProps } from "./Panel";
-import { OnlineUsers } from "../../../OnlineUsers";
-import { SharePopover } from "../../../SharePopover";
-import { useOnlineUsers } from "../../hooks/useOnlineUsers";
-import { useShare } from "../../hooks/useShare";
+import { OnlineUsers, SharePopover } from "..";
+import { useOnlineUsers } from "../c4-view-renderer/hooks/useOnlineUsers";
+import { useShare } from "../c4-view-renderer/hooks/useShare";
 
 export type CollaborationPanelProps = Partial<Pick<PanelProps, "dock">>;
 

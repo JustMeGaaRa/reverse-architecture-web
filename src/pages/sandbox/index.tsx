@@ -1,6 +1,7 @@
 import { Box, useDisclosure, useToast } from "@chakra-ui/react";
 import { FC, useCallback, useEffect } from "react";
 import { C4DiagramRenderer, TemplateSelectorModal } from "../../components";
+import { CollaborationPanel, InteractivityPanel, NavigationPanel } from "../../components/Panels";
 import { useC4Diagram } from "../../components/c4-view-renderer/hooks";
 import { templates } from "./Templates";
 import { workspaceTemplate } from "./Templates/Workspace";
@@ -76,7 +77,13 @@ export const Sandbox: FC = () => {
         <Box height={"100vh"}>
             <C4DiagramRenderer
                 onImport={onImport}
-            />
+            >
+                
+                <CollaborationPanel />
+                <InteractivityPanel />
+                <NavigationPanel />
+
+            </C4DiagramRenderer>
                 
             <TemplateSelectorModal
                 templates={templates}
