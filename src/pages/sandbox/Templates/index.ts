@@ -47,7 +47,7 @@ export const templates: DiagramTemplateGroup[] = [
             {
                 header: "Deployment Diagram",
                 description: "A deployment diagram allows you to illustrate how software systems and/or containers in the static model are mapped to infrastructure. This deployment diagram is based upon a UML deployment diagram, although simplified slightly to show the mapping between containers and deployment nodes.",
-                payload: JSON.stringify({ type: "Deployment", identifier: "ss-internet-banking" })
+                payload: JSON.stringify({ type: "Deployment", identifier: "ss-internet-banking", environment: "Live" })
             }
         ]
     }

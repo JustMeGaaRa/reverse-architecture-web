@@ -1,17 +1,17 @@
-import { useReactFlow } from "@reactflow/core";
 import saveAs from "file-saver";
+import { useWorkspace } from "../../../dsl";
 import { exportToDrawio, exportToJson } from "../../../services/export";
 
 export const useExports = () => {
-    const { toObject } = useReactFlow();
+    const { workspace } = useWorkspace();
     const exports = [
         {
             title: "Drawio (*.drawio)",
-            export: (filename: string) => saveAs(exportToDrawio(filename, toObject()))
+            export: () => saveAs(exportToDrawio(workspace))
         },
         {
             title: "React Flow (*.json)",
-            export: (filename: string) => saveAs(exportToJson(filename, toObject()))
+            export: () => saveAs(exportToJson(workspace))
         }
     ];
 

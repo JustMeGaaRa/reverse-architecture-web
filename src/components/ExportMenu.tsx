@@ -10,17 +10,13 @@ import {
 import { FC } from "react";
 
 type ExportMenuProps = {
-    filename: string;
     items: Array<{
         title: string;
-        export: (filename: string) => void;
+        export: () => void;
     }>;
 }
 
-export const ExportMenu: FC<ExportMenuProps> = ({
-    filename,
-    items
-}) => {
+export const ExportMenu: FC<ExportMenuProps> = ({ items }) => {
     const menuBgColor = useColorModeValue("whiteAlpha.900", "gray.900");
     const menuItemBgColor = useColorModeValue("blackAlpha.200", "whiteAlpha.200");
     
@@ -41,7 +37,7 @@ export const ExportMenu: FC<ExportMenuProps> = ({
                         key={item.title}
                         background={menuBgColor}
                         _hover={{ background: menuItemBgColor }}
-                        onClick={() => item.export(filename)}
+                        onClick={() => item.export()}
                     >
                         {item.title}
                     </MenuItem>

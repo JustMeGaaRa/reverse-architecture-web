@@ -1,22 +1,28 @@
 import { FC } from "react";
 import { Flex, Text } from "@chakra-ui/react";
 import { ExpandedElementLabel } from "./ExpandedElementLabel";
-import { DeploymentNode } from "../../../../dsl";
+import { DeploymentNode, ElementStyleProperties } from "../../../../dsl";
 
 export type DeploymentNodeLabelProps = {
-    data: DeploymentNode
+    data: DeploymentNode;
+    style?: Partial<ElementStyleProperties>;
 }
 
 export const DeploymentNodeLabel: FC<DeploymentNodeLabelProps> = ({
-    data
+    data,
+    style
 }) => {
     return (
         <Flex
-            justify={"space-between"}
             align={"flex-end"}
+            color={style.color}
+            justify={"space-between"}
             width={"100%"}
         >
-            <ExpandedElementLabel data={data} />
+            <ExpandedElementLabel
+                data={data}
+                style={style}
+            />
             {data.instances && (
                 <Text
                     fontSize={"xx-large"}

@@ -3,7 +3,7 @@ import { Identifier } from "./model/Identifier";
 import { Properties } from "./model/Properties";
 import { Views } from "./Views";
 
-export class Workspace {
+export interface Workspace {
     name?: string;
     description?: string;
     lastModifiedData?: Date;

@@ -2,15 +2,15 @@ import { HStack, StackDivider, useColorModeValue } from "@chakra-ui/react";
 import { FC } from "react";
 import { Panel } from "./Panel";
 import { useExports } from "../c4-view-renderer/hooks/useExports";
-import { useC4BuilderStore } from "../c4-view-renderer/store";
 import { Logo, TitleEditable, ExportMenu } from "..";
+import { useWorkspace } from "../../dsl";
 
 export type NavigationPanelProps = unknown;
 
 export const NavigationPanel: FC<NavigationPanelProps> = () => {
     const dividerBorderColor = useColorModeValue("gray.200", "gray.700");
     
-    const { title, setTitle } = useC4BuilderStore();
+    const { workspace, setName } = useWorkspace();
     const { exports } = useExports();
 
     return (
@@ -25,9 +25,9 @@ export const NavigationPanel: FC<NavigationPanelProps> = () => {
             >
                 <Logo />
                 
-                <TitleEditable title={title} onTitleChange={setTitle} />
+                <TitleEditable title={workspace.name} onTitleChange={setName} />
                 
-                <ExportMenu filename={title} items={exports} />
+                <ExportMenu items={exports} />
             </HStack>
         </Panel>
     );

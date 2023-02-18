@@ -5,16 +5,17 @@ import { CollaborationPanel, InteractivityPanel, NavigationPanel } from "../../c
 import { useC4Diagram } from "../../components/c4-view-renderer/hooks";
 import { templates } from "./Templates";
 import { workspaceTemplate } from "./Templates/Workspace";
+import { useWorkspace } from "../../dsl";
 
 export const Sandbox: FC = () => {
     const {
-        setWorkspace,
         renderSystemContextView,
         renderContainerView,
         renderComponentView,
         renderDeploymentView,
         fromObject
     } = useC4Diagram();
+    const { setWorkspace } = useWorkspace();
 
     const toast = useToast();
     const onImport = useCallback((result) => {
@@ -44,7 +45,7 @@ export const Sandbox: FC = () => {
     const onSelected = useCallback((template) => {
         onClose();
 
-        const { type, identifier } = JSON.parse(template.payload);
+        const { type, identifier, environment } = JSON.parse(template.payload);
 
         switch (type) {
             case "Software Context":
@@ -57,7 +58,7 @@ export const Sandbox: FC = () => {
                 renderComponentView(identifier);
                 break;
             case "Deployment":
-                renderDeploymentView(identifier);
+                renderDeploymentView(identifier, environment);
                 break;
         }
     }, [

@@ -25,13 +25,13 @@ export const ExpandedElement: FC<PropsWithChildren<ExpandedElementProps>> = ({
         <Flex
             border={"dashed"}
             borderWidth={2}
-            borderColor={mergedStyle.background}
+            borderColor={mergedStyle.stroke}
             align={"end"}
             justify={"start"}
             padding={2}
             width={width}
             height={height}
-            textColor={mergedStyle.background}
+            textColor={mergedStyle.color}
         >
             {children}
         </Flex>

@@ -43,3 +43,5 @@ export * from "./view/SystemLandscapeView";
 export * from "./Model";
 export * from "./Views";
 export * from "./Workspace";
+
+export * from "./store";

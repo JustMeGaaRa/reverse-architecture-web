@@ -6,35 +6,35 @@ import { Url } from "../model/Url";
 
 
 export class ElementStyleProperties {
-    shape: ShapeType | string;
-    icon: Url | string;
-    width: number;
-    height: number;
     background: Color;
+    border: LineStyle;
     color: Color;
+    description: boolean;
+    fontSize: number;
+    height: number;
+    icon: Url | string;
+    metadata: boolean;
+    opacity: number;
+    properties: Properties;
+    shape: ShapeType | string;
     stroke: Color;
     strokeWidth: number;
-    fontSize: number;
-    border: LineStyle;
-    opacity: number;
-    metadata: boolean;
-    description: boolean;
-    properties: Properties;
+    width: number;
 }
 
 export const defaultElementStyle: ElementStyleProperties = {
-    shape: ShapeType.RoundedBox,
-    icon: "",
-    width: 300,
-    height: 200,
     background: "#DDDDDD",
-    color: "#000000",
-    stroke: "#C3C3C3",
-    strokeWidth: 0,
-    fontSize: 14,
     border: LineStyle.Solid,
-    opacity: 100,
-    metadata: false,
+    color: "#000000",
     description: true,
-    properties: new Map()
+    fontSize: 14,
+    height: 200,
+    icon: "",
+    metadata: false,
+    opacity: 100,
+    properties: new Map(),
+    shape: ShapeType.RoundedBox,
+    stroke: "#C3C3C3",
+    strokeWidth: 1,
+    width: 300,
 }

@@ -19,7 +19,7 @@ export interface Views {
     dynamics?: DynamicView[];
     deployments?: DeploymentView[];
     custom?: GenericView[];
-    styles: Styles;
+    styles?: Styles;
     theme?: string;
     themes?: string[];
     branding?: Branding;

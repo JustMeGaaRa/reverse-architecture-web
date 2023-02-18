@@ -6,7 +6,7 @@ import { Relationship } from "./Relationship";
 import { Tag } from "./Tag";
 import { Url } from "./Url";
 
-export interface Person extends Omit<Element, "description"> {
+export interface Person extends Omit<Element, "description" | "technology"> {
     identifier: Identifier;
     name: string;
     description?: string;

@@ -70,7 +70,10 @@ export const ElementNode: FC<ElementNodeProps> = ({
                 height={size.height}
                 selected={selected}
             >
-                <DeploymentNodeLabel data={data} />
+                <DeploymentNodeLabel
+                    data={data}
+                    style={style}
+                />
                 <NodeResizer
                     isVisible={selected}
                     minWidth={380}
@@ -91,7 +94,10 @@ export const ElementNode: FC<ElementNodeProps> = ({
                 height={size.height}
                 selected={selected}
             >
-                <ExpandedElementLabel data={data} />
+                <ExpandedElementLabel
+                    data={data}
+                    style={style}
+                />
                 <NodeResizer
                     isVisible={selected}
                     minWidth={380}
@@ -111,7 +117,7 @@ export const ElementNode: FC<ElementNodeProps> = ({
             height={size.height}
             selected={selected}
         >
-            <ElementLabel data={data} showDescription />
+            <ElementLabel data={data} style={style} showDescription />
             <Handle id={"a"} type={"source"} position={Position.Left} />
             <Handle id={"b"} type={"source"} position={Position.Top} />
             <Handle id={"c"} type={"source"} position={Position.Right} />

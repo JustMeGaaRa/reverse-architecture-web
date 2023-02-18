@@ -478,7 +478,7 @@ export const workspaceTemplate = workspace("Big Bank plc", "",
                 "ss-internet-banking",
                 "Live",
                 "Template",
-                "Internet Banking System",
+                "Internet Banking System - Live",
                 {
                     ["ss-internet-banking"]: { x: 80, y: 80 },
                     ["ss-mainframe-banking"]: { x: 40, y: 40 },
@@ -505,22 +505,32 @@ export const workspaceTemplate = workspace("Big Bank plc", "",
         ],
         styles([
             element("Person", {
-                background: "#38A169"
+                background: "#38A169",
+                color: "#ffffff",
+                strokeWidth: 0
             }),
             element("Software System", {
-                background: "#6B46C1"
+                background: "#6B46C1",
+                color: "#ffffff",
+                strokeWidth: 0
             }),
             element("Container", {
-                background: "#3182ce"
+                background: "#3182ce",
+                color: "#ffffff",
+                strokeWidth: 0
             }),
             element("Component", {
-                background: "#90cdf4"
+                background: "#90cdf4",
+                color: "#000000",
+                strokeWidth: 0
             }),
             element("Deployment Node", {
-                strokeWidth: 2
+                color: "#000000",
+                strokeWidth: 2,
             }),
             element("External", {
-                background: "#999999"
+                background: "#999999",
+                strokeWidth: 0
             }),
             element("Secondary", {
                 opacity: 25

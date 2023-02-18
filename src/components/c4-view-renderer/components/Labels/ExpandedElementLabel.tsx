@@ -1,9 +1,8 @@
 import { FC } from "react";
 import { VStack, Text } from "@chakra-ui/react";
-import { Element } from "../../../../dsl";
+import { Element, ElementStyleProperties } from "../../../../dsl";
 
 export const formatExpandedTechnology = (data: Element) => {
-    // TODO: handle tags corectly
     const type = data.tags.filter(x => x.name !== "Element").at(0);
     return data?.technology && data?.technology.length > 0
         ? `[${type.name}: ${data.technology.map(x => x.name).join(", ")}]`
@@ -12,14 +11,17 @@ export const formatExpandedTechnology = (data: Element) => {
 
 export type ExpandedElementLabelProps = {
     data: Element;
+    style?: Partial<ElementStyleProperties>;
 }
 
 export const ExpandedElementLabel: FC<ExpandedElementLabelProps> = ({
-    data
+    data,
+    style
 }) => {
     return (
         <VStack
             align={"start"}
+            color={style.color}
             spacing={0}
         >
             <Text

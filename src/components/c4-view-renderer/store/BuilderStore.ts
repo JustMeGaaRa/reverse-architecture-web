@@ -1,7 +1,5 @@
 import { ReactFlowState } from "@reactflow/core";
-import { v4 } from "uuid";
 import { create } from "zustand";
-import { Workspace } from "../../../dsl";
 
 type C4ElementChanges = 
     "change position"
@@ -13,13 +11,11 @@ type C4RelatonshipChanges =
     | "change data";
 
 type C4BuilderState = {
-    title: string;
     // elements: C4.Element[];
     // relationships: C4.Relationship[];
 }
 
 type C4BuilderActions = {
-    setTitle: (title: string) => void;
     // setElements: (elements: C4.Element[]) => void;
     // setRelationships: (relationships: Relationship[]) => void;
     // addElement: (type: string) => C4.Element;
@@ -58,13 +54,9 @@ type C4BuilderStore = C4BuilderState & C4BuilderActions;
 // };
 
 const useC4BuilderStore = create<C4BuilderStore>((set, get) => ({
-    title: "Diagram",
     elements: [],
     relationships: [],
 
-    setTitle: (title) => {
-        set({ title });
-    },
     // setElements: (elements) => {
     //     set({ elements });
     // },

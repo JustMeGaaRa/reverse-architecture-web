@@ -1,11 +1,7 @@
-import { ReactFlowJsonObject } from "@reactflow/core";
-import { ElementNodeProps } from "../../components/c4-view-renderer/components/Nodes/ElementNode";
-import { RelationshipEdgeProps } from "../../components/c4-view-renderer/components/Edges/RelationshipEdge";
+import { Workspace } from "../../dsl";
 
-export function exportToJson(
-    filename: string,
-    flow: ReactFlowJsonObject<ElementNodeProps, RelationshipEdgeProps>
-): File {
-    const json = JSON.stringify(flow);
+export function exportToJson(workspace: Workspace): File {
+    const json = JSON.stringify(workspace);
+    const filename = workspace.name ?? "Workspace";
     return new File([json], `${filename}.json`);
 }

@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { VStack, Text } from "@chakra-ui/react";
-import { Element } from "../../../../dsl";
+import { Element, ElementStyleProperties } from "../../../../dsl";
 
 export const formatElementTechnology = (data: Element) => {
     // TODO: handle tags corectly
@@ -13,15 +13,18 @@ export const formatElementTechnology = (data: Element) => {
 export type ElementLabelProps = {
     data: Element;
     showDescription?: boolean;
+    style?: Partial<ElementStyleProperties>;
 }
 
 export const ElementLabel: FC<ElementLabelProps> = ({
     data,
-    showDescription
+    showDescription,
+    style
 }) => {
     return (
         <VStack
             align={"center"}
+            color={style.color}
             spacing={0}
         >
             <Text
