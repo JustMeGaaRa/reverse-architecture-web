@@ -8,7 +8,6 @@ import {
 } from "../Controls";
 import { Element } from "../../dsl";
 import { selectedNodeSelector } from "../c4-view-renderer/store/BuilderStore";
-import Technologies from "../c4-view-renderer/contracts/Technologies.json";
 
 export type ElementEditorProps = unknown;
 
@@ -44,7 +43,7 @@ export const ElementEditor: FC<ElementEditorProps> = () => {
             <MultiselectInputControl
                 placeholder={"Select technology"}
                 name={"Technology"}
-                options={Technologies.map(t => ({ name: t, value: t }))}
+                options={[].map(t => ({ name: t, value: t }))}
                 value={selectedNode?.data.technology && selectedNode?.data.technology.map(t => ({ label: t, value: t }))}
                 // onChange={() => setNodeChanges({
                 //     technology: selectRef.current.getValue().map(option => option["value"])

@@ -7,7 +7,6 @@ import {
 } from "../Controls";
 import { Relationship } from "../../dsl";
 import { selectedEdgeSelector } from "../c4-view-renderer/store/BuilderStore";
-import Technologies from "../c4-view-renderer/contracts/Technologies.json";
 
 export type RelationshipEditorProps = unknown;
 
@@ -44,7 +43,7 @@ export const RelationshipEditor: FC<RelationshipEditorProps> = () => {
                 placeholder={"Select technology"}
                 name={"Technology"}
                 value={selectedEdge?.data.technology && selectedEdge?.data.technology.map(t => ({ name: t, value: t }))}
-                options={Technologies.map(t => ({ name: t, value: t }))}
+                options={[].map(t => ({ name: t, value: t }))}
                 // onChange={() => setEdgeChanges({
                 //     technology: selectRef.current.getValue().map(option => option["value"])
                 // })}
