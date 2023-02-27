@@ -6,7 +6,8 @@ import {
     ConnectionMode,
     useReactFlow,
     useNodesState,
-    useEdgesState
+    useEdgesState,
+    Node
 } from "@reactflow/core";
 import {
     CSSProperties,
@@ -16,9 +17,11 @@ import {
     useRef,
     useState
 } from "react";
-import { ElementNodeWrapper } from "../Nodes/ElementNode";
+import { ElementNodeWrapper, ElementNodeWrapperProps } from "../Nodes/ElementNode";
 import { RelationshipEdgeWrapper } from "../Edges/RelationshipEdge";
 import { parseReactFlow } from "../../utils";
+import { Tag } from "../../../../dsl";
+import { useC4Diagram } from "../../hooks";
 
 const NodeTypes = {
     element: ElementNodeWrapper,
@@ -196,6 +199,20 @@ export const C4DiagramRenderer: FC<PropsWithChildren<C4DiagramRendererProps>> = 
         });
     }, [onImport]);
 
+    const { renderContainerView, renderComponentView } = useC4Diagram();
+    const { fitView } = useReactFlow();
+
+    const onNodeDoubleClick = useCallback((event, node: Node<ElementNodeWrapperProps>) => {
+        if (node.data.element.tags.some(x => x.name === Tag.SoftwareSystem.name)) {
+            renderContainerView(node.data.element.identifier);
+            fitView({ padding: 0.2, duration: 500 });
+        }
+        if (node.data.element.tags.some(x => x.name === Tag.Container.name)) {
+            renderComponentView(node.data.element.identifier);
+            fitView({ padding: 0.2, duration: 500 });
+        }
+    }, [renderContainerView, renderComponentView, fitView]);
+
     return (
         <ReactFlow
             connectionMode={ConnectionMode.Loose}
@@ -207,8 +224,9 @@ export const C4DiagramRenderer: FC<PropsWithChildren<C4DiagramRendererProps>> = 
             nodeTypes={NodeTypes}
             proOptions={{ hideAttribution: true }}
             ref={reactFlowRef}
-            snapGrid={[20, 20]}
-            snapToGrid
+            snapGrid={[40, 40]}
+            // snapToGrid
+            onNodeDoubleClick={onNodeDoubleClick}
             // onConnect={onConnect}
             // onNodeDrag={onNodeDrag}
             // onNodeDragStop={onNodeDragStop}
@@ -221,7 +239,7 @@ export const C4DiagramRenderer: FC<PropsWithChildren<C4DiagramRendererProps>> = 
         >
             <Background
                 variant={BackgroundVariant.Dots}
-                gap={[20, 20]}
+                gap={[40, 40]}
             />
             
             {children}

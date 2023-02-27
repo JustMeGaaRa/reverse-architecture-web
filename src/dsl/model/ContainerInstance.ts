@@ -7,7 +7,13 @@ import { Tag } from "./Tag";
 import { Url } from "./Url";
 
 export class ContainerInstance {
-    constructor(containerIdentifier: Identifier, deploymentGroups?: Identifier[], tags?: Tag[]) {
+    constructor(
+        containerIdentifier: Identifier,
+        identifier: Identifier,
+        deploymentGroups?: Identifier[],
+        tags?: Tag[]
+    ) {
+        this.identifier = identifier;
         this.containerIdentifier = containerIdentifier;
         this.deploymentGroups = deploymentGroups;
         this.tags = [
@@ -30,6 +36,9 @@ export class ContainerInstance {
     healthCheck?: HealthCheck;
 }
 
-export function containerInstance(identifier: Identifier) {
-    return new ContainerInstance(identifier);
+export function containerInstance(
+    containerIdentifier: Identifier,
+    identifier: Identifier
+) {
+    return new ContainerInstance(containerIdentifier, identifier);
 }

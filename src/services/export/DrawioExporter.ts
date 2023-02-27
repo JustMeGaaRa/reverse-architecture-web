@@ -733,7 +733,6 @@ const fromDeploymentView = (
     };
 
     const flatMapDeploymentNode = (parentDeploymentNode: DeploymentNode) => {
-        // TODO: fix the issue with instances references only being displayed once
         return [
             fromDeploymentNodeScope(defaultParent1._id, parentDeploymentNode, view.layout),
             ...parentDeploymentNode.deploymentNodes
@@ -741,13 +740,19 @@ const fromDeploymentView = (
             ...parentDeploymentNode.softwareSystemInstances
                 ?.flatMap(instance => fromSoftwareSystem(
                     defaultParent1._id,
-                    findSoftwareSystem(workspace, instance.softwareSystemIdentifier),
+                    {
+                        ...findSoftwareSystem(workspace, instance.softwareSystemIdentifier),
+                        identifier: instance.identifier
+                    },
                     view.layout
                 )) ?? [],
             ...parentDeploymentNode.containerInstances
                 ?.flatMap(instance => fromContainer(
                     defaultParent1._id,
-                    findContainer(workspace, instance.containerIdentifier),
+                    {
+                        ...findContainer(workspace, instance.containerIdentifier),
+                        identifier: instance.identifier
+                    },
                     view.layout
                 )) ?? [],
         ];

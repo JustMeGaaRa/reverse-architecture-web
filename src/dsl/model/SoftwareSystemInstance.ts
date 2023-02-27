@@ -7,7 +7,13 @@ import { Relationship } from "./Relationship";
 import { HealthCheck } from "./HealthCheck";
 
 export class SoftwareSystemInstance {
-    constructor(softwareSystemIdentifier: Identifier, deploymentGroups?: Identifier[], tags?: Tag[]) {
+    constructor(
+        softwareSystemIdentifier: Identifier,
+        identifier?: Identifier,
+        deploymentGroups?: Identifier[],
+        tags?: Tag[]
+    ) {
+        this.identifier = identifier;
         this.softwareSystemIdentifier = softwareSystemIdentifier;
         this.deploymentGroups = deploymentGroups;
         this.tags = [
@@ -30,6 +36,9 @@ export class SoftwareSystemInstance {
     healthCheck?: HealthCheck;
 }
 
-export function softwareSystemInstance(identifier: Identifier) {
-    return new SoftwareSystemInstance(identifier);
+export function softwareSystemInstance(
+    softwareSystemIdentifier: Identifier,
+    identifier?: Identifier,
+) {
+    return new SoftwareSystemInstance(softwareSystemIdentifier, identifier);
 }

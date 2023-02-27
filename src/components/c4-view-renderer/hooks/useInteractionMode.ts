@@ -1,27 +1,26 @@
-import { useCallback, useState } from "react";
 import { ReactFlowState, useStore, useStoreApi } from "@reactflow/core";
+import { useCallback, useState } from "react";
 
 enum InteractionMode {
     Build = "build",
     Explore = "explore"
 }
 
-const useInteractionMode = () => {
-    const isInteractiveSelector = (flowState: ReactFlowState) => {
-        return flowState.nodesDraggable
-            && flowState.nodesConnectable
-            && flowState.elementsSelectable;
-    };
-
+export const useInteractionMode = () => {
     const [mode, setMode] = useState(InteractionMode.Build);
     const { setState } = useStoreApi();
+    
+    const isInteractiveSelector = (flow: ReactFlowState) => {
+        return flow.nodesDraggable
+            && flow.nodesConnectable;
+    };
     const isInteractive = useStore(isInteractiveSelector);
 
     const toggleMode = useCallback(() => {
         setState({
             nodesDraggable: !isInteractive,
             nodesConnectable: !isInteractive,
-            elementsSelectable: !isInteractive,
+            // elementsSelectable: !isInteractive,
         });
         setMode(mode === InteractionMode.Build
             ? InteractionMode.Explore
@@ -31,8 +30,8 @@ const useInteractionMode = () => {
 
     return {
         mode,
+        isPresentationMode: mode === InteractionMode.Explore,
+        isBuilderMode: mode === InteractionMode.Build,
         toggleMode
     };
 }
-
-export { useInteractionMode };

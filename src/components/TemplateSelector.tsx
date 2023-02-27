@@ -1,9 +1,14 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import {
     Box,
     Card,
     CardBody,
+    Flex,
     Heading,
+    Link,
+    List,
+    ListItem,
+    SimpleGrid,
     Text,
     useColorModeValue,
     Wrap,
@@ -30,17 +35,23 @@ const TemplateItem: FC<TemplateItemProps> = ({
     description,
     onClick
 }) => {
-    const defaultBackground = useColorModeValue("blackAlpha.100", "whiteAlpha.100");
-    const highlightBackground = useColorModeValue("blackAlpha.200", "whiteAlpha.200");
+    const defaultBorder = useColorModeValue("blackAlpha.300", "rgba(255, 255, 255, 0.1)");
+    const defaultBackground = useColorModeValue("blackAlpha.100", "rgba(31, 33, 35, 0.9)");
+    const activeBorder = useColorModeValue("blackAlpha.300", "#E5FF00");
+    const activeBackground = useColorModeValue("gray.100", "rgba(229, 255, 0, 0.05)");    
+    const activeColor = useColorModeValue("gray.800", "#E3FB51");
 
     return (
         <Card
             background={defaultBackground}
+            borderColor={defaultBorder}
             width={200}
             height={200}
             variant={"outline"}
             _hover={{
-                background: highlightBackground,
+                background: activeBackground,
+                borderColor: activeBorder,
+                color: activeColor,
                 cursor: "pointer"
             }}
             onClick={onClick}
@@ -103,16 +114,50 @@ export const TemplateSelector: FC<TemplateSelectorProps> = ({
     templates,
     onSelected
 }) => {
+    const AllGroupName = "All";
+    const [selectedGroup, setSelectedGroup] = useState(AllGroupName);
+    const selectedTemplates = templates
+        .filter(group => group.templates.length > 0)
+        .filter(group => selectedGroup === AllGroupName || selectedGroup === group.header);
+
+    const defaultColor = useColorModeValue("gray.800", "#ffffff");
+    const activeColor = useColorModeValue("gray.800", "#E5FF00");
+
     return (
-        <>
-            {templates.map(group => (
-                <TemplateGroup
-                    key={group.header}
-                    header={group.header}
-                    templates={group.templates}
-                    onSelected={onSelected}
-                />
-            ))}
-        </>
+        <Flex gap={5} justify={"space-between"}>
+            <List maxWidth={150}>
+                <ListItem
+                    style={{ color: selectedGroup === AllGroupName ? activeColor : defaultColor }}
+                    onClick={() => setSelectedGroup(AllGroupName)}
+                >
+                    {AllGroupName}
+                </ListItem>
+
+                {templates.map(group => (
+                    <ListItem
+                        key={group.header}
+                        style={{ color: selectedGroup === group.header ? activeColor : defaultColor }}
+                        onClick={() => setSelectedGroup(group.header)}
+                    >
+                        {`${group.header} (${group.templates.length})`}
+                    </ListItem>
+                ))}
+            </List>
+            <Box
+                flex={1}
+                maxHeight={["lg", "xl", "2xl"]}
+                px={5}
+                overflowY={"scroll"}
+            >
+                {selectedTemplates.map(group => (
+                    <TemplateGroup
+                        key={group.header}
+                        header={group.header}
+                        templates={group.templates}
+                        onSelected={onSelected}
+                    />
+                ))}
+            </Box>
+        </Flex>
     );
 }

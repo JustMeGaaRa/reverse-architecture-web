@@ -1,23 +1,14 @@
 import { create } from "zustand";
-import { ComponentView, ContainerView, DeploymentView, SystemContextView } from "..";
-import { Identifier } from "../model/Identifier";
-import { findContainer, findSoftwareSystem, Workspace } from "../Workspace";
-
-type WorkspaceState = {
-    workspace: Workspace;
-}
-
-type Action<TParam> = (param: TParam) => void;
-type Func<TParam, TResult> = (param: TParam) => TResult;
-
-type WorkspaceActions = {
-    setWorkspace: Action<Workspace>;
-    setName: Action<string>;
-    systemContextView: Func<Identifier, SystemContextView>;
-    containerView: Func<Identifier, ContainerView>;
-    componentView: Func<Identifier, ComponentView>;
-    deploymentView: Func<{ identifier: Identifier, environment: string }, DeploymentView>;
-}
+import {
+    Identifier,
+    findContainer,
+    findSoftwareSystem,
+    Workspace,
+    GenericView
+} from "..";
+import { ElementDimensions } from "./ElementDimensions";
+import { WorkspaceActions } from "./WorkspaceActions";
+import { WorkspaceState } from "./WorkspaceState";
 
 type WorkspaceStore = WorkspaceState & WorkspaceActions;
 
@@ -62,14 +53,14 @@ const buildComponentView = (workspace: Workspace, identifier: Identifier) => {
     const container = findContainer(workspace, identifier);
     return {
         ...view,
-        components: container.components,
+        components: container.components ?? [],
         people: workspace.model.people
-            .filter(x => container.components.some(component => relationshipExists(workspace, component.identifier, x.identifier))),
+            .filter(x => container.components?.some(component => relationshipExists(workspace, component.identifier, x.identifier))),
         softwareSystems: workspace.model.softwareSystems
-            .filter(x => container.components.some(component => relationshipExists(workspace, component.identifier, x.identifier))),
+            .filter(x => container.components?.some(component => relationshipExists(workspace, component.identifier, x.identifier))),
         containers: workspace.model.softwareSystems
             .flatMap(system => system.containers)
-            .filter(x => container.components.some(component => relationshipExists(workspace, component.identifier, x.identifier)))
+            .filter(x => container?.components?.some(component => relationshipExists(workspace, component.identifier, x.identifier)))
     }
 }
 
@@ -112,20 +103,74 @@ export const useWorkspace = create<WorkspaceStore>((set, get) => ({
             workspace: { ...state.workspace, name }
         }));
     },
-    systemContextView: (identifier: Identifier) => {
-        const workspace = get().workspace;
-        return buildSystemContextView(workspace, identifier);
+    addPerson: (identifier: Identifier) => {
+        // set((state) => {
+        //     const workspace = state.workspace;
+        //     const people = workspace.model.people;
+        // });
     },
-    containerView: (identifier: Identifier) => {
-        const workspace = get().workspace;
-        return buildContainerView(workspace, identifier);
+    addSoftwareSystem: (identifier: Identifier) => {
+        // set((state) => {
+        //     const workspace = state.workspace;
+        //     const softwareSystems = workspace.model.softwareSystems;
+        // });
     },
-    componentView: (identifier: Identifier) => {
-        const workspace = get().workspace;
-        return buildComponentView(workspace, identifier);
+    addContainer: (identifier: Identifier) => {
+        // set((state) => {
+        //     const workspace = state.workspace;
+        //     const containers = workspace.model.softwareSystems
+        // });
     },
-    deploymentView: ({ identifier, environment }) => {
-        const workspace = get().workspace;
-        return buildDeploymentView(workspace, identifier, environment);
+    addComponent: (identifier: Identifier) => {
+        // set((state) => {
+        //     const workspace = state.workspace;
+        //     const components = workspace.model.softwareSystems
+        // });
+    },
+    addDeploymentEnvironment: (identifier: Identifier) => {
+        // set((state) => {
+        //     const workspace = state.workspace;
+        //     const deploymentEnvironments = workspace.model.deploymentEnvironments
+        // });
+    },
+    addDeploymentNode: (identifier: Identifier) => {
+        // set((state) => {
+        //     const workspace = state.workspace;
+        //     const deploymentNodes = workspace.model.softwareSystems
+        // });
+    },
+    setElementDimensions: (dimensions: ElementDimensions) => {
+        const updateView = <TView extends GenericView>(view: TView): TView => {
+            return {
+                ...view,
+                layout: {
+                    ...view.layout,
+                    [dimensions.elementIdentifier]: {
+                        x: dimensions.x,
+                        y: dimensions.y,
+                        width: dimensions.width,
+                        height: dimensions.height
+                    }
+                }
+            }
+        }
+
+        set((state) => ({
+            workspace: {
+                ...state.workspace,
+                views: {
+                    ...state.workspace.views,
+                    systemContexts: state.workspace.views.systemContexts
+                        .map(view => view.softwareSystemIdentifier === dimensions.viewIdentifier ? updateView(view) : view),
+                    containers: state.workspace.views.containers
+                        .map(view => view.softwareSystemIdentifier === dimensions.viewIdentifier ? updateView(view) : view),
+                    components: state.workspace.views.components
+                        .map(view => view.containerIdentifier === dimensions.viewIdentifier ? updateView(view) : view),
+                    deployments: state.workspace.views.deployments
+                        .map(view => view.softwareSystemIdentifier === dimensions.viewIdentifier ? updateView(view) : view)
+                },
+                lastModifiedData: new Date()
+            }
+        }));
     }
 }));

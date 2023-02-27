@@ -143,7 +143,7 @@ export const workspaceTemplate = workspace("Big Bank plc", "",
                                 undefined,
                                 undefined,
                                 undefined,
-                                [ containerInstance("con-single-page-app") ]
+                                [ containerInstance("con-single-page-app", "con-single-page-app-inst-1") ]
                             )
                         ]
                     ),
@@ -156,7 +156,7 @@ export const workspaceTemplate = workspace("Big Bank plc", "",
                         undefined,
                         undefined,
                         undefined,
-                        [ containerInstance("con-mobile-app") ]
+                        [ containerInstance("con-mobile-app", "con-mobile-app-inst-1") ]
                     ),
                     deploymentNode(
                         "dn-big-bank-plc",
@@ -183,7 +183,7 @@ export const workspaceTemplate = workspace("Big Bank plc", "",
                                         undefined,
                                         undefined,
                                         undefined,
-                                        [ containerInstance("con-web-app") ]
+                                        [ containerInstance("con-web-app", "con-web-app-inst-1") ]
                                     )
                                 ],
                             ),
@@ -204,7 +204,7 @@ export const workspaceTemplate = workspace("Big Bank plc", "",
                                         undefined,
                                         undefined,
                                         undefined,
-                                        [ containerInstance("con-api-application") ]
+                                        [ containerInstance("con-api-application", "con-api-application-inst-1") ]
                                     )
                                 ]
                             ),
@@ -225,7 +225,7 @@ export const workspaceTemplate = workspace("Big Bank plc", "",
                                         undefined,
                                         undefined,
                                         undefined,
-                                        [ containerInstance("db-database-1") ]
+                                        [ containerInstance("db-database-1", "db-database-1-inst-1") ]
                                     )
                                 ]
                             ),
@@ -246,7 +246,7 @@ export const workspaceTemplate = workspace("Big Bank plc", "",
                                         undefined,
                                         undefined,
                                         undefined,
-                                        [ containerInstance("db-database-1") ]
+                                        [ containerInstance("db-database-1", "db-database-1-inst-2") ]
                                     )
                                 ]
                             ),
@@ -258,7 +258,7 @@ export const workspaceTemplate = workspace("Big Bank plc", "",
                                 undefined,
                                 undefined,
                                 undefined,
-                                [ softwareSystemInstance("ss-mainframe-banking") ]
+                                [ softwareSystemInstance("ss-mainframe-banking", "ss-mainframe-banking-inst-1") ]
                             )
                         ]
                     )
@@ -481,12 +481,13 @@ export const workspaceTemplate = workspace("Big Bank plc", "",
                 "Internet Banking System - Live",
                 {
                     ["ss-internet-banking"]: { x: 80, y: 80 },
-                    ["ss-mainframe-banking"]: { x: 40, y: 40 },
-                    ["con-web-app"]: { x: 40, y: 40 },
-                    ["con-single-page-app"]: { x: 40, y: 40 },
-                    ["con-mobile-app"]: { x: 40, y: 40 },
-                    ["con-api-application"]: { x: 40, y: 40 },
-                    ["db-database-1"]: { x: 40, y: 40 },
+                    ["ss-mainframe-banking-inst-1"]: { x: 40, y: 40 },
+                    ["con-web-app-inst-1"]: { x: 40, y: 40 },
+                    ["con-single-page-app-inst-1"]: { x: 40, y: 40 },
+                    ["con-mobile-app-inst-1"]: { x: 40, y: 40 },
+                    ["con-api-application-inst-1"]: { x: 40, y: 40 },
+                    ["db-database-1-inst-1"]: { x: 40, y: 40 },
+                    ["db-database-1-inst-2"]: { x: 40, y: 40 },
                     ["dn-customers-computer"]: { x: 0, y: 40, width: 460, height: 420 },
                     ["dn-web-browser"]: { x: 40, y: 40, width: 380, height: 320 },
                     ["dn-customers-mobile"]: { x: 40, y: 740, width: 380, height: 320 },

@@ -1,9 +1,6 @@
-import { CopyIcon } from "@chakra-ui/icons";
 import {
-    Button,
     FormControl,
     FormLabel,
-    IconButton,
     Input,
     InputGroup,
     InputRightElement,
@@ -13,9 +10,12 @@ import {
     PopoverContent,
     PopoverHeader,
     PopoverTrigger,
-    Switch
+    Switch,
+    useColorModeValue
 } from "@chakra-ui/react";
+import { Copy, ShareAndroid } from "iconoir-react";
 import { FC, useRef } from "react";
+import { ToolbarIconButton } from "./ToolbarIconButton";
 
 type SharePopoverProps = {
     link: string;
@@ -31,16 +31,20 @@ export const SharePopover: FC<SharePopoverProps> = ({
     return (
         <Popover
             initialFocusRef={inputRef}
-            placement={"bottom-end"}
+            placement={"bottom-start"}
             closeOnBlur={true}
             closeOnEsc={true}
         >
             <PopoverTrigger>
-                <Button>
-                    Share
-                </Button>
+                <ToolbarIconButton
+                    aria-label={"Share"}
+                    title={"Share"}
+                    icon={<ShareAndroid />}
+                />
             </PopoverTrigger>
-            <PopoverContent>
+            <PopoverContent
+                background={useColorModeValue("whiteAlpha.900", "rgba(31, 33, 35, 1)")}
+            >
                 <PopoverCloseButton />
                 <PopoverHeader>Share Diagram</PopoverHeader>
                 <PopoverBody>
@@ -54,11 +58,10 @@ export const SharePopover: FC<SharePopoverProps> = ({
                                 onFocus={(event) => event.target.select()}
                             />
                             <InputRightElement>
-                                <IconButton
+                                <ToolbarIconButton
                                     aria-label={"copy"}
                                     title={"copy"}
-                                    icon={<CopyIcon />}
-                                    variant={"ghost"}
+                                    icon={<Copy />}
                                     onClick={() => onCopy(link)}
                                 />
                             </InputRightElement>

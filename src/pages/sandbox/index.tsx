@@ -1,20 +1,14 @@
-import { Box, useDisclosure, useToast } from "@chakra-ui/react";
+import { Box, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
 import { FC, useCallback, useEffect } from "react";
 import { C4DiagramRenderer, TemplateSelectorModal } from "../../components";
-import { CollaborationPanel, InteractivityPanel, NavigationPanel } from "../../components/Panels";
+import { ActivityPanel, ToolbarPanel, WorkspacePanel } from "../../components/Panels";
 import { useC4Diagram } from "../../components/c4-view-renderer/hooks";
 import { templates } from "./Templates";
 import { workspaceTemplate } from "./Templates/Workspace";
 import { useWorkspace } from "../../dsl";
 
 export const Sandbox: FC = () => {
-    const {
-        renderSystemContextView,
-        renderContainerView,
-        renderComponentView,
-        renderDeploymentView,
-        fromObject
-    } = useC4Diagram();
+    const { renderSystemContextView, fromObject } = useC4Diagram();
     const { setWorkspace } = useWorkspace();
 
     const toast = useToast();
@@ -44,30 +38,9 @@ export const Sandbox: FC = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const onSelected = useCallback((template) => {
         onClose();
-
-        const { type, identifier, environment } = JSON.parse(template.payload);
-
-        switch (type) {
-            case "Software Context":
-                renderSystemContextView(identifier);
-                break;
-            case "Container":
-                renderContainerView(identifier);
-                break;
-            case "Component":
-                renderComponentView(identifier);
-                break;
-            case "Deployment":
-                renderDeploymentView(identifier, environment);
-                break;
-        }
-    }, [
-        onClose,
-        renderSystemContextView,
-        renderContainerView,
-        renderComponentView,
-        renderDeploymentView
-    ]);
+        const { identifier } = JSON.parse(template.payload);
+        renderSystemContextView(identifier);
+    }, [onClose, renderSystemContextView]);
     
     useEffect(() => {
         onOpen();
@@ -75,14 +48,14 @@ export const Sandbox: FC = () => {
     }, [onOpen, setWorkspace]);
 
     return (
-        <Box height={"100vh"}>
+        <Box height={"100vh"} background={useColorModeValue("", "#1E1E1E")}>
             <C4DiagramRenderer
                 onImport={onImport}
             >
                 
-                <CollaborationPanel />
-                <InteractivityPanel />
-                <NavigationPanel />
+                <WorkspacePanel />
+                <ActivityPanel />
+                <ToolbarPanel />
 
             </C4DiagramRenderer>
                 

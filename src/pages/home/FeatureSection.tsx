@@ -8,8 +8,8 @@ import {
     Flex,
     Heading
 } from "@chakra-ui/react";
-import { FcCheckmark, FcSynchronize, FcWorkflow } from "react-icons/fc";
 import { Lorem } from "../../components/Lorem";
+import { Check, CloudSync, Network } from "iconoir-react";
 
 interface IFeatureProps {
     title: string;
@@ -59,19 +59,19 @@ export function FeatureSection() {
                 spacing={10}
             >
                 <Feature
-                    icon={<Icon as={FcSynchronize} w={10} h={10} />}
+                    icon={<Icon as={CloudSync} color={"black"} w={10} h={10} />}
                     title={"Real-time Collaboration"}
                 >
                     <Lorem noOfLines={3} />
                 </Feature>
                 <Feature
-                    icon={<Icon as={FcCheckmark} w={10} h={10} />}
+                    icon={<Icon as={Check} color={"black"} w={10} h={10} />}
                     title={"Peer Review"}
                 >
                     <Lorem noOfLines={3} />
                 </Feature>
                 <Feature
-                    icon={<Icon as={FcWorkflow} w={10} h={10} />}
+                    icon={<Icon as={Network} color={"black"} w={10} h={10} />}
                     title={"Diagram Standard"}
                 >
                     <Lorem noOfLines={3} />

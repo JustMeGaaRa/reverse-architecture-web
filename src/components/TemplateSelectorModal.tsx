@@ -5,7 +5,8 @@ import {
     ModalCloseButton,
     ModalContent,
     ModalHeader,
-    ModalOverlay
+    ModalOverlay,
+    useColorModeValue
 } from "@chakra-ui/react";
 import {
     TemplateSelector,
@@ -30,17 +31,19 @@ export const TemplateSelectorModal: FC<TemplateSelectorModalProps> = ({
         <Modal
             isOpen={isOpen}
             isCentered
-            size={["sm", "xl", "2xl"]}
+            size={["xl", "2xl", "4xl"]}
             onClose={onClose}
             closeOnEsc={false}
             closeOnOverlayClick={false}
-            scrollBehavior={"inside"}
         >
             <ModalOverlay
                 backdropFilter={"auto"}
                 backdropBlur={"2px"}
             />
-            <ModalContent>
+            <ModalContent
+                background={useColorModeValue("whiteAlpha.900", "rgba(31, 33, 35, 0.9)")}
+                borderColor={useColorModeValue("blackAlpha.300", "rgba(255, 255, 255, 0.1)")}
+            >
                 <ModalHeader>Select Diagram Template</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>

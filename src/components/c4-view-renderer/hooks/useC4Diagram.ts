@@ -24,19 +24,13 @@ import {
     SystemContextView,
     ContainerView,
     ComponentView,
-    DeploymentView
+    DeploymentView,
+    GenericView
 } from "../../../dsl";
 
 export const useC4Diagram = () => {
     const reactFlow = useReactFlow();
-    const {
-        workspace,
-        setName,
-        systemContextView,
-        containerView,
-        componentView,
-        deploymentView
-    } = useWorkspace();
+    const { workspace, setName } = useWorkspace();
 
     type FromNodeParams = {
         node: Element;
@@ -88,9 +82,10 @@ export const useC4Diagram = () => {
         };
     }, [workspace]);
 
-    const fromWorkspaceRelationships = useCallback((workspace: Workspace) => {
-        // TODO: filter edges only for nodes that will be rendered
-        return workspace.model.relationships.map(edge => fromEdge(edge));
+    const fromWorkspaceRelationships = useCallback((view: GenericView, workspace: Workspace) => {
+        return workspace.model.relationships
+            .filter(edge => view.layout[edge.sourceIdentifier] && view.layout[edge.targetIdentifier])
+            .map(edge => fromEdge(edge));
     }, [fromEdge]);
 
     const clearView = useCallback(() => {
@@ -110,11 +105,11 @@ export const useC4Diagram = () => {
             ];
         };
         
-        const view = systemContextView(softwareSystemIdentifier);
+        const view = workspace.views.systemContexts.find(x => x.softwareSystemIdentifier === softwareSystemIdentifier);
         setName(view.title);
         reactFlow.setNodes(fromSystemContextView(view, workspace));
-        reactFlow.setEdges(fromWorkspaceRelationships(workspace));
-    }, [reactFlow, workspace, systemContextView, setName, fromNode, fromWorkspaceRelationships]);
+        reactFlow.setEdges(fromWorkspaceRelationships(view, workspace));
+    }, [reactFlow, workspace, setName, fromNode, fromWorkspaceRelationships]);
 
     const renderContainerView = useCallback((softwareSystemIdentifier: Identifier) => {
         const fromContainerView = (view: ContainerView, workspace: Workspace) => {
@@ -129,11 +124,11 @@ export const useC4Diagram = () => {
             ];
         }
 
-        const view = containerView(softwareSystemIdentifier);
+        const view = workspace.views.containers.find(x => x.softwareSystemIdentifier === softwareSystemIdentifier);
         setName(view.title);
         reactFlow.setNodes(fromContainerView(view, workspace));
-        reactFlow.setEdges(fromWorkspaceRelationships(workspace));
-    }, [reactFlow, workspace, containerView, setName, fromNode, fromWorkspaceRelationships]);
+        reactFlow.setEdges(fromWorkspaceRelationships(view, workspace));
+    }, [reactFlow, workspace, setName, fromNode, fromWorkspaceRelationships]);
 
     const renderComponentView = useCallback((containerIdentifier: Identifier) => {
         const fromComponentView = (view: ComponentView, workspace: Workspace) => {
@@ -149,16 +144,15 @@ export const useC4Diagram = () => {
             ];
         }
 
-        const view = componentView(containerIdentifier);
+        const view = workspace.views.components.find(x => x.containerIdentifier === containerIdentifier);
         setName(view.title);
         reactFlow.setNodes(fromComponentView(view, workspace));
-        reactFlow.setEdges(fromWorkspaceRelationships(workspace));
-    }, [reactFlow, workspace, componentView, setName, fromNode, fromWorkspaceRelationships]);
+        reactFlow.setEdges(fromWorkspaceRelationships(view, workspace));
+    }, [reactFlow, workspace, setName, fromNode, fromWorkspaceRelationships]);
 
     const renderDeploymentView = useCallback((softwareSystemIdentifier: Identifier, environment: string) => {
         const fromDeploymentView = (view: DeploymentView, workspace: Workspace) => {
             const flatMapDeploymentNode = (parentDeploymentNode: DeploymentNode, parentNode?: string) => {
-                // TODO: fix the issue with instances references only being displayed once
                 return [
                     fromNode({ node: parentDeploymentNode, parentNode, layout }),
                     ...parentDeploymentNode.deploymentNodes
@@ -168,13 +162,19 @@ export const useC4Diagram = () => {
                         )) ?? [],
                     ...parentDeploymentNode.softwareSystemInstances
                         ?.flatMap(instance => fromNode({
-                            node: findSoftwareSystem(workspace, instance.softwareSystemIdentifier),
+                            node: {
+                                ...findSoftwareSystem(workspace, instance.softwareSystemIdentifier),
+                                identifier: instance.identifier
+                            },
                             parentNode: parentDeploymentNode.identifier,
                             layout
                         })) ?? [],
                     ...parentDeploymentNode.containerInstances
                         ?.flatMap(instance => fromNode({
-                            node: findContainer(workspace, instance.containerIdentifier),
+                            node: {
+                                ...findContainer(workspace, instance.containerIdentifier),
+                                identifier: instance.identifier
+                            },
                             parentNode: parentDeploymentNode.identifier,
                             layout
                         })) ?? [],
@@ -185,11 +185,11 @@ export const useC4Diagram = () => {
             return view.deploymentNodes.flatMap(dn => flatMapDeploymentNode(dn));
         }
 
-        const view = deploymentView({ identifier: softwareSystemIdentifier, environment });
+        const view = workspace.views.deployments.find(x => x.softwareSystemIdentifier === softwareSystemIdentifier);
         setName(view.title);
         reactFlow.setNodes(fromDeploymentView(view, workspace));
-        reactFlow.setEdges(fromWorkspaceRelationships(workspace));
-    }, [reactFlow, workspace, deploymentView, setName, fromNode, fromWorkspaceRelationships]);
+        reactFlow.setEdges(fromWorkspaceRelationships(view, workspace));
+    }, [reactFlow, workspace, setName, fromNode, fromWorkspaceRelationships]);
 
     const fromObject = useCallback((
         flow: ReactFlowJsonObject,

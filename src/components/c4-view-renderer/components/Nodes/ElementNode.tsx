@@ -1,15 +1,22 @@
 import '@reactflow/node-resizer/dist/style.css';
 
-import { FC, PropsWithChildren, useCallback, useState } from "react";
 import { Handle, NodeProps, Position } from "@reactflow/core";
 import { NodeResizer } from "@reactflow/node-resizer";
+import { FC, PropsWithChildren, useCallback } from "react";
 import { ExpandedElement } from "./ExpandedElement";
 import { DeploymentNode } from './DeploymentNode';
 import { DefaultBox, RoundedBox } from '../Shapes';
 import { ExpandedElementLabel } from "../Labels/ExpandedElementLabel";
 import { ElementLabel } from "../Labels/ElementLabel";
 import { DeploymentNodeLabel } from "../Labels/DeploymentNodeLabel";
-import { defaultElementStyle, Element, ElementStyleProperties, ShapeType, Tag } from '../../../../dsl';
+import {
+    defaultElementStyle,
+    Element,
+    ElementStyleProperties,
+    ShapeType,
+    Tag,
+    useWorkspace
+} from '../../../../dsl';
 
 type ShapeshiftElementProps = {
     style?: Partial<ElementStyleProperties>;
@@ -59,15 +66,21 @@ export const ElementNode: FC<ElementNodeProps> = ({
     selected = false,
     expanded = false
 }) => {
-    const [size, setSize] = useState({ width, height });
-    const onResize = useCallback((event, params) => setSize({ ...params }), []);
+    const { setElementDimensions } = useWorkspace();
+    const onResize = useCallback((event, params) => {
+        setElementDimensions({
+            // TODO: add view identifier
+            ...params,
+            elementIdentifier: data.identifier
+        });
+    }, [setElementDimensions, data]);
 
     if (data.tags.some(x => x.name === Tag.DeploymentNode.name)) {
         return (
             <DeploymentNode
                 style={style}
-                width={size.width}
-                height={size.height}
+                width={width}
+                height={height}
                 selected={selected}
             >
                 <DeploymentNodeLabel
@@ -90,8 +103,8 @@ export const ElementNode: FC<ElementNodeProps> = ({
         return (
             <ExpandedElement
                 style={style}
-                width={size.width}
-                height={size.height}
+                width={width}
+                height={height}
                 selected={selected}
             >
                 <ExpandedElementLabel
@@ -113,8 +126,8 @@ export const ElementNode: FC<ElementNodeProps> = ({
     return (
         <ShapeshiftElement
             style={style}
-            width={size.width}
-            height={size.height}
+            width={width}
+            height={height}
             selected={selected}
         >
             <ElementLabel data={data} style={style} showDescription />

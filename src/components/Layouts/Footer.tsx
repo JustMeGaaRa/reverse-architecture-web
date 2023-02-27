@@ -1,11 +1,5 @@
 import { FC } from "react";
 import {
-    FaGithub,
-    FaTwitter,
-    FaMediumM,
-    FaLinkedinIn
-} from "react-icons/fa";
-import {
     Box,
     Container,
     Stack,
@@ -13,6 +7,12 @@ import {
     useColorModeValue
 } from "@chakra-ui/react";
 import { Logo, SocialButton } from "..";
+import {
+    GitHub,
+    LinkedIn,
+    Medium,
+    Twitter
+} from "iconoir-react";
 
 export const Footer: FC = () => {
     return (
@@ -33,16 +33,16 @@ export const Footer: FC = () => {
                     label={"Twitter"}
                     href={"https://twitter.com/justmegaara"}
                 >
-                    <FaTwitter />
+                    <Twitter />
                 </SocialButton>
                 <SocialButton label={"Medium"} href={"https://blog.justmegaara.me"}>
-                    <FaMediumM />
+                    <Medium />
                 </SocialButton>
                 <SocialButton label={"GitHub"} href={"https://code.justmegaara.me"}>
-                    <FaGithub />
+                    <GitHub />
                 </SocialButton>
                 <SocialButton label={"CV"} href={"https://cv.justmegaara.me"}>
-                    <FaLinkedinIn />
+                    <LinkedIn />
                 </SocialButton>
             </Stack>
             </Container>
