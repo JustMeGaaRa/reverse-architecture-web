@@ -1,5 +1,5 @@
 import { Workspace } from "..";
 
 export type WorkspaceState = {
-    workspace: Workspace;
+    workspace?: Workspace;
 };

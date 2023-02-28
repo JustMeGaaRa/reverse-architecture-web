@@ -1,13 +1,21 @@
 import { create } from "zustand";
+import { immer } from "zustand/middleware/immer";
 import {
     Identifier,
     findContainer,
     findSoftwareSystem,
     Workspace,
-    GenericView
+    Person,
+    SoftwareSystem,
+    DeploymentEnvironment
 } from "..";
-import { ElementDimensions } from "./ElementDimensions";
-import { WorkspaceActions } from "./WorkspaceActions";
+import {
+    ComponentParams,
+    ContainerParams,
+    DeploymentNodeParams,
+    LayoutElementParams,
+    WorkspaceActions
+} from "./WorkspaceActions";
 import { WorkspaceState } from "./WorkspaceState";
 
 type WorkspaceStore = WorkspaceState & WorkspaceActions;
@@ -74,12 +82,7 @@ const buildDeploymentView = (workspace: Workspace, identifier: Identifier, envir
     }
 }
 
-export const useWorkspace = create<WorkspaceStore>((set, get) => ({
-    workspace: {
-        lastModifiedData: new Date(),
-        model: {},
-        views: {},
-    },
+export const useWorkspace = create(immer<WorkspaceStore>((set, get) => ({
     setWorkspace: (workspace: Workspace) => {
         set({
             workspace: {
@@ -99,78 +102,85 @@ export const useWorkspace = create<WorkspaceStore>((set, get) => ({
         });
     },
     setName: (name: string) => {
-        set((state) => ({
-            workspace: { ...state.workspace, name }
-        }));
+        set((state) => {
+            state.workspace.name = name;
+        });
     },
-    addPerson: (identifier: Identifier) => {
-        // set((state) => {
-        //     const workspace = state.workspace;
-        //     const people = workspace.model.people;
-        // });
+    addPerson: (person: Person) => {
+        set((state) => {
+            state.workspace.model.people.push(person);
+        });
     },
-    addSoftwareSystem: (identifier: Identifier) => {
-        // set((state) => {
-        //     const workspace = state.workspace;
-        //     const softwareSystems = workspace.model.softwareSystems;
-        // });
+    addSoftwareSystem: (softwareSystem: SoftwareSystem) => {
+        set((state) => {
+            state.workspace.model.softwareSystems.push(softwareSystem);
+        });
     },
-    addContainer: (identifier: Identifier) => {
-        // set((state) => {
-        //     const workspace = state.workspace;
-        //     const containers = workspace.model.softwareSystems
-        // });
+    addContainer: (params: ContainerParams) => {
+        set((state) => {
+            const index = state.workspace.model.softwareSystems
+                .findIndex(x => x.identifier === params.softwareSystemIdentifier);
+            state.workspace.model
+                .softwareSystems[index]
+                .containers
+                .push(params.container);
+        });
     },
-    addComponent: (identifier: Identifier) => {
-        // set((state) => {
-        //     const workspace = state.workspace;
-        //     const components = workspace.model.softwareSystems
-        // });
+    addComponent: (params: ComponentParams) => {
+        set((state) => {
+            const systemIndex = state.workspace.model
+                .softwareSystems
+                .findIndex(x => x.identifier === params.softwareSystemIdentifier);
+            const containerIndex = state.workspace.model
+                .softwareSystems[systemIndex]
+                .containers
+                .findIndex(x => x.identifier === params.containerIdentifier);
+            state.workspace.model
+                .softwareSystems[systemIndex]
+                .containers[containerIndex]
+                .components
+                .push(params.component);
+        });
     },
-    addDeploymentEnvironment: (identifier: Identifier) => {
-        // set((state) => {
-        //     const workspace = state.workspace;
-        //     const deploymentEnvironments = workspace.model.deploymentEnvironments
-        // });
+    addDeploymentEnvironment: (deploymentEnvironment: DeploymentEnvironment) => {
+        set((state) => {
+            state.workspace.model.deploymentEnvironments.push(deploymentEnvironment);
+        });
     },
-    addDeploymentNode: (identifier: Identifier) => {
-        // set((state) => {
-        //     const workspace = state.workspace;
-        //     const deploymentNodes = workspace.model.softwareSystems
-        // });
+    addDeploymentNode: (params: DeploymentNodeParams) => {
+        set((state) => {
+            const index = state.workspace.model
+                .deploymentEnvironments
+                .findIndex(x => x.name === params.environment);
+            state.workspace.model
+                .deploymentEnvironments[index]
+                .deploymentNodes
+                .push(params.deploymentNode);
+        });
     },
-    setElementDimensions: (dimensions: ElementDimensions) => {
-        const updateView = <TView extends GenericView>(view: TView): TView => {
-            return {
-                ...view,
-                layout: {
-                    ...view.layout,
-                    [dimensions.elementIdentifier]: {
-                        x: dimensions.x,
-                        y: dimensions.y,
-                        width: dimensions.width,
-                        height: dimensions.height
-                    }
-                }
-            }
-        }
+    setLayoutElement: (params: LayoutElementParams) => {
+        set((state) => {
+            const dimentions = {
+                x: params.x,
+                y: params.y,
+                width: params.width,
+                height: params.height
+            };
 
-        set((state) => ({
-            workspace: {
-                ...state.workspace,
-                views: {
-                    ...state.workspace.views,
-                    systemContexts: state.workspace.views.systemContexts
-                        .map(view => view.softwareSystemIdentifier === dimensions.viewIdentifier ? updateView(view) : view),
-                    containers: state.workspace.views.containers
-                        .map(view => view.softwareSystemIdentifier === dimensions.viewIdentifier ? updateView(view) : view),
-                    components: state.workspace.views.components
-                        .map(view => view.containerIdentifier === dimensions.viewIdentifier ? updateView(view) : view),
-                    deployments: state.workspace.views.deployments
-                        .map(view => view.softwareSystemIdentifier === dimensions.viewIdentifier ? updateView(view) : view)
-                },
-                lastModifiedData: new Date()
-            }
-        }));
+            state.workspace.views
+                .systemContexts[params.viewIdentifier]
+                .layout[params.elementIdentifier] = dimentions;
+            state.workspace.views
+                .containers[params.viewIdentifier]
+                .layout[params.elementIdentifier] = dimentions;
+            state.workspace.views
+                .components[params.viewIdentifier]
+                .layout[params.elementIdentifier] = dimentions;
+            state.workspace.views
+                .deployments[params.viewIdentifier]
+                .layout[params.elementIdentifier] = dimentions;
+                
+            state.workspace.lastModifiedData = new Date();
+        });
     }
-}));
+})));

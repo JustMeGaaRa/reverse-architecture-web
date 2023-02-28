@@ -21,7 +21,7 @@ import {
 } from "../../../dsl";
 import { element } from "../../../dsl/view/ElementStyle";
 
-export const workspaceTemplate = workspace("Big Bank plc", "",
+export const BigBankPlc = workspace("Big Bank plc", "",
     model(
         [
             person(

@@ -1,15 +1,52 @@
-import { Identifier, Workspace } from "..";
-import { Action } from "./Action";
-import { ElementDimensions } from "./ElementDimensions";
+import {
+    Component,
+    Container,
+    DeploymentEnvironment,
+    DeploymentNode,
+    Identifier,
+    Person,
+    SoftwareSystem,
+    Workspace
+} from "..";
 
 export type WorkspaceActions = {
     setWorkspace: Action<Workspace>;
     setName: Action<string>;
-    addPerson: Action<Identifier>;
-    addSoftwareSystem: Action<Identifier>;
-    addContainer: Action<Identifier>;
-    addComponent: Action<Identifier>;
-    addDeploymentEnvironment: Action<Identifier>;
-    addDeploymentNode: Action<Identifier>;
-    setElementDimensions: Action<ElementDimensions>;
+    addPerson: Action<Person>;
+    addSoftwareSystem: Action<SoftwareSystem>;
+    addContainer: Action<ContainerParams>;
+    addComponent: Action<ComponentParams>;
+    addDeploymentEnvironment: Action<DeploymentEnvironment>;
+    addDeploymentNode: Action<DeploymentNodeParams>;
+    setLayoutElement: Action<LayoutElementParams>;
+};
+
+export type Action<TParam> = (param: TParam) => void;
+
+export type Func<TParam, TResult> = (param: TParam) => TResult;
+
+export type ContainerParams = {
+    softwareSystemIdentifier: Identifier;
+    container: Container;
+}
+
+export type ComponentParams = {
+    softwareSystemIdentifier: Identifier;
+    containerIdentifier: Identifier;
+    component: Component;
+}
+
+export type DeploymentNodeParams = {
+    softwareSystemIdentifier: Identifier;
+    environment: string;
+    deploymentNode: DeploymentNode;
+};
+
+export type LayoutElementParams = {
+    viewIdentifier: Identifier;
+    elementIdentifier: Identifier;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
 };

@@ -1,15 +1,22 @@
 import { Box, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
 import { FC, useCallback, useEffect } from "react";
-import { C4DiagramRenderer, TemplateSelectorModal } from "../../components";
-import { ActivityPanel, ToolbarPanel, WorkspacePanel } from "../../components/Panels";
+import {
+    ActivityPanel,
+    ToolbarPanel,
+    WorkspacePanel,
+    C4DiagramRenderer,
+    createAnonymousUser,
+    TemplateSelectorModal,
+    awareness
+} from "../../components";
 import { useC4Diagram } from "../../components/c4-view-renderer/hooks";
 import { templates } from "./Templates";
-import { workspaceTemplate } from "./Templates/Workspace";
-import { useWorkspace } from "../../dsl";
+import { useWorkspace, Workspace } from "../../dsl";
+import { RoomProvider } from "@y-presence/react";
 
 export const Sandbox: FC = () => {
+    const { workspace, setWorkspace } = useWorkspace();
     const { renderSystemContextView, fromObject } = useC4Diagram();
-    const { setWorkspace } = useWorkspace();
 
     const toast = useToast();
     const onImport = useCallback((result) => {
@@ -38,33 +45,42 @@ export const Sandbox: FC = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const onSelected = useCallback((template) => {
         onClose();
-        const { identifier } = JSON.parse(template.payload);
-        renderSystemContextView(identifier);
-    }, [onClose, renderSystemContextView]);
+        setWorkspace(JSON.parse(template.payload) as Workspace);
+    }, [onClose, setWorkspace]);
     
+    const initialPresence = createAnonymousUser();
+
+    useEffect(() => {
+        if (workspace?.views.systemContexts?.length > 0) {
+            const identifier = workspace.views.systemContexts.at(0).softwareSystemIdentifier;
+            renderSystemContextView(identifier);
+        }
+    }, [workspace, renderSystemContextView]);
+
     useEffect(() => {
         onOpen();
-        setWorkspace(workspaceTemplate);
-    }, [onOpen, setWorkspace]);
+    }, [onOpen]);
 
     return (
-        <Box height={"100vh"} background={useColorModeValue("", "#1E1E1E")}>
-            <C4DiagramRenderer
-                onImport={onImport}
-            >
-                
-                <WorkspacePanel />
-                <ActivityPanel />
-                <ToolbarPanel />
+        <RoomProvider awareness={awareness} initialPresence={initialPresence}>
+            <Box height={"100vh"} background={useColorModeValue("", "#1E1E1E")}>
+                <C4DiagramRenderer
+                    onImport={onImport}
+                >
+                    
+                    <WorkspacePanel />
+                    <ActivityPanel />
+                    <ToolbarPanel />
 
-            </C4DiagramRenderer>
-                
-            <TemplateSelectorModal
-                templates={templates}
-                isOpen={isOpen}
-                onClose={onClose}
-                onSelected={onSelected}
-            />
-        </Box>
+                </C4DiagramRenderer>
+                    
+                <TemplateSelectorModal
+                    templates={templates}
+                    isOpen={isOpen}
+                    onClose={onClose}
+                    onSelected={onSelected}
+                />
+            </Box>
+        </RoomProvider>
     );
 };

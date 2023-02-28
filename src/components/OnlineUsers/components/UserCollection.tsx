@@ -1,20 +1,12 @@
-import {
-    Avatar,
-    AvatarGroup
-} from "@chakra-ui/react";
+import { Avatar, AvatarGroup } from "@chakra-ui/react";
 import { FC } from "react";
+import { User } from "../types";
 
-interface User {
-    username: string;
-    fullname: string;
-    avatarUrl: string;
-}
-
-type OnlineUsersProps = {
+type UserCollectionProps = {
     users: Array<User>;
 };
 
-export const OnlineUsers: FC<OnlineUsersProps> = ({
+export const UserCollection: FC<UserCollectionProps> = ({
     users
 }) => {
     return (
@@ -22,8 +14,10 @@ export const OnlineUsers: FC<OnlineUsersProps> = ({
             {users && users.map(user => (
                 <Avatar
                     key={user.username}
+                    bgColor={user.color}
                     name={user.fullname}
                     src={user.avatarUrl}
+                    title={user.fullname}
                 />
             ))}
         </AvatarGroup>

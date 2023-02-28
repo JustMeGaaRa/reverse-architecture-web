@@ -30,7 +30,7 @@ import {
 
 export const useC4Diagram = () => {
     const reactFlow = useReactFlow();
-    const { workspace, setName } = useWorkspace();
+    const store = useWorkspace();
 
     type FromNodeParams = {
         node: Element;
@@ -48,7 +48,7 @@ export const useC4Diagram = () => {
                 element: node,
                 style: aggrerateStyles(
                     defaultElementStyle,
-                    workspace.views.styles.element,
+                    store.workspace.views.styles.element,
                     [...node.tags].reverse()
                 ),
                 width: layout[node.identifier].width,
@@ -60,7 +60,7 @@ export const useC4Diagram = () => {
             extent: "parent",
             style: parentNode ? undefined : { zIndex: -1 }
         }
-    }, [workspace]);
+    }, [store]);
     
     const fromEdge = useCallback((
         edge: Relationship
@@ -73,14 +73,14 @@ export const useC4Diagram = () => {
                 relationship: edge,
                 style: aggrerateStyles(
                     defaultRelationshipStyle,
-                    workspace.views.styles.relationship,
+                    store.workspace.views.styles.relationship,
                     [...edge.tags].reverse()
                 ),
             },
             source: edge.sourceIdentifier,
             target: edge.targetIdentifier
         };
-    }, [workspace]);
+    }, [store]);
 
     const fromWorkspaceRelationships = useCallback((view: GenericView, workspace: Workspace) => {
         return workspace.model.relationships
@@ -105,11 +105,11 @@ export const useC4Diagram = () => {
             ];
         };
         
-        const view = workspace.views.systemContexts.find(x => x.softwareSystemIdentifier === softwareSystemIdentifier);
-        setName(view.title);
-        reactFlow.setNodes(fromSystemContextView(view, workspace));
-        reactFlow.setEdges(fromWorkspaceRelationships(view, workspace));
-    }, [reactFlow, workspace, setName, fromNode, fromWorkspaceRelationships]);
+        const view = store.workspace.views.systemContexts.find(x => x.softwareSystemIdentifier === softwareSystemIdentifier);
+        store.setName(view.title);
+        reactFlow.setNodes(fromSystemContextView(view, store.workspace));
+        reactFlow.setEdges(fromWorkspaceRelationships(view, store.workspace));
+    }, [reactFlow, store, fromNode, fromWorkspaceRelationships]);
 
     const renderContainerView = useCallback((softwareSystemIdentifier: Identifier) => {
         const fromContainerView = (view: ContainerView, workspace: Workspace) => {
@@ -124,11 +124,11 @@ export const useC4Diagram = () => {
             ];
         }
 
-        const view = workspace.views.containers.find(x => x.softwareSystemIdentifier === softwareSystemIdentifier);
-        setName(view.title);
-        reactFlow.setNodes(fromContainerView(view, workspace));
-        reactFlow.setEdges(fromWorkspaceRelationships(view, workspace));
-    }, [reactFlow, workspace, setName, fromNode, fromWorkspaceRelationships]);
+        const view = store.workspace.views.containers.find(x => x.softwareSystemIdentifier === softwareSystemIdentifier);
+        store.setName(view.title);
+        reactFlow.setNodes(fromContainerView(view, store.workspace));
+        reactFlow.setEdges(fromWorkspaceRelationships(view, store.workspace));
+    }, [reactFlow, store, fromNode, fromWorkspaceRelationships]);
 
     const renderComponentView = useCallback((containerIdentifier: Identifier) => {
         const fromComponentView = (view: ComponentView, workspace: Workspace) => {
@@ -144,11 +144,11 @@ export const useC4Diagram = () => {
             ];
         }
 
-        const view = workspace.views.components.find(x => x.containerIdentifier === containerIdentifier);
-        setName(view.title);
-        reactFlow.setNodes(fromComponentView(view, workspace));
-        reactFlow.setEdges(fromWorkspaceRelationships(view, workspace));
-    }, [reactFlow, workspace, setName, fromNode, fromWorkspaceRelationships]);
+        const view = store.workspace.views.components.find(x => x.containerIdentifier === containerIdentifier);
+        store.setName(view.title);
+        reactFlow.setNodes(fromComponentView(view, store.workspace));
+        reactFlow.setEdges(fromWorkspaceRelationships(view, store.workspace));
+    }, [reactFlow, store, fromNode, fromWorkspaceRelationships]);
 
     const renderDeploymentView = useCallback((softwareSystemIdentifier: Identifier, environment: string) => {
         const fromDeploymentView = (view: DeploymentView, workspace: Workspace) => {
@@ -185,11 +185,11 @@ export const useC4Diagram = () => {
             return view.deploymentNodes.flatMap(dn => flatMapDeploymentNode(dn));
         }
 
-        const view = workspace.views.deployments.find(x => x.softwareSystemIdentifier === softwareSystemIdentifier);
-        setName(view.title);
-        reactFlow.setNodes(fromDeploymentView(view, workspace));
-        reactFlow.setEdges(fromWorkspaceRelationships(view, workspace));
-    }, [reactFlow, workspace, setName, fromNode, fromWorkspaceRelationships]);
+        const view = store.workspace.views.deployments.find(x => x.softwareSystemIdentifier === softwareSystemIdentifier);
+        store.setName(view.title);
+        reactFlow.setNodes(fromDeploymentView(view, store.workspace));
+        reactFlow.setEdges(fromWorkspaceRelationships(view, store.workspace));
+    }, [reactFlow, store, fromNode, fromWorkspaceRelationships]);
 
     const fromObject = useCallback((
         flow: ReactFlowJsonObject,

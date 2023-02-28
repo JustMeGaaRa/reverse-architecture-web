@@ -66,14 +66,14 @@ export const ElementNode: FC<ElementNodeProps> = ({
     selected = false,
     expanded = false
 }) => {
-    const { setElementDimensions } = useWorkspace();
+    const { setLayoutElement } = useWorkspace();
     const onResize = useCallback((event, params) => {
-        setElementDimensions({
+        setLayoutElement({
             // TODO: add view identifier
             ...params,
             elementIdentifier: data.identifier
         });
-    }, [setElementDimensions, data]);
+    }, [setLayoutElement, data]);
 
     if (data.tags.some(x => x.name === Tag.DeploymentNode.name)) {
         return (

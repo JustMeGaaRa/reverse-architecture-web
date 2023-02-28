@@ -36,7 +36,7 @@ export const WorkspacePanel: FC<WorkspacePanelProps> = () => {
                         />
                     </Box>
                     
-                    <TitleEditable title={workspace.name} onTitleChange={setName} />
+                    <TitleEditable title={workspace?.name ?? "Workspace"} onTitleChange={setName} />
                     
                     <HStack gap={2} px={2}>
                         <SettingsMenu />
