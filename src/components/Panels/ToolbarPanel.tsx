@@ -76,42 +76,31 @@ export const ToolbarPanel: FC<PropsWithChildren<ToolbarPanelProps>> = ({
                         />
                     </ButtonGroup>                
 
-                    <ButtonGroup
-                        gap={0}
-                        spacing={0}
-                        px={2}
-                        orientation={"horizontal"}
-                        size={"md"}
-                    >
-                        {isPresentationMode && (
-                            <ToolbarIconButton
-                                aria-label={"comment"}
-                                title={"comment"}
-                                icon={<MessageText />}
-                            />
-                        )}
-                        {isBuilderMode && (
+                    {isBuilderMode && (
+                        <ButtonGroup
+                            gap={0}
+                            spacing={0}
+                            px={2}
+                            orientation={"horizontal"}
+                            size={"md"}
+                        >
                             <ToolbarIconButton
                                 aria-label={"square"}
                                 title={"square"}
                                 icon={<Square />}
                             />
-                        )}
-                        {isBuilderMode && (
                             <ToolbarIconButton
                                 aria-label={"circle"}
                                 title={"circle"}
                                 icon={<Circle />}
                             />
-                        )}
-                        {isBuilderMode && (
                             <ToolbarIconButton
                                 aria-label={"shapes"}
                                 title={"shapes"}
                                 icon={<Triangle />}
                             />
-                        )}
-                    </ButtonGroup>
+                        </ButtonGroup>
+                    )}
 
                     <ButtonGroup
                         gap={0}
@@ -120,32 +109,48 @@ export const ToolbarPanel: FC<PropsWithChildren<ToolbarPanelProps>> = ({
                         orientation={"horizontal"}
                         size={"md"}
                     >
-                        {isBuilderMode && showDelete && (
-                            <ToolbarIconButton
-                                aria-label={"delete selected element"}
-                                icon={<BinMinus />}
-                                title={"delete selected"}
-                                isActive={(selectedNode || selectedEdge) ? true : false}
-                                onClick={() => onSelectedDelete() }
-                            />
-                        )}
-                        {showUndoRedo && (
-                            <ToolbarIconButton
-                                aria-label={"undo last change"}
-                                icon={<Undo />}
-                                title={"undo last change"}
-                                onClick={() => undo()}
-                            />
-                        )}
-                        {showUndoRedo && (
-                            <ToolbarIconButton
-                                aria-label={"redo last change"}
-                                icon={<Redo />}
-                                title={"redo last change"}
-                                onClick={() => redo()}
-                            />
-                        )}
+                        <ToolbarIconButton
+                            aria-label={"comment"}
+                            title={"comment"}
+                            icon={<MessageText />}
+                        />
                     </ButtonGroup>
+
+                    {isBuilderMode && (
+                        <ButtonGroup
+                            gap={0}
+                            spacing={0}
+                            px={2}
+                            orientation={"horizontal"}
+                            size={"md"}
+                        >
+                            {showDelete && (
+                                <ToolbarIconButton
+                                    aria-label={"delete selected element"}
+                                    icon={<BinMinus />}
+                                    title={"delete selected"}
+                                    isActive={(selectedNode || selectedEdge) ? true : false}
+                                    onClick={() => onSelectedDelete() }
+                                />
+                            )}
+                            {showUndoRedo && (
+                                <ToolbarIconButton
+                                    aria-label={"undo last change"}
+                                    icon={<Undo />}
+                                    title={"undo last change"}
+                                    onClick={() => undo()}
+                                />
+                            )}
+                            {showUndoRedo && (
+                                <ToolbarIconButton
+                                    aria-label={"redo last change"}
+                                    icon={<Redo />}
+                                    title={"redo last change"}
+                                    onClick={() => redo()}
+                                />
+                            )}
+                        </ButtonGroup>
+                    )}
 
                     <ButtonGroup
                         gap={0}

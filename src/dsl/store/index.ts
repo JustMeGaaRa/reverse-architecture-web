@@ -82,7 +82,7 @@ const buildDeploymentView = (workspace: Workspace, identifier: Identifier, envir
     }
 }
 
-export const useWorkspace = create(immer<WorkspaceStore>((set, get) => ({
+export const useWorkspace = create(immer<WorkspaceStore>((set) => ({
     setWorkspace: (workspace: Workspace) => {
         set({
             workspace: {

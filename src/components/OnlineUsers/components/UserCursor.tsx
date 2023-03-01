@@ -1,23 +1,31 @@
-import { Avatar } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { FC } from "react";
 import { User } from "../types";
 
 type UserCursorProps = {
     user: User;
-    position: { x: number; y: number };
+    point: { x: number; y: number; };
 }
 
 export const UserCursor: FC<UserCursorProps> = ({
     user,
-    position
+    point
 }) => {
     return (
-        <Avatar
+        <Box
             key={user.username}
-            bgColor={user.color}
-            name={user.fullname}
-            src={user.avatarUrl}
+            position={"absolute"}
+            background={user.color}
+            borderRadius={"full"}
+            borderWidth={1}
+            borderColor={"rgba(255, 255, 255, 0.1)"}
+            width={"10px"}
+            height={"10px"}
             title={user.fullname}
+            left={point.x}
+            top={point.y}
+            cursor={"pointer"}
+            zIndex={100}
         />
     );
 }

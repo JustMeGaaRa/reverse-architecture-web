@@ -1,4 +1,5 @@
 import { Box, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
+import { RoomProvider } from "@y-presence/react";
 import { FC, useCallback, useEffect } from "react";
 import {
     ActivityPanel,
@@ -12,7 +13,6 @@ import {
 import { useC4Diagram } from "../../components/c4-view-renderer/hooks";
 import { templates } from "./Templates";
 import { useWorkspace, Workspace } from "../../dsl";
-import { RoomProvider } from "@y-presence/react";
 
 export const Sandbox: FC = () => {
     const { workspace, setWorkspace } = useWorkspace();

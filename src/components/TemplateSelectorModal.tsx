@@ -44,7 +44,7 @@ export const TemplateSelectorModal: FC<TemplateSelectorModalProps> = ({
                 background={useColorModeValue("whiteAlpha.900", "rgba(31, 33, 35, 0.9)")}
                 borderColor={useColorModeValue("blackAlpha.300", "rgba(255, 255, 255, 0.1)")}
             >
-                <ModalHeader>Select Diagram Template</ModalHeader>
+                <ModalHeader>Select Workspace Template</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
                     <TemplateSelector

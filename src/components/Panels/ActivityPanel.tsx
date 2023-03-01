@@ -16,11 +16,9 @@ export const ActivityPanel: FC<ActivityPanelProps> = ({
     showZoom = true,
     showFitView = true,
 }) => {
-    const zoomSelector = (state) => {
-        return (state.transform[2] * 100);
-    };
+    const zoomSelector = (state) => (state.transform[2] * 100);
     const zoom = useStore(zoomSelector);
-    const { zoomIn, zoomOut, fitView } = useReactFlow();
+    const { zoomIn, zoomOut, zoomTo } = useReactFlow();
     
     const backgroundColor = useColorModeValue("gray.100", "#3F4614");
     const color = useColorModeValue("gray.800", "#E5FF00");
@@ -65,7 +63,7 @@ export const ActivityPanel: FC<ActivityPanelProps> = ({
                                 _active={{
                                     color: activeColor,
                                 }}
-                                onClick={() => fitView({ padding: 0.2, duration: 500 })}
+                                onClick={() => zoomTo(1, { duration: 500 })}
                             >
                                 {`${zoom.toFixed(0)}%`}
                             </Button>

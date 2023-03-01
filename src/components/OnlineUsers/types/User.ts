@@ -2,7 +2,7 @@ export interface User {
     username: string;
     fullname: string;
     avatarUrl: string;
-    point: { x: 0, y: 0 };
+    point: { x: number, y: number };
     color: string;
     isActive: boolean;
 }

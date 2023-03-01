@@ -1,5 +1,5 @@
 import { Result, Ok, Err } from "@sniptt/monads";
-import { ReactFlowJsonObject } from "@reactflow/core";
+import { ReactFlowJsonObject, Viewport, XYPosition } from "@reactflow/core";
 
 const isReactFlowJsonObject = (
     value: object
@@ -23,4 +23,17 @@ export const parseReactFlow = (
     catch (error) {
         return Err(new Error("The file content is not a valid JSON."));
     }
+}
+
+export const projectPoint = (viewport: Viewport, point: XYPosition) => {
+    return {
+        x: (point.x * viewport.zoom) + viewport.x,
+        y: (point.y * viewport.zoom) + viewport.y
+    };
+}
+export const normalizePoint = (viewport: Viewport, point: XYPosition) => {
+    return {
+        x: (point.x - viewport.x) / viewport.zoom,
+        y: (point.y - viewport.y) / viewport.zoom
+    };
 }

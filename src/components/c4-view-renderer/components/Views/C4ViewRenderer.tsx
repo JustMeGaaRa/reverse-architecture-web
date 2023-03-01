@@ -19,9 +19,10 @@ import {
 } from "react";
 import { ElementNodeWrapper, ElementNodeWrapperProps } from "../Nodes/ElementNode";
 import { RelationshipEdgeWrapper } from "../Edges/RelationshipEdge";
-import { parseReactFlow } from "../../utils";
-import { Tag } from "../../../../dsl";
+import { UserCursor, useUserPresence } from "../../../OnlineUsers";
 import { useC4Diagram } from "../../hooks";
+import { Tag } from "../../../../dsl";
+import { normalizePoint, parseReactFlow, projectPoint } from "../../utils";
 
 const NodeTypes = {
     element: ElementNodeWrapper,
@@ -52,123 +53,11 @@ export const C4DiagramRenderer: FC<PropsWithChildren<C4DiagramRendererProps>> = 
     children,
     onImport
 }) => {
-    const [nodes, setNodes, onNodesChange] = useNodesState([]);
-    const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+    const [nodes, , onNodesChange] = useNodesState([]);
+    const [edges, , onEdgesChange] = useEdgesState([]);
 
     const reactFlowRef = useRef<HTMLDivElement>(null);
-    const reactFlow = useReactFlow();    
-    
-    // const addNode = useCallback((position, type) => {
-    //     const reactFlowBounds = reactFlowRef.current.getBoundingClientRect();
-    //     const relativePosition = reactFlow.project({
-    //         x: position.x - reactFlowBounds.left,
-    //         y: position.y - reactFlowBounds.top
-    //     });
-    //     const node = {
-    //         id: v4(),
-    //         type: type ?? "roundedBox",
-    //         data: {
-    //             element: addElement(type)
-    //         },
-    //         position: relativePosition,
-    //         parentNode: undefined
-    //     };
-    //     setNodes(nodes => nodes.concat(node));
-    // }, [setNodes, addElement, reactFlow]);
-
-    // const addEdge = useCallback((connection) => {
-    //     const { source, target } = connection;
-    //     const edge = {
-    //         id: v4(),
-    //         type: "default",
-    //         data: {
-    //             relationship: addRelationship(source, target)
-    //         },
-    //         source: source,
-    //         target: target,
-    //     };
-    //     setEdges(edges => edges.concat(edge));
-    // }, [setEdges, addRelationship])
-
-    // const onConnect = useCallback((connection: Connection) => {
-    //     if (!connection.source || !connection.target) return;
-    //     addEdge(connection);
-    // }, [addEdge]);
-
-    const onNodeDrag = useCallback((event, draggedNode) => {
-        // NOTE: only allow to update nodes that are dragged and are not of type scope
-        if (draggedNode.type === "scope") return;
-        
-        const intersections = reactFlow
-            .getIntersectingNodes(draggedNode)
-            .filter(node => node.type === "scope");
-        const draggedOverScope = intersections.length > 0;
-
-        setNodes(nodes => nodes.map(node => {
-            if (node.type === "scope") {
-                return {
-                    ...node,
-                    data: {
-                        ...node.data,
-                        draggedOver: draggedOverScope
-                    }
-                };
-            }
-
-            return node;
-        }));
-    }, [setNodes, reactFlow]);
-
-    const onNodeDragStop = useCallback((event, draggedNode) => {
-        // NOTE: only allow to update nodes that are dragged and are not of type scope
-        if (draggedNode.type === "scope") return;
-        
-        const intersections = reactFlow
-            .getIntersectingNodes(draggedNode)
-            .filter(node => node.type === "scope");
-        const draggedOverScope = intersections.length > 0;
-        const wasInsideScope = draggedNode.parentNode !== undefined;
-        
-        setNodes(nodes => nodes.map(node => {
-            if (node.type === "scope") {
-                return {
-                    ...node,
-                    data: {
-                        ...node.data,
-                        draggedOver: false
-                    }
-                };
-            }
-
-            if (node.id === draggedNode.id && wasInsideScope && !draggedOverScope) {
-                const reactFlowBounds = reactFlowRef.current.getBoundingClientRect();
-                const outsideScopePosition = reactFlow.project({
-                    x: event.clientX - reactFlowBounds.left,
-                    y: event.clientY - reactFlowBounds.top
-                });
-                return {
-                    ...node,
-                    position: outsideScopePosition,
-                    parentNode: undefined
-                };
-            }
-
-            if (node.id === draggedNode.id && !wasInsideScope && draggedOverScope) {
-                const scope = intersections[0];
-                const insideScopePosition = {
-                    x: node.position.x - scope.position.x,
-                    y: node.position.y - scope.position.y
-                };
-                return {
-                    ...node,
-                    position: insideScopePosition,
-                    parentNode: scope.id
-                };
-            }
-
-            return node;
-        }));
-    }, [setNodes, reactFlow]);
+    const reactFlow = useReactFlow();
 
     const defaultStyle: CSSProperties = {
         border: "dashed 3px transparent",
@@ -213,6 +102,14 @@ export const C4DiagramRenderer: FC<PropsWithChildren<C4DiagramRendererProps>> = 
         }
     }, [renderContainerView, renderComponentView, fitView]);
 
+    const viewport = reactFlow.getViewport();
+    const { others, setSelfPoint } = useUserPresence();
+
+    const onMouseMove = useCallback((event) => {
+        const point = normalizePoint(viewport, { x: event.clientX, y: event.clientY });
+        setSelfPoint(point);
+    }, [setSelfPoint, viewport]);
+
     return (
         <ReactFlow
             connectionMode={ConnectionMode.Loose}
@@ -225,11 +122,8 @@ export const C4DiagramRenderer: FC<PropsWithChildren<C4DiagramRendererProps>> = 
             proOptions={{ hideAttribution: true }}
             ref={reactFlowRef}
             snapGrid={[40, 40]}
-            // snapToGrid
             onNodeDoubleClick={onNodeDoubleClick}
-            // onConnect={onConnect}
-            // onNodeDrag={onNodeDrag}
-            // onNodeDragStop={onNodeDragStop}
+            onMouseMove={onMouseMove}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onDragOver={() => setIsDragOver(true)}
@@ -242,6 +136,13 @@ export const C4DiagramRenderer: FC<PropsWithChildren<C4DiagramRendererProps>> = 
                 gap={[40, 40]}
             />
             
+            {others.map(user => (
+                <UserCursor
+                    key={user.id}
+                    user={user.presence}
+                    point={projectPoint(viewport, user.presence.point)}
+                />
+            ))}
             {children}
         </ReactFlow>
     );
