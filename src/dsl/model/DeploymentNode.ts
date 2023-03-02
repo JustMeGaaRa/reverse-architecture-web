@@ -1,11 +1,11 @@
-import { ContainerInstance } from "./ContainerInstance";
+import { ContainerInstance, toContainerInstanceString } from "./ContainerInstance";
 import { Element } from "./Element";
 import { Identifier } from "./Identifier";
 import { InfrastructureNode } from "./InfrastructureNode";
 import { Perspectives } from "./Perspectives";
 import { Properties } from "./Properties";
 import { Relationship } from "./Relationship";
-import { SoftwareSystemInstance } from "./SoftwareSystemInstance";
+import { SoftwareSystemInstance, toSoftwareSystemInstanceString } from "./SoftwareSystemInstance";
 import { Tag } from "./Tag";
 import { Technology } from "./Technology";
 import { Url } from "./Url";
@@ -25,6 +25,14 @@ export interface DeploymentNode extends Omit<Element, "description"> {
     url?: Url;
     properties?: Properties;
     perspectives?: Perspectives;
+}
+
+export function toDeploymentNodeString(deploymentNode: DeploymentNode): string {
+    return deploymentNode ? `deploymentNode "${deploymentNode.name}" {
+        ${deploymentNode.deploymentNodes?.map(toDeploymentNodeString).join("\n") ?? ""}
+        ${deploymentNode.softwareSystemInstances?.map(toSoftwareSystemInstanceString).join("\n") ?? ""}
+        ${deploymentNode.containerInstances?.map(toContainerInstanceString).join("\n") ?? ""}
+    }` : "";
 }
 
 export function deploymentNode(

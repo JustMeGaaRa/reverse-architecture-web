@@ -25,7 +25,7 @@ export const UserCursor: FC<UserCursorProps> = ({
             left={point.x}
             top={point.y}
             cursor={"pointer"}
-            zIndex={100}
+            zIndex={5}
         />
     );
 }

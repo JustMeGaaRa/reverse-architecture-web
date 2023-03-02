@@ -1,3 +1,3 @@
 export * from "./useDragAndDrop";
-export * from "./useC4Diagram";
+export * from "./useWorkspaceRenderer";
 export * from "./useInteractionMode";

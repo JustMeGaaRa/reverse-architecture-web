@@ -1,10 +1,10 @@
-import { Component } from "./Component";
+import { Component, toComponentString } from "./Component";
 import { Element } from "./Element";
 import { Group } from "./Group";
 import { Identifier } from "./Identifier";
 import { Perspectives } from "./Perspectives";
 import { Properties } from "./Properties";
-import { Relationship } from "./Relationship";
+import { Relationship, toRelationshipString } from "./Relationship";
 import { Tag } from "./Tag";
 import { Technology } from "./Technology";
 import { Url } from "./Url";
@@ -21,6 +21,13 @@ export interface Container extends Element {
     properties?: Properties;
     perspectives?: Perspectives;
     relationships?: Relationship[];
+}
+
+export function toContainerString(container: Container): string {
+    return `${container.identifier} = container "${container.name}" "${container.description ?? ""}" {
+        \t${container.components?.map(toComponentString).join("\n") ?? ""}
+        \t${container.relationships?.map(toRelationshipString).join("\n") ?? ""}
+    }`
 }
 
 export function container(

@@ -28,7 +28,7 @@ import {
     GenericView
 } from "../../../dsl";
 
-export const useC4Diagram = () => {
+export const useWorkspaceRenderer = () => {
     const reactFlow = useReactFlow();
     const store = useWorkspace();
 
@@ -83,6 +83,10 @@ export const useC4Diagram = () => {
     }, [store]);
 
     const fromWorkspaceRelationships = useCallback((view: GenericView, workspace: Workspace) => {
+        if (!view) {
+            return [];
+        }
+
         return workspace.model.relationships
             .filter(edge => view.layout[edge.sourceIdentifier] && view.layout[edge.targetIdentifier])
             .map(edge => fromEdge(edge));
@@ -96,56 +100,73 @@ export const useC4Diagram = () => {
     const renderSystemContextView = useCallback((softwareSystemIdentifier: Identifier) => {
         const fromSystemContextView = (view: SystemContextView, workspace: Workspace) => {
             const softwareSystem = findSoftwareSystem(workspace, view.softwareSystemIdentifier);
-            const layout = view.layout;
             
             return [
-                fromNode({ node: softwareSystem, layout }),
-                ...view.people.map(node => fromNode({ node, layout })),
-                ...view.softwareSystems.map(node => fromNode({ node, layout }))
+                fromNode({ node: softwareSystem, layout: view.layout }),
+                ...view.people.map(node => fromNode({ node, layout: view.layout })),
+                ...view.softwareSystems.map(node => fromNode({ node, layout: view.layout }))
             ];
         };
         
         const view = store.workspace.views.systemContexts.find(x => x.softwareSystemIdentifier === softwareSystemIdentifier);
-        store.setName(view.title);
+        // store.setName(view.title);
         reactFlow.setNodes(fromSystemContextView(view, store.workspace));
         reactFlow.setEdges(fromWorkspaceRelationships(view, store.workspace));
     }, [reactFlow, store, fromNode, fromWorkspaceRelationships]);
 
     const renderContainerView = useCallback((softwareSystemIdentifier: Identifier) => {
         const fromContainerView = (view: ContainerView, workspace: Workspace) => {
-            const softwareSystem = findSoftwareSystem(workspace, view.softwareSystemIdentifier);
-            const layout = view.layout;
-    
+            const softwareSystem = findSoftwareSystem(workspace, softwareSystemIdentifier);
+            
+            if (!view) {
+                const layout = {
+                    [softwareSystem.identifier]: { x: 0, y: 0, width: 500, height: 500 }
+                }
+
+                return [
+                    fromNode({ node: softwareSystem, expanded: true, layout }),
+                ];
+            }
+            
             return [
-                fromNode({ node: softwareSystem, expanded: true, layout }),
-                ...view.people.map(node => fromNode({ node, layout })),
-                ...view.softwareSystems.map(node => fromNode({ node, layout })),
-                ...view.containers?.map(node => fromNode({ node, parentNode: softwareSystem.identifier, layout })) ?? [],
+                fromNode({ node: softwareSystem, expanded: true, layout: view.layout }),
+                ...view.people.map(node => fromNode({ node, layout: view.layout })),
+                ...view.softwareSystems.map(node => fromNode({ node, layout: view.layout })),
+                ...view.containers?.map(node => fromNode({ node, parentNode: softwareSystem.identifier, layout: view.layout })) ?? [],
             ];
         }
-
+        
         const view = store.workspace.views.containers.find(x => x.softwareSystemIdentifier === softwareSystemIdentifier);
-        store.setName(view.title);
+        // store.setName(view?.title ?? `${store.workspace.name} - ${softwareSystem.name}`);
         reactFlow.setNodes(fromContainerView(view, store.workspace));
         reactFlow.setEdges(fromWorkspaceRelationships(view, store.workspace));
     }, [reactFlow, store, fromNode, fromWorkspaceRelationships]);
 
     const renderComponentView = useCallback((containerIdentifier: Identifier) => {
         const fromComponentView = (view: ComponentView, workspace: Workspace) => {
-            const container = findContainer(workspace, view.containerIdentifier);
-            const layout = view.layout;
-    
+            const container = findContainer(workspace, containerIdentifier);
+
+            if (!view) {
+                const layout = {
+                    [container.identifier]: { x: 0, y: 0, width: 500, height: 500 }
+                }
+                
+                return [
+                    fromNode({ node: container, expanded: true, layout }),
+                ];
+            }
+            
             return [
-                fromNode({ node: container, expanded: true, layout }),
-                ...view.people.map(node => fromNode({ node, layout })),
-                ...view.softwareSystems.map(node => fromNode({ node, layout })),
-                ...view.containers.map(node => fromNode({ node, layout })),
-                ...view.components?.map(node => fromNode({ node, parentNode: container.identifier, layout })) ?? [],
+                fromNode({ node: container, expanded: true, layout: view.layout }),
+                ...view.people.map(node => fromNode({ node, layout: view.layout })),
+                ...view.softwareSystems.map(node => fromNode({ node, layout: view.layout })),
+                ...view.containers.map(node => fromNode({ node, layout: view.layout })),
+                ...view.components?.map(node => fromNode({ node, parentNode: container.identifier, layout: view.layout })) ?? [],
             ];
         }
-
+        
         const view = store.workspace.views.components.find(x => x.containerIdentifier === containerIdentifier);
-        store.setName(view.title);
+        // store.setName(view?.title ?? `${store.workspace.name} - ${container.name}`);
         reactFlow.setNodes(fromComponentView(view, store.workspace));
         reactFlow.setEdges(fromWorkspaceRelationships(view, store.workspace));
     }, [reactFlow, store, fromNode, fromWorkspaceRelationships]);

@@ -20,7 +20,7 @@ import {
 import { ElementNodeWrapper, ElementNodeWrapperProps } from "../Nodes/ElementNode";
 import { RelationshipEdgeWrapper } from "../Edges/RelationshipEdge";
 import { UserCursor, useUserPresence } from "../../../OnlineUsers";
-import { useC4Diagram } from "../../hooks";
+import { useWorkspaceRenderer } from "../../hooks";
 import { Tag } from "../../../../dsl";
 import { normalizePoint, parseReactFlow, projectPoint } from "../../utils";
 
@@ -88,7 +88,7 @@ export const C4DiagramRenderer: FC<PropsWithChildren<C4DiagramRendererProps>> = 
         });
     }, [onImport]);
 
-    const { renderContainerView, renderComponentView } = useC4Diagram();
+    const { renderContainerView, renderComponentView } = useWorkspaceRenderer();
     const { fitView } = useReactFlow();
 
     const onNodeDoubleClick = useCallback((event, node: Node<ElementNodeWrapperProps>) => {

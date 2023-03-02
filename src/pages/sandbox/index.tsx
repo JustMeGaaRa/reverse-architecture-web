@@ -1,6 +1,6 @@
 import { Box, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
 import { RoomProvider } from "@y-presence/react";
-import { FC, useCallback, useEffect } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import {
     ActivityPanel,
     ToolbarPanel,
@@ -10,13 +10,14 @@ import {
     TemplateSelectorModal,
     awareness
 } from "../../components";
-import { useC4Diagram } from "../../components/c4-view-renderer/hooks";
+import { useWorkspaceRenderer } from "../../components/c4-view-renderer/hooks";
 import { templates } from "./Templates";
 import { useWorkspace, Workspace } from "../../dsl";
 
 export const Sandbox: FC = () => {
     const { workspace, setWorkspace } = useWorkspace();
-    const { renderSystemContextView, fromObject } = useC4Diagram();
+    const { renderSystemContextView, fromObject } = useWorkspaceRenderer();
+    const [isInitialized, setIsInitialized] = useState(false);
 
     const toast = useToast();
     const onImport = useCallback((result) => {
@@ -51,11 +52,12 @@ export const Sandbox: FC = () => {
     const initialPresence = createAnonymousUser();
 
     useEffect(() => {
-        if (workspace?.views.systemContexts?.length > 0) {
-            const identifier = workspace.views.systemContexts.at(0).softwareSystemIdentifier;
+        if (!isInitialized && workspace) {
+            const identifier = workspace.views.systemContexts[0].softwareSystemIdentifier;
             renderSystemContextView(identifier);
+            setIsInitialized(true);
         }
-    }, [workspace, renderSystemContextView]);
+    }, [workspace, renderSystemContextView, isInitialized, setIsInitialized]);
 
     useEffect(() => {
         onOpen();

@@ -1,5 +1,5 @@
 import { DeploymentGroup } from "./DeploymentGroup";
-import { DeploymentNode } from "./DeploymentNode";
+import { DeploymentNode, toDeploymentNodeString } from "./DeploymentNode";
 import { Identifier } from "./Identifier";
 import { Relationship } from "./Relationship";
 
@@ -9,6 +9,12 @@ export interface DeploymentEnvironment {
     deploymentGroups?: DeploymentGroup[];
     deploymentNodes?: DeploymentNode[];
     relationships?: Relationship[];
+}
+
+export function toDeploymentEnvironmentString(deploymentEnvironment: DeploymentEnvironment): string {
+    return deploymentEnvironment ? `deploymentEnvironment "${deploymentEnvironment.name}" {
+        ${deploymentEnvironment.deploymentNodes?.map(toDeploymentNodeString).join("\n") ?? ""}
+    }` : "";
 }
 
 export function deploymentEnvironment(

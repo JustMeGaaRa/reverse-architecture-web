@@ -25,73 +25,73 @@ export const BigBankPlc = workspace("Big Bank plc", "",
     model(
         [
             person(
-                "pn-banking-customer",
+                "pn_banking_customer",
                 "Personal Banking Customer",
                 "A customer of the bank, with personal bank accounts."
             )
         ],
         [
             softwareSystem(
-                "ss-internet-banking",
+                "ss_internet_banking",
                 "Internet Banking System",
                 "Allows customers to view information about their bank accounts, and make payments.",
                 [
                     container(
-                        "con-web-app",
+                        "con_web_app",
                         "Web Application",
                         "Delivers the static content and the Internet banking single page application.",
                         technologies("Java", "Spring MVC"),
                     ),
                     container(
-                        "con-single-page-app",
+                        "con_single_page_app",
                         "Single-Page Application",
                         "Provides all of the Internet banking functionality to customers via their web browser.",
                         technologies("JavaScript", "Angular")
                     ),
                     container(
-                        "con-mobile-app",
+                        "con_mobile_app",
                         "Mobile App",
                         "Provides limited subset of the Internet banking functionality to the customers via their mobile device.",
                         technologies("Xamarin")
                     ),
                     container(
-                        "con-api-application",
+                        "con_api_application",
                         "API Application",
                         "Provides Internet banking functionality via a JSON/HTTPS API.",
                         technologies("Java", "Spring MVC"),
                         [
                             component(
-                                "cmp-signin-ctrl",
+                                "cmp_signin_ctrl",
                                 "Sign-In Controller",
                                 "Allows user to sign-in in to the Internat Banking System.",
                                 technologies("Spring MVC REST Controller")
                             ),
                             component(
-                                "cmp-reset-pwd-ctrl",
+                                "cmp_reset_pwd_ctrl",
                                 "Reset Password Controller",
                                 "Allows user to reset their password with a single use URL.",
                                 technologies("Spring MVC REST Controller")
                             ),
                             component(
-                                "cmp-accounts-summary-ctrl",
+                                "cmp_accounts_summary_ctrl",
                                 "Accounts Summary Controller",
                                 "Provides customers with a summary of their bank accouts.",
                                 technologies("Spring MVC REST Controller")
                             ),
                             component(
-                                "cmp-security-component",
+                                "cmp_security_component",
                                 "Security Component",
                                 "Provides functionality related to signing in, changing passwords, etc.",
                                 technologies("Spring Bean")
                             ),
                             component(
-                                "cmp-email-component",
+                                "cmp_email_component",
                                 "E-mail Component",
                                 "Sends e-mails to users.",
                                 technologies("Spring Bean")
                             ),
                             component(
-                                "cmp-mainframe-facade",
+                                "cmp_mainframe_facade",
                                 "Mainframe Banking System Facade",
                                 "A facade onto the mainframe banking system.",
                                 technologies("Spring Bean")
@@ -99,7 +99,7 @@ export const BigBankPlc = workspace("Big Bank plc", "",
                         ]
                     ),
                     container(
-                        "db-database-1",
+                        "db_database_1",
                         "Database",
                         "Stores user registration information, hashed authentication credential, access logs, etc.",
                         technologies("Oracle Database Schema")
@@ -107,14 +107,14 @@ export const BigBankPlc = workspace("Big Bank plc", "",
                 ]
             ),
             softwareSystem(
-                "ss-mainframe-banking",
+                "ss_mainframe_banking",
                 "Mainframe Banking System",
                 "Stores all of the core banking information about customers, accounts, transactions, etc.",
                 [],
                 tags("External")
             ),
             softwareSystem(
-                "ss-email-system",
+                "ss_email_system",
                 "E-mail System",
                 "The internal Microsoft Exchange e-mail system.",
                 [],
@@ -123,11 +123,11 @@ export const BigBankPlc = workspace("Big Bank plc", "",
         ],
         [
             deploymentEnvironment(
-                "live-env",
+                "live_env",
                 "Live",
                 [
                     deploymentNode(
-                        "dn-customers-computer",
+                        "dn_customers_computer",
                         "Customer's Computer",
                         undefined,
                         technologies("Microsoft Windows or Apple macOS"),
@@ -135,7 +135,7 @@ export const BigBankPlc = workspace("Big Bank plc", "",
                         undefined,
                         [
                             deploymentNode(
-                                "dn-web-browser",
+                                "dn_web_browser",
                                 "Web Browser",
                                 undefined,
                                 technologies("Chrome, Firefox, Safari, or Edge"),
@@ -143,12 +143,12 @@ export const BigBankPlc = workspace("Big Bank plc", "",
                                 undefined,
                                 undefined,
                                 undefined,
-                                [ containerInstance("con-single-page-app", "con-single-page-app-inst-1") ]
+                                [ containerInstance("con_single_page_app", "con_single_page_app_inst_1") ]
                             )
                         ]
                     ),
                     deploymentNode(
-                        "dn-customers-mobile",
+                        "dn_customers_mobile",
                         "Customer's Mobile Device",
                         undefined,
                         technologies("Apple iOS or Android"),
@@ -156,10 +156,10 @@ export const BigBankPlc = workspace("Big Bank plc", "",
                         undefined,
                         undefined,
                         undefined,
-                        [ containerInstance("con-mobile-app", "con-mobile-app-inst-1") ]
+                        [ containerInstance("con_mobile_app", "con_mobile_app_inst_1") ]
                     ),
                     deploymentNode(
-                        "dn-big-bank-plc",
+                        "dn_big_bank_plc",
                         "Big Bank plc",
                         undefined,
                         technologies("Big Bank plc data center"),
@@ -167,7 +167,7 @@ export const BigBankPlc = workspace("Big Bank plc", "",
                         undefined,
                         [
                             deploymentNode(
-                                "dn-bigbank-web",
+                                "dn_bigbank_web",
                                 "bigbank-web***",
                                 undefined,
                                 technologies("Ubuntu 16.04 LTS"),
@@ -175,7 +175,7 @@ export const BigBankPlc = workspace("Big Bank plc", "",
                                 undefined,
                                 [
                                     deploymentNode(
-                                        "dn-apache-tomcat-1",
+                                        "dn_apache_tomcat_1",
                                         "Apache Tomcat",
                                         undefined,
                                         technologies("Apache Tomcat 8.x"),
@@ -183,12 +183,12 @@ export const BigBankPlc = workspace("Big Bank plc", "",
                                         undefined,
                                         undefined,
                                         undefined,
-                                        [ containerInstance("con-web-app", "con-web-app-inst-1") ]
+                                        [ containerInstance("con_web_app", "con_web_app_inst_1") ]
                                     )
                                 ],
                             ),
                             deploymentNode(
-                                "dn-bigbank-api",
+                                "dn_bigbank_api",
                                 "bigbank-api***",
                                 undefined,
                                 technologies("Ubuntu 16.04.LTS"),
@@ -196,7 +196,7 @@ export const BigBankPlc = workspace("Big Bank plc", "",
                                 undefined,
                                 [
                                     deploymentNode(
-                                        "dn-apache-tomcat-2",
+                                        "dn_apache_tomcat_2",
                                         "Apache Tomcat",
                                         undefined,
                                         technologies("Apache Tomcat 8.x"),
@@ -204,12 +204,12 @@ export const BigBankPlc = workspace("Big Bank plc", "",
                                         undefined,
                                         undefined,
                                         undefined,
-                                        [ containerInstance("con-api-application", "con-api-application-inst-1") ]
+                                        [ containerInstance("con_api_application", "con_api_application_inst_1") ]
                                     )
                                 ]
                             ),
                             deploymentNode(
-                                "dn-bigbank-db01",
+                                "dn_bigbank_db01",
                                 "bigbank-db01",
                                 undefined,
                                 technologies("Ubuntu 16.04 LTS"),
@@ -217,7 +217,7 @@ export const BigBankPlc = workspace("Big Bank plc", "",
                                 undefined,
                                 [
                                     deploymentNode(
-                                        "dn-oracle-primary",
+                                        "dn_oracle_primary",
                                         "Oracle - Primary",
                                         undefined,
                                         technologies("Oracle 12c"),
@@ -225,12 +225,12 @@ export const BigBankPlc = workspace("Big Bank plc", "",
                                         undefined,
                                         undefined,
                                         undefined,
-                                        [ containerInstance("db-database-1", "db-database-1-inst-1") ]
+                                        [ containerInstance("db_database_1", "db_database_1_inst_1") ]
                                     )
                                 ]
                             ),
                             deploymentNode(
-                                "dn-bigbank-db02",
+                                "dn_bigbank_db02",
                                 "bigbank-db02",
                                 undefined,
                                 technologies("Ubuntu 16.04 LTS"),
@@ -238,7 +238,7 @@ export const BigBankPlc = workspace("Big Bank plc", "",
                                 tags("Secondary"),
                                 [
                                     deploymentNode(
-                                        "dn-oracle-secondary",
+                                        "dn_oracle_secondary",
                                         "Oracle - Secondary",
                                         undefined,
                                         technologies("Oracle 12c"),
@@ -246,19 +246,19 @@ export const BigBankPlc = workspace("Big Bank plc", "",
                                         undefined,
                                         undefined,
                                         undefined,
-                                        [ containerInstance("db-database-1", "db-database-1-inst-2") ]
+                                        [ containerInstance("db_database_1", "db_database_1_inst_2") ]
                                     )
                                 ]
                             ),
                             deploymentNode(
-                                "dn-bigbank-prod001",
+                                "dn_bigbank_prod001",
                                 "bigbank-prod001",
                                 undefined,
                                 undefined,
                                 undefined,
                                 undefined,
                                 undefined,
-                                [ softwareSystemInstance("ss-mainframe-banking", "ss-mainframe-banking-inst-1") ]
+                                [ softwareSystemInstance("ss_mainframe_banking", "ss_mainframe_banking_inst_1") ]
                             )
                         ]
                     )
@@ -268,153 +268,153 @@ export const BigBankPlc = workspace("Big Bank plc", "",
         [
             // System Context Relationships
             relationship(
-                "pn-banking-customer",
-                "ss-internet-banking",
+                "pn_banking_customer",
+                "ss_internet_banking",
                 "Views account balances, and makes payments using",
             ),
             relationship(
-                "ss-email-system",
-                "pn-banking-customer",
+                "ss_email_system",
+                "pn_banking_customer",
                 "Sends e-mails to",
             ),
             relationship(
-                "ss-internet-banking",
-                "ss-email-system",
+                "ss_internet_banking",
+                "ss_email_system",
                 "Sends e-mails using",
             ),
             relationship(
-                "ss-internet-banking",
-                "ss-mainframe-banking",
+                "ss_internet_banking",
+                "ss_mainframe_banking",
                 "Gets account information from, and makes payments using",
             ),
             // Container Relationships
             relationship(
-                "pn-banking-customer",
-                "con-web-app",
+                "pn_banking_customer",
+                "con_web_app",
                 "Visits bigbank.com/id using",
                 technologies("HTTPS")
             ),
             relationship(
-                "pn-banking-customer",
-                "con-single-page-app",
+                "pn_banking_customer",
+                "con_single_page_app",
                 "Views account balances, and makes payments using",
             ),
             relationship(
-                "pn-banking-customer",
-                "con-mobile-app",
+                "pn_banking_customer",
+                "con_mobile_app",
                 "Views account balances, and makes payments using",
             ),
             relationship(
-                "con-web-app",
-                "con-single-page-app",
+                "con_web_app",
+                "con_single_page_app",
                 "Delivers to the customer's web browser",
             ),
             relationship(
-                "con-single-page-app",
-                "con-api-application",
+                "con_single_page_app",
+                "con_api_application",
                 "Makes API calls to",
                 technologies("JSON", "HTTPS")
             ),
             relationship(
-                "con-mobile-app",
-                "con-api-application",
+                "con_mobile_app",
+                "con_api_application",
                 "Makes API calls to",
                 technologies("JSON", "HTTPS")
             ),
             relationship(
-                "con-api-application",
-                "db-database-1",
+                "con_api_application",
+                "db_database_1",
                 "Reads from and writes to",
                 technologies("JDBC")
             ),
             relationship(
-                "con-api-application",
-                "ss-email-system",
+                "con_api_application",
+                "ss_email_system",
                 "Sends e-mails using",
             ),
             relationship(
-                "con-api-application",
-                "ss-mainframe-banking",
+                "con_api_application",
+                "ss_mainframe_banking",
                 "Makes API calls to",
                 technologies("JSON", "HTTPS")
             ),
             // Component Relationships
             relationship(
-                "con-single-page-app",
-                "cmp-signin-ctrl",
+                "con_single_page_app",
+                "cmp_signin_ctrl",
                 "Makes API calls to",
                 technologies("JSON", "HTTPS")
             ),
             relationship(
-                "con-single-page-app",
-                "cmp-reset-pwd-ctrl",
+                "con_single_page_app",
+                "cmp_reset_pwd_ctrl",
                 "Makes API calls to",
                 technologies("JSON", "HTTPS")
             ),
             relationship(
-                "con-single-page-app",
-                "cmp-accounts-summary-ctrl",
+                "con_single_page_app",
+                "cmp_accounts_summary_ctrl",
                 "Makes API calls to",
                 technologies("JSON", "HTTPS")
             ),
             relationship(
-                "con-mobile-app",
-                "cmp-signin-ctrl",
+                "con_mobile_app",
+                "cmp_signin_ctrl",
                 "Makes API calls to",
                 technologies("JSON", "HTTPS")
             ),
             relationship(
-                "con-mobile-app",
-                "cmp-reset-pwd-ctrl",
+                "con_mobile_app",
+                "cmp_reset_pwd_ctrl",
                 "Makes API calls to",
                 technologies("JSON", "HTTPS")
             ),
             relationship(
-                "con-mobile-app",
-                "cmp-accounts-summary-ctrl",
+                "con_mobile_app",
+                "cmp_accounts_summary_ctrl",
                 "Makes API calls to",
                 technologies("JSON", "HTTPS")
             ),
             relationship(
-                "cmp-signin-ctrl",
-                "cmp-security-component",
+                "cmp_signin_ctrl",
+                "cmp_security_component",
                 "Uses",
             ),
             relationship(
-                "cmp-reset-pwd-ctrl",
-                "cmp-security-component",
+                "cmp_reset_pwd_ctrl",
+                "cmp_security_component",
                 "Uses",
             ),
             relationship(
-                "cmp-reset-pwd-ctrl",
-                "cmp-email-component",
+                "cmp_reset_pwd_ctrl",
+                "cmp_email_component",
                 "Uses",
             ),
             relationship(
-                "cmp-accounts-summary-ctrl",
-                "cmp-mainframe-facade",
+                "cmp_accounts_summary_ctrl",
+                "cmp_mainframe_facade",
                 "Uses",
             ),
             relationship(
-                "cmp-security-component",
-                "db-database-1",
+                "cmp_security_component",
+                "db_database_1",
                 "Reads from and writes to",
                 technologies("JDBC"),
             ),
             relationship(
-                "cmp-email-component",
-                "ss-email-system",
-                "Sends e-mails using",
+                "cmp_email_component",
+                "ss_email_system",
+                "Sends e_mails using",
             ),
             relationship(
-                "cmp-mainframe-facade",
-                "ss-mainframe-banking",
+                "cmp_mainframe_facade",
+                "ss_mainframe_banking",
                 "Makes API calls to",
                 technologies("XML", "HTTPS")
             ),
             relationship(
-                "dn-oracle-primary",
-                "dn-oracle-secondary",
+                "dn_oracle_primary",
+                "dn_oracle_secondary",
                 "Replicates data to",
             )
         ]
@@ -422,85 +422,85 @@ export const BigBankPlc = workspace("Big Bank plc", "",
     views(
         [
             systemContextView(
-                "ss-internet-banking",
+                "ss_internet_banking",
                 "Template",
                 "Internet Banking System",
                 {
-                    ["pn-banking-customer"]: { x: 0, y: 0 },
-                    ["ss-internet-banking"]: { x: 0, y: 400 },
-                    ["ss-email-system"]: { x: 480, y: 400 },
-                    ["ss-mainframe-banking"]: { x: 0, y: 800 }
+                    ["pn_banking_customer"]: { x: 0, y: 0 },
+                    ["ss_internet_banking"]: { x: 0, y: 400 },
+                    ["ss_email_system"]: { x: 480, y: 400 },
+                    ["ss_mainframe_banking"]: { x: 0, y: 800 }
                 }
             )
         ],
         [
             containerView(
-                "ss-internet-banking",
+                "ss_internet_banking",
                 "Template",
                 "Internet Banking System",
                 {
-                    ["pn-banking-customer"]: { x: 800, y: 0 },
-                    ["ss-internet-banking"]: { x: 0, y: 380, width: 1320, height: 720 },
-                    ["ss-email-system"]: { x: 1500, y: 420 },
-                    ["ss-mainframe-banking"]: { x: 1500, y: 820 },
-                    ["con-web-app"]: { x: 40, y: 40 },
-                    ["con-single-page-app"]: { x: 640, y: 40 },
-                    ["con-mobile-app"]: { x: 980, y: 40 },
-                    ["con-api-application"]: { x: 800, y: 440 },
-                    ["db-database-1"]: { x: 40, y: 440 },
+                    ["pn_banking_customer"]: { x: 800, y: 0 },
+                    ["ss_internet_banking"]: { x: 0, y: 380, width: 1320, height: 720 },
+                    ["ss_email_system"]: { x: 1500, y: 420 },
+                    ["ss_mainframe_banking"]: { x: 1500, y: 820 },
+                    ["con_web_app"]: { x: 40, y: 40 },
+                    ["con_single_page_app"]: { x: 640, y: 40 },
+                    ["con_mobile_app"]: { x: 980, y: 40 },
+                    ["con_api_application"]: { x: 800, y: 440 },
+                    ["db_database_1"]: { x: 40, y: 440 },
                 }
             )
         ],
         [
             componentView(
-                "con-api-application",
+                "con_api_application",
                 "Template",
-                "Internet Banking System - API Application",
+                "Internet Banking System _ API Application",
                 {
-                    ["ss-internet-banking"]: { x: 0, y: 0, width: 1660, height: 1380 },
-                    ["ss-email-system"]: { x: 680, y: 1100 },
-                    ["ss-mainframe-banking"]: { x: 1280, y: 1100 },
-                    ["con-single-page-app"]: { x: 380, y: 40 },
-                    ["con-mobile-app"]: { x: 980, y: 40 },
-                    ["con-api-application"]: { x: 40, y: 380, width: 1580, height: 600 },
-                    ["db-database-1"]: { x: 80, y: 1100 },
-                    ["cmp-signin-ctrl"]: { x: 40, y: 40 },
-                    ["cmp-reset-pwd-ctrl"]: { x: 640, y: 40 },
-                    ["cmp-accounts-summary-ctrl"]: { x: 1240, y: 40 },
-                    ["cmp-security-component"]: { x: 40, y: 320 },
-                    ["cmp-email-component"]: { x: 640, y: 320 },
-                    ["cmp-mainframe-facade"]: { x: 1240, y: 320 },
+                    ["ss_internet_banking"]: { x: 0, y: 0, width: 1660, height: 1380 },
+                    ["ss_email_system"]: { x: 680, y: 1100 },
+                    ["ss_mainframe_banking"]: { x: 1280, y: 1100 },
+                    ["con_single_page_app"]: { x: 380, y: 40 },
+                    ["con_mobile_app"]: { x: 980, y: 40 },
+                    ["con_api_application"]: { x: 40, y: 380, width: 1580, height: 600 },
+                    ["db_database_1"]: { x: 80, y: 1100 },
+                    ["cmp_signin_ctrl"]: { x: 40, y: 40 },
+                    ["cmp_reset_pwd_ctrl"]: { x: 640, y: 40 },
+                    ["cmp_accounts_summary_ctrl"]: { x: 1240, y: 40 },
+                    ["cmp_security_component"]: { x: 40, y: 320 },
+                    ["cmp_email_component"]: { x: 640, y: 320 },
+                    ["cmp_mainframe_facade"]: { x: 1240, y: 320 },
                 }
             )
         ],
         [
             deploymentView(
-                "ss-internet-banking",
+                "ss_internet_banking",
                 "Live",
                 "Template",
-                "Internet Banking System - Live",
+                "Internet Banking System _ Live",
                 {
-                    ["ss-internet-banking"]: { x: 80, y: 80 },
-                    ["ss-mainframe-banking-inst-1"]: { x: 40, y: 40 },
-                    ["con-web-app-inst-1"]: { x: 40, y: 40 },
-                    ["con-single-page-app-inst-1"]: { x: 40, y: 40 },
-                    ["con-mobile-app-inst-1"]: { x: 40, y: 40 },
-                    ["con-api-application-inst-1"]: { x: 40, y: 40 },
-                    ["db-database-1-inst-1"]: { x: 40, y: 40 },
-                    ["db-database-1-inst-2"]: { x: 40, y: 40 },
-                    ["dn-customers-computer"]: { x: 0, y: 40, width: 460, height: 420 },
-                    ["dn-web-browser"]: { x: 40, y: 40, width: 380, height: 320 },
-                    ["dn-customers-mobile"]: { x: 40, y: 740, width: 380, height: 320 },
-                    ["dn-big-bank-plc"]: { x: 800, y: 0, width: 1300, height: 1800 },
-                    ["dn-bigbank-web"]: { x: 40, y: 40, width: 460, height: 420 },
-                    ["dn-apache-tomcat-1"]: { x: 40, y: 40, width: 380, height: 320 },
-                    ["dn-bigbank-api"]: { x: 40, y: 700, width: 460, height: 420 },
-                    ["dn-apache-tomcat-2"]: { x: 40, y: 40, width: 380, height: 320 },
-                    ["dn-bigbank-db02"]: { x: 800, y: 40, width: 460, height: 420 },
-                    ["dn-oracle-primary"]: { x: 40, y: 40, width: 380, height: 320 },
-                    ["dn-bigbank-db01"]: { x: 800, y: 700, width: 460, height: 420 },
-                    ["dn-oracle-secondary"]: { x: 40, y: 40, width: 380, height: 320 },
-                    ["dn-bigbank-prod001"]: { x: 840, y: 1400, width: 380, height: 320 },
+                    ["ss_internet_banking"]: { x: 80, y: 80 },
+                    ["ss_mainframe_banking_inst_1"]: { x: 40, y: 40 },
+                    ["con_web_app_inst_1"]: { x: 40, y: 40 },
+                    ["con_single_page_app_inst_1"]: { x: 40, y: 40 },
+                    ["con_mobile_app_inst_1"]: { x: 40, y: 40 },
+                    ["con_api_application_inst_1"]: { x: 40, y: 40 },
+                    ["db_database_1_inst_1"]: { x: 40, y: 40 },
+                    ["db_database_1_inst_2"]: { x: 40, y: 40 },
+                    ["dn_customers_computer"]: { x: 0, y: 40, width: 460, height: 420 },
+                    ["dn_web_browser"]: { x: 40, y: 40, width: 380, height: 320 },
+                    ["dn_customers_mobile"]: { x: 40, y: 740, width: 380, height: 320 },
+                    ["dn_big_bank_plc"]: { x: 800, y: 0, width: 1300, height: 1800 },
+                    ["dn_bigbank_web"]: { x: 40, y: 40, width: 460, height: 420 },
+                    ["dn_apache_tomcat_1"]: { x: 40, y: 40, width: 380, height: 320 },
+                    ["dn_bigbank_api"]: { x: 40, y: 700, width: 460, height: 420 },
+                    ["dn_apache_tomcat_2"]: { x: 40, y: 40, width: 380, height: 320 },
+                    ["dn_bigbank_db02"]: { x: 800, y: 40, width: 460, height: 420 },
+                    ["dn_oracle_primary"]: { x: 40, y: 40, width: 380, height: 320 },
+                    ["dn_bigbank_db01"]: { x: 800, y: 700, width: 460, height: 420 },
+                    ["dn_oracle_secondary"]: { x: 40, y: 40, width: 380, height: 320 },
+                    ["dn_bigbank_prod001"]: { x: 840, y: 1400, width: 380, height: 320 },
                 }
             )
         ],

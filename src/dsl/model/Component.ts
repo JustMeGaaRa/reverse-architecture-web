@@ -19,6 +19,12 @@ export interface Component extends Element {
     relationships?: Relationship[];
 }
 
+export function toComponentString(component: Component): string {
+    return component
+        ? `${component.identifier} = component "${component.name}" "${component.description ?? ""}"`
+        : "";
+}
+
 export function component(
     identifier: Identifier,
     name: string,

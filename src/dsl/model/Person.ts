@@ -17,6 +17,12 @@ export interface Person extends Omit<Element, "description" | "technology"> {
     relationships?: Relationship[];
 }
 
+export function toPersonString(person: Person): string {
+    return `${person.identifier} = person "${person.name}" "${person.description ?? ""}" {
+        ${person.relationships?.map(x => x.toString()).join("\n") ?? ""}
+    }`
+}
+
 export function person(
     identifier: Identifier,
     name: string,

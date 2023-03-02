@@ -1,7 +1,7 @@
 import { Properties } from "./model/Properties";
 import { Terminology } from "./model/Terminology";
 import { Branding } from "./view/Branding";
-import { Styles } from "./view/Style";
+import { Styles, toStylesString } from "./view/Style";
 import { ComponentView } from "./view/ComponentView";
 import { ContainerView } from "./view/ContainerView";
 import { DeploymentView } from "./view/DeploymentView";
@@ -25,6 +25,12 @@ export interface Views {
     branding?: Branding;
     terminology?: Terminology;
     properties?: Properties;
+}
+
+export function toViewsString(views: Views): string {
+    return `views {
+        ${toStylesString(views.styles)}
+    }`
 }
 
 export function views(

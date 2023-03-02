@@ -1,10 +1,17 @@
 import { Tag } from "../model/Tag";
-import { ElementStyle } from "./ElementStyle";
-import { RelationshipStyle } from "./RelationshipStyle";
+import { ElementStyle, toElementStyleString } from "./ElementStyle";
+import { RelationshipStyle, toRelationshipStyleString } from "./RelationshipStyle";
 
 export interface Styles {
     element: ElementStyle;
     relationship: RelationshipStyle;
+}
+
+export function toStylesString(styles: Styles): string {
+    return `styles {
+        \t${toElementStyleString(styles.element)}
+        \t${toRelationshipStyleString(styles.relationship)}
+    }`
 }
 
 export function styles(

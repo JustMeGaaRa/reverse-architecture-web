@@ -5,24 +5,7 @@ import { Tag } from "./Tag";
 import { Technology } from "./Technology";
 import { Url } from "./Url";
 
-export class Relationship {
-    constructor(
-        sourceIdentifier: Identifier,
-        targetIdentifier: Identifier,
-        description?: string,
-        technology?: Technology[],
-        tags?: Tag[]
-    ) {
-        this.sourceIdentifier = sourceIdentifier;
-        this.targetIdentifier = targetIdentifier;
-        this.description = description;
-        this.technology = technology;
-        this.tags = [
-            Tag.Relationship,
-            ...(tags ?? [])
-        ];
-    }
-
+export interface Relationship {
     sourceIdentifier: Identifier;
     targetIdentifier: Identifier;
     description?: string;
@@ -33,6 +16,10 @@ export class Relationship {
     perspectives?: Perspectives;
 }
 
+export function toRelationshipString(relationship: Relationship): string {
+    return `${relationship.sourceIdentifier} -> ${relationship.targetIdentifier} "${relationship.description ?? ""}"`;
+}
+
 export function relationship(
     sourceIdentifier: Identifier,
     targetIdentifier: Identifier,
@@ -40,11 +27,14 @@ export function relationship(
     technology?: Technology[],
     tags?: Tag[]
 ) {
-    return new Relationship(
+    return {
         sourceIdentifier,
         targetIdentifier,
         description,
         technology,
-        tags
-    );
+        tags: [
+            Tag.Relationship,
+            ...(tags ?? [])
+        ]
+    }
 }

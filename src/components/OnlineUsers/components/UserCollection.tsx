@@ -14,7 +14,8 @@ export const UserCollection: FC<UserCollectionProps> = ({
             {users && users.map(user => (
                 <Avatar
                     key={user.username}
-                    bgColor={user.color}
+                    background={user.color}
+                    cursor={"pointer"}
                     name={user.fullname}
                     src={user.avatarUrl}
                     title={user.fullname}

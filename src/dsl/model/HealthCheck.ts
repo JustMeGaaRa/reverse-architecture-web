@@ -1,6 +1,5 @@
 import { Url } from "./Url";
 
-
 export class HealthCheck {
     constructor(name: string, url: string, interval?: number, timeout?: number) {
         this.name = name;

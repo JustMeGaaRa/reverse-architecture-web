@@ -6,24 +6,7 @@ import { Url } from "./Url";
 import { Relationship } from "./Relationship";
 import { HealthCheck } from "./HealthCheck";
 
-export class SoftwareSystemInstance {
-    constructor(
-        softwareSystemIdentifier: Identifier,
-        identifier?: Identifier,
-        deploymentGroups?: Identifier[],
-        tags?: Tag[]
-    ) {
-        this.identifier = identifier;
-        this.softwareSystemIdentifier = softwareSystemIdentifier;
-        this.deploymentGroups = deploymentGroups;
-        this.tags = [
-            Tag.Element,
-            Tag.SoftwareSystem,
-            Tag.SoftwareSystemInstance,
-            ...(tags ?? [])
-        ];
-    }
-
+export interface SoftwareSystemInstance {
     identifier?: Identifier;
     softwareSystemIdentifier: Identifier;
     deploymentGroups?: Identifier[];
@@ -36,9 +19,25 @@ export class SoftwareSystemInstance {
     healthCheck?: HealthCheck;
 }
 
+export function toSoftwareSystemInstanceString(instance: SoftwareSystemInstance): string {
+    return `${instance.identifier} = softwareSystemInstance "${instance.softwareSystemIdentifier}"`;
+}
+
 export function softwareSystemInstance(
     softwareSystemIdentifier: Identifier,
     identifier?: Identifier,
+    deploymentGroups?: Identifier[],
+    tags?: Tag[]
 ) {
-    return new SoftwareSystemInstance(softwareSystemIdentifier, identifier);
+    return {
+        identifier,
+        softwareSystemIdentifier,
+        deploymentGroups,
+        tags: [
+            Tag.Element,
+            Tag.SoftwareSystem,
+            Tag.SoftwareSystemInstance,
+            ...(tags ?? [])
+        ]
+    }
 }

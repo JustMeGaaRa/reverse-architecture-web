@@ -6,24 +6,7 @@ import { Relationship } from "./Relationship";
 import { Tag } from "./Tag";
 import { Url } from "./Url";
 
-export class ContainerInstance {
-    constructor(
-        containerIdentifier: Identifier,
-        identifier: Identifier,
-        deploymentGroups?: Identifier[],
-        tags?: Tag[]
-    ) {
-        this.identifier = identifier;
-        this.containerIdentifier = containerIdentifier;
-        this.deploymentGroups = deploymentGroups;
-        this.tags = [
-            Tag.Element,
-            Tag.Container,
-            Tag.ContainerInstance,
-            ...(tags ?? [])
-        ];
-    }
-
+export interface ContainerInstance {
     identifier?: Identifier;
     containerIdentifier: Identifier;
     deploymentGroups?: Identifier[];
@@ -36,9 +19,25 @@ export class ContainerInstance {
     healthCheck?: HealthCheck;
 }
 
+export function toContainerInstanceString(instance: ContainerInstance): string {
+    return `${instance.identifier} = containerInstance "${instance.containerIdentifier}"`;
+}
+
 export function containerInstance(
     containerIdentifier: Identifier,
-    identifier: Identifier
+    identifier: Identifier,
+    deploymentGroups?: Identifier[],
+    tags?: Tag[]
 ) {
-    return new ContainerInstance(containerIdentifier, identifier);
+    return {
+        identifier,
+        containerIdentifier,
+        deploymentGroups,
+        tags: [
+            Tag.Element,
+            Tag.Container,
+            Tag.ContainerInstance,
+            ...(tags ?? [])
+        ]
+    }
 }

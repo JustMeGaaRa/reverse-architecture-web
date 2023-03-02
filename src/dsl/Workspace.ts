@@ -1,7 +1,7 @@
-import { Model } from "./Model";
+import { Model, toModelString } from "./Model";
 import { Identifier } from "./model/Identifier";
 import { Properties } from "./model/Properties";
-import { Views } from "./Views";
+import { toViewsString, Views } from "./Views";
 
 export interface Workspace {
     name?: string;
@@ -10,6 +10,13 @@ export interface Workspace {
     properties?: Properties;
     model: Model;
     views: Views;
+}
+
+export function toWorkspaceString(workspace: Workspace): string {
+    return `workspace "${workspace.name}" "${workspace.description}" {
+        ${toModelString(workspace.model)}
+        ${toViewsString(workspace.views)}
+    }`
 }
 
 export function workspace(
