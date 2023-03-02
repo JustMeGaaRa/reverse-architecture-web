@@ -15,6 +15,9 @@ export const provider = new WebsocketProvider(
 
 export const awareness = provider.awareness;
 
+export const nodes = doc.getArray("nodes");
+export const edges = doc.getArray("edges");
+
 type UserState = {
     users: User[];
 }

@@ -2,7 +2,6 @@ import { Box, HStack, StackDivider, useColorModeValue } from "@chakra-ui/react";
 import { Panel } from "@reactflow/core";
 import { FC } from "react";
 import { HomeSimple } from "iconoir-react";
-import { useExports } from "../c4-view-renderer/hooks/useExports";
 import {
     TitleEditable,
     ToolbarIconButton,
@@ -11,7 +10,7 @@ import {
     SettingsMenu
 } from "..";
 import { useWorkspace } from "../../dsl";
-import { useShare } from "../c4-view-renderer/hooks/useShare";
+import { useShare, useExports } from "../";
 import { ControlPanel } from "./Panel";
 
 export type WorkspacePanelProps = unknown;

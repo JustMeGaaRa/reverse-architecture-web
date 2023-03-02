@@ -5,12 +5,12 @@ import {
     ActivityPanel,
     ToolbarPanel,
     WorkspacePanel,
-    C4DiagramRenderer,
+    WorkspaceRenderer,
     createAnonymousUser,
     TemplateSelectorModal,
     awareness
 } from "../../components";
-import { useWorkspaceRenderer } from "../../components/c4-view-renderer/hooks";
+import { useWorkspaceRenderer } from "../../components";
 import { templates } from "./Templates";
 import { useWorkspace, Workspace } from "../../dsl";
 
@@ -66,7 +66,9 @@ export const Sandbox: FC = () => {
     return (
         <RoomProvider awareness={awareness} initialPresence={initialPresence}>
             <Box height={"100vh"} background={useColorModeValue("", "#1E1E1E")}>
-                <C4DiagramRenderer
+                <WorkspaceRenderer
+                    // workspace={workspace}
+                    // view={view}
                     onImport={onImport}
                 >
                     
@@ -74,7 +76,7 @@ export const Sandbox: FC = () => {
                     <ActivityPanel />
                     <ToolbarPanel />
 
-                </C4DiagramRenderer>
+                </WorkspaceRenderer>
                     
                 <TemplateSelectorModal
                     templates={templates}

@@ -44,12 +44,12 @@ const EdgeTypes = {
 
 const SupportedFileTypes = new Set(["application/json"]);
 
-type C4DiagramRendererProps = {
+type WorkspaceRendererProps = {
     onImport?: (result) => void;
     onExport?: (result) => void;
 }
 
-export const C4DiagramRenderer: FC<PropsWithChildren<C4DiagramRendererProps>> = ({
+export const WorkspaceRenderer: FC<PropsWithChildren<WorkspaceRendererProps>> = ({
     children,
     onImport
 }) => {

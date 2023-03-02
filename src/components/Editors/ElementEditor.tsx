@@ -7,7 +7,7 @@ import {
     TextareaControl
 } from "../Controls";
 import { Element } from "../../dsl";
-import { selectedNodeSelector } from "../c4-view-renderer/store/BuilderStore";
+import { selectedNodeSelector } from "../";
 
 export type ElementEditorProps = unknown;
 

@@ -18,12 +18,12 @@ import {
     Play
 } from "iconoir-react";
 import { FC, PropsWithChildren, useCallback } from "react";
-import { useInteractionMode } from "../c4-view-renderer";
+import { useInteractionMode } from "../";
 import {
     selectedEdgeSelector,
     selectedNodeSelector,
     useC4BuilderStore
-} from "../c4-view-renderer/store";
+} from "../";
 import { ToolbarIconButton } from "../ToolbarIconButton";
 import { ControlPanel } from "./Panel";
 

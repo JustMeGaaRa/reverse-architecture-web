@@ -1,4 +1,4 @@
-export * from "./c4-view-renderer";
+export * from "./WorkspaceRenderer";
 export * from "./Logo";
 export * from "./SocialButton";
 export * from "./ExportMenu";

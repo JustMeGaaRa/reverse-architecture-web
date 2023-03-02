@@ -6,7 +6,7 @@ import {
     TextareaControl
 } from "../Controls";
 import { Relationship } from "../../dsl";
-import { selectedEdgeSelector } from "../c4-view-renderer/store/BuilderStore";
+import { selectedEdgeSelector } from "../";
 
 export type RelationshipEditorProps = unknown;
 
