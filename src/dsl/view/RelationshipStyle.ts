@@ -1,3 +1,4 @@
+import { indent, line } from "../utils";
 import { RelationshipStyleProperties } from "./RelationshipStyleProperties";
 
 
@@ -13,13 +14,12 @@ export function toRelationshipStyleString(relationshipStyle: RelationshipStyle):
     return Object.keys(relationshipStyle)
         .map(tag => {
             const style = relationshipStyle[tag];
-            return `relationship "${tag}" {
-                \t${Object.keys(style)
-                    .map(key => `${key} ${style[key]}`)
-                    .join("\n\t")}
-            }`
+            const properties = Object.keys(style)
+                .map(property => line(indent(`${property} ${style[property]}`)))
+                .join("");
+            return `element "${tag}" {\n${properties}\n}`;
         })
-        .join("\n\t")
+        .join("\n");
 }
 
 export function relationship(

@@ -2,6 +2,7 @@ import { Model, toModelString } from "./Model";
 import { Identifier } from "./model/Identifier";
 import { Properties } from "./model/Properties";
 import { toViewsString, Views } from "./Views";
+import { indent } from "./utils";
 
 export interface Workspace {
     name?: string;
@@ -13,10 +14,9 @@ export interface Workspace {
 }
 
 export function toWorkspaceString(workspace: Workspace): string {
-    return `workspace "${workspace.name}" "${workspace.description}" {
-        ${toModelString(workspace.model)}
-        ${toViewsString(workspace.views)}
-    }`
+    const model = indent(toModelString(workspace.model));
+    const views = indent(toViewsString(workspace.views));
+    return `workspace "${workspace.name}" "${workspace.description}" {\n${model}\n${views}\n}`;
 }
 
 export function workspace(

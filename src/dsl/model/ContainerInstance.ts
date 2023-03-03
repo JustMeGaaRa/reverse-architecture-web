@@ -23,6 +23,10 @@ export function toContainerInstanceString(instance: ContainerInstance): string {
     return `${instance.identifier} = containerInstance "${instance.containerIdentifier}"`;
 }
 
+export function toContainerInstanceArrayString(instances: ContainerInstance[]): string {
+    return instances.map(toContainerInstanceString).join("\n");
+}
+
 export function containerInstance(
     containerIdentifier: Identifier,
     identifier: Identifier,

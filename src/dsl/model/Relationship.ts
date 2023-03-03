@@ -20,6 +20,10 @@ export function toRelationshipString(relationship: Relationship): string {
     return `${relationship.sourceIdentifier} -> ${relationship.targetIdentifier} "${relationship.description ?? ""}"`;
 }
 
+export function toRelationshipArrayString(relationships: Relationship[]): string {
+    return relationships.map(toRelationshipString).join("\n");
+}
+
 export function relationship(
     sourceIdentifier: Identifier,
     targetIdentifier: Identifier,

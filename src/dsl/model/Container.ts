@@ -1,10 +1,11 @@
-import { Component, toComponentString } from "./Component";
+import { indent } from "../utils";
+import { Component, toComponentArrayString } from "./Component";
 import { Element } from "./Element";
 import { Group } from "./Group";
 import { Identifier } from "./Identifier";
 import { Perspectives } from "./Perspectives";
 import { Properties } from "./Properties";
-import { Relationship, toRelationshipString } from "./Relationship";
+import { Relationship, toRelationshipArrayString } from "./Relationship";
 import { Tag } from "./Tag";
 import { Technology } from "./Technology";
 import { Url } from "./Url";
@@ -24,10 +25,15 @@ export interface Container extends Element {
 }
 
 export function toContainerString(container: Container): string {
-    return `${container.identifier} = container "${container.name}" "${container.description ?? ""}" {
-        \t${container.components?.map(toComponentString).join("\n") ?? ""}
-        \t${container.relationships?.map(toRelationshipString).join("\n") ?? ""}
-    }`
+    const components = indent(toComponentArrayString(container.components ?? []));
+    const rels = indent(toRelationshipArrayString(container.relationships ?? []));
+    return container
+        ? `${container.identifier} = container "${container.name}" "${container.description ?? ""}" {\n${components}\n${rels}\n}`
+        : "";
+}
+
+export function toContainerArrayString(containers: Container[]): string {
+    return containers.map(toContainerString).join("\n");
 }
 
 export function container(

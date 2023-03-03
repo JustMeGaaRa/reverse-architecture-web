@@ -45,3 +45,4 @@ export * from "./Views";
 export * from "./Workspace";
 
 export * from "./store";
+export * from "./store/WorkspaceActions";

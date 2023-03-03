@@ -9,6 +9,7 @@ import { DynamicView } from "./view/DynamicView";
 import { SystemContextView } from "./view/SystemContextView";
 import { SystemLandscapeView } from "./view/SystemLandscapeView";
 import { GenericView } from "./view/GenericView";
+import { indent, line } from "./utils";
 
 export interface Views {
     systemLandscape?: SystemLandscapeView;
@@ -28,9 +29,8 @@ export interface Views {
 }
 
 export function toViewsString(views: Views): string {
-    return `views {
-        ${toStylesString(views.styles)}
-    }`
+    const styles = line(indent(toStylesString(views.styles)));
+    return `views {\n${styles}\n}`;
 }
 
 export function views(

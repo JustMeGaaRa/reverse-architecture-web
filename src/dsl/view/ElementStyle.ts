@@ -1,3 +1,4 @@
+import { indent, line } from "../utils";
 import { ElementStyleProperties } from "./ElementStyleProperties";
 
 export interface ElementStyle {
@@ -12,13 +13,12 @@ export function toElementStyleString(elementStyle: ElementStyle): string {
     return Object.keys(elementStyle)
         .map(tag => {
             const style = elementStyle[tag];
-            return `element "${tag}" {
-                \t${Object.keys(style)
-                    .map(key => `${key} ${style[key]}`)
-                    .join("\n\t")}
-            }`
+            const properties = Object.keys(style)
+                .map(property => line(indent(`${property} ${style[property]}`)))
+                .join("");
+            return `element "${tag}" {\n${properties}\n}`;
         })
-        .join("\n\t")
+        .join("\n");
 }
 
 export function element(

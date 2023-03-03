@@ -5,6 +5,7 @@ import {
     DeploymentNode,
     Identifier,
     Person,
+    Relationship,
     SoftwareSystem,
     Workspace
 } from "..";
@@ -18,6 +19,7 @@ export type WorkspaceActions = {
     addComponent: Action<ComponentParams>;
     addDeploymentEnvironment: Action<DeploymentEnvironment>;
     addDeploymentNode: Action<DeploymentNodeParams>;
+    addRelationship: Action<Relationship>;
     setLayoutElement: Action<LayoutElementParams>;
 };
 

@@ -25,6 +25,10 @@ export function toComponentString(component: Component): string {
         : "";
 }
 
+export function toComponentArrayString(components: Component[]): string {
+    return components.map(toComponentString).join("\n");
+}
+
 export function component(
     identifier: Identifier,
     name: string,

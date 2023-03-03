@@ -23,6 +23,10 @@ export function toSoftwareSystemInstanceString(instance: SoftwareSystemInstance)
     return `${instance.identifier} = softwareSystemInstance "${instance.softwareSystemIdentifier}"`;
 }
 
+export function toSoftwareSystemInstanceArrayString(instances: SoftwareSystemInstance[]): string {
+    return instances.map(toSoftwareSystemInstanceString).join("\n");
+}
+
 export function softwareSystemInstance(
     softwareSystemIdentifier: Identifier,
     identifier?: Identifier,

@@ -1,4 +1,5 @@
 import { Tag } from "../model/Tag";
+import { indent } from "../utils";
 import { ElementStyle, toElementStyleString } from "./ElementStyle";
 import { RelationshipStyle, toRelationshipStyleString } from "./RelationshipStyle";
 
@@ -8,10 +9,9 @@ export interface Styles {
 }
 
 export function toStylesString(styles: Styles): string {
-    return `styles {
-        \t${toElementStyleString(styles.element)}
-        \t${toRelationshipStyleString(styles.relationship)}
-    }`
+    const elements = indent(toElementStyleString(styles.element));
+    const relationships = indent(toRelationshipStyleString(styles.relationship));
+    return `styles {\n${elements}\n${relationships}\n}`;
 }
 
 export function styles(

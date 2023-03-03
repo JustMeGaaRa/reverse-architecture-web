@@ -1,5 +1,6 @@
+import { indent } from "../utils";
 import { DeploymentGroup } from "./DeploymentGroup";
-import { DeploymentNode, toDeploymentNodeString } from "./DeploymentNode";
+import { DeploymentNode, toDeploymentNodeArrayString } from "./DeploymentNode";
 import { Identifier } from "./Identifier";
 import { Relationship } from "./Relationship";
 
@@ -11,10 +12,15 @@ export interface DeploymentEnvironment {
     relationships?: Relationship[];
 }
 
-export function toDeploymentEnvironmentString(deploymentEnvironment: DeploymentEnvironment): string {
-    return deploymentEnvironment ? `deploymentEnvironment "${deploymentEnvironment.name}" {
-        ${deploymentEnvironment.deploymentNodes?.map(toDeploymentNodeString).join("\n") ?? ""}
-    }` : "";
+export function toDeploymentEnvironmentString(environment: DeploymentEnvironment): string {
+    const deploymentNodes = indent(toDeploymentNodeArrayString(environment.deploymentNodes ?? []));
+    return environment
+        ? `deploymentEnvironment "${environment.name}" {\n${deploymentNodes}\n}`
+        : "";
+}
+
+export function toDeploymentEnvironmentArrayString(environments: DeploymentEnvironment[]): string {
+    return environments.map(toDeploymentEnvironmentString).join("\n");
 }
 
 export function deploymentEnvironment(

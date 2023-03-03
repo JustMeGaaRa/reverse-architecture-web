@@ -1,8 +1,9 @@
+import { indent } from "../utils";
 import { Element } from "./Element";
 import { Identifier } from "./Identifier";
 import { Perspectives } from "./Perspectives";
 import { Properties } from "./Properties";
-import { Relationship } from "./Relationship";
+import { Relationship, toRelationshipArrayString } from "./Relationship";
 import { Tag } from "./Tag";
 import { Url } from "./Url";
 
@@ -18,9 +19,12 @@ export interface Person extends Omit<Element, "description" | "technology"> {
 }
 
 export function toPersonString(person: Person): string {
-    return `${person.identifier} = person "${person.name}" "${person.description ?? ""}" {
-        ${person.relationships?.map(x => x.toString()).join("\n") ?? ""}
-    }`
+    const rels = indent(toRelationshipArrayString(person.relationships ?? []));
+    return `${person.identifier} = person "${person.name}" "${person.description ?? ""}" {\n${rels}\n}`;
+}
+
+export function toPersonArrayString(persons: Person[]): string {
+    return persons.map(toPersonString).join("\n");
 }
 
 export function person(

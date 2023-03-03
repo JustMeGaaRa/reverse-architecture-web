@@ -1,11 +1,12 @@
-import { ContainerInstance, toContainerInstanceString } from "./ContainerInstance";
+import { indent } from "../utils";
+import { ContainerInstance, toContainerInstanceArrayString } from "./ContainerInstance";
 import { Element } from "./Element";
 import { Identifier } from "./Identifier";
 import { InfrastructureNode } from "./InfrastructureNode";
 import { Perspectives } from "./Perspectives";
 import { Properties } from "./Properties";
 import { Relationship } from "./Relationship";
-import { SoftwareSystemInstance, toSoftwareSystemInstanceString } from "./SoftwareSystemInstance";
+import { SoftwareSystemInstance, toSoftwareSystemInstanceArrayString } from "./SoftwareSystemInstance";
 import { Tag } from "./Tag";
 import { Technology } from "./Technology";
 import { Url } from "./Url";
@@ -28,11 +29,16 @@ export interface DeploymentNode extends Omit<Element, "description"> {
 }
 
 export function toDeploymentNodeString(deploymentNode: DeploymentNode): string {
-    return deploymentNode ? `deploymentNode "${deploymentNode.name}" {
-        ${deploymentNode.deploymentNodes?.map(toDeploymentNodeString).join("\n") ?? ""}
-        ${deploymentNode.softwareSystemInstances?.map(toSoftwareSystemInstanceString).join("\n") ?? ""}
-        ${deploymentNode.containerInstances?.map(toContainerInstanceString).join("\n") ?? ""}
-    }` : "";
+    const deploymentNodes = indent(toDeploymentNodeArrayString(deploymentNode.deploymentNodes ?? []));
+    const systems = indent(toSoftwareSystemInstanceArrayString(deploymentNode.softwareSystemInstances ?? []));
+    const containers = indent(toContainerInstanceArrayString(deploymentNode.containerInstances ?? []));
+    return deploymentNode
+        ? `deploymentNode "${deploymentNode.name}" {\n${deploymentNodes}\n${systems}\n${containers}\n}`
+        : "";
+}
+
+export function toDeploymentNodeArrayString(deploymentNodes: DeploymentNode[]): string {
+    return deploymentNodes.map(toDeploymentNodeString).join("\n");
 }
 
 export function deploymentNode(

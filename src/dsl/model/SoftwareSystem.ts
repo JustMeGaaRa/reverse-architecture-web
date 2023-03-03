@@ -1,13 +1,14 @@
-import { Container, toContainerString } from "./Container";
+import { Container, toContainerArrayString } from "./Container";
 import { Group } from "./Group";
 import { Element } from "./Element";
 import { Identifier } from "./Identifier";
 import { Perspectives } from "./Perspectives";
 import { Properties } from "./Properties";
-import { Relationship, toRelationshipString } from "./Relationship";
+import { Relationship, toRelationshipArrayString } from "./Relationship";
 import { Tag } from "./Tag";
 import { Url } from "./Url";
 import { Technology } from "./Technology";
+import { indent } from "../utils";
 
 export interface SoftwareSystem extends Element {
     identifier: Identifier;
@@ -24,10 +25,15 @@ export interface SoftwareSystem extends Element {
 }
 
 export function toSoftwareSystemString(software: SoftwareSystem): string {
-    return software ? `${software.identifier} = softwareSystem "${software.name}" "${software.description ?? ""}" {
-        \t${software.containers?.map(toContainerString).join("\n") ?? ""}
-        \t${software.relationships?.map(toRelationshipString).join("\n") ?? ""}
-    }` : "";
+    const containers = indent(toContainerArrayString(software.containers ?? []));
+    const rels = indent(toRelationshipArrayString(software.relationships ?? []));
+    return software
+        ? `${software.identifier} = softwareSystem "${software.name}" "${software.description ?? ""}" {\n${containers}\n${rels}\n}`
+        : "";
+}
+
+export function toSoftwareSystemArrayString(softwareSystems: SoftwareSystem[]): string {
+    return softwareSystems.map(toSoftwareSystemString).join("\n");
 }
 
 export function softwareSystem(

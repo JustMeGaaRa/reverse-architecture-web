@@ -1,9 +1,10 @@
-import { Relationship, toRelationshipString } from "./model/Relationship";
-import { DeploymentEnvironment, toDeploymentEnvironmentString } from "./model/DeploymentEnvironment";
-import { SoftwareSystem, toSoftwareSystemString } from "./model/SoftwareSystem";
-import { Person, toPersonString } from "./model/Person";
+import { Relationship, toRelationshipArrayString } from "./model/Relationship";
+import { DeploymentEnvironment, toDeploymentEnvironmentArrayString } from "./model/DeploymentEnvironment";
+import { SoftwareSystem, toSoftwareSystemArrayString } from "./model/SoftwareSystem";
+import { Person, toPersonArrayString } from "./model/Person";
 import { Group } from "./model/Group";
 import { Enterprise, toEnterpriseString } from "./model/Enterprise";
+import { indent } from "./utils";
 
 export interface Model {
     people?: Person[];
@@ -16,13 +17,12 @@ export interface Model {
 }
 
 export function toModelString(model: Model): string {
-    return `model {
-        ${toEnterpriseString(model.enterprise)}
-        ${model.people?.map(toPersonString).join("\n") ?? ""}
-        ${model.softwareSystems?.map(toSoftwareSystemString).join("\n") ?? ""}
-        ${model.deploymentEnvironments?.map(toDeploymentEnvironmentString).join("\n") ?? ""}
-        ${model.relationships?.map(toRelationshipString).join("\n") ?? ""}
-    }`;
+    const enterprise = indent(toEnterpriseString(model.enterprise));
+    const people = indent(toPersonArrayString(model.people ?? []));
+    const softwareSystems = indent(toSoftwareSystemArrayString(model.softwareSystems ?? []));
+    const environments = indent(toDeploymentEnvironmentArrayString(model.deploymentEnvironments ?? []));
+    const relationships = indent(toRelationshipArrayString(model.relationships ?? []));
+    return `model {\n${enterprise}\n${people}\n${softwareSystems}\n${environments}\n${relationships}\n}`;
 }
 
 export function model(

@@ -7,7 +7,8 @@ import {
     Workspace,
     Person,
     SoftwareSystem,
-    DeploymentEnvironment
+    DeploymentEnvironment,
+    Relationship
 } from "..";
 import {
     ComponentParams,
@@ -18,7 +19,7 @@ import {
 } from "./WorkspaceActions";
 import { WorkspaceState } from "./WorkspaceState";
 
-type WorkspaceStore = WorkspaceState & WorkspaceActions;
+export type WorkspaceStore = WorkspaceState & WorkspaceActions;
 
 const relationshipExists = (
     workspace: Workspace,
@@ -156,6 +157,11 @@ export const useWorkspace = create(immer<WorkspaceStore>((set) => ({
                 .deploymentEnvironments[index]
                 .deploymentNodes
                 .push(params.deploymentNode);
+        });
+    },
+    addRelationship: (relationship: Relationship) => {
+        set((state) => {
+            state.workspace.model.relationships.push(relationship);
         });
     },
     setLayoutElement: (params: LayoutElementParams) => {
