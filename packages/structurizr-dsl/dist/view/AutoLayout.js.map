@@ -1,0 +1,1 @@
+{"version":3,"file":"AutoLayout.js","sourceRoot":"","sources":["../../src/view/AutoLayout.ts"],"names":[],"mappings":";;;AAAA,+DAA4D;AAG5D,MAAa,UAAU;IACnB;QACI,IAAI,CAAC,SAAS,GAAG,yCAAmB,CAAC,QAAQ,CAAC;QAC9C,IAAI,CAAC,cAAc,GAAG,GAAG,CAAC;QAC1B,IAAI,CAAC,cAAc,GAAG,GAAG,CAAC;IAC9B,CAAC;IAED,SAAS,CAAsB;IAC/B,cAAc,CAAS;IACvB,cAAc,CAAS;CAC1B;AAVD,gCAUC"}

@@ -1,0 +1,32 @@
+- diagram features:
+	- interaction modes
+		- explore (only zoom, pan and views navigation)
+		- build (manageme elements, relationships and details)
+		- code (write code and auto render, with ability to only position elements)
+	- manage elements (software system, container, element, deployment environment, deployment node)
+		- manage tags
+	- change elements styles
+	- change relationship styles
+	- add element to view from template
+	- export/import
+		- drawio
+		- structurizr dsl
+		- structurizr json
+	- share collaboration link
+		- explore mode
+		- build mode
+	- comments
+		- leave comments
+	
+- dashboard
+	- manage projects (add, remove, rename, share)
+	- create from template
+		- search by name
+		- filter by tags
+		- domain categories
+	- switch accounts
+	- manage settings
+	- change layout
+		- personal (more clean layout with less management, more focus)
+		- organization (more feature-rich layout with teams and access management)
+	- sign out

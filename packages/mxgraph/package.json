@@ -1,0 +1,22 @@
+{
+  "name": "@justmegaara/mxgraph",
+  "version": "0.1.0",
+  "description": "",
+  "main": "dist/index.js",
+  "keywords": [
+    "maxgraph",
+    "drawio",
+    "vector",
+    "diagram"
+  ],
+  "scripts": {
+    "build": "npx tsc"
+  },
+  "author": "JustMeGaaRa",
+  "license": "MIT",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "typescript": "^4.9.5"
+  }
+}
