@@ -1,4 +1,4 @@
-# Turborepo starter
+# Reverse Architecture Turborepo
 
 This is an official npm starter turborepo.
 
@@ -8,9 +8,9 @@ This turborepo uses [npm](https://www.npmjs.com/) as a package manager. It inclu
 
 ### Apps and Packages
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `ui`: a stub React component library shared by both `web` and `docs` applications
+- `apps/website`: a main website for the Reverse Architecture product built using [Create React App](https://create-react-app.dev/).
+- `packages/structurizr-dsl`: a TypeScript library that defines types for Structurizr DSL structures and files.
+- `packages/mxgraph`: a TypeScript library that defines types for MXGrap vector diagrams (draw.io diagrams).
 - `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
 - `tsconfig`: `tsconfig.json`s used throughout the monorepo
 
