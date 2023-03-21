@@ -13,10 +13,13 @@ import { NodeResizer } from "@reactflow/node-resizer";
 import { FC, PropsWithChildren, useCallback } from "react";
 import { ExpandedElement } from "./ExpandedElement";
 import { DeploymentNode } from "./DeploymentNode";
-import { DefaultBox, RoundedBox } from "../../../../components/Shapes";
-import { ExpandedElementLabel } from "../../../../components/Labels/ExpandedElementLabel";
-import { ElementLabel } from "../../../../components/Labels/ElementLabel";
-import { DeploymentNodeLabel } from "../../../../components/Labels/DeploymentNodeLabel";
+import {
+    DefaultBox,
+    RoundedBox,
+    ExpandedElementLabel,
+    ElementLabel,
+    DeploymentNodeLabel
+} from "../../../../components";
 
 type ShapeshiftElementProps = {
     style?: Partial<ElementStyleProperties>;
@@ -66,14 +69,14 @@ export const ElementNode: FC<ElementNodeProps> = ({
     selected = false,
     expanded = false
 }) => {
-    const { setLayoutElement } = useWorkspace();
+    const { setElementDimension } = useWorkspace();
     const onResize = useCallback((event, params) => {
-        setLayoutElement({
+        setElementDimension({
             // TODO: add view identifier
             ...params,
             elementIdentifier: data.identifier
         });
-    }, [setLayoutElement, data]);
+    }, [setElementDimension, data]);
 
     if (data.tags.some(x => x.name === Tag.DeploymentNode.name)) {
         return (

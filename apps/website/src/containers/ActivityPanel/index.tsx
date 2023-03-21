@@ -1,12 +1,21 @@
-import { Button, ButtonGroup, HStack, useColorModeValue } from "@chakra-ui/react";
-import { Panel, useReactFlow, useStore } from "@reactflow/core";
+import {
+    Button,
+    ButtonGroup,
+    HStack,
+    useColorModeValue
+} from "@chakra-ui/react";
+import {
+    Panel,
+    useReactFlow,
+    useStore
+} from "@reactflow/core";
 import { HelpCircle, Minus, Plus } from "iconoir-react";
 import { FC } from "react";
 import {
     ControlPanel,
     ToolbarIconButton,
 } from "../../components";
-import { UsersOnline } from "../UserPresence";
+import { UsersOnline } from "..";
 
 export type ActivityPanelProps = {
     showZoom?: boolean;

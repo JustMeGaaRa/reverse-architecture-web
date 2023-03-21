@@ -1,72 +1,85 @@
 import { useReactFlow } from "@reactflow/core";
-import { useCallback } from "react";
 import {
-    ComponentParams,
-    ContainerParams,
     DeploymentNodeParams,
     DeploymentEnvironment,
     Person,
+    Position,
     Relationship,
     SoftwareSystem,
-    useWorkspace,
-    Tag
+    Tag,
+    Container,
+    Component,
+    useWorkspace
 } from "@justmegaara/structurizr-dsl";
-import { componentViewSelector, containerViewSelector, systemContextViewSelector } from "../utils/ViewSelectors";
+import { useYReactFlow } from "@justmegaara/y-reactflow";
+import { useCallback } from "react";
+import {
+    fromComponentView,
+    fromContainerView,
+    fromSystemContextView,
+} from "../utils/Workspace";
 
 export const useWorkspaceRenderer = () => {
-    const flow = useReactFlow();
+    const flowState = useReactFlow();
     const store = useWorkspace();
+    const flowShared = useYReactFlow();
     
-    const addPerson = useCallback((person: Person) => {
-        store.addPerson(person);
-        // reactFlow.addNodes(fromNode({ node: person, /* layout: view.layout */ }, workspace.workspace.views.styles));
+    const addPerson = useCallback((person: Person, position: Position) => {
+        // store.addPerson({ element, position });
+        // flowShared.setNode(fromElement({
+        //     element: person,
+        //     position,
+        //     styles: store.workspace.views.styles
+        // }));
     }, [store]);
 
-    const addSoftwareSystem = useCallback((softwareSystem: SoftwareSystem) => {
-        store.addSoftwareSystem(softwareSystem);
-        // reactFlow.addNodes(fromNode({ node: softwareSystem, /* layout: view.layout */ }, workspace.workspace.views.styles));
+    const addSoftwareSystem = useCallback((softwareSystem: SoftwareSystem, position: Position) => {
+        // flowShared.setNode(fromElement({
+        //     element: softwareSystem,
+        //     position,
+        //     styles: store.workspace.views.styles
+        // }));
     }, [store]);
 
-    const addContainer = useCallback((params: ContainerParams) => {
-        store.addContainer(params);
-        // reactFlow.addNodes(fromNode({ node: params.container, parentNode: params.softwareSystemIdentifier, /* layout: view.layout */ }, workspace.workspace.views.styles));
+    const addContainer = useCallback((container: Container, position: Position) => {
+        // store.addContainer({
+        //     element: container,
+        //     position,
+        //     styles: store.workspace.views.styles
+        // });
     }, [store]);
 
-    const addComponent = useCallback((params: ComponentParams) => {
-        store.addComponent(params);
-        // reactFlow.addNodes(fromNode({ node: params.component, parentNode: params.containerIdentifier, /* layout: view.layout */ }, workspace.workspace.views.styles));
+    const addComponent = useCallback((compoent: Component, position: Position) => {
+        // store.addComponent(params);
     }, [store]);
     
     const addDeploymentEnvironment = useCallback((deploymentEnvironment: DeploymentEnvironment) => {
-        store.addDeploymentEnvironment(deploymentEnvironment);
-        // reactFlow.addNodes(fromNode({ node: deploymentEnvironment, /* layout: view.layout */ }, workspace.workspace.views.styles));
+        // store.addDeploymentEnvironment(deploymentEnvironment);
     }, [store]);
     
     const addDeploymentNode = useCallback((params: DeploymentNodeParams) => {
-        store.addDeploymentNode(params);
-        // reactFlow.addNodes(fromNode({ node: deploymentNode, /* layout: view.layout */ }, workspace.workspace.views.styles));
+        // store.addDeploymentNode(params);
     }, [store]);
 
     const addRelationship = useCallback((relationship: Relationship) => {
-        store.addRelationship(relationship);
-        // reactFlow.addEdges(fromRelationship({ relationship, /* layout: view.layout */ }, workspace.workspace.views.styles));
+        // store.addRelationship(relationship);
     }, [store]);
 
     const setView = useCallback((kind: string, view: any) => {
         if (store.workspace) {
             const { nodes, edges } = kind === Tag.SoftwareSystem.name
-                ? systemContextViewSelector(view, store.workspace)
+                ? fromSystemContextView(view, store.workspace)
                 : kind === Tag.Container.name
-                ? containerViewSelector(view, store.workspace)
+                ? fromContainerView(view, store.workspace)
                 : kind === Tag.Component.name
-                ? componentViewSelector(view, store.workspace)
+                ? fromComponentView(view, store.workspace)
                 : { nodes: [], edges: [] };
     
-            flow.setNodes(nodes);
-            flow.setEdges(edges);
-            flow.fitView({ padding: 0.2, duration: 500 });
+            flowShared.setNodes(nodes);
+            flowShared.setEdges(edges);
+            flowState.fitView({ padding: 0.2, duration: 500 });
         }
-    }, [flow, store.workspace]);
+    }, [flowState, flowShared, store.workspace]);
 
     return {
         addPerson,

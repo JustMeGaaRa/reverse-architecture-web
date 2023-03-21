@@ -1,6 +1,14 @@
 import { useOthers, useSelf, useSetPresence } from "@y-presence/react";
 import { useCallback } from "react";
-import { User } from "../../../components";
+
+export interface User {
+    username: string;
+    fullname: string;
+    avatarUrl: string;
+    point: { x: number, y: number };
+    color: string;
+    isActive: boolean;
+}
 
 export const useUserPresence = () => {
     const self = useSelf<User>();

@@ -1,6 +1,7 @@
 import "@reactflow/core/dist/style.css";
 
 import { Tag, useWorkspace } from "@justmegaara/structurizr-dsl";
+import { useYReactFlow } from "@justmegaara/y-reactflow";
 import { Background, BackgroundVariant } from "@reactflow/background";
 import {
     ReactFlow,
@@ -10,17 +11,15 @@ import {
     useEdgesState,
 } from "@reactflow/core";
 import {
-    CSSProperties,
     FC,
     PropsWithChildren,
     useCallback,
-    useState
 } from "react";
+import { UserCursor } from "../../../../components";
 import { ElementNodeWrapper } from "../Nodes/ElementNode";
 import { RelationshipEdgeWrapper } from "../Edges/RelationshipEdge";
-import { normalizePoint, parseReactFlow, projectPoint } from "../../utils";
+import { normalizePoint, projectPoint } from "../../utils/ReactFlow";
 import { useUserPresence, useWorkspaceRenderer } from "../../hooks";
-import { UserCursor } from "../../../../components/UserCursor";
 
 const NodeTypes = {
     element: ElementNodeWrapper,
@@ -40,48 +39,22 @@ const EdgeTypes = {
     simplebezier: RelationshipEdgeWrapper
 }
 
-const SupportedFileTypes = new Set(["application/json"]);
-
 type WorkspaceRendererProps = {
     onImport?: (result) => void;
     onExport?: (result) => void;
 }
 
 export const WorkspaceRenderer: FC<PropsWithChildren<WorkspaceRendererProps>> = ({
-    children,
-    onImport
+    children
 }) => {
-    const [nodes, , onNodesChange] = useNodesState([]);
-    const [edges, , onEdgesChange] = useEdgesState([]);
+    const [nodes, setNodes, onNodesChange] = useNodesState([]);
+    const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
-    const defaultStyle: CSSProperties = {
-        border: "dashed 3px transparent",
-        boxSizing: "border-box"
-    }
-    const dropStyle: CSSProperties = {
-        background: "#0064ff33",
-        border: "dashed 3px #009fff",
-        boxSizing: "border-box"
-    };
-    const [isDragOver, setIsDragOver] = useState(false);
+    /* handling the updates via y.js shared state */
+    const { updateNodes, deleteNodes } = useYReactFlow();
 
-    const onDrop = useCallback((event: React.DragEvent<HTMLDivElement>) => {
-        setIsDragOver(false);
-        
-        const draggedFiles = Array
-            .from(event.dataTransfer.files)
-            .filter(file => SupportedFileTypes.has(file.type));
-
-        const restoreFromJson = (json: string) => {
-            onImport(parseReactFlow(json));
-        };
-
-        draggedFiles.forEach(file => {
-            const fileReader = new FileReader();
-            fileReader.onload = (event) => restoreFromJson(event.target.result as string);
-            fileReader.readAsText(file);
-        });
-    }, [onImport]);
+    const onNodeDragStop = useCallback(() => { updateNodes(nodes); }, [nodes, updateNodes]);
+    const onNodesDelete = useCallback(() => { deleteNodes(nodes); }, [nodes, deleteNodes]);
 
     /* handling drilldown of the views */
     const { workspace } = useWorkspace();
@@ -102,13 +75,15 @@ export const WorkspaceRenderer: FC<PropsWithChildren<WorkspaceRendererProps>> = 
         }
     }, [setView, workspace]);
     
+    /* handling the user presence on the diagram */
     const { getViewport } = useReactFlow();
     const { others, setSelfPoint } = useUserPresence();
 
     const onMouseMove = useCallback((event) => {
+        const mousePoint = { x: event.clientX, y: event.clientY };
         const viewport = getViewport();
-        const point = normalizePoint(viewport, { x: event.clientX, y: event.clientY });
-        setSelfPoint(point);
+        const normalizedPoint = normalizePoint(viewport, mousePoint);
+        setSelfPoint(normalizedPoint);
     }, [setSelfPoint, getViewport]);
 
     return (
@@ -123,13 +98,11 @@ export const WorkspaceRenderer: FC<PropsWithChildren<WorkspaceRendererProps>> = 
             proOptions={{ hideAttribution: true }}
             snapGrid={[40, 40]}
             onNodeDoubleClick={onNodeDoubleClick}
+            onNodeDragStop={onNodeDragStop}
+            onNodesDelete={onNodesDelete}
             onMouseMove={onMouseMove}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
-            onDragOver={() => setIsDragOver(true)}
-            onDragExit={() => setIsDragOver(false)}
-            onDrop={onDrop}
-            style={isDragOver ? dropStyle : defaultStyle}
         >
             <Background
                 variant={BackgroundVariant.Dots}

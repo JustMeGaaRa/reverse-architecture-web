@@ -9,14 +9,21 @@
     "vector",
     "diagram"
   ],
+  "author": "JustMeGaaRa",
+  "license": "MIT",
   "scripts": {
     "build": "npx tsc"
   },
-  "author": "JustMeGaaRa",
-  "license": "MIT",
   "dependencies": {
   },
   "devDependencies": {
     "typescript": "^4.9.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JustMeGaaRa/reverse-architecture-web.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JustMeGaaRa/reverse-architecture-web/issues"
   }
 }

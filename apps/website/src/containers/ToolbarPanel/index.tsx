@@ -3,7 +3,14 @@ import {
     HStack,
     StackDivider
 } from "@chakra-ui/react";
-import { Panel, ReactFlowState, useReactFlow, useStore } from "@reactflow/core";
+import * as DSL from "@justmegaara/structurizr-dsl";
+import {
+    Panel,
+    ReactFlowState,
+    useReactFlow,
+    useStore
+} from "@reactflow/core";
+import { useInteractionMode } from "@reversearchitecture/hooks";
 import {
     Cancel,
     CursorPointer,
@@ -17,9 +24,15 @@ import {
     Redo,
     Play
 } from "iconoir-react";
-import { FC, PropsWithChildren, useCallback } from "react";
-import { useInteractionMode } from "./hooks";
+import {
+    FC,
+    PropsWithChildren,
+    MouseEvent,
+    useCallback
+} from "react";
+import { v4 } from "uuid";
 import { ControlPanel, ToolbarIconButton } from "../../components";
+import { useWorkspaceRenderer } from "..";
 
 const selectedNodeSelector = (state: ReactFlowState) => Array.from(state.nodeInternals.values()).find(node => node.selected);
 const selectedEdgeSelector = (state: ReactFlowState) => Array.from(state.edges).find(edge => edge.selected);
@@ -36,14 +49,40 @@ export const ToolbarPanel: FC<PropsWithChildren<ToolbarPanelProps>> = ({
     const { deleteElements } = useReactFlow();
     const selectedNode = useStore(selectedNodeSelector);
     const selectedEdge = useStore(selectedEdgeSelector);
+    const { project } = useReactFlow();
+    const store = useWorkspaceRenderer();
 
     const { isPresentationMode, isBuilderMode, toggleMode } = useInteractionMode();
 
-    const onSelectedDelete = useCallback(() => {
+    const onDeleteSelected = useCallback((event: MouseEvent<HTMLButtonElement>) => {
         const nodes = selectedNode ? Array.of(selectedNode) : [];
         const edges = selectedEdge ? Array.of(selectedEdge) : [];
         deleteElements({ nodes, edges })
     }, [deleteElements, selectedNode, selectedEdge]);
+
+    const onAddPerson = (event: MouseEvent<HTMLButtonElement>) => {
+        const element = DSL.person(v4(), "Person", "A person");
+        const position = project({ x: 0, y: 0 });
+        store.addPerson(element, position);
+    }
+
+    const onAddSoftwareSystem = (event: MouseEvent<HTMLButtonElement>) => {
+        const element = DSL.softwareSystem(v4(), "Software System", "A software system");
+        const position = project({ x: 0, y: 0 });
+        store.addSoftwareSystem(element, position);
+    }
+
+    const onAddContainer = (event: MouseEvent<HTMLButtonElement>) => {
+        const element = DSL.container(v4(), "Container", "A container");
+        const position = project({ x: 0, y: 0 });
+        store.addContainer(element, position);
+    }
+
+    const onAddComponent = (event: MouseEvent<HTMLButtonElement>) => {
+        const element = DSL.component(v4(), "Component", "A component");
+        const position = project({ x: 0, y: 0 });
+        store.addComponent(element, position);
+    }
 
     return (
         <Panel position={"bottom-center"}>
@@ -81,19 +120,28 @@ export const ToolbarPanel: FC<PropsWithChildren<ToolbarPanelProps>> = ({
                             size={"md"}
                         >
                             <ToolbarIconButton
-                                aria-label={"square"}
-                                title={"square"}
+                                aria-label={"person"}
+                                title={"person"}
                                 icon={<Square />}
+                                onClick={onAddPerson}
                             />
                             <ToolbarIconButton
-                                aria-label={"circle"}
-                                title={"circle"}
+                                aria-label={"software system"}
+                                title={"software system"}
+                                icon={<Square />}
+                                onClick={onAddSoftwareSystem}
+                            />
+                            <ToolbarIconButton
+                                aria-label={"container"}
+                                title={"container"}
                                 icon={<Circle />}
+                                onClick={onAddContainer}
                             />
                             <ToolbarIconButton
-                                aria-label={"shapes"}
-                                title={"shapes"}
+                                aria-label={"component"}
+                                title={"component"}
                                 icon={<Triangle />}
+                                onClick={onAddComponent}
                             />
                         </ButtonGroup>
                     )}
@@ -126,7 +174,7 @@ export const ToolbarPanel: FC<PropsWithChildren<ToolbarPanelProps>> = ({
                                     icon={<BinMinus />}
                                     title={"delete selected"}
                                     isActive={(selectedNode || selectedEdge) ? true : false}
-                                    onClick={() => onSelectedDelete() }
+                                    onClick={onDeleteSelected}
                                 />
                             )}
                             {showUndoRedo && (

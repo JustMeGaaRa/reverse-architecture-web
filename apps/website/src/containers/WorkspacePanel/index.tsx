@@ -1,4 +1,9 @@
-import { Box, HStack, StackDivider, useColorModeValue } from "@chakra-ui/react";
+import {
+    Box,
+    HStack,
+    StackDivider,
+    useColorModeValue
+} from "@chakra-ui/react";
 import { useWorkspace } from "@justmegaara/structurizr-dsl";
 import { Panel } from "@reactflow/core";
 import { FC } from "react";
@@ -35,7 +40,10 @@ export const WorkspacePanel: FC<WorkspacePanelProps> = () => {
                         />
                     </Box>
                     
-                    <TitleEditable title={workspace?.name ?? "Workspace"} onTitleChange={setName} />
+                    <TitleEditable
+                        title={workspace?.name ?? "Workspace"}
+                        onTitleChange={setName}
+                    />
                     
                     <HStack gap={2} px={2}>
                         <SettingsMenu />

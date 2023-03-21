@@ -1,19 +1,16 @@
-import React from "react";
-import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { ReactFlowProvider } from "@reactflow/core";
 import { ChakraProvider } from "@chakra-ui/react";
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { RouterProvider } from "react-router-dom";
 
 import { routes } from "./routes";
 import { theme } from "./theme";
 
 const root = createRoot(document.getElementById("root"));
 root.render(
-    <React.StrictMode>
+    <StrictMode>
         <ChakraProvider resetCSS theme={theme}>
-            <ReactFlowProvider>
-                <RouterProvider router={createBrowserRouter(routes)} />
-            </ReactFlowProvider>
+            <RouterProvider router={routes} />
         </ChakraProvider>
-    </React.StrictMode>
+    </StrictMode>
 );

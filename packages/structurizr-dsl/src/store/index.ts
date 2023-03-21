@@ -5,19 +5,9 @@ import {
     findContainer,
     findSoftwareSystem,
     Workspace,
-    Person,
-    SoftwareSystem,
-    DeploymentEnvironment,
     Relationship,
-    SystemContextView
 } from "..";
-import {
-    ComponentParams,
-    ContainerParams,
-    DeploymentNodeParams,
-    LayoutElementParams,
-    WorkspaceActions
-} from "./WorkspaceActions";
+import { WorkspaceActions } from "./WorkspaceActions";
 import { WorkspaceState } from "./WorkspaceState";
 
 export type WorkspaceStore = WorkspaceState & WorkspaceActions;
@@ -98,8 +88,8 @@ const buildDeploymentView = (workspace: Workspace, identifier: Identifier | unde
 
 export const useWorkspace = create(immer<WorkspaceStore>((set) => ({
     setWorkspace: (workspace: Workspace) => {
-        set({
-            workspace: {
+        set((state) => {
+            state.workspace = {
                 ...workspace,
                 views: {
                     ...workspace.views,
@@ -119,70 +109,77 @@ export const useWorkspace = create(immer<WorkspaceStore>((set) => ({
         set((state) => {
             if (state.workspace) {
                 state.workspace.name = name;
+                state.workspace.lastModifiedData = new Date();
             }
         });
     },
-    addPerson: (person: Person) => {
+    addPerson: ({ person }) => {
         set((state) => {
             if (state.workspace) {
                 state.workspace.model.people.push(person);
+                state.workspace.lastModifiedData = new Date();
             }
         });
     },
-    addSoftwareSystem: (softwareSystem: SoftwareSystem) => {
+    addSoftwareSystem: ({ softwareSystem }) => {
         set((state) => {
             if (state.workspace) {
                 state.workspace.model.softwareSystems.push(softwareSystem);
+                state.workspace.lastModifiedData = new Date();
             }
         });
     },
-    addContainer: (params: ContainerParams) => {
+    addContainer: ({ softwareSystemIdentifier, container }) => {
         set((state) => {
             if (state.workspace) {
                 const index = state.workspace.model.softwareSystems
-                    .findIndex(x => x.identifier === params.softwareSystemIdentifier);
+                    .findIndex(x => x.identifier === softwareSystemIdentifier);
                 state.workspace.model
                     .softwareSystems[index]
                     .containers
-                    .push(params.container);
-                }
+                    .push(container);
+                state.workspace.lastModifiedData = new Date();
+            }
         });
     },
-    addComponent: (params: ComponentParams) => {
+    addComponent: ({ softwareSystemIdentifier, containerIdentifier, component }) => {
         set((state) => {
             if (state.workspace) {
                 const systemIndex = state.workspace.model
                     .softwareSystems
-                    .findIndex(x => x.identifier === params.softwareSystemIdentifier);
+                    .findIndex(x => x.identifier === softwareSystemIdentifier);
                 const containerIndex = state.workspace.model
                     .softwareSystems[systemIndex]
                     .containers
-                    .findIndex(x => x.identifier === params.containerIdentifier);
+                    .findIndex(x => x.identifier === containerIdentifier);
                 state.workspace.model
                     .softwareSystems[systemIndex]
                     .containers[containerIndex]
                     .components
-                    .push(params.component);
+                    .push(component);
+                state.workspace.lastModifiedData = new Date();
             }
         });
     },
-    addDeploymentEnvironment: (deploymentEnvironment: DeploymentEnvironment) => {
+    addDeploymentEnvironment: ({ deploymentEnvironment }) => {
         set((state) => {
             if (state.workspace) {
                 state.workspace.model.deploymentEnvironments.push(deploymentEnvironment);
+                state.workspace.lastModifiedData = new Date();
             }
         });
     },
-    addDeploymentNode: (params: DeploymentNodeParams) => {
+    addDeploymentNode: ({ environment, deploymentNode }) => {
         set((state) => {
             if (state.workspace) {
                 const index = state.workspace.model
                     .deploymentEnvironments
-                    .findIndex(x => x.name === params.environment);
+                    .findIndex(x => x.name === environment);
                 state.workspace.model
                     .deploymentEnvironments[index]
                     .deploymentNodes
-                    .push(params.deploymentNode);
+                    .push(deploymentNode);
+                state.workspace.lastModifiedData = new Date();
             }
         });
     },
@@ -190,31 +187,41 @@ export const useWorkspace = create(immer<WorkspaceStore>((set) => ({
         set((state) => {
             if (state.workspace) {
                 state.workspace.model.relationships.push(relationship);
+                state.workspace.lastModifiedData = new Date();
             }
         });
     },
-    setLayoutElement: (params: LayoutElementParams) => {
+    setElementDimension: ({ viewIdentifier, elementIdentifier, position, size }) => {
         set((state) => {
-            if (state.workspace && params.viewIdentifier) {
+            if (state.workspace && viewIdentifier) {
                 const dimentions = {
-                    x: params.x,
-                    y: params.y,
-                    width: params.width,
-                    height: params.height
+                    ...position,
+                    ...size
                 };
     
-                // state.workspace.views
-                //     .systemContexts[params.viewIdentifier]
-                //     .layout[params.elementIdentifier] = dimentions;
-                // state.workspace.views
-                //     .containers[params.viewIdentifier]
-                //     .layout[params.elementIdentifier] = dimentions;
-                // state.workspace.views
-                //     .components[params.viewIdentifier]
-                //     .layout[params.elementIdentifier] = dimentions;
-                // state.workspace.views
-                //     .deployments[params.viewIdentifier]
-                //     .layout[params.elementIdentifier] = dimentions;
+                if (state.workspace.views.systemContexts[viewIdentifier]) {
+                    state.workspace.views
+                        .systemContexts[viewIdentifier]
+                        .layout[elementIdentifier] = dimentions;
+                }
+
+                if (state.workspace.views.containers[viewIdentifier]) {
+                    state.workspace.views
+                        .containers[viewIdentifier]
+                        .layout[elementIdentifier] = dimentions;
+                }
+
+                if (state.workspace.views.components[viewIdentifier]) {
+                    state.workspace.views
+                        .components[viewIdentifier]
+                        .layout[elementIdentifier] = dimentions;
+                }
+
+                if (state.workspace.views.deployments[viewIdentifier]) {
+                    state.workspace.views
+                        .deployments[viewIdentifier]
+                        .layout[elementIdentifier] = dimentions;
+                }
                     
                 state.workspace.lastModifiedData = new Date();
             }

@@ -15,7 +15,7 @@ import {
 } from "@reactflow/core";
 import { FC, useCallback } from "react";
 import { BaseEdge } from "./BaseEdge";
-import { RelationshipLabel } from "../../../../components/Labels/RelationshipLabel";
+import { RelationshipLabel } from "../../../../components";
 
 function getNodeCenter(node: Node) {
     return {

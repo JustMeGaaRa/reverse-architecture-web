@@ -1,98 +1,57 @@
-import { Box, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
-import { Tag, useWorkspace, Workspace } from "@justmegaara/structurizr-dsl";
-import { useReactFlow } from "@reactflow/core";
-import { RoomProvider } from "@y-presence/react";
-import { FC, useCallback, useEffect, useState } from "react";
-import { TemplateSelectorModal } from "../../components";
-import { ActivityPanel } from "../../containers/ActivityPanel";
-import { ToolbarPanel } from "../../containers/ToolbarPanel";
-import { awareness } from "../../containers/UserPresence";
-import { WorkspacePanel } from "../../containers/WorkspacePanel";
-import { useWorkspaceRenderer, WorkspaceRenderer } from "../../containers/WorkspaceRenderer";
-import { createRandomUser } from "../../utils/User";
+import { Box, useColorModeValue } from "@chakra-ui/react";
+import { createYDoc } from "@reversearchitecture/utils";
+import { FC, useEffect, useState } from "react";
+import { useParams } from "react-router";
+import {
+    ActivityPanel,
+    ToolbarPanel,
+    TemplateSelectorModal,
+    WorkspacePanel,
+    WorkspaceRenderer,
+    WorkspaceRoomProvider
+} from "../../containers";
 import { templates } from "./Templates";
+import { createRandomUser } from "../../utils/User";
 
 export const Sandbox: FC = () => {
-    /* handling the import of the file */
-    const reactFlow = useReactFlow();
-    const toast = useToast();
-
-    // const onImport = useCallback((result) => {
-    //     result.match({
-    //         ok: (flow) => {
-                
-    //             reactFlow.setNodes(flow.nodes || []);
-    //             reactFlow.setEdges(flow.edges || []);
-    //             reactFlow.fitView({ padding: 0.2 });
-
-    //             toast({
-    //                 title: "Successfully imported file",
-    //                 status: "success",
-    //                 position: "bottom-right",
-    //                 isClosable: true,
-    //                 size: "lg"
-    //             });
-    //         },
-    //         err: () => {
-    //             toast({
-    //                 title: "Failed to import file",
-    //                 position: "bottom-right",
-    //                 status: "error",
-    //                 isClosable: true
-    //             });
-    //         }
-    //     });
-    // }, [reactFlow, toast]);
-    
-    /* handling the template selection */
-    const { isOpen, onOpen, onClose } = useDisclosure();
-    const { workspace, setWorkspace } = useWorkspace();
-    const { setView } = useWorkspaceRenderer();
-    const [isInitialized, setIsInitialized] = useState(false);
-
-    const onSelected = useCallback((template) => {
-        onClose();
-        setWorkspace(JSON.parse(template.payload) as Workspace);
-    }, [onClose, setWorkspace]);
+    const { workspaceId } = useParams();
+    const [store, setStore] = useState(null);
+    const [user, setUser] = useState(null);
 
     useEffect(() => {
-        onOpen();
-    }, [onOpen]);
+        const store = createYDoc({ documentId: workspaceId });
+        const user = createRandomUser();
 
-    useEffect(() => {
-        if (!isInitialized && workspace) {
-            setView(Tag.SoftwareSystem.name, workspace.views.systemContexts[0]);
-            setIsInitialized(true);
+        setStore(store);
+        setUser(user);
+
+        return () => {
+            store.document.destroy();
+            store.provider.disconnect();
+            store.provider.destroy();
         }
-    }, [workspace, setView, isInitialized, setIsInitialized]);
-    
-    /* handling the user presence */
-    const initialPresence = createRandomUser();
+    }, [workspaceId]);
 
     return (
-        <RoomProvider
-            awareness={awareness}
-            initialPresence={initialPresence}
+        <Box
+            height={"100vh"}
+            background={useColorModeValue("", "#1E1E1E")}
         >
-            <Box
-                height={"100vh"}
-                background={useColorModeValue("", "#1E1E1E")}
-            >
+            {store && user && (
+                <WorkspaceRoomProvider {...store} user={user}>
 
-                <WorkspaceRenderer>
-                    <WorkspacePanel />
-                    <ActivityPanel />
-                    <ToolbarPanel />
-                </WorkspaceRenderer>
+                    <WorkspaceRenderer>
+                        <WorkspacePanel />
+                        <ActivityPanel />
+                        <ToolbarPanel />
+                    </WorkspaceRenderer>
+
+                    <TemplateSelectorModal
+                        templates={templates}
+                    />
                     
-                <TemplateSelectorModal
-                    templates={templates}
-                    isOpen={isOpen}
-                    onClose={onClose}
-                    onSelected={onSelected}
-                />
-
-            </Box>
-        </RoomProvider>
+                </WorkspaceRoomProvider>
+            )}
+        </Box>
     );
 };

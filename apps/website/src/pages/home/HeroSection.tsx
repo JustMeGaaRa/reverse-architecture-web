@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 
 import { HeroIllustration } from "./HeroIllustration";
+import { v4 } from "uuid";
 
 export function HeroSection() {
   return (
@@ -43,7 +44,7 @@ export function HeroSection() {
             colorScheme={"blue"}
             bg={"blue.400"}
             as={RouterLink}
-            to="/sandbox"
+            to={`/sandbox/${v4()}`}
             _hover={{ bg: "blue.500" }}
           >
             Try it out

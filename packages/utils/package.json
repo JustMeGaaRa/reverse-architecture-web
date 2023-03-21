@@ -1,24 +1,27 @@
 {
-  "name": "@justmegaara/structurizr-dsl",
+  "name": "@reversearchitecture/utils",
   "version": "0.1.0",
-  "description": "A library for building the Structurizr object.",
+  "description": "A package with utility functions for Reverse Architecture app.",
   "main": "dist/index.js",
   "keywords": [
-    "structurizr",
-    "dsl",
-    "c4-model",
-    "c4",
+    "reverse-architecture",
+    "utilities",
+    "diagram",
     "architecture",
-    "diagram"
+    "c4",
+    "c4-model"
   ],
   "author": "JustMeGaaRa",
   "license": "MIT",
   "scripts": {
-    "build": "npx tsc"
+    "build": "npx tsc",
+    "test": "test"
   },
   "dependencies": {
-    "immer": "^9.0.19",
-    "zustand": "^4.3.5"
+    "@justmegaara/structurizr-dsl": "*",
+    "@reactflow/core": "^11.6.1",
+    "react": "^18.0.0",
+    "yjs": "^13.5.47"
   },
   "devDependencies": {
     "typescript": "^4.9.5"

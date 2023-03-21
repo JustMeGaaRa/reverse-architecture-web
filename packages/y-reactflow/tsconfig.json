@@ -1,0 +1,24 @@
+{
+    "display": "@justmegaara/y-reactflow",
+    "extends": "tsconfig/react-library.json",
+    "include": [
+        "./src/**/*.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist"
+    ],
+    "compilerOptions": {
+        "strict": false,
+        "esModuleInterop": true,
+        "declaration": true,
+        "outDir": "./dist",
+        "rootDir": "./src",
+        "module": "CommonJS",
+        "allowJs": false,
+        "incremental": true,
+        "sourceMap": true,
+        "target": "ESNext",
+        "jsx": "react-jsx"
+    }
+}

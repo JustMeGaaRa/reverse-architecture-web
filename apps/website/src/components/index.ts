@@ -1,6 +1,7 @@
+export * from "./Controls";
 export * from "./ExportMenu";
 export * from "./Logo";
-export * from "./Labels/ElementLabel";
+export * from "./Labels";
 export * from "./Layouts/Header";
 export * from "./Layouts/Footer";
 export * from "./Panel";
@@ -11,5 +12,5 @@ export * from "./SharePopover";
 export * from "./TitleEditable";
 export * from "./ToolbarIconButton";
 export * from "./TemplateSelector";
-export * from "./TemplateSelectorModal";
+export * from "./UserCursor";
 export * from "./UserCollection";
