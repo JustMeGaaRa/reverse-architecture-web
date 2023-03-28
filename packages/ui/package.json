@@ -1,7 +1,7 @@
 {
-  "name": "@reversearchitecture/utils",
+  "name": "@reversearchitecture/ui",
   "version": "0.1.0",
-  "description": "A package with utility functions for Reverse Architecture app.",
+  "description": "A package with shared reusable UI components for Reverse Architecture app.",
   "main": "dist/index.js",
   "keywords": [
     "reverse-architecture",
@@ -14,20 +14,24 @@
   "author": "JustMeGaaRa",
   "license": "MIT",
   "scripts": {
-    "build": "npx tsc"
+    "build": "npx tsc",
+    "lint": "eslint \"**/*.ts*\""
   },
   "dependencies": {
-    "@justmegaara/structurizr-dsl": "*",
-    "@reactflow/core": "^11.6.1",
+    "@chakra-ui/react": "^2.5.1",
+    "@emotion/react": "11.10.5",
+    "@emotion/styled": "11.10.5",
+    "framer-motion": "7.9.1",
     "react": "^18.0.0",
-    "yjs": "^13.5.47"
+    "react-dom": "^18.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
     "eslint": "^7.32.0",
     "eslint-config-custom": "*",
     "tsconfig": "*",
-    "typescript": "^4.9.5"
+    "typescript": "^4.5.2"
   },
   "repository": {
     "type": "git",

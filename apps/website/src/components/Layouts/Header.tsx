@@ -1,4 +1,3 @@
-import { FC, PropsWithChildren } from "react";
 import {
     Flex,
     Stack,
@@ -11,8 +10,14 @@ import {
     useColorModeValue,
     useColorMode
 } from "@chakra-ui/react";
-import { HamburgerIcon, CloseIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
-import { Logo } from "..";
+import {
+    HamburgerIcon,
+    CloseIcon,
+    MoonIcon,
+    SunIcon
+} from "@chakra-ui/icons";
+import { FC, PropsWithChildren } from "react";
+import { Logo } from "./Logo";
 
 const NavLink: FC<PropsWithChildren<{ to: string }>> = ({
     to,
@@ -61,9 +66,8 @@ export function Header() {
                         spacing={4}
                         display={{ base: "none", md: "flex" }}
                     >
-                        <NavLink to={"/sandbox"}>Sandbox</NavLink>
-                        <NavLink to={"/#features"}>Features</NavLink>
-                        <NavLink to={"https://github.com/JustMeGaaRa/reverse-architecture-web"}>GitHub</NavLink>
+                        <NavLink to={"/docs"}>Docs</NavLink>
+                        <NavLink to={"/about"}>About</NavLink>
                     </HStack>
                 </HStack>
                 <Flex align={"center"} gap={4}>
@@ -102,9 +106,8 @@ export function Header() {
             {isOpen && (
                 <Box pb={4} display={{ md: "none" }}>
                     <Stack as={"nav"} spacing={4}>
-                        <NavLink to={"/sandbox"}>Sandbox</NavLink>
-                        <NavLink to={"/#features"}>Features</NavLink>
-                        <NavLink to={"https://github.com/JustMeGaaRa/reverse-architecture-web"}>GitHub</NavLink>
+                        <NavLink to={"/docs"}>Docs</NavLink>
+                        <NavLink to={"/about"}>About</NavLink>
                     </Stack>
                 </Box>
             )}

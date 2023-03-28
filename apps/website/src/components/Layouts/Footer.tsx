@@ -6,13 +6,14 @@ import {
     Text,
     useColorModeValue
 } from "@chakra-ui/react";
-import { Logo, SocialButton } from "..";
+import { SocialButton } from "..";
 import {
     GitHub,
     LinkedIn,
     Medium,
     Twitter
 } from "iconoir-react";
+import { Logo } from "./Logo";
 
 export const Footer: FC = () => {
     return (

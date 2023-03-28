@@ -2,19 +2,22 @@ import {
     Box,
     HStack,
     StackDivider,
+    Menu,
+    MenuButton,
+    MenuItem,
+    MenuList,
     useColorModeValue
 } from "@chakra-ui/react";
 import { useWorkspace } from "@justmegaara/structurizr-dsl";
 import { Panel } from "@reactflow/core";
+import { RaIconButton } from "@reversearchitecture/ui";
+import { Download, Settings } from "iconoir-react";
 import { FC } from "react";
-import { HomeSimple } from "iconoir-react";
 import {
     ControlPanel,
-    ExportMenu,
-    SettingsMenu,
+    HomeButton,
     SharePopover,
-    TitleEditable,
-    ToolbarIconButton,
+    TitleEditable
 } from "../../components";
 import { useExports, useShare } from "./hooks";
 
@@ -22,6 +25,8 @@ export type WorkspacePanelProps = unknown;
 
 export const WorkspacePanel: FC<WorkspacePanelProps> = () => {
     const dividerBorderColor = useColorModeValue("gray.200", "gray.700");
+    const menuBgColor = useColorModeValue("whiteAlpha.900", "rgba(31, 33, 35, 1)");
+    const menuItemBgColor = useColorModeValue("blackAlpha.200", "#3F4614");
     
     const { workspace, setName } = useWorkspace();
     const { exports } = useExports();
@@ -33,11 +38,7 @@ export const WorkspacePanel: FC<WorkspacePanelProps> = () => {
                 <HStack divider={<StackDivider borderColor={dividerBorderColor} />}>
 
                     <Box px={2}>
-                        <ToolbarIconButton
-                            aria-label={"Home"}
-                            title={"Home"}
-                            icon={<HomeSimple />}
-                        />
+                        <HomeButton />
                     </Box>
                     
                     <TitleEditable
@@ -46,12 +47,60 @@ export const WorkspacePanel: FC<WorkspacePanelProps> = () => {
                     />
                     
                     <HStack gap={2} px={2}>
-                        <SettingsMenu />
+                        <Menu
+                            closeOnBlur={true}
+                            closeOnSelect={true}
+                            placement={"bottom-start"}
+                        >
+                            <MenuButton
+                                as={RaIconButton}
+                                title={"settings"}
+                                icon={<Settings />}
+                            />
+                            <MenuList background={menuBgColor}>
+                                {[].map(item => (
+                                    <MenuItem
+                                        key={item.title}
+                                        background={menuBgColor}
+                                        _hover={{
+                                            background: menuItemBgColor
+                                        }}
+                                        onClick={item.onClick}
+                                    >
+                                        {item.title}
+                                    </MenuItem>
+                                ))}
+                            </MenuList>
+                        </Menu>
                         <SharePopover link={link} onCopy={clipboardCopy} />
                     </HStack>
                     
                     <Box px={2}>
-                        <ExportMenu items={exports} />
+                        <Menu
+                            closeOnBlur={true}
+                            closeOnSelect={true}
+                            placement={"bottom-start"}
+                        >
+                            <MenuButton
+                                as={RaIconButton}
+                                title={"export"}
+                                icon={<Download />}
+                            />
+                            <MenuList background={menuBgColor}>
+                                {exports.map(item => (
+                                    <MenuItem
+                                        key={item.title}
+                                        background={menuBgColor}
+                                        _hover={{
+                                            background: menuItemBgColor
+                                        }}
+                                        onClick={item.onClick}
+                                    >
+                                        {item.title}
+                                    </MenuItem>
+                                ))}
+                            </MenuList>
+                        </Menu>
                     </Box>
 
                 </HStack>

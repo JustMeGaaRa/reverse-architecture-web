@@ -16,6 +16,8 @@ import { useCallback } from "react";
 import {
     fromComponentView,
     fromContainerView,
+    fromElement,
+    fromRelationship,
     fromSystemContextView,
 } from "../utils/Workspace";
 
@@ -25,55 +27,99 @@ export const useWorkspaceRenderer = () => {
     const flowShared = useYReactFlow();
     
     const addPerson = useCallback((person: Person, position: Position) => {
-        // store.addPerson({ element, position });
-        // flowShared.setNode(fromElement({
-        //     element: person,
-        //     position,
-        //     styles: store.workspace.views.styles
-        // }));
-    }, [store]);
+        if (store?.workspace) {
+            // store.addPerson({ element, position });
+            flowShared.updateNodes([
+                fromElement({
+                    element: person,
+                    size: { ...position, width: 300, height: 200 },
+                    styles: store.workspace.views.styles
+                })
+            ]);
+        }
+    }, [flowShared, store]);
 
     const addSoftwareSystem = useCallback((softwareSystem: SoftwareSystem, position: Position) => {
-        // flowShared.setNode(fromElement({
-        //     element: softwareSystem,
-        //     position,
-        //     styles: store.workspace.views.styles
-        // }));
-    }, [store]);
+        if (store) {
+            flowShared.updateNodes([
+                fromElement({
+                    element: softwareSystem,
+                    size: { ...position, width: 300, height: 200 },
+                    styles: store.workspace.views.styles
+                })
+            ]);
+        }
+    }, [flowShared, store]);
 
     const addContainer = useCallback((container: Container, position: Position) => {
-        // store.addContainer({
-        //     element: container,
-        //     position,
-        //     styles: store.workspace.views.styles
-        // });
-    }, [store]);
+        if (store) {
+            flowShared.updateNodes([
+                fromElement({
+                    element: container,
+                    size: { ...position, width: 300, height: 200 },
+                    styles: store.workspace.views.styles
+                })
+            ]);
+        }
+    }, [flowShared, store]);
 
     const addComponent = useCallback((compoent: Component, position: Position) => {
-        // store.addComponent(params);
-    }, [store]);
+        if (store) {
+            flowShared.updateNodes([
+                fromElement({
+                    element: compoent,
+                    size: { ...position, width: 300, height: 200 },
+                    styles: store.workspace.views.styles
+                })
+            ]);
+        }
+    }, [flowShared, store]);
     
     const addDeploymentEnvironment = useCallback((deploymentEnvironment: DeploymentEnvironment) => {
-        // store.addDeploymentEnvironment(deploymentEnvironment);
-    }, [store]);
+        if (store) {
+            flowShared.updateNodes([
+                fromElement({
+                    element: deploymentEnvironment,
+                    size: { x: 0, y: 0, width: 300, height: 200 },
+                    styles: store.workspace.views.styles
+                })
+            ]);
+        }
+    }, [flowShared, store]);
     
     const addDeploymentNode = useCallback((params: DeploymentNodeParams) => {
-        // store.addDeploymentNode(params);
-    }, [store]);
+        if (store) {
+            flowShared.updateNodes([
+                fromElement({
+                    element: params.deploymentNode,
+                    size: { ...params.position, width: 300, height: 200 },
+                    styles: store.workspace.views.styles
+                })
+            ]);
+        }
+    }, [flowShared, store]);
 
     const addRelationship = useCallback((relationship: Relationship) => {
-        // store.addRelationship(relationship);
-    }, [store]);
-
+        if (store) {
+            flowShared.updateEdges([
+                fromRelationship({
+                    relationship,
+                    styles: store.workspace.views.styles
+                })
+            ]);
+        }
+    }, [flowShared, store]);
+    
     const setView = useCallback((kind: string, view: any) => {
+        const viewFunctions = {
+            [Tag.SoftwareSystem.name]: fromSystemContextView,
+            [Tag.Container.name]: fromContainerView,
+            [Tag.Component.name]: fromComponentView,
+        };
+
         if (store.workspace) {
-            const { nodes, edges } = kind === Tag.SoftwareSystem.name
-                ? fromSystemContextView(view, store.workspace)
-                : kind === Tag.Container.name
-                ? fromContainerView(view, store.workspace)
-                : kind === Tag.Component.name
-                ? fromComponentView(view, store.workspace)
-                : { nodes: [], edges: [] };
+            const viewFunction = viewFunctions[kind] || (() => ({ nodes: [], edges: [] }));
+            const { nodes, edges } = viewFunction(view, store.workspace);
     
             flowShared.setNodes(nodes);
             flowShared.setEdges(edges);

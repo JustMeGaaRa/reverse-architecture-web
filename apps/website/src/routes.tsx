@@ -1,5 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
-import { Home, Sandbox } from "./pages";
+import {
+    About,
+    DocsPage,
+    Home,
+    Sandbox
+} from "./pages";
 
 export const routes = createBrowserRouter([
     {
@@ -9,5 +14,13 @@ export const routes = createBrowserRouter([
     {
         path: "sandbox/:workspaceId",
         element: <Sandbox />
+    },
+    {
+        path: "docs",
+        element: <DocsPage />
+    },
+    {
+        path: "about",
+        element: <About />
     }
 ]);

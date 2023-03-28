@@ -47,8 +47,8 @@ type WorkspaceRendererProps = {
 export const WorkspaceRenderer: FC<PropsWithChildren<WorkspaceRendererProps>> = ({
     children
 }) => {
-    const [nodes, setNodes, onNodesChange] = useNodesState([]);
-    const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+    const [nodes, , onNodesChange] = useNodesState([]);
+    const [edges, , onEdgesChange] = useEdgesState([]);
 
     /* handling the updates via y.js shared state */
     const { updateNodes, deleteNodes } = useYReactFlow();
@@ -61,18 +61,14 @@ export const WorkspaceRenderer: FC<PropsWithChildren<WorkspaceRendererProps>> = 
     const { setView } = useWorkspaceRenderer();
     
     const onNodeDoubleClick = useCallback((event, node) => {
-        if (node.data.element.tags.some(tag => tag.name === Tag.SoftwareSystem.name)) {
-            setView(
-                Tag.Container.name,
-                workspace.views.containers.find(x => x.softwareSystemIdentifier === node.data.element.identifier)
-            );
-        }
-        if (node.data.element.tags.some(tag => tag.name === Tag.Container.name)) {
-            setView(
-                Tag.Component.name,
-                workspace.views.components.find(x => x.containerIdentifier === node.data.element.identifier)
-            );
-        }
+        const findTagAndSetView = (element, tagName, viewName, identifierKey, views) => {
+            if (element.tags.some(tag => tag.name === tagName)) {
+                setView(viewName, views.find(x => x[identifierKey] === element.identifier));
+            }
+        };
+        
+        findTagAndSetView(node.data.element, Tag.SoftwareSystem.name, Tag.Container.name, 'softwareSystemIdentifier', workspace.views.containers);
+        findTagAndSetView(node.data.element, Tag.Container.name, Tag.Component.name, 'containerIdentifier', workspace.views.components);
     }, [setView, workspace]);
     
     /* handling the user presence on the diagram */
@@ -90,7 +86,7 @@ export const WorkspaceRenderer: FC<PropsWithChildren<WorkspaceRendererProps>> = 
         <ReactFlow
             connectionMode={ConnectionMode.Loose}
             fitView
-            fitViewOptions={{ padding: 0.2, duration: 500 }}
+            fitViewOptions={{ padding: 0.2, duration: 500, maxZoom: 5, minZoom: 0.1 }}
             edges={edges}
             edgeTypes={EdgeTypes}
             nodes={nodes}

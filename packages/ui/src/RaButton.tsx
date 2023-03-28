@@ -1,11 +1,15 @@
-import { IconButtonProps, IconButton, useColorModeValue } from "@chakra-ui/react";
+import {
+    ButtonProps,
+    Button,
+    useColorModeValue
+} from "@chakra-ui/react";
 import { forwardRef } from "react";
 
-type ToolbarIconButtonProps = IconButtonProps;
+type RaButtonProps = ButtonProps;
 
-const ToolbarIconButton = forwardRef<HTMLButtonElement, ToolbarIconButtonProps>((props, ref) => {
+export const RaButton = forwardRef<HTMLButtonElement, RaButtonProps>((props, ref) => {
     return (
-        <IconButton
+        <Button
             ref={ref}
             {...props}
             variant={"ghost"}
@@ -16,10 +20,10 @@ const ToolbarIconButton = forwardRef<HTMLButtonElement, ToolbarIconButtonProps>(
             _active={{
                 color: useColorModeValue("gray.800", "#E5FF00"),
             }}
-        />
+        >
+            {props.children}
+        </Button>
     )
 })
 
-ToolbarIconButton.displayName = "ToolbarIconButton";
-
-export { ToolbarIconButton };
+RaButton.displayName = "RaButton";

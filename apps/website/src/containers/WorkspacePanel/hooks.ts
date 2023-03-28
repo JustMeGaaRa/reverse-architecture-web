@@ -29,19 +29,19 @@ export const useExports = () => {
     const exports = [
         {
             title: "Drawio (*.drawio)",
-            export: () => saveAs(exportToDrawio(workspace))
+            onClick: () => saveAs(exportToDrawio(workspace))
         },
         {
             title: "Structurizr DSL (*.dsl)",
-            export: () => saveAs(exportToStructurizrDsl(workspace))
+            onClick: () => saveAs(exportToStructurizrDsl(workspace))
         },
         {
             title: "Structurizr JSON (*.json)",
-            export: () => saveAs(exportToStructurizrJson(workspace))
+            onClick: () => saveAs(exportToStructurizrJson(workspace))
         },
         {
             title: "React Flow (*.json)",
-            export: () => saveAs(exportToJson(workspace, toObject()))
+            onClick: () => saveAs(exportToJson(workspace, toObject()))
         }
     ];
 

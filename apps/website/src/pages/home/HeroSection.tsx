@@ -49,7 +49,12 @@ export function HeroSection() {
           >
             Try it out
           </Button>
-          <Button rounded={"full"} px={6}>
+          <Button
+            as={RouterLink}
+            to={"/docs"}
+            rounded={"full"}
+            px={6}
+          >
             Learn more
           </Button>
         </Stack>

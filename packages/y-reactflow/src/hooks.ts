@@ -3,7 +3,7 @@ import {
     Edge,
     useReactFlow
 } from "@reactflow/core";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import * as Y from "yjs";
 import { useReactFlowRoom } from "./context";
 
@@ -14,8 +14,8 @@ export const useYReactFlow = () => {
     const NodesKey = "nodes";
     const EdgesKey = "edges";
 
-    const ynodes = document.getMap(NodesKey);
-    const yedges = document.getMap(EdgesKey);
+    const ynodes = useMemo(() => document?.getMap(NodesKey) ?? new Y.Map<Node>(), [document]);
+    const yedges = useMemo(() => document?.getMap(EdgesKey) ?? new Y.Map<Edge>(), [document]);
 
     const setNodes = useCallback((nodes: Node[]) => {
         if (document) {

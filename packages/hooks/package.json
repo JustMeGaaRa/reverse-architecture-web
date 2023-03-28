@@ -14,8 +14,7 @@
   "author": "JustMeGaaRa",
   "license": "MIT",
   "scripts": {
-    "build": "npx tsc",
-    "test": "test"
+    "build": "npx tsc"
   },
   "dependencies": {
     "@justmegaara/structurizr-dsl": "*",

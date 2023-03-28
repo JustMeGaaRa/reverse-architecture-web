@@ -15,7 +15,7 @@
   "author": "JustMeGaaRa",
   "license": "MIT",
   "scripts": {
-    "test": "test"
+    "build": "npx tsc"
   },
   "dependencies": {
   },

@@ -1,32 +1,119 @@
-- diagram features:
-	- interaction modes
-		- explore (only zoom, pan and views navigation)
-		- build (manageme elements, relationships and details)
-		- code (write code and auto render, with ability to only position elements)
-	- manage elements (software system, container, element, deployment environment, deployment node)
-		- manage tags
-	- change elements styles
-	- change relationship styles
-	- add element to view from template
-	- export/import
-		- drawio
-		- structurizr dsl
-		- structurizr json
-	- share collaboration link
-		- explore mode
-		- build mode
-	- comments
+Develop a web application that help software architects create software architectures by drafting and working on the architecture diagrams, managing their building blocks using C4 model and boost their performance and efficiency with support of diagram analysis and AI models.
+
+EPIC: website
+
+FEATURE: homepage with general information and feature overview
+FEATURE: documentation page with how to guides and tutorials
+FEATURE: sandbox page to try out the diagramming feature without signing in
+
+
+
+EPIC: account
+
+FEATURE: create and account by signing in via GitHub (potentially Google and other providers in future)
+USER STORY: As a user I need to have an account to save progress and have an authorized access to it.
+
+FEATURE: sign in into existing account via GitHub
+USER STORY: As a user I need to be able to sign in back into my account to access previous progress.
+
+FEATURE: sign out from account (to be able to sign in with a different one)
+USER STORY: As a user I need to be able to sign out from my account for security reasons or to change accounts.
+
+FEATURE: view account information (like username, avatar, full name, etc.)
+USER STORY: As a user I need to see some basic account information like avatar and a username to be able to identify with which account I am signed in.
+
+
+
+EPIC: dashboard
+
+FEATURE: manage projects (add, remove, rename, share)
+USER STORY: As a user I might work on different projects and model different systems, so I need a way to separate those.
+
+FEATURE: share project with users via email
+USER STORY: As a user I want to be able to collaborate on a project or share a project to get feedback.
+
+FEATURE: manage settings (like default layout, account type, dark or light theme, etc.)
+USER STORY: As a user I need to change personal preferences like light or dark theme.
+
+FEATURE: switch between accounts
+USER STORY: As a user I might want to have a personal account and a work account with different emails.
+
+FEATURE: explore architecture references
+USER STORY: As a user I need to explore existing architectures for reference.
+
+
+
+EPIC: projects
+
+FEATURE: create project
+FEATURE: change project name and description (optional)
+FEATURE: add a workspace to the project
+FEATURE: create a workspace from a selected architecture reference
+FEATURE: delete workspace
+FEATURE: export workspace to various formats (drawio, structurizr dsl, structurizr json, etc.)
+FEATURE: import workspace from various formats (structurizr dsl, json, etc.)
+FEATURE: open in workspace viewer / explorer
+
+
+
+EPIC: workspaces
+
+FEATURE: add/delete enterprise
+FEATURE: add/delete software system
+FEATURE: add/delete containers
+FEATURE: add/delete components
+FEATURE: add deployment environment
+FEATURE: change workspace name
+FEATURE: change workspace element and relationship styles
+FEATURE: publish as public architecture reference
+
+
+
+EPIC: workspace viewer
+
+FEATURE: workspace build mode (manage elements, relationships and details with a mouse or touch screen)
+FEATURE: workspace explore mode (only zoom, pan and views navigation)
+FEATURE: workspace code mode (write code and auto render, with ability to only position elements)
+FEATURE: share collaboration link (share in explore or build mode)
+FEATURE: pin comment threads on the diagram
 		- leave comments
-	
-- dashboard
-	- manage projects (add, remove, rename, share)
-	- create from template
-		- search by name
-		- filter by tags
-		- domain categories
-	- switch accounts
-	- manage settings
-	- change layout
-		- personal (more clean layout with less management, more focus)
-		- organization (more feature-rich layout with teams and access management)
-	- sign out
+		- reply to comments
+		- mark thread as resolved
+FEATURE: open workspace code editor
+FEATURE: undo/redo user changes
+FEATURE: save workspace version
+FEATURE: view workspace version history (or change log)
+FEATURE: add elements to view from template (software system, container, component, deployment node, etc.)
+
+
+
+EPIC: workspace code editor
+
+FEATURE: write code according to Structurizr DSL and get basic syntax highlighting
+FEATURE: see active user cursors and changes in real-time
+FEATURE: see syntax errors with decriptions, codes and links to documentation
+
+
+
+EPIC: architecture references hub
+
+FEATURE: search architecture references by name
+FEATURE: filter architecture references using tags
+FEATURE: explore existing architecture references via categories (finance, media, secutiry, etc.)
+FEATURE: upvote an architecture reference
+FEATURE: track changes in the desired architecture reference
+FEATURE: comment thread for architecture reference in general
+
+
+
+EPIC: NFRs
+
+FEATURE: view architecture NFRs and their metrics
+FEATURE: define NFRs for architecture reference / workspace
+
+
+
+EPIC: reverse engineering of the architecture
+
+FEATURE: connect to git repository (select git provider, like github, gitlab, etc.)
+FEATURE: automaticaly scan codebase and create respective workspace

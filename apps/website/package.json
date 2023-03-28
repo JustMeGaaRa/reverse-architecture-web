@@ -29,6 +29,7 @@
     "@reactflow/core": "^11.6.1",
     "@reactflow/node-resizer": "^2.1.0",
     "@reversearchitecture/hooks": "*",
+    "@reversearchitecture/ui": "*",
     "@reversearchitecture/utils": "*",
     "@y-presence/react": "^2.0.1",
     "chakra-react-select": "^4.4.3",
@@ -71,6 +72,9 @@
     "prettier": "^2.8.1",
     "tsconfig": "*",
     "typescript": "^4.5.3"
+  },
+  "resolutions": {
+    "ts-loader": "9.2.6"
   },
   "browserslist": {
     "production": [

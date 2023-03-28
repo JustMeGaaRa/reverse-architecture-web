@@ -1,24 +1,15 @@
 {
-    "display": "@justmegaara/structurizr-dsl",
+    "display": "@reversearchitecture/utils",
     "extends": "tsconfig/react-library.json",
     "include": [
-        "./src/**/*.ts"
+        "./src/**/*"
     ],
     "exclude": [
         "node_modules",
         "dist"
     ],
     "compilerOptions": {
-        "strict": false,
-        "esModuleInterop": true,
-        "declaration": true,
         "outDir": "./dist",
-        "rootDir": "./src",
-        "module": "CommonJS",
-        "allowJs": false,
-        "incremental": true,
-        "sourceMap": true,
-        "target": "ESNext",
-        "jsx": "react-jsx"
+        "rootDir": "./src"
     }
 }

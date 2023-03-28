@@ -2,7 +2,6 @@ import {
     defaultElementStyle,
     defaultRelationshipStyle,
     Element,
-    Layout,
     Relationship,
     DeploymentNode,
     aggrerateStyles,
@@ -15,7 +14,7 @@ import {
     DeploymentView,
     GenericView,
     Styles,
-    Position
+    Dimension
 } from "@justmegaara/structurizr-dsl";
 import { Node, Edge } from "@reactflow/core";
 import { ElementNodeWrapperProps } from "../components/Nodes/ElementNode";
@@ -25,12 +24,12 @@ export type ElementParams<TElement extends Element = any> = {
     element: TElement;
     parentId?: string;
     expanded?: boolean;
-    position: Position;
+    size: Dimension;
     styles: Styles;
 }
 
 export const fromElement = (params: ElementParams): Node<ElementNodeWrapperProps> => {
-    const { element, parentId, expanded, position, styles } = params;
+    const { element, parentId, expanded, size, styles } = params;
 
     return {
         id: element.identifier,
@@ -42,11 +41,11 @@ export const fromElement = (params: ElementParams): Node<ElementNodeWrapperProps
                 styles.element,
                 [...element.tags].reverse()
             ),
-            width: 300, // position.width,
-            height: 200, // position.height,
+            width: size.width,
+            height: size.height,
             expanded: expanded,
         },
-        position: position,
+        position: { x: size.x, y: size.y },
         parentNode: parentId,
         extent: "parent",
         style: parentId ? undefined : { zIndex: -1 }
@@ -98,17 +97,17 @@ export const fromSystemContextView = (view: SystemContextView, workspace: Worksp
         return [
             fromElement({
                 element: softwareSystem,
-                position: view.layout[softwareSystem.identifier],
+                size: view.layout[softwareSystem.identifier],
                 styles: workspace.views.styles
             }),
             ...view.people.map(person => fromElement({
                 element: person,
-                position: view.layout[person.identifier],
+                size: view.layout[person.identifier],
                 styles: workspace.views.styles
             })),
             ...view.softwareSystems.map(system => fromElement({
                 element: system,
-                position: view.layout[system.identifier],
+                size: view.layout[system.identifier],
                 styles: workspace.views.styles
             })),
         ];
@@ -135,7 +134,7 @@ export const fromContainerView = (view: ContainerView, workspace: Workspace) => 
                 fromElement({
                     element: softwareSystem,
                     expanded: true,
-                    position: layout[softwareSystem.identifier],
+                    size: layout[softwareSystem.identifier],
                     styles: workspace.views.styles
                 }),
             ];
@@ -145,23 +144,23 @@ export const fromContainerView = (view: ContainerView, workspace: Workspace) => 
             fromElement({
                 element: softwareSystem,
                 expanded: true,
-                position: view.layout[softwareSystem.identifier],
+                size: view.layout[softwareSystem.identifier],
                 styles: workspace.views.styles
             }),
             ...view.people.map(person => fromElement({
                 element: person,
-                position: view.layout[person.identifier],
+                size: view.layout[person.identifier],
                 styles: workspace.views.styles
             })),
             ...view.softwareSystems.map(system => fromElement({
                 element: system,
-                position: view.layout[system.identifier],
+                size: view.layout[system.identifier],
                 styles: workspace.views.styles
             })),
             ...view.containers?.map(container => fromElement({
                 element: container,
                 parentId: softwareSystem.identifier,
-                position: view.layout[container.identifier],
+                size: view.layout[container.identifier],
                 styles: workspace.views.styles
             })) ?? [],
         ];
@@ -188,7 +187,7 @@ export const fromComponentView = (view: ComponentView, workspace: Workspace) => 
                 fromElement({
                     element: container,
                     expanded: true,
-                    position: layout[container.identifier],
+                    size: layout[container.identifier],
                     styles: workspace.views.styles
                 }),
             ];
@@ -198,28 +197,28 @@ export const fromComponentView = (view: ComponentView, workspace: Workspace) => 
             fromElement({
                 element: container,
                 expanded: true,
-                position: view.layout[container.identifier],
+                size: view.layout[container.identifier],
                 styles: workspace.views.styles
             }),
             ...view.people.map(node => fromElement({
                 element: node, 
-                position: view.layout[node.identifier],
+                size: view.layout[node.identifier],
                 styles: workspace.views.styles
             })),
             ...view.softwareSystems.map(node => fromElement({
                 element: node,
-                position: view.layout[node.identifier],
+                size: view.layout[node.identifier],
                 styles: workspace.views.styles
             })),
             ...view.containers.map(node => fromElement({
                 element: node,
-                position: view.layout[node.identifier],
+                size: view.layout[node.identifier],
                 styles: workspace.views.styles
             })),
             ...view.components?.map(node => fromElement({
                 element: node,
                 parentId: container.identifier,
-                position: view.layout[node.identifier],
+                size: view.layout[node.identifier],
                 styles: workspace.views.styles
             })) ?? [],
         ];
@@ -240,7 +239,7 @@ export const fromDeploymentView = (view: DeploymentView, workspace: Workspace) =
                 fromElement({
                         element: parentDeploymentNode,
                         parentId: parentNode,
-                        position: view.layout[parentDeploymentNode.identifier],
+                        size: view.layout[parentDeploymentNode.identifier],
                         styles: workspace.views.styles
                     },
                 ),
@@ -254,7 +253,7 @@ export const fromDeploymentView = (view: DeploymentView, workspace: Workspace) =
                         identifier: instance.identifier
                     },
                     parentId: parentDeploymentNode.identifier,
-                    position: view.layout[instance.identifier],
+                    size: view.layout[instance.identifier],
                     styles: workspace.views.styles
                 })) ?? [],
                 ...parentDeploymentNode.containerInstances?.flatMap(instance => fromElement({
@@ -263,7 +262,7 @@ export const fromDeploymentView = (view: DeploymentView, workspace: Workspace) =
                         identifier: instance.identifier
                     },
                     parentId: parentDeploymentNode.identifier,
-                    position: view.layout[instance.identifier],
+                    size: view.layout[instance.identifier],
                     styles: workspace.views.styles
                 })) ?? [],
             ];

@@ -13,9 +13,9 @@ import {
     Switch,
     useColorModeValue
 } from "@chakra-ui/react";
+import { RaIconButton } from "@reversearchitecture/ui";
 import { Copy, ShareAndroid } from "iconoir-react";
 import { FC, useRef } from "react";
-import { ToolbarIconButton } from "./ToolbarIconButton";
 
 type SharePopoverProps = {
     link: string;
@@ -36,9 +36,9 @@ export const SharePopover: FC<SharePopoverProps> = ({
             closeOnEsc={true}
         >
             <PopoverTrigger>
-                <ToolbarIconButton
-                    aria-label={"Share"}
-                    title={"Share"}
+                <RaIconButton
+                    aria-label={"share"}
+                    title={"share"}
                     icon={<ShareAndroid />}
                 />
             </PopoverTrigger>
@@ -58,7 +58,7 @@ export const SharePopover: FC<SharePopoverProps> = ({
                                 onFocus={(event) => event.target.select()}
                             />
                             <InputRightElement>
-                                <ToolbarIconButton
+                                <RaIconButton
                                     aria-label={"copy"}
                                     title={"copy"}
                                     icon={<Copy />}
