@@ -1,5 +1,4 @@
-import { Box } from "@chakra-ui/react";
-import { RaIconButton } from "@reversearchitecture/ui";
+import { Box, IconButton } from "@chakra-ui/react";
 import { HomeSimple } from "iconoir-react";
 import { FC } from "react";
 import { Link } from "react-router-dom";
@@ -11,7 +10,7 @@ export interface HomeButtonProps {
 export const HomeButton: FC<HomeButtonProps> = (props) => {
     return (
         <Box as={Link} to={"/"}>
-            <RaIconButton
+            <IconButton
                 aria-label={"home"}
                 title={"home"}
                 icon={<HomeSimple />}

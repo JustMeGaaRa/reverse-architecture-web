@@ -5,11 +5,11 @@
   "main": "dist/index.js",
   "keywords": [
     "reverse-architecture",
-    "utilities",
     "diagram",
     "architecture",
     "c4",
-    "c4-model"
+    "c4-model",
+    "utilities"
   ],
   "author": "JustMeGaaRa",
   "license": "MIT",

@@ -29,6 +29,7 @@
     "@reactflow/core": "^11.6.1",
     "@reactflow/node-resizer": "^2.1.0",
     "@reversearchitecture/hooks": "*",
+    "@reversearchitecture/theme": "*",
     "@reversearchitecture/ui": "*",
     "@reversearchitecture/utils": "*",
     "@y-presence/react": "^2.0.1",

@@ -6,11 +6,11 @@ import {
     MenuButton,
     MenuItem,
     MenuList,
-    useColorModeValue
+    useColorModeValue,
+    IconButton
 } from "@chakra-ui/react";
 import { useWorkspace } from "@justmegaara/structurizr-dsl";
 import { Panel } from "@reactflow/core";
-import { RaIconButton } from "@reversearchitecture/ui";
 import { Download, Settings } from "iconoir-react";
 import { FC } from "react";
 import {
@@ -53,7 +53,7 @@ export const WorkspacePanel: FC<WorkspacePanelProps> = () => {
                             placement={"bottom-start"}
                         >
                             <MenuButton
-                                as={RaIconButton}
+                                as={IconButton}
                                 title={"settings"}
                                 icon={<Settings />}
                             />
@@ -82,7 +82,7 @@ export const WorkspacePanel: FC<WorkspacePanelProps> = () => {
                             placement={"bottom-start"}
                         >
                             <MenuButton
-                                as={RaIconButton}
+                                as={IconButton}
                                 title={"export"}
                                 icon={<Download />}
                             />

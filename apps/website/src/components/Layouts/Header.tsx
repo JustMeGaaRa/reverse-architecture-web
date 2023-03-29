@@ -72,9 +72,8 @@ export function Header() {
                 </HStack>
                 <Flex align={"center"} gap={4}>
                     <IconButton
-                        aria-label={"Toggle Theme"}
+                        aria-label={"toggle theme"}
                         icon={colorMode === "light" ? <MoonIcon/> : <SunIcon />}
-                        bg={"transparent"}
                         rounded={"full"}
                         onClick={toggleColorMode}
                     />

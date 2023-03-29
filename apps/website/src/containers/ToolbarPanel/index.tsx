@@ -1,6 +1,7 @@
 import {
     ButtonGroup,
     HStack,
+    IconButton,
     StackDivider
 } from "@chakra-ui/react";
 import * as DSL from "@justmegaara/structurizr-dsl";
@@ -34,7 +35,6 @@ import {
 import { v4 } from "uuid";
 import { ControlPanel } from "../../components";
 import { useWorkspaceRenderer } from "..";
-import { RaIconButton } from "@reversearchitecture/ui";
 
 const selectedNodeSelector = (state: ReactFlowState) => Array.from(state.nodeInternals.values()).find(node => node.selected);
 const selectedEdgeSelector = (state: ReactFlowState) => Array.from(state.edges).find(edge => edge.selected);
@@ -100,12 +100,12 @@ export const ToolbarPanel: FC<PropsWithChildren<ToolbarPanelProps>> = ({
                         orientation={"horizontal"}
                         size={"md"}
                     >
-                        <RaIconButton
+                        <IconButton
                             aria-label={"cursor"}
                             title={"cursor"}
                             icon={<CursorPointer />}
                             />
-                        <RaIconButton
+                        <IconButton
                             aria-label={"drag"}
                             title={"drag"}
                             icon={<DragHandGesture />}
@@ -121,25 +121,25 @@ export const ToolbarPanel: FC<PropsWithChildren<ToolbarPanelProps>> = ({
                             orientation={"horizontal"}
                             size={"md"}
                         >
-                            <RaIconButton
+                            <IconButton
                                 aria-label={"person"}
                                 title={"person"}
                                 icon={<Square />}
                                 onClick={onAddPerson}
                             />
-                            <RaIconButton
+                            <IconButton
                                 aria-label={"software system"}
                                 title={"software system"}
                                 icon={<Circle />}
                                 onClick={onAddSoftwareSystem}
                             />
-                            <RaIconButton
+                            <IconButton
                                 aria-label={"container"}
                                 title={"container"}
                                 icon={<Triangle />}
                                 onClick={onAddContainer}
                             />
-                            <RaIconButton
+                            <IconButton
                                 aria-label={"component"}
                                 title={"component"}
                                 icon={<Rhombus />}
@@ -155,7 +155,7 @@ export const ToolbarPanel: FC<PropsWithChildren<ToolbarPanelProps>> = ({
                         orientation={"horizontal"}
                         size={"md"}
                     >
-                        <RaIconButton
+                        <IconButton
                             aria-label={"comment"}
                             title={"comment"}
                             icon={<MessageText />}
@@ -171,7 +171,7 @@ export const ToolbarPanel: FC<PropsWithChildren<ToolbarPanelProps>> = ({
                             size={"md"}
                         >
                             {showDelete && (
-                                <RaIconButton
+                                <IconButton
                                     aria-label={"delete selected element"}
                                     icon={<BinMinus />}
                                     title={"delete selected"}
@@ -180,14 +180,14 @@ export const ToolbarPanel: FC<PropsWithChildren<ToolbarPanelProps>> = ({
                                 />
                             )}
                             {showUndoRedo && (
-                                <RaIconButton
+                                <IconButton
                                     aria-label={"undo last change"}
                                     icon={<Undo />}
                                     title={"undo last change"}
                                 />
                             )}
                             {showUndoRedo && (
-                                <RaIconButton
+                                <IconButton
                                     aria-label={"redo last change"}
                                     icon={<Redo />}
                                     title={"redo last change"}
@@ -204,7 +204,7 @@ export const ToolbarPanel: FC<PropsWithChildren<ToolbarPanelProps>> = ({
                         size={"md"}
                     >
                         {isPresentationMode && (
-                            <RaIconButton
+                            <IconButton
                                 aria-label={"exit mode"}
                                 title={"exit mode"}
                                 icon={<Cancel />}
@@ -212,7 +212,7 @@ export const ToolbarPanel: FC<PropsWithChildren<ToolbarPanelProps>> = ({
                             />
                         )}
                         {isBuilderMode && (
-                            <RaIconButton
+                            <IconButton
                                 aria-label={"presentation"}
                                 title={"presentation"}
                                 icon={<Play />}

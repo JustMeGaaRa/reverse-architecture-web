@@ -1,6 +1,8 @@
 import {
+    Button,
     ButtonGroup,
     HStack,
+    IconButton,
     Menu,
     MenuButton,
     MenuItem,
@@ -12,10 +14,6 @@ import {
     useReactFlow,
     useStore
 } from "@reactflow/core";
-import {
-    RaButton,
-    RaIconButton,
-} from "@reversearchitecture/ui";
 import { HelpCircle, Minus, Plus } from "iconoir-react";
 import { FC, useMemo } from "react";
 import { ControlPanel } from "../../components";
@@ -53,7 +51,7 @@ export const ZoomPanel: FC<ActivityPanelProps> = ({
             size={"md"}
         >
             {showZoom && (
-                <RaIconButton
+                <IconButton
                     aria-label={"zoom out"}
                     title={"zoom out"}
                     icon={<Minus />}
@@ -67,7 +65,7 @@ export const ZoomPanel: FC<ActivityPanelProps> = ({
                     placement={"bottom-start"}
                 >
                     <MenuButton
-                        as={RaButton}
+                        as={Button}
                     >
                         {`${zoom.toFixed(0)}%`}
                     </MenuButton>
@@ -88,7 +86,7 @@ export const ZoomPanel: FC<ActivityPanelProps> = ({
                 </Menu>
             )}
             {showZoom && (
-                <RaIconButton
+                <IconButton
                     aria-label={"zoom in"}
                     title={"zoom in"}
                     icon={<Plus />}
@@ -122,7 +120,7 @@ export const ActivityPanel: FC<ActivityPanelProps> = ({
                 </ControlPanel>
 
                 <ControlPanel>
-                    <RaIconButton
+                    <IconButton
                         aria-label={"Help"}
                         title={"Help"}
                         icon={<HelpCircle />}
