@@ -88,8 +88,8 @@ const buildDeploymentView = (workspace: Workspace, identifier: Identifier | unde
 
 export const useWorkspace = create(immer<WorkspaceStore>((set) => ({
     setWorkspace: (workspace: Workspace) => {
-        set((state) => {
-            state.workspace = {
+        set({
+            workspace: {
                 ...workspace,
                 views: {
                     ...workspace.views,

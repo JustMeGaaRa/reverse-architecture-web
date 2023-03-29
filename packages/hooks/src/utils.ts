@@ -1,7 +1,7 @@
 import { Identifier, Workspace } from "@justmegaara/structurizr-dsl";
 import { ReactFlowJsonObject } from "@reactflow/core";
 
-export const toReactFlow = (workspaceObject: Workspace, selectedView: Identifier): ReactFlowJsonObject => {
+export const toReactFlow = (workspaceObject?: Workspace, selectedView?: Identifier): ReactFlowJsonObject => {
     return {
         nodes: [],
         edges: [],

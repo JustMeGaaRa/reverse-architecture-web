@@ -14,12 +14,15 @@ export const useWorkspaceBinding = () => {
         return reactFlowObject;
     }
 
-    const saveWorkspace = (workspaceObject: Workspace): Workspace => {
-        setWorkspace(workspaceObject);
+    const saveWorkspace = (workspaceObject?: Workspace): Workspace | undefined => {
+        if (workspaceObject) {
+            setWorkspace(workspaceObject);
+        }
+        
         return workspaceObject;
     }
 
-    const parseYDoc = (sharedWorkspace: Y.Doc): Workspace => {
+    const parseYDoc = (sharedWorkspace?: Y.Doc): Workspace | undefined => {
         return undefined;
     }
 
