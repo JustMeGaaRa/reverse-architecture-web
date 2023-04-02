@@ -11,11 +11,11 @@ export const Button: ComponentStyleConfig = {
         ghost: (props) => ({
             bg: "transparent",
             _hover: {
-                bg: mode("", "brand.background")(props),
+                background: mode("", "brand.hover")(props),
                 color: mode("", "brand.color")(props)
             },
             _active: {
-                bg: mode("", "transparent")(props),
+                background: mode("", "transparent")(props),
                 color: mode("", "brand.color")(props)
             }
         })

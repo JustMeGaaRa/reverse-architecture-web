@@ -28,7 +28,6 @@ export const useWorkspaceRenderer = () => {
     
     const addPerson = useCallback((person: Person, position: Position) => {
         if (store?.workspace) {
-            // store.addPerson({ element, position });
             flowShared.updateNodes([
                 fromElement({
                     element: person,

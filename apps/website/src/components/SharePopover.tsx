@@ -32,8 +32,6 @@ export const SharePopover: FC<SharePopoverProps> = ({
         <Popover
             initialFocusRef={inputRef}
             placement={"bottom-start"}
-            closeOnBlur={true}
-            closeOnEsc={true}
         >
             <PopoverTrigger>
                 <IconButton

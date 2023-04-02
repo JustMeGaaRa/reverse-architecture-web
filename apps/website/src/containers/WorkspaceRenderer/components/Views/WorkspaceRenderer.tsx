@@ -3,6 +3,7 @@ import "@reactflow/core/dist/style.css";
 import { Tag, useWorkspace } from "@justmegaara/structurizr-dsl";
 import { useYReactFlow } from "@justmegaara/y-reactflow";
 import { Background, BackgroundVariant } from "@reactflow/background";
+import { useUserPresence } from "@reversearchitecture/hooks";
 import {
     ReactFlow,
     ConnectionMode,
@@ -19,7 +20,7 @@ import { UserCursor } from "../../../../components";
 import { ElementNodeWrapper } from "../Nodes/ElementNode";
 import { RelationshipEdgeWrapper } from "../Edges/RelationshipEdge";
 import { normalizePoint, projectPoint } from "../../utils/ReactFlow";
-import { useUserPresence, useWorkspaceRenderer } from "../../hooks";
+import { useWorkspaceRenderer } from "../../hooks";
 
 const NodeTypes = {
     element: ElementNodeWrapper,

@@ -6,8 +6,7 @@ import {
     Menu,
     MenuButton,
     MenuItem,
-    MenuList,
-    useColorModeValue
+    MenuList
 } from "@chakra-ui/react";
 import {
     Panel,
@@ -28,19 +27,14 @@ export const ZoomPanel: FC<ActivityPanelProps> = ({
     showZoom = true,
     showFitView = true,
 }) => {
-    const menuBgColor = useColorModeValue("whiteAlpha.900", "rgba(31, 33, 35, 1)");
-    const menuItemBgColor = useColorModeValue("blackAlpha.200", "#3F4614");
-
     const zoom = useStore((state) => (state.transform[2] * 100));
     const { zoomTo, zoomIn, zoomOut, fitView } = useReactFlow();
 
     const items = useMemo(() => [
-        { title: "Fit view", onClick: () => fitView({ padding: 0.2, duration: 500 })},
-        { title: "25%", onClick: () => zoomTo(0.25, { duration: 500 }) },
-        { title: "50%", onClick: () => zoomTo(0.5, { duration: 500 }) },
-        { title: "100%", onClick: () => zoomTo(1, { duration: 500 }) },
-        { title: "200%", onClick: () => zoomTo(2, { duration: 500 }) },
-        { title: "300%", onClick: () => zoomTo(3, { duration: 500 }) },
+        { title: "Fit view", command: "Ctrl + 0", onClick: () => fitView({ padding: 0.2, duration: 500 })},
+        { title: "50%", command: "Ctrl + .", onClick: () => zoomTo(0.5, { duration: 500 }) },
+        { title: "100%", command: "Ctrl + 1", onClick: () => zoomTo(1, { duration: 500 }) },
+        { title: "200%", command: "Ctrl + 2", onClick: () => zoomTo(2, { duration: 500 }) }
     ], [zoomTo, fitView]);
 
     return (
@@ -59,24 +53,15 @@ export const ZoomPanel: FC<ActivityPanelProps> = ({
                 />
             )}
             {showFitView && (
-                <Menu
-                    closeOnBlur={true}
-                    closeOnSelect={true}
-                    placement={"bottom-start"}
-                >
-                    <MenuButton
-                        as={Button}
-                    >
+                <Menu>
+                    <MenuButton as={Button}>
                         {`${zoom.toFixed(0)}%`}
                     </MenuButton>
-                    <MenuList background={menuBgColor}>
+                    <MenuList>
                         {items.map(item => (
                             <MenuItem
                                 key={item.title}
-                                background={menuBgColor}
-                                _hover={{
-                                    background: menuItemBgColor
-                                }}
+                                command={item.command}
                                 onClick={item.onClick}
                             >
                                 {item.title}

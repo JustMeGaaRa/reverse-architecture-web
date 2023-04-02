@@ -51,14 +51,8 @@ export const TemplateSelectorModal: FC<TemplateSelectorModalProps> = ({
             closeOnEsc={false}
             closeOnOverlayClick={false}
         >
-            <ModalOverlay
-                backdropFilter={"auto"}
-                backdropBlur={"2px"}
-            />
-            <ModalContent
-                background={useColorModeValue("whiteAlpha.900", "rgba(31, 33, 35, 0.9)")}
-                borderColor={useColorModeValue("blackAlpha.300", "rgba(255, 255, 255, 0.1)")}
-            >
+            <ModalOverlay />
+            <ModalContent>
                 <ModalHeader>Select Workspace Template</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>

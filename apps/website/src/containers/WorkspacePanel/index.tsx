@@ -10,27 +10,55 @@ import {
     IconButton
 } from "@chakra-ui/react";
 import { useWorkspace } from "@justmegaara/structurizr-dsl";
-import { Panel } from "@reactflow/core";
+import { Panel, useReactFlow } from "@reactflow/core";
 import { Download, Settings } from "iconoir-react";
 import { FC } from "react";
+import saveAs from "file-saver";
 import {
     ControlPanel,
     HomeButton,
     SharePopover,
     TitleEditable
 } from "../../components";
-import { useExports, useShare } from "./hooks";
+import { useShare } from "./hooks";
+import {
+    exportToDrawio,
+    exportToJson,
+    exportToStructurizrDsl,
+    exportToStructurizrJson
+} from "./export";
 
 export type WorkspacePanelProps = unknown;
 
 export const WorkspacePanel: FC<WorkspacePanelProps> = () => {
     const dividerBorderColor = useColorModeValue("gray.200", "gray.700");
-    const menuBgColor = useColorModeValue("whiteAlpha.900", "rgba(31, 33, 35, 1)");
-    const menuItemBgColor = useColorModeValue("blackAlpha.200", "#3F4614");
     
     const { workspace, setName } = useWorkspace();
-    const { exports } = useExports();
     const { link, clipboardCopy } = useShare();
+    const { toObject } = useReactFlow();
+
+    const exports = [
+        {
+            title: "Drawio (*.drawio)",
+            command: "Ctrl + E + 1",
+            onClick: () => saveAs(exportToDrawio(workspace))
+        },
+        {
+            title: "Structurizr DSL (*.dsl)",
+            command: "Ctrl + E + 2",
+            onClick: () => saveAs(exportToStructurizrDsl(workspace))
+        },
+        {
+            title: "Structurizr JSON (*.json)",
+            command: "Ctrl + E + 3",
+            onClick: () => saveAs(exportToStructurizrJson(workspace))
+        },
+        {
+            title: "React Flow (*.json)",
+            command: "Ctrl + E + 4",
+            onClick: () => saveAs(exportToJson(workspace, toObject()))
+        }
+    ];
 
     return (
         <Panel position={"top-left"}>
@@ -47,24 +75,17 @@ export const WorkspacePanel: FC<WorkspacePanelProps> = () => {
                     />
                     
                     <HStack gap={2} px={2}>
-                        <Menu
-                            closeOnBlur={true}
-                            closeOnSelect={true}
-                            placement={"bottom-start"}
-                        >
+                        <Menu>
                             <MenuButton
                                 as={IconButton}
                                 title={"settings"}
                                 icon={<Settings />}
                             />
-                            <MenuList background={menuBgColor}>
+                            <MenuList>
                                 {[].map(item => (
                                     <MenuItem
                                         key={item.title}
-                                        background={menuBgColor}
-                                        _hover={{
-                                            background: menuItemBgColor
-                                        }}
+                                        command={item.command}
                                         onClick={item.onClick}
                                     >
                                         {item.title}
@@ -76,24 +97,17 @@ export const WorkspacePanel: FC<WorkspacePanelProps> = () => {
                     </HStack>
                     
                     <Box px={2}>
-                        <Menu
-                            closeOnBlur={true}
-                            closeOnSelect={true}
-                            placement={"bottom-start"}
-                        >
+                        <Menu>
                             <MenuButton
                                 as={IconButton}
                                 title={"export"}
                                 icon={<Download />}
                             />
-                            <MenuList background={menuBgColor}>
+                            <MenuList>
                                 {exports.map(item => (
                                     <MenuItem
                                         key={item.title}
-                                        background={menuBgColor}
-                                        _hover={{
-                                            background: menuItemBgColor
-                                        }}
+                                        command={item.command}
                                         onClick={item.onClick}
                                     >
                                         {item.title}
