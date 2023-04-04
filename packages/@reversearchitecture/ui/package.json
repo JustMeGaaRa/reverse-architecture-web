@@ -4,11 +4,11 @@
   "description": "A package with shared reusable UI components for Reverse Architecture app.",
   "main": "dist/index.js",
   "keywords": [
-    "reverse-architecture",
+    "reverse architecture",
     "diagram",
     "architecture",
     "c4",
-    "c4-model",
+    "c4 model",
     "utilities"
   ],
   "author": "JustMeGaaRa",
