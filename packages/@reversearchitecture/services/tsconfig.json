@@ -1,0 +1,17 @@
+{
+    "display": "@reversearchitecture/services",
+    "extends": "tsconfig/react-library.json",
+    "include": [
+        "./src/**/*"
+    ],
+    "exclude": [
+        "dist",
+        "build",
+        "node_modules"
+    ],
+    "compilerOptions": {
+        "resolveJsonModule": true,
+        "outDir": "./dist",
+        "rootDir": "./src",
+    }
+}

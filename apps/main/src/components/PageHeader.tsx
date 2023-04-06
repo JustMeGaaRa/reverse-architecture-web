@@ -10,6 +10,7 @@ export const PageHeader: FC<PropsWithChildren<{
         <Flex
             direction={"row"}
             justifyContent={"space-between"}
+            alignItems={"center"}
             height={"80px"}
         >
             {children}

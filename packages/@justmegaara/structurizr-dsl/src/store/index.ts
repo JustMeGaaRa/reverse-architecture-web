@@ -12,7 +12,7 @@ import { WorkspaceState } from "./WorkspaceState";
 
 export type WorkspaceStore = WorkspaceState & WorkspaceActions;
 
-const relationshipExists = (
+export const relationshipExists = (
     workspace: Workspace,
     sourceIdentifier: Identifier,
     targetIdentifier: Identifier
@@ -23,7 +23,7 @@ const relationshipExists = (
     )
 }
 
-const buildSystemContextView = (workspace: Workspace, identifier: Identifier) => {
+export const buildSystemContextView = (workspace: Workspace, identifier: Identifier) => {
     const view = workspace.views.systemContexts.find(x => x.softwareSystemIdentifier === identifier);
     if (view) {
         return  {
@@ -37,7 +37,7 @@ const buildSystemContextView = (workspace: Workspace, identifier: Identifier) =>
     return undefined;
 }
 
-const buildContainerView = (workspace: Workspace, identifier: Identifier) => {
+export const buildContainerView = (workspace: Workspace, identifier: Identifier) => {
     const view = workspace.views.containers.find(x => x.softwareSystemIdentifier === identifier);
     const softwareSystem = findSoftwareSystem(workspace, identifier);
     if (view && softwareSystem) {
@@ -54,7 +54,7 @@ const buildContainerView = (workspace: Workspace, identifier: Identifier) => {
     return undefined;
 }
 
-const buildComponentView = (workspace: Workspace, identifier: Identifier) => {
+export const buildComponentView = (workspace: Workspace, identifier: Identifier) => {
     const view = workspace.views.components.find(x => x.containerIdentifier === identifier);
     const container = findContainer(workspace, identifier);
     if (view && container) {
@@ -73,7 +73,7 @@ const buildComponentView = (workspace: Workspace, identifier: Identifier) => {
     return undefined;
 }
 
-const buildDeploymentView = (workspace: Workspace, identifier: Identifier | undefined, environment: string ) => {
+export const buildDeploymentView = (workspace: Workspace, identifier: Identifier | undefined, environment: string ) => {
     const deploymentEnvironment = workspace.model.deploymentEnvironments
         ?.find(deployment => deployment.name === environment);
     const view = workspace.views.deployments.find(x => x.softwareSystemIdentifier === identifier);

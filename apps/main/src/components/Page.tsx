@@ -10,6 +10,7 @@ export const Page: FC<PropsWithChildren<{
         <Flex
             background={"#161819"}
             direction={"column"}
+            height={"100vh"}
         >
             {children}
         </Flex>

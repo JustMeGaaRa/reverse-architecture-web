@@ -24,6 +24,7 @@
     "@emotion/react": "11.10.5",
     "@emotion/styled": "11.10.5",
     "@reversearchitecture/theme": "*",
+    "@reversearchitecture/services": "*",
     "framer-motion": "7.9.1",
     "iconoir-react": "^6.3.0",
     "react": "^18.0.0",

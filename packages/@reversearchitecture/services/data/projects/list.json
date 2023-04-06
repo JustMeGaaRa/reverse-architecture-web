@@ -1,0 +1,8 @@
+{
+    "values": [
+        { "name": "Project 1", "date": "29.03.2023", "updatedBy": "pavlo@rvrs.io", "access": "write", "workspaceId": "123" },
+        { "name": "Project 2", "date": "30.03.2023", "updatedBy": "vitalii@rvrs.io", "access": "readonly", "workspaceId": "456" },
+        { "name": "Project 3", "date": "30.03.2023", "updatedBy": "oleh@rvrs.io", "access": "readonly", "workspaceId": "789" },
+        { "name": "Project 4", "date": "31.03.2023", "updatedBy": "romano@rvrs.io", "access": "readonly", "workspaceId": "248" }
+    ]
+}

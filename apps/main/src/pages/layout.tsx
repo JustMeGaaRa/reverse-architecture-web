@@ -41,14 +41,14 @@ export const Layout: FC<PropsWithChildren<{
     return (
         <Page>
             <PageHeader>
-                <Allign to={"left"}>
+                <HStack>
                     <NavigationSidebarToggle onClick={onToggle} />
                     <Logo />
-                </Allign>
-                <Allign to={"center"}>
+                </HStack>
+                <Box>
                     <Search />
-                </Allign>
-                <Allign to={"right"}>
+                </Box>
+                <Box>
                     <ButtonGroup mr={4} variant={"outline"}>
                         <Button
                             leftIcon={<AddPageAlt />}
@@ -60,7 +60,7 @@ export const Layout: FC<PropsWithChildren<{
                             icon={<Upload />}
                         />
                     </ButtonGroup>
-                </Allign>
+                </Box>
             </PageHeader>
             <PageBody>
                 <Navigation>
@@ -90,17 +90,5 @@ export const Layout: FC<PropsWithChildren<{
                 </Navigation>
             </PageBody>
         </Page>
-    )
-}
-
-export const Allign: FC<PropsWithChildren<{
-    to: "left" | "center" | "right" | "top" | "bottom"
-}>> = ({
-    children
-}) => {
-    return (
-        <HStack>
-            {children}
-        </HStack>
     )
 }

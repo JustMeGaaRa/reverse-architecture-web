@@ -12,7 +12,7 @@ export const ContextSheet: FC<PropsWithChildren<{
             borderRadius={"24px 0px 0px 0px"}
             borderWidth={1}
             borderColor={"#FFFFFF1A"}
-            padding={"24px"}
+            overflow={"hidden"}
             width={"100%"}
         >
             {children}

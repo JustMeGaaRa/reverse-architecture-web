@@ -9,7 +9,7 @@ import { routes } from "./routes";
 const root = createRoot(document.getElementById("root"));
 root.render(
     <StrictMode>
-        <ChakraProvider resetCSS>
+        <ChakraProvider resetCSS theme={theme}>
             <RouterProvider router={routes} />
         </ChakraProvider>
     </StrictMode>

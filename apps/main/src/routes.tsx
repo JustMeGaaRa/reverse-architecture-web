@@ -5,26 +5,34 @@ import {
 import {
     CommunityHub,
     Dashboard,
-    ProjectList
+    ErrorPage,
+    ProjectList,
+    Workspace
 } from "./pages";
 
 export const routes = createBrowserRouter([
     {
         path: "/",
         element: <Layout />,
+        errorElement: <ErrorPage />,
         children: [
             {
                 path: "/dashboard",
-                element: <Dashboard />,
+                element: <Dashboard />
             },
             {
                 path: "/projects",
-                element: <ProjectList />,
+                element: <ProjectList />
             },
             {
                 path: "/hub",
-                element: <CommunityHub />,
+                element: <CommunityHub />
             }
         ]
+    },
+    {
+        path: "/workspace/:workspaceId",
+        element: <Workspace />,
+        errorElement: <ErrorPage />
     }
 ]);

@@ -1,0 +1,1403 @@
+{
+   "name":"Big Bank plc",
+   "description":"",
+   "lastModifiedData":"2023-04-06T11:26:23.300Z",
+   "model":{
+      "people":[
+         {
+            "identifier":"pn_banking_customer",
+            "name":"Personal Banking Customer",
+            "description":"A customer of the bank, with personal bank accounts.",
+            "tags":[
+               {
+                  "name":"Element"
+               },
+               {
+                  "name":"Person"
+               }
+            ]
+         }
+      ],
+      "softwareSystems":[
+         {
+            "identifier":"ss_internet_banking",
+            "name":"Internet Banking System",
+            "description":"Allows customers to view information about their bank accounts, and make payments.",
+            "containers":[
+               {
+                  "identifier":"con_web_app",
+                  "name":"Web Application",
+                  "description":"Delivers the static content and the Internet banking single page application.",
+                  "technology":[
+                     {
+                        "name":"Java"
+                     },
+                     {
+                        "name":"Spring MVC"
+                     }
+                  ],
+                  "components":[
+                     
+                  ],
+                  "groups":[
+                     
+                  ],
+                  "relationships":[
+                     
+                  ],
+                  "tags":[
+                     {
+                        "name":"Element"
+                     },
+                     {
+                        "name":"Container"
+                     }
+                  ]
+               },
+               {
+                  "identifier":"con_single_page_app",
+                  "name":"Single-Page Application",
+                  "description":"Provides all of the Internet banking functionality to customers via their web browser.",
+                  "technology":[
+                     {
+                        "name":"JavaScript"
+                     },
+                     {
+                        "name":"Angular"
+                     }
+                  ],
+                  "components":[
+                     
+                  ],
+                  "groups":[
+                     
+                  ],
+                  "relationships":[
+                     
+                  ],
+                  "tags":[
+                     {
+                        "name":"Element"
+                     },
+                     {
+                        "name":"Container"
+                     }
+                  ]
+               },
+               {
+                  "identifier":"con_mobile_app",
+                  "name":"Mobile App",
+                  "description":"Provides limited subset of the Internet banking functionality to the customers via their mobile device.",
+                  "technology":[
+                     {
+                        "name":"Xamarin"
+                     }
+                  ],
+                  "components":[
+                     
+                  ],
+                  "groups":[
+                     
+                  ],
+                  "relationships":[
+                     
+                  ],
+                  "tags":[
+                     {
+                        "name":"Element"
+                     },
+                     {
+                        "name":"Container"
+                     }
+                  ]
+               },
+               {
+                  "identifier":"con_api_application",
+                  "name":"API Application",
+                  "description":"Provides Internet banking functionality via a JSON/HTTPS API.",
+                  "technology":[
+                     {
+                        "name":"Java"
+                     },
+                     {
+                        "name":"Spring MVC"
+                     }
+                  ],
+                  "components":[
+                     {
+                        "identifier":"cmp_signin_ctrl",
+                        "name":"Sign-In Controller",
+                        "description":"Allows user to sign-in in to the Internat Banking System.",
+                        "technology":[
+                           {
+                              "name":"Spring MVC REST Controller"
+                           }
+                        ],
+                        "relationships":[
+                           
+                        ],
+                        "tags":[
+                           {
+                              "name":"Element"
+                           },
+                           {
+                              "name":"Component"
+                           }
+                        ]
+                     },
+                     {
+                        "identifier":"cmp_reset_pwd_ctrl",
+                        "name":"Reset Password Controller",
+                        "description":"Allows user to reset their password with a single use URL.",
+                        "technology":[
+                           {
+                              "name":"Spring MVC REST Controller"
+                           }
+                        ],
+                        "relationships":[
+                           
+                        ],
+                        "tags":[
+                           {
+                              "name":"Element"
+                           },
+                           {
+                              "name":"Component"
+                           }
+                        ]
+                     },
+                     {
+                        "identifier":"cmp_accounts_summary_ctrl",
+                        "name":"Accounts Summary Controller",
+                        "description":"Provides customers with a summary of their bank accouts.",
+                        "technology":[
+                           {
+                              "name":"Spring MVC REST Controller"
+                           }
+                        ],
+                        "relationships":[
+                           
+                        ],
+                        "tags":[
+                           {
+                              "name":"Element"
+                           },
+                           {
+                              "name":"Component"
+                           }
+                        ]
+                     },
+                     {
+                        "identifier":"cmp_security_component",
+                        "name":"Security Component",
+                        "description":"Provides functionality related to signing in, changing passwords, etc.",
+                        "technology":[
+                           {
+                              "name":"Spring Bean"
+                           }
+                        ],
+                        "relationships":[
+                           
+                        ],
+                        "tags":[
+                           {
+                              "name":"Element"
+                           },
+                           {
+                              "name":"Component"
+                           }
+                        ]
+                     },
+                     {
+                        "identifier":"cmp_email_component",
+                        "name":"E-mail Component",
+                        "description":"Sends e-mails to users.",
+                        "technology":[
+                           {
+                              "name":"Spring Bean"
+                           }
+                        ],
+                        "relationships":[
+                           
+                        ],
+                        "tags":[
+                           {
+                              "name":"Element"
+                           },
+                           {
+                              "name":"Component"
+                           }
+                        ]
+                     },
+                     {
+                        "identifier":"cmp_mainframe_facade",
+                        "name":"Mainframe Banking System Facade",
+                        "description":"A facade onto the mainframe banking system.",
+                        "technology":[
+                           {
+                              "name":"Spring Bean"
+                           }
+                        ],
+                        "relationships":[
+                           
+                        ],
+                        "tags":[
+                           {
+                              "name":"Element"
+                           },
+                           {
+                              "name":"Component"
+                           }
+                        ]
+                     }
+                  ],
+                  "groups":[
+                     
+                  ],
+                  "relationships":[
+                     
+                  ],
+                  "tags":[
+                     {
+                        "name":"Element"
+                     },
+                     {
+                        "name":"Container"
+                     }
+                  ]
+               },
+               {
+                  "identifier":"db_database_1",
+                  "name":"Database",
+                  "description":"Stores user registration information, hashed authentication credential, access logs, etc.",
+                  "technology":[
+                     {
+                        "name":"Oracle Database Schema"
+                     }
+                  ],
+                  "components":[
+                     
+                  ],
+                  "groups":[
+                     
+                  ],
+                  "relationships":[
+                     
+                  ],
+                  "tags":[
+                     {
+                        "name":"Element"
+                     },
+                     {
+                        "name":"Container"
+                     }
+                  ]
+               }
+            ],
+            "groups":[
+               
+            ],
+            "technology":[
+               
+            ],
+            "tags":[
+               {
+                  "name":"Element"
+               },
+               {
+                  "name":"Software System"
+               }
+            ]
+         },
+         {
+            "identifier":"ss_mainframe_banking",
+            "name":"Mainframe Banking System",
+            "description":"Stores all of the core banking information about customers, accounts, transactions, etc.",
+            "containers":[
+               
+            ],
+            "groups":[
+               
+            ],
+            "technology":[
+               
+            ],
+            "tags":[
+               {
+                  "name":"Element"
+               },
+               {
+                  "name":"Software System"
+               },
+               {
+                  "name":"External"
+               }
+            ]
+         },
+         {
+            "identifier":"ss_email_system",
+            "name":"E-mail System",
+            "description":"The internal Microsoft Exchange e-mail system.",
+            "containers":[
+               
+            ],
+            "groups":[
+               
+            ],
+            "technology":[
+               
+            ],
+            "tags":[
+               {
+                  "name":"Element"
+               },
+               {
+                  "name":"Software System"
+               },
+               {
+                  "name":"External"
+               }
+            ]
+         }
+      ],
+      "deploymentEnvironments":[
+         {
+            "identifier":"live_env",
+            "name":"Live",
+            "deploymentNodes":[
+               {
+                  "identifier":"dn_customers_computer",
+                  "name":"Customer's Computer",
+                  "technology":[
+                     {
+                        "name":"Microsoft Windows or Apple macOS"
+                     }
+                  ],
+                  "tags":[
+                     {
+                        "name":"Element"
+                     },
+                     {
+                        "name":"Deployment Node"
+                     }
+                  ],
+                  "deploymentNodes":[
+                     {
+                        "identifier":"dn_web_browser",
+                        "name":"Web Browser",
+                        "technology":[
+                           {
+                              "name":"Chrome, Firefox, Safari, or Edge"
+                           }
+                        ],
+                        "tags":[
+                           {
+                              "name":"Element"
+                           },
+                           {
+                              "name":"Deployment Node"
+                           }
+                        ],
+                        "containerInstances":[
+                           {
+                              "identifier":"con_single_page_app_inst_1",
+                              "containerIdentifier":"con_single_page_app",
+                              "tags":[
+                                 {
+                                    "name":"Element"
+                                 },
+                                 {
+                                    "name":"Container"
+                                 },
+                                 {
+                                    "name":"Container Instance"
+                                 }
+                              ]
+                           }
+                        ]
+                     }
+                  ]
+               },
+               {
+                  "identifier":"dn_customers_mobile",
+                  "name":"Customer's Mobile Device",
+                  "technology":[
+                     {
+                        "name":"Apple iOS or Android"
+                     }
+                  ],
+                  "tags":[
+                     {
+                        "name":"Element"
+                     },
+                     {
+                        "name":"Deployment Node"
+                     }
+                  ],
+                  "containerInstances":[
+                     {
+                        "identifier":"con_mobile_app_inst_1",
+                        "containerIdentifier":"con_mobile_app",
+                        "tags":[
+                           {
+                              "name":"Element"
+                           },
+                           {
+                              "name":"Container"
+                           },
+                           {
+                              "name":"Container Instance"
+                           }
+                        ]
+                     }
+                  ]
+               },
+               {
+                  "identifier":"dn_big_bank_plc",
+                  "name":"Big Bank plc",
+                  "technology":[
+                     {
+                        "name":"Big Bank plc data center"
+                     }
+                  ],
+                  "tags":[
+                     {
+                        "name":"Element"
+                     },
+                     {
+                        "name":"Deployment Node"
+                     }
+                  ],
+                  "deploymentNodes":[
+                     {
+                        "identifier":"dn_bigbank_web",
+                        "name":"bigbank-web***",
+                        "technology":[
+                           {
+                              "name":"Ubuntu 16.04 LTS"
+                           }
+                        ],
+                        "instances":4,
+                        "tags":[
+                           {
+                              "name":"Element"
+                           },
+                           {
+                              "name":"Deployment Node"
+                           }
+                        ],
+                        "deploymentNodes":[
+                           {
+                              "identifier":"dn_apache_tomcat_1",
+                              "name":"Apache Tomcat",
+                              "technology":[
+                                 {
+                                    "name":"Apache Tomcat 8.x"
+                                 }
+                              ],
+                              "tags":[
+                                 {
+                                    "name":"Element"
+                                 },
+                                 {
+                                    "name":"Deployment Node"
+                                 }
+                              ],
+                              "containerInstances":[
+                                 {
+                                    "identifier":"con_web_app_inst_1",
+                                    "containerIdentifier":"con_web_app",
+                                    "tags":[
+                                       {
+                                          "name":"Element"
+                                       },
+                                       {
+                                          "name":"Container"
+                                       },
+                                       {
+                                          "name":"Container Instance"
+                                       }
+                                    ]
+                                 }
+                              ]
+                           }
+                        ]
+                     },
+                     {
+                        "identifier":"dn_bigbank_api",
+                        "name":"bigbank-api***",
+                        "technology":[
+                           {
+                              "name":"Ubuntu 16.04.LTS"
+                           }
+                        ],
+                        "instances":8,
+                        "tags":[
+                           {
+                              "name":"Element"
+                           },
+                           {
+                              "name":"Deployment Node"
+                           }
+                        ],
+                        "deploymentNodes":[
+                           {
+                              "identifier":"dn_apache_tomcat_2",
+                              "name":"Apache Tomcat",
+                              "technology":[
+                                 {
+                                    "name":"Apache Tomcat 8.x"
+                                 }
+                              ],
+                              "tags":[
+                                 {
+                                    "name":"Element"
+                                 },
+                                 {
+                                    "name":"Deployment Node"
+                                 }
+                              ],
+                              "containerInstances":[
+                                 {
+                                    "identifier":"con_api_application_inst_1",
+                                    "containerIdentifier":"con_api_application",
+                                    "tags":[
+                                       {
+                                          "name":"Element"
+                                       },
+                                       {
+                                          "name":"Container"
+                                       },
+                                       {
+                                          "name":"Container Instance"
+                                       }
+                                    ]
+                                 }
+                              ]
+                           }
+                        ]
+                     },
+                     {
+                        "identifier":"dn_bigbank_db01",
+                        "name":"bigbank-db01",
+                        "technology":[
+                           {
+                              "name":"Ubuntu 16.04 LTS"
+                           }
+                        ],
+                        "tags":[
+                           {
+                              "name":"Element"
+                           },
+                           {
+                              "name":"Deployment Node"
+                           }
+                        ],
+                        "deploymentNodes":[
+                           {
+                              "identifier":"dn_oracle_primary",
+                              "name":"Oracle - Primary",
+                              "technology":[
+                                 {
+                                    "name":"Oracle 12c"
+                                 }
+                              ],
+                              "tags":[
+                                 {
+                                    "name":"Element"
+                                 },
+                                 {
+                                    "name":"Deployment Node"
+                                 }
+                              ],
+                              "containerInstances":[
+                                 {
+                                    "identifier":"db_database_1_inst_1",
+                                    "containerIdentifier":"db_database_1",
+                                    "tags":[
+                                       {
+                                          "name":"Element"
+                                       },
+                                       {
+                                          "name":"Container"
+                                       },
+                                       {
+                                          "name":"Container Instance"
+                                       }
+                                    ]
+                                 }
+                              ]
+                           }
+                        ]
+                     },
+                     {
+                        "identifier":"dn_bigbank_db02",
+                        "name":"bigbank-db02",
+                        "technology":[
+                           {
+                              "name":"Ubuntu 16.04 LTS"
+                           }
+                        ],
+                        "tags":[
+                           {
+                              "name":"Element"
+                           },
+                           {
+                              "name":"Deployment Node"
+                           },
+                           {
+                              "name":"Secondary"
+                           }
+                        ],
+                        "deploymentNodes":[
+                           {
+                              "identifier":"dn_oracle_secondary",
+                              "name":"Oracle - Secondary",
+                              "technology":[
+                                 {
+                                    "name":"Oracle 12c"
+                                 }
+                              ],
+                              "tags":[
+                                 {
+                                    "name":"Element"
+                                 },
+                                 {
+                                    "name":"Deployment Node"
+                                 }
+                              ],
+                              "containerInstances":[
+                                 {
+                                    "identifier":"db_database_1_inst_2",
+                                    "containerIdentifier":"db_database_1",
+                                    "tags":[
+                                       {
+                                          "name":"Element"
+                                       },
+                                       {
+                                          "name":"Container"
+                                       },
+                                       {
+                                          "name":"Container Instance"
+                                       }
+                                    ]
+                                 }
+                              ]
+                           }
+                        ]
+                     },
+                     {
+                        "identifier":"dn_bigbank_prod001",
+                        "name":"bigbank-prod001",
+                        "tags":[
+                           {
+                              "name":"Element"
+                           },
+                           {
+                              "name":"Deployment Node"
+                           }
+                        ],
+                        "softwareSystemInstances":[
+                           {
+                              "identifier":"ss_mainframe_banking_inst_1",
+                              "softwareSystemIdentifier":"ss_mainframe_banking",
+                              "tags":[
+                                 {
+                                    "name":"Element"
+                                 },
+                                 {
+                                    "name":"Software System"
+                                 },
+                                 {
+                                    "name":"Software System Instance"
+                                 }
+                              ]
+                           }
+                        ]
+                     }
+                  ]
+               }
+            ],
+            "deploymentGroups":[
+               
+            ],
+            "relationships":[
+               
+            ]
+         }
+      ],
+      "relationships":[
+         {
+            "sourceIdentifier":"pn_banking_customer",
+            "targetIdentifier":"ss_internet_banking",
+            "description":"Views account balances, and makes payments using",
+            "tags":[
+               {
+                  "name":"Relationship"
+               }
+            ]
+         },
+         {
+            "sourceIdentifier":"ss_email_system",
+            "targetIdentifier":"pn_banking_customer",
+            "description":"Sends e-mails to",
+            "tags":[
+               {
+                  "name":"Relationship"
+               }
+            ]
+         },
+         {
+            "sourceIdentifier":"ss_internet_banking",
+            "targetIdentifier":"ss_email_system",
+            "description":"Sends e-mails using",
+            "tags":[
+               {
+                  "name":"Relationship"
+               }
+            ]
+         },
+         {
+            "sourceIdentifier":"ss_internet_banking",
+            "targetIdentifier":"ss_mainframe_banking",
+            "description":"Gets account information from, and makes payments using",
+            "tags":[
+               {
+                  "name":"Relationship"
+               }
+            ]
+         },
+         {
+            "sourceIdentifier":"pn_banking_customer",
+            "targetIdentifier":"con_web_app",
+            "description":"Visits bigbank.com/id using",
+            "technology":[
+               {
+                  "name":"HTTPS"
+               }
+            ],
+            "tags":[
+               {
+                  "name":"Relationship"
+               }
+            ]
+         },
+         {
+            "sourceIdentifier":"pn_banking_customer",
+            "targetIdentifier":"con_single_page_app",
+            "description":"Views account balances, and makes payments using",
+            "tags":[
+               {
+                  "name":"Relationship"
+               }
+            ]
+         },
+         {
+            "sourceIdentifier":"pn_banking_customer",
+            "targetIdentifier":"con_mobile_app",
+            "description":"Views account balances, and makes payments using",
+            "tags":[
+               {
+                  "name":"Relationship"
+               }
+            ]
+         },
+         {
+            "sourceIdentifier":"con_web_app",
+            "targetIdentifier":"con_single_page_app",
+            "description":"Delivers to the customer's web browser",
+            "tags":[
+               {
+                  "name":"Relationship"
+               }
+            ]
+         },
+         {
+            "sourceIdentifier":"con_single_page_app",
+            "targetIdentifier":"con_api_application",
+            "description":"Makes API calls to",
+            "technology":[
+               {
+                  "name":"JSON"
+               },
+               {
+                  "name":"HTTPS"
+               }
+            ],
+            "tags":[
+               {
+                  "name":"Relationship"
+               }
+            ]
+         },
+         {
+            "sourceIdentifier":"con_mobile_app",
+            "targetIdentifier":"con_api_application",
+            "description":"Makes API calls to",
+            "technology":[
+               {
+                  "name":"JSON"
+               },
+               {
+                  "name":"HTTPS"
+               }
+            ],
+            "tags":[
+               {
+                  "name":"Relationship"
+               }
+            ]
+         },
+         {
+            "sourceIdentifier":"con_api_application",
+            "targetIdentifier":"db_database_1",
+            "description":"Reads from and writes to",
+            "technology":[
+               {
+                  "name":"JDBC"
+               }
+            ],
+            "tags":[
+               {
+                  "name":"Relationship"
+               }
+            ]
+         },
+         {
+            "sourceIdentifier":"con_api_application",
+            "targetIdentifier":"ss_email_system",
+            "description":"Sends e-mails using",
+            "tags":[
+               {
+                  "name":"Relationship"
+               }
+            ]
+         },
+         {
+            "sourceIdentifier":"con_api_application",
+            "targetIdentifier":"ss_mainframe_banking",
+            "description":"Makes API calls to",
+            "technology":[
+               {
+                  "name":"JSON"
+               },
+               {
+                  "name":"HTTPS"
+               }
+            ],
+            "tags":[
+               {
+                  "name":"Relationship"
+               }
+            ]
+         },
+         {
+            "sourceIdentifier":"con_single_page_app",
+            "targetIdentifier":"cmp_signin_ctrl",
+            "description":"Makes API calls to",
+            "technology":[
+               {
+                  "name":"JSON"
+               },
+               {
+                  "name":"HTTPS"
+               }
+            ],
+            "tags":[
+               {
+                  "name":"Relationship"
+               }
+            ]
+         },
+         {
+            "sourceIdentifier":"con_single_page_app",
+            "targetIdentifier":"cmp_reset_pwd_ctrl",
+            "description":"Makes API calls to",
+            "technology":[
+               {
+                  "name":"JSON"
+               },
+               {
+                  "name":"HTTPS"
+               }
+            ],
+            "tags":[
+               {
+                  "name":"Relationship"
+               }
+            ]
+         },
+         {
+            "sourceIdentifier":"con_single_page_app",
+            "targetIdentifier":"cmp_accounts_summary_ctrl",
+            "description":"Makes API calls to",
+            "technology":[
+               {
+                  "name":"JSON"
+               },
+               {
+                  "name":"HTTPS"
+               }
+            ],
+            "tags":[
+               {
+                  "name":"Relationship"
+               }
+            ]
+         },
+         {
+            "sourceIdentifier":"con_mobile_app",
+            "targetIdentifier":"cmp_signin_ctrl",
+            "description":"Makes API calls to",
+            "technology":[
+               {
+                  "name":"JSON"
+               },
+               {
+                  "name":"HTTPS"
+               }
+            ],
+            "tags":[
+               {
+                  "name":"Relationship"
+               }
+            ]
+         },
+         {
+            "sourceIdentifier":"con_mobile_app",
+            "targetIdentifier":"cmp_reset_pwd_ctrl",
+            "description":"Makes API calls to",
+            "technology":[
+               {
+                  "name":"JSON"
+               },
+               {
+                  "name":"HTTPS"
+               }
+            ],
+            "tags":[
+               {
+                  "name":"Relationship"
+               }
+            ]
+         },
+         {
+            "sourceIdentifier":"con_mobile_app",
+            "targetIdentifier":"cmp_accounts_summary_ctrl",
+            "description":"Makes API calls to",
+            "technology":[
+               {
+                  "name":"JSON"
+               },
+               {
+                  "name":"HTTPS"
+               }
+            ],
+            "tags":[
+               {
+                  "name":"Relationship"
+               }
+            ]
+         },
+         {
+            "sourceIdentifier":"cmp_signin_ctrl",
+            "targetIdentifier":"cmp_security_component",
+            "description":"Uses",
+            "tags":[
+               {
+                  "name":"Relationship"
+               }
+            ]
+         },
+         {
+            "sourceIdentifier":"cmp_reset_pwd_ctrl",
+            "targetIdentifier":"cmp_security_component",
+            "description":"Uses",
+            "tags":[
+               {
+                  "name":"Relationship"
+               }
+            ]
+         },
+         {
+            "sourceIdentifier":"cmp_reset_pwd_ctrl",
+            "targetIdentifier":"cmp_email_component",
+            "description":"Uses",
+            "tags":[
+               {
+                  "name":"Relationship"
+               }
+            ]
+         },
+         {
+            "sourceIdentifier":"cmp_accounts_summary_ctrl",
+            "targetIdentifier":"cmp_mainframe_facade",
+            "description":"Uses",
+            "tags":[
+               {
+                  "name":"Relationship"
+               }
+            ]
+         },
+         {
+            "sourceIdentifier":"cmp_security_component",
+            "targetIdentifier":"db_database_1",
+            "description":"Reads from and writes to",
+            "technology":[
+               {
+                  "name":"JDBC"
+               }
+            ],
+            "tags":[
+               {
+                  "name":"Relationship"
+               }
+            ]
+         },
+         {
+            "sourceIdentifier":"cmp_email_component",
+            "targetIdentifier":"ss_email_system",
+            "description":"Sends e_mails using",
+            "tags":[
+               {
+                  "name":"Relationship"
+               }
+            ]
+         },
+         {
+            "sourceIdentifier":"cmp_mainframe_facade",
+            "targetIdentifier":"ss_mainframe_banking",
+            "description":"Makes API calls to",
+            "technology":[
+               {
+                  "name":"XML"
+               },
+               {
+                  "name":"HTTPS"
+               }
+            ],
+            "tags":[
+               {
+                  "name":"Relationship"
+               }
+            ]
+         },
+         {
+            "sourceIdentifier":"dn_oracle_primary",
+            "targetIdentifier":"dn_oracle_secondary",
+            "description":"Replicates data to",
+            "tags":[
+               {
+                  "name":"Relationship"
+               }
+            ]
+         }
+      ],
+      "groups":[
+         
+      ],
+      "elements":[
+         
+      ]
+   },
+   "views":{
+      "systemContexts":[
+         {
+            "softwareSystemIdentifier":"ss_internet_banking",
+            "key":"Template",
+            "layout":{
+               "pn_banking_customer":{
+                  "x":0,
+                  "y":0
+               },
+               "ss_internet_banking":{
+                  "x":0,
+                  "y":400
+               },
+               "ss_email_system":{
+                  "x":480,
+                  "y":400
+               },
+               "ss_mainframe_banking":{
+                  "x":0,
+                  "y":800
+               }
+            },
+            "title":"Internet Banking System"
+         }
+      ],
+      "containers":[
+         {
+            "softwareSystemIdentifier":"ss_internet_banking",
+            "key":"Template",
+            "layout":{
+               "pn_banking_customer":{
+                  "x":800,
+                  "y":0
+               },
+               "ss_internet_banking":{
+                  "x":0,
+                  "y":380,
+                  "width":1320,
+                  "height":720
+               },
+               "ss_email_system":{
+                  "x":1500,
+                  "y":420
+               },
+               "ss_mainframe_banking":{
+                  "x":1500,
+                  "y":820
+               },
+               "con_web_app":{
+                  "x":40,
+                  "y":40
+               },
+               "con_single_page_app":{
+                  "x":640,
+                  "y":40
+               },
+               "con_mobile_app":{
+                  "x":980,
+                  "y":40
+               },
+               "con_api_application":{
+                  "x":800,
+                  "y":440
+               },
+               "db_database_1":{
+                  "x":40,
+                  "y":440
+               }
+            },
+            "title":"Internet Banking System"
+         }
+      ],
+      "components":[
+         {
+            "containerIdentifier":"con_api_application",
+            "key":"Template",
+            "layout":{
+               "ss_internet_banking":{
+                  "x":0,
+                  "y":0,
+                  "width":1660,
+                  "height":1380
+               },
+               "ss_email_system":{
+                  "x":680,
+                  "y":1100
+               },
+               "ss_mainframe_banking":{
+                  "x":1280,
+                  "y":1100
+               },
+               "con_single_page_app":{
+                  "x":380,
+                  "y":40
+               },
+               "con_mobile_app":{
+                  "x":980,
+                  "y":40
+               },
+               "con_api_application":{
+                  "x":40,
+                  "y":380,
+                  "width":1580,
+                  "height":600
+               },
+               "db_database_1":{
+                  "x":80,
+                  "y":1100
+               },
+               "cmp_signin_ctrl":{
+                  "x":40,
+                  "y":40
+               },
+               "cmp_reset_pwd_ctrl":{
+                  "x":640,
+                  "y":40
+               },
+               "cmp_accounts_summary_ctrl":{
+                  "x":1240,
+                  "y":40
+               },
+               "cmp_security_component":{
+                  "x":40,
+                  "y":320
+               },
+               "cmp_email_component":{
+                  "x":640,
+                  "y":320
+               },
+               "cmp_mainframe_facade":{
+                  "x":1240,
+                  "y":320
+               }
+            },
+            "title":"Internet Banking System _ API Application"
+         }
+      ],
+      "deployments":[
+         {
+            "softwareSystemIdentifier":"ss_internet_banking",
+            "environment":"Live",
+            "key":"Template",
+            "layout":{
+               "ss_internet_banking":{
+                  "x":80,
+                  "y":80
+               },
+               "ss_mainframe_banking_inst_1":{
+                  "x":40,
+                  "y":40
+               },
+               "con_web_app_inst_1":{
+                  "x":40,
+                  "y":40
+               },
+               "con_single_page_app_inst_1":{
+                  "x":40,
+                  "y":40
+               },
+               "con_mobile_app_inst_1":{
+                  "x":40,
+                  "y":40
+               },
+               "con_api_application_inst_1":{
+                  "x":40,
+                  "y":40
+               },
+               "db_database_1_inst_1":{
+                  "x":40,
+                  "y":40
+               },
+               "db_database_1_inst_2":{
+                  "x":40,
+                  "y":40
+               },
+               "dn_customers_computer":{
+                  "x":0,
+                  "y":40,
+                  "width":460,
+                  "height":420
+               },
+               "dn_web_browser":{
+                  "x":40,
+                  "y":40,
+                  "width":380,
+                  "height":320
+               },
+               "dn_customers_mobile":{
+                  "x":40,
+                  "y":740,
+                  "width":380,
+                  "height":320
+               },
+               "dn_big_bank_plc":{
+                  "x":800,
+                  "y":0,
+                  "width":1300,
+                  "height":1800
+               },
+               "dn_bigbank_web":{
+                  "x":40,
+                  "y":40,
+                  "width":460,
+                  "height":420
+               },
+               "dn_apache_tomcat_1":{
+                  "x":40,
+                  "y":40,
+                  "width":380,
+                  "height":320
+               },
+               "dn_bigbank_api":{
+                  "x":40,
+                  "y":700,
+                  "width":460,
+                  "height":420
+               },
+               "dn_apache_tomcat_2":{
+                  "x":40,
+                  "y":40,
+                  "width":380,
+                  "height":320
+               },
+               "dn_bigbank_db02":{
+                  "x":800,
+                  "y":40,
+                  "width":460,
+                  "height":420
+               },
+               "dn_oracle_primary":{
+                  "x":40,
+                  "y":40,
+                  "width":380,
+                  "height":320
+               },
+               "dn_bigbank_db01":{
+                  "x":800,
+                  "y":700,
+                  "width":460,
+                  "height":420
+               },
+               "dn_oracle_secondary":{
+                  "x":40,
+                  "y":40,
+                  "width":380,
+                  "height":320
+               },
+               "dn_bigbank_prod001":{
+                  "x":840,
+                  "y":1400,
+                  "width":380,
+                  "height":320
+               }
+            },
+            "title":"Internet Banking System _ Live",
+            "deploymentNodes":[
+               
+            ]
+         }
+      ],
+      "styles":{
+         "element":{
+            "Person":{
+               "background":"#38A169",
+               "color":"#ffffff",
+               "strokeWidth":0
+            },
+            "Software System":{
+               "background":"#6B46C1",
+               "color":"#ffffff",
+               "strokeWidth":0
+            },
+            "Container":{
+               "background":"#3182ce",
+               "color":"#ffffff",
+               "strokeWidth":0
+            },
+            "Component":{
+               "background":"#90cdf4",
+               "color":"#000000",
+               "strokeWidth":0
+            },
+            "Deployment Node":{
+               "color":"#000000",
+               "strokeWidth":2
+            },
+            "External":{
+               "background":"#999999",
+               "strokeWidth":0
+            },
+            "Secondary":{
+               "opacity":25
+            }
+         },
+         "relationship":{
+            
+         }
+      }
+   }
+}

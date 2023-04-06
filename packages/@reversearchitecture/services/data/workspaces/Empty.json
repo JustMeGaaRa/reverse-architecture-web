@@ -1,0 +1,59 @@
+{
+   "name":"Empty",
+   "description":"An empty diagram",
+   "lastModifiedData":"2023-04-06T11:28:34.562Z",
+   "model":{
+      "people":[
+         
+      ],
+      "softwareSystems":[
+         
+      ],
+      "deploymentEnvironments":[
+         
+      ],
+      "relationships":[
+         
+      ],
+      "groups":[
+         
+      ],
+      "elements":[
+         
+      ]
+   },
+   "views":{
+      "systemContexts":[
+         
+      ],
+      "containers":[
+         
+      ],
+      "components":[
+         
+      ],
+      "deployments":[
+         
+      ],
+      "filtered":[
+         
+      ],
+      "dynamics":[
+         
+      ],
+      "custom":[
+         
+      ],
+      "themes":[
+         
+      ],
+      "styles":{
+         "element":{
+            
+         },
+         "relationship":{
+            
+         }
+      }
+   }
+}
