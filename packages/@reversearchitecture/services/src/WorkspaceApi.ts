@@ -1,4 +1,4 @@
-import BigBankPlc from "../data/workspaces/BigBankPlc.json";
+import BigBankPlc from "./data/workspaces/BigBankPlc.json";
 
 type Workspace = typeof BigBankPlc;
 

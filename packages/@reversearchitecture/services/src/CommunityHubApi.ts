@@ -1,4 +1,4 @@
-import Workspaces from "../data/community/list.json";
+import Workspaces from "./data/community/list.json";
 
 type Workspace = typeof Workspaces.values[0];
 

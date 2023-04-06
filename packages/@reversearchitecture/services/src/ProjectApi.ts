@@ -1,4 +1,4 @@
-import Projects from "../data/projects/list.json";
+import Projects from "./data/projects/list.json";
 
 type Project = typeof Projects.values[0];
 
