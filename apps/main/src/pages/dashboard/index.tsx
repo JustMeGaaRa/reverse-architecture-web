@@ -1,5 +1,6 @@
-import { Box, Heading } from "@chakra-ui/react";
+import { Box, Divider, Heading } from "@chakra-ui/react";
 import { FC, PropsWithChildren } from "react";
+import { ContextSheet } from "../../components/ContextSheet";
 
 export const Dashboard: FC<PropsWithChildren<{
 
@@ -7,10 +8,14 @@ export const Dashboard: FC<PropsWithChildren<{
 
 }) => {
     return (
-        <Box
-            padding={"24px"}
-        >
-            <Heading as={"h1"} mb={8}>Dashboard</Heading>
-        </Box>
+        <ContextSheet>
+            <Box
+                padding={"24px"}
+                width={"100%"}
+            >
+                <Heading as={"h1"}>Dashboard</Heading>
+                <Divider my={8} />
+            </Box>
+        </ContextSheet>
     );
 }

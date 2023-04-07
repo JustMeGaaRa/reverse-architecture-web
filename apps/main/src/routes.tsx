@@ -7,8 +7,10 @@ import {
     Dashboard,
     ErrorPage,
     ProjectList,
+    Settings,
     Workspace
 } from "./pages";
+import { ProfileSection } from "./pages/settings/sections/ProfileSection";
 
 export const routes = createBrowserRouter([
     {
@@ -17,16 +19,34 @@ export const routes = createBrowserRouter([
         errorElement: <ErrorPage />,
         children: [
             {
-                path: "/dashboard",
+                index: true,
                 element: <Dashboard />
             },
             {
-                path: "/projects",
+                path: "dashboard",
+                element: <Dashboard />
+            },
+            {
+                path: "projects",
                 element: <ProjectList />
             },
             {
-                path: "/hub",
+                path: "hub",
                 element: <CommunityHub />
+            },
+            {
+                path: "settings",
+                element: <Settings />,
+                children: [
+                    {
+                        index: true,
+                        element: <ProfileSection />
+                    },
+                    {
+                        path: "profile",
+                        element: <ProfileSection />
+                    }
+                ]
             }
         ]
     },

@@ -12,10 +12,12 @@ import {
     Th,
     Tr,
     Thead,
-    Tbody
+    Tbody,
+    Divider
 } from "@chakra-ui/react";
 import { ProjectApi } from "@reversearchitecture/services";
 import { FC, PropsWithChildren, useEffect, useState } from "react";
+import { ContextSheet } from "../../components/ContextSheet";
 
 export const ProjectList: FC<PropsWithChildren<{
 
@@ -43,47 +45,51 @@ export const ProjectList: FC<PropsWithChildren<{
     }, []);
 
     return (
-        <Box
-            padding={"24px"}
-        >
-            <Heading as={"h1"} mb={8}>All Projects</Heading>
-            <Tabs>
-                <TabList>
-                    <Tab>My projects</Tab>
-                    <Tab>Shared</Tab>
-                    <Tab>Archived</Tab>
-                </TabList>
-                <TabPanels>
-                    <TabPanel>
-                        <TableContainer>
-                            <Table>
-                                <Thead>
-                                    <Tr>
-                                        {metadata.map((item) => (
-                                            <Th key={item.name}>{item.name}</Th>
-                                        ))}
-                                    </Tr>
-                                </Thead>
-                                <Tbody>
-                                    {projects.map((item) => (
-                                        <Tr
+        <ContextSheet>
+            <Box
+                padding={"24px"}
+                width={"100%"}
+            >
+                <Heading as={"h1"} mb={8}>All Projects</Heading>
+                <Divider my={8} />
+                <Tabs>
+                    <TabList>
+                        <Tab>My projects</Tab>
+                        <Tab>Shared</Tab>
+                        <Tab>Archived</Tab>
+                    </TabList>
+                    <TabPanels>
+                        <TabPanel>
+                            <TableContainer>
+                                <Table>
+                                    <Thead>
+                                        <Tr>
+                                            {metadata.map((item) => (
+                                                <Th key={item.name}>{item.name}</Th>
+                                                ))}
+                                        </Tr>
+                                    </Thead>
+                                    <Tbody>
+                                        {projects.map((item) => (
+                                            <Tr
                                             cursor={"pointer"}
                                             key={item.name}
                                             _hover={{ background: "whiteAlpha.100" }}
-                                        >
-                                            {metadata.map((meta) => (
-                                                <Td key={meta.name}>{item[meta.key]}</Td>
-                                            ))}
-                                        </Tr>
-                                    ))}
-                                </Tbody>
-                            </Table>
-                        </TableContainer>
-                    </TabPanel>
-                    <TabPanel></TabPanel>
-                    <TabPanel></TabPanel>
-                </TabPanels>
-            </Tabs>
-        </Box>
+                                            >
+                                                {metadata.map((meta) => (
+                                                    <Td key={meta.name}>{item[meta.key]}</Td>
+                                                    ))}
+                                            </Tr>
+                                        ))}
+                                    </Tbody>
+                                </Table>
+                            </TableContainer>
+                        </TabPanel>
+                        <TabPanel></TabPanel>
+                        <TabPanel></TabPanel>
+                    </TabPanels>
+                </Tabs>
+            </Box>
+        </ContextSheet>
     )
 }

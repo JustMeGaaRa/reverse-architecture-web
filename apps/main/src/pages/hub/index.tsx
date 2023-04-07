@@ -8,12 +8,14 @@ import {
     Tr,
     Thead,
     Tbody,
-    IconButton
+    IconButton,
+    Divider
 } from "@chakra-ui/react";
 import { CommunityHubApi } from "@reversearchitecture/services";
 import { OpenInWindow } from "iconoir-react";
 import { FC, PropsWithChildren, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
+import { ContextSheet } from "../../components/ContextSheet";
 
 export const CommunityHub: FC<PropsWithChildren<{
 
@@ -41,44 +43,48 @@ export const CommunityHub: FC<PropsWithChildren<{
     }, []);
 
     return (
-        <Box
-            padding={"24px"}
-        >
-            <Heading as={"h1"} mb={8}>Community Hub</Heading>
-            <TableContainer>
-                <Table>
-                    <Thead>
-                        <Tr>
-                            {metadata.map((item) => (
-                                <Th key={item.name}>{item.name}</Th>
-                            ))}
-                            <Th>Actions</Th>
-                        </Tr>
-                    </Thead>
-                    <Tbody>
-                        {workspaces.map((item) => (
-                            <Tr
+        <ContextSheet>
+            <Box
+                padding={"24px"}
+                width={"100%"}
+            >
+                <Heading as={"h1"} mb={8}>Community Hub</Heading>
+                <Divider my={8} />
+                <TableContainer>
+                    <Table>
+                        <Thead>
+                            <Tr>
+                                {metadata.map((item) => (
+                                    <Th key={item.name}>{item.name}</Th>
+                                ))}
+                                <Th>Actions</Th>
+                            </Tr>
+                        </Thead>
+                        <Tbody>
+                            {workspaces.map((item) => (
+                                <Tr
                                 cursor={"pointer"}
                                 key={item.name}
                                 _hover={{ background: "whiteAlpha.100" }}
-                            >
-                                {metadata.map((meta) => (
-                                    <Td key={meta.name}>{item[meta.key]}</Td>
-                                ))}
-                                <Td>
-                                    <IconButton
-                                        as={NavLink}
-                                        aria-label={"open"}
-                                        title={"open"}
-                                        icon={<OpenInWindow />}
-                                        to={`../workspace/${item.workspaceId}`}
-                                    />
-                                </Td>
-                            </Tr>
-                        ))}
-                    </Tbody>
-                </Table>
-            </TableContainer>
-        </Box>
+                                >
+                                    {metadata.map((meta) => (
+                                        <Td key={meta.name}>{item[meta.key]}</Td>
+                                        ))}
+                                    <Td>
+                                        <IconButton
+                                            as={NavLink}
+                                            aria-label={"open"}
+                                            title={"open"}
+                                            icon={<OpenInWindow />}
+                                            to={`../workspace/${item.workspaceId}`}
+                                            />
+                                    </Td>
+                                </Tr>
+                            ))}
+                        </Tbody>
+                    </Table>
+                </TableContainer>
+            </Box>
+        </ContextSheet>
     );
 }

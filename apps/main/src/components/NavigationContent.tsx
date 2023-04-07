@@ -9,6 +9,8 @@ export const NavigationContent: FC<PropsWithChildren<{
     return (
         <Flex
             flexGrow={1}
+            height={"100%"}
+            width={"100%"}
         >
             {children}
         </Flex>

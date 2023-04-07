@@ -34,7 +34,9 @@ import { Search } from "../components/Search";
 import { AccountMenu } from "../containers";
 
 export const Layout: FC<PropsWithChildren<{
+
 }>> = ({
+    
 }) => {
     const { isOpen, onToggle } = useDisclosure();
 
@@ -83,9 +85,7 @@ export const Layout: FC<PropsWithChildren<{
                         </Box>
                     </NavigationSidebar>
                     <NavigationContent>
-                        <ContextSheet>
-                            <Outlet />
-                        </ContextSheet>
+                        <Outlet />
                     </NavigationContent>
                 </Navigation>
             </PageBody>

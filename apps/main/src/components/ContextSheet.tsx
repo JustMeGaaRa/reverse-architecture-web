@@ -14,6 +14,7 @@ export const ContextSheet: FC<PropsWithChildren<{
             borderColor={"#FFFFFF1A"}
             overflow={"hidden"}
             width={"100%"}
+            height={"100%"}
         >
             {children}
         </Box>
