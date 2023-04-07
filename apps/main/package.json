@@ -23,6 +23,7 @@
     "@chakra-ui/react": "^2.5.1",
     "@emotion/react": "11.10.5",
     "@emotion/styled": "11.10.5",
+    "@justmegaara/workspace-viewer": "*",
     "@reversearchitecture/theme": "*",
     "@reversearchitecture/services": "*",
     "framer-motion": "7.9.1",

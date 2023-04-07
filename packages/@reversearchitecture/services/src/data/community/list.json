@@ -5,14 +5,14 @@
             "date": "29.03.2023",
             "updatedBy": "pavlo@rvrs.io",
             "access": "write",
-            "workspaceUrl": "/workspaces/BigBankPlc.json"
+            "url": "/workspaces/BigBankPlc.json"
         },
         {
             "name": "Empty",
             "date": "30.03.2023",
             "updatedBy": "vitalii@rvrs.io",
             "access": "readonly",
-            "workspaceUrl": "/workspaces/Empty.json"
+            "url": "/workspaces/Empty.json"
         }
     ]
 }
