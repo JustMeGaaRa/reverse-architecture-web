@@ -2,25 +2,19 @@ import { Flex } from "@chakra-ui/react"
 import { FC, PropsWithChildren } from "react"
 
 export const NavigationSidebar: FC<PropsWithChildren<{
-    expanded: boolean
+    isExpanded: boolean
 }>> = ({
     children,
-    expanded
+    isExpanded
 }) => {
     return (
         <Flex
-            direction={"row"}
-            justifyContent={"center"}
-            width={expanded ? "320px" : "80px"}
-            px={4}
+            direction={"column"}
+            justifyContent={"space-between"}
+            px={2}
+            width={isExpanded ? "320px" : "80px"}
         >
-            <Flex
-                direction={"column"}
-                justifyContent={"space-between"}
-                width={"100%"}
-            >
-                {children}
-            </Flex>
+            {children}
         </Flex>
     )
 }

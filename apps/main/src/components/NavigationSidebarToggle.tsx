@@ -1,10 +1,12 @@
-import { Flex, IconButton } from "@chakra-ui/react";
-import { Menu } from "iconoir-react";
-import { FC } from "react";
+import { Flex, IconButton } from "@chakra-ui/react"
+import { SidebarExpand, SidebarCollapse } from "iconoir-react"
+import { FC, PropsWithChildren } from "react"
 
-export const NavigationSidebarToggle: FC<{
+export const NavigationSidebarToggle: FC<PropsWithChildren<{
+    isExpanded: boolean,
     onClick: () => void
-}> = ({
+}>> = ({
+    isExpanded,
     onClick
 }) => {
     return (
@@ -14,8 +16,9 @@ export const NavigationSidebarToggle: FC<{
             width={"80px"}
         >
             <IconButton
-                aria-label={"navigation sidebar toggle"}
-                icon={<Menu />}
+                aria-label={"toggle navigation sidebar"}
+                icon={isExpanded ? <SidebarCollapse /> : <SidebarExpand />}
+                size={"lg"}
                 variant={"ghost"}
                 onClick={onClick}
             />

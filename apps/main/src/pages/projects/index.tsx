@@ -13,11 +13,13 @@ import {
     Tr,
     Thead,
     Tbody,
-    Divider
+    Divider,
+    VStack
 } from "@chakra-ui/react";
 import { ProjectApi } from "@reversearchitecture/services";
 import { FC, PropsWithChildren, useEffect, useState } from "react";
 import { ContextSheet } from "../../components/ContextSheet";
+import { ProjectCard } from "../../components/ProjectCard";
 
 export const ProjectList: FC<PropsWithChildren<{
 
@@ -28,7 +30,7 @@ export const ProjectList: FC<PropsWithChildren<{
 
     const metadata = [
         { name: "Name", key: "name" },
-        { name: "Last Updated", key: "date" },
+        { name: "Last Updated", key: "updated" },
         { name: "Updated By", key: "updatedBy" },
         { name: "Access", key: "access" }
     ]
@@ -60,6 +62,19 @@ export const ProjectList: FC<PropsWithChildren<{
                     </TabList>
                     <TabPanels>
                         <TabPanel>
+                            <VStack gap={8} height={"100%"} overflowY={"scroll"}>
+                                {projects.map((item) => (
+                                    <ProjectCard
+                                        key={item.name}
+                                        name={item.name}
+                                        updated={item.updated}
+                                        files={item.files}
+                                        members={item.members}
+                                    />
+                                ))}
+                            </VStack>
+                        </TabPanel>
+                        <TabPanel>
                             <TableContainer>
                                 <Table>
                                     <Thead>
@@ -72,20 +87,19 @@ export const ProjectList: FC<PropsWithChildren<{
                                     <Tbody>
                                         {projects.map((item) => (
                                             <Tr
-                                            cursor={"pointer"}
-                                            key={item.name}
-                                            _hover={{ background: "whiteAlpha.100" }}
+                                                cursor={"pointer"}
+                                                key={item.name}
+                                                _hover={{ background: "whiteAlpha.100" }}
                                             >
                                                 {metadata.map((meta) => (
                                                     <Td key={meta.name}>{item[meta.key]}</Td>
-                                                    ))}
+                                                ))}
                                             </Tr>
                                         ))}
                                     </Tbody>
                                 </Table>
                             </TableContainer>
                         </TabPanel>
-                        <TabPanel></TabPanel>
                         <TabPanel></TabPanel>
                     </TabPanels>
                 </Tabs>

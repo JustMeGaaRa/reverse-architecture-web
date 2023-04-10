@@ -1,16 +1,18 @@
 import {
     Avatar,
-    Box,
     Flex,
     IconButton,
     Menu,
     MenuButton,
+    MenuDivider,
+    MenuGroup,
     MenuList,
+    MenuItem,
     Text
 } from "@chakra-ui/react";
 import { FC, PropsWithChildren } from "react";
 import { useAccount } from "./hooks";
-import { NavArrowUp } from "iconoir-react";
+import { NavArrowUp, ProfileCircle } from "iconoir-react";
 
 export const AccountMenu: FC<PropsWithChildren<{
     expanded: boolean;
@@ -21,26 +23,37 @@ export const AccountMenu: FC<PropsWithChildren<{
 
     return (                  
         <Menu>
-            <MenuButton width={"100%"}>
+            <MenuButton
+                borderRadius={16}
+                height={"64px"}
+                width={"100%"}
+                _hover={{
+                    background: "gray.100"
+                }}
+            >
                 <Flex
                     alignItems={"center"}
                     gap={4}
+                    px={3}
                 >
                     <Avatar
-                        background={"#B614F61A"}
+                        background={"purple.200"}
                         backdropBlur={"8px"}
-                        borderColor={"#B614F6"}
+                        borderColor={"purple.primary"}
                         borderWidth={"1px"}
-                        color={"#B614F6"}
+                        colorScheme={"purple"}
+                        color={"purple.primary"}
                         name={account.fullname}
                         src={account.avatar}
                         rounded={"md"}
+                        height={"40px"}
+                        width={"40px"}
                     />
                     {expanded && (
                         <>
                             <Flex
                                 direction={"column"}
-                                alignItems={"left"}
+                                alignItems={"start"}
                                 flexGrow={1}
                             >
                                 <Text fontSize={16}>{account.fullname}</Text>
@@ -56,7 +69,16 @@ export const AccountMenu: FC<PropsWithChildren<{
                 </Flex>
             </MenuButton>
             <MenuList>
-                
+                <MenuGroup>
+                    <MenuItem icon={<ProfileCircle />}>Personal Profile</MenuItem>
+                    <MenuItem icon={<ProfileCircle />}>Theme</MenuItem>
+                    <MenuItem icon={<ProfileCircle />}>Upgrade</MenuItem>
+                </MenuGroup>
+                <MenuDivider />
+                <MenuGroup>
+                    <MenuItem icon={<ProfileCircle />}>Switch Account</MenuItem>
+                    <MenuItem icon={<ProfileCircle />}>Sign Out</MenuItem>
+                </MenuGroup>
             </MenuList>
         </Menu>
     )

@@ -5,38 +5,41 @@ import { NavLink } from "react-router-dom";
 export const Route: FC<{
     to: string,
     icon: JSX.Element,
-    label?: string
-    expanded?: boolean
+    title?: string
+    isExpanded?: boolean
 }> = ({
     to,
     icon,
-    label,
-    expanded = false
+    title,
+    isExpanded = false
 }) => {
-    return expanded ? (
+    return isExpanded ? (
         <Button
             as={NavLink}
-            aria-label={label ?? to}
+            aria-label={title ?? to}
             justifyContent={"left"}
             leftIcon={icon}
             iconSpacing={4}
             px={"11px"}
             to={to}
+            title={title}
             _activeLink={{
-                bg: "whiteAlpha.200"
+                backgroundColor: "gray.100",
+                color: "yellow.primary"
             }}
         >
-            {label}
+            {title}
         </Button>
     ) : (
         <IconButton
             as={NavLink}
-            aria-label={label ?? to}
+            aria-label={title ?? to}
             icon={icon}
-            title={label}
+            title={title}
             to={to}
             _activeLink={{
-                bg: "whiteAlpha.200"
+                backgroundColor: "gray.100",
+                color: "yellow.primary"
             }}
         />
     )

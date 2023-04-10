@@ -1,8 +1,8 @@
 {
     "values": [
-        { "name": "Project 1", "date": "29.03.2023", "updatedBy": "pavlo@rvrs.io", "access": "write", "workspaceId": "123" },
-        { "name": "Project 2", "date": "30.03.2023", "updatedBy": "vitalii@rvrs.io", "access": "readonly", "workspaceId": "456" },
-        { "name": "Project 3", "date": "30.03.2023", "updatedBy": "oleh@rvrs.io", "access": "readonly", "workspaceId": "789" },
-        { "name": "Project 4", "date": "31.03.2023", "updatedBy": "romano@rvrs.io", "access": "readonly", "workspaceId": "248" }
+        { "name": "Project 1", "updated": "29.03.2023", "members": 8, "files": 5, "updatedBy": "pavlo@rvrs.io", "access": "write" },
+        { "name": "Project 2", "updated": "30.03.2023", "members": 8, "files": 5, "updatedBy": "vitalii@rvrs.io", "access": "readonly" },
+        { "name": "Project 3", "updated": "30.03.2023", "members": 8, "files": 5, "updatedBy": "oleh@rvrs.io", "access": "readonly" },
+        { "name": "Project 4", "updated": "31.03.2023", "members": 8, "files": 5, "updatedBy": "romano@rvrs.io", "access": "readonly" }
     ]
 }

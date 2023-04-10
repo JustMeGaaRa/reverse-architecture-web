@@ -28,8 +28,8 @@ export const ErrorPage: FC<{
                     direction={"column"}
                     height={"100%"}
                 >
-                    <Heading as={"h1"}>{error.name}</Heading>
-                    <Heading as={"h2"}>{error.message}</Heading>
+                    <Heading as={"h4"}>{error.name}</Heading>
+                    <Heading as={"h5"}>{error.message}</Heading>
                 </Flex>
             </PageBody>
         </Page>

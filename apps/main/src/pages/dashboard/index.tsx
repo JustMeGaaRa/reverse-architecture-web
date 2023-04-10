@@ -13,7 +13,7 @@ export const Dashboard: FC<PropsWithChildren<{
                 padding={"24px"}
                 width={"100%"}
             >
-                <Heading as={"h1"}>Dashboard</Heading>
+                <Heading as={"h4"}>Dashboard</Heading>
                 <Divider my={8} />
             </Box>
         </ContextSheet>

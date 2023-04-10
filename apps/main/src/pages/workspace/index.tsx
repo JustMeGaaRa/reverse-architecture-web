@@ -43,7 +43,7 @@ export const Workspace: FC<PropsWithChildren<{
             </PageHeader>
             <PageBody>
                 <Navigation>
-                    <NavigationSidebar expanded={false}>
+                    <NavigationSidebar isExpanded={false}>
 
                     </NavigationSidebar>
                     <NavigationContent>
