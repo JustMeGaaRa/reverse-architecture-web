@@ -15,7 +15,7 @@ import { CommunityHubApi } from "@reversearchitecture/services";
 import { OpenInWindow } from "iconoir-react";
 import { FC, PropsWithChildren, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { ContextSheet } from "../../components/ContextSheet";
+import { ContextSheet } from "../../../components/ContextSheet";
 
 export const CommunityHub: FC<PropsWithChildren<{
 

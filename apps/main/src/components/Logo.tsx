@@ -9,6 +9,7 @@ export const Logo: FC<{
         <Flex>
             <Text
                 fontSize={"32px"}
+                fontFamily={"Inter"}
             >
                 RVRS.IO
             </Text>

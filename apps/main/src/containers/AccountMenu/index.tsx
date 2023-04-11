@@ -38,16 +38,11 @@ export const AccountMenu: FC<PropsWithChildren<{
                 >
                     <Avatar
                         background={"purple.200"}
-                        backdropBlur={"8px"}
                         borderColor={"purple.primary"}
-                        borderWidth={"1px"}
-                        colorScheme={"purple"}
                         color={"purple.primary"}
                         name={account.fullname}
                         src={account.avatar}
-                        rounded={"md"}
-                        height={"40px"}
-                        width={"40px"}
+                        title={account.fullname}
                     />
                     {expanded && (
                         <>

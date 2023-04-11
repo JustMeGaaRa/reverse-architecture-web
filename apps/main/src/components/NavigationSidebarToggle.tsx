@@ -13,10 +13,9 @@ export const NavigationSidebarToggle: FC<PropsWithChildren<{
         <Flex
             direction={"row"}
             justifyContent={"center"}
-            width={"80px"}
         >
             <IconButton
-                aria-label={"toggle navigation sidebar"}
+                aria-label={"navigation sidebar toggle"}
                 icon={isExpanded ? <SidebarCollapse /> : <SidebarExpand />}
                 size={"lg"}
                 variant={"ghost"}

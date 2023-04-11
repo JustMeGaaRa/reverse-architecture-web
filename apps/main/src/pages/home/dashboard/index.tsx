@@ -1,6 +1,6 @@
 import { Box, Divider, Heading } from "@chakra-ui/react";
 import { FC, PropsWithChildren } from "react";
-import { ContextSheet } from "../../components/ContextSheet";
+import { ContextSheet } from "../../../components/ContextSheet";
 
 export const Dashboard: FC<PropsWithChildren<{
 

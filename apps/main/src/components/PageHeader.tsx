@@ -12,6 +12,7 @@ export const PageHeader: FC<PropsWithChildren<{
             justifyContent={"space-between"}
             alignItems={"center"}
             height={"80px"}
+            px={4}
         >
             {children}
         </Flex>

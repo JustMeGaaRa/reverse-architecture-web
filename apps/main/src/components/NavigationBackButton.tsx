@@ -1,5 +1,5 @@
 import { Flex, IconButton } from "@chakra-ui/react";
-import { ArrowLeft, Menu } from "iconoir-react";
+import { ArrowLeft } from "iconoir-react";
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -18,11 +18,11 @@ export const NavigationBackButton: FC<{
         <Flex
             direction={"row"}
             justifyContent={"center"}
-            width={"80px"}
         >
             <IconButton
                 aria-label={"navigation back button"}
                 icon={<ArrowLeft />}
+                size={"lg"}
                 variant={"ghost"}
                 onClick={handleOnClick}
             />

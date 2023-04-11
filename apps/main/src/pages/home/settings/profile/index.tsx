@@ -1,8 +1,8 @@
 import { Box, Divider, Heading } from "@chakra-ui/react";
 import { FC } from "react";
-import { ContextSheet } from "../../../components/ContextSheet";
+import { ContextSheet } from "../../../../components/ContextSheet";
 
-export const ProfileSection: FC<{
+export const ProfileSheet: FC<{
 
 }> = ({
 

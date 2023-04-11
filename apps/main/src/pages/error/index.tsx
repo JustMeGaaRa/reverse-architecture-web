@@ -16,7 +16,7 @@ export const ErrorPage: FC<{
     return (
         <Page>
             <PageHeader>
-                <HStack>
+                <HStack gap={2}>
                     <NavigationBackButton />
                     <Logo />
                 </HStack>

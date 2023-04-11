@@ -1,8 +1,8 @@
 export const useAccount = () => {
     return {
-        username: "johny.cash",
-        fullname: "Johny Cash",
-        email: "johny.cash@rvrs.io",
+        username: "joseph.joestar",
+        fullname: "Joseph Joestar",
+        email: "joseph.joestar@rvrs.io",
         avatar: undefined
     }
 }

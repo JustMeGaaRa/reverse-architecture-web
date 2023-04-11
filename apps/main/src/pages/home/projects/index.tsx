@@ -18,8 +18,8 @@ import {
 } from "@chakra-ui/react";
 import { ProjectApi } from "@reversearchitecture/services";
 import { FC, PropsWithChildren, useEffect, useState } from "react";
-import { ContextSheet } from "../../components/ContextSheet";
-import { ProjectCard } from "../../components/ProjectCard";
+import { ContextSheet } from "../../../components/ContextSheet";
+import { ProjectCard } from "../../../components/ProjectCard";
 
 export const ProjectList: FC<PropsWithChildren<{
 

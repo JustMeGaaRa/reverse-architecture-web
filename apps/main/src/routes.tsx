@@ -1,16 +1,17 @@
 import { createBrowserRouter } from "react-router-dom";
 import {
     Layout,
-} from "./pages/layout";
-import {
     CommunityHub,
     Dashboard,
     ErrorPage,
     ProjectList,
     Settings,
-    Workspace
+    Workspace,
+    ProfileSheet,
+    CodeEditorSheet,
+    CommentsSheet,
+    WorkspaceViewerSheet
 } from "./pages";
-import { ProfileSection } from "./pages/settings/sections/ProfileSection";
 
 export const routes = createBrowserRouter([
     {
@@ -40,11 +41,11 @@ export const routes = createBrowserRouter([
                 children: [
                     {
                         index: true,
-                        element: <ProfileSection />
+                        element: <ProfileSheet />
                     },
                     {
                         path: "profile",
-                        element: <ProfileSection />
+                        element: <ProfileSheet />
                     }
                 ]
             }
@@ -53,6 +54,20 @@ export const routes = createBrowserRouter([
     {
         path: "/workspace/:workspaceId",
         element: <Workspace />,
-        errorElement: <ErrorPage />
+        errorElement: <ErrorPage />,
+        children: [
+            {
+                index: true,
+                element: <WorkspaceViewerSheet />
+            },
+            {
+                path: "editor",
+                element: <CodeEditorSheet />
+            },
+            {
+                path: "comments",
+                element: <CommentsSheet />
+            }
+        ]
     }
 ]);

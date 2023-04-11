@@ -20,14 +20,27 @@ const iconStyle = defineStyle((props) => ({
 }));
 
 const itemStyle = defineStyle((props) => ({
-    background: mode("whiteAlpha.900", "brand.bg")(props),
+    background: mode("", "transparent")(props),
+    borderRadius: "8px",
+    color: mode("", "basic.White")(props),
+    _hover: {
+        backgroundColor: mode("", "gray.100")(props),
+    },
     _active: {
-        background: mode("blackAlpha.200", "brand.hover")(props),
+        backgroundColor: mode("", "gray.100")(props),
+        color: mode("", "yellow.primary")(props),
+    },
+    _disabled: {
+        backgroundColor: mode("", "transparent")(props),
+        color: mode("", "gray.200")(props),
     }
 }));
 
 const listStyleStyle = defineStyle((props) => ({
-    background: mode("whiteAlpha.900", "brand.bg")(props)
+    backgroundColor: mode("", "basic.EerieBlack")(props),
+    borderColor: mode("", "gray.200")(props),
+    borderRadius: "14px",
+    padding: "8px"
 }));
 
 const menuStyle = defineStyle((props) => ({
