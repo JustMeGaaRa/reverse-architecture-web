@@ -16,6 +16,7 @@ export const NavigationHomeButton: FC<{
             <IconButton
                 as={NavLink}
                 aria-label={"navigation home button"}
+                colorScheme={"gray"}
                 icon={<HomeSimple />}
                 size={"lg"}
                 variant={"ghost"}

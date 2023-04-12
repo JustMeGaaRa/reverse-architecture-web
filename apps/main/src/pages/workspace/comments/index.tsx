@@ -1,6 +1,8 @@
-import { Box, Flex, Heading } from "@chakra-ui/react";
+import { Box, Divider, Flex, Heading } from "@chakra-ui/react";
 import { FC } from "react";
 import { ContextSheet } from "../../../components/ContextSheet";
+import { ContextSheetContent } from "../../../components/ContextSheetContent";
+import { ContextSheetHeader } from "../../../components/ContextSheetHeader";
 import { WorkspaceViewerSheet } from "../viewer";
 
 export const CommentsSheet: FC<{
@@ -13,11 +15,12 @@ export const CommentsSheet: FC<{
                 direction={"row"}
                 height={"100%"}
             >
-                <Box
-                    padding={4}
-                    width={"400px"}
-                >
-                    <Heading as={"h6"} size={"lg"}>All Comments</Heading>
+                <Box width={"400px"}>
+                    <ContextSheetHeader title={"All Comments"} />
+                    <Divider />
+                    <ContextSheetContent>
+
+                    </ContextSheetContent>
                 </Box>
                 <WorkspaceViewerSheet />
             </Flex>

@@ -5,7 +5,7 @@ import { NavLink } from "react-router-dom";
 export const Route: FC<{
     to: string,
     icon: JSX.Element,
-    title?: string
+    title?: string,
     isExpanded?: boolean
 }> = ({
     to,

@@ -4,7 +4,7 @@ import { createMultiStyleConfigHelpers } from "@chakra-ui/react";
 const {
     definePartsStyle,
     defineMultiStyleConfig
-} = createMultiStyleConfigHelpers(avatarAnatomy.keys)
+} = createMultiStyleConfigHelpers(avatarAnatomy.keys);
 
 const sizes = {
     md: definePartsStyle((props) => ({

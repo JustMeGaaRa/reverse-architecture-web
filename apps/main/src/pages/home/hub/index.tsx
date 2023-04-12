@@ -1,6 +1,5 @@
 import {
     Box,
-    Heading,
     Table,
     TableContainer,
     Td,
@@ -16,6 +15,8 @@ import { OpenInWindow } from "iconoir-react";
 import { FC, PropsWithChildren, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { ContextSheet } from "../../../components/ContextSheet";
+import { ContextSheetContent } from "../../../components/ContextSheetContent";
+import { ContextSheetHeader } from "../../../components/ContextSheetHeader";
 
 export const CommunityHub: FC<PropsWithChildren<{
 
@@ -44,46 +45,46 @@ export const CommunityHub: FC<PropsWithChildren<{
 
     return (
         <ContextSheet>
-            <Box
-                padding={"24px"}
-                width={"100%"}
-            >
-                <Heading as={"h1"} mb={8}>Community Hub</Heading>
-                <Divider my={8} />
-                <TableContainer>
-                    <Table>
-                        <Thead>
-                            <Tr>
-                                {metadata.map((item) => (
-                                    <Th key={item.name}>{item.name}</Th>
-                                ))}
-                                <Th>Actions</Th>
-                            </Tr>
-                        </Thead>
-                        <Tbody>
-                            {workspaces.map((item) => (
-                                <Tr
-                                cursor={"pointer"}
-                                key={item.name}
-                                _hover={{ background: "whiteAlpha.100" }}
-                                >
-                                    {metadata.map((meta) => (
-                                        <Td key={meta.name}>{item[meta.key]}</Td>
-                                        ))}
-                                    <Td>
-                                        <IconButton
-                                            as={NavLink}
-                                            aria-label={"open"}
-                                            title={"open"}
-                                            icon={<OpenInWindow />}
-                                            to={`../workspace/${item.workspaceId}`}
-                                            />
-                                    </Td>
+            <Box>
+                <ContextSheetHeader title={"Community Hub"} />
+                <Divider />
+                <ContextSheetContent>
+                    <TableContainer>
+                        <Table>
+                            <Thead>
+                                <Tr>
+                                    {metadata.map((item) => (
+                                        <Th key={item.name}>{item.name}</Th>
+                                    ))}
+                                    <Th>Actions</Th>
                                 </Tr>
-                            ))}
-                        </Tbody>
-                    </Table>
-                </TableContainer>
+                            </Thead>
+                            <Tbody>
+                                {workspaces.map((item) => (
+                                    <Tr
+                                        key={item.name}
+                                        cursor={"pointer"}
+                                        _hover={{ background: "whiteAlpha.100" }}
+                                    >
+                                        {metadata.map((meta) => (
+                                            <Td key={meta.name}>{item[meta.key]}</Td>
+                                        ))}
+                                        <Td>
+                                            <IconButton
+                                                as={NavLink}
+                                                aria-label={"open"}
+                                                icon={<OpenInWindow />}
+                                                variant={"ghost"}
+                                                title={"open"}
+                                                to={`../workspace/${item.workspaceId}`}
+                                            />
+                                        </Td>
+                                    </Tr>
+                                ))}
+                            </Tbody>
+                        </Table>
+                    </TableContainer>
+                </ContextSheetContent>
             </Box>
         </ContextSheet>
     );

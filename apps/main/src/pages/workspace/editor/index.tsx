@@ -1,6 +1,8 @@
-import { Box, Flex, Heading } from "@chakra-ui/react";
+import { Box, Divider, Flex, Heading } from "@chakra-ui/react";
 import { FC } from "react";
 import { ContextSheet } from "../../../components/ContextSheet";
+import { ContextSheetContent } from "../../../components/ContextSheetContent";
+import { ContextSheetHeader } from "../../../components/ContextSheetHeader";
 import { WorkspaceViewerSheet } from "../viewer";
 
 export const CodeEditorSheet: FC<{
@@ -12,11 +14,12 @@ export const CodeEditorSheet: FC<{
                 direction={"row"}
                 height={"100%"}
             >
-                <Box
-                    padding={4}
-                    width={"400px"}
-                >
-                    <Heading as={"h6"} size={"lg"}>Code Editor</Heading>
+                <Box width={"400px"}>
+                    <ContextSheetHeader title={"Code Editor"} />
+                    <Divider />
+                    <ContextSheetContent>
+
+                    </ContextSheetContent>
                 </Box>
                 <WorkspaceViewerSheet />
             </Flex>

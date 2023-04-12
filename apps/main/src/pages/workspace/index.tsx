@@ -46,6 +46,7 @@ export const Workspace: FC<PropsWithChildren<{
                     </AvatarGroup>
                     <IconButton
                         aria-label={"share"}
+                        colorScheme={"gray"}
                         icon={<AddUser />}
                         size={"md"}
                     />

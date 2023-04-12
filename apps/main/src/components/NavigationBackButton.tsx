@@ -21,6 +21,7 @@ export const NavigationBackButton: FC<{
         >
             <IconButton
                 aria-label={"navigation back button"}
+                colorScheme={"gray"}
                 icon={<ArrowLeft />}
                 size={"lg"}
                 variant={"ghost"}

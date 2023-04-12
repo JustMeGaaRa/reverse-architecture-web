@@ -19,6 +19,8 @@ import {
 import { ProjectApi } from "@reversearchitecture/services";
 import { FC, PropsWithChildren, useEffect, useState } from "react";
 import { ContextSheet } from "../../../components/ContextSheet";
+import { ContextSheetContent } from "../../../components/ContextSheetContent";
+import { ContextSheetHeader } from "../../../components/ContextSheetHeader";
 import { ProjectCard } from "../../../components/ProjectCard";
 
 export const ProjectList: FC<PropsWithChildren<{
@@ -48,61 +50,60 @@ export const ProjectList: FC<PropsWithChildren<{
 
     return (
         <ContextSheet>
-            <Box
-                padding={"24px"}
-                width={"100%"}
-            >
-                <Heading as={"h1"} mb={8}>All Projects</Heading>
-                <Divider my={8} />
-                <Tabs>
-                    <TabList>
-                        <Tab>My projects</Tab>
-                        <Tab>Shared</Tab>
-                        <Tab>Archived</Tab>
-                    </TabList>
-                    <TabPanels>
-                        <TabPanel>
-                            <VStack gap={8} height={"100%"} overflowY={"scroll"}>
-                                {projects.map((item) => (
-                                    <ProjectCard
-                                        key={item.name}
-                                        name={item.name}
-                                        updated={item.updated}
-                                        files={item.files}
-                                        members={item.members}
-                                    />
-                                ))}
-                            </VStack>
-                        </TabPanel>
-                        <TabPanel>
-                            <TableContainer>
-                                <Table>
-                                    <Thead>
-                                        <Tr>
-                                            {metadata.map((item) => (
-                                                <Th key={item.name}>{item.name}</Th>
-                                                ))}
-                                        </Tr>
-                                    </Thead>
-                                    <Tbody>
-                                        {projects.map((item) => (
-                                            <Tr
-                                                cursor={"pointer"}
-                                                key={item.name}
-                                                _hover={{ background: "whiteAlpha.100" }}
-                                            >
-                                                {metadata.map((meta) => (
-                                                    <Td key={meta.name}>{item[meta.key]}</Td>
-                                                ))}
+            <Box>
+                <ContextSheetHeader title={"All Projects"} />
+                <Divider />
+                <ContextSheetContent>
+                    <Tabs>
+                        <TabList>
+                            <Tab>My projects</Tab>
+                            <Tab>Shared</Tab>
+                            <Tab>Archived</Tab>
+                        </TabList>
+                        <TabPanels>
+                            <TabPanel>
+                                <VStack gap={8} height={"100%"} overflowY={"scroll"}>
+                                    {projects.map((item) => (
+                                        <ProjectCard
+                                            key={item.name}
+                                            name={item.name}
+                                            updated={item.updated}
+                                            files={item.files}
+                                            members={item.members}
+                                        />
+                                    ))}
+                                </VStack>
+                            </TabPanel>
+                            <TabPanel>
+                                <TableContainer>
+                                    <Table>
+                                        <Thead>
+                                            <Tr>
+                                                {metadata.map((item) => (
+                                                    <Th key={item.name}>{item.name}</Th>
+                                                    ))}
                                             </Tr>
-                                        ))}
-                                    </Tbody>
-                                </Table>
-                            </TableContainer>
-                        </TabPanel>
-                        <TabPanel></TabPanel>
-                    </TabPanels>
-                </Tabs>
+                                        </Thead>
+                                        <Tbody>
+                                            {projects.map((item) => (
+                                                <Tr
+                                                    cursor={"pointer"}
+                                                    key={item.name}
+                                                    _hover={{ background: "whiteAlpha.100" }}
+                                                >
+                                                    {metadata.map((meta) => (
+                                                        <Td key={meta.name}>{item[meta.key]}</Td>
+                                                    ))}
+                                                </Tr>
+                                            ))}
+                                        </Tbody>
+                                    </Table>
+                                </TableContainer>
+                            </TabPanel>
+                            <TabPanel></TabPanel>
+                        </TabPanels>
+                    </Tabs>
+                </ContextSheetContent>
             </Box>
         </ContextSheet>
     )

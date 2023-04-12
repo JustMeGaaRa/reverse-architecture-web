@@ -4,6 +4,7 @@ import { mode } from "@chakra-ui/theme-tools";
 export const Button: ComponentStyleConfig = {
     baseStyle: {
         colorScheme: "yellow",
+        fontWeight: "normal",
     },
     sizes: {
         sm: {
@@ -84,6 +85,7 @@ export const Button: ComponentStyleConfig = {
         })
     },
     defaultProps: {
+        colorScheme: "yellow",
         size: "md",
         variant: "outline",
     }

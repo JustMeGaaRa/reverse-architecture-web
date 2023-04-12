@@ -16,6 +16,7 @@ export const NavigationSidebarToggle: FC<PropsWithChildren<{
         >
             <IconButton
                 aria-label={"navigation sidebar toggle"}
+                colorScheme={"gray"}
                 icon={isExpanded ? <SidebarCollapse /> : <SidebarExpand />}
                 size={"lg"}
                 variant={"ghost"}

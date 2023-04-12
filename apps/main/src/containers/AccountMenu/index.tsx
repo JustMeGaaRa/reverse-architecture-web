@@ -52,10 +52,11 @@ export const AccountMenu: FC<PropsWithChildren<{
                                 flexGrow={1}
                             >
                                 <Text fontSize={16}>{account.fullname}</Text>
-                                <Text fontSize={14} color={"#A4A5A5"}>{account.email}</Text>
+                                <Text fontSize={14} color={"gray.400"}>{account.email}</Text>
                             </Flex>
                             <IconButton
                                 aria-label={"expand/collapse"}
+                                colorScheme={"gray"}
                                 icon={<NavArrowUp />}
                                 variant={"ghost"}
                             />

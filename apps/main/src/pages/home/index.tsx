@@ -53,13 +53,14 @@ export const Layout: FC<PropsWithChildren<{
                 <Box>
                     <ButtonGroup size={"lg"} variant={"outline"}>
                         <Button
+                            aria-label={"create new file"}
                             colorScheme={"yellow"}
                             leftIcon={<AddPageAlt />}
                         >
                             Create new file
                         </Button>
                         <IconButton
-                            aria-label={"button"}
+                            aria-label={"import file"}
                             colorScheme={"gray"}
                             icon={<Upload />}
                         />
