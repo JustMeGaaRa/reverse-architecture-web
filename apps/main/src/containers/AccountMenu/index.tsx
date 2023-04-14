@@ -10,9 +10,9 @@ import {
     MenuItem,
     Text
 } from "@chakra-ui/react";
+import { NavArrowUp, ProfileCircle } from "iconoir-react";
 import { FC, PropsWithChildren } from "react";
 import { useAccount } from "./hooks";
-import { NavArrowUp, ProfileCircle } from "iconoir-react";
 
 export const AccountMenu: FC<PropsWithChildren<{
     expanded: boolean;

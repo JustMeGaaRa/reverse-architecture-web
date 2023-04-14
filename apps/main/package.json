@@ -27,6 +27,7 @@
     "@justmegaara/y-reactflow": "*",
     "@reversearchitecture/theme": "*",
     "@reversearchitecture/services": "*",
+    "@reversearchitecture/ui": "*",
     "framer-motion": "7.9.1",
     "iconoir-react": "^6.3.0",
     "react": "^18.0.0",

@@ -9,6 +9,19 @@ import {
     useDisclosure
 } from "@chakra-ui/react";
 import {
+    Logo,
+    Navigation,
+    NavigationContent,
+    NavigationSidebarToggle,
+    NavigationSidebar,
+    Page,
+    PageBody,
+    PageHeader,
+    Route,
+    RouteList,
+    Search
+} from "@reversearchitecture/ui";
+import {
     AddPageAlt,
     BellNotification,
     Globe,
@@ -20,17 +33,6 @@ import {
 } from "iconoir-react";
 import { FC, PropsWithChildren } from "react";
 import { Outlet } from "react-router";
-import { Route } from "../../components/Route";
-import { Page } from "../../components/Page";
-import { PageHeader } from "../../components/PageHeader";
-import { PageBody } from "../../components/PageBody";
-import { Navigation } from "../../components/Navigation";
-import { NavigationSidebarToggle } from "../../components/NavigationSidebarToggle";
-import { NavigationSidebar } from "../../components/NavigationSidebar";
-import { NavigationContent } from "../../components/NavigationContent";
-import { Logo } from "../../components/Logo";
-import { RouteList } from "../../components/RouteList";
-import { Search } from "../../components/Search";
 import { AccountMenu } from "../../containers";
 
 export const Layout: FC<PropsWithChildren<{

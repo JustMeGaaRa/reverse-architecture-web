@@ -11,12 +11,19 @@ import {
     Divider
 } from "@chakra-ui/react";
 import { CommunityHubApi } from "@reversearchitecture/services";
+import {
+    ContextSheet,
+    ContextSheetContent,
+    ContextSheetHeader
+} from "@reversearchitecture/ui";
 import { OpenInWindow } from "iconoir-react";
-import { FC, PropsWithChildren, useEffect, useState } from "react";
+import {
+    FC,
+    PropsWithChildren,
+    useEffect,
+    useState
+} from "react";
 import { NavLink } from "react-router-dom";
-import { ContextSheet } from "../../../components/ContextSheet";
-import { ContextSheetContent } from "../../../components/ContextSheetContent";
-import { ContextSheetHeader } from "../../../components/ContextSheetHeader";
 
 export const CommunityHub: FC<PropsWithChildren<{
 

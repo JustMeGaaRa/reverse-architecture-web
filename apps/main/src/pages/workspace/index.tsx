@@ -1,24 +1,41 @@
-import { Avatar, AvatarGroup, Box, Flex, HStack, IconButton } from "@chakra-ui/react";
+import {
+    Avatar,
+    AvatarGroup,
+    Box,
+    Divider,
+    Flex,
+    HStack,
+    IconButton
+} from "@chakra-ui/react";
+import {
+    Navigation,
+    NavigationContent,
+    NavigationHomeButton,
+    NavigationSidebar,
+    Page,
+    PageBody,
+    PageHeader,
+    Route,
+    RouteList
+} from "@reversearchitecture/ui";
+import {
+    AddKeyframes,
+    AddUser,
+    ChatLines,
+    Code,
+    HelpCircle,
+    Timer
+} from "iconoir-react";
 import { FC, PropsWithChildren } from "react";
-import { Logo } from "../../components/Logo";
-import { Page } from "../../components/Page";
-import { PageHeader } from "../../components/PageHeader";
-import { PageBody } from "../../components/PageBody";
-import { Navigation } from "../../components/Navigation";
-import { NavigationBackButton } from "../../components/NavigationBackButton";
-import { NavigationSidebar } from "../../components/NavigationSidebar";
-import { NavigationContent } from "../../components/NavigationContent";
-import { AddKeyframes, AddUser, ChatLines, Code, HelpCircle, Timer } from "iconoir-react";
 import { Outlet } from "react-router";
-import { RouteList } from "../../components/RouteList";
-import { Route } from "../../components/Route";
-import { NavigationHomeButton } from "../../components/NavigationHomeButton";
+import { WorkspaceMenu } from "../../containers";
 
 export const Workspace: FC<PropsWithChildren<{
 
 }>> = ({
 
 }) => {
+    const title = "Big Bank plc.";
     const users = [
         { name: "Joseph Joestar", },
         { name: "Erina Pendleton", },
@@ -31,7 +48,13 @@ export const Workspace: FC<PropsWithChildren<{
             <PageHeader>
                 <HStack gap={2}>
                     <NavigationHomeButton />
-                    <Logo />
+                    <Divider
+                        borderWidth={1}
+                        color={"gray.200"}
+                        height={"32px"}
+                        orientation={"vertical"}
+                    />
+                    <WorkspaceMenu title={title} />
                 </HStack>
                 <HStack gap={2}>
                     <AvatarGroup max={3} colorScheme={"purple"}>

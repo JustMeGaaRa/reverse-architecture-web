@@ -1,13 +1,15 @@
-import { FC } from "react";
 import { Box, Divider, Flex } from "@chakra-ui/react";
-import { Outlet } from "react-router";
-import { ContextSheet } from "../../../components/ContextSheet";
-import { RouteList } from "../../../components/RouteList";
-import { Route } from "../../../components/Route";
+import {
+    ContextSheet,
+    ContextSheetContent,
+    ContextSheetHeader,
+    Route,
+    RouteList,
+    RouteSection
+} from "@reversearchitecture/ui";
 import { ProfileCircle } from "iconoir-react";
-import { RouteSection } from "../../../components/RouteSection";
-import { ContextSheetHeader } from "../../../components/ContextSheetHeader";
-import { ContextSheetContent } from "../../../components/ContextSheetContent";
+import { FC } from "react";
+import { Outlet } from "react-router";
 
 export const Settings: FC<{
 

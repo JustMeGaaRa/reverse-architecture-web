@@ -1,8 +1,10 @@
-import { Box, Divider, Flex, Heading } from "@chakra-ui/react";
+import { Box, Divider, Flex } from "@chakra-ui/react";
+import {
+    ContextSheet,
+    ContextSheetContent,
+    ContextSheetHeader
+} from "@reversearchitecture/ui";
 import { FC } from "react";
-import { ContextSheet } from "../../../components/ContextSheet";
-import { ContextSheetContent } from "../../../components/ContextSheetContent";
-import { ContextSheetHeader } from "../../../components/ContextSheetHeader";
 import { WorkspaceViewerSheet } from "../viewer";
 
 export const CommentsSheet: FC<{

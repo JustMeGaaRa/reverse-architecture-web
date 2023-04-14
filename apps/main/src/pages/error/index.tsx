@@ -1,11 +1,13 @@
 import { Flex, HStack, Heading } from "@chakra-ui/react";
+import {
+    Logo,
+    NavigationBackButton,
+    Page,
+    PageBody,
+    PageHeader,
+} from "@reversearchitecture/ui";
 import { FC } from "react";
-import { Page } from "../../components/Page";
-import { PageHeader } from "../../components/PageHeader";
-import { PageBody } from "../../components/PageBody";
 import { useRouteError } from "react-router";
-import { NavigationBackButton } from "../../components/NavigationBackButton";
-import { Logo } from "../../components/Logo";
 
 export const ErrorPage: FC<{
 }> = ({

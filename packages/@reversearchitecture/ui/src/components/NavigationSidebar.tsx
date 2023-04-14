@@ -1,5 +1,5 @@
-import { Flex } from "@chakra-ui/react"
-import { FC, PropsWithChildren } from "react"
+import { Flex } from "@chakra-ui/react";
+import { FC, PropsWithChildren } from "react";
 
 export const NavigationSidebar: FC<PropsWithChildren<{
     isExpanded: boolean

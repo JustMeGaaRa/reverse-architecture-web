@@ -1,6 +1,5 @@
 import {
     Box,
-    Heading,
     Tabs,
     Tab,
     TabList,
@@ -17,11 +16,18 @@ import {
     VStack
 } from "@chakra-ui/react";
 import { ProjectApi } from "@reversearchitecture/services";
-import { FC, PropsWithChildren, useEffect, useState } from "react";
-import { ContextSheet } from "../../../components/ContextSheet";
-import { ContextSheetContent } from "../../../components/ContextSheetContent";
-import { ContextSheetHeader } from "../../../components/ContextSheetHeader";
-import { ProjectCard } from "../../../components/ProjectCard";
+import {
+    ContextSheet,
+    ContextSheetContent,
+    ContextSheetHeader,
+    ProjectCard
+} from "@reversearchitecture/ui";
+import {
+    FC,
+    PropsWithChildren,
+    useEffect,
+    useState
+} from "react";
 
 export const ProjectList: FC<PropsWithChildren<{
 

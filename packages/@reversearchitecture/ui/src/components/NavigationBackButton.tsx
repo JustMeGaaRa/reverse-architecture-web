@@ -1,19 +1,12 @@
 import { Flex, IconButton } from "@chakra-ui/react";
 import { ArrowLeft } from "iconoir-react";
 import { FC } from "react";
-import { useNavigate } from "react-router-dom";
 
 export const NavigationBackButton: FC<{
     onClick?: () => void
 }> = ({
     onClick
 }) => {
-    const navigate = useNavigate();
-    const handleOnClick = () => {
-        navigate(-1);
-        onClick && onClick();
-    }
-
     return (
         <Flex
             direction={"row"}
@@ -25,7 +18,7 @@ export const NavigationBackButton: FC<{
                 icon={<ArrowLeft />}
                 size={"lg"}
                 variant={"ghost"}
-                onClick={handleOnClick}
+                onClick={onClick}
             />
         </Flex>
     )

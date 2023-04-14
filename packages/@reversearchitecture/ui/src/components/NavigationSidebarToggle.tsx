@@ -1,6 +1,6 @@
-import { Flex, IconButton } from "@chakra-ui/react"
-import { SidebarExpand, SidebarCollapse } from "iconoir-react"
-import { FC, PropsWithChildren } from "react"
+import { Flex, IconButton } from "@chakra-ui/react";
+import { SidebarExpand, SidebarCollapse } from "iconoir-react";
+import { FC, PropsWithChildren } from "react";
 
 export const NavigationSidebarToggle: FC<PropsWithChildren<{
     isExpanded: boolean,
