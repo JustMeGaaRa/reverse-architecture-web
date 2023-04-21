@@ -29,7 +29,6 @@ export * from "./view/ComponentView";
 export * from "./view/ContainerView";
 export * from "./view/DeploymentView";
 export * from "./view/Dimension";
-export * from "./view/DynamicView";
 export * from "./view/ElementStyle";
 export * from "./view/ElementStyleProperties";
 export * from "./view/GenericView";
@@ -49,6 +48,14 @@ export * from "./workspace/Model";
 export * from "./workspace/Views";
 export * from "./workspace/Workspace";
 
-export * from "./store";
-export * from "./store/WorkspaceActions";
-export * from "./store/WorkspaceState";
+export * from "./visitors/IElement";
+export * from "./visitors/IVisitor";
+export * from "./visitors/IClient";
+export * from "./visitors/ComponentViewClient";
+export * from "./visitors/ContainerViewClient";
+export * from "./visitors/DeploymentViewClient";
+export * from "./visitors/RelationshipElement";
+export * from "./visitors/SystemContextViewClient";
+export * from "./visitors/SystemLandscapeViewClient";
+
+export * from "./utils";

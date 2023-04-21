@@ -1,107 +1,88 @@
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    Button
-} from "@chakra-ui/react";
-import { Workspace as WorkspaceType } from "@justmegaara/structurizr-dsl";
-import { WorkspaceRenderer } from "@justmegaara/workspace-viewer";
+import { GenericView } from "@justmegaara/structurizr-dsl";
+import { useWorkspaceStore, WorkspaceRenderer } from "@justmegaara/workspace-viewer";
 import { WorkspaceApi } from "@reversearchitecture/services";
-import {
-    ContextSheet,
-} from "@reversearchitecture/ui";
+import { ContextSheet } from "@reversearchitecture/ui";
 import { Panel } from "@reactflow/core";
-import {
-    Rhombus,
-    Square,
-    Triangle,
-} from "iconoir-react";
-import { FC, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { WorkspaceToolbar } from "../../../containers";
+import {
+    WorkspaceBreadcrumb,
+    WorkspaceToolbar,
+    WorkspaceZoom
+} from "../../../containers";
 
 export const WorkspaceViewerSheet: FC<{
 
 }> = () => {
     const params = useParams<{ workspaceId: string }>();
-    const [workspace, setWorkspace] = useState<WorkspaceType>();
+    const { workspace, setWorkspace, levels, setLevels } = useWorkspaceStore();
+    const [view, setView] = useState<GenericView>();
 
     useEffect(() => {
         const api = new WorkspaceApi();
         api.getWorkspace(params.workspaceId)
             .then(workspace => {
-                setWorkspace(JSON.parse(JSON.stringify(workspace)));
+                const systemContextView = workspace.views.systemContexts[0];
+                setWorkspace(workspace);
+                setView(systemContextView);
+                setLevels([{ view: systemContextView }])
             })
             .catch(error => {
                 console.error(error);
             });
-    }, [params.workspaceId]);
+    }, [params.workspaceId, setWorkspace, setView, setLevels]);
 
-    const colors = [
-        {
-            scheme: "yellow",
-            color: "#E3FB51",
-        },
-        {
-            scheme: "blue",
-            color: "#0A84FF",
-        },
-        {
-            scheme: "purple",
-            color: "#BF5AF2",
+    const layout = view ? { [view.identifier]: view.layout } : undefined;
+
+    const onNodesDoubleClick = useCallback((event: React.MouseEvent, node: any) => {
+        const element = node.data.element;
+        // TODO: set newly created view object as the current view (as there might be no view for the element)
+        // setView({
+        //     identifier: element.identifier,
+        //     type: element.tags[1].name,
+        //     title: `${element.tags[1].name} - ${element.name}`,
+        // });
+        if (element.tags.some(tag => tag.name === "Software System")) {
+            const view = workspace.views.containers.find(view => view.identifier === element.identifier);
+            setView(view);
+            setLevels([...levels, { view }]);
         }
-    ]
-    const levels = [
-        { name: "Context - [block name]" },
-        { name: "Container - [block name]" },
-        { name: "Component - [block name]" }
-    ]
+        if (element.tags.some(tag => tag.name === "Container")) {
+            const view = workspace.views.components.find(view => view.identifier === element.identifier);
+            setView(view);
+            setLevels([...levels, { view }]);
+        }
+    }, [workspace, setView, levels, setLevels]);
+
+    const onBreadcrumItemClick = useCallback((level) => {
+        setView(level.view);
+        // TODO: remove levels after the selected level
+        // setLevels([...levels, level])
+    }, []);
 
     return (
         <ContextSheet>
-            <WorkspaceRenderer
-                workspace={workspace}
-            >
-                <Panel position={"top-left"}>
-                    <Breadcrumb separator={""}>
-                        {levels.map((level, index) => (
-                            <BreadcrumbItem
-                                key={level.name}
-                                isCurrentPage={index === levels.length - 1}
-                            >
-                                <BreadcrumbLink
-                                    as={Button}
-                                    backgroundColor={"gray.100"}
-                                    borderColor={"gray.200"}
-                                    borderWidth={1}
-                                    borderRadius={8}
-                                    colorScheme={colors[index].scheme}
-                                    height={"24px"}
-                                    leftIcon={
-                                        <Triangle fontSize={6} color={colors[index].color} />
-                                    }
-                                    fontSize={"14px"}
-                                    color={"gray.700"}
-                                    _hover={{
-                                        textDecoration: "none"
-                                    }}
-                                    _activeLink={{
-                                        colorScheme: colors[index].scheme,
-                                        backgroundColor: `${colors[index].scheme}.100`,
-                                        borderColor: `${colors[index].scheme}.primary`,
-                                        color: "basic.White"
-                                    }}
-                                >
-                                    {level.name}
-                                </BreadcrumbLink>
-                            </BreadcrumbItem>
-                        ))}
-                    </Breadcrumb>
-                </Panel>
-                <Panel position={"bottom-center"}>
-                    <WorkspaceToolbar />
-                </Panel>
-            </WorkspaceRenderer>
+            {workspace && view && (
+                <WorkspaceRenderer
+                    workspace={workspace}
+                    workspaceLayout={layout}
+                    initialView={view}
+                    onNodesDoubleClick={onNodesDoubleClick}
+                >
+                    <Panel position={"top-left"}>
+                        <WorkspaceBreadcrumb
+                            items={levels}
+                            onClick={onBreadcrumItemClick}
+                        />
+                    </Panel>
+                    <Panel position={"bottom-right"}>
+                        <WorkspaceZoom />
+                    </Panel>
+                    <Panel position={"bottom-center"}>
+                        <WorkspaceToolbar />
+                    </Panel>
+                </WorkspaceRenderer>
+            )}
         </ContextSheet>
     );
 };

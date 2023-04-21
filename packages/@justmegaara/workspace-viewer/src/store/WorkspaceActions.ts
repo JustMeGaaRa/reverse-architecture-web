@@ -10,7 +10,8 @@ import {
     Size,
     SoftwareSystem,
     Workspace
-} from "..";
+} from "@justmegaara/structurizr-dsl";
+import { Level } from "./WorkspaceState";
 
 export type WorkspaceActions = {
     setWorkspace: Action<Workspace>;
@@ -23,6 +24,7 @@ export type WorkspaceActions = {
     addDeploymentNode: Action<DeploymentNodeParams>;
     addRelationship: Action<Relationship>;
     setElementDimension: Action<LayoutElementParams>;
+    setLevels: Action<Array<Level>>;
 };
 
 export type Action<TParam> = (param: TParam) => void;

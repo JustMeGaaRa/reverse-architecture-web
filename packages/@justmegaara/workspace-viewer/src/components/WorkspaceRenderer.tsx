@@ -1,23 +1,30 @@
 import "@reactflow/core/dist/style.css";
 
-import { Workspace, buildSystemContextView } from "@justmegaara/structurizr-dsl";
+import {
+    ComponentViewClient,
+    ContainerViewClient,
+    DeploymentViewClient,
+    GenericView,
+    IClient,
+    SystemContextViewClient,
+    SystemLandscapeViewClient,
+    ViewType,
+    Workspace,
+    WorkspaceLayout
+} from "@justmegaara/structurizr-dsl";
 import { Background, BackgroundVariant } from "@reactflow/background";
 import {
     ReactFlow,
     ConnectionMode,
-    applyNodeChanges,
-    applyEdgeChanges,
-    NodeChange,
-    EdgeChange,
+    NodeMouseHandler,
 } from "@reactflow/core";
 import {
     FC,
     PropsWithChildren,
-    useCallback,
 } from "react";
 import { ElementNodeWrapper } from "./Nodes/ElementNode";
 import { RelationshipEdgeWrapper } from "./Edges/RelationshipEdge";
-import { fromSystemContextView } from "../utils/Workspace";
+import { ReactFlowVisitor } from "../services/ReactFlowVisitor";
 
 const NodeTypes = {
     element: ElementNodeWrapper,
@@ -39,21 +46,33 @@ const EdgeTypes = {
 
 export const WorkspaceRenderer: FC<PropsWithChildren<{
     workspace?: Workspace;
+    workspaceLayout?: WorkspaceLayout;
+    initialView?: GenericView;
+    onNodesDoubleClick?: NodeMouseHandler;
 }>> = ({
     children,
-    workspace
+    workspace,
+    workspaceLayout,
+    initialView,
+    onNodesDoubleClick
 }) => {
-    const view = workspace
-        ? buildSystemContextView(workspace, workspace?.views.systemContexts[0].softwareSystemIdentifier)
-        : undefined;
-    const { nodes: defaultNodes, edges: defaultEdges } = fromSystemContextView(view, workspace);
+    const viewLayout = workspaceLayout[initialView.identifier];
+    const viewFunctions: Map<ViewType, IClient> = new Map<ViewType, IClient>([
+        [ "System Landscape", new SystemLandscapeViewClient(workspace, viewLayout)],
+        [ "System Context", new SystemContextViewClient(workspace, viewLayout, initialView.identifier) ],
+        [ "Container", new ContainerViewClient(workspace, viewLayout, initialView.identifier) ],
+        [ "Component", new ComponentViewClient(workspace, viewLayout, initialView.identifier) ],
+        [ "Deployment", new DeploymentViewClient(workspace, "REPLACE", initialView.identifier)],
+    ]);
 
-    const onNodesChange = useCallback((changes: NodeChange[]) => {
-        applyNodeChanges(changes, defaultNodes);
-    }, [defaultNodes]);
-    const onEdgesChange = useCallback((changes: EdgeChange[]) => {
-        applyEdgeChanges(changes, defaultEdges);
-    }, [defaultEdges]);
+    const visitor = new ReactFlowVisitor(
+        workspace,
+        viewLayout,
+        initialView.type,
+        initialView.identifier
+    );
+    viewFunctions.get(initialView.type).accept(visitor);
+    const { nodes, edges } = visitor.getReactFlow();
 
     const fitViewOptions = {
         padding: 0.2,
@@ -67,14 +86,13 @@ export const WorkspaceRenderer: FC<PropsWithChildren<{
             connectionMode={ConnectionMode.Loose}
             fitView
             fitViewOptions={fitViewOptions}
-            nodes={defaultNodes}
-            edges={defaultEdges}
+            nodes={nodes}
+            edges={edges}
             edgeTypes={EdgeTypes}
             nodeTypes={NodeTypes}
             proOptions={{ hideAttribution: true }}
             snapGrid={[40, 40]}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
+            onNodeDoubleClick={onNodesDoubleClick}
         >
             <Background
                 variant={BackgroundVariant.Dots}

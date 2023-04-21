@@ -25,6 +25,8 @@
     "@emotion/styled": "11.10.5",
     "@justmegaara/workspace-viewer": "*",
     "@justmegaara/y-reactflow": "*",
+    "@reactflow/core": "^11.6.1",
+    "@reversearchitecture/hooks": "*",
     "@reversearchitecture/theme": "*",
     "@reversearchitecture/services": "*",
     "@reversearchitecture/ui": "*",
@@ -35,6 +37,7 @@
     "react-router": "6.4.5",
     "react-router-dom": "6.4.5",
     "react-scripts": "5.0.1",
+    "uuid": "9.0.0",
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {

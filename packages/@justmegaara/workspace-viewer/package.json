@@ -23,6 +23,7 @@
     "@emotion/react": "11.10.5",
     "@emotion/styled": "11.10.5",
     "@justmegaara/structurizr-dsl": "*",
+    "@justmegaara/y-reactflow": "*",
     "@reactflow/background": "^11.1.10",
     "@reactflow/core": "^11.6.1",
     "@reactflow/node-resizer": "^2.1.0",

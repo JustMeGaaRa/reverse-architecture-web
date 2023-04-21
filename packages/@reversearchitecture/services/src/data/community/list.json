@@ -1,6 +1,7 @@
 {
     "values": [
         {
+            "workspaceId": 1,
             "name": "Big Bank plc.",
             "date": "29.03.2023",
             "updatedBy": "pavlo@rvrs.io",
@@ -8,6 +9,7 @@
             "url": "/workspaces/BigBankPlc.json"
         },
         {
+            "workspaceId": 2,
             "name": "Empty",
             "date": "30.03.2023",
             "updatedBy": "vitalii@rvrs.io",

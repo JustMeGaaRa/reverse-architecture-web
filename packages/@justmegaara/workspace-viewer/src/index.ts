@@ -1,4 +1,4 @@
 export * from "./components/WorkspaceRenderer";
-export * from "./hooks/useWorkspaceRenderer";
+export * from "./hooks/useWorkspaceApi";
+export * from "./store";
 export * from "./utils/ReactFlow";
-export * from "./utils/Workspace";

@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@justmegaara/structurizr-dsl": "*",
+    "@justmegaara/workspace-viewer": "*",
     "@reactflow/core": "^11.6.1",
     "@y-presence/react": "^2.0.1",
     "react": "^18.0.0",

@@ -26,14 +26,16 @@ export function componentView(
     containers?: Container[]
 ): ComponentView {
     return {
+        type: "Component",
         containerIdentifier,
+        identifier: containerIdentifier,
         key,
         layout,
         title,
         description,
-        components,
-        people,
-        softwareSystems,
-        containers
+        components: components ?? [],
+        people: people ?? [],
+        softwareSystems: softwareSystems ?? [],
+        containers: containers ?? [],
     }
 }

@@ -1,3 +1,6 @@
+import { Identifier } from "../model/Identifier";
+import { Workspace } from "../workspace/Workspace";
+
 export function line(line: string) {
     return  line ? `${line}\n` : ""; 
 }
@@ -7,4 +10,15 @@ export function indent(text: string) {
         .split('\n')
         .map(line => `\t${line}`)
         .join('\n');
+}
+
+export const relationshipExists = (
+    workspace: Workspace,
+    sourceIdentifier: Identifier,
+    targetIdentifier: Identifier
+) => {
+    return workspace?.model.relationships.some(x => 
+        x.sourceIdentifier === sourceIdentifier && x.targetIdentifier === targetIdentifier
+        || x.sourceIdentifier === targetIdentifier && x.targetIdentifier === sourceIdentifier
+    )
 }

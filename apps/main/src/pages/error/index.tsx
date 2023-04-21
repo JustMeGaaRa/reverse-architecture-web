@@ -13,7 +13,6 @@ export const ErrorPage: FC<{
 }> = ({
 }) => {
     const { error } = useRouteError() as { error: Error };
-    console.log(error)
 
     return (
         <Page>
@@ -24,15 +23,17 @@ export const ErrorPage: FC<{
                 </HStack>
             </PageHeader>
             <PageBody>
-                <Flex
-                    alignItems={"center"}
-                    justifyContent={"center"}
-                    direction={"column"}
-                    height={"100%"}
-                >
-                    <Heading as={"h4"}>{error.name}</Heading>
-                    <Heading as={"h5"}>{error.message}</Heading>
-                </Flex>
+                {error && (
+                    <Flex
+                        alignItems={"center"}
+                        justifyContent={"center"}
+                        direction={"column"}
+                        height={"100%"}
+                    >
+                        <Heading as={"h4"}>{error.name}</Heading>
+                        <Heading as={"h5"}>{error.message}</Heading>
+                    </Flex>
+                )}
             </PageBody>
         </Page>
     )

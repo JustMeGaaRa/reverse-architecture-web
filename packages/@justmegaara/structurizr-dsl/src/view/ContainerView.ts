@@ -23,13 +23,15 @@ export function containerView(
     softwareSystems?: SoftwareSystem[]
 ): ContainerView {
     return {
+        type: "Container",
         softwareSystemIdentifier,
+        identifier: softwareSystemIdentifier,
         key,
         layout,
         title,
         description,
-        containers,
-        people,
-        softwareSystems
+        containers: containers ?? [],
+        people: people ?? [],
+        softwareSystems: softwareSystems ?? [],
     }
 }

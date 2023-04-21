@@ -16,10 +16,12 @@ export function systemLandscapeView(
     softwareSystems?: SoftwareSystem[]
 ): SystemLandscapeView {
     return {
+        type: "System Landscape",
+        identifier: "SystemLandscape",
         title,
         key,
         layout,
-        people,
-        softwareSystems
+        people: people ?? [],
+        softwareSystems: softwareSystems ?? [],
     }
 }

@@ -5,7 +5,6 @@ import { Styles, toStylesString } from "../view/Style";
 import { ComponentView } from "../view/ComponentView";
 import { ContainerView } from "../view/ContainerView";
 import { DeploymentView } from "../view/DeploymentView";
-import { DynamicView } from "../view/DynamicView";
 import { SystemContextView } from "../view/SystemContextView";
 import { SystemLandscapeView } from "../view/SystemLandscapeView";
 import { GenericView } from "../view/GenericView";
@@ -17,7 +16,7 @@ export interface Views {
     containers: ContainerView[];
     components: ComponentView[];
     filtered: GenericView[];
-    dynamics: DynamicView[];
+    dynamics: GenericView[];
     deployments: DeploymentView[];
     custom: GenericView[];
     styles: Styles;

@@ -20,12 +20,14 @@ export function systemContextView(
     softwareSystems?: SoftwareSystem[]
 ): SystemContextView {
     return {
+        type: "System Context",
         softwareSystemIdentifier,
+        identifier: softwareSystemIdentifier,
         key,
         layout,
         title,
         description,
-        people,
-        softwareSystems
+        people: people ?? [],
+        softwareSystems: softwareSystems ?? [],
     }
 }

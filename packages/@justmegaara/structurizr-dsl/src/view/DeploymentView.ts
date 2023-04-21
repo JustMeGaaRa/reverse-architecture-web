@@ -19,7 +19,9 @@ export function deploymentView(
     deploymentNodes?: DeploymentNode[],
 ): DeploymentView {
     return {
+        type: "Deployment",
         softwareSystemIdentifier,
+        identifier: softwareSystemIdentifier,
         environment,
         key,
         layout,

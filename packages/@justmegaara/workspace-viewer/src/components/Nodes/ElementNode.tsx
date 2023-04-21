@@ -5,8 +5,7 @@ import {
     Element,
     ElementStyleProperties,
     ShapeType,
-    Tag,
-    useWorkspace
+    Tag
 } from "@justmegaara/structurizr-dsl";
 import { Handle, NodeProps, Position } from "@reactflow/core";
 import { NodeResizer } from "@reactflow/node-resizer";
@@ -22,6 +21,7 @@ import {
 } from '../Shapes';
 import { ExpandedElement } from "./ExpandedElement";
 import { DeploymentNode } from "./DeploymentNode";
+import { useWorkspaceStore } from "../../store";
 
 type ShapeshiftElementProps = {
     style?: Partial<ElementStyleProperties>;
@@ -71,7 +71,7 @@ export const ElementNode: FC<ElementNodeProps> = ({
     selected = false,
     expanded = false
 }) => {
-    const { setElementDimension } = useWorkspace();
+    const { setElementDimension } = useWorkspaceStore();
     const onResize = useCallback((event, params) => {
         setElementDimension({
             // TODO: add view identifier

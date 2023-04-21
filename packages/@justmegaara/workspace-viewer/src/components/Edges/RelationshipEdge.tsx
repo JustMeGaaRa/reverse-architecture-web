@@ -105,8 +105,8 @@ export const RelationshipEdge: FC<RelationshipEdgeProps> = ({
     style = defaultRelationshipStyle,
     selected = false,
 }) => {
-    const backgroundDefault = useColorModeValue("whiteAlpha.900", "gray.900");
-    const backgroundHighlight = useColorModeValue("whiteAlpha.900", "gray.900");
+    const backgroundDefault = useColorModeValue("whiteAlpha.900", "gray.200");
+    const backgroundHighlight = useColorModeValue("whiteAlpha.900", "gray.200");
     const background = selected
         ? backgroundDefault
         : backgroundHighlight;
