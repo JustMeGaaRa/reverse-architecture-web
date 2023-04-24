@@ -42,7 +42,7 @@ export const WorkspaceBreadcrumb: FC<{
         <Breadcrumb separator={""}>
             {path.map((view, index) => (
                 <BreadcrumbItem
-                    key={view.identifier}
+                    key={`${view.type}-${view.identifier}`}
                     isCurrentPage={index === path.length - 1}
                 >
                     <BreadcrumbLink

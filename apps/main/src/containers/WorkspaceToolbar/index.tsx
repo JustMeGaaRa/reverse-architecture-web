@@ -2,7 +2,7 @@ import {
     IconButton
 } from "@chakra-ui/react";
 import * as DSL from "@justmegaara/structurizr-dsl";
-import { useWorkspaceStore } from "@justmegaara/workspace-viewer";
+import { useWorkspaceStore, WorkspaceStore } from "@justmegaara/workspace-viewer";
 import { useReactFlow } from "@reactflow/core";
 import { useInteractionMode } from "@reversearchitecture/hooks";
 import {
@@ -30,6 +30,22 @@ import {
 } from "react";
 import { v4 } from "uuid";
 
+const AllowElementsSelector = (state: WorkspaceStore) => {
+    const isSystemLandscapView = state.selectedView.type === "System Landscape"
+    const isSystemContextView = state.selectedView.type === "System Context"
+    const isContainerView = state.selectedView.type === "Container"
+    const isComponentView = state.selectedView.type === "Component"
+    const isDeploymentView = state.selectedView.type === "Deployment"
+
+    return {
+        allowPerson: isSystemLandscapView || isSystemContextView || isContainerView || isComponentView,
+        allowSoftwareSystem: isSystemLandscapView || isSystemContextView || isContainerView || isComponentView,
+        allowContainer: isContainerView || isComponentView,
+        allowComponent: isComponentView,
+        allowDeploymentNode: isDeploymentView
+    }
+}
+
 export const WorkspaceToolbar: FC<{
     
 }> = ({
@@ -37,11 +53,19 @@ export const WorkspaceToolbar: FC<{
 }) => {
     const { project } = useReactFlow();
     const store = useWorkspaceStore();
+    const {
+        allowPerson,
+        allowSoftwareSystem,
+        allowContainer,
+        allowComponent,
+        allowDeploymentNode
+    } = useWorkspaceStore(AllowElementsSelector);
     const { isPresentationMode, isBuilderMode, toggleMode } = useInteractionMode();
 
     const onAddPerson = useCallback(() => {
         const person = DSL.person(v4(), "Person", "A person");
         const position = project({ x: 0, y: 0 });
+        console.log(person, position);
         store.addPerson({ person, position });
     }, [project, store]);
 
@@ -83,30 +107,38 @@ export const WorkspaceToolbar: FC<{
             </ToolbalSection>
             
             <ToolbalSection>
-                <IconButton
-                    aria-label={"person"}
-                    icon={<Square />}
-                    title={"person"}
-                    onClick={onAddPerson}
-                />
-                <IconButton
-                    aria-label={"software system"}
-                    icon={<Circle />}
-                    title={"software system"}
-                    onClick={onAddSoftwareSystem}
-                />
-                <IconButton
-                    aria-label={"container"}
-                    icon={<Triangle />}
-                    title={"container"}
-                    onClick={onAddContainer}
-                />
-                <IconButton
-                    aria-label={"component"}
-                    icon={<Rhombus />}
-                    title={"component"}
-                    onClick={onAddComponent}
-                />
+                {allowPerson && (
+                    <IconButton
+                        aria-label={"person"}
+                        icon={<Square />}
+                        title={"person"}
+                        onClick={onAddPerson}
+                    />
+                )}
+                {allowSoftwareSystem && (
+                    <IconButton
+                        aria-label={"software system"}
+                        icon={<Circle />}
+                        title={"software system"}
+                        onClick={onAddSoftwareSystem}
+                    />
+                )}
+                {allowContainer && (
+                    <IconButton
+                        aria-label={"container"}
+                        icon={<Triangle />}
+                        title={"container"}
+                        onClick={onAddContainer}
+                    />
+                )}
+                {allowComponent && (
+                    <IconButton
+                        aria-label={"component"}
+                        icon={<Rhombus />}
+                        title={"component"}
+                        onClick={onAddComponent}
+                    />
+                )}
             </ToolbalSection>
 
             <ToolbalSection>

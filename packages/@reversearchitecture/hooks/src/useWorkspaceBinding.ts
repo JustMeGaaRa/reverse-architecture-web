@@ -1,14 +1,13 @@
 import { Workspace } from "@justmegaara/structurizr-dsl";
-import { useSelectedView, useWorkspaceStore } from "@justmegaara/workspace-viewer";
+import { useWorkspaceStore } from "@justmegaara/workspace-viewer";
 import { ReactFlowJsonObject } from "@reactflow/core";
 import * as Y from "yjs";
 import { useSharedWorkspaceObject } from "./useSharedWorkspaceObject";
 import { toReactFlow } from "./utils";
 
 export const useWorkspaceBinding = () => {
-    const { selectedView } = useSelectedView();
     const { sharedWorkspaceObject } = useSharedWorkspaceObject();
-    const { setWorkspace } = useWorkspaceStore();
+    const { selectedView, setWorkspace } = useWorkspaceStore();
 
     const saveReactFlow = (reactFlowObject: ReactFlowJsonObject): ReactFlowJsonObject => {
         return reactFlowObject;

@@ -7,11 +7,12 @@ import {
     PageHeader,
 } from "@reversearchitecture/ui";
 import { FC } from "react";
-import { useRouteError } from "react-router";
+import { useNavigate, useRouteError } from "react-router";
 
 export const ErrorPage: FC<{
 }> = ({
 }) => {
+    const navigate = useNavigate();
     const { error } = useRouteError() as { error: Error };
     const { name, message } = error ?? { name: "Error", message: "Oops, something went wrong..." };
 
@@ -19,7 +20,9 @@ export const ErrorPage: FC<{
         <Page>
             <PageHeader>
                 <HStack gap={2}>
-                    <NavigationBackButton />
+                    <NavigationBackButton
+                        onClick={() => navigate(-1)}
+                    />
                     <Logo />
                 </HStack>
             </PageHeader>
