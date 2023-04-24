@@ -1,23 +1,24 @@
 import { relationshipExists } from "../utils";
-import { Layout } from "../view/Layout";
+import { GenericView } from "../view/GenericView";
 import { Workspace } from "../workspace/Workspace";
 import { ContainerElement } from "./ContainerElement";
-import { IClient } from "./IClient";
+import { IViewBuilder, ViewBuilderResult } from "./IViewBuilder";
 import { IVisitor } from "./IVisitor";
 import { PersonElement } from "./PersonElement";
 import { RelationshipElement } from "./RelationshipElement";
 import { SoftwareSystemElement } from "./SoftwareSystemElement";
 
-export class ContainerViewClient implements IClient {
+export class ContainerViewBuilder implements IViewBuilder {
     constructor(
         private workspace: Workspace,
-        private layout: Layout,
-        private softwareSystemIdentifier: string
+        private view: GenericView,
     ) {}
 
-    accept(visitor: IVisitor): void {
+    build(visitor: IVisitor): ViewBuilderResult {
+        const path = [];
+
         this.workspace.model.softwareSystems
-            .filter(softwareSystem => softwareSystem.identifier === this.softwareSystemIdentifier)
+            .filter(softwareSystem => softwareSystem.identifier === this.view.identifier)
             .forEach(softwareSystem => {
                 // include the current software system and all containers within it
                 new SoftwareSystemElement(softwareSystem).accept(visitor);
@@ -35,10 +36,25 @@ export class ContainerViewClient implements IClient {
                         .filter(softwareSystem => relationshipExists(this.workspace, container.identifier, softwareSystem.identifier))
                         .forEach(softwareSystem => new SoftwareSystemElement(softwareSystem).accept(visitor));
                 });
+
+                path.push({
+                    type: "System Context",
+                    identifier: softwareSystem.identifier,
+                    title: softwareSystem.name
+                });
+                path.push({
+                    type: "Container",
+                    identifier: softwareSystem.identifier,
+                    title: softwareSystem.name
+                });
             });
         
         this.workspace.model.relationships
-            .filter(edge => this.layout[edge.sourceIdentifier] && this.layout[edge.targetIdentifier])
+            .filter(edge => this.view.layout[edge.sourceIdentifier] && this.view.layout[edge.targetIdentifier])
             .forEach(relationship => new RelationshipElement(relationship).accept(visitor));
+        
+        return {
+            viewPath: { path }
+        }
     }
 }

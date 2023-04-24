@@ -1,17 +1,5 @@
 import "@reactflow/core/dist/style.css";
 
-import {
-    ComponentViewClient,
-    ContainerViewClient,
-    DeploymentViewClient,
-    GenericView,
-    IClient,
-    SystemContextViewClient,
-    SystemLandscapeViewClient,
-    ViewType,
-    Workspace,
-    WorkspaceLayout
-} from "@justmegaara/structurizr-dsl";
 import { Background, BackgroundVariant } from "@reactflow/background";
 import {
     ReactFlow,
@@ -20,11 +8,10 @@ import {
 } from "@reactflow/core";
 import {
     FC,
-    PropsWithChildren,
+    PropsWithChildren
 } from "react";
 import { ElementNodeWrapper } from "./Nodes/ElementNode";
 import { RelationshipEdgeWrapper } from "./Edges/RelationshipEdge";
-import { ReactFlowVisitor } from "../services/ReactFlowVisitor";
 
 const NodeTypes = {
     element: ElementNodeWrapper,
@@ -45,35 +32,15 @@ const EdgeTypes = {
 }
 
 export const WorkspaceRenderer: FC<PropsWithChildren<{
-    workspace?: Workspace;
-    workspaceLayout?: WorkspaceLayout;
-    initialView?: GenericView;
+    nodes: any[];
+    edges: any[];
     onNodesDoubleClick?: NodeMouseHandler;
 }>> = ({
     children,
-    workspace,
-    workspaceLayout,
-    initialView,
+    nodes,
+    edges,
     onNodesDoubleClick
 }) => {
-    const viewLayout = workspaceLayout[initialView.identifier];
-    const viewFunctions: Map<ViewType, IClient> = new Map<ViewType, IClient>([
-        [ "System Landscape", new SystemLandscapeViewClient(workspace, viewLayout)],
-        [ "System Context", new SystemContextViewClient(workspace, viewLayout, initialView.identifier) ],
-        [ "Container", new ContainerViewClient(workspace, viewLayout, initialView.identifier) ],
-        [ "Component", new ComponentViewClient(workspace, viewLayout, initialView.identifier) ],
-        [ "Deployment", new DeploymentViewClient(workspace, "REPLACE", initialView.identifier)],
-    ]);
-
-    const visitor = new ReactFlowVisitor(
-        workspace,
-        viewLayout,
-        initialView.type,
-        initialView.identifier
-    );
-    viewFunctions.get(initialView.type).accept(visitor);
-    const { nodes, edges } = visitor.getReactFlow();
-
     const fitViewOptions = {
         padding: 0.2,
         duration: 500,
@@ -101,4 +68,4 @@ export const WorkspaceRenderer: FC<PropsWithChildren<{
             {children}
         </ReactFlow>
     );
-};
+}

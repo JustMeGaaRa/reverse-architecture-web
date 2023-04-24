@@ -4,7 +4,7 @@ import {
     BreadcrumbLink,
     Button
 } from "@chakra-ui/react";
-import { Level } from "@justmegaara/workspace-viewer";
+import { GenericView } from "@justmegaara/structurizr-dsl";
 import {
     Rhombus,
     Square,
@@ -13,10 +13,10 @@ import {
 import { FC } from "react";
 
 export const WorkspaceBreadcrumb: FC<{
-    items: Array<Level>;
-    onClick?: (level: Level) => void;
+    path: Array<GenericView>;
+    onClick?: (view: GenericView) => void;
 }> = ({
-    items,
+    path,
     onClick
 }) => {
     // TODO: add more color levels
@@ -40,10 +40,10 @@ export const WorkspaceBreadcrumb: FC<{
 
     return (
         <Breadcrumb separator={""}>
-            {items.map((level, index) => (
+            {path.map((view, index) => (
                 <BreadcrumbItem
-                    key={level.view.identifier}
-                    isCurrentPage={index === items.length - 1}
+                    key={view.identifier}
+                    isCurrentPage={index === path.length - 1}
                 >
                     <BreadcrumbLink
                         as={Button}
@@ -65,9 +65,9 @@ export const WorkspaceBreadcrumb: FC<{
                             borderColor: `${colors[index].scheme}.primary`,
                             color: "basic.White"
                         }}
-                        onClick={() => onClick?.(level)}
+                        onClick={() => onClick?.(view)}
                     >
-                        {`${level.view.type} - ${level.view.title}`}
+                        {`${view.type} - ${view.title}`}
                     </BreadcrumbLink>
                 </BreadcrumbItem>
             ))}

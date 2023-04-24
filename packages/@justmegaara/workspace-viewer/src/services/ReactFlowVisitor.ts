@@ -1,11 +1,10 @@
 import {
     Component,
     Container,
-    Layout,
+    GenericView,
     Person,
     Relationship,
     SoftwareSystem,
-    ViewType,
     Workspace,
 } from "@justmegaara/structurizr-dsl";
 import { Edge, Node } from "@reactflow/core";
@@ -15,9 +14,7 @@ import { IReactFlowVisitor } from "./IReactFlowVisitor";
 export class ReactFlowVisitor implements IReactFlowVisitor {
     constructor(
         private workspace: Workspace,
-        private layout: Layout,
-        private viewType: ViewType,
-        private scopedElementId: string,
+        private selectedView: GenericView,
         private nodes: Node[] = [],
         private edges: Edge[] = []
     ) {}
@@ -25,7 +22,7 @@ export class ReactFlowVisitor implements IReactFlowVisitor {
     visitPerson(person: Person) {
         const node = fromElement({
             element: person,
-            size: this.layout[person.identifier],
+            size: this.selectedView.layout[person.identifier],
             styles: this.workspace.views.styles,
         });
         this.nodes.push(node);
@@ -34,8 +31,8 @@ export class ReactFlowVisitor implements IReactFlowVisitor {
     visitSoftwareSystem(softwareSystem: SoftwareSystem) {
         const node = fromElement({
             element: softwareSystem,
-            size: this.layout[softwareSystem.identifier],
-            expanded: this.viewType === "Container" && softwareSystem.identifier === this.scopedElementId,
+            size: this.selectedView.layout[softwareSystem.identifier],
+            expanded: this.selectedView.type === "Container" && softwareSystem.identifier === this.selectedView.identifier,
             styles: this.workspace.views.styles,
         });
         this.nodes.push(node);
@@ -44,9 +41,9 @@ export class ReactFlowVisitor implements IReactFlowVisitor {
     visitContainer(container: Container) {
         const node = fromElement({
             element: container,
-            size: this.layout[container.identifier],
-            expanded: this.viewType === "Component" && container.identifier === this.scopedElementId,
-            parentId: this.viewType === "Container" ? this.scopedElementId : undefined,
+            size: this.selectedView.layout[container.identifier],
+            expanded: this.selectedView.type === "Component" && container.identifier === this.selectedView.identifier,
+            parentId: this.selectedView.type === "Container" ? this.selectedView.identifier : undefined,
             styles: this.workspace.views.styles,
         });
         this.nodes.push(node);
@@ -55,8 +52,8 @@ export class ReactFlowVisitor implements IReactFlowVisitor {
     visitComponent(component: Component) {
         const node = fromElement({
             element: component,
-            size: this.layout[component.identifier],
-            parentId: this.viewType === "Component" ? this.scopedElementId : undefined,
+            size: this.selectedView.layout[component.identifier],
+            parentId: this.selectedView.type === "Component" ? this.selectedView.identifier : undefined,
             styles: this.workspace.views.styles,
         });
         this.nodes.push(node);

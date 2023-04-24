@@ -6,18 +6,39 @@ import {
     workspace,
     model,
     views,
+    ViewPath,
+    WorkspaceLayout,
+    GenericView
 } from "@justmegaara/structurizr-dsl";
 import { WorkspaceActions } from "./WorkspaceActions";
-import { Level, WorkspaceState } from "./WorkspaceState";
+import { WorkspaceState } from "./WorkspaceState";
 
 export type WorkspaceStore = WorkspaceState & WorkspaceActions;
 
 export const useWorkspaceStore = create(immer<WorkspaceStore>((set) => ({
     workspace: workspace("Workspace", "This is a workspace", model(), views()),
-    layout: {},
-    levels: [],
+    viewPath: { path: [] },
+    
     setWorkspace: (workspace: Workspace) => {
         set({ workspace });
+    },
+    setSelectedView: (view: GenericView) => {
+        set({ selectedView: view });
+    },
+    setViewPath: (path: ViewPath) => {
+        set({ viewPath: path });
+    },
+    setElementDimension: ({ viewIdentifier, elementIdentifier, position, size }) => {
+        set((state) => {
+            if (state.workspace && viewIdentifier) {
+                // TODO: adapt to new api
+                // state.layout[viewIdentifier][elementIdentifier] = {
+                //     ...position,
+                //     ...size
+                // }   
+                state.workspace.lastModifiedData = new Date();
+            }
+        });
     },
     setName: (name: string) => {
         set((state) => {
@@ -104,20 +125,6 @@ export const useWorkspaceStore = create(immer<WorkspaceStore>((set) => ({
                 state.workspace.lastModifiedData = new Date();
             }
         });
-    },
-    setElementDimension: ({ viewIdentifier, elementIdentifier, position, size }) => {
-        set((state) => {
-            if (state.workspace && viewIdentifier) {
-                state.layout[viewIdentifier][elementIdentifier] = {
-                    ...position,
-                    ...size
-                }   
-                state.workspace.lastModifiedData = new Date();
-            }
-        });
-    },
-    setLevels: (levels: Array<Level>) => {
-        set({ levels });
     }
 })));
 

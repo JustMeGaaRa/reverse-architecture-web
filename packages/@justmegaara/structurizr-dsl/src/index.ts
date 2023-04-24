@@ -43,6 +43,7 @@ export * from "./view/ShapeType";
 export * from "./view/Style";
 export * from "./view/SystemContextView";
 export * from "./view/SystemLandscapeView";
+export * from "./view/ViewPath";
 
 export * from "./workspace/Model";
 export * from "./workspace/Views";
@@ -50,12 +51,11 @@ export * from "./workspace/Workspace";
 
 export * from "./visitors/IElement";
 export * from "./visitors/IVisitor";
-export * from "./visitors/IClient";
-export * from "./visitors/ComponentViewClient";
-export * from "./visitors/ContainerViewClient";
-export * from "./visitors/DeploymentViewClient";
-export * from "./visitors/RelationshipElement";
-export * from "./visitors/SystemContextViewClient";
-export * from "./visitors/SystemLandscapeViewClient";
+export * from "./visitors/IViewBuilder";
+export * from "./visitors/ComponentViewBuilder";
+export * from "./visitors/ContainerViewBuilder";
+export * from "./visitors/DeploymentViewBuilder";
+export * from "./visitors/SystemContextViewBuilder";
+export * from "./visitors/SystemLandscapeViewBuilder";
 
 export * from "./utils";

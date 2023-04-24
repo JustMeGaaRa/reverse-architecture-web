@@ -1,11 +1,7 @@
-import { GenericView, Workspace, WorkspaceLayout } from "@justmegaara/structurizr-dsl";
-
-export type Level = {
-    view: GenericView;
-}
+import { GenericView, ViewPath, Workspace } from "@justmegaara/structurizr-dsl";
 
 export type WorkspaceState = {
     workspace: Workspace;
-    layout: WorkspaceLayout;
-    levels: Array<Level>;
+    selectedView?: GenericView;
+    viewPath: ViewPath;
 };

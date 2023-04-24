@@ -3,18 +3,22 @@ import {
     Container,
     DeploymentEnvironment,
     DeploymentNode,
+    GenericView,
     Identifier,
     Person,
     Position,
     Relationship,
     Size,
     SoftwareSystem,
-    Workspace
+    ViewPath,
+    Workspace,
 } from "@justmegaara/structurizr-dsl";
-import { Level } from "./WorkspaceState";
 
 export type WorkspaceActions = {
     setWorkspace: Action<Workspace>;
+    setSelectedView: Action<GenericView>;
+    setViewPath: Action<ViewPath>;
+    setElementDimension: Action<LayoutElementParams>;
     setName: Action<string>;
     addPerson: Action<PersonParams>;
     addSoftwareSystem: Action<SoftwareSystemParams>;
@@ -23,8 +27,6 @@ export type WorkspaceActions = {
     addDeploymentEnvironment: Action<DeploymentEnvironmentParams>;
     addDeploymentNode: Action<DeploymentNodeParams>;
     addRelationship: Action<Relationship>;
-    setElementDimension: Action<LayoutElementParams>;
-    setLevels: Action<Array<Level>>;
 };
 
 export type Action<TParam> = (param: TParam) => void;

@@ -1,8 +1,7 @@
 import { Workspace } from "@justmegaara/structurizr-dsl";
-import { useWorkspaceStore } from "@justmegaara/workspace-viewer";
+import { useSelectedView, useWorkspaceStore } from "@justmegaara/workspace-viewer";
 import { ReactFlowJsonObject } from "@reactflow/core";
 import * as Y from "yjs";
-import { useSelectedView } from "./useSelectedView";
 import { useSharedWorkspaceObject } from "./useSharedWorkspaceObject";
 import { toReactFlow } from "./utils";
 
@@ -29,5 +28,5 @@ export const useWorkspaceBinding = () => {
 
     [sharedWorkspaceObject]
         .map(workspace => saveWorkspace(parseYDoc(workspace)))
-        .map(workspace => saveReactFlow(toReactFlow(workspace, selectedView)));
+        .map(workspace => saveReactFlow(toReactFlow(workspace, undefined)));
 }

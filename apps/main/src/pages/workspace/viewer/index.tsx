@@ -1,87 +1,108 @@
-import { GenericView } from "@justmegaara/structurizr-dsl";
-import { useWorkspaceStore, WorkspaceRenderer } from "@justmegaara/workspace-viewer";
+import { useWorkspaceStore, WorkspaceExplorer } from "@justmegaara/workspace-viewer";
 import { WorkspaceApi } from "@reversearchitecture/services";
 import { ContextSheet } from "@reversearchitecture/ui";
 import { Panel } from "@reactflow/core";
-import { FC, useCallback, useEffect, useState } from "react";
+import { FC, useCallback, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import {
     WorkspaceBreadcrumb,
     WorkspaceToolbar,
     WorkspaceZoom
 } from "../../../containers";
+import { GenericView } from "@justmegaara/structurizr-dsl";
 
 export const WorkspaceViewerSheet: FC<{
 
 }> = () => {
     const params = useParams<{ workspaceId: string }>();
-    const { workspace, setWorkspace, levels, setLevels } = useWorkspaceStore();
-    const [view, setView] = useState<GenericView>();
+    const {
+        workspace,
+        selectedView,
+        viewPath,
+        setWorkspace,
+        setSelectedView
+    } = useWorkspaceStore();
 
     useEffect(() => {
         const api = new WorkspaceApi();
         api.getWorkspace(params.workspaceId)
             .then(workspace => {
-                const systemContextView = workspace.views.systemContexts[0];
                 setWorkspace(workspace);
-                setView(systemContextView);
-                setLevels([{ view: systemContextView }])
+                setSelectedView(workspace.views.systemContexts[0])
             })
             .catch(error => {
                 console.error(error);
             });
-    }, [params.workspaceId, setWorkspace, setView, setLevels]);
+    }, [params.workspaceId, setSelectedView, setWorkspace]);
 
-    const layout = view ? { [view.identifier]: view.layout } : undefined;
+    useEffect(() => {
+        // const api = new WorkspaceApi();
+        // api.getWorkspaceLayout(params.workspaceId)
+        //     .then(layout => {
+        //         setSelectedView(workspace.views.systemContexts[0]);
+        //     })
+        //     .catch(error => {
+        //         console.log(error);
+        //     });
+    }, [params.workspaceId, workspace, setSelectedView]);
 
-    const onNodesDoubleClick = useCallback((event: React.MouseEvent, node: any) => {
+    const onNodesDoubleClick = useCallback((_event: React.MouseEvent, node: any) => {
         const element = node.data.element;
-        // TODO: set newly created view object as the current view (as there might be no view for the element)
-        // setView({
-        //     identifier: element.identifier,
-        //     type: element.tags[1].name,
-        //     title: `${element.tags[1].name} - ${element.name}`,
-        // });
-        if (element.tags.some(tag => tag.name === "Software System")) {
-            const view = workspace.views.containers.find(view => view.identifier === element.identifier);
-            setView(view);
-            setLevels([...levels, { view }]);
+        
+        // do not handle the click for component elements as there is no such view type
+        if (!element.tags.some(tag => tag.name === "Component")) {
+            const currentView: GenericView = {
+                identifier: element.identifier,
+                type: element.tags.some(tag => tag.name === "Software System")
+                    ? "Container"
+                    : "Component",
+                title: element.name,
+            };
+            const selectedView = workspace.views.systemLandscape?.type === currentView.type
+                ? workspace.views.systemLandscape
+                : workspace.views.systemContexts.find(x => x.type === currentView.type && x.identifier === currentView.identifier)
+                    ?? workspace.views.containers.find(x => x.type === currentView.type && x.identifier === currentView.identifier)
+                    ?? workspace.views.components.find(x => x.type === currentView.type && x.identifier === currentView.identifier)
+                    ?? currentView;
+            
+            setSelectedView(selectedView);
         }
-        if (element.tags.some(tag => tag.name === "Container")) {
-            const view = workspace.views.components.find(view => view.identifier === element.identifier);
-            setView(view);
-            setLevels([...levels, { view }]);
-        }
-    }, [workspace, setView, levels, setLevels]);
+    }, [workspace, setSelectedView]);
 
-    const onBreadcrumItemClick = useCallback((level) => {
-        setView(level.view);
-        // TODO: remove levels after the selected level
-        // setLevels([...levels, level])
-    }, []);
+    const onBreadcrumItemClick = useCallback((view) => {
+        const selectedView = workspace.views.systemLandscape?.type === view.type
+            ? workspace.views.systemLandscape
+            : workspace.views.systemContexts.find(x => x.type === view.type && x.identifier === view.identifier)
+                ?? workspace.views.containers.find(x => x.type === view.type && x.identifier === view.identifier)
+                ?? workspace.views.components.find(x => x.type === view.type && x.identifier === view.identifier)
+                ?? view;
+
+        setSelectedView(selectedView);
+    }, [workspace, setSelectedView]);
 
     return (
         <ContextSheet>
-            {workspace && view && (
-                <WorkspaceRenderer
+            {workspace && selectedView && (
+                <WorkspaceExplorer
                     workspace={workspace}
-                    workspaceLayout={layout}
-                    initialView={view}
+                    initialView={selectedView}
                     onNodesDoubleClick={onNodesDoubleClick}
                 >
-                    <Panel position={"top-left"}>
-                        <WorkspaceBreadcrumb
-                            items={levels}
-                            onClick={onBreadcrumItemClick}
-                        />
-                    </Panel>
+                    {viewPath && (
+                        <Panel position={"top-left"}>
+                            <WorkspaceBreadcrumb
+                                path={viewPath.path}
+                                onClick={onBreadcrumItemClick}
+                            />
+                        </Panel>
+                    )}
                     <Panel position={"bottom-right"}>
                         <WorkspaceZoom />
                     </Panel>
                     <Panel position={"bottom-center"}>
                         <WorkspaceToolbar />
                     </Panel>
-                </WorkspaceRenderer>
+                </WorkspaceExplorer>
             )}
         </ContextSheet>
     );
