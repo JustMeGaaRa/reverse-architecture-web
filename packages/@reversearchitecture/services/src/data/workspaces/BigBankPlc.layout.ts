@@ -1,9 +1,9 @@
-import { WorkspaceLayout } from "@justmegaara/structurizr-dsl";
+import { ViewType, WorkspaceLayout } from "@structurizr/dsl";
 
 export const BigBankPlcLayout: WorkspaceLayout = {
     views: [
         {
-            type: "System Context",
+            type: ViewType.SystemContext,
             identifier: "ss_internet_banking",
             elements: {
                 ["pn_banking_customer"]: { x: 0, y: 0 },
@@ -13,7 +13,7 @@ export const BigBankPlcLayout: WorkspaceLayout = {
             }
         },
         {
-            type: "Container",
+            type: ViewType.Container,
             identifier: "ss_internet_banking",
             elements: {
                 ["pn_banking_customer"]: { x: 800, y: 0 },
@@ -28,7 +28,7 @@ export const BigBankPlcLayout: WorkspaceLayout = {
             }
         },
         {
-            type: "Component",
+            type: ViewType.Component,
             identifier: "con_api_application",
             elements: {
                 ["ss_internet_banking"]: { x: 0, y: 0, width: 1660, height: 1380 },
@@ -47,7 +47,7 @@ export const BigBankPlcLayout: WorkspaceLayout = {
             },
         },
         {
-            type: "Deployment",
+            type: ViewType.Deployment,
             identifier: "ss_internet_banking",
             elements: {
                 ["ss_internet_banking"]: { x: 80, y: 80 },

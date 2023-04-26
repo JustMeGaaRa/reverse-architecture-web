@@ -19,7 +19,7 @@ import {
     technologies,
     views,
     workspace
-} from "@justmegaara/structurizr-dsl";
+} from "@structurizr/dsl";
 
 export const BigBankPlc = workspace("Big Bank plc", "",
     model(

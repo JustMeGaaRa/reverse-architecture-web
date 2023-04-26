@@ -1,0 +1,50 @@
+{
+  "name": "@reversearchitecture/workspace-viewer",
+  "version": "0.1.0",
+  "description": "A Structurizr workspace viewer component for rendering and navigating the model.",
+  "main": "dist/index.js",
+  "keywords": [
+    "reverse-architecture",
+    "diagram",
+    "architecture",
+    "c4",
+    "c4-model",
+    "structurizr",
+    "workspace"
+  ],
+  "author": "JustMeGaaRa",
+  "license": "MIT",
+  "scripts": {
+    "build": "npx tsc",
+    "lint": "eslint \"**/*.ts*\""
+  },
+  "dependencies": {
+    "@chakra-ui/react": "^2.5.1",
+    "@emotion/react": "11.10.5",
+    "@emotion/styled": "11.10.5",
+    "@justmegaara/y-reactflow": "*",
+    "@structurizr/dsl": "*",
+    "@reactflow/background": "^11.1.10",
+    "@reactflow/core": "^11.6.1",
+    "@reactflow/node-resizer": "^2.1.0",
+    "framer-motion": "7.9.1",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "zustand": "^4.3.2"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "eslint": "^7.32.0",
+    "eslint-config-custom": "*",
+    "tsconfig": "*",
+    "typescript": "^4.5.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JustMeGaaRa/reverse-architecture-web.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JustMeGaaRa/reverse-architecture-web/issues"
+  }
+}

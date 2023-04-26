@@ -1,4 +1,4 @@
-import { Workspace, WorkspaceLayout } from "@justmegaara/structurizr-dsl";
+import { Workspace, WorkspaceLayout } from "@structurizr/dsl";
 import { BigBankPlc } from "./data/workspaces/BigBankPlc";
 import { BigBankPlcLayout } from "./data/workspaces/BigBankPlc.layout";
 

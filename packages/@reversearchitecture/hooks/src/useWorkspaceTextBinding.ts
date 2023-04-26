@@ -1,5 +1,5 @@
-import { Workspace } from "@justmegaara/structurizr-dsl";
-import { useWorkspaceStore } from "@justmegaara/workspace-viewer";
+import { Workspace } from "@structurizr/dsl";
+import { useWorkspaceStore } from "@reversearchitecture/workspace-viewer";
 import { ReactFlowJsonObject } from "@reactflow/core";
 import * as Y from "yjs";
 import { useSharedWorkspaceText } from "./useSharedWorkspaceText";

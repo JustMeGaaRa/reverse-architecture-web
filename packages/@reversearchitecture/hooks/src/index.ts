@@ -1,4 +1,3 @@
-export * from "./useInteractionMode";
 export * from "./useSharedWorkspaceObject";
 export * from "./useSharedWorkspaceText";
 export * from "./useUserPresence";

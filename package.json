@@ -5,8 +5,9 @@
   "workspaces": [
     "apps/*",
     "packages/*",
-    "packages/@reversearchitecture/*",
-    "packages/@justmegaara/*"
+    "packages/@justmegaara/*",
+    "packages/@structurizr/*",
+    "packages/@reversearchitecture/*"
   ],
   "scripts": {
     "build": "turbo run build",

@@ -1,0 +1,49 @@
+{
+  "name": "@reversearchitecture/workspace-breadcrumb",
+  "version": "0.1.0",
+  "description": "A Structurizr workspace breadcrumb component for visualizing diagram view path and navigating between them.",
+  "main": "dist/index.js",
+  "keywords": [
+    "reverse-architecture",
+    "diagram",
+    "architecture",
+    "c4",
+    "c4-model",
+    "structurizr",
+    "workspace-breadcrumb"
+  ],
+  "author": "JustMeGaaRa",
+  "license": "MIT",
+  "scripts": {
+    "build": "npx tsc",
+    "lint": "eslint \"**/*.ts*\""
+  },
+  "dependencies": {
+    "@chakra-ui/react": "^2.5.1",
+    "@emotion/react": "11.10.5",
+    "@emotion/styled": "11.10.5",
+    "@structurizr/dsl": "*",
+    "@reversearchitecture/workspace-viewer": "*",
+    "@reactflow/core": "^11.6.1",
+    "iconoir-react": "^6.3.0",
+    "framer-motion": "7.9.1",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "zustand": "^4.3.2"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "eslint": "^7.32.0",
+    "eslint-config-custom": "*",
+    "tsconfig": "*",
+    "typescript": "^4.5.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JustMeGaaRa/reverse-architecture-web.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JustMeGaaRa/reverse-architecture-web/issues"
+  }
+}
