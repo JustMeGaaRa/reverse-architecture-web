@@ -1,5 +1,5 @@
 {
-    "display": "@justmegaara/structurizr-dsl",
+    "display": "@structurizr/dsl",
     "extends": "tsconfig/react-library.json",
     "include": [
         "./src/**/*"
