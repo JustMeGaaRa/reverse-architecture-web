@@ -38,8 +38,6 @@ export function softwareSystemInstance(
         softwareSystemIdentifier,
         deploymentGroups,
         tags: [
-            Tag.Element,
-            Tag.SoftwareSystem,
             Tag.SoftwareSystemInstance,
             ...(tags ?? [])
         ]

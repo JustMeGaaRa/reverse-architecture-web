@@ -10,22 +10,18 @@ export interface User {
     isActive: boolean;
 }
 
-type UserCollectionProps = {
+export const UserCollection: FC<{
     users: Array<User>;
-};
-
-export const UserCollection: FC<UserCollectionProps> = ({
+}> = ({
     users
 }) => {
     return (
-        <AvatarGroup size={"sm"} max={3}>
-            {users && users.map(user => (
+        <AvatarGroup size={"sm"} max={3} colorScheme={"purple"}>
+            {users.map(user => (
                 <Avatar
                     key={user.username}
-                    background={user.color}
+                    name={user.username}
                     cursor={"pointer"}
-                    name={user.fullname}
-                    src={user.avatarUrl}
                     title={user.fullname}
                 />
             ))}

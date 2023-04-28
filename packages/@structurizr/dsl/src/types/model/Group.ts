@@ -1,28 +1,20 @@
 import { Component } from "./Component";
 import { Container } from "./Container";
-import { Identifier } from "./Identifier";
 import { Person } from "./Person";
 import { SoftwareSystem } from "./SoftwareSystem";
 
+type GroupElementArray = Array<Person | SoftwareSystem> | Array<Container> | Array<Component>;
+
 export interface Group {
-    identifier: Identifier;
     name: string;
-    people: Person[];
-    softwareSystems: SoftwareSystem[];
-    containers: Container[];
-    components: Component[];
+    elements: GroupElementArray;
 }
 
 export function group(
-    identifier: Identifier,
     name: string
 ): Group {
     return {
-        identifier,
         name,
-        people: [],
-        softwareSystems: [],
-        containers: [],
-        components: []
+        elements: [],
     }
 }

@@ -28,7 +28,7 @@ export const SocialButton = ({
       }}
     >
       <VisuallyHidden>{label}</VisuallyHidden>
-      {children}
-    </chakra.button>
+        {children}
+      </chakra.button>
   );
 };

@@ -11,10 +11,12 @@ import {
     model,
     person,
     relationship,
+    ShapeType,
     softwareSystem,
     softwareSystemInstance,
     styles,
     systemContextView,
+    Tag,
     tags,
     technologies,
     views,
@@ -505,27 +507,32 @@ export const BigBankPlc = workspace("Big Bank plc", "",
             )
         ],
         styles([
-            elementStyle("Person", {
+            elementStyle(Tag.Element.name, {
+                shape: ShapeType.RoundedBox,
+                height: 200,
+                width: 300,
+            }),
+            elementStyle(Tag.Person.name, {
                 background: "#38A169",
                 color: "#ffffff",
                 strokeWidth: 0
             }),
-            elementStyle("Software System", {
+            elementStyle(Tag.SoftwareSystem.name, {
                 background: "#6B46C1",
                 color: "#ffffff",
                 strokeWidth: 0
             }),
-            elementStyle("Container", {
+            elementStyle(Tag.Container.name, {
                 background: "#3182ce",
                 color: "#ffffff",
                 strokeWidth: 0
             }),
-            elementStyle("Component", {
+            elementStyle(Tag.Component.name, {
                 background: "#90cdf4",
                 color: "#000000",
                 strokeWidth: 0
             }),
-            elementStyle("Deployment Node", {
+            elementStyle(Tag.DeploymentNode.name, {
                 color: "#000000",
                 strokeWidth: 2,
             }),

@@ -1,118 +1,99 @@
 import {
-    Button,
-    ButtonGroup,
     HStack,
     IconButton,
     Menu,
     MenuButton,
     MenuItem,
-    MenuList
+    MenuList,
 } from "@chakra-ui/react";
+import { useReactFlow } from "@reactflow/core";
 import {
-    Panel,
-    useReactFlow,
-    useStore
-} from "@reactflow/core";
-import { HelpCircle, Minus, Plus } from "iconoir-react";
-import { FC, useMemo } from "react";
-import { ControlPanel } from "../../components";
-import { UsersOnline } from "..";
+    ToolbalSection,
+    Toolbar,
+    useWorkspaceStore
+} from "@reversearchitecture/workspace-viewer";
+import saveAs from "file-saver";
+import { Download, HelpCircle } from "iconoir-react";
+import { FC } from "react";
+import { HomeButton, SharePopover } from "../../components";
+import { UsersOnline } from "../../containers";
+import {
+    exportToDrawio,
+    exportToJson,
+    exportToStructurizrDsl,
+    exportToStructurizrJson
+} from "./export";
+import { useShare } from "./hooks";
 
-export type ZoomPanelProps = {
-    showZoom?: boolean;
-    showFitView?: boolean;
-}
-
-export const ZoomPanel: FC<ActivityPanelProps> = ({
-    showZoom = true,
-    showFitView = true,
+export const ActivityPanel: FC<{
+    
+}> = ({
+    
 }) => {
-    const zoom = useStore((state) => (state.transform[2] * 100));
-    const { zoomTo, zoomIn, zoomOut, fitView } = useReactFlow();
+    const { workspace } = useWorkspaceStore();
+    const { link, clipboardCopy } = useShare();
+    const { toObject } = useReactFlow();
 
-    const items = useMemo(() => [
-        { title: "Fit view", command: "Ctrl + 0", onClick: () => fitView({ padding: 0.2, duration: 500 })},
-        { title: "50%", command: "Ctrl + .", onClick: () => zoomTo(0.5, { duration: 500 }) },
-        { title: "100%", command: "Ctrl + 1", onClick: () => zoomTo(1, { duration: 500 }) },
-        { title: "200%", command: "Ctrl + 2", onClick: () => zoomTo(2, { duration: 500 }) }
-    ], [zoomTo, fitView]);
+    const exports = [
+        {
+            title: "Drawio (*.drawio)",
+            command: "Ctrl + E + 1",
+            onClick: () => saveAs(exportToDrawio(workspace))
+        },
+        {
+            title: "Structurizr DSL (*.dsl)",
+            command: "Ctrl + E + 2",
+            onClick: () => saveAs(exportToStructurizrDsl(workspace))
+        },
+        {
+            title: "Structurizr JSON (*.json)",
+            command: "Ctrl + E + 3",
+            onClick: () => saveAs(exportToStructurizrJson(workspace))
+        },
+        {
+            title: "React Flow (*.json)",
+            command: "Ctrl + E + 4",
+            onClick: () => saveAs(exportToJson(workspace, toObject()))
+        }
+    ];
 
     return (
-        <ButtonGroup
-            gap={0}
-            spacing={0}
-            orientation={"horizontal"}
-            size={"md"}
-        >
-            {showZoom && (
-                <IconButton
-                    aria-label={"zoom out"}
-                    title={"zoom out"}
-                    icon={<Minus />}
-                    onClick={() => zoomOut()}
-                />
-            )}
-            {showFitView && (
-                <Menu>
-                    <MenuButton as={Button}>
-                        {`${zoom.toFixed(0)}%`}
-                    </MenuButton>
-                    <MenuList>
-                        {items.map(item => (
-                            <MenuItem
-                                key={item.title}
-                                command={item.command}
-                                onClick={item.onClick}
-                            >
-                                {item.title}
-                            </MenuItem>
-                        ))}
-                    </MenuList>
-                </Menu>
-            )}
-            {showZoom && (
-                <IconButton
-                    aria-label={"zoom in"}
-                    title={"zoom in"}
-                    icon={<Plus />}
-                    onClick={() => zoomIn()}
-                />
-            )}
-        </ButtonGroup>
-    )
-};
+        <HStack>
+            
+            <Toolbar>
+                <UsersOnline />
+            </Toolbar>
 
-export type ActivityPanelProps = ZoomPanelProps & {
-};
-
-export const ActivityPanel: FC<ActivityPanelProps> = ({
-    showZoom,
-    showFitView,
-}) => {
-    return (
-        <Panel position={"top-right"}>
-            <HStack>
-                
-                <ControlPanel>
-                    <UsersOnline />
-                </ControlPanel>
-                
-                <ControlPanel>
-                    <ZoomPanel
-                        showZoom={showZoom}
-                        showFitView={showFitView}
-                    />
-                </ControlPanel>
-
-                <ControlPanel>
+            <Toolbar>
+                <ToolbalSection>
+                    <HomeButton />
+                    <SharePopover link={link} onCopy={clipboardCopy} />
+                    <Menu>
+                        <MenuButton
+                            as={IconButton}
+                            icon={<Download />}
+                            title={"export"}
+                        />
+                        <MenuList>
+                            {exports.map(item => (
+                                <MenuItem
+                                    key={item.title}
+                                    command={item.command}
+                                    onClick={item.onClick}
+                                >
+                                    {item.title}
+                                </MenuItem>
+                            ))}
+                        </MenuList>
+                    </Menu>
                     <IconButton
                         aria-label={"Help"}
-                        title={"Help"}
                         icon={<HelpCircle />}
+                        title={"Help"}
                     />
-                </ControlPanel>
+                </ToolbalSection>
+            </Toolbar>
 
-            </HStack>
-        </Panel>
+        </HStack>
     );
 }

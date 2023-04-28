@@ -1,170 +1,48 @@
-import '@reactflow/node-resizer/dist/style.css';
+import { Element, ElementStyleProperties, ShapeType } from "@structurizr/dsl";
+import { Handle, Position } from "@reactflow/core";
+import { FC, PropsWithChildren } from "react";
+import { ElementLabel } from "./ElementLabel";
+import { DefaultBox, RoundedBox } from "../Shapes";
 
-import {
-    defaultElementStyle,
-    Element,
-    ElementStyleProperties,
-    ShapeType,
-    Tag
-} from "@structurizr/dsl";
-import { Handle, NodeProps, Position } from "@reactflow/core";
-import { NodeResizer } from "@reactflow/node-resizer";
-import { FC, PropsWithChildren, useCallback } from "react";
-import {
-    ExpandedElementLabel,
-    ElementLabel,
-    DeploymentNodeLabel
-} from "../Labels";
-import {
-    DefaultBox,
-    RoundedBox
-} from '../Shapes';
-import { ExpandedElement } from "./ExpandedElement";
-import { DeploymentNode } from "./DeploymentNode";
-import { useWorkspaceStore } from "../../store";
-
-type ShapeshiftElementProps = {
-    style?: Partial<ElementStyleProperties>;
-    width?: number;
-    height?: number;
+export const ElementNode: FC<{
+    data: Element;
+    style: ElementStyleProperties;
     selected?: boolean;
-}
-
-const ShapeshiftElement: FC<PropsWithChildren<ShapeshiftElementProps>> = ({
-    children,
-    style,
-    width,
-    height,
-    selected
-}) => {
-    const mergedStyle = {
-        ...defaultElementStyle,
-        ...style
-    }
-    const mergedProps = {
-        style: mergedStyle,
-        width,
-        height,
-        selected        
-    }
-
-    switch (mergedStyle.shape) {
+}> = (props) => {
+    switch (props.style.shape) {
         case ShapeType.RoundedBox:
-            return (<RoundedBox {...mergedProps}>{children}</RoundedBox>);
+            return (<RoundedBoxElement {...props} />);
         case ShapeType.Box:
-            return (<DefaultBox {...mergedProps}>{children}</DefaultBox>);
+            return (<DefaultBoxElement {...props} />);
         default:
-            return (<RoundedBox {...mergedProps}>{children}</RoundedBox>);
+            return (<DefaultBoxElement {...props} />);
     };
 }
 
-export type ElementNodeProps = ShapeshiftElementProps & {
+export function ElementShapeWhapper(ElementComponent: FC<PropsWithChildren<{
+    style: ElementStyleProperties;
+    selected?: boolean;
+}>>): FC<{
     data: Element;
-    expanded?: boolean;
-}
-
-export const ElementNode: FC<ElementNodeProps> = ({
-    data,
-    style,
-    width = 300,
-    height = 200,
-    selected = false,
-    expanded = false
-}) => {
-    const { setElementDimension } = useWorkspaceStore();
-    const onResize = useCallback((event, params) => {
-        setElementDimension({
-            // TODO: add view identifier
-            ...params,
-            elementIdentifier: data.identifier
-        });
-    }, [setElementDimension, data]);
-
-    if (data.tags.some(x => x.name === Tag.DeploymentNode.name)) {
+    style: ElementStyleProperties;
+    selected?: boolean;
+}> {
+    return function WrappedElement({
+        data,
+        style,
+        selected,
+    }) {
         return (
-            <DeploymentNode
-                style={style}
-                width={width}
-                height={height}
-                selected={selected}
-            >
-                <DeploymentNodeLabel
-                    data={data}
-                    style={style}
-                />
-                <NodeResizer
-                    isVisible={selected}
-                    minWidth={380}
-                    minHeight={320}
-                    handleStyle={{ width: 7, height: 7 }}
-                    lineStyle={{ borderWidth: 0 }}
-                    onResize={onResize}
-                />
-            </DeploymentNode>
+            <ElementComponent style={style} selected={selected} >
+                <ElementLabel data={data} style={style} showDescription />
+                <Handle id={"a"} type={"source"} position={Position.Left} />
+                <Handle id={"b"} type={"source"} position={Position.Top} />
+                <Handle id={"c"} type={"source"} position={Position.Right} />
+                <Handle id={"d"} type={"source"} position={Position.Bottom} />
+            </ElementComponent>
         );
     }
-
-    if (expanded) {
-        return (
-            <ExpandedElement
-                style={style}
-                width={width}
-                height={height}
-                selected={selected}
-            >
-                <ExpandedElementLabel
-                    data={data}
-                    style={style}
-                />
-                <NodeResizer
-                    isVisible={selected}
-                    minWidth={380}
-                    minHeight={320}
-                    handleStyle={{ width: 7, height: 7 }}
-                    lineStyle={{ borderWidth: 0 }}
-                    onResize={onResize}
-                />
-            </ExpandedElement>
-        );
-    }
-    
-    return (
-        <ShapeshiftElement
-            style={style}
-            width={width}
-            height={height}
-            selected={selected}
-        >
-            <ElementLabel data={data} style={style} showDescription />
-            <Handle id={"a"} type={"source"} position={Position.Left} />
-            <Handle id={"b"} type={"source"} position={Position.Top} />
-            <Handle id={"c"} type={"source"} position={Position.Right} />
-            <Handle id={"d"} type={"source"} position={Position.Bottom} />
-        </ShapeshiftElement>
-    );
 }
 
-export type ElementNodeWrapperProps = {
-    element: Element;
-    style?: Partial<ElementStyleProperties>;
-    width?: number;
-    height?: number;
-    expanded?: boolean;
-    draggedOver?: boolean;
-}
-
-export const ElementNodeWrapper: FC<NodeProps<ElementNodeWrapperProps>> = ({
-    data,
-    selected
-}) => {
-    return (
-        <ElementNode
-            data={data.element}
-            style={data.style}
-            width={data.width}
-            height={data.height}
-            selected={data.draggedOver || selected}
-            expanded={data.expanded}
-        />
-    );
-}
+export const DefaultBoxElement = ElementShapeWhapper(DefaultBox);
+export const RoundedBoxElement = ElementShapeWhapper(RoundedBox);

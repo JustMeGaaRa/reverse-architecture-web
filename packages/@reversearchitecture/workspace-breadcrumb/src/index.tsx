@@ -4,8 +4,8 @@ import {
     BreadcrumbLink,
     Button
 } from "@chakra-ui/react";
-import { IView, IViewDefinition } from "@structurizr/dsl";
-import { useWorkspaceStore } from "@reversearchitecture/workspace-viewer";
+import { IViewDefinition } from "@structurizr/dsl";
+import { useWorkspaceNavigation } from "@reversearchitecture/workspace-viewer";
 import {
     Hexagon,
     Rhombus,
@@ -16,15 +16,12 @@ import { FC, useCallback } from "react";
 
 export const WorkspaceBreadcrumb: FC<{
     path: Array<IViewDefinition>;
-    onClick?: (view: IView) => void;
+    onClick?: (view: IViewDefinition) => void;
 }> = ({
     path,
     onClick
 }) => {
-    const {
-        workspace,
-        setSelectedView
-    } = useWorkspaceStore();
+    const { navigate } = useWorkspaceNavigation();
     
     const colors = [
         {
@@ -49,17 +46,10 @@ export const WorkspaceBreadcrumb: FC<{
         }
     ];
 
-    const onBreadcrumItemClick = useCallback((view) => {
-        const selectedView: IView = 
-            workspace.views.systemContexts.find(x => x.type === view.type && x.identifier === view.identifier)
-            ?? workspace.views.containers.find(x => x.type === view.type && x.identifier === view.identifier)
-            ?? workspace.views.components.find(x => x.type === view.type && x.identifier === view.identifier)
-            ?? view;
-
-        setSelectedView(selectedView);
-
+    const handleOnBreadcrumLinkClick = useCallback((view: IViewDefinition) => {
+        navigate(view);
         onClick?.(view);
-    }, [workspace, setSelectedView, onClick]);
+    }, [navigate, onClick]);
 
     return (
         <Breadcrumb separator={""}>
@@ -88,7 +78,7 @@ export const WorkspaceBreadcrumb: FC<{
                             borderColor: `${colors[index].scheme}.primary`,
                             color: "basic.White"
                         }}
-                        onClick={onBreadcrumItemClick}
+                        onClick={() => handleOnBreadcrumLinkClick(view)}
                     >
                         {`${view.type} - ${view.title}`}
                     </BreadcrumbLink>

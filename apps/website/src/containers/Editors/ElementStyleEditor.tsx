@@ -3,7 +3,7 @@ import {
     ElementStyleProperties,
     LineStyle,
     ShapeType
-} from "@justmegaara/structurizr-dsl";
+} from "@structurizr/dsl";
 import { FC } from "react";
 import {
     ColorInputControl,

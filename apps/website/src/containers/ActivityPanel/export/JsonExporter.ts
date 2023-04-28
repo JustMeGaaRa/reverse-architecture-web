@@ -1,4 +1,4 @@
-import { Workspace } from "@justmegaara/structurizr-dsl";
+import { Workspace } from "@structurizr/dsl";
 import { ReactFlowJsonObject } from "@reactflow/core";
 
 export function exportToJson(workspace: Workspace, flowState: ReactFlowJsonObject): File {

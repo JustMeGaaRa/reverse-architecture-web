@@ -4,16 +4,13 @@ import { FC, PropsWithChildren } from "react";
 
 export type DefaultBoxProps = {
     style: ElementStyleProperties;
-    width?: number;
-    height?: number;
     selected?: boolean,
 }
 
 export const DefaultBox: FC<PropsWithChildren<DefaultBoxProps>> = ({
     children,
     style,
-    width,
-    height,
+    selected
 }) => {
     return (
         <Flex
@@ -23,8 +20,8 @@ export const DefaultBox: FC<PropsWithChildren<DefaultBoxProps>> = ({
             align={"center"}
             justify={"center"}
             padding={2}
-            width={width}
-            height={height}
+            height={style.height}
+            width={style.width}
             textColor={"whiteAlpha.900"}
         >
             {children}

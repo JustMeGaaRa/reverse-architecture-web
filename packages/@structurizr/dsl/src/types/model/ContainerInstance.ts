@@ -38,8 +38,6 @@ export function containerInstance(
         containerIdentifier,
         deploymentGroups,
         tags: [
-            Tag.Element,
-            Tag.Container,
             Tag.ContainerInstance,
             ...(tags ?? [])
         ]

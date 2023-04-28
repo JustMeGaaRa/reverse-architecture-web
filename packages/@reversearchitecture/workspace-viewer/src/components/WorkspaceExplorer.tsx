@@ -1,5 +1,6 @@
 import {
     IView,
+    ViewType,
     Workspace,
 } from "@structurizr/dsl";
 import {
@@ -7,11 +8,13 @@ import {
 } from "@reactflow/core";
 import {
     FC,
-    PropsWithChildren
+    PropsWithChildren,
+    useCallback
 } from "react";
-import { useSelectedView } from "../hooks/useSelectedView";
+import { useSelectedViewGraph } from "../hooks/useSelectedViewGraph";
 import { WorkspaceRenderer } from "./WorkspaceRenderer";
 import { WorkspaceStoreUpdater } from "./WorkspaceStoreUpdater";
+import { useWorkspaceNavigation } from "../hooks/useWorkspaceNavigation";
 
 export const WorkspaceExplorer: FC<PropsWithChildren<{
     workspace?: Workspace;
@@ -23,7 +26,28 @@ export const WorkspaceExplorer: FC<PropsWithChildren<{
     initialView,
     onNodesDoubleClick
 }) => {
-    const { nodes, edges, onNodesChange, onEdgesChange } = useSelectedView();
+    const { nodes, edges, onNodesChange, onEdgesChange } = useSelectedViewGraph();
+    const { navigate } = useWorkspaceNavigation();
+
+    const handleOnDoubleClick = useCallback((event: React.MouseEvent, node: any) => {
+        const element = node.data.element;
+
+        // do not handle the click for component elements as there is no such view type
+        if (element.tags.some(tag => tag.name === "Person")
+            || element.tags.some(tag => tag.name === "Component")) {
+            return;
+        }
+
+        navigate({
+            identifier: element.identifier,
+            type: element.tags.some(tag => tag.name === "Software System")
+                ? ViewType.Container
+                : ViewType.Component,
+            title: element.name
+        });
+
+        onNodesDoubleClick?.(event, node);
+    }, [navigate, onNodesDoubleClick]);
 
     return (
         <ReactFlowProvider>
@@ -36,7 +60,7 @@ export const WorkspaceExplorer: FC<PropsWithChildren<{
                 edges={edges}
                 onNodesChange={onNodesChange}
                 onEdgesChange={onEdgesChange}
-                onNodesDoubleClick={onNodesDoubleClick}
+                onNodesDoubleClick={handleOnDoubleClick}
             >
                 {children}
             </WorkspaceRenderer>

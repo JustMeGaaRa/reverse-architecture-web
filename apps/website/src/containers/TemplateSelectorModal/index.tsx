@@ -5,16 +5,14 @@ import {
     ModalContent,
     ModalHeader,
     ModalOverlay,
-    useColorModeValue,
     useDisclosure
 } from "@chakra-ui/react";
-import { Tag, useWorkspace, Workspace } from "@justmegaara/structurizr-dsl";
+import { useWorkspaceNavigation, useWorkspaceStore } from "@reversearchitecture/workspace-viewer";
 import { FC, useCallback, useEffect, useState } from "react";
 import {
     TemplateSelector,
     DiagramTemplateGroup
 } from "../../components";
-import { useWorkspaceRenderer } from "..";
 
 type TemplateSelectorModalProps = {
     templates: Array<DiagramTemplateGroup>;
@@ -24,21 +22,21 @@ export const TemplateSelectorModal: FC<TemplateSelectorModalProps> = ({
     templates,
 }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const { workspace, setWorkspace } = useWorkspace();
-    const { setView } = useWorkspaceRenderer();
+    const { workspace, setWorkspace } = useWorkspaceStore();
+    const { navigate } = useWorkspaceNavigation();
     const [isInitialized, setIsInitialized] = useState(false);
 
     const onSelected = useCallback((template) => {
         onClose();
-        setWorkspace(JSON.parse(template.payload) as Workspace);
+        setWorkspace(JSON.parse(template.payload));
     }, [onClose, setWorkspace]);
 
     useEffect(() => {
         if (!isInitialized && workspace) {
-            setView(Tag.SoftwareSystem.name, workspace.views.systemContexts[0]);
+            navigate(workspace.views.systemContexts[0]);
             setIsInitialized(true);
         }
-    }, [workspace, setView, isInitialized, setIsInitialized]);
+    }, [workspace, isInitialized, navigate, setIsInitialized]);
 
     useEffect(() => onOpen(), [onOpen]);
 

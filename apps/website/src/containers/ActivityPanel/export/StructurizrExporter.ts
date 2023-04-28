@@ -1,4 +1,4 @@
-import { toWorkspaceString, Workspace } from "@justmegaara/structurizr-dsl";
+import { toWorkspaceString, Workspace } from "@structurizr/dsl";
 
 export const exportToStructurizrDsl = (workspace: Workspace): File => {
     const dsl = toWorkspaceString(workspace);

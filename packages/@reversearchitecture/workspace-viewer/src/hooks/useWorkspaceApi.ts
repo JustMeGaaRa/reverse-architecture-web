@@ -1,6 +1,5 @@
 import { useYReactFlow } from "@justmegaara/y-reactflow";
 import {
-    DeploymentEnvironment,
     Person,
     Position,
     Relationship,
@@ -16,7 +15,7 @@ import {
 import {
     fromElement,
     fromRelationship,
-} from "../utils/ReactFlow"
+} from "../services/ReactFlowVisitor";
 
 export const useWorkspaceApi = () => {
     const workspaceStore = useWorkspaceStore();
@@ -27,7 +26,7 @@ export const useWorkspaceApi = () => {
             reactFlowShared.updateNodes([
                 fromElement({
                     element: person,
-                    size: { ...position, width: 300, height: 200 },
+                    position: position,
                     styles: workspaceStore.workspace.views.styles
                 })
             ]);
@@ -39,7 +38,7 @@ export const useWorkspaceApi = () => {
             reactFlowShared.updateNodes([
                 fromElement({
                     element: softwareSystem,
-                    size: { ...position, width: 300, height: 200 },
+                    position: position,
                     styles: workspaceStore.workspace.views.styles
                 })
             ]);
@@ -51,7 +50,7 @@ export const useWorkspaceApi = () => {
             reactFlowShared.updateNodes([
                 fromElement({
                     element: container,
-                    size: { ...position, width: 300, height: 200 },
+                    position: position,
                     styles: workspaceStore.workspace.views.styles
                 })
             ]);
@@ -63,19 +62,7 @@ export const useWorkspaceApi = () => {
             reactFlowShared.updateNodes([
                 fromElement({
                     element: compoent,
-                    size: { ...position, width: 300, height: 200 },
-                    styles: workspaceStore.workspace.views.styles
-                })
-            ]);
-        }
-    }, [reactFlowShared, workspaceStore]);
-    
-    const addDeploymentEnvironment = useCallback((deploymentEnvironment: DeploymentEnvironment) => {
-        if (workspaceStore) {
-            reactFlowShared.updateNodes([
-                fromElement({
-                    element: deploymentEnvironment,
-                    size: { x: 0, y: 0, width: 300, height: 200 },
+                    position: position,
                     styles: workspaceStore.workspace.views.styles
                 })
             ]);
@@ -87,7 +74,7 @@ export const useWorkspaceApi = () => {
             reactFlowShared.updateNodes([
                 fromElement({
                     element: params.deploymentNode,
-                    size: { ...params.position, width: 300, height: 200 },
+                    position: params.position,
                     styles: workspaceStore.workspace.views.styles
                 })
             ]);
@@ -110,7 +97,6 @@ export const useWorkspaceApi = () => {
         addSoftwareSystem,
         addContainer,
         addComponent,
-        addDeploymentEnvironment,
         addDeploymentNode,
         addRelationship
     }

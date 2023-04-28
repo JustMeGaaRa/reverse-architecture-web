@@ -16,13 +16,13 @@ export interface RelationshipStyleProperties {
 }
 
 export const defaultRelationshipStyle: RelationshipStyleProperties = {
-    color: "#898989",
-    fontSize: 14,
+    color: "#707070",
+    fontSize: 24,
     opacity: 100,
-    position: 1,
+    position: 50,
     properties: new Map(),
     routing: RoutingStyle.Direct,
-    style: LineStyle.Solid,
-    thikness: 1,
-    width: 1,
+    style: LineStyle.Dashed,
+    thikness: 2,
+    width: 200,
 }

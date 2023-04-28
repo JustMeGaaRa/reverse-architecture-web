@@ -1,4 +1,5 @@
 import "@reactflow/core/dist/style.css";
+import '@reactflow/node-resizer/dist/style.css';
 
 import { Background, BackgroundVariant } from "@reactflow/background";
 import {
@@ -8,30 +9,13 @@ import {
     OnNodesChange,
     OnEdgesChange,
 } from "@reactflow/core";
+import { FC, PropsWithChildren, useMemo } from "react";
 import {
-    FC,
-    PropsWithChildren
-} from "react";
-import { ElementNodeWrapper } from "./Nodes/ElementNode";
-import { RelationshipEdgeWrapper } from "./Edges/RelationshipEdge";
-
-const NodeTypes = {
-    element: ElementNodeWrapper,
-    box: ElementNodeWrapper,
-    cylinder: ElementNodeWrapper,
-    hexagon: ElementNodeWrapper,
-    person: ElementNodeWrapper,
-    pipe: ElementNodeWrapper,
-    roundedBox: ElementNodeWrapper
-}
-
-const EdgeTypes = {
-    relationship: RelationshipEdgeWrapper,
-    straight: RelationshipEdgeWrapper,
-    step: RelationshipEdgeWrapper,
-    smoothstep: RelationshipEdgeWrapper,
-    simplebezier: RelationshipEdgeWrapper
-}
+    ReactFlowBoundaryNode,
+    ReactFlowElementNode,
+    ReactFlowDeploymentNode
+} from "./Nodes";
+import { ReactFlowBezierEdge } from "./Edges";
 
 export const WorkspaceRenderer: FC<PropsWithChildren<{
     nodes: any[];
@@ -47,18 +31,32 @@ export const WorkspaceRenderer: FC<PropsWithChildren<{
     onEdgesChange,
     onNodesDoubleClick
 }) => {
-    const fitViewOptions = {
+    const NodeTypes = useMemo(() => ({
+        boundary: ReactFlowBoundaryNode,
+        element: ReactFlowElementNode,
+        deploymentNode: ReactFlowDeploymentNode,
+    }), []);
+    
+    const EdgeTypes = useMemo(() => ({
+        relationship: ReactFlowBezierEdge,
+        straight: ReactFlowBezierEdge,
+        step: ReactFlowBezierEdge,
+        smoothstep: ReactFlowBezierEdge,
+        simplebezier: ReactFlowBezierEdge
+    }), []);
+
+    const FitViewOptions = useMemo(() => ({
         padding: 0.2,
         duration: 500,
         maxZoom: 5,
         minZoom: 0.1
-    };
+    }), []);
 
     return (
         <ReactFlow
             connectionMode={ConnectionMode.Loose}
             fitView
-            fitViewOptions={fitViewOptions}
+            fitViewOptions={FitViewOptions}
             nodeTypes={NodeTypes}
             nodes={nodes}
             edgeTypes={EdgeTypes}

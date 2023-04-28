@@ -1,5 +1,5 @@
 import { Flex } from "@chakra-ui/react";
-import { Relationship } from "@justmegaara/structurizr-dsl";
+import { Relationship } from "@structurizr/dsl";
 import {
     ReactFlowState,
     useReactFlow,

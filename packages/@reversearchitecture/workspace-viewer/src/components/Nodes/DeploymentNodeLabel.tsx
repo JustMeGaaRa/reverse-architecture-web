@@ -1,7 +1,7 @@
 import { Flex, Text } from "@chakra-ui/react";
 import { DeploymentNode, ElementStyleProperties } from "@structurizr/dsl";
 import { FC } from "react";
-import { ExpandedElementLabel } from "./ExpandedElementLabel";
+import { ExpandedElementLabel } from "./BoundaryElementLabel";
 
 export type DeploymentNodeLabelProps = {
     data: DeploymentNode;

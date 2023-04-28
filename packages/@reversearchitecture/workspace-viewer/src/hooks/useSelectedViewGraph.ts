@@ -5,15 +5,15 @@ import {
     SystemContextViewStrategy,
     SystemLandscapeViewStrategy,
     IViewStrategy,
-    ViewType
+    ViewType,
 } from "@structurizr/dsl";
 import { useEdgesState, useNodesState } from "@reactflow/core";
 import { useEffect } from "react";
 import { ReactFlowVisitor } from "../services/ReactFlowVisitor";
 import { useWorkspaceStore } from "../store";
 
-export const useSelectedView = () => {
-    const { workspace, selectedView, setSelectedView, setViewPath } = useWorkspaceStore();
+export const useSelectedViewGraph = () => {
+    const { workspace, selectedView, setViewPath } = useWorkspaceStore();
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
@@ -33,17 +33,10 @@ export const useSelectedView = () => {
         const path = viewFunctions.get(selectedView.type).getPath();
         const { nodes, edges } = visitor.getGraph();
 
-        // const selectedView = 
-        //     workspace.views.systemContexts.find(x => x.type === currentView.type && x.identifier === currentView.identifier)
-        //     ?? workspace.views.containers.find(x => x.type === currentView.type && x.identifier === currentView.identifier)
-        //     ?? workspace.views.components.find(x => x.type === currentView.type && x.identifier === currentView.identifier)
-        //     ?? currentView;
-
-        // setSelectedView(selectedView);
         setNodes(nodes);
         setEdges(edges);
         setViewPath({ path });
-    }, [workspace, selectedView, setSelectedView, setViewPath, setNodes, setEdges])
+    }, [workspace, selectedView, setViewPath, setNodes, setEdges])
 
     return {
         nodes,
