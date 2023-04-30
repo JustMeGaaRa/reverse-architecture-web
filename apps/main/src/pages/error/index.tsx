@@ -1,11 +1,13 @@
 import { Flex, HStack, Heading } from "@chakra-ui/react";
 import {
+    EmptyContent,
     Logo,
     NavigationBackButton,
     Page,
     PageBody,
     PageHeader,
 } from "@reversearchitecture/ui";
+import { CloudError } from "iconoir-react";
 import { FC } from "react";
 import { useNavigate, useRouteError } from "react-router";
 
@@ -30,11 +32,14 @@ export const ErrorPage: FC<{
                 <Flex
                     alignItems={"center"}
                     justifyContent={"center"}
-                    direction={"column"}
                     height={"100%"}
+                    width={"100%"}
                 >
-                    <Heading as={"h4"}>{name}</Heading>
-                    <Heading as={"h5"}>{message}</Heading>
+                    <EmptyContent
+                        icon={CloudError}
+                        title={name}
+                        description={message}
+                    />
                 </Flex>
             </PageBody>
         </Page>

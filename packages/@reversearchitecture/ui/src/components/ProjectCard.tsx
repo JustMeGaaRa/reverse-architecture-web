@@ -1,75 +1,94 @@
 import {
     Box,
-    Button,
-    ButtonGroup,
+    Card,
+    CardBody,
     Flex,
-    Heading,
-    HStack,
-    IconButton,
-    Text
+    Icon,
+    Image,
+    Text,
 } from "@chakra-ui/react";
 import{
-    Plus
+    EyeEmpty,
+    MediaImage
 } from "iconoir-react";
 import { FC, PropsWithChildren } from "react";
-import { WorkspacePreviewCard } from "./WorkspacePreviewCard";
 
 export const ProjectCard: FC<PropsWithChildren<{
     name: string;
     updated: string;
-    files: number;
-    members: number;
-
+    preview?: string;
 }>> = ({
     name,
     updated,
-    files,
-    members
+    preview
 }) => {
     return (
-        <Box
-            backgroundColor={"gray.100"}
-            padding={4}
-            borderRadius={24}
-            height={"368px"}
-            width={"100%"}
+        <Card
+            data-group
+            backgroundColor={"transparent"}
+            borderRadius={16}
+            height={"242px"}
+            width={"345px"}
+            padding={0}
+            _hover={{
+                backgroundColor: "gray.100",
+                cursor: "pointer",
+            }}
         >
-            <Flex direction={"column"} gap={8}>
-                <Flex gap={4}>
-                    <Box
-                        borderWidth={1}
-                        borderRadius={16}
-                        height={16}
-                        width={16}
-                    />
-                    <Flex direction={"column"} flexGrow={1}>
-                        <Heading as={"h5"} size={"lg"}>{name}</Heading>
-                        <HStack gap={4} color={"gray.700"}>
-                            <Text>Updated: {updated}</Text>
-                            <Text>Files: {files}</Text>
-                            <Text>Members: {members}</Text>
-                        </HStack>
-                    </Flex>
-                    <ButtonGroup size={"lg"}>
-                        <Button
-                            leftIcon={<Plus />}
-                            colorScheme={"yellow"}
-                        >
-                            New File
-                        </Button>
-                        <IconButton
-                            aria-label={""}
-                            colorScheme={"gray"}
-                            icon={<Plus />}
+            <CardBody padding={0}>
+                <Flex
+                    backgroundColor={"gray.100"}
+                    borderColor={"gray.200"}
+                    borderWidth={1}
+                    borderRadius={16}
+                    height={"182px"}
+                    width={"345px"}
+                    alignItems={"center"}
+                    justifyContent={"center"}
+                    overflow={"hidden"}
+                    _groupHover={{
+                        borderColor: "gray.900",
+                    }}
+                >
+                    {preview && (
+                        <Image alt={"Project Preview Image"} src={preview} />
+                    )}
+                    {!preview && (
+                        <Icon
+                            as={MediaImage}
+                            color={"gray.700"}
+                            fontSize={32}
+                            strokeWidth={1}
+                            _groupHover={{ display: "none" }}
                         />
-                    </ButtonGroup>
+                    )}
+                    <Icon
+                        as={EyeEmpty}
+                        color={"gray.900"}
+                        display={"none"}
+                        fontSize={40}
+                        strokeWidth={1}
+                        _groupHover={{ display: "block" }}
+                    />
                 </Flex>
-                <HStack spacing={4}>
-                    <WorkspacePreviewCard />
-                    <WorkspacePreviewCard />
-                    <WorkspacePreviewCard />
-                </HStack>
-            </Flex>
-        </Box>
+                <Box padding={2}>
+                    <Text
+                        color={"gray.700"}
+                        fontSize={18}
+                        noOfLines={1}
+                        _groupHover={{ color: "basic.White" }}
+                    >
+                        {name}
+                    </Text>
+                    <Text
+                        color={"gray.500"}
+                        fontSize={14}
+                        _groupHover={{ color: "gray.700" }}
+                    >
+                        {updated}
+                    </Text>
+                </Box>
+            </CardBody>
+        </Card>
     )
 }

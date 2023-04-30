@@ -1,4 +1,7 @@
-import { createBrowserRouter } from "react-router-dom";
+import {
+    createBrowserRouter,
+    Navigate
+} from "react-router-dom";
 import {
     Layout,
     CommunityHub,
@@ -21,7 +24,7 @@ export const routes = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <Dashboard />
+                element: <Navigate to={"projects"} />
             },
             {
                 path: "dashboard",
@@ -41,7 +44,7 @@ export const routes = createBrowserRouter([
                 children: [
                     {
                         index: true,
-                        element: <ProfileSheet />
+                        element: <Navigate to={"profile"} />
                     },
                     {
                         path: "profile",

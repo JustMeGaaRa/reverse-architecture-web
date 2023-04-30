@@ -13,15 +13,20 @@ import {
     Thead,
     Tbody,
     Divider,
-    VStack
+    VStack,
+    Wrap,
+    WrapItem,
+    Flex
 } from "@chakra-ui/react";
 import { ProjectApi } from "@reversearchitecture/services";
 import {
     ContextSheet,
     ContextSheetContent,
     ContextSheetHeader,
+    EmptyContent,
     ProjectCard
 } from "@reversearchitecture/ui";
+import { Folder } from "iconoir-react";
 import {
     FC,
     PropsWithChildren,
@@ -58,55 +63,54 @@ export const ProjectList: FC<PropsWithChildren<{
         <ContextSheet>
             <Box>
                 <ContextSheetHeader title={"All Projects"} />
-                <Divider />
-                <ContextSheetContent>
+                <ContextSheetContent padding={0}>
                     <Tabs>
-                        <TabList>
+                        <TabList px={6}>
                             <Tab>My projects</Tab>
                             <Tab>Shared</Tab>
                             <Tab>Archived</Tab>
                         </TabList>
-                        <TabPanels>
-                            <TabPanel>
-                                <VStack gap={8} height={"100%"} overflowY={"scroll"}>
+                        <TabPanels px={6} pt={6}>
+                            <TabPanel padding={0}>
+                                <Wrap spacing={6}>
                                     {projects.map((item) => (
-                                        <ProjectCard
-                                            key={item.name}
-                                            name={item.name}
-                                            updated={item.updated}
-                                            files={item.files}
-                                            members={item.members}
-                                        />
+                                        <WrapItem key={item.name}>
+                                            <ProjectCard
+                                                name={item.name}
+                                                updated={item.updated}
+                                            />
+                                        </WrapItem>
                                     ))}
-                                </VStack>
+                                </Wrap>
                             </TabPanel>
                             <TabPanel>
-                                <TableContainer>
-                                    <Table>
-                                        <Thead>
-                                            <Tr>
-                                                {metadata.map((item) => (
-                                                    <Th key={item.name}>{item.name}</Th>
-                                                    ))}
-                                            </Tr>
-                                        </Thead>
-                                        <Tbody>
-                                            {projects.map((item) => (
-                                                <Tr
-                                                    cursor={"pointer"}
-                                                    key={item.name}
-                                                    _hover={{ background: "whiteAlpha.100" }}
-                                                >
-                                                    {metadata.map((meta) => (
-                                                        <Td key={meta.name}>{item[meta.key]}</Td>
-                                                    ))}
-                                                </Tr>
-                                            ))}
-                                        </Tbody>
-                                    </Table>
-                                </TableContainer>
+                                <Flex
+                                    alignItems={"center"}
+                                    justifyContent={"center"}
+                                    height={"100%"}
+                                    width={"100%"}
+                                >
+                                    <EmptyContent
+                                        icon={Folder}
+                                        title={"No shared projects"}
+                                        description={"To get started, click the \"Create New Project\" button to create a new project."}
+                                    />
+                                </Flex>
                             </TabPanel>
-                            <TabPanel></TabPanel>
+                            <TabPanel>
+                                <Flex
+                                    alignItems={"center"}
+                                    justifyContent={"center"}
+                                    height={"100%"}
+                                    width={"100%"}
+                                >
+                                    <EmptyContent
+                                        icon={Folder}
+                                        title={"No archived projects"}
+                                        description={"To get started, click the \"Create New Project\" button to create a new project."}
+                                    />
+                                </Flex>
+                            </TabPanel>
                         </TabPanels>
                     </Tabs>
                 </ContextSheetContent>

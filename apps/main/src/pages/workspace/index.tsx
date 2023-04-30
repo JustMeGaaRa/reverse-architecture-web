@@ -57,7 +57,7 @@ export const Workspace: FC<PropsWithChildren<{
                     <WorkspaceMenu title={title} />
                 </HStack>
                 <HStack gap={2}>
-                    <AvatarGroup max={3} colorScheme={"purple"}>
+                    <AvatarGroup max={3}>
                         {users.map(user => (
                             <Avatar
                                 key={user.name}

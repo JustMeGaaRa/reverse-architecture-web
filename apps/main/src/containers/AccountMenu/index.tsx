@@ -10,7 +10,7 @@ import {
     MenuItem,
     Text
 } from "@chakra-ui/react";
-import { NavArrowUp, ProfileCircle } from "iconoir-react";
+import { LogOut, NavArrowUp, ProfileCircle } from "iconoir-react";
 import { FC, PropsWithChildren } from "react";
 import { useAccount } from "./hooks";
 
@@ -22,7 +22,7 @@ export const AccountMenu: FC<PropsWithChildren<{
     const account = useAccount();
 
     return (                  
-        <Menu>
+        <Menu placement={"top-end"}>
             <MenuButton
                 borderRadius={16}
                 height={"64px"}
@@ -73,7 +73,7 @@ export const AccountMenu: FC<PropsWithChildren<{
                 <MenuDivider />
                 <MenuGroup>
                     <MenuItem icon={<ProfileCircle />}>Switch Account</MenuItem>
-                    <MenuItem icon={<ProfileCircle />}>Sign Out</MenuItem>
+                    <MenuItem icon={<LogOut />}>Sign Out</MenuItem>
                 </MenuGroup>
             </MenuList>
         </Menu>
