@@ -24,7 +24,7 @@ export const AccountMenu: FC<PropsWithChildren<{
     return (                  
         <Menu placement={"top-end"}>
             <MenuButton
-                borderRadius={16}
+                borderRadius={24}
                 height={"64px"}
                 width={"100%"}
                 _hover={{
@@ -34,7 +34,7 @@ export const AccountMenu: FC<PropsWithChildren<{
                 <Flex
                     alignItems={"center"}
                     gap={4}
-                    px={3}
+                    px={2}
                 >
                     <Avatar
                         background={"purple.200"}
