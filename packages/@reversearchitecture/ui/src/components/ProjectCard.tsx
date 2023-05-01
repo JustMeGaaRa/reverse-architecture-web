@@ -76,7 +76,7 @@ export const ProjectCard: FC<PropsWithChildren<{
                         color={"gray.700"}
                         fontSize={18}
                         noOfLines={1}
-                        _groupHover={{ color: "basic.White" }}
+                        _groupHover={{ color: "basic.white" }}
                     >
                         {name}
                     </Text>

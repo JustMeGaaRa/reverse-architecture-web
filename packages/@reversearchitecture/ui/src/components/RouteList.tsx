@@ -1,4 +1,4 @@
-import { ButtonGroup } from "@chakra-ui/react";
+import { List } from "@chakra-ui/react";
 import { FC, PropsWithChildren } from "react";
 
 export const RouteList: FC<PropsWithChildren<{
@@ -8,14 +8,11 @@ export const RouteList: FC<PropsWithChildren<{
     size = "lg"
 }) => {
     return (
-        <ButtonGroup
-            colorScheme={"gray"}
-            orientation={"vertical"}
+        <List
             size={size}
-            variant={"ghost"}
             width={"100%"}
         >
             {children}
-        </ButtonGroup>
+        </List>
     )
 }

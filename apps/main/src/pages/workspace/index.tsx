@@ -42,6 +42,14 @@ export const Workspace: FC<PropsWithChildren<{
         { name: "Robert Speedwagon", },
         { name: "Will Zeppeli", },
     ]
+    const colorSchemes = [
+        "blue",
+        "green",
+        "red",
+        "orange",
+        "yellow",
+        "purple",
+    ]
 
     return (
         <Page>
@@ -57,12 +65,12 @@ export const Workspace: FC<PropsWithChildren<{
                     <WorkspaceMenu title={title} />
                 </HStack>
                 <HStack gap={2}>
-                    <AvatarGroup max={3}>
-                        {users.map(user => (
+                    <AvatarGroup max={3} cursor={"pointer"}>
+                        {users.map((user, index) => (
                             <Avatar
                                 key={user.name}
+                                colorScheme={colorSchemes[index % colorSchemes.length]}
                                 name={user.name}
-                                cursor={"pointer"}
                                 title={user.name}
                             />
                         ))}
@@ -90,29 +98,29 @@ export const Workspace: FC<PropsWithChildren<{
                             </Box>
                             <RouteList>
                                 <Route
-                                    icon={<AddKeyframes />}
+                                    icon={AddKeyframes}
                                     title={"add frames"}
                                     to={"add"}
                                 />
                                 <Route
-                                    icon={<Code />}
+                                    icon={Code}
                                     title={"code editor"}
                                     to={"editor"}
                                 />
                                 <Route
-                                    icon={<Timer />}
+                                    icon={Timer}
                                     title={"timer"}
                                     to={"timer"}
                                 />
                                 <Route
-                                    icon={<ChatLines />}
+                                    icon={ChatLines}
                                     title={"comments"}
                                     to={"comments"}
                                 />
                             </RouteList>
                             <RouteList>
                                 <Route
-                                    icon={<HelpCircle />}
+                                    icon={HelpCircle}
                                     title={"help"}
                                     to={"help"}
                                 />

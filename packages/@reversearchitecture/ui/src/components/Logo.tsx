@@ -10,7 +10,7 @@ export const Logo: FC<{
             <Text
                 fontSize={"32px"}
                 fontFamily={"Inter"}
-                color={"yellow.primary"}
+                color={"yellow.900"}
             >
                 RVRS.IO
             </Text>

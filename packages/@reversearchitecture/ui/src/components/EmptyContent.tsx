@@ -20,7 +20,7 @@ export const EmptyContent: FC<{
             <Icon as={icon} fontSize={70} strokeWidth={.4} mb={4} />
             <Text
                 fontSize={20}
-                color={"basic.White"}
+                color={"basic.white"}
             >
                 {title}
             </Text>

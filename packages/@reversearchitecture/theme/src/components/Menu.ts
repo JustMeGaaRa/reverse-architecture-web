@@ -22,13 +22,13 @@ const iconStyle = defineStyle((props) => ({
 const itemStyle = defineStyle((props) => ({
     background: mode("", "transparent")(props),
     borderRadius: "8px",
-    color: mode("", "basic.White")(props),
+    color: mode("", "basic.white")(props),
     _hover: {
         backgroundColor: mode("", "gray.100")(props),
     },
     _active: {
         backgroundColor: mode("", "gray.100")(props),
-        color: mode("", "yellow.primary")(props),
+        color: mode("", "yellow.900")(props),
     },
     _disabled: {
         backgroundColor: mode("", "transparent")(props),
@@ -37,7 +37,7 @@ const itemStyle = defineStyle((props) => ({
 }));
 
 const listStyleStyle = defineStyle((props) => ({
-    backgroundColor: mode("", "basic.EerieBlack")(props),
+    backgroundColor: mode("", "basic.eerie-black")(props),
     borderColor: mode("", "gray.200")(props),
     borderRadius: "14px",
     padding: "8px"

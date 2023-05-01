@@ -6,6 +6,9 @@ import {
     Flex,
     HStack,
     IconButton,
+    List,
+    ListIcon,
+    ListItem,
     useDisclosure
 } from "@chakra-ui/react";
 import {
@@ -33,6 +36,7 @@ import {
 } from "iconoir-react";
 import { FC, PropsWithChildren } from "react";
 import { Outlet } from "react-router";
+import { NavLink } from "react-router-dom";
 import { AccountMenu } from "../../containers";
 
 export const Layout: FC<PropsWithChildren<{
@@ -81,19 +85,19 @@ export const Layout: FC<PropsWithChildren<{
                             <RouteList>
                                 <Route
                                     isExpanded={isOpen}
-                                    icon={<HomeSimple />}
+                                    icon={HomeSimple}
                                     title={"Dashboard"}
                                     to={"dashboard"}
                                 />
                                 <Route
                                     isExpanded={isOpen}
-                                    icon={<MultiplePagesEmpty />}
+                                    icon={MultiplePagesEmpty}
                                     title={"My Projects"}
                                     to={"projects"}
                                 />
                                 <Route
                                     isExpanded={isOpen}
-                                    icon={<Globe />}
+                                    icon={Globe}
                                     title={"Community"}
                                     to={"hub"}
                                 />
@@ -101,19 +105,19 @@ export const Layout: FC<PropsWithChildren<{
                             <RouteList>
                                 <Route
                                     isExpanded={isOpen}
-                                    icon={<BellNotification />}
+                                    icon={BellNotification}
                                     title={"Notifications"}
                                     to={"notifications"}
                                 />
                                 <Route
                                     isExpanded={isOpen}
-                                    icon={<Settings />}
+                                    icon={Settings}
                                     title={"Settings"}
                                     to={"settings"}
                                 />
                                 <Route
                                     isExpanded={isOpen}
-                                    icon={<HelpCircle />}
+                                    icon={HelpCircle}
                                     title={"Help & Feedback"}
                                     to={"help"}
                                 />

@@ -1,10 +1,10 @@
-import { Button, IconButton } from "@chakra-ui/react";
+import { ListIcon, ListItem } from "@chakra-ui/react";
 import { FC } from "react";
 import { NavLink } from "react-router-dom";
 
 export const Route: FC<{
     to: string,
-    icon: JSX.Element,
+    icon: any,
     title?: string,
     isExpanded?: boolean
 }> = ({
@@ -13,34 +13,16 @@ export const Route: FC<{
     title,
     isExpanded = false
 }) => {
-    return isExpanded ? (
-        <Button
+    return (
+        <ListItem
             as={NavLink}
             aria-label={title ?? to}
-            justifyContent={"left"}
-            leftIcon={icon}
-            iconSpacing={4}
-            px={"11px"}
+            display={"block"}
             to={to}
             title={title}
-            _activeLink={{
-                backgroundColor: "gray.100",
-                color: "yellow.primary"
-            }}
         >
-            {title}
-        </Button>
-    ) : (
-        <IconButton
-            as={NavLink}
-            aria-label={title ?? to}
-            icon={icon}
-            title={title}
-            to={to}
-            _activeLink={{
-                backgroundColor: "gray.100",
-                color: "yellow.primary"
-            }}
-        />
+            <ListIcon data-group as={icon} />
+            {isExpanded && title}
+        </ListItem>
     )
 }

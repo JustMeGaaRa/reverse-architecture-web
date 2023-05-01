@@ -8,7 +8,7 @@ export const Page: FC<PropsWithChildren<{
 }) => {
     return (
         <Flex
-            background={"basic.EerieBlack"}
+            background={"basic.eerie-black"}
             direction={"column"}
             height={"100vh"}
         >

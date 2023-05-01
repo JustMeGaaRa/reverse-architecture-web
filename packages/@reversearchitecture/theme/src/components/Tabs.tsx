@@ -26,15 +26,15 @@ export const Tabs = defineMultiStyleConfig({
             tab: {
                 color: mode("", "gray.700")(props),
                 _hover: {
-                    color: mode("", "basic.White")(props)
+                    color: mode("", "basic.white")(props)
                 },
                 _active: {
-                    borderBottomColor: mode("", `${props.colorScheme}.primary`)(props),
-                    color: mode("", "basic.White")(props)
+                    borderBottomColor: mode("", `${props.colorScheme}.900`)(props),
+                    color: mode("", "basic.white")(props)
                 },
                 _selected: {
-                    borderBottomColor: mode("", `${props.colorScheme}.primary`)(props),
-                    color: mode("", "basic.White")(props)
+                    borderBottomColor: mode("", `${props.colorScheme}.900`)(props),
+                    color: mode("", "basic.white")(props)
                 },
                 _disabled: {
                     color: mode("", "gray.200")(props)

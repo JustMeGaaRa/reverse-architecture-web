@@ -22,16 +22,16 @@ export const Button: ComponentStyleConfig = {
     },
     variants: {
         ghost: (props) => ({
-            color: mode("", `${props.colorScheme}.primary`)(props),
+            color: mode("", `${props.colorScheme}.900`)(props),
             _hover: {
                 backgroundColor: mode("", `${props.colorScheme}.200`)(props),
-                color: mode("", `${props.colorScheme}.primary`)(props),
+                color: mode("", `${props.colorScheme}.900`)(props),
             },
             _focus: {
                 backgroundColor: mode("", `${props.colorScheme}.200`)(props),
                 borderWidth: 0,
-                borderColor: mode("", `${props.colorScheme}.primary`)(props),
-                color: mode("", `${props.colorScheme}.primary`)(props),
+                borderColor: mode("", `${props.colorScheme}.900`)(props),
+                color: mode("", `${props.colorScheme}.900`)(props),
             },
             _active: {
                 backgroundColor: mode("", `${props.colorScheme}.100`)(props),
@@ -48,21 +48,21 @@ export const Button: ComponentStyleConfig = {
         }),
         outline: (props) => ({
             backgroundColor: mode("", `${props.colorScheme}.100`)(props),
-            borderColor: mode("", `${props.colorScheme}.primary`)(props),
+            borderColor: mode("", `${props.colorScheme}.900`)(props),
             borderWidth: 1,
-            color: mode("", `${props.colorScheme}.primary`)(props),
+            color: mode("", `${props.colorScheme}.900`)(props),
             _hover: {
                 backgroundColor: mode("", `${props.colorScheme}.200`)(props),
-                borderColor: mode("", `${props.colorScheme}.primary`)(props),
+                borderColor: mode("", `${props.colorScheme}.900`)(props),
                 borderWidth: 1,
-                color: mode("", `${props.colorScheme}.primary`)(props),
+                color: mode("", `${props.colorScheme}.900`)(props),
             },
             _focus: {
                 backgroundColor: mode("", `${props.colorScheme}.200`)(props),
-                borderColor: mode("", `${props.colorScheme}.primary`)(props),
+                borderColor: mode("", `${props.colorScheme}.900`)(props),
                 borderWidth: 1,
                 boxShadow: mode("", "0 0 0 5px yellow.200")(props),
-                color: mode("", `${props.colorScheme}.primary`)(props),
+                color: mode("", `${props.colorScheme}.900`)(props),
             },
             _active: {
                 backgroundColor: mode("", `${props.colorScheme}.100`)(props),
