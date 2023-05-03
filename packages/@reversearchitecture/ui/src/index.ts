@@ -13,6 +13,7 @@ export * from "./components/Page";
 export * from "./components/PageBody";
 export * from "./components/PageHeader";
 export * from "./components/ProjectCard";
+export * from "./components/ProjectList";
 export * from "./components/Route";
 export * from "./components/RouteList";
 export * from "./components/RouteSection";

@@ -10,6 +10,7 @@ export const RouteList: FC<PropsWithChildren<{
     return (
         <List
             size={size}
+            spacing={1}
             width={"100%"}
         >
             {children}

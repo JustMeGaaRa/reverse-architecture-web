@@ -11,6 +11,9 @@ export const List = defineMultiStyleConfig({
     baseStyle: definePartsStyle((props) => ({
         item: {
             color: mode("", "gray.700")(props),
+            transitionProperty: "all",
+            transitionDuration: "normal",
+            transitionTimingFunction: "ease",
             _hover: {
                 backgroundColor: mode("", "gray.100")(props),
                 color: mode("", "basic.white")(props),
@@ -21,21 +24,6 @@ export const List = defineMultiStyleConfig({
             },
             _activeLink: {
                 backgroundColor: mode("", "gray.100")(props),
-                color: mode("", "yellow.900")(props),
-            },
-            _disabled: {
-                color: mode("", "gray.200")(props),
-            }
-        },
-        icon: {
-            color: mode("", "gray.700")(props),
-            _hover: {
-                color: mode("", "basic.white")(props),
-            },
-            _active: {
-                color: mode("", "yellow.900")(props),
-            },
-            _activeLink: {
                 color: mode("", "yellow.900")(props),
             },
             _disabled: {

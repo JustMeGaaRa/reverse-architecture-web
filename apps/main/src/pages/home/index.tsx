@@ -6,9 +6,6 @@ import {
     Flex,
     HStack,
     IconButton,
-    List,
-    ListIcon,
-    ListItem,
     useDisclosure
 } from "@chakra-ui/react";
 import {
@@ -27,16 +24,15 @@ import {
 import {
     AddPageAlt,
     BellNotification,
-    Globe,
     HelpCircle,
     HomeSimple,
+    Internet,
     MultiplePagesEmpty,
     Settings,
     Upload
 } from "iconoir-react";
 import { FC, PropsWithChildren } from "react";
 import { Outlet } from "react-router";
-import { NavLink } from "react-router-dom";
 import { AccountMenu } from "../../containers";
 
 export const Layout: FC<PropsWithChildren<{
@@ -92,12 +88,12 @@ export const Layout: FC<PropsWithChildren<{
                                 <Route
                                     isExpanded={isOpen}
                                     icon={MultiplePagesEmpty}
-                                    title={"My Projects"}
+                                    title={"All Projects"}
                                     to={"projects"}
                                 />
                                 <Route
                                     isExpanded={isOpen}
-                                    icon={Globe}
+                                    icon={Internet}
                                     title={"Community"}
                                     to={"hub"}
                                 />
@@ -124,7 +120,7 @@ export const Layout: FC<PropsWithChildren<{
                             </RouteList>
                         </Flex>
                         <Box py={4}>
-                            <Divider my={4} background={"gray.200"} />
+                            <Divider mb={2} background={"gray.200"} />
                             <AccountMenu expanded={isOpen} />
                         </Box>
                     </NavigationSidebar>

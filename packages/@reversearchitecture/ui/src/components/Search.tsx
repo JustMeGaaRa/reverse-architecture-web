@@ -13,7 +13,7 @@ export const Search: FC<{
 }> = ({
 }) => {
     return (
-        <InputGroup width={"xl"} variant={"filled"}>
+        <InputGroup width={["xs", "md", "xl"]} variant={"filled"}>
             <InputLeftElement
                 pointerEvents={"none"}
             >

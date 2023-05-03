@@ -7,7 +7,11 @@ export const ContextSheetHeader: FC<{
     title
 }) => {
     return (
-        <Box padding={6}>
+        <Box
+            boxSizing={"border-box"}
+            padding={6}
+            height={"80px"}
+        >
             <Heading as={"h4"} fontSize={32}>{title}</Heading>
         </Box>
     )

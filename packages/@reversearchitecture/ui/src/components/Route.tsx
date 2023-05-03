@@ -21,7 +21,7 @@ export const Route: FC<{
             to={to}
             title={title}
         >
-            <ListIcon data-group as={icon} />
+            <ListIcon as={icon} />
             {isExpanded && title}
         </ListItem>
     )

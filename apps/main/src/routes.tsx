@@ -7,7 +7,7 @@ import {
     CommunityHub,
     Dashboard,
     ErrorPage,
-    ProjectList,
+    ProjectListContent,
     Settings,
     Workspace,
     ProfileSheet,
@@ -32,7 +32,7 @@ export const routes = createBrowserRouter([
             },
             {
                 path: "projects",
-                element: <ProjectList />
+                element: <ProjectListContent />
             },
             {
                 path: "hub",

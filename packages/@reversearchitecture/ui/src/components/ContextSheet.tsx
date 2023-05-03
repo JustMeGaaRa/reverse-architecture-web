@@ -10,7 +10,8 @@ export const ContextSheet: FC<PropsWithChildren<{
         <Box
             background={"gray.50"}
             borderRadius={"24px 0px 0px 0px"}
-            borderWidth={1}
+            borderLeftWidth={1}
+            borderTopWidth={1}
             borderColor={"gray.200"}
             overflow={"hidden"}
             width={"100%"}

@@ -51,7 +51,14 @@ export const ProjectCard: FC<PropsWithChildren<{
                     }}
                 >
                     {preview && (
-                        <Image alt={"Project Preview Image"} src={preview} />
+                        <Image
+                            alt={"Project Preview Image"}
+                            src={preview}
+                            transitionProperty={"all"}
+                            transitionDuration={"0.3s"}
+                            transitionTimingFunction={"ease"}
+                            _groupHover={{ opacity: .4, transform: "scale(2)" }}
+                        />
                     )}
                     {!preview && (
                         <Icon
@@ -62,14 +69,14 @@ export const ProjectCard: FC<PropsWithChildren<{
                             _groupHover={{ display: "none" }}
                         />
                     )}
-                    <Icon
+                    {/* <Icon
                         as={EyeEmpty}
                         color={"gray.900"}
                         display={"none"}
                         fontSize={40}
                         strokeWidth={1}
                         _groupHover={{ display: "block" }}
-                    />
+                    /> */}
                 </Flex>
                 <Box padding={2}>
                     <Text

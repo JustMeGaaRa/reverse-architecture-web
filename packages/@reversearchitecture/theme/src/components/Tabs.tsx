@@ -12,6 +12,9 @@ export const Tabs = defineMultiStyleConfig({
         tab: {
             colorScheme: "yellow",
             fontWeight: "normal",
+        },
+        tabpanel: {
+            padding: 0,
         }
     },
     sizes: {

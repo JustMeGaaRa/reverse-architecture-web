@@ -8,7 +8,11 @@ export const ContextSheetContent: FC<PropsWithChildren<{
     padding = 6
 }) => {
     return (
-        <Box padding={padding} height={"100%"}>
+        <Box
+            boxSizing={"border-box"}
+            padding={padding}
+            height={"calc(100% - 80px)"}
+        >
             {children}
         </Box>
     )
