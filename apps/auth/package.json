@@ -1,0 +1,80 @@
+{
+  "name": "@reversearchitecture/auth",
+  "version": "0.1.0",
+  "description": "Authentication app for Reverse Architecture.",
+  "private": true,
+  "keywords": [
+    "reverse architecture",
+    "diagram",
+    "architecture",
+    "authentication",
+    "c4",
+    "c4 model"
+  ],
+  "main": "src/index.tsx",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "dev": "react-scripts start",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "dependencies": {
+    "@chakra-ui/icons": "2.0.13",
+    "@chakra-ui/react": "^2.5.1",
+    "@emotion/react": "11.10.5",
+    "@emotion/styled": "11.10.5",
+    "@reversearchitecture/theme": "*",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.18.25",
+    "@types/react": "^18.2.1",
+    "@types/react-dom": "^18.2.2",
+    "framer-motion": "7.9.1",
+    "iconoir-react": "^6.3.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-router": "6.4.5",
+    "react-router-dom": "6.4.5",
+    "react-scripts": "5.0.1",
+    "web-vitals": "^2.1.4"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "@types/react-router": "5.1.19",
+    "@types/react-router-dom": "5.3.3",
+    "@typescript-eslint/eslint-plugin": "^5.47.0",
+    "@typescript-eslint/parser": "^5.47.0",
+    "eslint": "^8.30.0",
+    "eslint-config-custom": "*",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-standard-with-typescript": "^24.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-react": "^7.31.11",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^2.8.1",
+    "tsconfig": "*",
+    "typescript": "^4.5.3"
+  },
+  "resolutions": {
+    "ts-loader": "9.2.6"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
