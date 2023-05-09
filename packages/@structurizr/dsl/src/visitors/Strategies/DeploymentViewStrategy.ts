@@ -32,7 +32,7 @@ export class DeploymentViewStrategy implements IViewStrategy {
                         type: ViewType.Deployment,
                         identifier: softwareSystem.identifier,
                         title: softwareSystem.name,
-                        layout: {}
+                        elements: []
                     }
                 ];
             }

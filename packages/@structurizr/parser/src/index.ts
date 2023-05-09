@@ -1,5 +1,3 @@
-export const createParser = () => {
-    return {
-        parse: (input: string) => { return undefined; }
-    };
-}
+export * from "./StructurizrLexer";
+export * from "./StructurizrParser";
+export * from "./StructurizrVisitor";

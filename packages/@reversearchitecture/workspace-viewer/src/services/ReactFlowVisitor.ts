@@ -2,14 +2,18 @@ import { Edge, Node } from "@reactflow/core";
 import {
     Component,
     Container,
+    ContainerInstance,
     DeploymentNode,
     Element,
+    Group,
+    InfrastructureNode,
     IView,
     IVisitor,
     Person,
     Position,
     Relationship,
     SoftwareSystem,
+    SoftwareSystemInstance,
     Styles,
     Tag,
     ViewType,
@@ -24,10 +28,20 @@ export class ReactFlowVisitor implements IVisitor {
         private edges: Edge[] = []
     ) {}
 
+    visitGroup(group: Group) {
+        const node = fromElement({
+            element: group,
+            position: this.selectedView.elements.find(x => x.id === group.identifier) ?? { x: 0, y: 0 },
+            expanded: true,
+            styles: this.workspace.views.styles,
+        });
+        this.nodes.push(node);
+    }
+
     visitPerson(person: Person) {
         const node = fromElement({
             element: person,
-            position: this.selectedView.layout[person.identifier] ?? { x: 0, y: 0 },
+            position: this.selectedView.elements.find(x => x.id === person.identifier) ?? { x: 0, y: 0 },
             styles: this.workspace.views.styles,
         });
         this.nodes.push(node);
@@ -36,7 +50,7 @@ export class ReactFlowVisitor implements IVisitor {
     visitSoftwareSystem(softwareSystem: SoftwareSystem) {
         const node = fromElement({
             element: softwareSystem,
-            position: this.selectedView.layout[softwareSystem.identifier] ?? { x: 0, y: 0 },
+            position: this.selectedView.elements.find(x => x.id === softwareSystem.identifier) ?? { x: 0, y: 0 },
             expanded: this.selectedView.type === ViewType.Container && softwareSystem.identifier === this.selectedView.identifier,
             styles: this.workspace.views.styles,
         });
@@ -46,7 +60,7 @@ export class ReactFlowVisitor implements IVisitor {
     visitContainer(container: Container) {
         const node = fromElement({
             element: container,
-            position: this.selectedView.layout[container.identifier] ?? { x: 0, y: 0 },
+            position: this.selectedView.elements.find(x => x.id === container.identifier) ?? { x: 0, y: 0 },
             expanded: this.selectedView.type === ViewType.Component && container.identifier === this.selectedView.identifier,
             parentId: this.selectedView.type === ViewType.Container ? this.selectedView.identifier : undefined,
             styles: this.workspace.views.styles,
@@ -57,7 +71,7 @@ export class ReactFlowVisitor implements IVisitor {
     visitComponent(component: Component) {
         const node = fromElement({
             element: component,
-            position: this.selectedView.layout[component.identifier] ?? { x: 0, y: 0 },
+            position: this.selectedView.elements.find(x => x.id === component.identifier) ?? { x: 0, y: 0 },
             parentId: this.selectedView.type === ViewType.Component ? this.selectedView.identifier : undefined,
             styles: this.workspace.views.styles,
         });
@@ -67,10 +81,22 @@ export class ReactFlowVisitor implements IVisitor {
     visitDeploymentNode(deploymentNode: DeploymentNode) {
         const node = fromElement({
             element: deploymentNode,
-            position: this.selectedView.layout[deploymentNode.identifier] ?? { x: 0, y: 0 },
+            position: this.selectedView.elements.find(x => x.id === deploymentNode.identifier) ?? { x: 0, y: 0 },
             styles: this.workspace.views.styles,
         });
         this.nodes.push(node);
+    }
+    
+    visitInfrastructureNode(infrastructureNode: InfrastructureNode) {
+
+    }
+
+    visitSoftwareSystemInstance(softwareSystemInstance: SoftwareSystemInstance) {
+        
+    }
+
+    visitContainerInstance(containerInstance: ContainerInstance) {
+
     }
 
     visitRelationship(relationship: Relationship) {

@@ -1,14 +1,19 @@
 import { relationshipExists } from "../../utils/Formatting";
-import { Workspace } from "../../types/Workspace";
-import { IVisitor } from "../../shared/IVisitor";
 import {
+    GroupElement,
     PersonElement,
     RelationshipElement,
     SoftwareSystemElement
 } from "../Elements";
-import { ViewType } from "../../types/views/ViewType";
-import { IViewStrategy } from "../../shared/IViewStrategy";
-import { IView } from "../../shared/IView";
+import {
+    Person,
+    SoftwareSystem,
+    IView,
+    IViewStrategy,
+    IVisitor,
+    ViewType,
+    Workspace
+} from "../../";
 
 export class SystemContextViewStrategy implements IViewStrategy {
     constructor(
@@ -17,25 +22,63 @@ export class SystemContextViewStrategy implements IViewStrategy {
     ) {}
 
     accept(visitor: IVisitor): void {
-        this.workspace.model.softwareSystems
-            .filter(softwareSystem => softwareSystem.identifier === this.view.identifier)
-            .forEach(softwareSystem => {
-                // include the current software and all software systems
-                // that are directly connected to the current software system
-                new SoftwareSystemElement(softwareSystem).accept(visitor);
+        const hasRelationship = (
+            sourceIdentifier: string,
+            targetIdentifier: string
+        ) => {
+            return this.view.elements.find(x => x.id === sourceIdentifier)
+                && this.view.elements.find(x => x.id === targetIdentifier)
+        }
 
-                // include all people that are directly connected to the current software system
-                this.workspace.model.people
-                    .filter(person => relationshipExists(this.workspace, softwareSystem.identifier, person.identifier))
-                    .forEach(person => new PersonElement(person).accept(visitor));
+        const visitSoftwareSystem = (
+            people: Array<Person>,
+            softwareSystems: Array<SoftwareSystem>
+        ) => {
+            // 2.1. iterate over all software systems and find software system for the view
+            softwareSystems
+                .filter(softwareSystem => softwareSystem.identifier === this.view.identifier)
+                .forEach(softwareSystem => {
+                    // 2.1.1. include the current software and all software systems
+                    new SoftwareSystemElement(softwareSystem).accept(visitor);
+                    
+                    // 2.1.2. include all people that are directly connected to the current software system
+                    people
+                        .filter(person => relationshipExists(this.workspace, softwareSystem.identifier, person.identifier))
+                        .forEach(person => new PersonElement(person).accept(visitor));
+                    
+                    // 2.1.3 include all software systems that are directly connected to the current container
+                    softwareSystems
+                        .filter(softwareSystem => relationshipExists(this.workspace, this.view.identifier, softwareSystem.identifier))
+                        .forEach(softwareSystem => new SoftwareSystemElement(softwareSystem).accept(visitor));
+                });
+        }
 
-                this.workspace.model.softwareSystems
-                    .filter(softwareSystem => relationshipExists(this.workspace, this.view.identifier, softwareSystem.identifier))
-                    .forEach(softwareSystem => new SoftwareSystemElement(softwareSystem).accept(visitor));
+        // 1.1. iterate over all groups and find software system for the view
+        this.workspace.model.groups
+            .forEach(group => {
+                // 1.1.1. iterate over the software systems in the group to find the one for the view
+                group.softwareSystems
+                    .filter(softwareSystem => softwareSystem.identifier === this.view.identifier)
+                    .forEach(softwareSystem => {
+                        // 1.1.1.1. include the software system group as a boundary element
+                        new GroupElement(group).accept(visitor);
+
+                        // 1.1.1.2. include people and software systems in the group
+                        visitSoftwareSystem(
+                            group.people.concat(this.workspace.model.people),
+                            group.softwareSystems.concat(this.workspace.model.softwareSystems)
+                        );
+                    });
             });
 
+        // 1.2. iterate over all software systems and find software system for the view
+        visitSoftwareSystem(
+            this.workspace.model.people,
+            this.workspace.model.softwareSystems
+        );
+
         this.workspace.model.relationships
-            .filter(edge => this.view.layout[edge.sourceIdentifier] && this.view.layout[edge.targetIdentifier])
+            .filter(edge => hasRelationship(edge.sourceIdentifier, edge.targetIdentifier))
             .forEach(relationship => new RelationshipElement(relationship).accept(visitor));
     }
 
@@ -47,7 +90,7 @@ export class SystemContextViewStrategy implements IViewStrategy {
                         type: ViewType.SystemContext,
                         identifier: softwareSystem.identifier,
                         title: softwareSystem.name,
-                        layout: {}
+                        elements: []
                     }
                 ];
             }

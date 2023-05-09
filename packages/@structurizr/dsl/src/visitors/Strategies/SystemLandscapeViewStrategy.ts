@@ -1,13 +1,17 @@
-import { Workspace } from "../../types/Workspace";
-import { IVisitor } from "../../shared/IVisitor";
 import {
     PersonElement,
     RelationshipElement,
     SoftwareSystemElement
 } from "../Elements";
-import { ViewType } from "../../types/views/ViewType";
-import { IViewStrategy } from "../../shared/IViewStrategy";
-import { IView } from "../../shared/IView";
+import {
+    Person,
+    SoftwareSystem,
+    IView,
+    IViewStrategy,
+    IVisitor,
+    ViewType,
+    Workspace
+} from "../../";
 
 export class SystemLandscapeViewStrategy implements IViewStrategy {
     constructor(
@@ -16,17 +20,41 @@ export class SystemLandscapeViewStrategy implements IViewStrategy {
     ) {}
 
     accept(visitor: IVisitor): void {
-        // include all people that are directly connected to the current software system
-        this.workspace.model.people
-            .forEach(person => new PersonElement(person).accept(visitor));
+        const hasRelationship = (
+            sourceIdentifier: string,
+            targetIdentifier: string
+        ) => {
+            return this.view.elements.find(x => x.id === sourceIdentifier)
+                && this.view.elements.find(x => x.id === targetIdentifier)
+        }
 
-        // include the current software and all software systems
-        // that are directly connected to the current software system
-        this.workspace.model.softwareSystems
-            .forEach(softwareSystem => new SoftwareSystemElement(softwareSystem).accept(visitor));
+        const visitSoftwareSystems = (
+            people: Array<Person>,
+            softwareSystems: Array<SoftwareSystem>
+        ) => {
+            // include all people that are directly connected to the current software system
+            people
+                .forEach(person => new PersonElement(person).accept(visitor));
+
+            // include the current software and all software systems
+            // that are directly connected to the current software system
+            softwareSystems
+                .forEach(softwareSystem => new SoftwareSystemElement(softwareSystem).accept(visitor));
+        }
+
+        this.workspace.model.groups
+            .forEach(group => visitSoftwareSystems(
+                group.people,
+                group.softwareSystems
+            ));
+
+        visitSoftwareSystems(
+            this.workspace.model.people,
+            this.workspace.model.softwareSystems
+        );
         
         this.workspace.model.relationships
-            .filter(edge => this.view.layout[edge.sourceIdentifier] && this.view.layout[edge.targetIdentifier])
+            .filter(edge => hasRelationship(edge.sourceIdentifier, edge.targetIdentifier))
             .forEach(relationship => new RelationshipElement(relationship).accept(visitor));
     }
 
@@ -35,7 +63,7 @@ export class SystemLandscapeViewStrategy implements IViewStrategy {
             type: ViewType.SystemLandscape,
             identifier: this.workspace.name,
             title: this.workspace.name,
-            layout: {}
+            elements: []
         }];
     }
 }

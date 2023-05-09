@@ -1,9 +1,67 @@
-import Workspaces from "./data/community/list.json";
+import { IWorkspaceMetadata, Workspace } from "@structurizr/dsl";
+import { StructurizrLexer, StructurizrParser, StructurizrVisitor } from "@structurizr/parser";
 
-type Workspace = typeof Workspaces.values[0];
+interface IWorkspaceInfo {
+    workspaceId: string;
+    name: string;
+    updated: Date;
+    updatedBy: string;
+    tags: Array<string>;
+}
 
 export class CommunityHubApi {
-    async getWorkspaces(): Promise<Array<Workspace>> {
-        return Promise.resolve<Array<Workspace>>(Workspaces.values);
+    constructor(
+        private readonly baseUrl: string = "https://raw.githubusercontent.com/JustMeGaaRa/reverse-architecture-community/main/workspaces"
+    ) { }
+
+    async getWorkspaces(): Promise<Array<IWorkspaceInfo>> {
+        const response = await fetch(`${this.baseUrl}/list.json`);
+        const { values } = await response.json();
+        return values;
+    }
+    
+    async getWorkspace(workspaceId: string): Promise<Workspace> {
+        const workspaceResponse = await fetch(`${this.baseUrl}/${workspaceId}/workspace.dsl`);
+        const workspaceText = await workspaceResponse.text() as string;
+        
+        const lexerResult = StructurizrLexer.tokenize(workspaceText);
+        
+        const parser = new StructurizrParser();
+        parser.reset();
+        parser.input = lexerResult.tokens;
+        const workspaceCst = parser.workspace();
+
+        const visitor = new StructurizrVisitor();
+        const workspace = visitor.visit(workspaceCst);
+        
+        const metadataResponse = await fetch(`${this.baseUrl}/${workspaceId}/workspace.metadata.json`);
+        const metadata = await metadataResponse.json() as IWorkspaceMetadata;
+        
+        return {
+            ...workspace,
+            views: {
+                ...workspace.views,
+                systemLandscape: {
+                    ...workspace.views.systemLandscape,
+                    elements: metadata.views.systemLandscape?.elements ?? []
+                },
+                systemContexts: workspace.views.systemContexts.map((view: any) => ({
+                    ...view,
+                    elements: metadata.views.systemContexts.find(x => x.identifier === view.identifier)?.elements ?? []
+                })),
+                containers: workspace.views.containers.map((view: any) => ({
+                    ...view,
+                    elements: metadata.views.containers.find(x => x.identifier === view.identifier)?.elements ?? []
+                })),
+                components: workspace.views.components.map((view: any) => ({
+                    ...view,
+                    elements: metadata.views.components.find(x => x.identifier === view.identifier)?.elements ?? []
+                })),
+                deployments: workspace.views.deployments.map((view: any) => ({
+                    ...view,
+                    elements: metadata.views.deployments.find(x => x.identifier === view.identifier)?.elements ?? []
+                }))
+            }
+        };
     }
 }

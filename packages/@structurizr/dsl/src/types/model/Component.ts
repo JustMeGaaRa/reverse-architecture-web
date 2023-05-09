@@ -1,4 +1,5 @@
 import { Element } from "./Element";
+import { ElementType } from "./ElementType";
 import { Identifier } from "./Identifier";
 import { Perspectives } from "./Perspectives";
 import { Properties } from "./Properties";
@@ -7,16 +8,38 @@ import { Tag } from "./Tag";
 import { Technology } from "./Technology";
 import { Url } from "./Url";
 
-export interface Component extends Element {    
-    identifier: Identifier;
-    name: string;
-    description?: string;
-    technology: Technology[];
-    tags: Tag[];
-    url?: Url;
-    properties?: Properties;
-    perspectives?: Perspectives;
-    relationships: Relationship[];
+type ComponentParams =
+    Required<Pick<Component, "identifier" | "name">>
+    & Partial<Omit<Component, "identifier" | "name" | "type">>;
+
+export class Component implements Element {
+    constructor(params: ComponentParams) {
+        this.type = ElementType.Component;
+        this.identifier = params.identifier;
+        this.name = params.name;
+        this.technology = params.technology;
+        this.description = params.description;
+        this.url = params.url;
+        this.properties = params.properties;
+        this.perspectives = params.perspectives;
+        this.relationships = params.relationships;
+        this.tags = [
+            Tag.Element,
+            Tag.Component,
+            ...(params.tags ?? [])
+        ]
+    }
+
+    public readonly type: ElementType.Component;
+    public readonly identifier: Identifier;
+    public readonly name: string;
+    public readonly technology: Technology[];
+    public readonly description?: string;
+    public readonly tags: Tag[];
+    public readonly url?: Url;
+    public readonly properties?: Properties;
+    public readonly perspectives?: Perspectives;
+    public readonly relationships: Relationship[];
 }
 
 export function toComponentString(component: Component): string {
@@ -27,25 +50,4 @@ export function toComponentString(component: Component): string {
 
 export function toComponentArrayString(components: Component[]): string {
     return components.map(toComponentString).join("\n");
-}
-
-export function component(
-    identifier: Identifier,
-    name: string,
-    description?: string,
-    technology?: Technology[],
-    tags?: Tag[]
-): Component {
-    return {
-        identifier,
-        name,
-        description,
-        technology: technology ?? [],
-        relationships: [],
-        tags: [
-            Tag.Element,
-            Tag.Component,
-            ...(tags ?? [])
-        ]
-    }
 }

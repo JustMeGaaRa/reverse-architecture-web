@@ -2,7 +2,7 @@ import { WorkspaceBreadcrumb } from "@reversearchitecture/workspace-breadcrumb";
 import { WorkspaceToolbar } from "@reversearchitecture/workspace-toolbar";
 import { useWorkspaceStore, WorkspaceExplorer } from "@reversearchitecture/workspace-viewer";
 import { WorkspaceZoom } from "@reversearchitecture/workspace-zoom";
-import { WorkspaceApi } from "@reversearchitecture/services";
+import { CommunityHubApi } from "@reversearchitecture/services";
 import { ContextSheet } from "@reversearchitecture/ui";
 import { Panel } from "@reactflow/core";
 import { FC, useEffect } from "react";
@@ -23,7 +23,7 @@ export const WorkspaceViewerSheet: FC<{
     } = useWorkspaceStore();
 
     useEffect(() => {
-        const api = new WorkspaceApi();
+        const api = new CommunityHubApi();
         api.getWorkspace(workspaceId)
             .then(workspace => {
                 const initialView = workspace.views.systemLandscape

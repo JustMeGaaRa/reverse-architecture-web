@@ -1,8 +1,8 @@
 import { Identifier } from "../model/Identifier";
-import { Layout } from "./Layout";
 import { Properties } from "../model/Properties";
-import { AutoLayout } from "./AutoLayout";
 import { IView } from "../../shared/IView";
+import { IElementPosition } from "../../shared/IVIewMetadata";
+import { AutoLayout } from "./AutoLayout";
 import { ViewType } from "./ViewType";
 
 export class SystemContextView implements IView {
@@ -15,25 +15,25 @@ export class SystemContextView implements IView {
     identifier: string;
     key?: string;
     autoLayout?: AutoLayout;
-    layout: Layout;
     animation?: any;
     title?: string;
     description?: string;
     properties?: Properties;
+    elements: Array<IElementPosition>;
 }
 
 export function systemContextView(
     softwareSystemIdentifier: Identifier,
     key?: string,
     title?: string,
-    layout?: Layout,
+    layout?: Array<IElementPosition>,
     description?: string,
 ): SystemContextView {
     return new SystemContextView({
         identifier: softwareSystemIdentifier,
         key,
-        layout,
         title,
         description,
+        elements: layout ?? [],
     });
 }

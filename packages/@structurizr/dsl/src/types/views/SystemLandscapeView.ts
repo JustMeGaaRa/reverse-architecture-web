@@ -1,7 +1,7 @@
-import { Layout } from "./Layout";
 import { Properties } from "../model/Properties";
-import { AutoLayout } from "./AutoLayout";
 import { IView } from "../../shared/IView";
+import { IElementPosition } from "../../shared/IVIewMetadata";
+import { AutoLayout } from "./AutoLayout";
 import { ViewType } from "./ViewType";
 
 export class SystemLandscapeView implements IView {
@@ -15,22 +15,22 @@ export class SystemLandscapeView implements IView {
     identifier: string;
     key?: string;
     autoLayout?: AutoLayout;
-    layout: Layout;
     animation?: any;
     title?: string;
     description?: string;
     properties?: Properties;
+    elements: Array<IElementPosition>;
 }
 
 export function systemLandscapeView(
     title?: string,
     key?: string,
-    layout?: Layout,
+    layout?: Array<IElementPosition>,
 ): SystemLandscapeView {
     return new SystemLandscapeView({
         identifier: "System Landscape",
         title,
         key,
-        layout: layout ?? {},
+        elements: layout ?? [],
     });
 }

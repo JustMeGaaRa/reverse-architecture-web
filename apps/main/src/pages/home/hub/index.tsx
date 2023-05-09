@@ -1,5 +1,4 @@
 import {
-    Box,
     Table,
     TableContainer,
     Td,
@@ -8,15 +7,17 @@ import {
     Thead,
     Tbody,
     IconButton,
-    Divider
+    Divider,
+    Flex
 } from "@chakra-ui/react";
 import { CommunityHubApi } from "@reversearchitecture/services";
 import {
     ContextSheet,
     ContextSheetContent,
-    ContextSheetHeader
+    ContextSheetHeader,
+    EmptyContent
 } from "@reversearchitecture/ui";
-import { OpenInWindow } from "iconoir-react";
+import { Folder, OpenInWindow } from "iconoir-react";
 import {
     FC,
     PropsWithChildren,
@@ -52,10 +53,10 @@ export const CommunityHub: FC<PropsWithChildren<{
 
     return (
         <ContextSheet>
-            <Box>
-                <ContextSheetHeader title={"Community Hub"} />
-                <Divider />
-                <ContextSheetContent>
+            <ContextSheetHeader title={"Community Hub"} />
+            <Divider />
+            <ContextSheetContent>
+                {workspaces.length > 0 ? (
                     <TableContainer>
                         <Table>
                             <Thead>
@@ -91,8 +92,21 @@ export const CommunityHub: FC<PropsWithChildren<{
                             </Tbody>
                         </Table>
                     </TableContainer>
-                </ContextSheetContent>
-            </Box>
+                ) : (
+                    <Flex
+                        alignItems={"center"}
+                        justifyContent={"center"}
+                        height={"100%"}
+                        width={"100%"}
+                    >
+                        <EmptyContent
+                            icon={Folder}
+                            title={"No community workspaces available yet"}
+                            description={"To get started, click the \"Create New Project\" button to create a new project."}
+                        />
+                    </Flex>
+                )}
+            </ContextSheetContent>
         </ContextSheet>
     );
 }

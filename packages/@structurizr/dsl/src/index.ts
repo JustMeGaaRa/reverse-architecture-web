@@ -5,6 +5,7 @@ export * from "./types/model/DeploymentEnvironment";
 export * from "./types/model/DeploymentGroup";
 export * from "./types/model/DeploymentNode";
 export * from "./types/model/Element";
+export * from "./types/model/ElementType";
 export * from "./types/model/Group";
 export * from "./types/model/HealthCheck";
 export * from "./types/model/Identifier";
@@ -13,6 +14,7 @@ export * from "./types/model/Person";
 export * from "./types/model/Perspectives";
 export * from "./types/model/Properties";
 export * from "./types/model/Relationship";
+export * from "./types/model/RelationshipType";
 export * from "./types/model/SoftwareSystem";
 export * from "./types/model/SoftwareSystemInstance";
 export * from "./types/model/Tag";
@@ -30,7 +32,6 @@ export * from "./types/views/DeploymentView";
 export * from "./types/views/Dimension";
 export * from "./types/views/ElementStyle";
 export * from "./types/views/ElementStyleProperties";
-export * from "./types/views/Layout";
 export * from "./types/views/LineStyle";
 export * from "./types/views/Position";
 export * from "./types/views/RelationshipStyle"
@@ -53,8 +54,11 @@ export * from "./shared/ISupportPath";
 export * from "./shared/ISupportVisitor";
 export * from "./shared/IView";
 export * from "./shared/IViewDefinition";
+export * from "./shared/IVIewMetadata";
 export * from "./shared/IViewStrategy";
 export * from "./shared/IVisitor";
+export * from "./shared/IWorkspaceMetadata";
+
 export * from "./visitors/Strategies";
 
 export * from "./utils/Formatting";

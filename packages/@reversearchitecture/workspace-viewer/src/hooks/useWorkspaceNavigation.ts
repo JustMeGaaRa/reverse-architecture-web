@@ -10,10 +10,7 @@ export const useWorkspaceNavigation = () => {
     
     const navigate = useCallback((view: IViewDefinition) => {
         // TODO: calculate the default layout
-        const defaultView: IView = {
-            ...view,
-            layout: {}
-        };
+        const defaultView: IView = { ...view, elements: [] };
         const selectedView = 
             workspace.views.systemContexts.find(x => x.type === view.type && x.identifier === view.identifier)
             ?? workspace.views.containers.find(x => x.type === view.type && x.identifier === view.identifier)
@@ -23,7 +20,5 @@ export const useWorkspaceNavigation = () => {
         setSelectedView(selectedView);
     }, [workspace, setSelectedView]);
 
-    return {
-        navigate
-    }
+    return { navigate }
 }

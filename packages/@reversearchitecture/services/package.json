@@ -15,10 +15,12 @@
   "license": "MIT",
   "scripts": {
     "build": "npx tsc",
+    "dev": "npx tsc -w",
     "lint": "eslint \"**/*.ts*\""
   },
   "dependencies": {
     "@structurizr/dsl": "*",
+    "@structurizr/parser": "*",
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
   },

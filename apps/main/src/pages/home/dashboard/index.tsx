@@ -15,24 +15,22 @@ export const Dashboard: FC<PropsWithChildren<{
 }) => {
     return (
         <ContextSheet>
-            <Box height={"100%"} >
-                <ContextSheetHeader title={"Dashboard"} />
-                <Divider />
-                <ContextSheetContent>
-                    <Flex
-                        alignItems={"center"}
-                        justifyContent={"center"}
-                        height={"100%"}
-                        width={"100%"}
-                    >
-                        <EmptyContent
-                            icon={Folder}
-                            title={"No projects created yet"}
-                            description={"To get started, click the \"Create New Project\" button to create a new project."}
-                        />
-                    </Flex>
-                </ContextSheetContent>
-            </Box>
+            <ContextSheetHeader title={"Dashboard"} />
+            <Divider />
+            <ContextSheetContent>
+                <Flex
+                    alignItems={"center"}
+                    justifyContent={"center"}
+                    height={"100%"}
+                    width={"100%"}
+                >
+                    <EmptyContent
+                        icon={Folder}
+                        title={"No projects created yet"}
+                        description={"To get started, click the \"Create New Project\" button to create a new project."}
+                    />
+                </Flex>
+            </ContextSheetContent>
         </ContextSheet>
     );
 }

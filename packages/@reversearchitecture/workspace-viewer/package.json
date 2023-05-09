@@ -16,6 +16,7 @@
   "license": "MIT",
   "scripts": {
     "build": "npx tsc",
+    "dev": "npx tsc -w",
     "lint": "eslint \"**/*.ts*\""
   },
   "dependencies": {

@@ -1,8 +1,8 @@
 import { All, Identifier } from "../model/Identifier";
-import { Layout } from "./Layout";
 import { Properties } from "../model/Properties";
-import { AutoLayout } from "./AutoLayout";
 import { IView } from "../../shared/IView";
+import { IElementPosition } from "../../shared/IVIewMetadata";
+import { AutoLayout } from "./AutoLayout";
 import { ViewType } from "./ViewType";
 
 type DeploymentViewValues = Omit<IView, "type"> & {
@@ -19,11 +19,11 @@ export class DeploymentView implements IView {
     identifier: string;
     key?: string;
     autoLayout?: AutoLayout;
-    layout: Layout;
     animation?: any;
     title?: string;
     description?: string;
     properties?: Properties;
+    elements: Array<IElementPosition>;
 }
 
 export function deploymentView(
@@ -31,15 +31,15 @@ export function deploymentView(
     environment: string,
     key?: string,
     title?: string,
-    layout?: Layout,
+    layout?: Array<IElementPosition>,
     description?: string
 ): DeploymentView {
     return new DeploymentView({
         identifier: softwareSystemIdentifier,
         environment,
         key,
-        layout,
         title,
-        description
+        description,
+        elements: layout ?? [],
     })
 }

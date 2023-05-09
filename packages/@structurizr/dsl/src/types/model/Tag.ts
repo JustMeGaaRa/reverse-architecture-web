@@ -15,6 +15,10 @@ export class Tag {
     static SoftwareSystemInstance = new Tag("Software System Instance");
     static ContainerInstance = new Tag("Container Instance");
     static Relationship = new Tag("Relationship");
+
+    static from(text: string) {
+        return text?.split(" ")?.map(name => new Tag(name.trim())) ?? [];
+    }
 }
 
 export function tags(...names: string[]) {

@@ -1,5 +1,6 @@
 import { indent } from "../../utils/Formatting";
 import { Element } from "./Element";
+import { ElementType } from "./ElementType";
 import { Identifier } from "./Identifier";
 import { Perspectives } from "./Perspectives";
 import { Properties } from "./Properties";
@@ -7,15 +8,36 @@ import { Relationship, toRelationshipArrayString } from "./Relationship";
 import { Tag } from "./Tag";
 import { Url } from "./Url";
 
-export interface Person extends Omit<Element, "description" | "technology"> {
-    identifier: Identifier;
-    name: string;
-    description?: string;
-    tags: Tag[];
-    url?: Url;
-    properties?: Properties;
-    perspectives?: Perspectives;
-    relationships?: Relationship[];
+type PersonParams = 
+    Required<Pick<Person, "identifier" | "name">>
+    & Partial<Omit<Person, "identifier" | "name" | "type">>;
+
+export class Person implements Omit<Element, "description" | "technology"> {
+    constructor(params: PersonParams) {
+        this.type = ElementType.Person;
+        this.identifier = params.identifier;
+        this.name = params.name;
+        this.description = params.description;
+        this.url = params.url;
+        this.properties = params.properties;
+        this.perspectives = params.perspectives;
+        this.relationships = params.relationships;
+        this.tags = [
+            Tag.Element,
+            Tag.Person,
+            ...(params.tags ?? [])
+        ]
+    }
+
+    public readonly type: ElementType.Person;
+    public readonly identifier: Identifier;
+    public readonly name: string;
+    public readonly tags: Tag[];
+    public readonly description?: string;
+    public readonly url?: Url;
+    public readonly properties?: Properties;
+    public readonly perspectives?: Perspectives;
+    public readonly relationships: Relationship[];
 }
 
 export function toPersonString(person: Person): string {
@@ -25,22 +47,4 @@ export function toPersonString(person: Person): string {
 
 export function toPersonArrayString(persons: Person[]): string {
     return persons.map(toPersonString).join("\n");
-}
-
-export function person(
-    identifier: Identifier,
-    name: string,
-    description?: string,
-    tags?: Tag[]
-): Person {
-    return {
-        identifier,
-        name,
-        description,
-        tags: [
-            Tag.Element,
-            Tag.Person,
-            ...(tags ?? [])
-        ]
-    }
 }

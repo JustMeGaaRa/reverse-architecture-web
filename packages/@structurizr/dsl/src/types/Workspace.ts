@@ -1,4 +1,3 @@
-import { Identifier } from "./model/Identifier";
 import { Properties } from "./model/Properties";
 import { Model, toModelString } from "./Model";
 import { toViewsString, Views } from "./Views";
@@ -51,22 +50,4 @@ export function workspace(
             }
         }
     }
-}
-
-export const findSoftwareSystem = (workspace: Workspace, identifier: Identifier) => {
-    return workspace.model.softwareSystems
-        .find(x => x.identifier === identifier);
-}
-
-export const findContainer = (workspace: Workspace, identifier: Identifier) => {
-    return workspace.model.softwareSystems
-        .flatMap(x => x.containers)
-        .find(x => x.identifier === identifier);
-}
-
-export const findComponent = (workspace: Workspace, identifier: Identifier) => {
-    return workspace.model.softwareSystems
-        .flatMap(x => x.containers)
-        .flatMap(x => x.components)
-        .find(x => x.identifier === identifier);
 }

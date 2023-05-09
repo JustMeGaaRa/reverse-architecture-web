@@ -1,3 +1,4 @@
+import { ElementType } from "./ElementType";
 import { HealthCheck } from "./HealthCheck";
 import { Identifier } from "./Identifier";
 import { Perspectives } from "./Perspectives";
@@ -6,17 +7,39 @@ import { Relationship } from "./Relationship";
 import { Tag } from "./Tag";
 import { Url } from "./Url";
 
-export interface ContainerInstance {
-    identifier?: Identifier;
-    containerIdentifier: Identifier;
-    deploymentGroups?: Identifier[];
-    relationships?: Relationship[];
-    description?: string;
-    tags?: Tag[];
-    url?: Url;
-    properties?: Properties;
-    perspectives?: Perspectives;
-    healthCheck?: HealthCheck;
+type ContainerInstanceParams =
+    Required<Pick<ContainerInstance, "containerIdentifier">>
+    & Partial<Omit<ContainerInstance, "containerIdentifier" | "type">>;
+
+export class ContainerInstance {
+    constructor(params: ContainerInstanceParams) {
+        this.type = ElementType.ContainerInstance;
+        this.identifier = params.identifier;
+        this.containerIdentifier = params.containerIdentifier;
+        this.deploymentGroups = params.deploymentGroups;
+        this.relationships = params.relationships;
+        this.description = params.description;
+        this.url = params.url;
+        this.properties = params.properties;
+        this.perspectives = params.perspectives;
+        this.healthCheck = params.healthCheck;
+        this.tags = [
+            Tag.ContainerInstance,
+            ...(params.tags ?? [])
+        ];
+    }
+
+    public readonly type: ElementType.ContainerInstance;
+    public readonly identifier?: Identifier;
+    public readonly containerIdentifier: Identifier;
+    public readonly deploymentGroups?: Identifier[];
+    public readonly relationships?: Relationship[];
+    public readonly description?: string;
+    public readonly tags?: Tag[];
+    public readonly url?: Url;
+    public readonly properties?: Properties;
+    public readonly perspectives?: Perspectives;
+    public readonly healthCheck?: HealthCheck;
 }
 
 export function toContainerInstanceString(instance: ContainerInstance): string {
@@ -25,21 +48,4 @@ export function toContainerInstanceString(instance: ContainerInstance): string {
 
 export function toContainerInstanceArrayString(instances: ContainerInstance[]): string {
     return instances.map(toContainerInstanceString).join("\n");
-}
-
-export function containerInstance(
-    containerIdentifier: Identifier,
-    identifier: Identifier,
-    deploymentGroups?: Identifier[],
-    tags?: Tag[]
-) {
-    return {
-        identifier,
-        containerIdentifier,
-        deploymentGroups,
-        tags: [
-            Tag.ContainerInstance,
-            ...(tags ?? [])
-        ]
-    }
 }

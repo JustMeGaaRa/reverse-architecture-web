@@ -30,6 +30,7 @@ import {
     useCallback,
 } from "react";
 import { v4 } from "uuid";
+import { Component, Container, Person, SoftwareSystem } from "@structurizr/dsl";
 
 const AllowElementsSelector = (state: WorkspaceStore) => {
     const isSystemLandscapView = state.selectedView.type === "System Landscape"
@@ -64,25 +65,41 @@ export const WorkspaceToolbar: FC<{
     const { isPresentationMode, isBuilderMode, toggleMode } = useInteractionMode();
 
     const onAddPerson = useCallback(() => {
-        const person = DSL.person(v4(), "Person", "A person");
+        const person = new Person({
+            identifier: v4(),
+            name: "Person",
+            description: "A person"
+        });
         const position = project({ x: 0, y: 0 });
         store.addPerson({ person, position });
     }, [project, store]);
 
     const onAddSoftwareSystem = useCallback(() => {
-        const softwareSystem = DSL.softwareSystem(v4(), "Software System", "A software system");
+        const softwareSystem = new SoftwareSystem({
+            identifier: v4(),
+            name: "Software System",
+            description: "A software system"
+        });
         const position = project({ x: 0, y: 0 });
         store.addSoftwareSystem({ softwareSystem, position });
     }, [project, store]);
 
     const onAddContainer = useCallback(() => {
-        const container = DSL.container(v4(), "Container", "A container");
+        const container = new Container({
+            identifier: v4(),
+            name: "Container",
+            description: "A container"
+        });
         const position = project({ x: 0, y: 0 });
         store.addContainer({ container, position, softwareSystemIdentifier: "" });
     }, [project, store]);
 
     const onAddComponent = useCallback(() => {
-        const component = DSL.component(v4(), "Component", "A component");
+        const component = new Component({
+            identifier: v4(),
+            name: "Component",
+            description: "A component"
+        });
         const position = project({ x: 0, y: 0 });
         store.addComponent({ component, position, containerIdentifier: "", softwareSystemIdentifier: "" });
     }, [project, store]);
