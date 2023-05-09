@@ -1,6 +1,6 @@
 export interface IVIewMetadata {
     identifier: string;
-    key: string;
+    key?: string;
     elements: Array<IElementPosition>;
 }
 
