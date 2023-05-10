@@ -7,14 +7,18 @@ import {
     DeploymentEnvironment,
     DeploymentNode,
     DeploymentView,
+    ElementStyle,
+    ElementStyleProperties,
     ElementType,
     Group,
     Model,
     Person,
     Relationship,
+    RelationshipStyle,
     RelationshipType,
     SoftwareSystem,
     SoftwareSystemInstance,
+    Styles,
     SystemContextView,
     SystemLandscapeView,
     Tag,
@@ -183,7 +187,7 @@ export class StructurizrVisitor extends VisitorCtor {
     deploymentNode(ctx: {
         Identifier?: any;
         StringLiteral?: any;
-        NumericalLiteral?: any;
+        NumericLiteral?: any;
         deploymentNode?: any[];
         softwareSystemInstance?: any[];
         containerInstance?: any[];
@@ -194,7 +198,7 @@ export class StructurizrVisitor extends VisitorCtor {
             description: trimQuotes(ctx.StringLiteral?.at(1)?.image),
             technology: [ { name: trimQuotes(ctx.StringLiteral?.at(2)?.image) } ],
             tags: Tag.from(trimQuotes(ctx.StringLiteral?.at(3)?.image)),
-            instances: ctx.NumericalLiteral?.at(0)?.image,
+            instances: ctx.NumericLiteral?.at(0)?.image,
             deploymentNodes: ctx.deploymentNode?.map((x) => this.visit(x)),
             softwareSystemInstances: ctx.softwareSystemInstance?.map((x) => this.visit(x)),
             containerInstances: ctx.containerInstance?.map((x) => this.visit(x))
@@ -244,6 +248,7 @@ export class StructurizrVisitor extends VisitorCtor {
         containerView?: any;
         componentView?: any;
         deploymentView?: any;
+        styles?: any;
     }): Views {
         return {
             systemLandscape: this.visit(ctx.systemLandscapeView),
@@ -254,10 +259,7 @@ export class StructurizrVisitor extends VisitorCtor {
             custom: [],
             dynamics: [],
             filtered: [],
-            styles: {
-                element: {},
-                relationship: {}
-            },
+            styles: this.visit(ctx.styles),
             themes: []
         };
     }
@@ -326,5 +328,147 @@ export class StructurizrVisitor extends VisitorCtor {
             description: trimQuotes(ctx.StringLiteral?.at(2)?.image),
             elements: []
         };
+    }
+
+    styles(ctx: {
+        elementStyle?: any[];
+        relationshipStyle?: any[];
+    }): Styles {
+        return {
+            element: ctx.elementStyle
+                ?.reduce((style, value) => ({ ...style, ...this.visit(value) }), {}) ?? {},
+            relationship: ctx.relationshipStyle
+                ?.reduce((style, value) => ({ ...style, ...this.visit(value) }), {}) ?? {}
+        }
+    }
+  
+    elementStyle(ctx: {
+        StringLiteral?: any;
+        shape?: any;
+        icon?: any;
+        width?: any;
+        height?: any;
+        background?: any;
+        color?: any;
+        stroke?: any;
+        strokeWidth?: any;
+        fontSize?: any;
+        border?: any;
+        opacity?: any;
+        metadata?: any;
+        description?: any;
+    }): ElementStyle {
+        const tag = trimQuotes(ctx.StringLiteral?.at(0)?.image);
+        return {
+            [tag]: {
+                shape: this.visit(ctx.shape),
+                icon: this.visit(ctx.icon),
+                width: this.visit(ctx.width),
+                height: this.visit(ctx.height),
+                background: this.visit(ctx.background),
+                color: this.visit(ctx.color),
+                stroke: this.visit(ctx.stroke),
+                strokeWidth: this.visit(ctx.strokeWidth),
+                fontSize: this.visit(ctx.fontSize),
+                border: this.visit(ctx.border),
+                opacity: this.visit(ctx.opacity),
+                metadata: this.visit(ctx.metadata),
+                description: this.visit(ctx.description),
+            },
+        }
+    }
+  
+    relationshipStyle(ctx: {
+        StringLiteral?: any;
+        thinkness?: any;
+        color?: any;
+        style?: any;
+        routing?: any;
+        fontSize?: any;
+        width?: any;
+        position?: any;
+        opacity?: any;
+    }): RelationshipStyle {
+        const tag = trimQuotes(ctx.StringLiteral?.at(0)?.image);
+        return {
+            [tag]: {
+                thikness: this.visit(ctx.thinkness),
+                color: this.visit(ctx.color),
+                style: this.visit(ctx.style),
+                routing: this.visit(ctx.routing),
+                fontSize: this.visit(ctx.fontSize),
+                width: this.visit(ctx.width),
+                position: this.visit(ctx.position),
+                opacity: this.visit(ctx.opacity)
+            }
+        }
+    }
+  
+    background(ctx: { HexColor?: any[] }) {
+        return ctx.HexColor?.at(0)?.image;
+    }
+  
+    color(ctx: { HexColor?: any[] }) {
+        return ctx.HexColor?.at(0)?.image;
+    }
+  
+    stroke(ctx: { HexColor?: any[] }) {
+        return ctx.HexColor?.at(0)?.image;
+    }
+  
+    strokeWidth(ctx: { NumericLiteral?: any[] }) {
+        return Number(ctx.NumericLiteral?.at(0)?.image);
+    }
+  
+    height(ctx: { NumericLiteral?: any[] }) {
+        return Number(ctx.NumericLiteral?.at(0)?.image);
+    }
+  
+    width(ctx: { NumericLiteral?: any[] }) {
+        return Number(ctx.NumericLiteral?.at(0)?.image);
+    }
+  
+    border(ctx: { Identifier?: any[] }) {
+        return ctx.Identifier?.at(0)?.image;
+    }
+  
+    shape(ctx: { Identifier?: any[] }) {
+        return ctx.Identifier?.at(0)?.image;
+    }
+  
+    icon(ctx: { Identifier?: any[] }) {
+        return ctx.Identifier?.at(0)?.image;
+    }
+  
+    fontSize(ctx: { NumericLiteral?: any[] }) {
+        return Number(ctx.NumericLiteral?.at(0)?.image);
+    }
+  
+    opacity(ctx: { NumericLiteral?: any[] }) {
+        return Number(ctx.NumericLiteral?.at(0)?.image);
+    }
+  
+    metadata(ctx: { Boolean?: any[] }) {
+        return Boolean(ctx.Boolean?.at(0)?.image);
+    }
+  
+    description(ctx: { Boolean?: any[] }) {
+        return Boolean(ctx.Boolean?.at(0)?.image);
+    }
+  
+    thinkness(ctx: { NumericLiteral?: any[] }) {
+        return Number(ctx.NumericLiteral?.at(0)?.image);
+    }
+  
+    style(ctx: { Identifier?: any[] }) {
+        return ctx.Identifier?.at(0)?.image;
+    }
+  
+    routing(ctx: { Identifier?: any[] }) {
+        return ctx.Identifier?.at(0)?.image;
+    }
+  
+    position(ctx: { NumericLiteral?: any[] }) {
+        return Number(ctx.NumericLiteral?.at(0)?.image);
     }
 }

@@ -1,6 +1,6 @@
 export enum ShapeType {
     Box = "Box",
-    RoundedBox = "Rounded Box",
+    RoundedBox = "RoundedBox",
     Circle = "Circle",
     Ellipse = "Ellipse",
     Hexagon = "Hexagon",

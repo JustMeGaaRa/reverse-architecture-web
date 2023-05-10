@@ -37,10 +37,11 @@ export function aggrerateStyles<
     if (tagStyles && nextTag) {
         const nextStyle = tagStyles[nextTag.name];
 
-        const appliedStyle: TStyle = {
-            ...style,
-            ...nextStyle
-        }
+        const appliedStyle: any = Object.fromEntries(
+            Object
+                .entries({ ...style, ...nextStyle })
+                .map(([key, value]) => [key, value !== undefined ? value : style[key]])
+        );
 
         return nextStyle
             ? aggrerateStyles(appliedStyle, tagStyles, tags)
