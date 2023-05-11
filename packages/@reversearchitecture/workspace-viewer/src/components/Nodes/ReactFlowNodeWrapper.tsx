@@ -25,11 +25,14 @@ export function ReactFlowNodeWrapper(NodeElement: FC<{
         data,
         selected,
     }) {
-        const elementStyle = useMemo(() => aggrerateStyles(
-            defaultElementStyle,
-            data.style,
-            [...data.element.tags].reverse()
-        ), [data.style, data.element.tags]);
+        const elementStyle = useMemo(() => {
+            const tags = data.element.tags
+                ? [...data.element.tags].reverse()
+                : [];
+            return data.element.tags
+                ? aggrerateStyles(defaultElementStyle, data.style, tags)
+                : defaultElementStyle;
+        }, [data.style, data.element.tags]);
 
         return (
             <NodeElement

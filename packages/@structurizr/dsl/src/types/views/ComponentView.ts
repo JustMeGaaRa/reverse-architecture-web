@@ -1,4 +1,3 @@
-import { Identifier } from "../model/Identifier";
 import { Properties } from "../model/Properties";
 import { IView } from "../../shared/IView";
 import { IElementPosition } from "../../shared/IVIewMetadata";
@@ -11,29 +10,13 @@ export class ComponentView implements IView {
         this.type = ViewType.Component;
     }
 
-    type: ViewType;
-    identifier: string;
-    key?: string;
-    autoLayout?: AutoLayout;
-    animation?: any;
-    title?: string;
-    description?: string;
-    properties?: Properties;
-    elements: Array<IElementPosition>;
-}
-
-export function componentView(
-    containerIdentifier: Identifier,
-    key?: string,
-    title?: string,
-    layout?: Array<IElementPosition>,
-    description?: string,
-): ComponentView {
-    return new ComponentView({
-        identifier: containerIdentifier,
-        key,
-        title,
-        description,
-        elements: layout ?? [],
-    });
+    public readonly type: ViewType;
+    public readonly identifier: string;
+    public readonly key?: string;
+    public readonly autoLayout?: AutoLayout;
+    public readonly animation?: any;
+    public readonly title?: string;
+    public readonly description?: string;
+    public readonly properties?: Properties;
+    public readonly elements: Array<IElementPosition>;
 }

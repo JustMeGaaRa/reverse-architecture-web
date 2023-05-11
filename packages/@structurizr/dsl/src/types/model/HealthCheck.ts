@@ -1,15 +1,21 @@
 import { Url } from "./Url";
 
+type HealthCheckParams = 
+    Required<Pick<HealthCheck, "name" | "url">>
+    & Partial<Omit<HealthCheck, "name" | "url">>;
+
 export class HealthCheck {
-    constructor(name: string, url: string, interval?: number, timeout?: number) {
-        this.name = name;
-        this.url = url;
-        this.interval = interval;
-        this.timeout = timeout;
+    constructor(
+        params: HealthCheckParams
+    ) {
+        this.name = params.name;
+        this.url = params.url;
+        this.interval = params.interval;
+        this.timeout = params.timeout;
     }
 
-    name!: string;
-    url!: Url;
-    interval?: number;
-    timeout?: number;
+    public readonly name!: string;
+    public readonly url!: Url;
+    public readonly interval?: number;
+    public readonly timeout?: number;
 }

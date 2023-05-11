@@ -4,25 +4,26 @@ import { Identifier } from "./Identifier";
 import { Person } from "./Person";
 import { SoftwareSystem } from "./SoftwareSystem";
 
-export interface Group {
-    identifier: Identifier;
-    name: string;
-    people: Array<Person>;
-    softwareSystems: Array<SoftwareSystem>;
-    containers: Array<Container>;
-    components: Array<Component>;
-}
+type GroupParams =
+    Required<Pick<Group, "identifier" | "name">>
+    & Partial<Omit<Group, "identifier" | "name">>;
 
-export function group(
-    identifier: Identifier,
-    name: string
-): Group {
-    return {
-        identifier,
-        name,
-        people: [],
-        softwareSystems: [],
-        containers: [],
-        components: [],
+export class Group {
+    constructor(
+        params: GroupParams
+    ) {
+        this.identifier = params.identifier;
+        this.name = params.name;
+        this.people = params.people ?? [];
+        this.softwareSystems = params.softwareSystems ?? [];
+        this.containers = params.containers ?? [];
+        this.components = params.components ?? [];
     }
+
+    public readonly identifier: Identifier;
+    public readonly name: string;
+    public readonly people: Array<Person>;
+    public readonly softwareSystems: Array<SoftwareSystem>;
+    public readonly containers: Array<Container>;
+    public readonly components: Array<Component>;
 }

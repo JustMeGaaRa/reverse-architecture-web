@@ -31,7 +31,7 @@ const Technology = createToken({ name: "Technology", pattern: /technology/ });
 const Description = createToken({ name: "Description", pattern: /description/ });
 const Properties = createToken({ name: "Properties", pattern: /properties/ });
 const Perspectives = createToken({ name: "Perspectives", pattern: /perspectives/ });
-const Configuration = createToken({ name: "Configuration", pattern: /configuration/ });
+const Configuration = createToken({ name: "Configuration", pattern: /\bconfiguration\b/ });
 const Tags = createToken({ name: "Tags", pattern: /tags/ });
 const Url = createToken({ name: "Url", pattern: /url/ });
 
@@ -63,6 +63,7 @@ const Background = createToken({ name: "Background", pattern: /background/ });
 const Color = createToken({ name: "Color", pattern: /colo[u]?r/ });
 const StrokeWidth = createToken({  name: "StrokeWidth", pattern: /strokeWidth/i });
 const Stroke = createToken({ name: "Stroke", pattern: /stroke/ });
+const Dashed = createToken({ name: "Dashed", pattern: /dashed/ });
 const FontSize = createToken({ name: "FontSize", pattern: /fontSize/i });
 const Border = createToken({ name: "Border", pattern: /border/ });
 const Opacity = createToken({ name: "Opacity", pattern: /opacity/ });
@@ -74,7 +75,7 @@ const Position = createToken({ name: "Position", pattern: /position/ });
 
 // view style property values
 const HexColor = createToken({ name: "HexColor", pattern: /#[0-9a-fA-F]{8}|#[0-9a-fA-F]{6}|#[0-9a-fA-F]{4}|#[0-9a-fA-F]{3}/ });
-const Boolean = createToken({ name: "Boolean", pattern: /\btrue\b|\bfalse\b/i });
+const BooleanLiteral = createToken({ name: "BooleanLiteral", pattern: /\btrue\b|\bfalse\b/i });
 
 export const allTokens = [
     WhiteSpace,
@@ -130,6 +131,7 @@ export const allTokens = [
     Color,
     StrokeWidth,
     Stroke,
+    Dashed,
     FontSize,
     Border,
     Opacity,
@@ -141,7 +143,7 @@ export const allTokens = [
 
     // view style property values
     HexColor,
-    Boolean,
+    BooleanLiteral,
 
     // global
     Identifier,

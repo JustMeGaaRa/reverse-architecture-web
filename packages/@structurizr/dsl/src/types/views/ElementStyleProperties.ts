@@ -4,7 +4,6 @@ import { Properties } from "../model/Properties";
 import { ShapeType } from "./ShapeType";
 import { Url } from "../model/Url";
 
-
 export interface ElementStyleProperties {
     background: Color;
     border: LineStyle;

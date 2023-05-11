@@ -3,7 +3,7 @@ export class Tag {
         this.name = name;
     }
 
-    name!: string;
+    public readonly name!: string;
 
     static Element = new Tag("Element");
     static Person = new Tag("Person");
@@ -19,8 +19,4 @@ export class Tag {
     static from(text: string) {
         return text?.split(" ")?.map(name => new Tag(name.trim())) ?? [];
     }
-}
-
-export function tags(...names: string[]) {
-    return names.map(name => new Tag(name));
 }

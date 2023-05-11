@@ -5,7 +5,7 @@ import {
     ElementStyleProperties,
 } from "@structurizr/dsl";
 import { FC  } from "react";
-import { ExpandedElementLabel } from "./BoundaryElementLabel";
+import { BoundaryElementLabel } from "./BoundaryElementLabel";
 
 export const BoundaryElement: FC<{
     data: Element;
@@ -42,7 +42,7 @@ export const BoundaryElement: FC<{
             textColor={style.color}
         >
             
-            <ExpandedElementLabel
+            <BoundaryElementLabel
                 data={data}
                 style={style}
             />

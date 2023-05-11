@@ -5,7 +5,10 @@ import {
     Button
 } from "@chakra-ui/react";
 import { IViewDefinition } from "@structurizr/dsl";
-import { useWorkspaceNavigation } from "@reversearchitecture/workspace-viewer";
+import {
+    useWorkspaceNavigation,
+    useWorkspaceStore
+} from "@reversearchitecture/workspace-viewer";
 import {
     Circle,
     Hexagon,
@@ -16,13 +19,12 @@ import {
 import { FC, useCallback } from "react";
 
 export const WorkspaceBreadcrumb: FC<{
-    path: Array<IViewDefinition>;
     onClick?: (view: IViewDefinition) => void;
 }> = ({
-    path,
     onClick
 }) => {
     const { navigate } = useWorkspaceNavigation();
+    const { viewPath } = useWorkspaceStore();
     
     const colorSchemes = [
         {
@@ -54,13 +56,13 @@ export const WorkspaceBreadcrumb: FC<{
 
     return (
         <Breadcrumb separator={""}>
-            {path.map((view, index) => {
+            {viewPath && viewPath.path.map((view, index) => {
                 const color = colorSchemes[index % colorSchemes.length];
                 const title = `${view.type} - ${view.title}`;
                 return (
                     <BreadcrumbItem
                         key={title}
-                        isCurrentPage={index === path.length - 1}
+                        isCurrentPage={index === viewPath.path.length - 1}
                     >
                         <BreadcrumbLink
                             as={Button}

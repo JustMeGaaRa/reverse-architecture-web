@@ -33,11 +33,11 @@ import { v4 } from "uuid";
 import { Component, Container, Person, SoftwareSystem } from "@structurizr/dsl";
 
 const AllowElementsSelector = (state: WorkspaceStore) => {
-    const isSystemLandscapView = state.selectedView.type === "System Landscape"
-    const isSystemContextView = state.selectedView.type === "System Context"
-    const isContainerView = state.selectedView.type === "Container"
-    const isComponentView = state.selectedView.type === "Component"
-    const isDeploymentView = state.selectedView.type === "Deployment"
+    const isSystemLandscapView = state.selectedView?.type === "System Landscape"
+    const isSystemContextView = state.selectedView?.type === "System Context"
+    const isContainerView = state.selectedView?.type === "Container"
+    const isComponentView = state.selectedView?.type === "Component"
+    const isDeploymentView = state.selectedView?.type === "Deployment"
 
     return {
         allowPerson: isSystemLandscapView || isSystemContextView || isContainerView || isComponentView,

@@ -1,10 +1,9 @@
 import { VStack, Text } from "@chakra-ui/react";
-import { Element, ElementStyleProperties } from "@structurizr/dsl";
+import { Element, ElementStyleProperties, Tag } from "@structurizr/dsl";
 import { FC } from "react";
 
 export const formatElementTechnology = (data: Element) => {
-    // TODO: handle tags corectly
-    const type = data.tags.filter(x => x.name !== "Element").at(0);
+    const type = data.tags.filter(x => x.name !== Tag.Element.name).at(0);
     if (!type) return "";
     
     return data?.technology && data?.technology.length > 0
@@ -12,13 +11,11 @@ export const formatElementTechnology = (data: Element) => {
         : `[${type.name}]`;
 };
 
-export type ElementLabelProps = {
+export const ElementLabel: FC<{
     data: Element;
     showDescription?: boolean;
     style?: Partial<ElementStyleProperties>;
-}
-
-export const ElementLabel: FC<ElementLabelProps> = ({
+}> = ({
     data,
     showDescription,
     style

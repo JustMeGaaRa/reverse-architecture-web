@@ -10,47 +10,48 @@ import { SystemLandscapeView } from "./views/SystemLandscapeView";
 import { indent, line } from "../utils/Formatting";
 import { IView } from "../shared/IView";
 
-export interface Views {
-    systemLandscape?: SystemLandscapeView;
-    systemContexts: SystemContextView[];
-    containers: ContainerView[];
-    components: ComponentView[];
-    filtered: IView[];
-    dynamics: IView[];
-    deployments: DeploymentView[];
-    custom: IView[];
-    styles: Styles;
-    theme?: string;
-    themes: string[];
-    branding?: Branding;
-    terminology?: Terminology;
-    properties?: Properties;
+type ViewsParams = Partial<Views>;
+
+export class Views {
+    constructor(
+        params: ViewsParams
+    ) {
+        this.systemLandscape = params.systemLandscape;
+        this.systemContexts = params.systemContexts ?? [];
+        this.containers = params.containers ?? [];
+        this.components = params.components ?? [];
+        this.deployments = params.deployments ?? [];
+        this.filtered = params.filtered ?? [];
+        this.dynamics = params.dynamics ?? [];
+        this.custom = params.custom ?? [];
+        this.styles = params.styles ?? {
+            element: {},
+            relationship: {}
+        };
+        this.theme = params.theme;
+        this.themes = params.themes ?? [];
+        this.branding = params.branding;
+        this.terminology = params.terminology;
+        this.properties = params.properties;
+    }
+
+    public readonly systemLandscape?: SystemLandscapeView;
+    public readonly systemContexts: SystemContextView[];
+    public readonly containers: ContainerView[];
+    public readonly components: ComponentView[];
+    public readonly filtered: IView[];
+    public readonly dynamics: IView[];
+    public readonly deployments: DeploymentView[];
+    public readonly custom: IView[];
+    public readonly styles: Styles;
+    public readonly theme?: string;
+    public readonly themes: string[];
+    public readonly branding?: Branding;
+    public readonly terminology?: Terminology;
+    public readonly properties?: Properties;
 }
 
 export function toViewsString(views: Views): string {
     const styles = line(indent(toStylesString(views.styles)));
     return `views {\n${styles}\n}`;
-}
-
-export function views(
-    systemContexts?: SystemContextView[],
-    containers?: ContainerView[],
-    components?: ComponentView[],
-    deployments?: DeploymentView[],
-    styles?: Styles
-): Views {
-    return {
-        systemContexts: systemContexts ?? [],
-        containers: containers ?? [],
-        components: components ?? [],
-        deployments: deployments ?? [],
-        filtered: [],
-        dynamics: [],
-        custom: [],
-        themes: [],
-        styles: styles ?? {
-            element: {},
-            relationship: {}
-        }
-    }
 }

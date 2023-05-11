@@ -1,7 +1,6 @@
 import { indent, line } from "../../utils/Formatting";
 import { RelationshipStyleProperties } from "./RelationshipStyleProperties";
 
-
 export interface RelationshipStyle {
     [tag: string]: Partial<RelationshipStyleProperties>;
 }
@@ -20,13 +19,4 @@ export function toRelationshipStyleString(relationshipStyle?: RelationshipStyle)
             return `element "${tag}" {\n${properties}\n}`;
         })
         .join("\n");
-}
-
-export function relationshipStyle(
-    tag: string,
-    style: Partial<RelationshipStyleProperties>
-): RelationshipStyle {
-    return {
-        [tag]: style
-    }
 }

@@ -7,34 +7,36 @@ import { Tag } from "./Tag";
 import { Technology } from "./Technology";
 import { Url } from "./Url";
 
-export interface InfrastructureNode extends Element {
-    identifier: Identifier;
-    name: string;
-    relationships?: Relationship[];
-    description?: string;
-    technology?: Technology[];
-    tags: Tag[];
-    url?: Url;
-    properties?: Properties;
-    perspectives?: Perspectives;
-}
+type InfrastructureNodeParams = 
+    Required<Pick<InfrastructureNode, "identifier" | "name">>
+    & Partial<Omit<InfrastructureNode, "identifier" | "name">>;
 
-export function InfrastructureNode(
-    identifier: Identifier,
-    name: string,
-    description?: string,
-    technology?: Technology[],
-    tags?: Tag[]
-): InfrastructureNode {
-    return {
-        identifier,
-        name,
-        description,
-        technology,
-        tags: [
+export class InfrastructureNode implements Element {
+    constructor(
+        params: InfrastructureNodeParams
+    ) {
+        this.identifier = params.identifier;
+        this.name = params.name;
+        this.description = params.description;
+        this.technology = params.technology ?? [];
+        this.tags = [
             Tag.Element,
-            Tag.DeploymentNode,
-            ...(tags ?? [])
-        ]
+            Tag.InfrastructureNode,
+            ...(params.tags ?? [])
+        ];
+        this.url = params.url;
+        this.properties = params.properties;
+        this.perspectives = params.perspectives;
+        this.relationships = params.relationships ?? [];
     }
+
+    public readonly identifier: Identifier;
+    public readonly name: string;
+    public readonly description?: string;
+    public readonly technology?: Technology[];
+    public readonly tags: Tag[];
+    public readonly url?: Url;
+    public readonly properties?: Properties;
+    public readonly perspectives?: Perspectives;
+    public readonly relationships: Relationship[];
 }

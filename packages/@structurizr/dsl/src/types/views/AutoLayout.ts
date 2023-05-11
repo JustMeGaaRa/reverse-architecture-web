@@ -1,6 +1,5 @@
 import { AutoLayoutDirection } from "./AutoLayoutDirection";
 
-
 export class AutoLayout {
     constructor() {
         this.direction = AutoLayoutDirection.TopBotom;
@@ -8,7 +7,7 @@ export class AutoLayout {
         this.nodeSeparation = 300;
     }
 
-    direction: AutoLayoutDirection;
-    rankSeparation: number;
-    nodeSeparation: number;
+    public readonly direction: AutoLayoutDirection;
+    public readonly rankSeparation: number;
+    public readonly nodeSeparation: number;
 }

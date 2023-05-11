@@ -1,9 +1,9 @@
 import { VStack, Text } from "@chakra-ui/react";
-import { Element, ElementStyleProperties } from "@structurizr/dsl";
+import { Element, ElementStyleProperties, Tag } from "@structurizr/dsl";
 import { FC } from "react";
 
 export const formatExpandedTechnology = (data: Element) => {
-    const type = data.tags.filter(x => x.name !== "Element").at(0);
+    const type = data.tags.filter(x => x.name !== Tag.Element.name).at(0);
     if (!type) return "";
     
     return data?.technology && data?.technology.length > 0
@@ -11,12 +11,10 @@ export const formatExpandedTechnology = (data: Element) => {
         : `[${type.name}]`;
 };
 
-export type ExpandedElementLabelProps = {
+export const BoundaryElementLabel: FC<{
     data: Element;
     style?: Partial<ElementStyleProperties>;
-}
-
-export const ExpandedElementLabel: FC<ExpandedElementLabelProps> = ({
+}> = ({
     data,
     style
 }) => {
@@ -33,13 +31,15 @@ export const ExpandedElementLabel: FC<ExpandedElementLabelProps> = ({
             >
                 {data.name}
             </Text>
-            <Text
-                fontSize={"small"}
-                noOfLines={1}
-                textAlign={"center"}
-            >
-                {formatExpandedTechnology(data)}
-            </Text>
+            {data.tags && (
+                <Text
+                    fontSize={"small"}
+                    noOfLines={1}
+                    textAlign={"center"}
+                >
+                    {formatExpandedTechnology(data)}
+                </Text>
+            )}
         </VStack>
     );
 }

@@ -8,14 +8,12 @@ import {
     DeploymentNode,
     DeploymentView,
     ElementStyle,
-    ElementStyleProperties,
     ElementType,
     Group,
     Model,
     Person,
     Relationship,
     RelationshipStyle,
-    RelationshipType,
     SoftwareSystem,
     SoftwareSystemInstance,
     Styles,
@@ -60,13 +58,13 @@ export class StructurizrVisitor extends VisitorCtor {
         deploymentEnvironment?: any;
         relationship?: any;
     }): Model {
-        return {
+        return new Model({
             groups: ctx.group?.map(x => this.visit(x)) ?? [],
             people: ctx.person?.map(x => this.visit(x)) ?? [],
             softwareSystems: ctx.softwareSystem?.map(x => this.visit(x)) ?? [],
             deploymentEnvironments: ctx.deploymentEnvironment?.map(x => this.visit(x)) ?? [],
             relationships: ctx.relationship?.map(x => this.visit(x)) ?? []
-        };
+        });
     }
 
     group(ctx: {
@@ -250,18 +248,14 @@ export class StructurizrVisitor extends VisitorCtor {
         deploymentView?: any;
         styles?: any;
     }): Views {
-        return {
+        return new Views({
             systemLandscape: this.visit(ctx.systemLandscapeView),
             systemContexts: ctx.systemContextView?.map((x) => this.visit(x)) ?? [],
             containers: ctx.containerView?.map((x) => this.visit(x)) ?? [],
             components: ctx.componentView?.map((x) => this.visit(x)) ?? [],
             deployments: ctx.deploymentView?.map((x) => this.visit(x)) ?? [],
-            custom: [],
-            dynamics: [],
-            filtered: [],
-            styles: this.visit(ctx.styles),
-            themes: []
-        };
+            styles: this.visit(ctx.styles)
+        });
     }
 
     systemLandscapeView(ctx: {

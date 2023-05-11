@@ -20,12 +20,3 @@ export function toElementStyleString(elementStyle?: ElementStyle): string {
         })
         .join("\n");
 }
-
-export function elementStyle(
-    tag: string,
-    style: Partial<ElementStyleProperties>
-): ElementStyle {
-    return {
-        [tag]: style
-    }
-}

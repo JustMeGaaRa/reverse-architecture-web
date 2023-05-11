@@ -22,8 +22,12 @@ export class CommunityHubApi {
     
     async getWorkspace(workspaceId: string): Promise<Workspace> {
         const workspaceResponse = await fetch(`${this.baseUrl}/${workspaceId}/workspace.dsl`);
+
+        if (!workspaceResponse.ok) {
+            throw new Error(`Workspace ${workspaceId} not found`);
+        }
+
         const workspaceText = await workspaceResponse.text() as string;
-        
         const lexerResult = StructurizrLexer.tokenize(workspaceText);
         
         const parser = new StructurizrParser();
@@ -35,8 +39,12 @@ export class CommunityHubApi {
         const workspace = visitor.visit(workspaceCst);
         
         const metadataResponse = await fetch(`${this.baseUrl}/${workspaceId}/workspace.metadata.json`);
+        if (!metadataResponse.ok) {
+            return workspace;
+        }
+
         const metadata = await metadataResponse.json() as IWorkspaceMetadata;
-        
+
         return {
             ...workspace,
             views: {
@@ -62,6 +70,6 @@ export class CommunityHubApi {
                     elements: metadata.views.deployments.find(x => x.identifier === view.identifier)?.elements ?? []
                 }))
             }
-        };
+        }
     }
 }

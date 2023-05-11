@@ -1,14 +1,12 @@
 import { Flex, Text } from "@chakra-ui/react";
 import { DeploymentNode, ElementStyleProperties } from "@structurizr/dsl";
 import { FC } from "react";
-import { ExpandedElementLabel } from "./BoundaryElementLabel";
+import { BoundaryElementLabel } from "./BoundaryElementLabel";
 
-export type DeploymentNodeLabelProps = {
+export const DeploymentNodeLabel: FC<{
     data: DeploymentNode;
     style?: Partial<ElementStyleProperties>;
-}
-
-export const DeploymentNodeLabel: FC<DeploymentNodeLabelProps> = ({
+}> = ({
     data,
     style
 }) => {
@@ -19,7 +17,7 @@ export const DeploymentNodeLabel: FC<DeploymentNodeLabelProps> = ({
             justify={"space-between"}
             width={"100%"}
         >
-            <ExpandedElementLabel
+            <BoundaryElementLabel
                 data={data}
                 style={style}
             />

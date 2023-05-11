@@ -1,4 +1,3 @@
-import { All, Identifier } from "../model/Identifier";
 import { Properties } from "../model/Properties";
 import { IView } from "../../shared/IView";
 import { IElementPosition } from "../../shared/IVIewMetadata";
@@ -15,31 +14,13 @@ export class DeploymentView implements IView {
         this.type = ViewType.Deployment;
     }
 
-    type: ViewType;
-    identifier: string;
-    key?: string;
-    autoLayout?: AutoLayout;
-    animation?: any;
-    title?: string;
-    description?: string;
-    properties?: Properties;
-    elements: Array<IElementPosition>;
-}
-
-export function deploymentView(
-    softwareSystemIdentifier: All | Identifier,
-    environment: string,
-    key?: string,
-    title?: string,
-    layout?: Array<IElementPosition>,
-    description?: string
-): DeploymentView {
-    return new DeploymentView({
-        identifier: softwareSystemIdentifier,
-        environment,
-        key,
-        title,
-        description,
-        elements: layout ?? [],
-    })
+    public readonly type: ViewType;
+    public readonly identifier: string;
+    public readonly key?: string;
+    public readonly autoLayout?: AutoLayout;
+    public readonly animation?: any;
+    public readonly title?: string;
+    public readonly description?: string;
+    public readonly properties?: Properties;
+    public readonly elements: Array<IElementPosition>;
 }

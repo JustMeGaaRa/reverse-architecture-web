@@ -5,12 +5,24 @@ import { Person, toPersonArrayString } from "./model/Person";
 import { Group } from "./model/Group";
 import { indent } from "../utils/Formatting";
 
-export interface Model {
-    people: Person[];
-    softwareSystems: SoftwareSystem[];
-    deploymentEnvironments: DeploymentEnvironment[];
-    relationships: Relationship[];
-    groups: Group[];
+type ModelParams = Partial<Model>;
+
+export class Model {
+    constructor(
+        params: ModelParams
+    ) {
+        this.people = params.people ?? [];
+        this.softwareSystems = params.softwareSystems ?? [];
+        this.deploymentEnvironments = params.deploymentEnvironments ?? [];
+        this.relationships = params.relationships ?? [];
+        this.groups = params.groups ?? [];
+    }
+
+    public readonly people: Person[];
+    public readonly softwareSystems: SoftwareSystem[];
+    public readonly deploymentEnvironments: DeploymentEnvironment[];
+    public readonly relationships: Relationship[];
+    public readonly groups: Group[];
 }
 
 export function toModelString(model: Model): string {
@@ -19,20 +31,4 @@ export function toModelString(model: Model): string {
     const environments = indent(toDeploymentEnvironmentArrayString(model.deploymentEnvironments ?? []));
     const relationships = indent(toRelationshipArrayString(model.relationships ?? []));
     return `model {\n${people}\n${softwareSystems}\n${environments}\n${relationships}\n}`;
-}
-
-export function model(
-    people?: Person[],
-    softwareSystems?: SoftwareSystem[],
-    deploymentEnvironments?: DeploymentEnvironment[],
-    relationships?: Relationship[],
-    groups?: Group[]
-): Model {
-    return {
-        people: people ?? [],
-        softwareSystems: softwareSystems ?? [],
-        deploymentEnvironments: deploymentEnvironments ?? [],
-        relationships: relationships ?? [],
-        groups: groups ?? []
-    }
 }

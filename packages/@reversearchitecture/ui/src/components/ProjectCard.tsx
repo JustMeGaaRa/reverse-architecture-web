@@ -27,6 +27,7 @@ export const ProjectCard: FC<PropsWithChildren<{
             data-group
             backgroundColor={"transparent"}
             borderRadius={16}
+            boxShadow={"none"}
             height={"242px"}
             width={"345px"}
             padding={0}
@@ -47,7 +48,7 @@ export const ProjectCard: FC<PropsWithChildren<{
                     justifyContent={"center"}
                     overflow={"hidden"}
                     _groupHover={{
-                        borderColor: "gray.900",
+                        borderColor: "gray.700",
                     }}
                 >
                     {preview && (

@@ -14,16 +14,6 @@ export function toStylesString(styles?: Styles): string {
     return `styles {\n${elements}\n${relationships}\n}`;
 }
 
-export function styles(
-    element?: ElementStyle[],
-    relationship?: RelationshipStyle[],
-): Styles {
-    return {
-        element: element?.reduce((result, current) => ({ ...result, ...current }), {}) ?? {},
-        relationship: relationship?.reduce((result, current) => ({ ...result, ...current }), {}) ?? {},
-    }
-}
-
 export function aggrerateStyles<
     TStyle,
     TTagStyles extends { [key: string]: Partial<TStyle> }

@@ -1,10 +1,7 @@
 import {
     Workspace,
     Relationship,
-    workspace,
-    model,
     IView,
-    views,
     ViewPath,
 } from "@structurizr/dsl";
 import { create } from "zustand";
@@ -15,7 +12,7 @@ import { WorkspaceState } from "./WorkspaceState";
 export type WorkspaceStore = WorkspaceState & WorkspaceActions;
 
 export const useWorkspaceStore = create(immer<WorkspaceStore>((set) => ({
-    workspace: workspace("Workspace", "This is a workspace", model(), views()),
+    workspace: Workspace.Empty,
     viewPath: { path: [] },
     
     setWorkspace: (workspace: Workspace) => {
@@ -35,7 +32,7 @@ export const useWorkspaceStore = create(immer<WorkspaceStore>((set) => ({
                 //     ...position,
                 //     ...size
                 // }   
-                state.workspace.lastModifiedData = new Date();
+                state.workspace.lastModifiedDate = new Date();
             }
         });
     },
@@ -43,7 +40,7 @@ export const useWorkspaceStore = create(immer<WorkspaceStore>((set) => ({
         set((state) => {
             if (state.workspace) {
                 state.workspace.name = name;
-                state.workspace.lastModifiedData = new Date();
+                state.workspace.lastModifiedDate = new Date();
             }
         });
     },
@@ -51,7 +48,7 @@ export const useWorkspaceStore = create(immer<WorkspaceStore>((set) => ({
         set((state) => {
             if (state.workspace) {
                 state.workspace.model.people.push(person);
-                state.workspace.lastModifiedData = new Date();
+                state.workspace.lastModifiedDate = new Date();
             }
         });
     },
@@ -59,7 +56,7 @@ export const useWorkspaceStore = create(immer<WorkspaceStore>((set) => ({
         set((state) => {
             if (state.workspace) {
                 state.workspace.model.softwareSystems.push(softwareSystem);
-                state.workspace.lastModifiedData = new Date();
+                state.workspace.lastModifiedDate = new Date();
             }
         });
     },
@@ -72,7 +69,7 @@ export const useWorkspaceStore = create(immer<WorkspaceStore>((set) => ({
                     .softwareSystems[index]
                     .containers
                     .push(container);
-                state.workspace.lastModifiedData = new Date();
+                state.workspace.lastModifiedDate = new Date();
             }
         });
     },
@@ -91,7 +88,7 @@ export const useWorkspaceStore = create(immer<WorkspaceStore>((set) => ({
                     .containers[containerIndex]
                     .components
                     .push(component);
-                state.workspace.lastModifiedData = new Date();
+                state.workspace.lastModifiedDate = new Date();
             }
         });
     },
@@ -99,7 +96,7 @@ export const useWorkspaceStore = create(immer<WorkspaceStore>((set) => ({
         set((state) => {
             if (state.workspace) {
                 state.workspace.model.deploymentEnvironments.push(deploymentEnvironment);
-                state.workspace.lastModifiedData = new Date();
+                state.workspace.lastModifiedDate = new Date();
             }
         });
     },
@@ -113,7 +110,7 @@ export const useWorkspaceStore = create(immer<WorkspaceStore>((set) => ({
                     .deploymentEnvironments[index]
                     .deploymentNodes
                     .push(deploymentNode);
-                state.workspace.lastModifiedData = new Date();
+                state.workspace.lastModifiedDate = new Date();
             }
         });
     },
@@ -121,7 +118,7 @@ export const useWorkspaceStore = create(immer<WorkspaceStore>((set) => ({
         set((state) => {
             if (state.workspace) {
                 state.workspace.model.relationships.push(relationship);
-                state.workspace.lastModifiedData = new Date();
+                state.workspace.lastModifiedDate = new Date();
             }
         });
     }

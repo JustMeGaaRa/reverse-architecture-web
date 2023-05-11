@@ -1,8 +1,7 @@
-
 export class DeploymentGroup {
     constructor(name: string) {
         this.name = name;
     }
 
-    name!: string;
+    public readonly name!: string;
 }

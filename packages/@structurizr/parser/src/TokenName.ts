@@ -54,6 +54,7 @@ export enum TokenName {
     Color = "Color",
     StrokeWidth = "StrokeWidth",
     Stroke = "Stroke",
+    Dashed = "Dashed",
     FontSize = "FontSize",
     Border = "Border",
     Opacity = "Opacity",
@@ -65,5 +66,5 @@ export enum TokenName {
 
     // view style property values
     HexColor = "HexColor",
-    Boolean = "Boolean"
+    BooleanLiteral = "BooleanLiteral"
 }

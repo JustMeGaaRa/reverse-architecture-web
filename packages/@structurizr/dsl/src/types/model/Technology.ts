@@ -3,13 +3,5 @@ export class Technology {
         this.name = name;
     }
 
-    name!: string;
-}
-
-export function technology(name: string) {
-    return new Technology(name);
-}
-
-export function technologies(...names: string[]) {
-    return names.map(name => new Technology(name));
+    public readonly name!: string;
 }

@@ -29,11 +29,11 @@ export class StructurizrParser extends CstParser {
         this.CONSUME(Tokens.LCurly);
         this.MANY(() => {
             this.OR([
-            { ALT: () => this.SUBRULE(this.group) },
-            { ALT: () => this.SUBRULE(this.person) },
-            { ALT: () => this.SUBRULE(this.softwareSystem) },
-            { ALT: () => this.SUBRULE(this.deploymentEnvironment) },
-            { ALT: () => this.SUBRULE(this.relationship) }
+                { ALT: () => this.SUBRULE(this.group) },
+                { ALT: () => this.SUBRULE(this.person) },
+                { ALT: () => this.SUBRULE(this.softwareSystem) },
+                { ALT: () => this.SUBRULE(this.deploymentEnvironment) },
+                { ALT: () => this.SUBRULE(this.relationship) }
             ]);
         });
         this.CONSUME(Tokens.RCurly);
@@ -48,19 +48,18 @@ export class StructurizrParser extends CstParser {
         // consume required name
         this.CONSUME(Tokens.StringLiteral);
         this.CONSUME(Tokens.LCurly);
-        // TODO: extend groups to either software systems and people or contaienrs or components
         this.OR([
             {
-            GATE: this.BACKTRACK(this.personOrSoftwareSystem),
-            ALT: () => this.MANY(() => this.SUBRULE(this.personOrSoftwareSystem))
+                GATE: this.BACKTRACK(this.personOrSoftwareSystem),
+                ALT: () => this.MANY(() => this.SUBRULE(this.personOrSoftwareSystem))
             },
             {
-            GATE: this.BACKTRACK(this.container),
-            ALT: () => this.MANY1(() => this.SUBRULE(this.container))
+                GATE: this.BACKTRACK(this.container),
+                ALT: () => this.MANY1(() => this.SUBRULE(this.container))
             },
             {
-            GATE: this.BACKTRACK(this.component),
-            ALT: () => this.MANY2(() => this.SUBRULE(this.component))
+                GATE: this.BACKTRACK(this.component),
+                ALT: () => this.MANY2(() => this.SUBRULE(this.component))
             }
         ]);
         this.CONSUME(Tokens.RCurly);
@@ -105,12 +104,12 @@ export class StructurizrParser extends CstParser {
         this.OPTION4(() => {
             this.CONSUME(Tokens.LCurly);
             this.MANY(() => {
-            this.OR([
-                { ALT: () => this.SUBRULE(this.group) },
-                { ALT: () => this.SUBRULE(this.container) },
-                { ALT: () => this.SUBRULE(this.relationship) },
-                { ALT: () => this.SUBRULE(this.elementProperties) }
-            ]);
+                this.OR([
+                    { ALT: () => this.SUBRULE(this.group) },
+                    { ALT: () => this.SUBRULE(this.container) },
+                    { ALT: () => this.SUBRULE(this.relationship) },
+                    { ALT: () => this.SUBRULE(this.elementProperties) }
+                ]);
             });
             this.CONSUME(Tokens.RCurly);
         });
@@ -131,12 +130,12 @@ export class StructurizrParser extends CstParser {
         this.OPTION5(() => {
             this.CONSUME(Tokens.LCurly);
             this.MANY(() => {
-            this.OR([
-                { ALT: () => this.SUBRULE(this.group) },
-                { ALT: () => this.SUBRULE(this.component) },
-                { ALT: () => this.SUBRULE(this.relationship) },
-                { ALT: () => this.SUBRULE(this.elementProperties) }
-            ]);
+                this.OR([
+                    { ALT: () => this.SUBRULE(this.group) },
+                    { ALT: () => this.SUBRULE(this.component) },
+                    { ALT: () => this.SUBRULE(this.relationship) },
+                    { ALT: () => this.SUBRULE(this.elementProperties) }
+                ]);
             });
             this.CONSUME(Tokens.RCurly);
         });
@@ -173,9 +172,9 @@ export class StructurizrParser extends CstParser {
         this.SUBRULE(this.elementProperties);
         this.MANY(() => {
             this.OR([
-            { ALT: () => this.SUBRULE(this.group) },
-            { ALT: () => this.SUBRULE(this.deploymentNode) },
-            { ALT: () => this.SUBRULE(this.relationship) }
+                { ALT: () => this.SUBRULE(this.group) },
+                { ALT: () => this.SUBRULE(this.deploymentNode) },
+                { ALT: () => this.SUBRULE(this.relationship) }
             ]);
         });
         this.CONSUME(Tokens.RCurly);
@@ -198,10 +197,10 @@ export class StructurizrParser extends CstParser {
         this.SUBRULE(this.elementProperties);
         this.MANY(() => {
             this.OR([
-            { ALT: () => this.SUBRULE1(this.deploymentNode) },
-            { ALT: () => this.SUBRULE1(this.infrastructureNode) },
-            { ALT: () => this.SUBRULE1(this.softwareSystemInstance) },
-            { ALT: () => this.SUBRULE1(this.containerInstance) }
+                { ALT: () => this.SUBRULE1(this.deploymentNode) },
+                { ALT: () => this.SUBRULE1(this.infrastructureNode) },
+                { ALT: () => this.SUBRULE1(this.softwareSystemInstance) },
+                { ALT: () => this.SUBRULE1(this.containerInstance) }
             ]);
         });
         this.CONSUME(Tokens.RCurly);
@@ -271,49 +270,50 @@ export class StructurizrParser extends CstParser {
             {
                 GATE: () => !hasName,
                 ALT: () => {
-                this.SUBRULE(this.name);
-                hasName = true;
+                    this.SUBRULE(this.name);
+                    hasName = true;
                 }
             },
             {
                 GATE: () => !hasTechnology,
                 ALT: () => {
-                this.SUBRULE(this.technology);
+                    this.SUBRULE(this.technology);
+                    hasTechnology = true;
                 }
             },
             {
                 GATE: () => !hasDescription,
                 ALT: () => {
-                this.SUBRULE(this.description);
-                hasDescription = true;
+                    this.SUBRULE(this.description);
+                    hasDescription = true;
                 }
             },
             {
                 GATE: () => !hasProperties,
                 ALT: () => {
-                this.SUBRULE(this.properties);
-                hasProperties = true;
+                    this.SUBRULE(this.properties);
+                    hasProperties = true;
                 }
             },
             {
                 GATE: () => !hasPerspectives,
                 ALT: () => {
-                this.SUBRULE(this.perspectives);
-                hasPerspectives = true;
+                    this.SUBRULE(this.perspectives);
+                    hasPerspectives = true;
                 }
             },
             {
                 GATE: () => !hasTags,
                 ALT: () => {
-                this.SUBRULE(this.tags);
-                hasTags = true;
+                    this.SUBRULE(this.tags);
+                    hasTags = true;
                 }
             },
             {
                 GATE: () => !hasUrl,
                 ALT: () => {
-                this.SUBRULE(this.url);
-                hasUrl = true;
+                    this.SUBRULE(this.url);
+                    hasUrl = true;
                 }
             }
             ]);
@@ -327,18 +327,18 @@ export class StructurizrParser extends CstParser {
         this.CONSUME(Tokens.LCurly);
         this.MANY(() => {
             this.OR([
-            { ALT: () => this.SUBRULE1(this.systemLandscapeView) },
-            { ALT: () => this.SUBRULE1(this.systemContextView) },
-            { ALT: () => this.SUBRULE1(this.containerView) },
-            { ALT: () => this.SUBRULE1(this.componentView) },
-            { ALT: () => this.SUBRULE1(this.deploymentView) },
-            {
-                GATE: () => !hasStyles,
-                ALT: () => {
-                this.SUBRULE(this.styles);
-                hasStyles = true;
+                { ALT: () => this.SUBRULE1(this.systemLandscapeView) },
+                { ALT: () => this.SUBRULE1(this.systemContextView) },
+                { ALT: () => this.SUBRULE1(this.containerView) },
+                { ALT: () => this.SUBRULE1(this.componentView) },
+                { ALT: () => this.SUBRULE1(this.deploymentView) },
+                {
+                    GATE: () => !hasStyles,
+                    ALT: () => {
+                        this.SUBRULE(this.styles);
+                        hasStyles = true;
+                    }
                 }
-            }
             ]);
         });
         this.CONSUME(Tokens.RCurly);
@@ -415,57 +415,57 @@ export class StructurizrParser extends CstParser {
             {
                 GATE: () => !hasInclude,
                 ALT: () => {
-                this.SUBRULE(this.include);
-                hasInclude = true;
+                    this.SUBRULE(this.include);
+                    hasInclude = true;
                 }
             },
             {
                 GATE: () => !hasExclude,
                 ALT: () => {
-                this.SUBRULE(this.exclude);
-                hasExclude = true;
+                    this.SUBRULE(this.exclude);
+                    hasExclude = true;
                 }
             },
             {
                 GATE: () => !hasAutoLayout,
                 ALT: () => {
-                this.SUBRULE(this.autolayout);
-                hasAutoLayout = true;
+                    this.SUBRULE(this.autolayout);
+                    hasAutoLayout = true;
                 }
             },
             {
                 GATE: () => !hasDefault,
                 ALT: () => {
-                this.SUBRULE(this.default);
-                hasDefault = true;
+                    this.SUBRULE(this.default);
+                    hasDefault = true;
                 }
             },
             {
                 GATE: () => !hasDescription,
                 ALT: () => {
-                this.SUBRULE(this.description);
-                hasDescription = true;
+                    this.SUBRULE(this.description);
+                    hasDescription = true;
                 }
             },
             {
                 GATE: () => !hasProperties,
                 ALT: () => {
-                this.SUBRULE(this.properties);
-                hasProperties = true;
+                    this.SUBRULE(this.properties);
+                    hasProperties = true;
                 }
             },
             {
                 GATE: () => !hasAnimation,
                 ALT: () => {
-                this.SUBRULE(this.animation);
-                hasAnimation = true;
+                    this.SUBRULE(this.animation);
+                    hasAnimation = true;
                 }
             },
             {
                 GATE: () => !hasTitle,
                 ALT: () => {
-                this.SUBRULE(this.title);
-                hasTitle = true;
+                    this.SUBRULE(this.title);
+                    hasTitle = true;
                 }
             }
             ]);
@@ -546,8 +546,8 @@ export class StructurizrParser extends CstParser {
         this.CONSUME(Tokens.LCurly);
         this.MANY(() =>
             this.OR([
-            { ALT: () => this.SUBRULE(this.elementStyle) },
-            { ALT: () => this.SUBRULE(this.relationshipStyle) }
+                { ALT: () => this.SUBRULE(this.elementStyle) },
+                { ALT: () => this.SUBRULE(this.relationshipStyle) }
             ])
         );
         this.CONSUME(Tokens.RCurly);
@@ -574,104 +574,104 @@ export class StructurizrParser extends CstParser {
         this.CONSUME(Tokens.LCurly);
         this.MANY(() => {
             this.OR([
-            {
-                GATE: () => !hasShape,
-                ALT: () => {
-                this.SUBRULE(this.shape);
-                hasShape = true;
+                {
+                    GATE: () => !hasShape,
+                    ALT: () => {
+                        this.SUBRULE(this.shape);
+                        hasShape = true;
+                    }
+                },
+                {
+                    GATE: () => !hasIcon,
+                    ALT: () => {
+                        this.SUBRULE(this.icon);
+                        hasIcon = true;
+                    }
+                },
+                {
+                    GATE: () => !hasWidth,
+                    ALT: () => {
+                        this.SUBRULE(this.width);
+                        hasWidth = true;
+                    }
+                },
+                {
+                    GATE: () => !hasHeight,
+                    ALT: () => {
+                        this.SUBRULE(this.height);
+                        hasHeight = true;
+                    }
+                },
+                {
+                    GATE: () => !hasBackground,
+                    ALT: () => {
+                        this.SUBRULE(this.background);
+                        hasBackground = true;
+                    }
+                },
+                {
+                    GATE: () => !hasColor,
+                    ALT: () => {
+                        this.SUBRULE(this.color);
+                        hasColor = true;
+                    }
+                },
+                {
+                    GATE: () => !hasStroke,
+                    ALT: () => {
+                        this.SUBRULE(this.stroke);
+                        hasStroke = true;
+                    }
+                },
+                {
+                    GATE: () => !hasStrokeWidth,
+                    ALT: () => {
+                        this.SUBRULE(this.strokeWidth);
+                        hasStrokeWidth = true;
+                    }
+                },
+                {
+                    GATE: () => !hasFontSize,
+                    ALT: () => {
+                        this.SUBRULE(this.fontSize);
+                        hasFontSize = true;
+                    }
+                },
+                {
+                    GATE: () => !hasBorder,
+                    ALT: () => {
+                        this.SUBRULE(this.border);
+                        hasBorder = true;
+                    }
+                },
+                {
+                    GATE: () => !hasOpacity,
+                    ALT: () => {
+                        this.SUBRULE(this.opacity);
+                        hasOpacity = true;
+                    }
+                },
+                {
+                    GATE: () => !hasMetadata,
+                    ALT: () => {
+                        this.SUBRULE(this.metadata);
+                        hasMetadata = true;
+                    }
+                },
+                {
+                    GATE: () => !hasDescription,
+                    ALT: () => {
+                        this.SUBRULE(this.description);
+                        hasDescription = true;
+                    }
+                },
+                {
+                    GATE: () => !hasProperties,
+                    ALT: () => {
+                        this.SUBRULE(this.properties);
+                        hasProperties = true;
+                    }
                 }
-            },
-            {
-                GATE: () => !hasIcon,
-                ALT: () => {
-                this.SUBRULE(this.icon);
-                hasIcon = true;
-                }
-            },
-            {
-                GATE: () => !hasWidth,
-                ALT: () => {
-                this.SUBRULE(this.width);
-                hasWidth = true;
-                }
-            },
-            {
-                GATE: () => !hasHeight,
-                ALT: () => {
-                this.SUBRULE(this.height);
-                hasHeight = true;
-                }
-            },
-            {
-                GATE: () => !hasBackground,
-                ALT: () => {
-                this.SUBRULE(this.background);
-                hasBackground = true;
-                }
-            },
-            {
-                GATE: () => !hasColor,
-                ALT: () => {
-                this.SUBRULE(this.color);
-                hasColor = true;
-                }
-            },
-            {
-                GATE: () => !hasStroke,
-                ALT: () => {
-                this.SUBRULE(this.stroke);
-                hasStroke = true;
-                }
-            },
-            {
-                GATE: () => !hasStrokeWidth,
-                ALT: () => {
-                this.SUBRULE(this.strokeWidth);
-                hasStrokeWidth = true;
-                }
-            },
-            {
-                GATE: () => !hasFontSize,
-                ALT: () => {
-                this.SUBRULE(this.fontSize);
-                hasFontSize = true;
-                }
-            },
-            {
-                GATE: () => !hasBorder,
-                ALT: () => {
-                this.SUBRULE(this.border);
-                hasBorder = true;
-                }
-            },
-            {
-                GATE: () => !hasOpacity,
-                ALT: () => {
-                this.SUBRULE(this.opacity);
-                hasOpacity = true;
-                }
-            },
-            {
-                GATE: () => !hasMetadata,
-                ALT: () => {
-                this.SUBRULE(this.metadata);
-                hasMetadata = true;
-                }
-            },
-            {
-                GATE: () => !hasDescription,
-                ALT: () => {
-                this.SUBRULE(this.description);
-                hasDescription = true;
-                }
-            },
-            {
-                GATE: () => !hasProperties,
-                ALT: () => {
-                this.SUBRULE(this.properties);
-                hasProperties = true;
-                }
-            }
             ]);
         });
         this.CONSUME(Tokens.RCurly);
@@ -679,6 +679,7 @@ export class StructurizrParser extends CstParser {
 
     relationshipStyle = this.RULE("relationshipStyle", () => {
         let hasThinkness = false;
+        let hasDashed = false;
         let hasColor = false;
         let hasStyle = false;
         let hasRouting = false;
@@ -693,69 +694,76 @@ export class StructurizrParser extends CstParser {
         this.CONSUME(Tokens.LCurly);
         this.MANY(() => {
             this.OR([
-            {
-                GATE: () => !hasThinkness,
-                ALT: () => {
-                this.SUBRULE(this.thinkness);
-                hasThinkness = true;
+                {
+                    GATE: () => !hasThinkness,
+                    ALT: () => {
+                        this.SUBRULE(this.thinkness);
+                        hasThinkness = true;
+                    }
+                },
+                {
+                    GATE: () => !hasDashed,
+                    ALT: () => {
+                        this.SUBRULE(this.dashed);
+                        hasDashed = true;
+                    }
+                },
+                {
+                    GATE: () => !hasColor,
+                    ALT: () => {
+                        this.SUBRULE(this.color);
+                        hasColor = true;
+                    }
+                },
+                {
+                    GATE: () => !hasStyle,
+                    ALT: () => {
+                        this.SUBRULE(this.style);
+                        hasStyle = true;
+                    }
+                },
+                {
+                    GATE: () => !hasRouting,
+                    ALT: () => {
+                        this.SUBRULE(this.routing);
+                        hasRouting = true;
+                    }
+                },
+                {
+                    GATE: () => !hasFontSize,
+                    ALT: () => {
+                        this.SUBRULE(this.fontSize);
+                        hasFontSize = true;
+                    }
+                },
+                {
+                    GATE: () => !hasWidth,
+                    ALT: () => {
+                        this.SUBRULE(this.width);
+                        hasWidth = true;
+                    }
+                },
+                {
+                    GATE: () => !hasPosition,
+                    ALT: () => {
+                        this.SUBRULE(this.position);
+                        hasPosition = true;
+                    }
+                },
+                {
+                    GATE: () => !hasOpacity,
+                    ALT: () => {
+                        this.SUBRULE(this.opacity);
+                        hasOpacity = true;
+                    }
+                },
+                {
+                    GATE: () => !hasProperties,
+                    ALT: () => {
+                        this.SUBRULE(this.properties);
+                        hasProperties = true;
+                    }
                 }
-            },
-            {
-                GATE: () => !hasColor,
-                ALT: () => {
-                this.SUBRULE(this.color);
-                hasColor = true;
-                }
-            },
-            {
-                GATE: () => !hasStyle,
-                ALT: () => {
-                this.SUBRULE(this.style);
-                hasStyle = true;
-                }
-            },
-            {
-                GATE: () => !hasRouting,
-                ALT: () => {
-                this.SUBRULE(this.routing);
-                hasRouting = true;
-                }
-            },
-            {
-                GATE: () => !hasFontSize,
-                ALT: () => {
-                this.SUBRULE(this.fontSize);
-                hasFontSize = true;
-                }
-            },
-            {
-                GATE: () => !hasWidth,
-                ALT: () => {
-                this.SUBRULE(this.width);
-                hasWidth = true;
-                }
-            },
-            {
-                GATE: () => !hasPosition,
-                ALT: () => {
-                this.SUBRULE(this.position);
-                hasPosition = true;
-                }
-            },
-            {
-                GATE: () => !hasOpacity,
-                ALT: () => {
-                this.SUBRULE(this.opacity);
-                hasOpacity = true;
-                }
-            },
-            {
-                GATE: () => !hasProperties,
-                ALT: () => {
-                this.SUBRULE(this.properties);
-                hasProperties = true;
-                }
-            }
             ]);
         });
         this.CONSUME(Tokens.RCurly);
@@ -784,6 +792,11 @@ export class StructurizrParser extends CstParser {
     strokeWidth = this.RULE("strokeWidth", () => {
         this.CONSUME(Tokens.StrokeWidth);
         this.CONSUME(Tokens.NumericLiteral);
+    });
+
+    dashed = this.RULE("dashed", () => {
+        this.CONSUME(Tokens.Dashed);
+        this.CONSUME(Tokens.BooleanLiteral);
     });
 
     width = this.RULE("width", () => {
@@ -818,7 +831,7 @@ export class StructurizrParser extends CstParser {
 
     metadata = this.RULE("metadata", () => {
         this.CONSUME(Tokens.Metadata);
-        this.CONSUME(Tokens.Boolean);
+        this.CONSUME(Tokens.BooleanLiteral);
     });
 
     thinkness = this.RULE("thinkness", () => {
