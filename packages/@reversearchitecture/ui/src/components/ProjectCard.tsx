@@ -70,14 +70,16 @@ export const ProjectCard: FC<PropsWithChildren<{
                             _groupHover={{ display: "none" }}
                         />
                     )}
-                    {/* <Icon
+                    
+                    <Icon
                         as={EyeEmpty}
                         color={"gray.900"}
                         display={"none"}
                         fontSize={40}
+                        position={"absolute"}
                         strokeWidth={1}
                         _groupHover={{ display: "block" }}
-                    /> */}
+                    />
                 </Flex>
                 <Box padding={2}>
                     <Text

@@ -4,10 +4,11 @@ import { SoftwareSystemInstance } from "../../types/model/SoftwareSystemInstance
 
 export class SoftwareSystemInstanceElement implements IElement {
     constructor(
-        private softwareSystemInstance: SoftwareSystemInstance
+        private softwareSystemInstance: SoftwareSystemInstance,
+        private parentId?: string
     ) { }
     
     accept(visitor: IVisitor): void {
-        visitor.visitSoftwareSystemInstance(this.softwareSystemInstance);
+        visitor.visitSoftwareSystemInstance(this.softwareSystemInstance, { parentId: this.parentId });
     }
 }

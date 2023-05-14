@@ -142,30 +142,37 @@ export class ComponentViewStrategy implements IViewStrategy {
     }
 
     getPath(): Array<IView> {
-        for (let softwareSystem of this.workspace.model.softwareSystems) {
-            for (let container of softwareSystem.containers) {
-                if (container.identifier === this.view.identifier) {
-                    return [
-                        {
-                            type: ViewType.SystemContext,
-                            identifier: softwareSystem.identifier,
-                            title: softwareSystem.name,
-                            elements: []
-                        },
-                        {
-                            type: ViewType.Container,
-                            identifier: softwareSystem.identifier,
-                            title: softwareSystem.name,
-                            elements: []
-                        },
-                        {
-                            type: ViewType.Component,
-                            identifier: container.identifier,
-                            title: container.name,
-                            elements: []
-                        }
-                    ]
-                }
+        const softwareSystems = this.workspace.model.groups
+            .flatMap(group => group.softwareSystems)
+            .concat(this.workspace.model.softwareSystems);
+
+        for (let softwareSystem of softwareSystems) {
+            const container = softwareSystem.groups
+                .flatMap(group => group.containers)
+                .concat(softwareSystem.containers)
+                .find(container => container.identifier === this.view.identifier);
+
+            if (container) {
+                return [
+                    {
+                        type: ViewType.SystemContext,
+                        identifier: softwareSystem.identifier,
+                        title: softwareSystem.name,
+                        elements: []
+                    },
+                    {
+                        type: ViewType.Container,
+                        identifier: softwareSystem.identifier,
+                        title: softwareSystem.name,
+                        elements: []
+                    },
+                    {
+                        type: ViewType.Component,
+                        identifier: container.identifier,
+                        title: container.name,
+                        elements: []
+                    }
+                ]
             }
         }
 

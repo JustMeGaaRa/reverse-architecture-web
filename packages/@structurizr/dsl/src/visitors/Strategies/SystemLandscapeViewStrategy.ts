@@ -1,4 +1,5 @@
 import {
+    GroupElement,
     PersonElement,
     RelationshipElement,
     SoftwareSystemElement
@@ -30,24 +31,33 @@ export class SystemLandscapeViewStrategy implements IViewStrategy {
 
         const visitSoftwareSystems = (
             people: Array<Person>,
-            softwareSystems: Array<SoftwareSystem>
+            softwareSystems: Array<SoftwareSystem>,
+            parentId?: string
         ) => {
-            // include all people that are directly connected to the current software system
+            // 2.1. include all people
             people
-                .forEach(person => new PersonElement(person).accept(visitor));
+                .forEach(person => new PersonElement(person, parentId).accept(visitor));
 
-            // include the current software and all software systems
-            // that are directly connected to the current software system
+            // 2.1. include all software systems
             softwareSystems
-                .forEach(softwareSystem => new SoftwareSystemElement(softwareSystem).accept(visitor));
+                .forEach(softwareSystem => new SoftwareSystemElement(softwareSystem, parentId).accept(visitor));
         }
 
+        // 1.1. iterate over all groups and find software system for the view
         this.workspace.model.groups
-            .forEach(group => visitSoftwareSystems(
-                group.people,
-                group.softwareSystems
-            ));
+            .forEach(group => {
+                // 1.1.1.1. include the software system group as a boundary element
+                new GroupElement(group).accept(visitor);
 
+                // 1.1.1.2. include people and software systems in the group
+                visitSoftwareSystems(
+                    group.people,
+                    group.softwareSystems,
+                    group.identifier
+                )
+            });
+
+        // 1.2. iterate over all software systems and find software system for the view
         visitSoftwareSystems(
             this.workspace.model.people,
             this.workspace.model.softwareSystems

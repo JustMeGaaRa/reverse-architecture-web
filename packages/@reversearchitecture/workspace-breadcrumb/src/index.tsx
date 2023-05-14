@@ -17,6 +17,7 @@ import {
     Triangle,
 } from "iconoir-react";
 import { FC, useCallback } from "react";
+import { Panel } from "@reactflow/core";
 
 export const WorkspaceBreadcrumb: FC<{
     onClick?: (view: IViewDefinition) => void;
@@ -55,26 +56,28 @@ export const WorkspaceBreadcrumb: FC<{
     }, [navigate, onClick]);
 
     return (
-        <Breadcrumb separator={""}>
-            {viewPath && viewPath.path.map((view, index) => {
-                const color = colorSchemes[index % colorSchemes.length];
-                const title = `${view.type} - ${view.title}`;
-                return (
-                    <BreadcrumbItem
-                        key={title}
-                        isCurrentPage={index === viewPath.path.length - 1}
-                    >
-                        <BreadcrumbLink
-                            as={Button}
-                            colorScheme={color.scheme}
-                            leftIcon={color.icon}
-                            onClick={() => handleOnBreadcrumLinkClick(view)}
-                        >
-                            {title}
-                        </BreadcrumbLink>
-                    </BreadcrumbItem>
-                )}
-            )}
-        </Breadcrumb>
+        <Panel position={"top-left"}>
+            <Breadcrumb separator={""}>
+                {viewPath && viewPath.path.map((view, index) => {
+                    const color = colorSchemes[index % colorSchemes.length];
+                    const title = `${view.type} - ${view.title}`;
+                    return (
+                        <BreadcrumbItem
+                            key={title}
+                            isCurrentPage={index === viewPath.path.length - 1}
+                            >
+                            <BreadcrumbLink
+                                as={Button}
+                                colorScheme={color.scheme}
+                                leftIcon={color.icon}
+                                onClick={() => handleOnBreadcrumLinkClick(view)}
+                                >
+                                {title}
+                            </BreadcrumbLink>
+                        </BreadcrumbItem>
+                    )}
+                    )}
+            </Breadcrumb>
+        </Panel>
     )
 }

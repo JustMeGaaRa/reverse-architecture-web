@@ -108,7 +108,11 @@ export class ContainerViewStrategy implements IViewStrategy {
     }
 
     getPath(): Array<IView> {
-        for (let softwareSystem of this.workspace.model.softwareSystems) {
+        const softwareSystems = this.workspace.model.groups
+            .flatMap(group => group.softwareSystems)
+            .concat(this.workspace.model.softwareSystems);
+
+        for (let softwareSystem of softwareSystems) {
             if (softwareSystem.identifier === this.view.identifier) {
                 return [
                     {
@@ -123,7 +127,7 @@ export class ContainerViewStrategy implements IViewStrategy {
                         title: softwareSystem.name,
                         elements: []
                     }
-                ]
+                ];
             }
         }
 

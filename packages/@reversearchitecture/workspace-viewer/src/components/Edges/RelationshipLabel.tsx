@@ -3,7 +3,9 @@ import { Relationship } from "@structurizr/dsl";
 import { FC } from "react";
 
 export const formatRelationshipTechnology = (data: Relationship) => {
-    return data?.technology && `[${data.technology.map(x => x.name).join(" / ")}]`;
+    return data?.technology
+        && data?.technology.length > 0
+        && `[${data.technology.map(x => x.name).join(" / ")}]`;
 };
 
 export type RelationshipLabelProps = {

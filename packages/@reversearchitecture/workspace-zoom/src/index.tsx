@@ -11,6 +11,7 @@ import {
     Toolbar
 } from "@reversearchitecture/workspace-viewer";
 import {
+    Panel,
     useReactFlow,
     useStore
 } from "@reactflow/core";
@@ -33,37 +34,39 @@ export const WorkspaceZoom: FC<{
     ], [zoomTo, fitView]);
 
     return (
-        <Toolbar>
-            <ToolbalSection>
-                <IconButton
-                    aria-label={"zoom out"}
-                    title={"zoom out"}
-                    icon={<Minus />}
-                    onClick={() => zoomOut()}
-                />
-                <Menu>
-                    <MenuButton as={Button}>
-                        {`${zoom.toFixed(0)}%`}
-                    </MenuButton>
-                    <MenuList>
-                        {items.map(item => (
-                            <MenuItem
-                                key={item.title}
-                                command={item.command}
-                                onClick={item.onClick}
-                            >
-                                {item.title}
-                            </MenuItem>
-                        ))}
-                    </MenuList>
-                </Menu>
-                <IconButton
-                    aria-label={"zoom in"}
-                    title={"zoom in"}
-                    icon={<Plus />}
-                    onClick={() => zoomIn()}
-                />
-            </ToolbalSection>
-        </Toolbar>
+        <Panel position={"bottom-right"}>
+            <Toolbar>
+                <ToolbalSection>
+                    <IconButton
+                        aria-label={"zoom out"}
+                        title={"zoom out"}
+                        icon={<Minus />}
+                        onClick={() => zoomOut()}
+                    />
+                    <Menu>
+                        <MenuButton as={Button}>
+                            {`${zoom.toFixed(0)}%`}
+                        </MenuButton>
+                        <MenuList>
+                            {items.map(item => (
+                                <MenuItem
+                                    key={item.title}
+                                    command={item.command}
+                                    onClick={item.onClick}
+                                >
+                                    {item.title}
+                                </MenuItem>
+                            ))}
+                        </MenuList>
+                    </Menu>
+                    <IconButton
+                        aria-label={"zoom in"}
+                        title={"zoom in"}
+                        icon={<Plus />}
+                        onClick={() => zoomIn()}
+                    />
+                </ToolbalSection>
+            </Toolbar>
+        </Panel>
     )
 }

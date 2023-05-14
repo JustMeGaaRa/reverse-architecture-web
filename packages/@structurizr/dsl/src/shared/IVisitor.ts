@@ -10,14 +10,33 @@ import { SoftwareSystem } from "../types/model/SoftwareSystem";
 import { SoftwareSystemInstance } from "../types/model/SoftwareSystemInstance";
 
 export interface IVisitor {
-    visitGroup: (group: Group) => void;
-    visitPerson: (person: Person) => void;
-    visitSoftwareSystem: (softwareSystem: SoftwareSystem) => void;
-    visitContainer: (container: Container) => void;
-    visitComponent: (component: Component) => void;
-    visitDeploymentNode: (deploymentNode: DeploymentNode) => void;
-    visitInfrastructureNode: (infrastructureNode: InfrastructureNode) => void;
-    visitSoftwareSystemInstance: (softwareSystemInstance: SoftwareSystemInstance) => void;
-    visitContainerInstance: (containerInstance: ContainerInstance) => void;
-    visitRelationship: (relationship: Relationship) => void;
+    visitGroup: (
+        group: Group,
+        params?: { parentId?: string }) => void;
+    visitPerson: (
+        person: Person,
+        params?: { parentId?: string }) => void;
+    visitSoftwareSystem: (
+        softwareSystem: SoftwareSystem,
+        params?: { parentId?: string }) => void;
+    visitContainer: (
+        container: Container,
+        params?: { parentId?: string }) => void;
+    visitComponent: (
+        component: Component,
+        params?: { parentId?: string }) => void;
+    visitDeploymentNode: (
+        deploymentNode: DeploymentNode,
+        params?: { parentId?: string }) => void;
+    visitInfrastructureNode: (
+        infrastructureNode: InfrastructureNode,
+        params?: { parentId?: string }) => void;
+    visitSoftwareSystemInstance: (
+        softwareSystemInstance: SoftwareSystemInstance,
+        params?: { parentId?: string }) => void;
+    visitContainerInstance: (
+        containerInstance: ContainerInstance,
+        params?: { parentId?: string }) => void;
+    visitRelationship: (
+        relationship: Relationship) => void;
 }

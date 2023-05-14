@@ -4,10 +4,9 @@ import { WorkspaceExplorer } from "@reversearchitecture/workspace-viewer";
 import { WorkspaceZoom } from "@reversearchitecture/workspace-zoom";
 import { CommunityHubApi } from "@reversearchitecture/services";
 import { ContextSheet } from "@reversearchitecture/ui";
-import { Panel } from "@reactflow/core";
 import { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { IView, ViewType, Workspace } from "@structurizr/dsl";
+import { IView, Workspace } from "@structurizr/dsl";
 import { useToast } from "@chakra-ui/react";
 
 export const WorkspaceViewerSheet: FC<{
@@ -32,9 +31,7 @@ export const WorkspaceViewerSheet: FC<{
                 setWorkspace(workspace);
                 setSelectedView(initialView);
             })
-            .catch(error => {
-                console.error(error);
-
+            .catch(_ => {
                 toast({
                     title: "Error",
                     description: "Failed to load workspace",
@@ -48,22 +45,14 @@ export const WorkspaceViewerSheet: FC<{
 
     return (
         <ContextSheet>
-            {workspace && selectedView && (
-                <WorkspaceExplorer
-                    workspace={workspace}
-                    initialView={selectedView}
-                >
-                    <Panel position={"top-left"}>
-                        <WorkspaceBreadcrumb />
-                    </Panel>
-                    <Panel position={"bottom-center"}>
-                        <WorkspaceToolbar />
-                    </Panel>
-                    <Panel position={"bottom-right"}>
-                        <WorkspaceZoom />
-                    </Panel>
-                </WorkspaceExplorer>
-            )}
+            <WorkspaceExplorer
+                workspace={workspace}
+                initialView={selectedView}
+            >
+                <WorkspaceBreadcrumb />
+                <WorkspaceToolbar />
+                <WorkspaceZoom />
+            </WorkspaceExplorer>
         </ContextSheet>
     );
 };

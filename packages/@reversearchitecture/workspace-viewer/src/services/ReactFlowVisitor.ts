@@ -3,6 +3,7 @@ import {
     Component,
     Container,
     ContainerInstance,
+    defaultElementStyle,
     DeploymentNode,
     Element,
     Group,
@@ -12,6 +13,7 @@ import {
     Person,
     Position,
     Relationship,
+    Size,
     SoftwareSystem,
     SoftwareSystemInstance,
     Styles,
@@ -28,47 +30,100 @@ export class ReactFlowVisitor implements IVisitor {
         private edges: Edge[] = []
     ) {}
 
-    visitGroup(group: Group) {
+    getBoundingBox(elements: Array<{ identifier: string }>) {
+        const defaultPosition = { x: 0, y: 0 };
+        const positions = elements
+            .map(x => this.selectedView.elements.find(y => y.id === x.identifier)
+            ?? defaultPosition);
+        const padding = 100;
+        const boundaries = positions.reduce((state, item) => ({
+            min: {
+                x: Math.min(state.min.x, item.x),
+                y: Math.min(state.min.y, item.y),
+            },
+            max: {
+                x: Math.max(state.max.x, item.x + defaultElementStyle.width),
+                y: Math.max(state.max.y, item.y + defaultElementStyle.height),
+            }
+        }), {
+            min: positions.at(0) ?? defaultPosition,
+            max: positions.at(0) ?? defaultPosition
+        });
+        return {
+            x: boundaries.min.x - padding / 2,
+            y: boundaries.min.y - padding / 2,
+            width: boundaries.max.x - boundaries.min.x + padding / 2,
+            height: boundaries.max.y - boundaries.min.y + padding / 2,
+        };
+    }
+
+    visitGroup(group: Group, params?: { parentId?: string }) {
+        const boundingBox = this.getBoundingBox(
+            Array.from<{ identifier: string }>([])
+                .concat(group.softwareSystems)
+                .concat(group.people)
+        );
         const node = fromElement({
+            elementId: group.identifier,
             element: group,
-            position: this.selectedView.elements.find(x => x.id === group.identifier) ?? { x: 0, y: 0 },
-            expanded: true,
+            isBoundary: true,
+            position: boundingBox,
+            parentId: params?.parentId,
+            size: boundingBox,
             styles: this.workspace.views.styles,
         });
         this.nodes.push(node);
     }
 
-    visitPerson(person: Person) {
+    visitPerson(person: Person, params?: { parentId?: string }) {
         const node = fromElement({
             element: person,
             position: this.selectedView.elements.find(x => x.id === person.identifier) ?? { x: 0, y: 0 },
+            parentId: params?.parentId,
             styles: this.workspace.views.styles,
         });
         this.nodes.push(node);
     }
     
-    visitSoftwareSystem(softwareSystem: SoftwareSystem) {
+    visitSoftwareSystem(softwareSystem: SoftwareSystem, params?: { parentId?: string }) {
+        const isBoundary = this.selectedView.type === ViewType.Container
+            && softwareSystem.identifier === this.selectedView.identifier;
+        const position = this.selectedView.elements.find(x => x.id === softwareSystem.identifier)
+            ?? { x: 0, y: 0 };
+        const boundingBox = isBoundary
+            ? this.getBoundingBox(softwareSystem.containers)
+            : { ...position, width: defaultElementStyle.width, height: defaultElementStyle.height };
         const node = fromElement({
             element: softwareSystem,
-            position: this.selectedView.elements.find(x => x.id === softwareSystem.identifier) ?? { x: 0, y: 0 },
-            expanded: this.selectedView.type === ViewType.Container && softwareSystem.identifier === this.selectedView.identifier,
+            isBoundary,
+            position,
+            parentId: params?.parentId,
+            size: boundingBox,
             styles: this.workspace.views.styles,
         });
         this.nodes.push(node);
     }
 
-    visitContainer(container: Container) {
+    visitContainer(container: Container, params?: { parentId?: string }) {
+        const isBoundary = this.selectedView.type === ViewType.Component
+            && container.identifier === this.selectedView.identifier;
+        const position = this.selectedView.elements.find(x => x.id === container.identifier)
+            ?? { x: 0, y: 0 };
+        const boundingBox = isBoundary
+            ? this.getBoundingBox(container.components)
+            : { ...position, width: defaultElementStyle.width, height: defaultElementStyle.height };
         const node = fromElement({
             element: container,
-            position: this.selectedView.elements.find(x => x.id === container.identifier) ?? { x: 0, y: 0 },
-            expanded: this.selectedView.type === ViewType.Component && container.identifier === this.selectedView.identifier,
+            position,
+            isBoundary,
             parentId: this.selectedView.type === ViewType.Container ? this.selectedView.identifier : undefined,
+            size: boundingBox,
             styles: this.workspace.views.styles,
         });
         this.nodes.push(node);
     }
 
-    visitComponent(component: Component) {
+    visitComponent(component: Component, params?: { parentId?: string }) {
         const node = fromElement({
             element: component,
             position: this.selectedView.elements.find(x => x.id === component.identifier) ?? { x: 0, y: 0 },
@@ -78,25 +133,42 @@ export class ReactFlowVisitor implements IVisitor {
         this.nodes.push(node);
     }
 
-    visitDeploymentNode(deploymentNode: DeploymentNode) {
+    visitDeploymentNode(deploymentNode: DeploymentNode, params?: { parentId?: string }) {
         const node = fromElement({
             element: deploymentNode,
             position: this.selectedView.elements.find(x => x.id === deploymentNode.identifier) ?? { x: 0, y: 0 },
+            parentId: params?.parentId,
             styles: this.workspace.views.styles,
         });
         this.nodes.push(node);
     }
     
-    visitInfrastructureNode(infrastructureNode: InfrastructureNode) {
+    visitInfrastructureNode(infrastructureNode: InfrastructureNode, params?: { parentId?: string }) {
 
     }
 
-    visitSoftwareSystemInstance(softwareSystemInstance: SoftwareSystemInstance) {
-        
+    visitSoftwareSystemInstance(softwareSystemInstance: SoftwareSystemInstance, params?: { parentId?: string }) {
+        const position = this.selectedView.elements.find(x => x.id === softwareSystemInstance.identifier)
+            ?? { x: 0, y: 0 };
+        const node = fromElement({
+            element: softwareSystemInstance,
+            position,
+            parentId: params?.parentId,
+            styles: this.workspace.views.styles,
+        });
+        this.nodes.push(node);
     }
 
-    visitContainerInstance(containerInstance: ContainerInstance) {
-
+    visitContainerInstance(containerInstance: ContainerInstance, params?: { parentId?: string }) {
+        const position = this.selectedView.elements.find(x => x.id === containerInstance.identifier)
+            ?? { x: 0, y: 0 };
+        const node = fromElement({
+            element: containerInstance,
+            position,
+            parentId: params?.parentId,
+            styles: this.workspace.views.styles,
+        });
+        this.nodes.push(node);
     }
 
     visitRelationship(relationship: Relationship) {
@@ -117,15 +189,15 @@ export class ReactFlowVisitor implements IVisitor {
 
 export type ElementParams<TElement extends Element = any> = {
     element: TElement;
+    elementId?: string;
     parentId?: string;
-    expanded?: boolean;
+    isBoundary?: boolean;
     position: Position;
+    size?: Size;
     styles: Styles;
 }
 
 export const fromElement = (params: ElementParams): Node => {
-    const { element, parentId, expanded, position, styles } = params;
-
     const getNoteTypeIfBoundary = (isBoundary: boolean) => {
         return isBoundary
             ? "boundary"
@@ -139,18 +211,20 @@ export const fromElement = (params: ElementParams): Node => {
     }
 
     return {
-        id: element.identifier,
-        type: getNoteTypeIfBoundary(expanded)
-            ?? getNodeTypeByTag(element)
+        id: params.elementId ?? params.element.identifier,
+        type: getNoteTypeIfBoundary(params.isBoundary)
+            ?? getNodeTypeByTag(params.element)
             ?? "element",
         data: {
-            element: element,
-            style: styles.element,
+            element: params.element,
+            style: params.styles.element,
+            height: params.size?.height,
+            width: params.size?.width,
         },
-        position: position,
-        parentNode: parentId,
-        extent: parentId ? "parent" : undefined,
-        style: parentId ? undefined : { zIndex: -1 }
+        position: params.position,
+        parentNode: params.parentId,
+        extent: params.parentId ? "parent" : undefined,
+        style: params.parentId ? undefined : { zIndex: -1 }
     }
 }
 
@@ -160,16 +234,14 @@ export type RelationshipParams = {
 }
 
 export const fromRelationship = (params: RelationshipParams): Edge => {
-    const { relationship, styles } = params;
-
     return {
-        id: `${relationship.sourceIdentifier}_${relationship.targetIdentifier}`,
+        id: `${params.relationship.sourceIdentifier}_${params.relationship.targetIdentifier}`,
         type: "simplebezier",
         data: {
-            relationship: relationship,
-            style: styles.relationship,
+            relationship: params.relationship,
+            style: params.styles.relationship,
         },
-        source: relationship.sourceIdentifier,
-        target: relationship.targetIdentifier
+        source: params.relationship.sourceIdentifier,
+        target: params.relationship.targetIdentifier
     };
 }

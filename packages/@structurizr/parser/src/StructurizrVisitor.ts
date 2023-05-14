@@ -20,6 +20,7 @@ import {
     SystemContextView,
     SystemLandscapeView,
     Tag,
+    Technology,
     Views,
     ViewType,
     Workspace
@@ -30,7 +31,7 @@ const parser = new StructurizrParser();
 const VisitorCtor = parser.getBaseCstVisitorConstructorWithDefaults();
 
 function trimQuotes(text: string): string {
-    return text?.replace(/^"(.*)"$/, '$1') ?? "";
+    return text?.replace(/^"(.*)"$/, '$1');
 }
 
 export class StructurizrVisitor extends VisitorCtor {
@@ -75,15 +76,16 @@ export class StructurizrVisitor extends VisitorCtor {
         component?: any[];
     }): Group {
         const personOrSoftwareSystems = ctx.personOrSoftwareSystem?.map((x) => this.visit(x));
+        const name = trimQuotes(ctx.StringLiteral?.at(0)?.image);
 
-        return {
-            identifier: ctx.Identifier?.at(0)?.image,
-            name: trimQuotes(ctx.StringLiteral?.at(0)?.image),
+        return new Group({
+            identifier: ctx.Identifier?.at(0)?.image ?? name,
+            name: name,
             people: personOrSoftwareSystems?.filter((x) => x.type === ElementType.Person) ?? [],
             softwareSystems: personOrSoftwareSystems?.filter((x) => x.type === ElementType.SoftwareSystem) ?? [],
             containers: ctx.container?.map((x) => this.visit(x)) ?? [],
             components: ctx.component?.map((x) => this.visit(x)) ?? []
-        };
+        });
     }
 
     personOrSoftwareSystem(ctx: {
@@ -142,7 +144,7 @@ export class StructurizrVisitor extends VisitorCtor {
             identifier: ctx.Identifier?.at(0)?.image,
             name: trimQuotes(ctx.StringLiteral?.at(0)?.image),
             description: trimQuotes(ctx.StringLiteral?.at(1)?.image),
-            technology: [ { name: trimQuotes(ctx.StringLiteral?.at(2)?.image) }],
+            technology: Technology.from(trimQuotes(ctx.StringLiteral?.at(2)?.image)),
             tags: Tag.from(trimQuotes(ctx.StringLiteral?.at(3)?.image)),
             groups: ctx.group?.map((x) => this.visit(x)),
             components: ctx.component?.map((x) => this.visit(x)),
@@ -159,7 +161,7 @@ export class StructurizrVisitor extends VisitorCtor {
             identifier: ctx.Identifier?.at(0)?.image,
             name: trimQuotes(ctx.StringLiteral?.at(0)?.image),
             description: trimQuotes(ctx.StringLiteral?.at(1)?.image),
-            technology: [ { name: trimQuotes(ctx.StringLiteral?.at(2)?.image) } ],
+            technology: Technology.from(trimQuotes(ctx.StringLiteral?.at(2)?.image)),
             tags: Tag.from(trimQuotes(ctx.StringLiteral?.at(3)?.image)),
             relationships: ctx.relationship?.map((x) => this.visit(x))
         });
@@ -194,7 +196,7 @@ export class StructurizrVisitor extends VisitorCtor {
             identifier: ctx.Identifier?.at(0)?.image,
             name: trimQuotes(ctx.StringLiteral?.at(0)?.image),
             description: trimQuotes(ctx.StringLiteral?.at(1)?.image),
-            technology: [ { name: trimQuotes(ctx.StringLiteral?.at(2)?.image) } ],
+            technology: Technology.from(trimQuotes(ctx.StringLiteral?.at(2)?.image)),
             tags: Tag.from(trimQuotes(ctx.StringLiteral?.at(3)?.image)),
             instances: ctx.NumericLiteral?.at(0)?.image,
             deploymentNodes: ctx.deploymentNode?.map((x) => this.visit(x)),
@@ -233,7 +235,7 @@ export class StructurizrVisitor extends VisitorCtor {
     }): Relationship {
         return new Relationship({
             description: trimQuotes(ctx.StringLiteral?.at(0)?.image),
-            technology: [ { name: trimQuotes(ctx.StringLiteral?.at(1)?.image) } ],
+            technology: Technology.from(trimQuotes(ctx.StringLiteral?.at(1)?.image)),
             tags: Tag.from(trimQuotes(ctx.StringLiteral?.at(2)?.image)),
             sourceIdentifier: ctx.Identifier[0].image,
             targetIdentifier: ctx.Identifier[1].image

@@ -46,7 +46,7 @@ export class SystemContextViewStrategy implements IViewStrategy {
                         .filter(person => relationshipExists(this.workspace, softwareSystem.identifier, person.identifier))
                         .forEach(person => new PersonElement(person).accept(visitor));
                     
-                    // 2.1.3 include all software systems that are directly connected to the current container
+                    // 2.1.3. include all software systems that are directly connected to the current container
                     softwareSystems
                         .filter(softwareSystem => relationshipExists(this.workspace, this.view.identifier, softwareSystem.identifier))
                         .forEach(softwareSystem => new SoftwareSystemElement(softwareSystem).accept(visitor));
@@ -55,21 +55,10 @@ export class SystemContextViewStrategy implements IViewStrategy {
 
         // 1.1. iterate over all groups and find software system for the view
         this.workspace.model.groups
-            .forEach(group => {
-                // 1.1.1. iterate over the software systems in the group to find the one for the view
-                group.softwareSystems
-                    .filter(softwareSystem => softwareSystem.identifier === this.view.identifier)
-                    .forEach(softwareSystem => {
-                        // 1.1.1.1. include the software system group as a boundary element
-                        new GroupElement(group).accept(visitor);
-
-                        // 1.1.1.2. include people and software systems in the group
-                        visitSoftwareSystem(
-                            group.people.concat(this.workspace.model.people),
-                            group.softwareSystems.concat(this.workspace.model.softwareSystems)
-                        );
-                    });
-            });
+            .forEach(group => visitSoftwareSystem(
+                group.people.concat(this.workspace.model.people),
+                group.softwareSystems.concat(this.workspace.model.softwareSystems)
+            ));
 
         // 1.2. iterate over all software systems and find software system for the view
         visitSoftwareSystem(
@@ -83,7 +72,11 @@ export class SystemContextViewStrategy implements IViewStrategy {
     }
 
     getPath(): Array<IView> {
-        for (let softwareSystem of this.workspace.model.softwareSystems) {
+        const softwareSystems = this.workspace.model.groups
+            .flatMap(group => group.softwareSystems)
+            .concat(this.workspace.model.softwareSystems);
+
+        for (let softwareSystem of softwareSystems) {
             if (softwareSystem.identifier === this.view.identifier) {
                 return [
                     {

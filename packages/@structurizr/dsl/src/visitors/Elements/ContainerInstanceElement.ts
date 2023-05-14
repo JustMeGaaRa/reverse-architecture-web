@@ -4,10 +4,11 @@ import { ContainerInstance } from "../../types/model/ContainerInstance";
 
 export class ContainerInstanceElement implements IElement {
     constructor(
-        private containerInstance: ContainerInstance
+        private containerInstance: ContainerInstance,
+        private parentId?: string
     ) { }
     
     accept(visitor: IVisitor): void {
-        visitor.visitContainerInstance(this.containerInstance);
+        visitor.visitContainerInstance(this.containerInstance, { parentId: this.parentId });
     }
 }

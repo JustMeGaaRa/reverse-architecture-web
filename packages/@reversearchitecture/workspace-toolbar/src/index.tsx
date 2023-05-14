@@ -8,7 +8,7 @@ import {
     useWorkspaceStore,
     WorkspaceStore
 } from "@reversearchitecture/workspace-viewer";
-import { useReactFlow } from "@reactflow/core";
+import { Panel, useReactFlow } from "@reactflow/core";
 import { useInteractionMode } from "./useInteractionMode";
 import {
     BinMinus,
@@ -105,103 +105,105 @@ export const WorkspaceToolbar: FC<{
     }, [project, store]);
 
     return (
-        <Toolbar>
-            <ToolbalSection>
-                <IconButton
-                    aria-label={"cursor"}
-                    isActive={isBuilderMode}
-                    icon={<CursorPointer />}
-                    title={"cursor"}
-                    onClick={toggleMode}
-                />
-                <IconButton
-                    aria-label={"drag"}
-                    isActive={isPresentationMode}
-                    icon={<DragHandGesture />}
-                    title={"drag"}
-                    onClick={toggleMode}
-                />
-            </ToolbalSection>
-            
-            <ToolbalSection>
-                {allowPerson && (
+        <Panel position={"bottom-center"}>
+            <Toolbar>
+                <ToolbalSection>
                     <IconButton
-                        aria-label={"person"}
-                        icon={<Square />}
-                        title={"person"}
-                        onClick={onAddPerson}
-                    />
-                )}
-                {allowSoftwareSystem && (
-                    <IconButton
-                        aria-label={"software system"}
-                        icon={<Circle />}
-                        title={"software system"}
-                        onClick={onAddSoftwareSystem}
-                    />
-                )}
-                {allowContainer && (
-                    <IconButton
-                        aria-label={"container"}
-                        icon={<Triangle />}
-                        title={"container"}
-                        onClick={onAddContainer}
-                    />
-                )}
-                {allowComponent && (
-                    <IconButton
-                        aria-label={"component"}
-                        icon={<Rhombus />}
-                        title={"component"}
-                        onClick={onAddComponent}
-                    />
-                )}
-            </ToolbalSection>
-
-            <ToolbalSection>
-                <IconButton
-                    aria-label={"comment"}
-                    icon={<ChatAdd />}
-                    title={"comment"}
-                />
-            </ToolbalSection>
-
-            <ToolbalSection>
-                <IconButton
-                    aria-label={"delete selected element"}
-                    icon={<BinMinus />}
-                    title={"delete selected"}
-                />
-                <IconButton
-                    aria-label={"undo last change"}
-                    icon={<Undo />}
-                    title={"undo last change"}
-                />
-                <IconButton
-                    aria-label={"redo last change"}
-                    icon={<Redo />}
-                    title={"redo last change"}
-                />
-            </ToolbalSection>
-
-            <ToolbalSection>
-                {isPresentationMode && (
-                    <IconButton
-                        aria-label={"exit mode"}
-                        icon={<Cancel />}
-                        title={"exit mode"}
+                        aria-label={"cursor"}
+                        isActive={isBuilderMode}
+                        icon={<CursorPointer />}
+                        title={"cursor"}
                         onClick={toggleMode}
                     />
-                )}
-                {isBuilderMode && (
                     <IconButton
-                        aria-label={"presentation"}
-                        icon={<Play />}
-                        title={"presentation"}
+                        aria-label={"drag"}
+                        isActive={isPresentationMode}
+                        icon={<DragHandGesture />}
+                        title={"drag"}
                         onClick={toggleMode}
                     />
-                )}
-            </ToolbalSection>
-        </Toolbar>
+                </ToolbalSection>
+                
+                <ToolbalSection>
+                    {allowPerson && (
+                        <IconButton
+                            aria-label={"person"}
+                            icon={<Square />}
+                            title={"person"}
+                            onClick={onAddPerson}
+                        />
+                    )}
+                    {allowSoftwareSystem && (
+                        <IconButton
+                            aria-label={"software system"}
+                            icon={<Circle />}
+                            title={"software system"}
+                            onClick={onAddSoftwareSystem}
+                        />
+                    )}
+                    {allowContainer && (
+                        <IconButton
+                            aria-label={"container"}
+                            icon={<Triangle />}
+                            title={"container"}
+                            onClick={onAddContainer}
+                        />
+                    )}
+                    {allowComponent && (
+                        <IconButton
+                            aria-label={"component"}
+                            icon={<Rhombus />}
+                            title={"component"}
+                            onClick={onAddComponent}
+                        />
+                    )}
+                </ToolbalSection>
+
+                <ToolbalSection>
+                    <IconButton
+                        aria-label={"comment"}
+                        icon={<ChatAdd />}
+                        title={"comment"}
+                    />
+                </ToolbalSection>
+
+                <ToolbalSection>
+                    <IconButton
+                        aria-label={"delete selected element"}
+                        icon={<BinMinus />}
+                        title={"delete selected"}
+                    />
+                    <IconButton
+                        aria-label={"undo last change"}
+                        icon={<Undo />}
+                        title={"undo last change"}
+                    />
+                    <IconButton
+                        aria-label={"redo last change"}
+                        icon={<Redo />}
+                        title={"redo last change"}
+                    />
+                </ToolbalSection>
+
+                <ToolbalSection>
+                    {isPresentationMode && (
+                        <IconButton
+                            aria-label={"exit mode"}
+                            icon={<Cancel />}
+                            title={"exit mode"}
+                            onClick={toggleMode}
+                        />
+                    )}
+                    {isBuilderMode && (
+                        <IconButton
+                            aria-label={"presentation"}
+                            icon={<Play />}
+                            title={"presentation"}
+                            onClick={toggleMode}
+                        />
+                    )}
+                </ToolbalSection>
+            </Toolbar>
+        </Panel>
     )
 }
