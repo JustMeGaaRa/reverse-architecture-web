@@ -19,6 +19,17 @@ export class CommunityHubApi {
         const { values } = await response.json();
         return values;
     }
+
+    async getWorkspaceText(workspaceId: string): Promise<string> {
+        const workspaceResponse = await fetch(`${this.baseUrl}/${workspaceId}/workspace.dsl`);
+
+        if (!workspaceResponse.ok) {
+            throw new Error(`Workspace ${workspaceId} not found`);
+        }
+        
+        const workspaceText = await workspaceResponse.text() as string;
+        return workspaceText;
+    }
     
     async getWorkspace(workspaceId: string): Promise<Workspace> {
         const workspaceResponse = await fetch(`${this.baseUrl}/${workspaceId}/workspace.dsl`);
@@ -71,5 +82,15 @@ export class CommunityHubApi {
                 }))
             }
         }
+    }
+
+    async getWorkspaceMetadata(workspaceId: string): Promise<IWorkspaceMetadata> {
+        const metadataResponse = await fetch(`${this.baseUrl}/${workspaceId}/workspace.metadata.json`);
+        if (!metadataResponse.ok) {
+            throw new Error(`Workspace metadata ${workspaceId} not found`);
+        }
+
+        const metadata = await metadataResponse.json() as IWorkspaceMetadata;
+        return metadata;
     }
 }

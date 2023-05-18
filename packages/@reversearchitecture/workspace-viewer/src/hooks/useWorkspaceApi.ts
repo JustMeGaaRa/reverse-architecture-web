@@ -11,7 +11,7 @@ import { useCallback } from "react";
 import {
     DeploymentNodeParams,
     useWorkspaceStore
-} from "../store";
+} from "../store/useWorkspaceStore";
 import {
     fromElement,
     fromRelationship,

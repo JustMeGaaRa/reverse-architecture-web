@@ -8,6 +8,7 @@ import {
     NodeMouseHandler,
     OnNodesChange,
     OnEdgesChange,
+    NodeDragHandler,
 } from "@reactflow/core";
 import { FC, PropsWithChildren, useMemo } from "react";
 import {
@@ -22,6 +23,7 @@ export const WorkspaceRenderer: FC<PropsWithChildren<{
     edges: any[];
     onNodesChange?: OnNodesChange;
     onEdgesChange?: OnEdgesChange;
+    onNodeDragStop?: NodeDragHandler;
     onNodesDoubleClick?: NodeMouseHandler;
 }>> = ({
     children,
@@ -29,6 +31,7 @@ export const WorkspaceRenderer: FC<PropsWithChildren<{
     edges,
     onNodesChange,
     onEdgesChange,
+    onNodeDragStop,
     onNodesDoubleClick
 }) => {
     const NodeTypes = useMemo(() => ({
@@ -65,6 +68,7 @@ export const WorkspaceRenderer: FC<PropsWithChildren<{
             snapGrid={[40, 40]}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
+            onNodeDragStop={onNodeDragStop}
             onNodeDoubleClick={onNodesDoubleClick}
         >
             <Background

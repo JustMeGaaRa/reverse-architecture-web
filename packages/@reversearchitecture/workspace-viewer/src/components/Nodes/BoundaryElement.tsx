@@ -4,7 +4,7 @@ import {
     Element,
     ElementStyleProperties,
 } from "@structurizr/dsl";
-import { FC  } from "react";
+import { FC, useCallback, useState  } from "react";
 import { BoundaryElementLabel } from "./BoundaryElementLabel";
 
 export const BoundaryElement: FC<{
@@ -20,14 +20,13 @@ export const BoundaryElement: FC<{
     height,
     selected,
 }) => {
-    // const { setElementDimension } = useWorkspaceStore();
-    // const onResize = useCallback((event, params) => {
-    //     setElementDimension({
-    //         // TODO: add view identifier
-    //         ...params,
-    //         elementIdentifier: data.identifier
-    //     });
-    // }, [setElementDimension, data]);
+    const [size, setSize] = useState({ width, height });
+    const onResize = useCallback((event, params) => {
+        setSize({
+            width: params.width,
+            height: params.height,
+        });
+    }, []);
 
     return (
         <Flex
@@ -37,8 +36,8 @@ export const BoundaryElement: FC<{
             align={"end"}
             justify={"start"}
             padding={2}
-            width={width}
-            height={height}
+            width={size.width}
+            height={size.height}
             textColor={style.color}
         >
             
@@ -52,7 +51,7 @@ export const BoundaryElement: FC<{
                 minHeight={320}
                 handleStyle={{ width: 7, height: 7 }}
                 lineStyle={{ borderWidth: 0 }}
-                // onResize={onResize}
+                onResize={onResize}
             />
         </Flex>
     );

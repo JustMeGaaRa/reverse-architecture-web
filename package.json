@@ -6,8 +6,9 @@
     "apps/*",
     "packages/*",
     "packages/@justmegaara/*",
-    "packages/@structurizr/*",
-    "packages/@reversearchitecture/*"
+    "packages/@monaco-editor/*",
+    "packages/@reversearchitecture/*",
+    "packages/@structurizr/*"
   ],
   "scripts": {
     "build": "turbo run build",

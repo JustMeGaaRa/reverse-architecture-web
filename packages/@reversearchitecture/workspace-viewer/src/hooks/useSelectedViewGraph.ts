@@ -10,7 +10,7 @@ import {
 import { useEdgesState, useNodesState } from "@reactflow/core";
 import { useEffect } from "react";
 import { ReactFlowVisitor } from "../services/ReactFlowVisitor";
-import { useWorkspaceStore } from "../store";
+import { useWorkspaceStore } from "../store/useWorkspaceStore";
 
 export const useSelectedViewGraph = () => {
     const { workspace, selectedView, setViewPath } = useWorkspaceStore();

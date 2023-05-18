@@ -3,13 +3,16 @@ import {
     IView
 } from "@structurizr/dsl";
 import { useCallback } from "react";
-import { useWorkspaceStore } from "../store";
+import { useWorkspaceStore } from "../store/useWorkspaceStore";
 
 export const useWorkspaceNavigation = () => {
+    // TODO: use the useMetadata hook to be able to manipulate the element positions
+    // TODO: use the useAutoLayout hook to calculate the element positions
+    // TODO: refactor into useSelectedView hook
     const { workspace, setSelectedView } = useWorkspaceStore();
     
     const navigate = useCallback((view: IViewDefinition) => {
-        // TODO: calculate the default layout
+        // TODO: calculate the automatic layout and update the metadata
         const defaultView: IView = { ...view, elements: [] };
         const selectedView = 
             workspace.views.systemContexts.find(x => x.type === view.type && x.identifier === view.identifier)

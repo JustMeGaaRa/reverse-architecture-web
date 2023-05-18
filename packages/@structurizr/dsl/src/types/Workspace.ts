@@ -2,6 +2,7 @@ import { Properties } from "./model/Properties";
 import { Model, toModelString } from "./Model";
 import { toViewsString, Views } from "./Views";
 import { indent } from "../utils/Formatting";
+import { IWorkspaceMetadata } from "../shared/IWorkspaceMetadata";
 
 type WorkspaceParams = 
     Required<Pick<Workspace, "name" | "description">>
@@ -30,6 +31,39 @@ export class Workspace {
         name: "Empty Workspace",
         description: "An empty workspace."
     });
+
+    public static applyMetadata(workspace: Workspace, metadata: IWorkspaceMetadata): Workspace {
+        return {
+            ...workspace,
+            views: {
+                ...workspace.views,
+                systemLandscape: {
+                    ...workspace.views.systemLandscape,
+                    elements: metadata.views.systemLandscape?.elements ?? []
+                },
+                systemContexts: workspace.views.systemContexts.map((view: any) => ({
+                    ...view,
+                    elements: metadata.views.systemContexts
+                        .find(x => x.identifier === view.identifier)?.elements ?? []
+                })),
+                containers: workspace.views.containers.map((view: any) => ({
+                    ...view,
+                    elements: metadata.views.containers
+                        .find(x => x.identifier === view.identifier)?.elements ?? []
+                })),
+                components: workspace.views.components.map((view: any) => ({
+                    ...view,
+                    elements: metadata.views.components
+                        .find(x => x.identifier === view.identifier)?.elements ?? []
+                })),
+                deployments: workspace.views.deployments.map((view: any) => ({
+                    ...view,
+                    elements: metadata.views.deployments
+                        .find(x => x.identifier === view.identifier)?.elements ?? []
+                }))
+            }
+        };
+    }
 }
 
 export function toWorkspaceString(workspace: Workspace): string {
