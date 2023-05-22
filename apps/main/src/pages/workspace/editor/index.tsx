@@ -7,29 +7,44 @@ import {
 } from "@reversearchitecture/ui";
 import { WorkspaceBreadcrumb } from "@reversearchitecture/workspace-breadcrumb";
 import { WorkspaceEditor } from "@reversearchitecture/workspace-editor";
-import {
-    useMetadataStore,
-    useStructurizrStore,
-    useWorkspace,
-    useWorkspaceStore,
-    WorkspaceExplorer
-} from "@reversearchitecture/workspace-viewer";
+import { useMetadata, WorkspaceExplorer } from "@reversearchitecture/workspace-viewer";
 import { WorkspaceZoom } from "@reversearchitecture/workspace-zoom";
+import { IWorkspaceMetadata, IView, Workspace } from "@structurizr/dsl";
 import { useStructurizrParser } from "@structurizr/react";
-import { FC, useCallback, useEffect } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 export const CodeEditorSheet: FC<{
 
 }> = () => {
     const { workspaceId } = useParams<{ workspaceId: string }>();
-    const { text, setText } = useStructurizrStore();
-    const { workspace, selectedView } = useWorkspaceStore();
-    const { metadata, setMetadata } = useMetadataStore();
-    const { setWorkspace } = useWorkspace();
+    const [ state, setState ] = useState({
+        showPages: false,
+        showComments: false,
+        showEditor: false,
+        showTimer: false
+    });
+    const [ text, setText ] = useState("");
+    const [ workspace, setWorkspace ] = useState(Workspace.Empty);
+    const [ selectedView, setSelectedView ] = useState<IView>();
+    const [ metadata, setMetadata ] = useState<IWorkspaceMetadata>();
+
+    const { applyElementPosition } = useMetadata();
     const parseWorkspace = useStructurizrParser();
     
     const toast = useToast();
+
+    const applyWorkspace = useCallback((workspace: Workspace, metadata?: IWorkspaceMetadata) => {
+        const updatedWorkspace = metadata
+            ? Workspace.applyMetadata(workspace, metadata)
+            : workspace;
+        setWorkspace(updatedWorkspace);
+        setSelectedView(updatedWorkspace.views.systemLandscape
+            ?? updatedWorkspace.views.systemContexts[0]
+            ?? updatedWorkspace.views.containers[0]
+            ?? updatedWorkspace.views.components[0]
+            ?? updatedWorkspace.views.deployments[0]);
+    }, [setSelectedView, setWorkspace]);
 
     useEffect(() => {
         const fetchWorkspace = async (workspaceId: string) => {
@@ -43,7 +58,7 @@ export const CodeEditorSheet: FC<{
         fetchWorkspace(workspaceId)
             .then(({ text, metadata }) => {
                 setText(text);
-                setWorkspace(parseWorkspace(text), metadata);
+                applyWorkspace(parseWorkspace(text), metadata);
                 setMetadata(metadata);
             })
             .catch(error => {
@@ -56,13 +71,33 @@ export const CodeEditorSheet: FC<{
                     position: "bottom-right"
                 })
             })
-    }, [workspaceId, setText, setWorkspace, setMetadata, parseWorkspace, toast]);
+    }, [workspaceId, toast, setText, applyWorkspace, setMetadata, parseWorkspace]);
 
     const handleOnChange = useCallback((value: string) => {
-        console.log(metadata)
         setText(value);
-        setWorkspace(parseWorkspace(value), metadata);
-    }, [setText, setWorkspace, parseWorkspace, metadata]);
+        applyWorkspace(parseWorkspace(value), metadata);
+    }, [metadata, setText, applyWorkspace, parseWorkspace]);
+
+    const handleOnNodeDragStop = useCallback((event: React.MouseEvent, node: any) => {
+        const emptyMetadata = {
+            name: "",
+            lastModifiedDate: new Date(),
+            views: {
+                systemLandscape: undefined,
+                systemContexts: [],
+                containers: [],
+                components: [],
+                deployments: []
+            }
+        };
+        const updatedMetadata = applyElementPosition(
+            metadata ?? emptyMetadata,
+            selectedView,
+            node.data.element.identifier,
+            node.position
+        );
+        setMetadata(updatedMetadata);
+    }, [metadata, selectedView, applyElementPosition]);
 
     return (
         <ContextSheet>
@@ -83,7 +118,8 @@ export const CodeEditorSheet: FC<{
                 <ContextSheet>
                     <WorkspaceExplorer
                         workspace={workspace}
-                        initialView={selectedView}
+                        selectedView={selectedView}
+                        onNodeDragStop={handleOnNodeDragStop}
                     >
                         <WorkspaceBreadcrumb />
                         <WorkspaceZoom />

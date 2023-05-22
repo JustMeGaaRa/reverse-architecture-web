@@ -4,7 +4,7 @@ import {
     DeploymentNode,
     ElementStyleProperties
 } from "@structurizr/dsl";
-import { FC } from "react";
+import { FC, useCallback, useState } from "react";
 import { DeploymentNodeLabel } from "./DeploymentNodeLabel";
 
 export const DeploymentNodeElement: FC<{
@@ -20,6 +20,14 @@ export const DeploymentNodeElement: FC<{
     height,
     selected
 }) => {
+    const [size, setSize] = useState({ width, height });
+    const onResize = useCallback((event, params) => {
+        setSize({
+            width: params.width,
+            height: params.height,
+        });
+    }, []);
+
     return (
         <Flex
             background={style.background}
@@ -28,8 +36,8 @@ export const DeploymentNodeElement: FC<{
             align={"end"}
             justify={"start"}
             padding={2}
-            width={width}
-            height={height}
+            width={size.width}
+            height={size.height}
             textColor={style.color}
         >
             <DeploymentNodeLabel
@@ -42,7 +50,7 @@ export const DeploymentNodeElement: FC<{
                 minHeight={320}
                 handleStyle={{ width: 7, height: 7 }}
                 lineStyle={{ borderWidth: 0 }}
-                // onResize={onResize}
+                onResize={onResize}
             />
         </Flex>
     );

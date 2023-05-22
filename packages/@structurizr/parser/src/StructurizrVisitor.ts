@@ -10,6 +10,7 @@ import {
     ElementStyle,
     ElementType,
     Group,
+    InfrastructureNode,
     Model,
     Person,
     Relationship,
@@ -32,6 +33,14 @@ const VisitorCtor = parser.getBaseCstVisitorConstructorWithDefaults();
 
 function trimQuotes(text: string): string {
     return text?.replace(/^"(.*)"$/, '$1');
+}
+
+interface PropertyContext {
+    Identifier?: Array<{ image?: string }>;
+    StringLiteral?: Array<{ image?: string }>;
+    NumericLiteral?: Array<{ image?: string }>;
+    HexColorLiteral?: Array<{ image?: string }>;
+    BooleanLiteral?: Array<{ image?: string }>;
 }
 
 export class StructurizrVisitor extends VisitorCtor {
@@ -102,13 +111,11 @@ export class StructurizrVisitor extends VisitorCtor {
         return undefined;
     }
 
-    person(ctx: {
-        Identifier?: any;
-        StringLiteral?: any
-    }): Person {
+    person(ctx: PropertyContext): Person {
+        const name = trimQuotes(ctx.StringLiteral?.at(0)?.image);
         return new Person({
-            identifier: ctx.Identifier?.at(0)?.image,
-            name: trimQuotes(ctx.StringLiteral?.at(0)?.image),
+            identifier: ctx.Identifier?.at(0)?.image ?? name,
+            name: name,
             description: trimQuotes(ctx.StringLiteral?.at(1)?.image),
             tags: Tag.from(trimQuotes(ctx.StringLiteral?.at(2)?.image))
         });
@@ -120,13 +127,20 @@ export class StructurizrVisitor extends VisitorCtor {
         group?: any[];
         container?: any[];
         relationship?: any[];
+        elementProperties?: any
     }): SoftwareSystem {
+        const name = trimQuotes(ctx.StringLiteral?.at(0)?.image);
+        const properties = this.visit(ctx.elementProperties);
+
         return new SoftwareSystem({
-            identifier: ctx.Identifier?.at(0)?.image,
-            name: trimQuotes(ctx.StringLiteral?.at(0)?.image),
+            identifier: ctx.Identifier?.at(0)?.image ?? name,
+            name: properties?.name ?? name,
             technology: [],
-            description: trimQuotes(ctx.StringLiteral?.at(1)?.image),
-            tags: Tag.from(trimQuotes(ctx.StringLiteral?.at(2)?.image)),
+            description: properties?.description
+                ?? trimQuotes(ctx.StringLiteral?.at(1)?.image),
+            tags: Tag
+                .from(trimQuotes(ctx.StringLiteral?.at(2)?.image))
+                .concat(properties?.tags ?? []),
             groups: ctx.group?.map((x) => this.visit(x)),
             containers: ctx.container?.map((x) => this.visit(x)),
             relationships: ctx.relationship?.map((x) => this.visit(x))
@@ -139,13 +153,22 @@ export class StructurizrVisitor extends VisitorCtor {
         group?: any[];
         component?: any[];
         relationship?: any[];
+        elementProperties?: any
     }): Container {
+        const name = trimQuotes(ctx.StringLiteral?.at(0)?.image);
+        const properties = this.visit(ctx.elementProperties);
+        
         return new Container({
-            identifier: ctx.Identifier?.at(0)?.image,
-            name: trimQuotes(ctx.StringLiteral?.at(0)?.image),
-            description: trimQuotes(ctx.StringLiteral?.at(1)?.image),
-            technology: Technology.from(trimQuotes(ctx.StringLiteral?.at(2)?.image)),
-            tags: Tag.from(trimQuotes(ctx.StringLiteral?.at(3)?.image)),
+            identifier: ctx.Identifier?.at(0)?.image ?? name,
+            name: properties?.name ?? name,
+            description: properties?.description
+                ?? trimQuotes(ctx.StringLiteral?.at(1)?.image),
+            technology: Technology
+                .from(trimQuotes(ctx.StringLiteral?.at(2)?.image))
+                .concat(properties?.technology ?? []),
+            tags: Tag
+                .from(trimQuotes(ctx.StringLiteral?.at(3)?.image))
+                .concat(properties?.tags ?? []),
             groups: ctx.group?.map((x) => this.visit(x)),
             components: ctx.component?.map((x) => this.visit(x)),
             relationships: ctx.relationship?.map((x) => this.visit(x))
@@ -156,13 +179,22 @@ export class StructurizrVisitor extends VisitorCtor {
         Identifier?: any;
         StringLiteral?: any;
         relationship?: any[];
+        elementProperties?: any
     }): Component {
+        const name = trimQuotes(ctx.StringLiteral?.at(0)?.image);
+        const properties = this.visit(ctx.elementProperties);
+
         return new Component({
-            identifier: ctx.Identifier?.at(0)?.image,
-            name: trimQuotes(ctx.StringLiteral?.at(0)?.image),
-            description: trimQuotes(ctx.StringLiteral?.at(1)?.image),
-            technology: Technology.from(trimQuotes(ctx.StringLiteral?.at(2)?.image)),
-            tags: Tag.from(trimQuotes(ctx.StringLiteral?.at(3)?.image)),
+            identifier: ctx.Identifier?.at(0)?.image ?? name,
+            name: properties?.name ?? name,
+            description: properties?.description
+                ?? trimQuotes(ctx.StringLiteral?.at(1)?.image),
+            technology: Technology
+                .from(trimQuotes(ctx.StringLiteral?.at(2)?.image))
+                .concat(properties?.technology ?? []),
+            tags: Tag
+                .from(trimQuotes(ctx.StringLiteral?.at(3)?.image))
+                .concat(properties?.tags ?? []),
             relationships: ctx.relationship?.map((x) => this.visit(x))
         });
     }
@@ -174,9 +206,11 @@ export class StructurizrVisitor extends VisitorCtor {
         deploymentNode?: any[];
         relationship?: any[];
     }): DeploymentEnvironment {
+        const name = trimQuotes(ctx.StringLiteral?.at(0)?.image);
+        
         return new DeploymentEnvironment({
-            identifier: ctx.Identifier?.at(0)?.image,
-            name: trimQuotes(ctx.StringLiteral?.at(0)?.image),
+            identifier: ctx.Identifier?.at(0)?.image ?? name,
+            name: name,
             deploymentGroups: ctx.group?.map((x) => this.visit(x)),
             // groups: ctx.group?.map((x) => this.visit(x)),
             deploymentNodes: ctx.deploymentNode?.map((x) => this.visit(x)),
@@ -189,50 +223,77 @@ export class StructurizrVisitor extends VisitorCtor {
         StringLiteral?: any;
         NumericLiteral?: any;
         deploymentNode?: any[];
+        infrastructureNode?: any[];
         softwareSystemInstance?: any[];
         containerInstance?: any[];
+        elementProperties?: any
     }): DeploymentNode {
+        const name = trimQuotes(ctx.StringLiteral?.at(0)?.image);
+        const properties = this.visit(ctx.elementProperties);
+
         return new DeploymentNode({
-            identifier: ctx.Identifier?.at(0)?.image,
-            name: trimQuotes(ctx.StringLiteral?.at(0)?.image),
-            description: trimQuotes(ctx.StringLiteral?.at(1)?.image),
-            technology: Technology.from(trimQuotes(ctx.StringLiteral?.at(2)?.image)),
-            tags: Tag.from(trimQuotes(ctx.StringLiteral?.at(3)?.image)),
+            identifier: ctx.Identifier?.at(0)?.image ?? name,
+            name: name,
+            description: properties?.description
+                ?? trimQuotes(ctx.StringLiteral?.at(1)?.image),
+            technology: Technology
+                .from(trimQuotes(ctx.StringLiteral?.at(2)?.image))
+                .concat(properties?.technology ?? []),
+            tags: Tag
+                .from(trimQuotes(ctx.StringLiteral?.at(3)?.image))
+                .concat(properties?.tags ?? []),
             instances: ctx.NumericLiteral?.at(0)?.image,
             deploymentNodes: ctx.deploymentNode?.map((x) => this.visit(x)),
+            infrastructureNodes: ctx.infrastructureNode?.map((x) => this.visit(x)),
             softwareSystemInstances: ctx.softwareSystemInstance?.map((x) => this.visit(x)),
             containerInstances: ctx.containerInstance?.map((x) => this.visit(x))
         });
     }
 
-    softwareSystemInstance(ctx: {
+    infrastructureNode(ctx: {
         Identifier?: any;
-        StringLiteral?: any
-    }): SoftwareSystemInstance {
+        StringLiteral?: any;
+        NumericLiteral?: any;
+        relationship?: any[];
+        elementProperties?: any
+    }): InfrastructureNode {
+        const name = trimQuotes(ctx.StringLiteral?.at(0)?.image);
+        const properties = this.visit(ctx.elementProperties);
+
+        return new InfrastructureNode({
+            identifier: ctx.Identifier?.at(0)?.image ?? name,
+            name: name,
+            description: properties?.description
+                ?? trimQuotes(ctx.StringLiteral?.at(1)?.image),
+            technology: Technology
+                .from(trimQuotes(ctx.StringLiteral?.at(2)?.image))
+                .concat(properties?.technology ?? []),
+            tags: Tag
+                .from(trimQuotes(ctx.StringLiteral?.at(3)?.image))
+                .concat(properties?.tags ?? []),
+            relationships: ctx.relationship?.map((x) => this.visit(x))
+        });
+    }
+
+    softwareSystemInstance(ctx: PropertyContext): SoftwareSystemInstance {
         return new SoftwareSystemInstance({
             identifier: ctx.Identifier?.at(0)?.image,
             softwareSystemIdentifier: ctx.Identifier?.at(1)?.image,
-            deploymentGroups: ctx.StringLiteral?.at(0)?.image,
+            // deploymentGroups: ctx.StringLiteral?.at(0)?.image,
             tags: Tag.from(trimQuotes(ctx.StringLiteral?.at(1)?.image))
         });
     }
 
-    containerInstance(ctx: {
-        Identifier?: any;
-        StringLiteral?: any
-    }): ContainerInstance {
+    containerInstance(ctx: PropertyContext): ContainerInstance {
         return new ContainerInstance({
             identifier: ctx.Identifier?.at(0)?.image,
             containerIdentifier: ctx.Identifier?.at(1)?.image,
-            deploymentGroups: ctx.StringLiteral?.at(0)?.image,
+            // deploymentGroups: ctx.StringLiteral?.at(0)?.image,
             tags: Tag.from(trimQuotes(ctx.StringLiteral?.at(1)?.image))
         });
     }
 
-    relationship(ctx: {
-        Identifier?: any;
-        StringLiteral?: any
-    }): Relationship {
+    relationship(ctx: PropertyContext): Relationship {
         return new Relationship({
             description: trimQuotes(ctx.StringLiteral?.at(0)?.image),
             technology: Technology.from(trimQuotes(ctx.StringLiteral?.at(1)?.image)),
@@ -240,6 +301,36 @@ export class StructurizrVisitor extends VisitorCtor {
             sourceIdentifier: ctx.Identifier[0].image,
             targetIdentifier: ctx.Identifier[1].image
         });
+    }
+
+    elementProperties(ctx: {
+        nameProperty: any,
+        technologyProperty: any,
+        descriptionProperty: any,
+        tagsProperty: any
+    }) : any {
+        return {
+            name: this.visit(ctx.nameProperty),
+            technology: this.visit(ctx.technologyProperty),
+            description: this.visit(ctx.descriptionProperty),
+            tags: this.visit(ctx.tagsProperty)
+        }
+    }
+
+    nameProperty(ctx: PropertyContext) : string {
+        return trimQuotes(ctx.StringLiteral?.at(0)?.image)
+    }
+
+    technologyProperty(ctx: PropertyContext) : Technology[] {
+        return Technology.from(trimQuotes(ctx.StringLiteral?.at(0)?.image))
+    }
+
+    descriptionProperty(ctx: PropertyContext) : string {
+        return trimQuotes(ctx.StringLiteral?.at(0)?.image)
+    }
+    
+    tagsProperty(ctx: PropertyContext): Tag[] {
+        return ctx.StringLiteral?.map((x) => new Tag(trimQuotes(x.image))) ?? [];
     }
 
     views(ctx: {
@@ -260,10 +351,7 @@ export class StructurizrVisitor extends VisitorCtor {
         });
     }
 
-    systemLandscapeView(ctx: {
-        Identifier?: any;
-        StringLiteral?: any
-    }): SystemLandscapeView {
+    systemLandscapeView(ctx: PropertyContext): SystemLandscapeView {
         return {
             type: ViewType.SystemLandscape,
             identifier: ctx.Identifier?.at(0)?.image,
@@ -273,10 +361,7 @@ export class StructurizrVisitor extends VisitorCtor {
         };
     }
 
-    systemContextView(ctx: {
-        Identifier?: any;
-        StringLiteral?: any
-    }): SystemContextView {
+    systemContextView(ctx: PropertyContext): SystemContextView {
         return {
             type: ViewType.SystemContext,
             identifier: ctx.Identifier?.at(0)?.image,
@@ -286,10 +371,7 @@ export class StructurizrVisitor extends VisitorCtor {
         };
     }
 
-    containerView(ctx: {
-        Identifier?: any;
-        StringLiteral?: any
-    }): ContainerView {
+    containerView(ctx: PropertyContext): ContainerView {
         return {
             type: ViewType.Container,
             identifier: ctx.Identifier?.at(0)?.image,
@@ -299,10 +381,7 @@ export class StructurizrVisitor extends VisitorCtor {
         };
     }
 
-    componentView(ctx: {
-        Identifier?: any;
-        StringLiteral?: any
-    }): ComponentView {
+    componentView(ctx: PropertyContext): ComponentView {
         return {
             type: ViewType.Component,
             identifier: ctx.Identifier?.at(0)?.image,
@@ -312,14 +391,11 @@ export class StructurizrVisitor extends VisitorCtor {
         };
     }
 
-    deploymentView(ctx: {
-        Identifier?: any;
-        StringLiteral?: any
-    }): DeploymentView {
+    deploymentView(ctx: PropertyContext): DeploymentView {
         return {
             type: ViewType.Deployment,
             identifier: ctx.Identifier?.at(0)?.image,
-            title: trimQuotes(ctx.StringLiteral?.at(0)?.image),
+            environment: trimQuotes(ctx.StringLiteral?.at(0)?.image),
             key: trimQuotes(ctx.StringLiteral?.at(1)?.image),
             description: trimQuotes(ctx.StringLiteral?.at(2)?.image),
             elements: []
@@ -332,9 +408,11 @@ export class StructurizrVisitor extends VisitorCtor {
     }): Styles {
         return {
             element: ctx.elementStyle
-                ?.reduce((style, value) => ({ ...style, ...this.visit(value) }), {}) ?? {},
+                ?.reduce((style, value) => ({ ...style, ...this.visit(value) }), {})
+                ?? {},
             relationship: ctx.relationshipStyle
-                ?.reduce((style, value) => ({ ...style, ...this.visit(value) }), {}) ?? {}
+                ?.reduce((style, value) => ({ ...style, ...this.visit(value) }), {})
+                ?? {}
         }
     }
   
@@ -400,71 +478,71 @@ export class StructurizrVisitor extends VisitorCtor {
         }
     }
   
-    background(ctx: { HexColor?: any[] }) {
-        return ctx.HexColor?.at(0)?.image;
+    background(ctx: PropertyContext) {
+        return ctx.HexColorLiteral?.at(0)?.image;
     }
   
-    color(ctx: { HexColor?: any[] }) {
-        return ctx.HexColor?.at(0)?.image;
+    color(ctx: PropertyContext) {
+        return ctx.HexColorLiteral?.at(0)?.image;
     }
   
-    stroke(ctx: { HexColor?: any[] }) {
-        return ctx.HexColor?.at(0)?.image;
+    stroke(ctx: PropertyContext) {
+        return ctx.HexColorLiteral?.at(0)?.image;
     }
   
-    strokeWidth(ctx: { NumericLiteral?: any[] }) {
+    strokeWidth(ctx: PropertyContext) {
         return Number(ctx.NumericLiteral?.at(0)?.image);
     }
   
-    height(ctx: { NumericLiteral?: any[] }) {
+    height(ctx: PropertyContext) {
         return Number(ctx.NumericLiteral?.at(0)?.image);
     }
   
-    width(ctx: { NumericLiteral?: any[] }) {
+    width(ctx: PropertyContext) {
         return Number(ctx.NumericLiteral?.at(0)?.image);
     }
   
-    border(ctx: { Identifier?: any[] }) {
+    border(ctx: PropertyContext) {
         return ctx.Identifier?.at(0)?.image;
     }
   
-    shape(ctx: { Identifier?: any[] }) {
+    shape(ctx: PropertyContext) {
         return ctx.Identifier?.at(0)?.image;
     }
   
-    icon(ctx: { Identifier?: any[] }) {
+    icon(ctx: PropertyContext) {
         return ctx.Identifier?.at(0)?.image;
     }
   
-    fontSize(ctx: { NumericLiteral?: any[] }) {
+    fontSize(ctx: PropertyContext) {
         return Number(ctx.NumericLiteral?.at(0)?.image);
     }
   
-    opacity(ctx: { NumericLiteral?: any[] }) {
+    opacity(ctx: PropertyContext) {
         return Number(ctx.NumericLiteral?.at(0)?.image);
     }
   
-    metadata(ctx: { Boolean?: any[] }) {
-        return Boolean(ctx.Boolean?.at(0)?.image);
+    metadata(ctx: PropertyContext) {
+        return Boolean(ctx.BooleanLiteral?.at(0)?.image);
     }
   
-    description(ctx: { Boolean?: any[] }) {
-        return Boolean(ctx.Boolean?.at(0)?.image);
+    description(ctx: PropertyContext) {
+        return Boolean(ctx.BooleanLiteral?.at(0)?.image);
     }
   
-    thinkness(ctx: { NumericLiteral?: any[] }) {
+    thinkness(ctx: PropertyContext) {
         return Number(ctx.NumericLiteral?.at(0)?.image);
     }
   
-    style(ctx: { Identifier?: any[] }) {
+    style(ctx: PropertyContext) {
         return ctx.Identifier?.at(0)?.image;
     }
   
-    routing(ctx: { Identifier?: any[] }) {
+    routing(ctx: PropertyContext) {
         return ctx.Identifier?.at(0)?.image;
     }
   
-    position(ctx: { NumericLiteral?: any[] }) {
+    position(ctx: PropertyContext) {
         return Number(ctx.NumericLiteral?.at(0)?.image);
     }
 }

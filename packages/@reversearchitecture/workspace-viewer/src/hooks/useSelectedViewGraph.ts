@@ -14,12 +14,12 @@ import { useWorkspaceStore } from "../store/useWorkspaceStore";
 
 export const useSelectedViewGraph = () => {
     const { workspace, selectedView, setViewPath } = useWorkspaceStore();
-    const [nodes, setNodes, onNodesChange] = useNodesState([]);
-    const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+    const [ nodes, setNodes, onNodesChange ] = useNodesState([]);
+    const [ edges, setEdges, onEdgesChange ] = useEdgesState([]);
 
     useEffect(() => {
         if (!workspace || !selectedView) return;
-        
+
         const viewFunctions: Map<ViewType, IViewStrategy> = new Map<ViewType, IViewStrategy>([
             [ ViewType.SystemLandscape, new SystemLandscapeViewStrategy(workspace, selectedView) ],
             [ ViewType.SystemContext, new SystemContextViewStrategy(workspace, selectedView) ],

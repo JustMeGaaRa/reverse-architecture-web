@@ -38,13 +38,14 @@ export class ComponentViewStrategy implements IViewStrategy {
             people: Array<Person>,
             softwareSystems: Array<SoftwareSystem>,
             containers: Array<Container>,
-            components: Array<Component>
+            components: Array<Component>,
+            parentId?: string
         ) => {
             // 4.1. iterate over all components and include them
             components
                 .forEach(component => {
                     // 4.1.1. include the component
-                    new ComponentElement(component).accept(visitor);
+                    new ComponentElement(component, parentId).accept(visitor);
                     
                     // 4.1.2. include all people that are directly connected to the current component
                     people
@@ -85,7 +86,8 @@ export class ComponentViewStrategy implements IViewStrategy {
                             people,
                             softwareSystems,
                             containers,
-                            group.components.concat(container.components)
+                            group.components.concat(container.components),
+                            group.identifier
                         );
                     });
 
@@ -94,7 +96,8 @@ export class ComponentViewStrategy implements IViewStrategy {
                         people,
                         softwareSystems,
                         containers,
-                        container.components
+                        container.components,
+                        container.identifier
                     );
                 })
         }

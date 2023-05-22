@@ -35,13 +35,14 @@ export class ContainerViewStrategy implements IViewStrategy {
         const visitContainer = (
             people: Array<Person>,
             softwareSystems: Array<SoftwareSystem>,
-            containers: Array<Container>
+            containers: Array<Container>,
+            parentId?: string
         ) => {
             // 3.1. iterate over all containers and include them
             containers
                 .forEach(container => {
                     // 3.1.1. include the container
-                    new ContainerElement(container).accept(visitor);
+                    new ContainerElement(container, parentId).accept(visitor);
 
                     // 3.1.2. include all people that are directly connected to the current container
                     people
@@ -70,13 +71,14 @@ export class ContainerViewStrategy implements IViewStrategy {
                     softwareSystem.groups
                         .forEach(group => {
                             // 2.1.2.1 include the container group as a boundary element
-                            new GroupElement(group).accept(visitor);
+                            new GroupElement(group, softwareSystem.identifier).accept(visitor);
 
                             // 2.1.2.2 include all containers in the group
                             visitContainer(
                                 people,
                                 softwareSystems,
-                                group.containers.concat(softwareSystem.containers)
+                                group.containers.concat(softwareSystem.containers),
+                                group.identifier
                             );
                         });
 
@@ -84,7 +86,8 @@ export class ContainerViewStrategy implements IViewStrategy {
                     visitContainer(
                         people,
                         softwareSystems,
-                        softwareSystem.containers
+                        softwareSystem.containers,
+                        softwareSystem.identifier
                     );
                 })
         }

@@ -781,12 +781,12 @@ export class StructurizrParser extends CstParser {
 
     color = this.RULE("color", () => {
         this.CONSUME(Tokens.Color);
-        this.CONSUME(Tokens.HexColor);
+        this.CONSUME(Tokens.HexColorLiteral);
     });
 
     stroke = this.RULE("stroke", () => {
         this.CONSUME(Tokens.Stroke);
-        this.CONSUME(Tokens.HexColor);
+        this.CONSUME(Tokens.HexColorLiteral);
     });
 
     strokeWidth = this.RULE("strokeWidth", () => {
@@ -811,7 +811,7 @@ export class StructurizrParser extends CstParser {
 
     background = this.RULE("background", () => {
         this.CONSUME(Tokens.Background);
-        this.CONSUME(Tokens.HexColor);
+        this.CONSUME(Tokens.HexColorLiteral);
     });
 
     fontSize = this.RULE("fonSize", () => {

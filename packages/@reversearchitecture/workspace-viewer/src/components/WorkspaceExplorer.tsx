@@ -16,21 +16,21 @@ import { useSelectedViewGraph } from "../hooks/useSelectedViewGraph";
 import { WorkspaceRenderer } from "./WorkspaceRenderer";
 import { WorkspaceStoreUpdater } from "./WorkspaceStoreUpdater";
 import { useWorkspaceNavigation } from "../hooks/useWorkspaceNavigation";
-import { useMetadata } from "../hooks";
 
 export const WorkspaceExplorer: FC<PropsWithChildren<{
     workspace?: Workspace;
-    initialView?: IView;
+    selectedView?: IView;
+    onNodeDragStop?: NodeMouseHandler;
     onNodesDoubleClick?: NodeMouseHandler;
 }>> = ({
     children,
     workspace,
-    initialView,
+    selectedView,
+    onNodeDragStop,
     onNodesDoubleClick
 }) => {
     const { nodes, edges, onNodesChange, onEdgesChange } = useSelectedViewGraph();
     const { navigate } = useWorkspaceNavigation();
-    const { setViewElementPosition } = useMetadata();
 
     const handleOnDoubleClick = useCallback((event: React.MouseEvent, node: any) => {
         const element = node.data.element;
@@ -50,14 +50,14 @@ export const WorkspaceExplorer: FC<PropsWithChildren<{
     }, [navigate, onNodesDoubleClick]);
 
     const handleOnNodeDragStop = useCallback((event: React.MouseEvent, node: any, nodes: any[]) => {
-        setViewElementPosition(initialView, node.data.element.identifier, node.position);
-    }, [initialView, setViewElementPosition]);
+        onNodeDragStop?.(event, node);
+    }, [onNodeDragStop]);
 
     return (
         <ReactFlowProvider>
             <WorkspaceStoreUpdater
                 workspace={workspace}
-                selectedView={initialView}
+                selectedView={selectedView}
             />
             <WorkspaceRenderer
                 nodes={nodes}

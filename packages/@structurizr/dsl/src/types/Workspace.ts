@@ -3,6 +3,10 @@ import { Model, toModelString } from "./Model";
 import { toViewsString, Views } from "./Views";
 import { indent } from "../utils/Formatting";
 import { IWorkspaceMetadata } from "../shared/IWorkspaceMetadata";
+import { SystemContextView } from "./views/SystemContextView";
+import { ContainerView } from "./views/ContainerView";
+import { ComponentView } from "./views/ComponentView";
+import { DeploymentView } from "./views/DeploymentView";
 
 type WorkspaceParams = 
     Required<Pick<Workspace, "name" | "description">>
@@ -37,26 +41,26 @@ export class Workspace {
             ...workspace,
             views: {
                 ...workspace.views,
-                systemLandscape: {
+                systemLandscape: workspace.views.systemLandscape && {
                     ...workspace.views.systemLandscape,
                     elements: metadata.views.systemLandscape?.elements ?? []
                 },
-                systemContexts: workspace.views.systemContexts.map((view: any) => ({
+                systemContexts: workspace.views.systemContexts.map((view: SystemContextView) => ({
                     ...view,
                     elements: metadata.views.systemContexts
                         .find(x => x.identifier === view.identifier)?.elements ?? []
                 })),
-                containers: workspace.views.containers.map((view: any) => ({
+                containers: workspace.views.containers.map((view: ContainerView) => ({
                     ...view,
                     elements: metadata.views.containers
                         .find(x => x.identifier === view.identifier)?.elements ?? []
                 })),
-                components: workspace.views.components.map((view: any) => ({
+                components: workspace.views.components.map((view: ComponentView) => ({
                     ...view,
                     elements: metadata.views.components
                         .find(x => x.identifier === view.identifier)?.elements ?? []
                 })),
-                deployments: workspace.views.deployments.map((view: any) => ({
+                deployments: workspace.views.deployments.map((view: DeploymentView) => ({
                     ...view,
                     elements: metadata.views.deployments
                         .find(x => x.identifier === view.identifier)?.elements ?? []

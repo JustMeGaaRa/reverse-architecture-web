@@ -65,6 +65,6 @@ export enum TokenName {
     Position = "Position",
 
     // view style property values
-    HexColor = "HexColor",
+    HexColorLiteral = "HexColorLiteral",
     BooleanLiteral = "BooleanLiteral"
 }

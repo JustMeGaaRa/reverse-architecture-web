@@ -1,31 +1,29 @@
 import {
-    IView,
+    IViewDefinition,
     IVIewMetadata,
+    IWorkspaceMetadata,
     Position,
     ViewType
 } from "@structurizr/dsl";
 import { useCallback } from "react";
-import { useMetadataStore } from "../store";
 
-export const useMetadata = () => {
-    const { metadata, setMetadata } = useMetadataStore();
-    
+export const useMetadata = () => {    
     const addViewLayout = useCallback((
-        view: Pick<IView, "identifier" | "type">,
+        metadata: IWorkspaceMetadata,
+        view: IViewDefinition,
         viewMetadata: IVIewMetadata
     ) => {
         switch (view.type) {
             case ViewType.SystemLandscape:
-                setMetadata({
+                return {
                     ...metadata,
                     views: {
                         ...metadata.views,
                         systemLandscape: viewMetadata
                     }
-                });
-                break;
+                };
             case ViewType.SystemContext:
-                setMetadata({
+                return {
                     ...metadata,
                     views: {
                         ...metadata.views,
@@ -34,10 +32,9 @@ export const useMetadata = () => {
                             viewMetadata
                         ]
                     }
-                });
-                break;
+                };
             case ViewType.Container:
-                setMetadata({
+                return {
                     ...metadata,
                     views: {
                         ...metadata.views,
@@ -46,10 +43,9 @@ export const useMetadata = () => {
                             viewMetadata
                         ]
                     }
-                });
-                break;
+                };
             case ViewType.Component:
-                setMetadata({
+                return {
                     ...metadata,
                     views: {
                         ...metadata.views,
@@ -58,10 +54,9 @@ export const useMetadata = () => {
                             viewMetadata
                         ]
                     }
-                });
-                break;
+                };
             case ViewType.Deployment:
-                setMetadata({
+                return {
                     ...metadata,
                     views: {
                         ...metadata.views,
@@ -70,13 +65,13 @@ export const useMetadata = () => {
                             viewMetadata
                         ]
                     }
-                });
-                break;
+                };
         }
-    }, [metadata, setMetadata]);
+    }, []);
 
-    const setViewElementPosition = useCallback((
-        view: Pick<IView, "identifier" | "type">,
+    const applyElementPosition = useCallback((
+        metadata: IWorkspaceMetadata,
+        view: IViewDefinition,
         elementId: string,
         position: Position
     ) => {
@@ -84,68 +79,59 @@ export const useMetadata = () => {
             return {
                 ...metadata,
                 elements: [
-                    ...metadata.elements,
-                    {
-                        id: elementId,
-                        x: position.x,
-                        y: position.y
-                    }
+                    ...metadata.elements.filter(x => x.id !== elementId),
+                    { id: elementId, x: position.x, y: position.y }
                 ]
             }
         }
 
         const updateViewMetadataArray = (metadata: IVIewMetadata[], elementId: string, position: Position) => {
-            return metadata.map(systemContext => {
-                return systemContext.identifier === view.identifier
-                    ? updateViewMetadata(systemContext, elementId, position)
-                    : systemContext;
-            })
+            const emptySystemContext: IVIewMetadata = { identifier: view.identifier, elements: [] };
+            const systemContext = metadata.find(systemContext => systemContext.identifier === view.identifier);
+            return [
+                ...metadata.filter(systemContext => systemContext.identifier !== view.identifier),
+                updateViewMetadata(systemContext ?? emptySystemContext, elementId, position)
+            ];
         }
 
         switch (view.type) {
             case ViewType.SystemLandscape:
-                setMetadata({
+                return {
                     ...metadata,
                     views: {
                         ...metadata.views,
                         systemLandscape: updateViewMetadata(metadata.views.systemLandscape, elementId, position)
                     }
-                });
-                break;
+                };
             case ViewType.SystemContext:
-                setMetadata({
+                return {
                     ...metadata,
                     views: {
                         ...metadata.views,
                         systemContexts: updateViewMetadataArray(metadata.views.systemContexts, elementId, position)
                     }
-                });
-                break;
+                };
             case ViewType.Container:
-                setMetadata({
+                return {
                     ...metadata,
                     views: {
                         ...metadata.views,
                         containers: updateViewMetadataArray(metadata.views.containers, elementId, position)
                     }
-                });
-                break;
+                };
             case ViewType.Component:
-                setMetadata({
+                return {
                     ...metadata,
                     views: {
                         ...metadata.views,
                         components: updateViewMetadataArray(metadata.views.components, elementId, position)
                     }
-                });
-                break;
+                };
             }
-    }, [metadata, setMetadata]);
+    }, []);
 
     return {
-        metadata,
-        setMetadata,
         addViewLayout,
-        setViewElementPosition
+        applyElementPosition
     }
 }

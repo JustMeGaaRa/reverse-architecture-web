@@ -74,7 +74,7 @@ const Routing = createToken({ name: "Routing", pattern: /routing/ });
 const Position = createToken({ name: "Position", pattern: /position/ });
 
 // view style property values
-const HexColor = createToken({ name: "HexColor", pattern: /#[0-9a-fA-F]{8}|#[0-9a-fA-F]{6}|#[0-9a-fA-F]{4}|#[0-9a-fA-F]{3}/ });
+const HexColorLiteral = createToken({ name: "HexColorLiteral", pattern: /#[0-9a-fA-F]{8}|#[0-9a-fA-F]{6}|#[0-9a-fA-F]{4}|#[0-9a-fA-F]{3}/ });
 const BooleanLiteral = createToken({ name: "BooleanLiteral", pattern: /\btrue\b|\bfalse\b/i });
 
 export const allTokens = [
@@ -142,7 +142,7 @@ export const allTokens = [
     Position,
 
     // view style property values
-    HexColor,
+    HexColorLiteral,
     BooleanLiteral,
 
     // global
