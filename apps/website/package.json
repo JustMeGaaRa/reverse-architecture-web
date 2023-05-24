@@ -27,6 +27,7 @@
     "@justmegaara/mxgraph": "*",
     "@justmegaara/y-reactflow": "*",
     "@structurizr/dsl": "*",
+    "@structurizr/react": "*",
     "@reactflow/background": "^11.1.10",
     "@reactflow/core": "^11.6.1",
     "@reactflow/node-resizer": "^2.1.0",

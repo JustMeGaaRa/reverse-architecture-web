@@ -1,10 +1,9 @@
-import { indent } from "../../utils/Formatting";
 import { Element } from "./Element";
 import { ElementType } from "./ElementType";
 import { Identifier } from "./Identifier";
 import { Perspectives } from "./Perspectives";
 import { Properties } from "./Properties";
-import { Relationship, toRelationshipArrayString } from "./Relationship";
+import { Relationship } from "./Relationship";
 import { Tag } from "./Tag";
 import { Url } from "./Url";
 
@@ -38,13 +37,4 @@ export class Person implements Omit<Element, "description" | "technology"> {
     public readonly properties?: Properties;
     public readonly perspectives?: Perspectives;
     public readonly relationships: Relationship[];
-}
-
-export function toPersonString(person: Person): string {
-    const rels = indent(toRelationshipArrayString(person.relationships ?? []));
-    return `${person.identifier} = person "${person.name}" "${person.description ?? ""}" {\n${rels}\n}`;
-}
-
-export function toPersonArrayString(persons: Person[]): string {
-    return persons.map(toPersonString).join("\n");
 }

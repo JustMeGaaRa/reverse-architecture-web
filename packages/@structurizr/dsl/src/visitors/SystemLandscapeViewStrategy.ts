@@ -1,10 +1,4 @@
 import {
-    GroupElement,
-    PersonElement,
-    RelationshipElement,
-    SoftwareSystemElement
-} from "../Elements";
-import {
     Person,
     SoftwareSystem,
     IView,
@@ -36,18 +30,18 @@ export class SystemLandscapeViewStrategy implements IViewStrategy {
         ) => {
             // 2.1. include all people
             people
-                .forEach(person => new PersonElement(person, parentId).accept(visitor));
+                .forEach(person => visitor.visitPerson(person, { parentId }));
 
             // 2.1. include all software systems
             softwareSystems
-                .forEach(softwareSystem => new SoftwareSystemElement(softwareSystem, parentId).accept(visitor));
+                .forEach(softwareSystem => visitor.visitSoftwareSystem(softwareSystem, { parentId }));
         }
 
         // 1.1. iterate over all groups and find software system for the view
         this.workspace.model.groups
             .forEach(group => {
                 // 1.1.1.1. include the software system group as a boundary element
-                new GroupElement(group).accept(visitor);
+                visitor.visitGroup(group);
 
                 // 1.1.1.2. include people and software systems in the group
                 visitSoftwareSystems(
@@ -65,7 +59,7 @@ export class SystemLandscapeViewStrategy implements IViewStrategy {
         
         this.workspace.model.relationships
             .filter(edge => hasRelationship(edge.sourceIdentifier, edge.targetIdentifier))
-            .forEach(relationship => new RelationshipElement(relationship).accept(visitor));
+            .forEach(relationship => visitor.visitRelationship(relationship));
     }
 
     getPath(): Array<IView> {

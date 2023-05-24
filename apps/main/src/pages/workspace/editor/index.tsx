@@ -39,12 +39,13 @@ export const CodeEditorSheet: FC<{
             ? Workspace.applyMetadata(workspace, metadata)
             : workspace;
         setWorkspace(updatedWorkspace);
-        setSelectedView(updatedWorkspace.views.systemLandscape
+        setSelectedView(selectedView
+            ?? updatedWorkspace.views.systemLandscape
             ?? updatedWorkspace.views.systemContexts[0]
             ?? updatedWorkspace.views.containers[0]
             ?? updatedWorkspace.views.components[0]
             ?? updatedWorkspace.views.deployments[0]);
-    }, [setSelectedView, setWorkspace]);
+    }, [selectedView, setSelectedView, setWorkspace]);
 
     useEffect(() => {
         const fetchWorkspace = async (workspaceId: string) => {
@@ -105,7 +106,7 @@ export const CodeEditorSheet: FC<{
                 direction={"row"}
                 height={"100%"}
             >
-                <Box width={"2000px"}>
+                <Box width={"1200px"}>
                     <ContextSheetHeader title={"Code Editor"} />
                     <Divider />
                     <ContextSheetContent padding={0}>

@@ -1,12 +1,3 @@
-import { relationshipExists } from "../../utils/Formatting";
-import {
-    ComponentElement,
-    ContainerElement,
-    GroupElement,
-    PersonElement,
-    RelationshipElement,
-    SoftwareSystemElement
-} from "../Elements";
 import {
     Person,
     SoftwareSystem,
@@ -16,8 +7,9 @@ import {
     ViewType,
     Workspace,
     Container,
-    Component
-} from "../../";
+    Component,
+    relationshipExists
+} from "..";
 
 export class ComponentViewStrategy implements IViewStrategy {
     constructor(
@@ -45,22 +37,22 @@ export class ComponentViewStrategy implements IViewStrategy {
             components
                 .forEach(component => {
                     // 4.1.1. include the component
-                    new ComponentElement(component, parentId).accept(visitor);
+                    visitor.visitComponent(component, { parentId });
                     
                     // 4.1.2. include all people that are directly connected to the current component
                     people
                         .filter(person => relationshipExists(this.workspace, component.identifier, person.identifier))
-                        .forEach(person => new PersonElement(person).accept(visitor));
+                        .forEach(person => visitor.visitPerson(person));
 
                     // 4.1.3. include all software systems that are directly connected to the current component
                     softwareSystems
                         .filter(softwareSystem => relationshipExists(this.workspace, component.identifier, softwareSystem.identifier))
-                        .forEach(softwareSystem => new SoftwareSystemElement(softwareSystem).accept(visitor));
+                        .forEach(softwareSystem => visitor.visitSoftwareSystem(softwareSystem));
 
                     // 4.1.4. include all containers that are directly connected to the current container
                     containers
                         .filter(container => relationshipExists(this.workspace, component.identifier, container.identifier))
-                        .forEach(container => new ContainerElement(container).accept(visitor));
+                        .forEach(container => visitor.visitContainer(container));
                 });
         }
 
@@ -74,12 +66,12 @@ export class ComponentViewStrategy implements IViewStrategy {
                 .filter(container => container.identifier === this.view.identifier)
                 .forEach(container => {
                     // 3.1.1. include the current container
-                    new ContainerElement(container).accept(visitor);
+                    visitor.visitContainer(container);
 
                     // 3.1.2. iterate over all groups in the container 
                     container.groups.forEach(group => {
                         // 3.1.2.1. include the component group as a boundary element
-                        new GroupElement(group).accept(visitor);
+                        visitor.visitGroup(group);
 
                         // 3.1.2.2. include all components in the group
                         visitComponent(
@@ -141,7 +133,7 @@ export class ComponentViewStrategy implements IViewStrategy {
         
         this.workspace.model.relationships
             .filter(edge => hasRelationship(edge.sourceIdentifier, edge.targetIdentifier))
-            .forEach(relationship => new RelationshipElement(relationship).accept(visitor));
+            .forEach(relationship => visitor.visitRelationship(relationship));
     }
 
     getPath(): Array<IView> {

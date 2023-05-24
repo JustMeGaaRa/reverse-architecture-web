@@ -1,15 +1,14 @@
-import { Container, toContainerArrayString } from "./Container";
+import { Container } from "./Container";
 import { Group } from "./Group";
 import { Element } from "./Element";
+import { ElementType } from "./ElementType";
 import { Identifier } from "./Identifier";
 import { Perspectives } from "./Perspectives";
 import { Properties } from "./Properties";
-import { Relationship, toRelationshipArrayString } from "./Relationship";
+import { Relationship } from "./Relationship";
 import { Tag } from "./Tag";
-import { Url } from "./Url";
 import { Technology } from "./Technology";
-import { indent } from "../../utils/Formatting";
-import { ElementType } from "./ElementType";
+import { Url } from "./Url";
 
 type SoftwareSystemParams =
     Required<Pick<SoftwareSystem, "identifier" | "name">>
@@ -47,16 +46,4 @@ export class SoftwareSystem implements Element {
     public readonly properties?: Properties;
     public readonly perspectives?: Perspectives;
     public readonly relationships: Relationship[];
-}
-
-export function toSoftwareSystemString(software: SoftwareSystem): string {
-    const containers = indent(toContainerArrayString(software.containers ?? []));
-    const rels = indent(toRelationshipArrayString(software.relationships ?? []));
-    return software
-        ? `${software.identifier} = softwareSystem "${software.name}" "${software.description ?? ""}" {\n${containers}\n${rels}\n}`
-        : "";
-}
-
-export function toSoftwareSystemArrayString(softwareSystems: SoftwareSystem[]): string {
-    return softwareSystems.map(toSoftwareSystemString).join("\n");
 }

@@ -9,6 +9,7 @@ import {
 } from "@structurizr/dsl";
 import { useEdgesState, useNodesState } from "@reactflow/core";
 import { useEffect } from "react";
+import { ReactFlowJsonObjectBuilder } from "../services/ReactFlowJsonObjectBuilder";
 import { ReactFlowVisitor } from "../services/ReactFlowVisitor";
 import { useWorkspaceStore } from "../store/useWorkspaceStore";
 
@@ -20,7 +21,7 @@ export const useSelectedViewGraph = () => {
     useEffect(() => {
         if (!workspace || !selectedView) return;
 
-        const viewFunctions: Map<ViewType, IViewStrategy> = new Map<ViewType, IViewStrategy>([
+        const viewBuilders: Map<ViewType, IViewStrategy> = new Map<ViewType, IViewStrategy>([
             [ ViewType.SystemLandscape, new SystemLandscapeViewStrategy(workspace, selectedView) ],
             [ ViewType.SystemContext, new SystemContextViewStrategy(workspace, selectedView) ],
             [ ViewType.Container, new ContainerViewStrategy(workspace, selectedView) ],
@@ -28,10 +29,22 @@ export const useSelectedViewGraph = () => {
             [ ViewType.Deployment, new DeploymentViewStrategy(workspace, selectedView, selectedView["environment"])],
         ]);
 
-        const visitor = new ReactFlowVisitor(workspace, selectedView);
-        viewFunctions.get(selectedView.type).accept(visitor);
-        const path = viewFunctions.get(selectedView.type).getPath();
-        const { nodes, edges } = visitor.getGraph();
+        const builder = new ReactFlowJsonObjectBuilder();
+        const visitor = new ReactFlowVisitor(workspace, selectedView, builder);
+        const viewBuilder = viewBuilders.get(selectedView.type);
+        viewBuilder.accept(visitor);
+        const { nodes, edges } = builder.build();
+
+        const pathBuilders: Map<ViewType, any> = new Map<ViewType, any>([
+            [ ViewType.SystemLandscape, undefined ],
+            [ ViewType.SystemContext, undefined ],
+            [ ViewType.Container, undefined ],
+            [ ViewType.Component, undefined ],
+            [ ViewType.Deployment, undefined ],
+        ]);
+
+        const pathBuilder = viewBuilders.get(selectedView.type);
+        const path = pathBuilder.getPath();
 
         setNodes(nodes);
         setEdges(edges);

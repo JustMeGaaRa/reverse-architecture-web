@@ -1,17 +1,10 @@
 import { Tag } from "../model/Tag";
-import { indent } from "../../utils/Formatting";
-import { ElementStyle, toElementStyleString } from "./ElementStyle";
-import { RelationshipStyle, toRelationshipStyleString } from "./RelationshipStyle";
+import { ElementStyle } from "./ElementStyle";
+import { RelationshipStyle } from "./RelationshipStyle";
 
 export interface Styles {
     element: ElementStyle;
     relationship: RelationshipStyle;
-}
-
-export function toStylesString(styles?: Styles): string {
-    const elements = indent(toElementStyleString(styles?.element));
-    const relationships = indent(toRelationshipStyleString(styles?.relationship));
-    return `styles {\n${elements}\n${relationships}\n}`;
 }
 
 export function aggrerateStyles<

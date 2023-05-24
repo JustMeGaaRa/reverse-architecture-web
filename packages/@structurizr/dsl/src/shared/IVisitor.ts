@@ -1,3 +1,4 @@
+import { Model } from "../types/Model";
 import { Component } from "../types/model/Component";
 import { Container } from "../types/model/Container";
 import { ContainerInstance } from "../types/model/ContainerInstance";
@@ -8,35 +9,45 @@ import { Person } from "../types/model/Person";
 import { Relationship } from "../types/model/Relationship";
 import { SoftwareSystem } from "../types/model/SoftwareSystem";
 import { SoftwareSystemInstance } from "../types/model/SoftwareSystemInstance";
+import { Views } from "../types/Views";
+import { ElementStyle } from "../types/views/ElementStyle";
+import { RelationshipStyle } from "../types/views/RelationshipStyle";
+import { Styles } from "../types/views/Style";
+import { Workspace } from "../types/Workspace";
 
 export interface IVisitor {
-    visitGroup: (
+    visitWorkspace(workspace: Workspace): void;
+    visitModel(model: Model): void;
+    visitGroup(
         group: Group,
-        params?: { parentId?: string }) => void;
-    visitPerson: (
+        params?: { parentId?: string }): void;
+    visitPerson(
         person: Person,
-        params?: { parentId?: string }) => void;
-    visitSoftwareSystem: (
+        params?: { parentId?: string }): void;
+    visitSoftwareSystem(
         softwareSystem: SoftwareSystem,
-        params?: { parentId?: string }) => void;
-    visitContainer: (
+        params?: { parentId?: string }): void;
+    visitContainer(
         container: Container,
-        params?: { parentId?: string }) => void;
-    visitComponent: (
+        params?: { parentId?: string }): void;
+    visitComponent(
         component: Component,
-        params?: { parentId?: string }) => void;
-    visitDeploymentNode: (
+        params?: { parentId?: string }): void;
+    visitDeploymentNode(
         deploymentNode: DeploymentNode,
-        params?: { parentId?: string }) => void;
-    visitInfrastructureNode: (
+        params?: { parentId?: string }): void;
+    visitInfrastructureNode(
         infrastructureNode: InfrastructureNode,
-        params?: { parentId?: string }) => void;
-    visitSoftwareSystemInstance: (
+        params?: { parentId?: string }): void;
+    visitSoftwareSystemInstance(
         softwareSystemInstance: SoftwareSystemInstance,
-        params?: { parentId?: string }) => void;
-    visitContainerInstance: (
+        params?: { parentId?: string }): void;
+    visitContainerInstance(
         containerInstance: ContainerInstance,
-        params?: { parentId?: string }) => void;
-    visitRelationship: (
-        relationship: Relationship) => void;
+        params?: { parentId?: string }): void;
+    visitRelationship(relationship: Relationship): void;
+    visitViews(views: Views): void;
+    visitStyles(styles: Styles): void;
+    visitElementStyle(elementStyle: ElementStyle): void;
+    visitRelationshipStyle(relationshipStyle: RelationshipStyle): void;
 }

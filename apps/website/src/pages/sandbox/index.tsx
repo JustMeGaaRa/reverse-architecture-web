@@ -1,30 +1,29 @@
-import { Box, useColorModeValue } from "@chakra-ui/react";
-import { Panel } from "@reactflow/core";
-import {
-    useWorkspaceStore,
-    WorkspaceExplorer
-} from "@reversearchitecture/workspace-viewer";
+import { Box, useColorModeValue, useToast } from "@chakra-ui/react";
+import { WorkspaceExplorer } from "@reversearchitecture/workspace-viewer";
 import { WorkspaceToolbar } from "@reversearchitecture/workspace-toolbar";
 import { WorkspaceZoom } from "@reversearchitecture/workspace-zoom";
 import { WorkspaceBreadcrumb } from "@reversearchitecture/workspace-breadcrumb";
-import { WorkspaceApi } from "@reversearchitecture/services";
+import { CommunityHubApi } from "@reversearchitecture/services";
 import { createYDoc } from "@reversearchitecture/utils";
-import { FC, useEffect, useState } from "react";
+import { IView, IWorkspaceMetadata, Workspace } from "@structurizr/dsl";
+import { useStructurizrParser } from "@structurizr/react";
+import { FC, useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { ActivityPanel, WorkspaceRoomProvider } from "../../containers";
 import { createRandomUser } from "../../utils/User";
 
 export const Sandbox: FC = () => {
     const { workspaceId } = useParams<{ workspaceId: string }>();
-    const [store, setStore] = useState(null);
-    const [user, setUser] = useState(null);
-    const {
-        workspace,
-        selectedView,
-        viewPath,
-        setWorkspace,
-        setSelectedView
-    } = useWorkspaceStore();
+    const [ store, setStore ] = useState(null);
+    const [ user, setUser ] = useState(null);
+    
+    const [ workspace, setWorkspace ] = useState(Workspace.Empty);
+    const [ selectedView, setSelectedView ] = useState<IView>();
+    const [ metadata, setMetadata ] = useState<IWorkspaceMetadata>();
+
+    const parseWorkspace = useStructurizrParser();
+    
+    const toast = useToast();
 
     useEffect(() => {
         const store = createYDoc({ documentId: workspaceId });
@@ -40,19 +39,44 @@ export const Sandbox: FC = () => {
         }
     }, [workspaceId]);
 
+    const applyWorkspace = useCallback((workspace: Workspace, metadata?: IWorkspaceMetadata) => {
+        const updatedWorkspace = metadata
+            ? Workspace.applyMetadata(workspace, metadata)
+            : workspace;
+        setWorkspace(updatedWorkspace);
+        setSelectedView(selectedView
+            ?? updatedWorkspace.views.systemLandscape
+            ?? updatedWorkspace.views.systemContexts[0]
+            ?? updatedWorkspace.views.containers[0]
+            ?? updatedWorkspace.views.components[0]
+            ?? updatedWorkspace.views.deployments[0]);
+    }, [selectedView, setSelectedView, setWorkspace]);
+
     useEffect(() => {
-        const api = new WorkspaceApi();
-        api.getWorkspace(workspaceId)
-            .then(workspace => {
-                const initialView = workspace.views.systemLandscape
-                    ?? workspace.views.systemContexts[0];
-                setWorkspace(workspace);
-                setSelectedView(initialView);
+        const fetchWorkspace = async (workspaceId: string) => {
+            const api = new CommunityHubApi();
+            const workspaceText = await api.getWorkspaceText(workspaceId);
+            const workspaceMetadata = await api.getWorkspaceMetadata(workspaceId);
+
+            return { text: workspaceText, metadata: workspaceMetadata };
+        }
+        
+        fetchWorkspace(workspaceId)
+            .then(({ text, metadata }) => {
+                applyWorkspace(parseWorkspace(text), metadata);
+                setMetadata(metadata);
             })
             .catch(error => {
-                console.error(error);
-            });
-    }, [workspaceId, setSelectedView, setWorkspace]);
+                toast({
+                    title: "Error",
+                    description: error.message,
+                    status: "error",
+                    duration: 9000,
+                    isClosable: true,
+                    position: "bottom-right"
+                })
+            })
+    }, [workspaceId, toast, applyWorkspace, setMetadata, parseWorkspace]);
 
     return (
         <Box
@@ -63,20 +87,12 @@ export const Sandbox: FC = () => {
                 <WorkspaceRoomProvider {...store} user={user}>
                     <WorkspaceExplorer
                         workspace={workspace}
-                        initialView={selectedView}
+                        selectedView={selectedView}
                     >
-                        <Panel position={"top-left"}>
-                            <WorkspaceBreadcrumb path={viewPath.path} />
-                        </Panel>
-                        <Panel position={"bottom-center"}>
-                            <WorkspaceToolbar />
-                        </Panel>
-                        <Panel position={"bottom-right"}>
-                            <WorkspaceZoom />
-                        </Panel>
-                        <Panel position={"top-right"}>
-                            <ActivityPanel />
-                        </Panel>
+                        <WorkspaceBreadcrumb />
+                        <WorkspaceToolbar />
+                        <WorkspaceZoom />
+                        <ActivityPanel />
                     </WorkspaceExplorer>
                 </WorkspaceRoomProvider>
             )}

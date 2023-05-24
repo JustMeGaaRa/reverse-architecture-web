@@ -1,4 +1,4 @@
-export * from "./Diagram";
+export * from "./MxDiagram";
 export * from "./Drawio";
 export * from "./MXCell";
 export * from "./MXGeometry";

@@ -41,11 +41,3 @@ export class SoftwareSystemInstance {
     public readonly perspectives?: Perspectives;
     public readonly healthCheck?: HealthCheck;
 }
-
-export function toSoftwareSystemInstanceString(instance: SoftwareSystemInstance): string {
-    return `${instance.identifier} = softwareSystemInstance "${instance.softwareSystemIdentifier}"`;
-}
-
-export function toSoftwareSystemInstanceArrayString(instances: SoftwareSystemInstance[]): string {
-    return instances.map(toSoftwareSystemInstanceString).join("\n");
-}

@@ -1,5 +1,4 @@
-import { indent } from "../../utils/Formatting";
-import { ContainerInstance, toContainerInstanceArrayString } from "./ContainerInstance";
+import { ContainerInstance } from "./ContainerInstance";
 import { Element } from "./Element";
 import { ElementType } from "./ElementType";
 import { Identifier } from "./Identifier";
@@ -7,7 +6,7 @@ import { InfrastructureNode } from "./InfrastructureNode";
 import { Perspectives } from "./Perspectives";
 import { Properties } from "./Properties";
 import { Relationship } from "./Relationship";
-import { SoftwareSystemInstance, toSoftwareSystemInstanceArrayString } from "./SoftwareSystemInstance";
+import { SoftwareSystemInstance } from "./SoftwareSystemInstance";
 import { Tag } from "./Tag";
 import { Technology } from "./Technology";
 import { Url } from "./Url";
@@ -54,17 +53,4 @@ export class DeploymentNode implements Element {
     public readonly properties?: Properties;
     public readonly perspectives?: Perspectives;
     public readonly relationships?: Relationship[];
-}
-
-export function toDeploymentNodeString(deploymentNode: DeploymentNode): string {
-    const deploymentNodes = indent(toDeploymentNodeArrayString(deploymentNode.deploymentNodes ?? []));
-    const systems = indent(toSoftwareSystemInstanceArrayString(deploymentNode.softwareSystemInstances ?? []));
-    const containers = indent(toContainerInstanceArrayString(deploymentNode.containerInstances ?? []));
-    return deploymentNode
-        ? `deploymentNode "${deploymentNode.name}" {\n${deploymentNodes}\n${systems}\n${containers}\n}`
-        : "";
-}
-
-export function toDeploymentNodeArrayString(deploymentNodes: DeploymentNode[]): string {
-    return deploymentNodes.map(toDeploymentNodeString).join("\n");
 }

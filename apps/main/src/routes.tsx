@@ -24,7 +24,7 @@ export const routes = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <Navigate to={"projects"} />
+                element: <Navigate to={"hub"} />
             },
             {
                 path: "dashboard",

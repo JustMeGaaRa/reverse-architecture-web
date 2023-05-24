@@ -1,10 +1,3 @@
-import { relationshipExists } from "../../utils/Formatting";
-import {
-    GroupElement,
-    PersonElement,
-    RelationshipElement,
-    SoftwareSystemElement
-} from "../Elements";
 import {
     Person,
     SoftwareSystem,
@@ -12,7 +5,8 @@ import {
     IViewStrategy,
     IVisitor,
     ViewType,
-    Workspace
+    Workspace,
+    relationshipExists
 } from "../../";
 
 export class SystemContextViewStrategy implements IViewStrategy {
@@ -39,17 +33,17 @@ export class SystemContextViewStrategy implements IViewStrategy {
                 .filter(softwareSystem => softwareSystem.identifier === this.view.identifier)
                 .forEach(softwareSystem => {
                     // 2.1.1. include the current software and all software systems
-                    new SoftwareSystemElement(softwareSystem).accept(visitor);
+                    visitor.visitSoftwareSystem(softwareSystem);
                     
                     // 2.1.2. include all people that are directly connected to the current software system
                     people
                         .filter(person => relationshipExists(this.workspace, softwareSystem.identifier, person.identifier))
-                        .forEach(person => new PersonElement(person).accept(visitor));
+                        .forEach(person => visitor.visitPerson(person));
                     
                     // 2.1.3. include all software systems that are directly connected to the current container
                     softwareSystems
                         .filter(softwareSystem => relationshipExists(this.workspace, this.view.identifier, softwareSystem.identifier))
-                        .forEach(softwareSystem => new SoftwareSystemElement(softwareSystem).accept(visitor));
+                        .forEach(softwareSystem => visitor.visitSoftwareSystem(softwareSystem));
                 });
         }
 
@@ -68,7 +62,7 @@ export class SystemContextViewStrategy implements IViewStrategy {
 
         this.workspace.model.relationships
             .filter(edge => hasRelationship(edge.sourceIdentifier, edge.targetIdentifier))
-            .forEach(relationship => new RelationshipElement(relationship).accept(visitor));
+            .forEach(relationship => visitor.visitRelationship(relationship));
     }
 
     getPath(): Array<IView> {

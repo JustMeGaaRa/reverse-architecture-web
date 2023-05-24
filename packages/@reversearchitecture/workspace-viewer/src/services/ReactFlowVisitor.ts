@@ -6,65 +6,51 @@ import {
     defaultElementStyle,
     DeploymentNode,
     Element,
+    ElementStyle,
     Group,
     InfrastructureNode,
     IView,
     IVisitor,
+    Model,
     Person,
     Position,
     Relationship,
+    RelationshipStyle,
     Size,
     SoftwareSystem,
     SoftwareSystemInstance,
     Styles,
     Tag,
+    Views,
     ViewType,
     Workspace,
 } from "@structurizr/dsl";
+import { ReactFlowJsonObjectBuilder } from "./ReactFlowJsonObjectBuilder";
 
 export class ReactFlowVisitor implements IVisitor {
     constructor(
         private workspace: Workspace,
         private selectedView: IView,
-        private nodes: Node[] = [],
-        private edges: Edge[] = []
-    ) {}
+        private builder: ReactFlowJsonObjectBuilder
+    ) { }
 
-    getBoundingBox(elements: Array<{ identifier: string }>) {
-        const defaultPosition = { x: 0, y: 0 };
-        const positions = elements
-            .map(x => this.selectedView.elements.find(y => y.id === x.identifier)
-                ?? defaultPosition);
-        const padding = 100;
-        const boundaries = positions.reduce((state, item) => ({
-            min: {
-                x: Math.min(state.min.x, item.x),
-                y: Math.min(state.min.y, item.y),
-            },
-            max: {
-                x: Math.max(state.max.x, item.x + defaultElementStyle.width),
-                y: Math.max(state.max.y, item.y + defaultElementStyle.height),
-            }
-        }), {
-            min: positions.at(0) ?? defaultPosition,
-            max: positions.at(0) ?? defaultPosition
-        });
-        return {
-            x: boundaries.min.x - padding / 2,
-            y: boundaries.min.y - padding / 2,
-            width: boundaries.max.x - boundaries.min.x + padding / 2,
-            height: boundaries.max.y - boundaries.min.y + padding / 2,
-        };
+    visitWorkspace(workspace: Workspace): void {
+        throw new Error("Method not implemented.");
     }
 
-    visitGroup(group: Group, params?: { parentId?: string }) {
-        const boundingBox = this.getBoundingBox(
+    visitModel(model: Model): void {
+        throw new Error("Method not implemented.");
+    }
+
+    visitGroup(group: Group, params?: { parentId?: string }): void {
+        const boundingBox = getBoundingBox(
+            this.selectedView,
             Array.from<{ identifier: string }>([])
                 .concat(group.softwareSystems)
                 .concat(group.people)
                 .concat(group.containers)
-                .concat(group.components)
-        );
+                .concat(group.components));
+        
         const node = fromElement({
             elementId: group.identifier,
             element: group,
@@ -74,26 +60,28 @@ export class ReactFlowVisitor implements IVisitor {
             size: boundingBox,
             styles: this.workspace.views.styles,
         });
-        this.nodes.push(node);
+        this.builder.addNode(node);
     }
 
-    visitPerson(person: Person, params?: { parentId?: string }) {
+    visitPerson(person: Person, params?: { parentId?: string }): void {
         const node = fromElement({
             element: person,
             position: this.selectedView.elements.find(x => x.id === person.identifier) ?? { x: 0, y: 0 },
             parentId: params?.parentId,
             styles: this.workspace.views.styles,
         });
-        this.nodes.push(node);
+        this.builder.addNode(node);
     }
     
-    visitSoftwareSystem(softwareSystem: SoftwareSystem, params?: { parentId?: string }) {
+    visitSoftwareSystem(softwareSystem: SoftwareSystem, params?: { parentId?: string }): void {
         const isBoundary = this.selectedView.type === ViewType.Container
             && softwareSystem.identifier === this.selectedView.identifier;
         const position = this.selectedView.elements.find(x => x.id === softwareSystem.identifier)
             ?? { x: 0, y: 0 };
         const boundingBox = isBoundary
-            ? this.getBoundingBox(softwareSystem.groups.flatMap(x => x.containers).concat(softwareSystem.containers))
+            ? getBoundingBox(
+                this.selectedView,
+                softwareSystem.groups.flatMap(x => x.containers).concat(softwareSystem.containers))
             : { ...position, width: defaultElementStyle.width, height: defaultElementStyle.height };
         const node = fromElement({
             element: softwareSystem,
@@ -103,16 +91,18 @@ export class ReactFlowVisitor implements IVisitor {
             size: boundingBox,
             styles: this.workspace.views.styles,
         });
-        this.nodes.push(node);
+        this.builder.addNode(node);
     }
 
-    visitContainer(container: Container, params?: { parentId?: string }) {
+    visitContainer(container: Container, params?: { parentId?: string }): void {
         const isBoundary = this.selectedView.type === ViewType.Component
             && container.identifier === this.selectedView.identifier;
         const position = this.selectedView.elements.find(x => x.id === container.identifier)
             ?? { x: 0, y: 0 };
         const boundingBox = isBoundary
-            ? this.getBoundingBox(container.groups.flatMap(x => x.components).concat(container.components))
+            ? getBoundingBox(
+                this.selectedView,
+                container.groups.flatMap(x => x.components).concat(container.components))
             : { ...position, width: defaultElementStyle.width, height: defaultElementStyle.height };
         const node = fromElement({
             element: container,
@@ -122,40 +112,40 @@ export class ReactFlowVisitor implements IVisitor {
             size: boundingBox,
             styles: this.workspace.views.styles,
         });
-        this.nodes.push(node);
+        this.builder.addNode(node);
     }
 
-    visitComponent(component: Component, params?: { parentId?: string }) {
+    visitComponent(component: Component, params?: { parentId?: string }): void {
         const node = fromElement({
             element: component,
             position: this.selectedView.elements.find(x => x.id === component.identifier) ?? { x: 0, y: 0 },
             parentId: params?.parentId,
             styles: this.workspace.views.styles,
         });
-        this.nodes.push(node);
+        this.builder.addNode(node);
     }
 
-    visitDeploymentNode(deploymentNode: DeploymentNode, params?: { parentId?: string }) {
+    visitDeploymentNode(deploymentNode: DeploymentNode, params?: { parentId?: string }): void {
         const node = fromElement({
             element: deploymentNode,
             position: this.selectedView.elements.find(x => x.id === deploymentNode.identifier) ?? { x: 0, y: 0 },
             parentId: params?.parentId,
             styles: this.workspace.views.styles,
         });
-        this.nodes.push(node);
+        this.builder.addNode(node);
     }
     
-    visitInfrastructureNode(infrastructureNode: InfrastructureNode, params?: { parentId?: string }) {
+    visitInfrastructureNode(infrastructureNode: InfrastructureNode, params?: { parentId?: string }): void {
         const node = fromElement({
             element: infrastructureNode,
             position: this.selectedView.elements.find(x => x.id === infrastructureNode.identifier) ?? { x: 0, y: 0 },
             parentId: params?.parentId,
             styles: this.workspace.views.styles,
         });
-        this.nodes.push(node);
+        this.builder.addNode(node);
     }
 
-    visitSoftwareSystemInstance(softwareSystemInstance: SoftwareSystemInstance, params?: { parentId?: string }) {
+    visitSoftwareSystemInstance(softwareSystemInstance: SoftwareSystemInstance, params?: { parentId?: string }): void {
         const position = this.selectedView.elements.find(x => x.id === softwareSystemInstance.identifier)
             ?? { x: 0, y: 0 };
         const node = fromElement({
@@ -164,10 +154,10 @@ export class ReactFlowVisitor implements IVisitor {
             parentId: params?.parentId,
             styles: this.workspace.views.styles,
         });
-        this.nodes.push(node);
+        this.builder.addNode(node);
     }
 
-    visitContainerInstance(containerInstance: ContainerInstance, params?: { parentId?: string }) {
+    visitContainerInstance(containerInstance: ContainerInstance, params?: { parentId?: string }): void {
         const position = this.selectedView.elements.find(x => x.id === containerInstance.identifier)
             ?? { x: 0, y: 0 };
         const node = fromElement({
@@ -176,22 +166,57 @@ export class ReactFlowVisitor implements IVisitor {
             parentId: params?.parentId,
             styles: this.workspace.views.styles,
         });
-        this.nodes.push(node);
+        this.builder.addNode(node);
     }
 
-    visitRelationship(relationship: Relationship) {
+    visitRelationship(relationship: Relationship): void {
         const edge = fromRelationship({
             relationship,
             styles: this.workspace.views.styles,
         });
-        this.edges.push(edge);
+        this.builder.addEdge(edge);
     }
 
-    getGraph() {
-        return {
-            nodes: this.nodes,
-            edges: this.edges
+    visitViews(views: Views): void {
+        throw new Error("Method not implemented.");
+    }
+
+    visitStyles(styles: Styles): void {
+        throw new Error("Method not implemented.");
+    }
+
+    visitElementStyle(elementStyle: ElementStyle): void {
+        throw new Error("Method not implemented.");
+    }
+
+    visitRelationshipStyle(relationshipStyle: RelationshipStyle): void {
+        throw new Error("Method not implemented.");
+    }
+}
+
+const getBoundingBox = (selectedView: IView, elements: Array<{ identifier: string }>) => {
+    const defaultPosition = { x: 0, y: 0 };
+    const positions = elements
+        .map(x => selectedView.elements.find(y => y.id === x.identifier) ?? defaultPosition);
+    const padding = 100;
+    const boundaries = positions.reduce((state, item) => ({
+        min: {
+            x: Math.min(state.min.x, item.x),
+            y: Math.min(state.min.y, item.y),
+        },
+        max: {
+            x: Math.max(state.max.x, item.x + defaultElementStyle.width),
+            y: Math.max(state.max.y, item.y + defaultElementStyle.height),
         }
+    }), {
+        min: positions.at(0) ?? defaultPosition,
+        max: positions.at(0) ?? defaultPosition
+    });
+    return {
+        x: boundaries.min.x - padding / 2,
+        y: boundaries.min.y - padding / 2,
+        width: boundaries.max.x - boundaries.min.x + padding / 2,
+        height: boundaries.max.y - boundaries.min.y + padding / 2,
     };
 }
 

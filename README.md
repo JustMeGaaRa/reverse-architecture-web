@@ -8,9 +8,22 @@ This turborepo uses [npm](https://www.npmjs.com/) as a package manager. It inclu
 
 ### Apps and Packages
 
-- `apps/website`: a main website for the Reverse Architecture product built using [Create React App](https://create-react-app.dev/).
-- `packages/structurizr-dsl`: a TypeScript library that defines types for Structurizr DSL structures and files.
-- `packages/mxgraph`: a TypeScript library that defines types for MXGrap vector diagrams (draw.io diagrams).
+- `apps/website`: a main website for the Reverse Architecture platform with product information.
+- `apps/main`: an application for creating and managing arhitecture workspaces and projects using C4 model and Structurizr.
+- `apps/auth`: an application for authentication via GitHub and accessing projects and workspaces in repositories.
+- `packages/@structurizr/dsl`: a TypeScript library that defines types for Structurizr DSL structures and files.
+- `packages/@structurizr/parser`: a library with types for parsing the Structurizr DSL language.
+- `packages/@structurizr/react`: a library with react bindings and hooks for Structurizr DSL to use in React apps.
+- `packages/@reversearchitecture/theme`: a Chakra UI theme for the entire platform.
+- `packages/@reversearchitecture/ui`: a set of reusable components within the entire platform.
+- `packages/@reversearchitecture/workspace-breadcrumb`
+- `packages/@reversearchitecture/workspace-editor`
+- `packages/@reversearchitecture/workspace-toolbar`
+- `packages/@reversearchitecture/workspace-viewer`
+- `packages/@reversearchitecture/workspace-zoom`
+- `packages/@monaco-editor/structurizr`: a Structurizr DSL language definition types for Monaco editor.
+- `packages/@justmegaara/mxgraph`: a TypeScript library that defines types for MXGrap vector diagrams (draw.io diagrams).
+- `packages/@justmegaara/y-reactflow`: a library with bindings and hooks for ReacFlow using yjs framework.
 - `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
 - `tsconfig`: `tsconfig.json`s used throughout the monorepo
 
@@ -29,8 +42,8 @@ This turborepo has some additional tools already setup for you:
 To build all apps and packages, run the following command:
 
 ```
-cd my-turborepo
-npm run build
+cd ./reverse-architecture-web
+turbo run build
 ```
 
 ### Develop
@@ -38,8 +51,8 @@ npm run build
 To develop all apps and packages, run the following command:
 
 ```
-cd my-turborepo
-npm run dev
+cd ./reverse-architecture-web
+turbo run dev
 ```
 
 ### Remote Caching
@@ -49,7 +62,7 @@ Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo
 By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
 
 ```
-cd my-turborepo
+cd ./reverse-architecture-web
 npx turbo login
 ```
 

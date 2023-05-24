@@ -1,11 +1,3 @@
-import { relationshipExists } from "../../utils/Formatting";
-import {
-    ContainerElement,
-    GroupElement,
-    PersonElement,
-    RelationshipElement,
-    SoftwareSystemElement
-} from "../Elements";
 import {
     Container,
     Person,
@@ -14,7 +6,8 @@ import {
     IViewStrategy,
     IVisitor,
     ViewType,
-    Workspace
+    Workspace,
+    relationshipExists
 } from "../../";
 
 export class ContainerViewStrategy implements IViewStrategy {
@@ -42,17 +35,17 @@ export class ContainerViewStrategy implements IViewStrategy {
             containers
                 .forEach(container => {
                     // 3.1.1. include the container
-                    new ContainerElement(container, parentId).accept(visitor);
+                    visitor.visitContainer(container, { parentId });
 
                     // 3.1.2. include all people that are directly connected to the current container
                     people
                         .filter(person => relationshipExists(this.workspace, container.identifier, person.identifier))
-                        .forEach(person => new PersonElement(person).accept(visitor));
+                        .forEach(person => visitor.visitPerson(person));
                     
                     // 3.1.3. include all software systems that are directly connected to the current container
                     softwareSystems
                         .filter(softwareSystem => relationshipExists(this.workspace, container.identifier, softwareSystem.identifier))
-                        .forEach(softwareSystem => new SoftwareSystemElement(softwareSystem).accept(visitor));
+                        .forEach(softwareSystem => visitor.visitSoftwareSystem(softwareSystem));
                 })
         }
 
@@ -65,13 +58,13 @@ export class ContainerViewStrategy implements IViewStrategy {
                 .filter(softwareSystem => softwareSystem.identifier === this.view.identifier)
                 .forEach(softwareSystem => {
                     // 2.1.1. include the software system as a boundary element
-                    new SoftwareSystemElement(softwareSystem).accept(visitor);
+                    visitor.visitSoftwareSystem(softwareSystem);
 
                     // 2.1.2. iterate over all groups in the software system
                     softwareSystem.groups
                         .forEach(group => {
                             // 2.1.2.1 include the container group as a boundary element
-                            new GroupElement(group, softwareSystem.identifier).accept(visitor);
+                            visitor.visitGroup(group, { parentId: softwareSystem.identifier });
 
                             // 2.1.2.2 include all containers in the group
                             visitContainer(
@@ -107,7 +100,7 @@ export class ContainerViewStrategy implements IViewStrategy {
         
         this.workspace.model.relationships
             .filter(edge => hasRelationship(edge.sourceIdentifier, edge.targetIdentifier))
-            .forEach(relationship => new RelationshipElement(relationship).accept(visitor));
+            .forEach(relationship => visitor.visitRelationship(relationship));
     }
 
     getPath(): Array<IView> {

@@ -41,13 +41,3 @@ export class Component implements Element {
     public readonly perspectives?: Perspectives;
     public readonly relationships: Relationship[];
 }
-
-export function toComponentString(component: Component): string {
-    return component
-        ? `${component.identifier} = component "${component.name}" "${component.description ?? ""}"`
-        : "";
-}
-
-export function toComponentArrayString(components: Component[]): string {
-    return components.map(toComponentString).join("\n");
-}

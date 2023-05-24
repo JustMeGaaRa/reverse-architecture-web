@@ -41,11 +41,3 @@ export class ContainerInstance {
     public readonly perspectives?: Perspectives;
     public readonly healthCheck?: HealthCheck;
 }
-
-export function toContainerInstanceString(instance: ContainerInstance): string {
-    return `${instance.identifier} = containerInstance "${instance.containerIdentifier}"`;
-}
-
-export function toContainerInstanceArrayString(instances: ContainerInstance[]): string {
-    return instances.map(toContainerInstanceString).join("\n");
-}

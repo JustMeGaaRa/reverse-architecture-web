@@ -49,7 +49,7 @@ export * from "./types/Model";
 export * from "./types/Views";
 export * from "./types/Workspace";
 
-export * from "./shared/IElement";
+export * from "./shared/IBuilder";
 export * from "./shared/ISupportPath";
 export * from "./shared/ISupportVisitor";
 export * from "./shared/IView";
@@ -59,6 +59,4 @@ export * from "./shared/IViewStrategy";
 export * from "./shared/IVisitor";
 export * from "./shared/IWorkspaceMetadata";
 
-export * from "./visitors/Strategies";
-
-export * from "./utils/Formatting";
+export * from "./visitors";

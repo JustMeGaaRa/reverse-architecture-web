@@ -1,12 +1,12 @@
 import { Properties } from "./model/Properties";
-import { Model, toModelString } from "./Model";
-import { toViewsString, Views } from "./Views";
-import { indent } from "../utils/Formatting";
+import { Model } from "./Model";
+import { Views } from "./Views";
 import { IWorkspaceMetadata } from "../shared/IWorkspaceMetadata";
 import { SystemContextView } from "./views/SystemContextView";
 import { ContainerView } from "./views/ContainerView";
 import { ComponentView } from "./views/ComponentView";
 import { DeploymentView } from "./views/DeploymentView";
+import { Identifier } from "./model/Identifier";
 
 type WorkspaceParams = 
     Required<Pick<Workspace, "name" | "description">>
@@ -70,8 +70,13 @@ export class Workspace {
     }
 }
 
-export function toWorkspaceString(workspace: Workspace): string {
-    const model = indent(toModelString(workspace.model));
-    const views = indent(toViewsString(workspace.views));
-    return `workspace "${workspace.name}" "${workspace.description}" {\n${model}\n${views}\n}`;
+export const relationshipExists = (
+    workspace: Workspace,
+    sourceIdentifier: Identifier,
+    targetIdentifier: Identifier
+) => {
+    return workspace?.model.relationships.some(x => 
+        x.sourceIdentifier === sourceIdentifier && x.targetIdentifier === targetIdentifier
+        || x.sourceIdentifier === targetIdentifier && x.targetIdentifier === sourceIdentifier
+    )
 }
