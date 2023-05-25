@@ -41,6 +41,7 @@ interface PropertyContext {
     NumericLiteral?: Array<{ image?: string }>;
     HexColorLiteral?: Array<{ image?: string }>;
     BooleanLiteral?: Array<{ image?: string }>;
+    UrlLiteral?: Array<{ image?: string }>;
 }
 
 export class StructurizrVisitor extends VisitorCtor {
@@ -333,6 +334,10 @@ export class StructurizrVisitor extends VisitorCtor {
         return ctx.StringLiteral?.map((x) => new Tag(trimQuotes(x.image))) ?? [];
     }
 
+    themesProperty(ctx: PropertyContext): string {
+        return ctx.UrlLiteral?.at(0)?.image ?? "";
+    }
+
     views(ctx: {
         systemLandscapeView?: any;
         systemContextView?: any;
@@ -340,14 +345,17 @@ export class StructurizrVisitor extends VisitorCtor {
         componentView?: any;
         deploymentView?: any;
         styles?: any;
+        themesProperty?: any;
     }): Views {
+        const themes = this.visit(ctx.themesProperty);
         return new Views({
             systemLandscape: this.visit(ctx.systemLandscapeView),
             systemContexts: ctx.systemContextView?.map((x) => this.visit(x)) ?? [],
             containers: ctx.containerView?.map((x) => this.visit(x)) ?? [],
             components: ctx.componentView?.map((x) => this.visit(x)) ?? [],
             deployments: ctx.deploymentView?.map((x) => this.visit(x)) ?? [],
-            styles: this.visit(ctx.styles)
+            styles: this.visit(ctx.styles),
+            themes: themes ? [themes] : []
         });
     }
 

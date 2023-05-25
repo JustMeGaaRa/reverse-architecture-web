@@ -1,9 +1,9 @@
 import {
-    aggrerateStyles,
     defaultElementStyle,
     Element,
     ElementStyle,
     ElementStyleProperties,
+    foldStyles,
 } from "@structurizr/dsl";
 import { NodeProps } from "@reactflow/core";
 import { FC, useMemo } from "react";
@@ -25,14 +25,11 @@ export function ReactFlowNodeWrapper(NodeElement: FC<{
         data,
         selected,
     }) {
-        const elementStyle = useMemo(() => {
-            const tags = data.element.tags
-                ? [...data.element.tags].reverse()
-                : [];
-            return data.element.tags
-                ? aggrerateStyles(defaultElementStyle, data.style, tags)
-                : defaultElementStyle;
-        }, [data.style, data.element.tags]);
+        const elementStyle = useMemo(() => foldStyles(
+                defaultElementStyle,
+                data.style,
+                data.element.tags
+        ), [data.style, data.element.tags]);
 
         return (
             <NodeElement

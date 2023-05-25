@@ -322,6 +322,7 @@ export class StructurizrParser extends CstParser {
 
     views = this.RULE("views", () => {
         let hasStyles = false;
+        let hasThemes = false;
 
         this.CONSUME(Tokens.Views);
         this.CONSUME(Tokens.LCurly);
@@ -337,6 +338,13 @@ export class StructurizrParser extends CstParser {
                     ALT: () => {
                         this.SUBRULE(this.styles);
                         hasStyles = true;
+                    }
+                },
+                {
+                    GATE: () => !hasThemes,
+                    ALT: () => {
+                        this.SUBRULE(this.themes),
+                        hasThemes = true;
                     }
                 }
             ]);
@@ -539,6 +547,11 @@ export class StructurizrParser extends CstParser {
     title = this.RULE("titleProperty", () => {
         this.CONSUME(Tokens.Title);
         this.CONSUME(Tokens.StringLiteral);
+    });
+
+    themes = this.RULE("themesProperty", () => {
+      this.CONSUME(Tokens.Themes);
+      this.CONSUME(Tokens.UrlLiteral);
     });
 
     styles = this.RULE("styles", () => {

@@ -50,7 +50,7 @@ export const DeploymentNodeElement: FC<{
                 minHeight={320}
                 handleStyle={{ width: 7, height: 7 }}
                 lineStyle={{ borderWidth: 0 }}
-                onResize={onResize}
+                onResizeEnd={onResize}
             />
         </Flex>
     );

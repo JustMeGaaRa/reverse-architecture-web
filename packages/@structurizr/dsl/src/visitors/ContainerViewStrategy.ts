@@ -8,7 +8,7 @@ import {
     ViewType,
     Workspace,
     relationshipExists
-} from "../../";
+} from "../";
 
 export class ContainerViewStrategy implements IViewStrategy {
     constructor(

@@ -1,6 +1,6 @@
 import {
-    aggrerateStyles,
     defaultRelationshipStyle,
+    foldStyles,
     Relationship,
     RelationshipStyle,
     RelationshipStyleProperties
@@ -20,10 +20,10 @@ export function ReactFlowEdgeWrapper(EdgeElement: FC<{
         data,
         selected
     }) {
-        const edgeStyle = useMemo(() => aggrerateStyles(
+        const edgeStyle = useMemo(() => foldStyles(
             defaultRelationshipStyle,
             data.style,
-            [...data.relationship.tags].reverse()
+            data.relationship.tags
         ), [data.relationship.tags, data.style]);
 
         return (

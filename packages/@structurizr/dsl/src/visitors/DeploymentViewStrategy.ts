@@ -5,7 +5,7 @@ import {
     Workspace,
     DeploymentNode,
     ViewType
-} from "../../";
+} from "../";
 
 export class DeploymentViewStrategy implements IViewStrategy {
     constructor(

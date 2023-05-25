@@ -1,3 +1,4 @@
+import { position } from "@chakra-ui/react";
 import { Edge, Node } from "@reactflow/core";
 import {
     Component,
@@ -7,7 +8,11 @@ import {
     DeploymentNode,
     Element,
     ElementStyle,
+    findContainer,
+    findSoftwareSystem,
+    foldStyles,
     Group,
+    IElementPosition,
     InfrastructureNode,
     IView,
     IVisitor,
@@ -31,7 +36,9 @@ export class ReactFlowVisitor implements IVisitor {
     constructor(
         private workspace: Workspace,
         private selectedView: IView,
-        private builder: ReactFlowJsonObjectBuilder
+        private builder: ReactFlowJsonObjectBuilder,
+        private defaultPosition: Position = { x: 0, y: 0 },
+        private defaultPadding: number = 50
     ) { }
 
     visitWorkspace(workspace: Workspace): void {
@@ -43,21 +50,29 @@ export class ReactFlowVisitor implements IVisitor {
     }
 
     visitGroup(group: Group, params?: { parentId?: string }): void {
-        const boundingBox = getBoundingBox(
-            this.selectedView,
-            Array.from<{ identifier: string }>([])
-                .concat(group.softwareSystems)
-                .concat(group.people)
-                .concat(group.containers)
-                .concat(group.components));
+        const boundingBox = extendBoundingBox(
+            foldBoundingBoxes(
+                Array.from<{ identifier: string, tags: Tag[] }>([])
+                    .concat(group.softwareSystems)
+                    .concat(group.people)
+                    .concat(group.containers)
+                    .concat(group.components)
+                    .map(element => extendElementBoundingBox(
+                        this.workspace.views.styles.element,
+                        this.selectedView.elements,
+                        element,
+                        this.defaultPadding
+                    ))
+            ), this.defaultPadding
+        )
         
         const node = fromElement({
             elementId: group.identifier,
             element: group,
             isBoundary: true,
-            position: boundingBox,
             parentId: params?.parentId,
-            size: boundingBox,
+            position: getPosition(boundingBox),
+            size: getSize(boundingBox),
             styles: this.workspace.views.styles,
         });
         this.builder.addNode(node);
@@ -66,7 +81,8 @@ export class ReactFlowVisitor implements IVisitor {
     visitPerson(person: Person, params?: { parentId?: string }): void {
         const node = fromElement({
             element: person,
-            position: this.selectedView.elements.find(x => x.id === person.identifier) ?? { x: 0, y: 0 },
+            position: this.selectedView.elements.find(x => x.id === person.identifier)
+                ?? this.defaultPosition,
             parentId: params?.parentId,
             styles: this.workspace.views.styles,
         });
@@ -74,42 +90,90 @@ export class ReactFlowVisitor implements IVisitor {
     }
     
     visitSoftwareSystem(softwareSystem: SoftwareSystem, params?: { parentId?: string }): void {
+        const getSoftwareSystemBoundingBox = (softwareSystem: SoftwareSystem) => {
+            const containerBoundingBoxes = softwareSystem.containers.map(element => {
+                return extendElementBoundingBox(
+                    this.workspace.views.styles.element,
+                    this.selectedView.elements,
+                    element,
+                    this.defaultPadding
+                );
+            });
+            const groupBoundingBoxes = softwareSystem.groups.flatMap(group => {
+                const groupBoundingBoxes = foldBoundingBoxes(group.containers.map(element => {
+                    return extendElementBoundingBox(
+                        this.workspace.views.styles.element,
+                        this.selectedView.elements,
+                        element,
+                        this.defaultPadding
+                    );
+                }));
+                return extendBoundingBox(groupBoundingBoxes, this.defaultPadding)
+            });
+            const softwareSystemBoundingBox = foldBoundingBoxes(containerBoundingBoxes.concat(groupBoundingBoxes));
+            return extendBoundingBox(softwareSystemBoundingBox, this.defaultPadding);
+        }
+        
         const isBoundary = this.selectedView.type === ViewType.Container
             && softwareSystem.identifier === this.selectedView.identifier;
-        const position = this.selectedView.elements.find(x => x.id === softwareSystem.identifier)
-            ?? { x: 0, y: 0 };
+        const softwareSystemPosition = this.selectedView.elements.find(element => element.id === softwareSystem.identifier)
+            ?? this.defaultPosition;
+        const softwareSystemSize = { height: defaultElementStyle.height, width: defaultElementStyle.width };
         const boundingBox = isBoundary
-            ? getBoundingBox(
-                this.selectedView,
-                softwareSystem.groups.flatMap(x => x.containers).concat(softwareSystem.containers))
-            : { ...position, width: defaultElementStyle.width, height: defaultElementStyle.height };
+            ? getSoftwareSystemBoundingBox(softwareSystem)
+            : createBoundingBox(softwareSystemPosition, softwareSystemSize);
+        
         const node = fromElement({
             element: softwareSystem,
             isBoundary,
-            position,
             parentId: params?.parentId,
-            size: boundingBox,
+            position: isBoundary ? getPosition(boundingBox) : softwareSystemPosition,
+            size: isBoundary ? getSize(boundingBox) : softwareSystemSize,
             styles: this.workspace.views.styles,
         });
         this.builder.addNode(node);
     }
 
     visitContainer(container: Container, params?: { parentId?: string }): void {
+        const getContainerBoundingBox = (container: Container) => {
+            const componentBoundingBoxes = container.components.map(element => {
+                return extendElementBoundingBox(
+                    this.workspace.views.styles.element,
+                    this.selectedView.elements,
+                    element,
+                    this.defaultPadding
+                );
+            });
+            const groupBoundingBoxes = container.groups.flatMap(group => {
+                const groupBoundingBoxes = foldBoundingBoxes(group.components.map(element => {
+                    return extendElementBoundingBox(
+                        this.workspace.views.styles.element,
+                        this.selectedView.elements,
+                        element,
+                        this.defaultPadding
+                    );
+                }));
+                return extendBoundingBox(groupBoundingBoxes, this.defaultPadding)
+            });
+            const containerBoundingBox = foldBoundingBoxes(componentBoundingBoxes.concat(groupBoundingBoxes));
+            return extendBoundingBox(containerBoundingBox, this.defaultPadding);
+        }
+
         const isBoundary = this.selectedView.type === ViewType.Component
             && container.identifier === this.selectedView.identifier;
-        const position = this.selectedView.elements.find(x => x.id === container.identifier)
-            ?? { x: 0, y: 0 };
+        const containerPosition = this.selectedView.elements.find(element => element.id === container.identifier)
+            ?? this.defaultPosition;
+        const containerSize = { height: defaultElementStyle.height, width: defaultElementStyle.width };
         const boundingBox = isBoundary
-            ? getBoundingBox(
-                this.selectedView,
-                container.groups.flatMap(x => x.components).concat(container.components))
-            : { ...position, width: defaultElementStyle.width, height: defaultElementStyle.height };
+            ? getContainerBoundingBox(container)
+            : createBoundingBox(containerPosition, containerSize);
+        
         const node = fromElement({
             element: container,
-            position,
             isBoundary,
             parentId: params?.parentId,
-            size: boundingBox,
+            position: isBoundary ? getPosition(boundingBox) : containerPosition,
+            size: isBoundary ? getSize(boundingBox) : containerSize,
             styles: this.workspace.views.styles,
         });
         this.builder.addNode(node);
@@ -118,7 +182,8 @@ export class ReactFlowVisitor implements IVisitor {
     visitComponent(component: Component, params?: { parentId?: string }): void {
         const node = fromElement({
             element: component,
-            position: this.selectedView.elements.find(x => x.id === component.identifier) ?? { x: 0, y: 0 },
+            position: this.selectedView.elements.find(x => x.id === component.identifier)
+                ?? this.defaultPosition,
             parentId: params?.parentId,
             styles: this.workspace.views.styles,
         });
@@ -126,10 +191,36 @@ export class ReactFlowVisitor implements IVisitor {
     }
 
     visitDeploymentNode(deploymentNode: DeploymentNode, params?: { parentId?: string }): void {
+        const getDepoymentNodeBoundingBox = (deploymentNode: DeploymentNode) => {
+            const elementsBoundingBoxes = Array.from<ElementProps>([])
+                .concat(deploymentNode.infrastructureNodes ?? [])
+                .concat(deploymentNode.containerInstances
+                    ?.map(instance => findContainer(this.workspace, instance.containerIdentifier)) ?? [])
+                .concat(deploymentNode.softwareSystemInstances
+                    ?.map(instance => findSoftwareSystem(this.workspace, instance.softwareSystemIdentifier)) ?? [])
+                .map(element => {
+                    return extendElementBoundingBox(
+                        this.workspace.views.styles.element,
+                        this.selectedView.elements,
+                        element,
+                        this.defaultPadding
+                    );
+                });
+
+            const nestedBoundingBoxes = deploymentNode.deploymentNodes
+                ?.map(getDepoymentNodeBoundingBox) ?? [];
+            
+            const deploymentNodeBoundingBox = foldBoundingBoxes(elementsBoundingBoxes.concat(nestedBoundingBoxes));
+            return extendBoundingBox(deploymentNodeBoundingBox, this.defaultPadding);
+        }
+        
+        const boundingBox = getDepoymentNodeBoundingBox(deploymentNode);
+
         const node = fromElement({
             element: deploymentNode,
-            position: this.selectedView.elements.find(x => x.id === deploymentNode.identifier) ?? { x: 0, y: 0 },
             parentId: params?.parentId,
+            position: getPosition(boundingBox),
+            size: getSize(boundingBox),
             styles: this.workspace.views.styles,
         });
         this.builder.addNode(node);
@@ -138,7 +229,8 @@ export class ReactFlowVisitor implements IVisitor {
     visitInfrastructureNode(infrastructureNode: InfrastructureNode, params?: { parentId?: string }): void {
         const node = fromElement({
             element: infrastructureNode,
-            position: this.selectedView.elements.find(x => x.id === infrastructureNode.identifier) ?? { x: 0, y: 0 },
+            position: this.selectedView.elements.find(x => x.id === infrastructureNode.identifier)
+                ?? this.defaultPosition,
             parentId: params?.parentId,
             styles: this.workspace.views.styles,
         });
@@ -147,7 +239,7 @@ export class ReactFlowVisitor implements IVisitor {
 
     visitSoftwareSystemInstance(softwareSystemInstance: SoftwareSystemInstance, params?: { parentId?: string }): void {
         const position = this.selectedView.elements.find(x => x.id === softwareSystemInstance.identifier)
-            ?? { x: 0, y: 0 };
+            ?? this.defaultPosition;
         const node = fromElement({
             element: softwareSystemInstance,
             position,
@@ -159,7 +251,7 @@ export class ReactFlowVisitor implements IVisitor {
 
     visitContainerInstance(containerInstance: ContainerInstance, params?: { parentId?: string }): void {
         const position = this.selectedView.elements.find(x => x.id === containerInstance.identifier)
-            ?? { x: 0, y: 0 };
+            ?? this.defaultPosition;
         const node = fromElement({
             element: containerInstance,
             position,
@@ -194,30 +286,85 @@ export class ReactFlowVisitor implements IVisitor {
     }
 }
 
-const getBoundingBox = (selectedView: IView, elements: Array<{ identifier: string }>) => {
-    const defaultPosition = { x: 0, y: 0 };
-    const positions = elements
-        .map(x => selectedView.elements.find(y => y.id === x.identifier) ?? defaultPosition);
-    const padding = 100;
-    const boundaries = positions.reduce((state, item) => ({
-        min: {
-            x: Math.min(state.min.x, item.x),
-            y: Math.min(state.min.y, item.y),
-        },
-        max: {
-            x: Math.max(state.max.x, item.x + defaultElementStyle.width),
-            y: Math.max(state.max.y, item.y + defaultElementStyle.height),
-        }
-    }), {
-        min: positions.at(0) ?? defaultPosition,
-        max: positions.at(0) ?? defaultPosition
-    });
+// TODO: cache the bounding boxes to resuse them and optimize computation time required
+const boundingBoxes: { [id: string]: BoundingBox } = {}
+
+type ElementProps = {
+    identifier: string,
+    tags: Tag[]
+}
+
+type BoundingBox = { minX: number, minY: number, maxX: number, maxY: number };
+
+const createBoundingBox = (position: Position, size: Size): BoundingBox => {
     return {
-        x: boundaries.min.x - padding / 2,
-        y: boundaries.min.y - padding / 2,
-        width: boundaries.max.x - boundaries.min.x + padding / 2,
-        height: boundaries.max.y - boundaries.min.y + padding / 2,
-    };
+        minX: position.x,
+        minY: position.y,
+        maxX: position.x + size.width,
+        maxY: position.y + size.height,
+    }
+}
+
+const extendBoundingBox = (boundingBox: BoundingBox, shift: number): BoundingBox => {
+    return {
+        minX: boundingBox.minX - shift,
+        minY: boundingBox.minY - shift,
+        maxX: boundingBox.maxX + shift,
+        maxY: boundingBox.maxY + shift,
+    }
+}
+
+const foldBoundingBoxes = (boundingBoxes: Array<BoundingBox>): BoundingBox => {
+    return boundingBoxes.reduce((state, box) => ({
+        minX: Math.min(state.minX, box.minX),
+        minY: Math.min(state.minY, box.minY),
+        maxY: Math.max(state.maxY, box.maxY),
+        maxX: Math.max(state.maxX, box.maxX),
+    }), boundingBoxes?.at(0) ?? { minX: 0, minY: 0, maxY: 0, maxX: 0 });
+}
+
+const createElementBoundingBox = (
+    styles: ElementStyle,
+    element: ElementProps,
+    position: Position
+): BoundingBox => {
+    const style = foldStyles(
+        defaultElementStyle,
+        styles,
+        element.tags?.reverse() ?? []
+    );
+    return {
+        minX: position.x,
+        minY: position.y,
+        maxX: position.x + style.width,
+        maxY: position.y + style.height,
+    }
+}
+
+const extendElementBoundingBox = (
+    styles: ElementStyle,
+    positions: IElementPosition[],
+    element: ElementProps,
+    padding: number
+): BoundingBox => {
+    const defaultPosition = { x: 0, y: 0 };
+    const position = positions.find(y => y.id === element.identifier) ?? defaultPosition;
+    const elementBoundingBox = createElementBoundingBox(styles, element, position);
+    return extendBoundingBox(elementBoundingBox, padding);
+}
+
+const getPosition = (boundingBox: BoundingBox): Position => {
+    return {
+        x: boundingBox.minX,
+        y: boundingBox.minY,
+    }
+}
+
+const getSize = (boundingBox: BoundingBox): Size => {
+    return {
+        height: boundingBox.maxY - boundingBox.minY,
+        width: boundingBox.maxX - boundingBox.minX,
+    }
 }
 
 export type ElementParams<TElement extends Element = any> = {

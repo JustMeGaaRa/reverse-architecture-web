@@ -42,6 +42,7 @@ export enum TokenName {
     Default = "Default",
     Animation = "Animation",
     Title = "Title",
+    Themes = "Themes",
     // view style properties
     Styles = "Styles",
     Element = "Element",
@@ -66,5 +67,6 @@ export enum TokenName {
 
     // view style property values
     HexColorLiteral = "HexColorLiteral",
-    BooleanLiteral = "BooleanLiteral"
+    BooleanLiteral = "BooleanLiteral",
+    UrlLiteral = "UrlLiteral",
 }

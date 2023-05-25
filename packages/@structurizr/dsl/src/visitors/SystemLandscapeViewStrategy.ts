@@ -6,7 +6,7 @@ import {
     IVisitor,
     ViewType,
     Workspace
-} from "../../";
+} from "../";
 
 export class SystemLandscapeViewStrategy implements IViewStrategy {
     constructor(

@@ -9,7 +9,7 @@ import {
     Container,
     Component,
     relationshipExists
-} from "..";
+} from "../";
 
 export class ComponentViewStrategy implements IViewStrategy {
     constructor(

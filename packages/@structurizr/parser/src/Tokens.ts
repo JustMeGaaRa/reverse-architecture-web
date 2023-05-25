@@ -50,6 +50,7 @@ const AutoLayout = createToken({ name: "AutoLayout", pattern: /autoLayout/i });
 const Default = createToken({ name: "Default", pattern: /default/ });
 const Animation = createToken({ name: "Animation", pattern: /animation/ });
 const Title = createToken({ name: "Title", pattern: /title/ });
+const Themes = createToken({ name: "Themes", pattern: /themes/ });
 
 // view style properties
 const Styles = createToken({ name: "Styles", pattern: /styles/ });
@@ -76,6 +77,7 @@ const Position = createToken({ name: "Position", pattern: /position/ });
 // view style property values
 const HexColorLiteral = createToken({ name: "HexColorLiteral", pattern: /#[0-9a-fA-F]{8}|#[0-9a-fA-F]{6}|#[0-9a-fA-F]{4}|#[0-9a-fA-F]{3}/ });
 const BooleanLiteral = createToken({ name: "BooleanLiteral", pattern: /\btrue\b|\bfalse\b/i });
+const UrlLiteral = createToken({ name: "UrlLiteral", pattern: /http(s)?:\/\/[^\s]+/ });
 
 export const allTokens = [
     WhiteSpace,
@@ -118,6 +120,7 @@ export const allTokens = [
     Default,
     Animation,
     Title,
+    Themes,
 
     // view style properties
     Styles,
@@ -144,6 +147,7 @@ export const allTokens = [
     // view style property values
     HexColorLiteral,
     BooleanLiteral,
+    UrlLiteral,
 
     // global
     Identifier,

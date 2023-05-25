@@ -70,6 +70,21 @@ export class Workspace {
     }
 }
 
+export const findSoftwareSystem = (workspace: Workspace, identifier: Identifier) => {
+    return workspace?.model.softwareSystems
+        .concat(workspace?.model.groups.flatMap(x => x.softwareSystems))
+        .find(x => x.identifier === identifier);
+}
+
+export const findContainer = (workspace: Workspace, identifier: Identifier) => {
+    return workspace?.model.softwareSystems
+        .flatMap(x => x.containers)
+        .concat(workspace?.model.groups
+            .flatMap(x => x.softwareSystems)
+            .flatMap(x => x.containers))
+        .find(x => x.identifier === identifier);
+}
+
 export const relationshipExists = (
     workspace: Workspace,
     sourceIdentifier: Identifier,

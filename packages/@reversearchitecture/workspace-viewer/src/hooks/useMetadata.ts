@@ -127,6 +127,14 @@ export const useMetadata = () => {
                         components: updateViewMetadataArray(metadata.views.components, elementId, position)
                     }
                 };
+            case ViewType.Deployment:
+                return {
+                    ...metadata,
+                    views: {
+                        ...metadata.views,
+                        deployments: updateViewMetadataArray(metadata.views.deployments, elementId, position)
+                    }
+                };
             }
     }, []);
 

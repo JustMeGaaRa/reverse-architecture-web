@@ -7,29 +7,27 @@ export interface Styles {
     relationship: RelationshipStyle;
 }
 
-export function aggrerateStyles<
+export function foldStyles<
     TStyle,
-    TTagStyles extends { [key: string]: Partial<TStyle> }
+    TTagStyle extends { [key: string]: Partial<TStyle> }
 >(
     style: TStyle,
-    tagStyles: TTagStyles,
+    tagStyles: TTagStyle,
     tags: Tag[]
 ): TStyle {
-    const nextTag = tags.pop();
-
-    if (tagStyles && nextTag) {
-        const nextStyle = tagStyles[nextTag.name];
-
-        const appliedStyle: any = Object.fromEntries(
+    const applyStyle = (style: TStyle, nextStyle: Partial<TStyle>) => {
+        return Object.fromEntries(
             Object
                 .entries({ ...style, ...nextStyle })
                 .map(([key, value]) => [key, value !== undefined ? value : style[key]])
-        );
+        ) as TStyle;
+    };
 
-        return nextStyle
-            ? aggrerateStyles(appliedStyle, tagStyles, tags)
-            : aggrerateStyles(style, tagStyles, tags);
-    }
-
-    return style;
+    return tags ?
+        [...tags]
+            .reverse()
+            .reduce((state, tag) => tagStyles[tag.name]
+                ? applyStyle(state, tagStyles[tag.name])
+                : state, style)
+        : style;
 }

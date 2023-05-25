@@ -38,6 +38,7 @@ export const CodeEditorSheet: FC<{
         const updatedWorkspace = metadata
             ? Workspace.applyMetadata(workspace, metadata)
             : workspace;
+        
         setWorkspace(updatedWorkspace);
         setSelectedView(selectedView
             ?? updatedWorkspace.views.systemLandscape

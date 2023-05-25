@@ -7,7 +7,7 @@ import {
     ViewType,
     Workspace,
     relationshipExists
-} from "../../";
+} from "../";
 
 export class SystemContextViewStrategy implements IViewStrategy {
     constructor(
