@@ -13,7 +13,7 @@ export const useWorkspaceNavigation = () => {
     
     const navigate = useCallback((view: IViewDefinition) => {
         // TODO: calculate the automatic layout and update the metadata
-        const defaultView: IView = { ...view, elements: [] };
+        const defaultView: IView = { ...view, elements: [], relationships: [] };
         const selectedView = 
             workspace.views.systemContexts.find(x => x.type === view.type && x.identifier === view.identifier)
             ?? workspace.views.containers.find(x => x.type === view.type && x.identifier === view.identifier)

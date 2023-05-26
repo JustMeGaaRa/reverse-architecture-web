@@ -1,33 +1,41 @@
+import {
+    ElementStyleProperties,
+    RelationshipStyleProperties
+} from "../..";
 import { Tag } from "../model/Tag";
-import { ElementStyle } from "./ElementStyle";
-import { RelationshipStyle } from "./RelationshipStyle";
 
 export interface Styles {
-    element: ElementStyle;
-    relationship: RelationshipStyle;
+    elements: ElementStyle;
+    relationships: RelationshipStyle;
 }
 
+export type ElementStyle = Array<Style<ElementStyleProperties>>;
+
+export type RelationshipStyle = Array<Style<RelationshipStyleProperties>>;
+
+export type Style<TProperties> = Partial<TProperties> & { tag: string };
+
 export function foldStyles<
-    TStyle,
-    TTagStyle extends { [key: string]: Partial<TStyle> }
+    TStyleProperties,
+    TTagStyle extends Style<TStyleProperties>
 >(
-    style: TStyle,
-    tagStyles: TTagStyle,
+    style: TStyleProperties,
+    tagStyles: TTagStyle[],
     tags: Tag[]
-): TStyle {
-    const applyStyle = (style: TStyle, nextStyle: Partial<TStyle>) => {
+): TStyleProperties {
+    const applyStyle = (
+        style: TStyleProperties,
+        tagStyle: Partial<TStyleProperties>
+    ) => {
         return Object.fromEntries(
             Object
-                .entries({ ...style, ...nextStyle })
+                .entries({ ...style, ...tagStyle })
                 .map(([key, value]) => [key, value !== undefined ? value : style[key]])
-        ) as TStyle;
+        ) as TStyleProperties;
     };
 
-    return tags ?
-        [...tags]
-            .reverse()
-            .reduce((state, tag) => tagStyles[tag.name]
-                ? applyStyle(state, tagStyles[tag.name])
-                : state, style)
-        : style;
+    return tags ? tags.reduce((state, tag) => {
+        const tagStyle = tagStyles.find(x => x.tag === tag.name);
+        return applyStyle(state, tagStyle)
+    }, style) : style;
 }

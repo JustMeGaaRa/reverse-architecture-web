@@ -21,7 +21,7 @@ export const useYReactFlow = () => {
         if (document) {
             Y.transact(document, () => {
                 ynodes.clear();
-                nodes.forEach(node => ynodes.set(node.id, node));
+                // nodes.forEach(node => ynodes.set(node.id, node));
             });
         }
     }, [document, ynodes]);
@@ -30,7 +30,7 @@ export const useYReactFlow = () => {
         if (document) {
             Y.transact(document, () => {
                 yedges.clear();
-                edges.forEach(edge => yedges.set(edge.id, edge));
+                // edges.forEach(edge => yedges.set(edge.id, edge));
             });
         }
     }, [document, yedges]);
@@ -38,7 +38,7 @@ export const useYReactFlow = () => {
     const updateNodes = useCallback((nodes: Node[]) => {
         if (document) {
             Y.transact(document, () => {
-                nodes.forEach(node => ynodes.set(node.id, node));
+                // nodes.forEach(node => ynodes.set(node.id, node));
             });
         }
     }, [document, ynodes]);
@@ -46,7 +46,7 @@ export const useYReactFlow = () => {
     const updateEdges = useCallback((edges: Edge[]) => {
         if (document) {
             Y.transact(document, () => {
-                edges.forEach(edge => yedges.set(edge.id, edge));
+                // edges.forEach(edge => yedges.set(edge.id, edge));
             });
         }
     }, [document, yedges]);

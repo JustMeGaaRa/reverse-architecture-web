@@ -30,7 +30,7 @@ function indent(text: string) {
         .join('\n');
 }
 
-export class StructurizrExportVisitor implements IVisitor<string> {
+export class StructurizrExportVisitor implements IVisitor {
     visitWorkspace(workspace: Workspace): string {
         const model = indent(this.visitModel(workspace.model));
         const views = indent(this.visitViews(workspace.views));
@@ -123,13 +123,13 @@ export class StructurizrExportVisitor implements IVisitor<string> {
     }
 
     visitViews(views: Views): string {
-        const styles = line(indent(this.visitStyles(views.styles)));
+        const styles = line(indent(this.visitStyles(views.configuration.styles)));
         return `views {\n${styles}\n}`;
     }
 
     visitStyles(styles: Styles): string {
-        const elements = indent(this.visitElementStyle(styles?.element));
-        const relationships = indent(this.visitRelationshipStyle(styles?.relationship));
+        const elements = indent(this.visitElementStyle(styles?.elements));
+        const relationships = indent(this.visitRelationshipStyle(styles?.relationships));
         return `styles {\n${elements}\n${relationships}\n}`;
     }
 

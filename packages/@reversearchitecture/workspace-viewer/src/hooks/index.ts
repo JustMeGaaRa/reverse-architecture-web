@@ -1,5 +1,4 @@
 export * from "./useMetadata";
-export * from "./useSelectedViewGraph";
-export * from "./useWorkspace";
+export * from "./useReactFlowSelectedView";
 export * from "./useWorkspaceApi";
 export * from "./useWorkspaceNavigation";

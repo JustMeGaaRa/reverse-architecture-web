@@ -1,6 +1,6 @@
 import {
     IViewDefinition,
-    IVIewMetadata,
+    IViewMetadata,
     IWorkspaceMetadata,
     Position,
     ViewType
@@ -11,7 +11,7 @@ export const useMetadata = () => {
     const addViewLayout = useCallback((
         metadata: IWorkspaceMetadata,
         view: IViewDefinition,
-        viewMetadata: IVIewMetadata
+        viewMetadata: IViewMetadata
     ) => {
         switch (view.type) {
             case ViewType.SystemLandscape:
@@ -75,7 +75,7 @@ export const useMetadata = () => {
         elementId: string,
         position: Position
     ) => {
-        const updateViewMetadata = (metadata: IVIewMetadata, elementId: string, position: Position) => {
+        const updateViewMetadata = (metadata: IViewMetadata, elementId: string, position: Position) => {
             return {
                 ...metadata,
                 elements: [
@@ -85,8 +85,8 @@ export const useMetadata = () => {
             }
         }
 
-        const updateViewMetadataArray = (metadata: IVIewMetadata[], elementId: string, position: Position) => {
-            const emptySystemContext: IVIewMetadata = { identifier: view.identifier, elements: [] };
+        const updateViewMetadataArray = (metadata: IViewMetadata[], elementId: string, position: Position) => {
+            const emptySystemContext: IViewMetadata = { identifier: view.identifier, elements: [], relationships: [] };
             const systemContext = metadata.find(systemContext => systemContext.identifier === view.identifier);
             return [
                 ...metadata.filter(systemContext => systemContext.identifier !== view.identifier),

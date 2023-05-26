@@ -1,6 +1,6 @@
 import { Properties } from "../model/Properties";
 import { IView } from "../../shared/IView";
-import { IElementPosition } from "../../shared/IVIewMetadata";
+import { IElementPosition, IRelationshipPosition } from "../../shared/IWorkspaceMetadata";
 import { AutoLayout } from "./AutoLayout";
 import { ViewType } from "./ViewType";
 
@@ -20,4 +20,5 @@ export class SystemLandscapeView implements IView {
     public readonly description?: string;
     public readonly properties?: Properties;
     public readonly elements: Array<IElementPosition>;
+    public readonly relationships: Array<IRelationshipPosition>;
 }

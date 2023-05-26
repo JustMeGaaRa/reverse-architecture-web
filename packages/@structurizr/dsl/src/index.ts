@@ -28,13 +28,12 @@ export * from "./types/views/Branding";
 export * from "./types/views/Color";
 export * from "./types/views/ComponentView";
 export * from "./types/views/ContainerView";
+export * from "./types/views/Configuration";
 export * from "./types/views/DeploymentView";
 export * from "./types/views/Dimension";
-export * from "./types/views/ElementStyle";
 export * from "./types/views/ElementStyleProperties";
 export * from "./types/views/LineStyle";
 export * from "./types/views/Position";
-export * from "./types/views/RelationshipStyle"
 export * from "./types/views/RelationshipStyleProperties";
 export * from "./types/views/RoutingStyle";
 export * from "./types/views/Size";
@@ -53,10 +52,19 @@ export * from "./shared/IBuilder";
 export * from "./shared/ISupportPath";
 export * from "./shared/ISupportVisitor";
 export * from "./shared/IView";
-export * from "./shared/IViewDefinition";
-export * from "./shared/IVIewMetadata";
-export * from "./shared/IViewStrategy";
 export * from "./shared/IVisitor";
 export * from "./shared/IWorkspaceMetadata";
 
-export * from "./visitors";
+export * from "./visitors/ComponentViewStrategy";
+export * from "./visitors/ContainerViewStrategy";
+export * from "./visitors/DeploymentViewStrategy";
+export * from "./visitors/SystemContextViewStrategy";
+export * from "./visitors/SystemLandscapeViewStrategy";
+
+export * from "./providers/SystemLandscapePathProvider";
+export * from "./providers/SystemContextPathProvider";
+export * from "./providers/ContainerPathProvider";
+export * from "./providers/ComponentPathProvider";
+export * from "./providers/DeploymentPathProvider";
+
+export * from "./utils";

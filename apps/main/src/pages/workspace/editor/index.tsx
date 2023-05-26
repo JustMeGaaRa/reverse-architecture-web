@@ -9,14 +9,12 @@ import { WorkspaceBreadcrumb } from "@reversearchitecture/workspace-breadcrumb";
 import { WorkspaceEditor } from "@reversearchitecture/workspace-editor";
 import { useMetadata, WorkspaceExplorer } from "@reversearchitecture/workspace-viewer";
 import { WorkspaceZoom } from "@reversearchitecture/workspace-zoom";
-import { IWorkspaceMetadata, IView, Workspace } from "@structurizr/dsl";
+import { IWorkspaceMetadata, IView, Workspace, applyMetadata, applyTheme } from "@structurizr/dsl";
 import { useStructurizrParser } from "@structurizr/react";
 import { FC, useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-export const CodeEditorSheet: FC<{
-
-}> = () => {
+export const CodeEditorSheet: FC = () => {
     const { workspaceId } = useParams<{ workspaceId: string }>();
     const [ state, setState ] = useState({
         showPages: false,
@@ -36,7 +34,7 @@ export const CodeEditorSheet: FC<{
 
     const applyWorkspace = useCallback((workspace: Workspace, metadata?: IWorkspaceMetadata) => {
         const updatedWorkspace = metadata
-            ? Workspace.applyMetadata(workspace, metadata)
+            ? applyMetadata(workspace, metadata)
             : workspace;
         
         setWorkspace(updatedWorkspace);
@@ -53,14 +51,15 @@ export const CodeEditorSheet: FC<{
             const api = new CommunityHubApi();
             const workspaceText = await api.getWorkspaceText(workspaceId);
             const workspaceMetadata = await api.getWorkspaceMetadata(workspaceId);
+            const theme = await api.getWorkspaceTheme(workspaceId);
 
-            return { text: workspaceText, metadata: workspaceMetadata };
+            return { text: workspaceText, metadata: workspaceMetadata, theme: theme };
         }
         
         fetchWorkspace(workspaceId)
-            .then(({ text, metadata }) => {
+            .then(({ text, metadata, theme }) => {
                 setText(text);
-                applyWorkspace(parseWorkspace(text), metadata);
+                applyWorkspace(applyTheme(parseWorkspace(text), theme), metadata);
                 setMetadata(metadata);
             })
             .catch(error => {

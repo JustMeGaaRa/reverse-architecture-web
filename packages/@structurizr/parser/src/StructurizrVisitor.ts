@@ -1,22 +1,24 @@
 import {
     Component,
     ComponentView,
+    Configuration,
     Container,
     ContainerInstance,
     ContainerView,
     DeploymentEnvironment,
     DeploymentNode,
     DeploymentView,
-    ElementStyle,
+    ElementStyleProperties,
     ElementType,
     Group,
     InfrastructureNode,
     Model,
     Person,
     Relationship,
-    RelationshipStyle,
+    RelationshipStyleProperties,
     SoftwareSystem,
     SoftwareSystemInstance,
+    Style,
     Styles,
     SystemContextView,
     SystemLandscapeView,
@@ -354,8 +356,10 @@ export class StructurizrVisitor extends VisitorCtor {
             containers: ctx.containerView?.map((x) => this.visit(x)) ?? [],
             components: ctx.componentView?.map((x) => this.visit(x)) ?? [],
             deployments: ctx.deploymentView?.map((x) => this.visit(x)) ?? [],
-            styles: this.visit(ctx.styles),
-            themes: themes ? [themes] : []
+            configuration: new Configuration({
+                styles: this.visit(ctx.styles),
+                themes: themes ? [themes] : []
+            })
         });
     }
 
@@ -365,7 +369,8 @@ export class StructurizrVisitor extends VisitorCtor {
             identifier: ctx.Identifier?.at(0)?.image,
             key: trimQuotes(ctx.StringLiteral?.at(0)?.image),
             description: trimQuotes(ctx.StringLiteral?.at(1)?.image),
-            elements: []
+            elements: [],
+            relationships: []
         };
     }
 
@@ -375,7 +380,8 @@ export class StructurizrVisitor extends VisitorCtor {
             identifier: ctx.Identifier?.at(0)?.image,
             key: trimQuotes(ctx.StringLiteral?.at(0)?.image),
             description: trimQuotes(ctx.StringLiteral?.at(1)?.image),
-            elements: []
+            elements: [],
+            relationships: []
         };
     }
 
@@ -385,7 +391,8 @@ export class StructurizrVisitor extends VisitorCtor {
             identifier: ctx.Identifier?.at(0)?.image,
             key: trimQuotes(ctx.StringLiteral?.at(0)?.image),
             description: trimQuotes(ctx.StringLiteral?.at(1)?.image),
-            elements: []
+            elements: [],
+            relationships: []
         };
     }
 
@@ -395,7 +402,8 @@ export class StructurizrVisitor extends VisitorCtor {
             identifier: ctx.Identifier?.at(0)?.image,
             key: trimQuotes(ctx.StringLiteral?.at(0)?.image),
             description: trimQuotes(ctx.StringLiteral?.at(1)?.image),
-            elements: []
+            elements: [],
+            relationships: []
         };
     }
 
@@ -406,7 +414,8 @@ export class StructurizrVisitor extends VisitorCtor {
             environment: trimQuotes(ctx.StringLiteral?.at(0)?.image),
             key: trimQuotes(ctx.StringLiteral?.at(1)?.image),
             description: trimQuotes(ctx.StringLiteral?.at(2)?.image),
-            elements: []
+            elements: [],
+            relationships: []
         };
     }
 
@@ -415,12 +424,12 @@ export class StructurizrVisitor extends VisitorCtor {
         relationshipStyle?: any[];
     }): Styles {
         return {
-            element: ctx.elementStyle
-                ?.reduce((style, value) => ({ ...style, ...this.visit(value) }), {})
-                ?? {},
-            relationship: ctx.relationshipStyle
-                ?.reduce((style, value) => ({ ...style, ...this.visit(value) }), {})
-                ?? {}
+            elements: ctx.elementStyle
+                ?.reduce((style, value) => ([ ...style, this.visit(value) ]), [])
+                ?? [],
+            relationships: ctx.relationshipStyle
+                ?.reduce((style, value) => ([ ...style, this.visit(value) ]), [])
+                ?? []
         }
     }
   
@@ -439,24 +448,22 @@ export class StructurizrVisitor extends VisitorCtor {
         opacity?: any;
         metadata?: any;
         description?: any;
-    }): ElementStyle {
-        const tag = trimQuotes(ctx.StringLiteral?.at(0)?.image);
+    }): Style<ElementStyleProperties> {
         return {
-            [tag]: {
-                shape: this.visit(ctx.shape),
-                icon: this.visit(ctx.icon),
-                width: this.visit(ctx.width),
-                height: this.visit(ctx.height),
-                background: this.visit(ctx.background),
-                color: this.visit(ctx.color),
-                stroke: this.visit(ctx.stroke),
-                strokeWidth: this.visit(ctx.strokeWidth),
-                fontSize: this.visit(ctx.fontSize),
-                border: this.visit(ctx.border),
-                opacity: this.visit(ctx.opacity),
-                metadata: this.visit(ctx.metadata),
-                description: this.visit(ctx.description),
-            },
+            tag: trimQuotes(ctx.StringLiteral?.at(0)?.image),
+            shape: this.visit(ctx.shape),
+            icon: this.visit(ctx.icon),
+            width: this.visit(ctx.width),
+            height: this.visit(ctx.height),
+            background: this.visit(ctx.background),
+            color: this.visit(ctx.color),
+            stroke: this.visit(ctx.stroke),
+            strokeWidth: this.visit(ctx.strokeWidth),
+            fontSize: this.visit(ctx.fontSize),
+            border: this.visit(ctx.border),
+            opacity: this.visit(ctx.opacity),
+            metadata: this.visit(ctx.metadata),
+            description: this.visit(ctx.description),
         }
     }
   
@@ -470,19 +477,17 @@ export class StructurizrVisitor extends VisitorCtor {
         width?: any;
         position?: any;
         opacity?: any;
-    }): RelationshipStyle {
-        const tag = trimQuotes(ctx.StringLiteral?.at(0)?.image);
+    }): Style<RelationshipStyleProperties> {
         return {
-            [tag]: {
-                thikness: this.visit(ctx.thinkness),
-                color: this.visit(ctx.color),
-                style: this.visit(ctx.style),
-                routing: this.visit(ctx.routing),
-                fontSize: this.visit(ctx.fontSize),
-                width: this.visit(ctx.width),
-                position: this.visit(ctx.position),
-                opacity: this.visit(ctx.opacity)
-            }
+            tag: trimQuotes(ctx.StringLiteral?.at(0)?.image), 
+            thikness: this.visit(ctx.thinkness),
+            color: this.visit(ctx.color),
+            style: this.visit(ctx.style),
+            routing: this.visit(ctx.routing),
+            fontSize: this.visit(ctx.fontSize),
+            width: this.visit(ctx.width),
+            position: this.visit(ctx.position),
+            opacity: this.visit(ctx.opacity)
         }
     }
   

@@ -27,7 +27,7 @@ export const useWorkspaceApi = () => {
                 fromElement({
                     element: person,
                     position: position,
-                    styles: workspaceStore.workspace.views.styles
+                    styles: workspaceStore.workspace.views.configuration.styles
                 })
             ]);
         }
@@ -39,7 +39,7 @@ export const useWorkspaceApi = () => {
                 fromElement({
                     element: softwareSystem,
                     position: position,
-                    styles: workspaceStore.workspace.views.styles
+                    styles: workspaceStore.workspace.views.configuration.styles
                 })
             ]);
         }
@@ -51,7 +51,7 @@ export const useWorkspaceApi = () => {
                 fromElement({
                     element: container,
                     position: position,
-                    styles: workspaceStore.workspace.views.styles
+                    styles: workspaceStore.workspace.views.configuration.styles
                 })
             ]);
         }
@@ -63,7 +63,7 @@ export const useWorkspaceApi = () => {
                 fromElement({
                     element: compoent,
                     position: position,
-                    styles: workspaceStore.workspace.views.styles
+                    styles: workspaceStore.workspace.views.configuration.styles
                 })
             ]);
         }
@@ -75,7 +75,7 @@ export const useWorkspaceApi = () => {
                 fromElement({
                     element: params.deploymentNode,
                     position: params.position,
-                    styles: workspaceStore.workspace.views.styles
+                    styles: workspaceStore.workspace.views.configuration.styles
                 })
             ]);
         }
@@ -86,7 +86,7 @@ export const useWorkspaceApi = () => {
             reactFlowShared.updateEdges([
                 fromRelationship({
                     relationship,
-                    styles: workspaceStore.workspace.views.styles
+                    styles: workspaceStore.workspace.views.configuration.styles
                 })
             ]);
         }

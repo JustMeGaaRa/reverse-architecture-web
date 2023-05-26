@@ -3,7 +3,7 @@ import {
     Element,
     ElementStyle,
     ElementStyleProperties,
-    foldStyles,
+    foldStyles
 } from "@structurizr/dsl";
 import { NodeProps } from "@reactflow/core";
 import { FC, useMemo } from "react";

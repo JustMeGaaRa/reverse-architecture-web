@@ -1,6 +1,6 @@
 import { Component, Container, ContainerInstance, DeploymentNode, ElementStyle, Group, InfrastructureNode, IVisitor, Model, Person, Relationship, RelationshipStyle, SoftwareSystem, SoftwareSystemInstance, Styles, Views, Workspace } from "@structurizr/dsl";
 
-export class WorkspaceJsonExportVisitor implements IVisitor<string> {
+export class WorkspaceJsonExportVisitor implements IVisitor {
     constructor(
         private readonly beautify: boolean = false,
         private readonly indent: number = 4

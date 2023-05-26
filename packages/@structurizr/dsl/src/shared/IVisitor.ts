@@ -10,8 +10,7 @@ import { Relationship } from "../types/model/Relationship";
 import { SoftwareSystem } from "../types/model/SoftwareSystem";
 import { SoftwareSystemInstance } from "../types/model/SoftwareSystemInstance";
 import { Views } from "../types/Views";
-import { ElementStyle } from "../types/views/ElementStyle";
-import { RelationshipStyle } from "../types/views/RelationshipStyle";
+import { ElementStyle, RelationshipStyle } from "../types/views/Style";
 import { Styles } from "../types/views/Style";
 import { Workspace } from "../types/Workspace";
 

@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "y-webrtc": "^10.2.5",
-    "yjs": "^13.5.47",
+    "yjs": "^13.6.1",
     "zustand": "^4.3.5"
   },
   "devDependencies": {

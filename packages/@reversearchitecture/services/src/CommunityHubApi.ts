@@ -1,5 +1,9 @@
-import { IWorkspaceMetadata, Workspace } from "@structurizr/dsl";
-import { StructurizrLexer, StructurizrParser, StructurizrVisitor } from "@structurizr/parser";
+import {
+    IWorkspaceMetadata,
+    IWorkspaceTheme,
+    fetchTheme,
+    Workspace
+} from "@structurizr/dsl";
 
 interface IWorkspaceInfo {
     workspaceId: string;
@@ -20,6 +24,17 @@ export class CommunityHubApi {
         return values;
     }
 
+    async getWorkspace(workspaceId: string): Promise<Workspace> {
+        const workspaceResponse = await fetch(`${this.baseUrl}/${workspaceId}/workspace.json`);
+
+        if (!workspaceResponse.ok) {
+            throw new Error(`Workspace ${workspaceId} not found`);
+        }
+        
+        const workspace = await workspaceResponse.json() as Workspace;
+        return workspace;
+    }
+
     async getWorkspaceText(workspaceId: string): Promise<string | undefined> {
         const workspaceResponse = await fetch(`${this.baseUrl}/${workspaceId}/workspace.dsl`);
 
@@ -38,5 +53,9 @@ export class CommunityHubApi {
             return metadata;
         }
         return undefined;
+    }
+
+    async getWorkspaceTheme(workspaceId: string): Promise<IWorkspaceTheme | undefined> {
+        return fetchTheme(`https://static.structurizr.com/themes/amazon-web-services-2020.04.30/theme.json`);
     }
 }

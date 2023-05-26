@@ -1,4 +1,3 @@
-import { position } from "@chakra-ui/react";
 import { Edge, Node } from "@reactflow/core";
 import {
     Component,
@@ -20,7 +19,6 @@ import {
     Person,
     Position,
     Relationship,
-    RelationshipStyle,
     Size,
     SoftwareSystem,
     SoftwareSystemInstance,
@@ -58,7 +56,7 @@ export class ReactFlowVisitor implements IVisitor {
                     .concat(group.containers)
                     .concat(group.components)
                     .map(element => extendElementBoundingBox(
-                        this.workspace.views.styles.element,
+                        this.workspace.views.configuration.styles.elements,
                         this.selectedView.elements,
                         element,
                         this.defaultPadding
@@ -73,7 +71,7 @@ export class ReactFlowVisitor implements IVisitor {
             parentId: params?.parentId,
             position: getPosition(boundingBox),
             size: getSize(boundingBox),
-            styles: this.workspace.views.styles,
+            styles: this.workspace.views.configuration.styles,
         });
         this.builder.addNode(node);
     }
@@ -84,7 +82,7 @@ export class ReactFlowVisitor implements IVisitor {
             position: this.selectedView.elements.find(x => x.id === person.identifier)
                 ?? this.defaultPosition,
             parentId: params?.parentId,
-            styles: this.workspace.views.styles,
+            styles: this.workspace.views.configuration.styles,
         });
         this.builder.addNode(node);
     }
@@ -93,7 +91,7 @@ export class ReactFlowVisitor implements IVisitor {
         const getSoftwareSystemBoundingBox = (softwareSystem: SoftwareSystem) => {
             const containerBoundingBoxes = softwareSystem.containers.map(element => {
                 return extendElementBoundingBox(
-                    this.workspace.views.styles.element,
+                    this.workspace.views.configuration.styles.elements,
                     this.selectedView.elements,
                     element,
                     this.defaultPadding
@@ -102,7 +100,7 @@ export class ReactFlowVisitor implements IVisitor {
             const groupBoundingBoxes = softwareSystem.groups.flatMap(group => {
                 const groupBoundingBoxes = foldBoundingBoxes(group.containers.map(element => {
                     return extendElementBoundingBox(
-                        this.workspace.views.styles.element,
+                        this.workspace.views.configuration.styles.elements,
                         this.selectedView.elements,
                         element,
                         this.defaultPadding
@@ -129,7 +127,7 @@ export class ReactFlowVisitor implements IVisitor {
             parentId: params?.parentId,
             position: isBoundary ? getPosition(boundingBox) : softwareSystemPosition,
             size: isBoundary ? getSize(boundingBox) : softwareSystemSize,
-            styles: this.workspace.views.styles,
+            styles: this.workspace.views.configuration.styles,
         });
         this.builder.addNode(node);
     }
@@ -138,7 +136,7 @@ export class ReactFlowVisitor implements IVisitor {
         const getContainerBoundingBox = (container: Container) => {
             const componentBoundingBoxes = container.components.map(element => {
                 return extendElementBoundingBox(
-                    this.workspace.views.styles.element,
+                    this.workspace.views.configuration.styles.elements,
                     this.selectedView.elements,
                     element,
                     this.defaultPadding
@@ -147,7 +145,7 @@ export class ReactFlowVisitor implements IVisitor {
             const groupBoundingBoxes = container.groups.flatMap(group => {
                 const groupBoundingBoxes = foldBoundingBoxes(group.components.map(element => {
                     return extendElementBoundingBox(
-                        this.workspace.views.styles.element,
+                        this.workspace.views.configuration.styles.elements,
                         this.selectedView.elements,
                         element,
                         this.defaultPadding
@@ -174,7 +172,7 @@ export class ReactFlowVisitor implements IVisitor {
             parentId: params?.parentId,
             position: isBoundary ? getPosition(boundingBox) : containerPosition,
             size: isBoundary ? getSize(boundingBox) : containerSize,
-            styles: this.workspace.views.styles,
+            styles: this.workspace.views.configuration.styles,
         });
         this.builder.addNode(node);
     }
@@ -185,7 +183,7 @@ export class ReactFlowVisitor implements IVisitor {
             position: this.selectedView.elements.find(x => x.id === component.identifier)
                 ?? this.defaultPosition,
             parentId: params?.parentId,
-            styles: this.workspace.views.styles,
+            styles: this.workspace.views.configuration.styles,
         });
         this.builder.addNode(node);
     }
@@ -200,7 +198,7 @@ export class ReactFlowVisitor implements IVisitor {
                     ?.map(instance => findSoftwareSystem(this.workspace, instance.softwareSystemIdentifier)) ?? [])
                 .map(element => {
                     return extendElementBoundingBox(
-                        this.workspace.views.styles.element,
+                        this.workspace.views.configuration.styles.elements,
                         this.selectedView.elements,
                         element,
                         this.defaultPadding
@@ -221,7 +219,7 @@ export class ReactFlowVisitor implements IVisitor {
             parentId: params?.parentId,
             position: getPosition(boundingBox),
             size: getSize(boundingBox),
-            styles: this.workspace.views.styles,
+            styles: this.workspace.views.configuration.styles,
         });
         this.builder.addNode(node);
     }
@@ -232,7 +230,7 @@ export class ReactFlowVisitor implements IVisitor {
             position: this.selectedView.elements.find(x => x.id === infrastructureNode.identifier)
                 ?? this.defaultPosition,
             parentId: params?.parentId,
-            styles: this.workspace.views.styles,
+            styles: this.workspace.views.configuration.styles,
         });
         this.builder.addNode(node);
     }
@@ -240,11 +238,13 @@ export class ReactFlowVisitor implements IVisitor {
     visitSoftwareSystemInstance(softwareSystemInstance: SoftwareSystemInstance, params?: { parentId?: string }): void {
         const position = this.selectedView.elements.find(x => x.id === softwareSystemInstance.identifier)
             ?? this.defaultPosition;
+        const softwareSystem = findSoftwareSystem(this.workspace, softwareSystemInstance.softwareSystemIdentifier);
         const node = fromElement({
-            element: softwareSystemInstance,
+            elementId: softwareSystemInstance.identifier,
+            element: softwareSystem,
             position,
             parentId: params?.parentId,
-            styles: this.workspace.views.styles,
+            styles: this.workspace.views.configuration.styles,
         });
         this.builder.addNode(node);
     }
@@ -252,11 +252,13 @@ export class ReactFlowVisitor implements IVisitor {
     visitContainerInstance(containerInstance: ContainerInstance, params?: { parentId?: string }): void {
         const position = this.selectedView.elements.find(x => x.id === containerInstance.identifier)
             ?? this.defaultPosition;
+        const container = findContainer(this.workspace, containerInstance.containerIdentifier);
         const node = fromElement({
-            element: containerInstance,
+            elementId: containerInstance.identifier,
+            element: container,
             position,
             parentId: params?.parentId,
-            styles: this.workspace.views.styles,
+            styles: this.workspace.views.configuration.styles,
         });
         this.builder.addNode(node);
     }
@@ -264,7 +266,7 @@ export class ReactFlowVisitor implements IVisitor {
     visitRelationship(relationship: Relationship): void {
         const edge = fromRelationship({
             relationship,
-            styles: this.workspace.views.styles,
+            styles: this.workspace.views.configuration.styles,
         });
         this.builder.addEdge(edge);
     }
@@ -281,7 +283,7 @@ export class ReactFlowVisitor implements IVisitor {
         throw new Error("Method not implemented.");
     }
 
-    visitRelationshipStyle(relationshipStyle: RelationshipStyle): void {
+    visitRelationshipStyle(relationshipStyle: ElementStyle): void {
         throw new Error("Method not implemented.");
     }
 }
@@ -328,11 +330,7 @@ const createElementBoundingBox = (
     element: ElementProps,
     position: Position
 ): BoundingBox => {
-    const style = foldStyles(
-        defaultElementStyle,
-        styles,
-        element.tags?.reverse() ?? []
-    );
+    const style = foldStyles(defaultElementStyle, styles, element.tags);
     return {
         minX: position.x,
         minY: position.y,
@@ -397,7 +395,7 @@ export const fromElement = (params: ElementParams): Node => {
             ?? "element",
         data: {
             element: params.element,
-            style: params.styles.element,
+            style: params.styles.elements,
             height: params.size?.height,
             width: params.size?.width,
         },
@@ -419,7 +417,7 @@ export const fromRelationship = (params: RelationshipParams): Edge => {
         type: "simplebezier",
         data: {
             relationship: params.relationship,
-            style: params.styles.relationship,
+            style: params.styles.relationships,
         },
         source: params.relationship.sourceIdentifier,
         target: params.relationship.targetIdentifier

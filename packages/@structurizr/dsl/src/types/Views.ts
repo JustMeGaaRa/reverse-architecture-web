@@ -1,19 +1,15 @@
 import { Properties } from "./model/Properties";
-import { Terminology } from "./model/Terminology";
-import { Branding } from "./views/Branding";
-import { Styles } from "./views/Style";
 import { ComponentView } from "./views/ComponentView";
 import { ContainerView } from "./views/ContainerView";
+import { Configuration } from "./views/Configuration";
 import { DeploymentView } from "./views/DeploymentView";
 import { SystemContextView } from "./views/SystemContextView";
 import { SystemLandscapeView } from "./views/SystemLandscapeView";
 import { IView } from "../shared/IView";
 
-type ViewsParams = Partial<Views>;
-
 export class Views {
     constructor(
-        params: ViewsParams
+        params: Partial<Views>
     ) {
         this.systemLandscape = params.systemLandscape;
         this.systemContexts = params.systemContexts ?? [];
@@ -23,15 +19,8 @@ export class Views {
         this.filtered = params.filtered ?? [];
         this.dynamics = params.dynamics ?? [];
         this.custom = params.custom ?? [];
-        this.styles = params.styles ?? {
-            element: {},
-            relationship: {}
-        };
-        this.theme = params.theme;
-        this.themes = params.themes ?? [];
-        this.branding = params.branding;
-        this.terminology = params.terminology;
-        this.properties = params.properties;
+        this.configuration = params.configuration ?? new Configuration({});
+        this.properties = params.properties ?? new Map<string, string>();
     }
 
     public readonly systemLandscape?: SystemLandscapeView;
@@ -42,10 +31,6 @@ export class Views {
     public readonly dynamics: IView[];
     public readonly deployments: DeploymentView[];
     public readonly custom: IView[];
-    public readonly styles: Styles;
-    public readonly theme?: string;
-    public readonly themes: string[];
-    public readonly branding?: Branding;
-    public readonly terminology?: Terminology;
+    public readonly configuration: Configuration;
     public readonly properties?: Properties;
 }

@@ -7,6 +7,8 @@ import { ContextSheet } from "@reversearchitecture/ui";
 import { FC, useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
+    applyMetadata,
+    applyTheme,
     IView,
     IWorkspaceMetadata,
     Workspace
@@ -14,11 +16,7 @@ import {
 import { useToast } from "@chakra-ui/react";
 import { useStructurizrParser } from "@structurizr/react";
 
-export const WorkspaceViewerSheet: FC<{
-
-}> = ({
-    
-}) => {
+export const WorkspaceViewerSheet: FC = () => {
     const { workspaceId } = useParams<{ workspaceId: string }>();
     const [ workspace, setWorkspace ] = useState(Workspace.Empty);
     const [ selectedView, setSelectedView ] = useState<IView>();
@@ -30,28 +28,31 @@ export const WorkspaceViewerSheet: FC<{
 
     const applyWorkspace = useCallback((workspace: Workspace, metadata?: IWorkspaceMetadata) => {
         const updatedWorkspace = metadata
-            ? Workspace.applyMetadata(workspace, metadata)
+            ? applyMetadata(workspace, metadata)
             : workspace;
+
         setWorkspace(updatedWorkspace);
-        setSelectedView(updatedWorkspace.views.systemLandscape
+        setSelectedView(selectedView
+            ?? updatedWorkspace.views.systemLandscape
             ?? updatedWorkspace.views.systemContexts[0]
             ?? updatedWorkspace.views.containers[0]
             ?? updatedWorkspace.views.components[0]
             ?? updatedWorkspace.views.deployments[0]);
-    }, [setSelectedView, setWorkspace]);
+    }, [selectedView, setSelectedView, setWorkspace]);
 
     useEffect(() => {
         const fetchWorkspace = async (workspaceId: string) => {
             const api = new CommunityHubApi();
             const workspaceText = await api.getWorkspaceText(workspaceId);
             const workspaceMetadata = await api.getWorkspaceMetadata(workspaceId);
+            const theme = await api.getWorkspaceTheme(workspaceId);
 
-            return { text: workspaceText, metadata: workspaceMetadata };
+            return { text: workspaceText, metadata: workspaceMetadata, theme: theme };
         }
         
         fetchWorkspace(workspaceId)
-            .then(({ text, metadata }) => {
-                applyWorkspace(parseWorkspace(text), metadata);
+            .then(({ text, metadata, theme }) => {
+                applyWorkspace(applyTheme(parseWorkspace(text), theme), metadata);
                 setMetadata(metadata);
             })
             .catch(error => {
@@ -67,12 +68,24 @@ export const WorkspaceViewerSheet: FC<{
     }, [workspaceId, toast, applyWorkspace, setMetadata, parseWorkspace]);
 
     const handleOnNodeDragStop = useCallback((event: React.MouseEvent, node: any) => {
-        setMetadata(applyElementPosition(
-            metadata,
+        const emptyMetadata = {
+            name: "",
+            lastModifiedDate: new Date(),
+            views: {
+                systemLandscape: undefined,
+                systemContexts: [],
+                containers: [],
+                components: [],
+                deployments: []
+            }
+        };
+        const updatedMetadata = applyElementPosition(
+            metadata ?? emptyMetadata,
             selectedView,
             node.data.element.identifier,
             node.position
-        ));
+        );
+        setMetadata(updatedMetadata);
     }, [metadata, selectedView, applyElementPosition]);
 
     return (

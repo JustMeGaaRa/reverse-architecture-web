@@ -2,16 +2,15 @@ import {
     Person,
     SoftwareSystem,
     IView,
-    IViewStrategy,
     IVisitor,
-    ViewType,
     Workspace,
     Container,
     Component,
-    relationshipExists
+    relationshipExists,
+    ISupportVisitor
 } from "../";
 
-export class ComponentViewStrategy implements IViewStrategy {
+export class ComponentViewStrategy implements ISupportVisitor {
     constructor(
         private workspace: Workspace,
         private view: IView,
@@ -134,43 +133,5 @@ export class ComponentViewStrategy implements IViewStrategy {
         this.workspace.model.relationships
             .filter(edge => hasRelationship(edge.sourceIdentifier, edge.targetIdentifier))
             .forEach(relationship => visitor.visitRelationship(relationship));
-    }
-
-    getPath(): Array<IView> {
-        const softwareSystems = this.workspace.model.groups
-            .flatMap(group => group.softwareSystems)
-            .concat(this.workspace.model.softwareSystems);
-
-        for (let softwareSystem of softwareSystems) {
-            const container = softwareSystem.groups
-                .flatMap(group => group.containers)
-                .concat(softwareSystem.containers)
-                .find(container => container.identifier === this.view.identifier);
-
-            if (container) {
-                return [
-                    {
-                        type: ViewType.SystemContext,
-                        identifier: softwareSystem.identifier,
-                        title: softwareSystem.name,
-                        elements: []
-                    },
-                    {
-                        type: ViewType.Container,
-                        identifier: softwareSystem.identifier,
-                        title: softwareSystem.name,
-                        elements: []
-                    },
-                    {
-                        type: ViewType.Component,
-                        identifier: container.identifier,
-                        title: container.name,
-                        elements: []
-                    }
-                ]
-            }
-        }
-
-        return [];
     }
 }

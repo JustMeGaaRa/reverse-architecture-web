@@ -1,13 +1,12 @@
 import {
     IVisitor,
-    IViewStrategy,
     IView,
     Workspace,
     DeploymentNode,
-    ViewType
+    ISupportVisitor
 } from "../";
 
-export class DeploymentViewStrategy implements IViewStrategy {
+export class DeploymentViewStrategy implements ISupportVisitor {
     constructor(
         private workspace: Workspace,
         private view: IView,
@@ -47,22 +46,5 @@ export class DeploymentViewStrategy implements IViewStrategy {
                     visitDeploymentNode(deploymentNode);
                 });
             });
-    }
-
-    getPath(): Array<IView> {
-        for (let softwareSystem of this.workspace.model.softwareSystems) {
-            if (softwareSystem.identifier === this.view.identifier) {
-                return [
-                    {
-                        type: ViewType.Deployment,
-                        identifier: softwareSystem.identifier,
-                        title: softwareSystem.name,
-                        elements: []
-                    }
-                ];
-            }
-        }
-
-        return [];
     }
 }

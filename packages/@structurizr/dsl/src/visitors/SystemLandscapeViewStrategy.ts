@@ -2,13 +2,12 @@ import {
     Person,
     SoftwareSystem,
     IView,
-    IViewStrategy,
     IVisitor,
-    ViewType,
-    Workspace
+    Workspace,
+    ISupportVisitor
 } from "../";
 
-export class SystemLandscapeViewStrategy implements IViewStrategy {
+export class SystemLandscapeViewStrategy implements ISupportVisitor {
     constructor(
         private workspace: Workspace,
         private view: IView
@@ -60,14 +59,5 @@ export class SystemLandscapeViewStrategy implements IViewStrategy {
         this.workspace.model.relationships
             .filter(edge => hasRelationship(edge.sourceIdentifier, edge.targetIdentifier))
             .forEach(relationship => visitor.visitRelationship(relationship));
-    }
-
-    getPath(): Array<IView> {
-        return [{
-            type: ViewType.SystemLandscape,
-            identifier: this.workspace.name,
-            title: this.workspace.name,
-            elements: []
-        }];
     }
 }

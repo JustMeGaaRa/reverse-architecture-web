@@ -3,14 +3,13 @@ import {
     Person,
     SoftwareSystem,
     IView,
-    IViewStrategy,
     IVisitor,
-    ViewType,
     Workspace,
-    relationshipExists
+    relationshipExists,
+    ISupportVisitor
 } from "../";
 
-export class ContainerViewStrategy implements IViewStrategy {
+export class ContainerViewStrategy implements ISupportVisitor {
     constructor(
         private workspace: Workspace,
         private view: IView,
@@ -101,32 +100,5 @@ export class ContainerViewStrategy implements IViewStrategy {
         this.workspace.model.relationships
             .filter(edge => hasRelationship(edge.sourceIdentifier, edge.targetIdentifier))
             .forEach(relationship => visitor.visitRelationship(relationship));
-    }
-
-    getPath(): Array<IView> {
-        const softwareSystems = this.workspace.model.groups
-            .flatMap(group => group.softwareSystems)
-            .concat(this.workspace.model.softwareSystems);
-
-        for (let softwareSystem of softwareSystems) {
-            if (softwareSystem.identifier === this.view.identifier) {
-                return [
-                    {
-                        type: ViewType.SystemContext,
-                        identifier: softwareSystem.identifier,
-                        title: softwareSystem.name,
-                        elements: []
-                    },
-                    {
-                        type: ViewType.Container,
-                        identifier: softwareSystem.identifier,
-                        title: softwareSystem.name,
-                        elements: []
-                    }
-                ];
-            }
-        }
-
-        return [];
     }
 }

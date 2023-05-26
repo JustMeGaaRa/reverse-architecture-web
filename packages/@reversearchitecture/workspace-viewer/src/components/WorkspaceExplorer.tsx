@@ -12,7 +12,7 @@ import {
     PropsWithChildren,
     useCallback
 } from "react";
-import { useSelectedViewGraph } from "../hooks/useSelectedViewGraph";
+import { useReactFlowSelectedView } from "../hooks/useReactFlowSelectedView";
 import { WorkspaceRenderer } from "./WorkspaceRenderer";
 import { WorkspaceStoreUpdater } from "./WorkspaceStoreUpdater";
 import { useWorkspaceNavigation } from "../hooks/useWorkspaceNavigation";
@@ -29,7 +29,7 @@ export const WorkspaceExplorer: FC<PropsWithChildren<{
     onNodeDragStop,
     onNodesDoubleClick
 }) => {
-    const { nodes, edges, onNodesChange, onEdgesChange } = useSelectedViewGraph();
+    const { nodes, edges, onNodesChange, onEdgesChange } = useReactFlowSelectedView();
     const { navigate } = useWorkspaceNavigation();
 
     const handleOnDoubleClick = useCallback((event: React.MouseEvent, node: any) => {
