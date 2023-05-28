@@ -4,7 +4,12 @@ import {
     TabList,
     TabPanel,
     TabPanels,
-    Flex
+    Flex,
+    useDisclosure,
+    IconButton,
+    ButtonGroup,
+    Box,
+    Divider
 } from "@chakra-ui/react";
 import { ProjectApi } from "@reversearchitecture/services";
 import {
@@ -12,22 +17,25 @@ import {
     ContextSheetContent,
     ContextSheetHeader,
     EmptyContent,
-    ProjectList
+    ProjectCardView,
+    ProjectTableView
 } from "@reversearchitecture/ui";
-import { Folder } from "iconoir-react";
+import { Folder, List, ViewGrid } from "iconoir-react";
 import {
     FC,
     PropsWithChildren,
     useEffect,
     useState
 } from "react";
+import { useContentViewMode } from "./hooks";
 
 export const ProjectListContent: FC<PropsWithChildren<{
 
 }>> = ({
     
 }) => {
-    const [projects, setProjects] = useState([]);
+    const { view, setView } = useContentViewMode("card");
+    const [ projects, setProjects ] = useState([]);
 
     useEffect(() => {
         const api = new ProjectApi();
@@ -43,16 +51,46 @@ export const ProjectListContent: FC<PropsWithChildren<{
     return (
         <ContextSheet>
             <ContextSheetHeader title={"All Projects"} />
+            <Divider />
             <ContextSheetContent padding={0}>
                 <Tabs height={"100%"}>
-                    <TabList px={6}>
+                    <TabList background={"gray.30"} px={6} height={12}>
                         <Tab>My projects</Tab>
                         <Tab>Shared</Tab>
                         <Tab>Archived</Tab>
+                        
+                        <ButtonGroup
+                            alignSelf={"center"}
+                            colorScheme={"gray"}
+                            position={"absolute"}
+                            right={4}
+                            size={"sm"}
+                            variant={"ghost"}
+                        >
+                            <IconButton
+                                aria-label={"card view"}
+                                isActive={view === "card"}
+                                icon={<ViewGrid />}
+                                onClick={() => setView("card")}
+                            />
+                            <IconButton
+                                aria-label={"table view"}
+                                isActive={view === "table"}
+                                icon={<List />}
+                                onClick={() => setView("table")}
+                            />
+                        </ButtonGroup>
                     </TabList>
                     <TabPanels height={"calc(100% - 42px)"}>
                         <TabPanel height={"100%"}>
-                            <ProjectList projects={projects} />
+                            <Box padding={6} height={"100%"} overflowY={"scroll"}>
+                                {view === "table" && (
+                                    <ProjectTableView data={projects} />
+                                )}
+                                {view === "card" && (
+                                    <ProjectCardView projects={projects} />
+                                )}
+                            </Box>
                         </TabPanel>
                         <TabPanel height={"100%"}>
                             <Flex
