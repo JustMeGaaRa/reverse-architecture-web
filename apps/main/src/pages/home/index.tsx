@@ -1,11 +1,9 @@
 import {
     Box,
-    Button,
     ButtonGroup,
     Divider,
     Flex,
     HStack,
-    IconButton,
     useDisclosure
 } from "@chakra-ui/react";
 import {
@@ -22,24 +20,24 @@ import {
     Search
 } from "@reversearchitecture/ui";
 import {
-    AddPageAlt,
     BellNotification,
     HelpCircle,
     HomeSimple,
     Internet,
     MultiplePagesEmpty,
-    Settings,
-    Upload
+    Settings
 } from "iconoir-react";
 import { FC, PropsWithChildren } from "react";
 import { Outlet } from "react-router";
 import { AccountMenu } from "../../containers";
+import { useNavigationContext } from "../../containers";
 
 export const Layout: FC<PropsWithChildren<{
 
 }>> = ({
     
 }) => {
+    const { availableActions } = useNavigationContext();
     const { isOpen, onToggle } = useDisclosure();
 
     return (
@@ -54,18 +52,7 @@ export const Layout: FC<PropsWithChildren<{
                 </Box>
                 <Box>
                     <ButtonGroup size={"lg"} variant={"outline"}>
-                        <Button
-                            aria-label={"create new file"}
-                            colorScheme={"yellow"}
-                            leftIcon={<AddPageAlt />}
-                        >
-                            Create new file
-                        </Button>
-                        <IconButton
-                            aria-label={"import file"}
-                            colorScheme={"gray"}
-                            icon={<Upload />}
-                        />
+                        {availableActions.map(action => (action))}
                     </ButtonGroup>
                 </Box>
             </PageHeader>
@@ -80,6 +67,7 @@ export const Layout: FC<PropsWithChildren<{
                         >
                             <RouteList>
                                 <Route
+                                    isDisabled={true}
                                     isExpanded={isOpen}
                                     icon={HomeSimple}
                                     title={"Dashboard"}
@@ -100,6 +88,7 @@ export const Layout: FC<PropsWithChildren<{
                             </RouteList>
                             <RouteList>
                                 <Route
+                                    isDisabled={true}
                                     isExpanded={isOpen}
                                     icon={BellNotification}
                                     title={"Notifications"}
@@ -112,6 +101,7 @@ export const Layout: FC<PropsWithChildren<{
                                     to={"settings"}
                                 />
                                 <Route
+                                    isDisabled={true}
                                     isExpanded={isOpen}
                                     icon={HelpCircle}
                                     title={"Help & Feedback"}

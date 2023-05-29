@@ -20,12 +20,14 @@ export const WorkspacePreviewCard: FC<PropsWithChildren<{
     title: string;
     author: string;
     preview?: string;
-    onClick?: () => void;
+    onPreviewClick?: () => void;
+    onUseTemplateClick?: () => void;
 }>> = ({
     title,
     author,
     preview,
-    onClick
+    onPreviewClick,
+    onUseTemplateClick
 }) => {
     return (
         <Card
@@ -68,7 +70,7 @@ export const WorkspacePreviewCard: FC<PropsWithChildren<{
                     _groupHover={{
                         borderColor: "yellow.900"
                     }}
-                    onClick={() => onClick && onClick()}
+                    onClick={() => onPreviewClick && onPreviewClick()}
                 >
                     {preview && (
                         <Image
@@ -97,16 +99,32 @@ export const WorkspacePreviewCard: FC<PropsWithChildren<{
                 width={"100%"}
             >
                     <HStack spacing={1}>
-                        <Tag backgroundColor={"gray.200"} borderRadius={"full"} color={"gray.700"}>788 used</Tag>
-                        <Tag backgroundColor={"gray.200"} borderRadius={"full"} color={"gray.700"}>47 liked</Tag>
+                        <Tag
+                            backgroundColor={"gray.200"}
+                            borderRadius={"full"}
+                            color={"gray.700"}
+                            size={"sm"}
+                        >
+                            788 used
+                        </Tag>
+                        <Tag
+                            backgroundColor={"gray.200"}
+                            borderRadius={"full"}
+                            color={"gray.700"}
+                            size={"sm"}
+                        >
+                            47 liked
+                        </Tag>
                     </HStack>
                     <Button
                         borderRadius={"full"}
                         colorScheme={"gray"}
+                        isDisabled={!onUseTemplateClick}
                         leftIcon={<ArrowTrCircle />}
                         pr={4}
-                        variant={"outline"}
                         size={"sm"}
+                        variant={"outline"}
+                        onClick={() => onUseTemplateClick?.()}
                     >
                         Use template
                     </Button>

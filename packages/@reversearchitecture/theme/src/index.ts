@@ -6,6 +6,7 @@ import { List } from "./components/List";
 import { Menu } from "./components/Menu";
 import { Modal } from "./components/Modal";
 import { Tabs } from "./components/Tabs";
+import { Tag } from "./components/Tag";
 import { colors } from "./foundations/Colors";
 import { textStyles } from "./foundations/TextStyles";
 
@@ -18,6 +19,7 @@ export const theme =  extendTheme({
         Menu,
         Modal,
         Tabs,
+        Tag
     },
     colors,
     fonts: {

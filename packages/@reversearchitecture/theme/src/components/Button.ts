@@ -3,7 +3,6 @@ import { mode } from "@chakra-ui/theme-tools";
 
 export const Button: ComponentStyleConfig = {
     baseStyle: {
-        colorScheme: "yellow",
         fontWeight: "normal",
     },
     sizes: {
@@ -22,7 +21,8 @@ export const Button: ComponentStyleConfig = {
     },
     variants: {
         ghost: (props) => ({
-            color: mode("", `${props.colorScheme}.900`)(props),
+            backgroundColor: mode("", "transparent")(props),
+            color: mode("", `${props.colorScheme}.800`)(props),
             _hover: {
                 backgroundColor: mode("", `${props.colorScheme}.200`)(props),
                 color: mode("", `${props.colorScheme}.900`)(props),
@@ -48,9 +48,9 @@ export const Button: ComponentStyleConfig = {
         }),
         outline: (props) => ({
             backgroundColor: mode("", `${props.colorScheme}.100`)(props),
-            borderColor: mode("", `${props.colorScheme}.900`)(props),
+            borderColor: mode("", `${props.colorScheme}.800`)(props),
             borderWidth: 1,
-            color: mode("", `${props.colorScheme}.900`)(props),
+            color: mode("", `${props.colorScheme}.800`)(props),
             _hover: {
                 backgroundColor: mode("", `${props.colorScheme}.200`)(props),
                 borderColor: mode("", `${props.colorScheme}.900`)(props),

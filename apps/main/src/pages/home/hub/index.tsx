@@ -1,4 +1,5 @@
 import {
+    Button,
     Divider,
     Flex,
     HStack,
@@ -13,10 +14,9 @@ import {
     ContextSheetContent,
     ContextSheetHeader,
     EmptyContent,
-    WorkspaceCardView,
-    WorkspacePreviewCard
+    WorkspaceCardView
 } from "@reversearchitecture/ui";
-import { Compass, FireFlame, Folder, SunLight } from "iconoir-react";
+import { AddPageAlt, Compass, FireFlame, Folder, SunLight } from "iconoir-react";
 import {
     FC,
     PropsWithChildren,
@@ -25,21 +25,39 @@ import {
     useState
 } from "react";
 import { useNavigate } from "react-router-dom";
+import { useNavigationContext } from "../../../containers";
 
 export const CommunityHub: FC<PropsWithChildren<{
 
 }>> = ({
 
 }) => {
+    const { setAvailableActions } = useNavigationContext();
     const [ workspaces, setWorkspaces ] = useState([]);
     const [ filters, setFilters ] = useState([]);
     const [ selectedFilter, setSelectedFilter ] = useState("Explore");
-    const navigate = useNavigate();
     const defaultFilters = [
         { tag: "Explore", icon: Compass },
         { tag: "New", icon: SunLight },
         { tag: "Popular", icon: FireFlame }
     ];
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        setAvailableActions([
+            (
+                <Button
+                    aria-label={"publish workspace"}
+                    key={"publish-workspace"}
+                    colorScheme={"yellow"}
+                    isDisabled={true}
+                    leftIcon={<AddPageAlt />}
+                >
+                    {"Publish Workspace"}
+                </Button>
+            )
+        ])
+    }, [setAvailableActions]);
 
     useEffect(() => {
         const api = new CommunityHubApi();
@@ -55,12 +73,15 @@ export const CommunityHub: FC<PropsWithChildren<{
 
     const onFilterClick = useCallback((filter) => {
         setSelectedFilter(filter);
-        console.log(filter);
     }, []);
 
     const onWorkspaceClick = useCallback((workspace) => {
         navigate(`/workspace/${workspace.workspaceId}`);
     }, [navigate]);
+
+    const capitalize = (str: string) => {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
 
     return (
         <ContextSheet>
@@ -72,27 +93,12 @@ export const CommunityHub: FC<PropsWithChildren<{
                         {defaultFilters.map((filter) => (
                             <Tag
                                 key={filter.tag}
-                                backgroundColor={"gray.100"}
-                                borderWidth={1}
-                                borderRadius={16}
-                                borderColor={"gray.200"}
-                                color={"gray.700"}
-                                colorScheme={"gray"}
-                                variant={"outline"}
+                                className={selectedFilter === filter.tag ? "active" : ""}
                                 cursor={"pointer"}
-                                _active={{
-                                    backgroundColor: "yellow.100",
-                                    borderColor: "yellow.900",
-                                    color: "basic.white"
-                                }}
-                                _hover={{
-                                    backgroundColor: "yellow.100",
-                                    borderColor: "yellow.900",
-                                    color: "basic.white"
-                                }}
-                                onClick={() => onFilterClick(filter)}
+                                size={"md"}
+                                onClick={() => onFilterClick(filter.tag)}
                             >
-                                <TagLeftIcon as={filter.icon} />
+                                <TagLeftIcon boxSize={5} as={filter.icon} />
                                 <TagLabel>{filter.tag}</TagLabel>
                             </Tag>
                         ))}
@@ -101,27 +107,12 @@ export const CommunityHub: FC<PropsWithChildren<{
                         {filters.map((tag) => (
                             <Tag
                                 key={tag}
-                                backgroundColor={"gray.100"}
-                                borderWidth={1}
-                                borderRadius={16}
-                                borderColor={"gray.200"}
-                                color={"gray.700"}
-                                colorScheme={"gray"}
-                                variant={"outline"}
+                                className={selectedFilter === tag ? "active" : ""}
                                 cursor={"pointer"}
-                                _active={{
-                                    backgroundColor: "yellow.100",
-                                    borderColor: "yellow.900",
-                                    color: "basic.white"
-                                }}
-                                _hover={{
-                                    backgroundColor: "yellow.100",
-                                    borderColor: "yellow.900",
-                                    color: "basic.white"
-                                }}
+                                size={"md"}
                                 onClick={() => onFilterClick(tag)}
                             >
-                                {tag}
+                                {capitalize(tag)}
                             </Tag>
                         ))}
                     </HStack>
@@ -131,7 +122,7 @@ export const CommunityHub: FC<PropsWithChildren<{
                     <WorkspaceCardView
                         workspaces={workspaces}
                         onClick={onWorkspaceClick}
-                        />
+                    />
                 ) : (
                     <Flex
                         alignItems={"center"}

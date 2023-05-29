@@ -5,11 +5,11 @@ import {
     TabPanel,
     TabPanels,
     Flex,
-    useDisclosure,
     IconButton,
     ButtonGroup,
     Box,
-    Divider
+    Divider,
+    Button
 } from "@chakra-ui/react";
 import { ProjectApi } from "@reversearchitecture/services";
 import {
@@ -20,13 +20,14 @@ import {
     ProjectCardView,
     ProjectTableView
 } from "@reversearchitecture/ui";
-import { Folder, List, ViewGrid } from "iconoir-react";
+import { AddPageAlt, Folder, List, Upload, ViewGrid } from "iconoir-react";
 import {
     FC,
     PropsWithChildren,
     useEffect,
     useState
 } from "react";
+import { useNavigationContext } from "../../../containers";
 import { useContentViewMode } from "./hooks";
 
 export const ProjectListContent: FC<PropsWithChildren<{
@@ -34,8 +35,35 @@ export const ProjectListContent: FC<PropsWithChildren<{
 }>> = ({
     
 }) => {
+    const { setAvailableActions } = useNavigationContext();
     const { view, setView } = useContentViewMode("card");
     const [ projects, setProjects ] = useState([]);
+
+    useEffect(() => {
+        setAvailableActions([
+            (
+                <Button
+                    aria-label={"create new project"}
+                    key={"create-new-project"}
+                    colorScheme={"yellow"}
+                    isDisabled={true}
+                    leftIcon={<AddPageAlt />}
+                >
+                    Create New Project
+                </Button>
+            ),
+            (
+                <IconButton
+                    aria-label={"import workspace"}
+                    key={"import-workspace"}
+                    colorScheme={"gray"}
+                    icon={<Upload />}
+                    isDisabled={true}
+                    title={"Import Workspace"}
+                />
+            )
+        ])
+    }, [setAvailableActions]);
 
     useEffect(() => {
         const api = new ProjectApi();

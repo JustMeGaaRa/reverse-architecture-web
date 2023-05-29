@@ -6,13 +6,20 @@ import {
     EmptyContent
 } from "@reversearchitecture/ui";
 import { Folder } from "iconoir-react";
-import { FC, PropsWithChildren } from "react";
+import { FC, PropsWithChildren, useEffect } from "react";
+import { useNavigationContext } from "../../../containers";
 
 export const Dashboard: FC<PropsWithChildren<{
 
 }>> = ({
 
 }) => {
+    const { setAvailableActions } = useNavigationContext();
+
+    useEffect(() => {
+        setAvailableActions([]);
+    }, [setAvailableActions]);
+
     return (
         <ContextSheet>
             <ContextSheetHeader title={"Dashboard"} />

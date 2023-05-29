@@ -18,7 +18,7 @@ export const WorkspaceCardView: FC<{
                         title={workspace.name}
                         author={workspace.author}
                         preview={workspace.preview}
-                        onClick={() => onClick?.(workspace)}
+                        onPreviewClick={() => onClick?.(workspace)}
                     />
                 </WrapItem>
             ))}

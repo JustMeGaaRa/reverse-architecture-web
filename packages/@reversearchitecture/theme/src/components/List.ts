@@ -28,6 +28,9 @@ export const List = defineMultiStyleConfig({
             },
             _disabled: {
                 color: mode("", "gray.200")(props),
+            },
+            "&.disabled": {
+                color: mode("", "gray.200")(props),
             }
         }
     })),

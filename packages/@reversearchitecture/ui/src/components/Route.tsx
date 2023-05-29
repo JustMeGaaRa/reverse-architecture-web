@@ -6,11 +6,13 @@ export const Route: FC<{
     to: string,
     icon: any,
     title?: string,
+    isDisabled?: boolean,
     isExpanded?: boolean
 }> = ({
     to,
     icon,
     title,
+    isDisabled = false,
     isExpanded = false
 }) => {
     return (
@@ -18,6 +20,7 @@ export const Route: FC<{
             as={NavLink}
             aria-label={title ?? to}
             display={"block"}
+            className={isDisabled ? "disabled" : ""}
             to={to}
             title={title}
         >
