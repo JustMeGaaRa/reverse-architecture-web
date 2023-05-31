@@ -2,6 +2,7 @@ import {
     Box,
     Card,
     CardBody,
+    CardFooter,
     Flex,
     Icon,
     Image,
@@ -28,23 +29,19 @@ export const ProjectCard: FC<PropsWithChildren<{
             backgroundColor={"transparent"}
             borderRadius={16}
             boxShadow={"none"}
-            height={"242px"}
-            width={"345px"}
             padding={0}
             _hover={{
                 backgroundColor: "gray.100",
                 cursor: "pointer",
             }}
         >
-            <CardBody padding={0}>
+            <CardBody px={0} py={1}>
                 <Flex
-                    backgroundColor={"gray.100"}
-                    borderColor={"gray.200"}
-                    borderWidth={1}
-                    borderRadius={16}
-                    height={"182px"}
-                    width={"345px"}
                     alignItems={"center"}
+                    borderColor={"gray.200"}
+                    borderRadius={16}
+                    borderWidth={1}
+                    height={"100%"}
                     justifyContent={"center"}
                     overflow={"hidden"}
                     _groupHover={{
@@ -81,7 +78,11 @@ export const ProjectCard: FC<PropsWithChildren<{
                         _groupHover={{ display: "block" }}
                     />
                 </Flex>
-                <Box padding={2}>
+            </CardBody>
+            <CardFooter padding={2}>
+                <Flex
+                    direction={"column"}
+                >
                     <Text
                         color={"gray.700"}
                         fontSize={18}
@@ -97,8 +98,8 @@ export const ProjectCard: FC<PropsWithChildren<{
                     >
                         {updated}
                     </Text>
-                </Box>
-            </CardBody>
+                </Flex>
+            </CardFooter>
         </Card>
     )
 }

@@ -1,4 +1,5 @@
 import {
+    Box,
     Button,
     Divider,
     Flex,
@@ -119,10 +120,12 @@ export const CommunityHub: FC<PropsWithChildren<{
                 </HStack>
                 <Divider height={16} border={0} />
                 {workspaces.length > 0 ? (
-                    <WorkspaceCardView
-                        workspaces={workspaces}
-                        onClick={onWorkspaceClick}
-                    />
+                    <Box height={"100%"} overflowY={"scroll"}>
+                        <WorkspaceCardView
+                            workspaces={workspaces.filter(x => x.tags.includes(selectedFilter) || selectedFilter === "Explore")}
+                            onClick={onWorkspaceClick}
+                        />
+                    </Box>
                 ) : (
                     <Flex
                         alignItems={"center"}

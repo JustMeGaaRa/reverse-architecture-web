@@ -1,4 +1,4 @@
-import { Wrap, WrapItem } from "@chakra-ui/react";
+import { Grid, useBreakpointValue } from "@chakra-ui/react";
 import { FC } from "react";
 import { ProjectCard } from "./ProjectCard";
 
@@ -7,17 +7,18 @@ export const ProjectCardView: FC<{
 }> = ({
     projects
 }) => {
+    const gridColumns = useBreakpointValue({ base: 1, md: 2, lg: 3, xl: 4 });
+
     return (
-        <Wrap spacing={6}>
+        <Grid gridTemplateColumns={`repeat(${gridColumns}, 1fr)`} gap={6}>
             {projects.map((project) => (
-                <WrapItem key={project.name}>
-                    <ProjectCard
-                        name={project.name}
-                        updated={project.updated}
-                        preview={project.url}
-                    />
-                </WrapItem>
+                <ProjectCard
+                    key={project.name}
+                    name={project.name}
+                    updated={project.updated}
+                    preview={project.url}
+                />
             ))}
-        </Wrap>
+        </Grid>
     )
 }

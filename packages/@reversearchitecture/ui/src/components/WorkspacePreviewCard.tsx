@@ -35,8 +35,6 @@ export const WorkspacePreviewCard: FC<PropsWithChildren<{
             backgroundColor={"transparent"}
             borderRadius={24}
             boxShadow={"none"}
-            height={"370px"}
-            width={"436px"}
             padding={1}
             _hover={{
                 backgroundColor: "gray.100",
@@ -60,12 +58,11 @@ export const WorkspacePreviewCard: FC<PropsWithChildren<{
             <CardBody px={0} py={1}>
                 <Flex
                     alignItems={"center"}
+                    borderColor={"gray.200"}
                     borderRadius={16}
                     borderWidth={1}
-                    borderColor={"gray.200"}
+                    height={"100%"}
                     justifyContent={"center"}
-                    height={"258px"}
-                    width={"428px"}
                     overflow={"hidden"}
                     _groupHover={{
                         borderColor: "yellow.900"

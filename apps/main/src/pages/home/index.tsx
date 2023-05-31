@@ -47,7 +47,7 @@ export const Layout: FC<PropsWithChildren<{
                     <NavigationSidebarToggle isExpanded={isOpen} onClick={onToggle} />
                     <Logo />
                 </HStack>
-                <Box>
+                <Box flexGrow={1} maxWidth={["xl"]} mx={4}>
                     <Search />
                 </Box>
                 <Box>

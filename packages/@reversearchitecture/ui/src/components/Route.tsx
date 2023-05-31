@@ -19,8 +19,9 @@ export const Route: FC<{
         <ListItem
             as={NavLink}
             aria-label={title ?? to}
-            display={"block"}
             className={isDisabled ? "disabled" : ""}
+            style={{ pointerEvents: isDisabled ? "none" : "auto" }}
+            display={"block"}
             to={to}
             title={title}
         >

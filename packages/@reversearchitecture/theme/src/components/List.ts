@@ -31,6 +31,7 @@ export const List = defineMultiStyleConfig({
             },
             "&.disabled": {
                 color: mode("", "gray.200")(props),
+                cursor: "not-allowed",
             }
         }
     })),

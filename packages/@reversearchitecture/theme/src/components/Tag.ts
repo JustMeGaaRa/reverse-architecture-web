@@ -8,6 +8,13 @@ const {
 } = createMultiStyleConfigHelpers(parts.keys);
 
 export const Tag = defineMultiStyleConfig({
+    baseStyle: {
+        container: {
+            transitionProperty: "all",
+            transitionDuration: "normal",
+            transitionTimingFunction: "ease",
+        }
+    },
     sizes: {
         xs: {
             container: {
