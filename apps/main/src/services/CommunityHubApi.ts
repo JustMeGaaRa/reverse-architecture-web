@@ -56,6 +56,11 @@ export class CommunityHubApi {
     }
 
     async getWorkspaceTheme(workspaceId: string): Promise<IWorkspaceTheme | undefined> {
-        return fetchTheme(`https://static.structurizr.com/themes/amazon-web-services-2020.04.30/theme.json`);
+        const themeResponse = await fetch(`${this.baseUrl}/${workspaceId}/workspace.theme.json`);
+        if (themeResponse.ok) {
+            const theme = await themeResponse.json() as IWorkspaceTheme;
+            return theme;
+        }
+        return undefined;
     }
 }

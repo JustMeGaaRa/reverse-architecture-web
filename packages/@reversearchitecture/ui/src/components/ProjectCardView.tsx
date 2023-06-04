@@ -7,7 +7,7 @@ export const ProjectCardView: FC<{
 }> = ({
     projects
 }) => {
-    const gridColumns = useBreakpointValue({ base: 1, md: 2, lg: 3, xl: 4 });
+    const gridColumns = useBreakpointValue({ base: 1, md: 2, lg: 3, xl: 4, "2xl": 5 });
 
     return (
         <Grid gridTemplateColumns={`repeat(${gridColumns}, 1fr)`} gap={6}>

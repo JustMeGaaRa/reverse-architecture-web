@@ -9,7 +9,6 @@ import {
     TagLabel,
     TagLeftIcon
 } from "@chakra-ui/react";
-import { CommunityHubApi } from "@reversearchitecture/services";
 import {
     ContextSheet,
     ContextSheetContent,
@@ -17,7 +16,13 @@ import {
     EmptyContent,
     WorkspaceCardView
 } from "@reversearchitecture/ui";
-import { AddPageAlt, Compass, FireFlame, Folder, SunLight } from "iconoir-react";
+import {
+    AddPageAlt,
+    Compass,
+    FireFlame,
+    Folder,
+    SunLight
+} from "iconoir-react";
 import {
     FC,
     PropsWithChildren,
@@ -27,6 +32,7 @@ import {
 } from "react";
 import { useNavigate } from "react-router-dom";
 import { useNavigationContext } from "../../../containers";
+import { CommunityHubApi } from "../../../services";
 
 export const CommunityHub: FC<PropsWithChildren<{
 

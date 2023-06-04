@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@structurizr/dsl": "*",
-    "chevrotain": "9.1.0"
+    "chevrotain": "10.5.0"
   },
   "devDependencies": {
     "typescript": "^4.9.5"

@@ -1,11 +1,9 @@
+import { useToast } from "@chakra-ui/react";
 import { WorkspaceBreadcrumb } from "@reversearchitecture/workspace-breadcrumb";
 import { WorkspaceToolbar } from "@reversearchitecture/workspace-toolbar";
 import { useMetadata, WorkspaceExplorer } from "@reversearchitecture/workspace-viewer";
 import { WorkspaceZoom } from "@reversearchitecture/workspace-zoom";
-import { CommunityHubApi } from "@reversearchitecture/services";
 import { ContextSheet } from "@reversearchitecture/ui";
-import { FC, useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import {
     applyMetadata,
     applyTheme,
@@ -13,16 +11,39 @@ import {
     IWorkspaceMetadata,
     Workspace
 } from "@structurizr/dsl";
-import { useToast } from "@chakra-ui/react";
 import { useStructurizrParser } from "@structurizr/react";
+import { RoomProvider } from "@y-presence/react";
+import { FC, useCallback, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { useWorkspaceTheme } from "../../../containers";
+import { useAccount, useUserPresence, useWebrtcProvider, useYDoc } from "../../../hooks";
+import { CommunityHubApi } from "../../../services";
+import { useOnlineUsersStore } from "../../../hooks/useOnlineUsersStore";
 
 export const WorkspaceViewerSheet: FC = () => {
     const { workspaceId } = useParams<{ workspaceId: string }>();
     const [ workspace, setWorkspace ] = useState(Workspace.Empty);
     const [ selectedView, setSelectedView ] = useState<IView>();
     const [ metadata, setMetadata ] = useState<IWorkspaceMetadata>();
-
+    const { theme } = useWorkspaceTheme();
     const { applyElementPosition } = useMetadata();
+    
+    const { account } = useAccount();
+    const { setUsers } = useOnlineUsersStore();
+    // const { ydoc } = useYDoc();
+    // const { provider } = useWebrtcProvider(ydoc, workspaceId);
+
+    useEffect(() => {
+        setUsers([{
+            avatarUrl: account?.avatar,
+            color: "green",
+            fullname: account?.fullname,
+            username: account?.username,
+            isActive: true,
+            point: { x: 0, y: 0 }
+        }])
+    }, [account, setUsers]);
+
     const parseWorkspace = useStructurizrParser();
     const toast = useToast();
 
@@ -45,13 +66,12 @@ export const WorkspaceViewerSheet: FC = () => {
             const api = new CommunityHubApi();
             const workspaceText = await api.getWorkspaceText(workspaceId);
             const workspaceMetadata = await api.getWorkspaceMetadata(workspaceId);
-            const theme = await api.getWorkspaceTheme(workspaceId);
 
-            return { text: workspaceText, metadata: workspaceMetadata, theme: theme };
+            return { text: workspaceText, metadata: workspaceMetadata };
         }
         
         fetchWorkspace(workspaceId)
-            .then(({ text, metadata, theme }) => {
+            .then(({ text, metadata }) => {
                 applyWorkspace(applyTheme(parseWorkspace(text), theme), metadata);
                 setMetadata(metadata);
             })
@@ -65,7 +85,7 @@ export const WorkspaceViewerSheet: FC = () => {
                     position: "bottom-right"
                 })
             })
-    }, [workspaceId, toast, applyWorkspace, setMetadata, parseWorkspace]);
+    }, [workspaceId, theme, toast, applyWorkspace, setMetadata, parseWorkspace]);
 
     const handleOnNodeDragStop = useCallback((event: React.MouseEvent, node: any) => {
         const emptyMetadata = {
@@ -90,15 +110,17 @@ export const WorkspaceViewerSheet: FC = () => {
 
     return (
         <ContextSheet>
-            <WorkspaceExplorer
-                workspace={workspace}
-                selectedView={selectedView}
-                onNodeDragStop={handleOnNodeDragStop}
-            >
-                <WorkspaceBreadcrumb />
-                <WorkspaceToolbar />
-                <WorkspaceZoom />
-            </WorkspaceExplorer>
+            {/* <RoomProvider initialPresence={account} awareness={provider.awareness}> */}
+                <WorkspaceExplorer
+                    workspace={workspace}
+                    selectedView={selectedView}
+                    onNodeDragStop={handleOnNodeDragStop}
+                >
+                    <WorkspaceBreadcrumb />
+                    <WorkspaceToolbar />
+                    <WorkspaceZoom />
+                </WorkspaceExplorer>
+            {/* </RoomProvider> */}
         </ContextSheet>
     );
 };

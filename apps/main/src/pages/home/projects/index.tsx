@@ -11,7 +11,6 @@ import {
     Divider,
     Button
 } from "@chakra-ui/react";
-import { ProjectApi } from "@reversearchitecture/services";
 import {
     ContextSheet,
     ContextSheetContent,
@@ -20,7 +19,13 @@ import {
     ProjectCardView,
     ProjectTableView
 } from "@reversearchitecture/ui";
-import { AddPageAlt, Folder, List, Upload, ViewGrid } from "iconoir-react";
+import {
+    AddPageAlt,
+    Folder,
+    List,
+    Upload,
+    ViewGrid
+} from "iconoir-react";
 import {
     FC,
     PropsWithChildren,
@@ -28,6 +33,7 @@ import {
     useState
 } from "react";
 import { useNavigationContext } from "../../../containers";
+import { ProjectApi } from "../../../services";
 import { useContentViewMode } from "./hooks";
 
 export const ProjectListContent: FC<PropsWithChildren<{

@@ -12,14 +12,14 @@ import {
 } from "@chakra-ui/react";
 import { LogOut, NavArrowUp, ProfileCircle } from "iconoir-react";
 import { FC, PropsWithChildren } from "react";
-import { useAccount } from "./hooks";
+import { useAccount } from "../../hooks";
 
 export const AccountMenu: FC<PropsWithChildren<{
     expanded: boolean;
 }>> = ({
     expanded
 }) => {
-    const account = useAccount();
+    const { account } = useAccount();
 
     return (                  
         <Menu placement={"top-end"}>

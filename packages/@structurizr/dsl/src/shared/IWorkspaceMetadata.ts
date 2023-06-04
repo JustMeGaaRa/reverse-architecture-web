@@ -1,7 +1,10 @@
 import {
+    defaultElementStyle,
+    defaultRelationshipStyle,
     ElementStyle,
     IViewMetadata,
     RelationshipStyle,
+    Tag,
 } from "..";
 
 export interface IWorkspaceMetadata {
@@ -32,4 +35,22 @@ export interface IWorkspaceTheme {
     lastModifiedDate: Date;
     elements: ElementStyle,
     relationships: RelationshipStyle;
+}
+
+export const defaultTheme: IWorkspaceTheme = {
+    name: "Default",
+    description: "Default theme defined in Structurizr specification",
+    lastModifiedDate: new Date(),
+    elements: [
+        {
+            tag: Tag.Element.name,
+            ...defaultElementStyle
+        }
+    ],
+    relationships: [
+        {
+            tag: Tag.Relationship.name,
+            ...defaultRelationshipStyle
+        }
+    ]
 }

@@ -19,6 +19,11 @@ import {
     RouteList
 } from "@reversearchitecture/ui";
 import {
+    defaultTheme,
+    fetchTheme,
+    IWorkspaceTheme
+} from "@structurizr/dsl";
+import {
     AddKeyframes,
     AddUser,
     ChatLines,
@@ -26,22 +31,24 @@ import {
     HelpCircle,
     Timer
 } from "iconoir-react";
-import { FC, PropsWithChildren } from "react";
+import {
+    FC,
+    PropsWithChildren,
+    useEffect,
+    useState
+} from "react";
 import { Outlet } from "react-router";
-import { WorkspaceMenu } from "../../containers";
+import {
+    WorkspaceMenu,
+    WorkspaceThemeProvider
+} from "../../containers";
+import { useOnlineUsersStore } from "../../hooks";
 
-export const Workspace: FC<PropsWithChildren<{
+export const Workspace: FC<PropsWithChildren> = () => {
+    const [ theme, setTheme ] = useState<IWorkspaceTheme>(defaultTheme);
+    const { users } = useOnlineUsersStore();
 
-}>> = ({
-
-}) => {
-    const title = "Big Bank plc.";
-    const users = [
-        { name: "Joseph Joestar", },
-        { name: "Erina Pendleton", },
-        { name: "Robert Speedwagon", },
-        { name: "Will Zeppeli", },
-    ]
+    
     const colorSchemes = [
         "blue",
         "green",
@@ -50,6 +57,16 @@ export const Workspace: FC<PropsWithChildren<{
         "yellow",
         "purple",
     ]
+
+    useEffect(() => {
+        fetchTheme(`https://raw.githubusercontent.com/JustMeGaaRa/reverse-architecture-community/main/theme.json`)
+            .then(theme => {
+                setTheme(theme);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }, []);
 
     return (
         <Page>
@@ -62,16 +79,17 @@ export const Workspace: FC<PropsWithChildren<{
                         height={"32px"}
                         orientation={"vertical"}
                     />
-                    <WorkspaceMenu title={title} />
+                    <WorkspaceMenu title={"Big Bank plc."} />
                 </HStack>
                 <HStack gap={2}>
                     <AvatarGroup max={3} cursor={"pointer"}>
                         {users.map((user, index) => (
                             <Avatar
-                                key={user.name}
+                                key={user.username}
                                 colorScheme={colorSchemes[index % colorSchemes.length]}
-                                name={user.name}
-                                title={user.name}
+                                name={user.fullname}
+                                src={user.avatarUrl}
+                                title={user.fullname}
                             />
                         ))}
                     </AvatarGroup>
@@ -128,7 +146,9 @@ export const Workspace: FC<PropsWithChildren<{
                         </Flex>
                     </NavigationSidebar>
                     <NavigationContent>
-                        <Outlet />
+                        <WorkspaceThemeProvider value={{ theme }}>
+                            <Outlet />
+                        </WorkspaceThemeProvider>
                     </NavigationContent>
                 </Navigation>
             </PageBody>

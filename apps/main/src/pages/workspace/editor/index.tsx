@@ -1,5 +1,4 @@
 import { Box, Divider, Flex, useToast } from "@chakra-ui/react";
-import { CommunityHubApi } from "@reversearchitecture/services";
 import {
     ContextSheet,
     ContextSheetContent,
@@ -13,6 +12,7 @@ import { IWorkspaceMetadata, IView, Workspace, applyMetadata, applyTheme } from 
 import { useStructurizrParser } from "@structurizr/react";
 import { FC, useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { CommunityHubApi } from "../../../services";
 
 export const CodeEditorSheet: FC = () => {
     const { workspaceId } = useParams<{ workspaceId: string }>();

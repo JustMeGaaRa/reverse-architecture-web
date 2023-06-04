@@ -5,6 +5,8 @@ import {
     Config,
     uniqueNamesGenerator
 } from "unique-names-generator";
+import { WebrtcProvider } from "y-webrtc";
+import * as Y from "yjs";
 import { User } from "../components";
 
 const sample = <T>(items: T[]) => items[Math.floor(Math.random() * items.length)];
@@ -43,4 +45,24 @@ export const createRandomUser = (): User => {
         color: sample(USER_COLORS),
         isActive: false
     };
+}
+
+type YDocProps = {
+    documentId: string;
+    signaling?: string[];
+    password?: string;
+}
+
+export function createYDoc({
+    documentId,
+    signaling,
+    password
+}: YDocProps) {
+    const document = new Y.Doc();
+    const provider = new WebrtcProvider(
+        documentId,
+        document,
+        { signaling, password }
+    );
+    return { document, provider };
 }

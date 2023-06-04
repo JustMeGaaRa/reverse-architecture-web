@@ -3,10 +3,8 @@ import { WorkspaceExplorer } from "@reversearchitecture/workspace-viewer";
 import { WorkspaceToolbar } from "@reversearchitecture/workspace-toolbar";
 import { WorkspaceZoom } from "@reversearchitecture/workspace-zoom";
 import { WorkspaceBreadcrumb } from "@reversearchitecture/workspace-breadcrumb";
-import { CommunityHubApi } from "@reversearchitecture/services";
-import { createYDoc } from "@reversearchitecture/utils";
-import { IView, IWorkspaceMetadata, Workspace } from "@structurizr/dsl";
-import { useStructurizrParser } from "@structurizr/react";
+import { createYDoc } from "../../utils/User";
+import { applyMetadata, IView, IWorkspaceMetadata, Workspace } from "@structurizr/dsl";
 import { FC, useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { ActivityPanel, WorkspaceRoomProvider } from "../../containers";
@@ -19,11 +17,6 @@ export const Sandbox: FC = () => {
     
     const [ workspace, setWorkspace ] = useState(Workspace.Empty);
     const [ selectedView, setSelectedView ] = useState<IView>();
-    const [ metadata, setMetadata ] = useState<IWorkspaceMetadata>();
-
-    const parseWorkspace = useStructurizrParser();
-    
-    const toast = useToast();
 
     useEffect(() => {
         const store = createYDoc({ documentId: workspaceId });
@@ -38,45 +31,6 @@ export const Sandbox: FC = () => {
             store.provider.destroy();
         }
     }, [workspaceId]);
-
-    const applyWorkspace = useCallback((workspace: Workspace, metadata?: IWorkspaceMetadata) => {
-        const updatedWorkspace = metadata
-            ? Workspace.applyMetadata(workspace, metadata)
-            : workspace;
-        setWorkspace(updatedWorkspace);
-        setSelectedView(selectedView
-            ?? updatedWorkspace.views.systemLandscape
-            ?? updatedWorkspace.views.systemContexts[0]
-            ?? updatedWorkspace.views.containers[0]
-            ?? updatedWorkspace.views.components[0]
-            ?? updatedWorkspace.views.deployments[0]);
-    }, [selectedView, setSelectedView, setWorkspace]);
-
-    useEffect(() => {
-        const fetchWorkspace = async (workspaceId: string) => {
-            const api = new CommunityHubApi();
-            const workspaceText = await api.getWorkspaceText(workspaceId);
-            const workspaceMetadata = await api.getWorkspaceMetadata(workspaceId);
-
-            return { text: workspaceText, metadata: workspaceMetadata };
-        }
-        
-        fetchWorkspace(workspaceId)
-            .then(({ text, metadata }) => {
-                applyWorkspace(parseWorkspace(text), metadata);
-                setMetadata(metadata);
-            })
-            .catch(error => {
-                toast({
-                    title: "Error",
-                    description: error.message,
-                    status: "error",
-                    duration: 9000,
-                    isClosable: true,
-                    position: "bottom-right"
-                })
-            })
-    }, [workspaceId, toast, applyWorkspace, setMetadata, parseWorkspace]);
 
     return (
         <Box
