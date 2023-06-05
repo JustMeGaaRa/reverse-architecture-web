@@ -1,4 +1,4 @@
-import { useToast } from "@chakra-ui/react";
+import { Avatar, AvatarGroup, IconButton, useToast } from "@chakra-ui/react";
 import { WorkspaceBreadcrumb } from "@reversearchitecture/workspace-breadcrumb";
 import { WorkspaceToolbar } from "@reversearchitecture/workspace-toolbar";
 import { useMetadata, WorkspaceExplorer } from "@reversearchitecture/workspace-viewer";
@@ -12,13 +12,15 @@ import {
     Workspace
 } from "@structurizr/dsl";
 import { useStructurizrParser } from "@structurizr/react";
-import { RoomProvider } from "@y-presence/react";
+import { AddUser } from "iconoir-react";
 import { FC, useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useWorkspaceTheme } from "../../../containers";
-import { useAccount, useUserPresence, useWebrtcProvider, useYDoc } from "../../../hooks";
+import * as Y from "yjs";
+import { WebrtcProvider } from "y-webrtc";
+import { Awareness } from "y-protocols/awareness";
+import { useAccount, useNavigationContext, useWorkspaceTheme } from "../../../containers";
 import { CommunityHubApi } from "../../../services";
-import { useOnlineUsersStore } from "../../../hooks/useOnlineUsersStore";
+import { useUserPresence } from "../../../hooks";
 
 export const WorkspaceViewerSheet: FC = () => {
     const { workspaceId } = useParams<{ workspaceId: string }>();
@@ -27,38 +29,18 @@ export const WorkspaceViewerSheet: FC = () => {
     const [ metadata, setMetadata ] = useState<IWorkspaceMetadata>();
     const { theme } = useWorkspaceTheme();
     const { applyElementPosition } = useMetadata();
-    
-    const { account } = useAccount();
-    const { setUsers } = useOnlineUsersStore();
-    // const { ydoc } = useYDoc();
-    // const { provider } = useWebrtcProvider(ydoc, workspaceId);
-
-    useEffect(() => {
-        setUsers([{
-            avatarUrl: account?.avatar,
-            color: "green",
-            fullname: account?.fullname,
-            username: account?.username,
-            isActive: true,
-            point: { x: 0, y: 0 }
-        }])
-    }, [account, setUsers]);
 
     const parseWorkspace = useStructurizrParser();
     const toast = useToast();
 
-    const applyWorkspace = useCallback((workspace: Workspace, metadata?: IWorkspaceMetadata) => {
-        const updatedWorkspace = metadata
-            ? applyMetadata(workspace, metadata)
-            : workspace;
-
-        setWorkspace(updatedWorkspace);
+    const applyWorkspace = useCallback((workspace: Workspace) => {
+        setWorkspace(workspace);
         setSelectedView(selectedView
-            ?? updatedWorkspace.views.systemLandscape
-            ?? updatedWorkspace.views.systemContexts[0]
-            ?? updatedWorkspace.views.containers[0]
-            ?? updatedWorkspace.views.components[0]
-            ?? updatedWorkspace.views.deployments[0]);
+            ?? workspace.views.systemLandscape
+            ?? workspace.views.systemContexts[0]
+            ?? workspace.views.containers[0]
+            ?? workspace.views.components[0]
+            ?? workspace.views.deployments[0]);
     }, [selectedView, setSelectedView, setWorkspace]);
 
     useEffect(() => {
@@ -72,7 +54,7 @@ export const WorkspaceViewerSheet: FC = () => {
         
         fetchWorkspace(workspaceId)
             .then(({ text, metadata }) => {
-                applyWorkspace(applyTheme(parseWorkspace(text), theme), metadata);
+                applyWorkspace(applyTheme(applyMetadata(parseWorkspace(text), metadata), theme));
                 setMetadata(metadata);
             })
             .catch(error => {
@@ -86,41 +68,96 @@ export const WorkspaceViewerSheet: FC = () => {
                 })
             })
     }, [workspaceId, theme, toast, applyWorkspace, setMetadata, parseWorkspace]);
+    
+    const { setAvailableActions } = useNavigationContext();
+    const { account } = useAccount();
+    const [ ydoc, setYdoc ] = useState<Y.Doc>();
+    const [ provider, setProvider ] = useState<WebrtcProvider>();
+
+    useEffect(() => {
+        const ydoc = new Y.Doc();
+        const provider = new WebrtcProvider(workspaceId, ydoc);
+
+        setYdoc(ydoc);
+        setProvider(provider);
+
+        return () => {
+            ydoc.destroy();
+            provider.disconnect();
+            provider.destroy();
+        }
+    }, [workspaceId, setYdoc, setProvider]);
+
+    useEffect(() => {
+        if(provider) {
+            provider.awareness.setLocalState(account);
+    
+            setAvailableActions([
+                (
+                    <OnlineUsers
+                        key={"users-online"}
+                        awareness={provider.awareness}
+                    />
+                ),
+                (
+                    <IconButton
+                        key={"users-add"}
+                        aria-label={"share"}
+                        colorScheme={"gray"}
+                        icon={<AddUser />}
+                        size={"md"}
+                    />
+                )
+            ]);
+        }
+    }, [account, provider, setAvailableActions]);
 
     const handleOnNodeDragStop = useCallback((event: React.MouseEvent, node: any) => {
-        const emptyMetadata = {
-            name: "",
-            lastModifiedDate: new Date(),
-            views: {
-                systemLandscape: undefined,
-                systemContexts: [],
-                containers: [],
-                components: [],
-                deployments: []
-            }
-        };
-        const updatedMetadata = applyElementPosition(
-            metadata ?? emptyMetadata,
+        setMetadata(applyElementPosition(
+            metadata,
             selectedView,
             node.data.element.identifier,
             node.position
-        );
-        setMetadata(updatedMetadata);
+        ));
     }, [metadata, selectedView, applyElementPosition]);
 
     return (
         <ContextSheet>
-            {/* <RoomProvider initialPresence={account} awareness={provider.awareness}> */}
-                <WorkspaceExplorer
-                    workspace={workspace}
-                    selectedView={selectedView}
-                    onNodeDragStop={handleOnNodeDragStop}
-                >
-                    <WorkspaceBreadcrumb />
-                    <WorkspaceToolbar />
-                    <WorkspaceZoom />
-                </WorkspaceExplorer>
-            {/* </RoomProvider> */}
+            <WorkspaceExplorer
+                workspace={workspace}
+                selectedView={selectedView}
+                onNodeDragStop={handleOnNodeDragStop}
+            >
+                <WorkspaceBreadcrumb />
+                <WorkspaceToolbar />
+                <WorkspaceZoom />
+            </WorkspaceExplorer>
         </ContextSheet>
     );
 };
+
+const OnlineUsers: FC<{ awareness: Awareness }> = ({ awareness }) => {
+    const { users } = useUserPresence(awareness);
+    const colorSchemes = [
+        "blue",
+        "green",
+        "red",
+        "orange",
+        "yellow",
+        "purple",
+    ]
+
+    return (
+        <AvatarGroup max={5} cursor={"pointer"}>
+            {users.map((user, index) => (
+                <Avatar
+                    key={user.username}
+                    colorScheme={colorSchemes[index % colorSchemes.length]}
+                    name={user.fullname}
+                    src={user.avatarUrl}
+                    title={user.fullname}
+                />
+            ))}
+        </AvatarGroup>
+    )
+}

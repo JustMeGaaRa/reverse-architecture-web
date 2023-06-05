@@ -65,13 +65,13 @@ export const WorkspaceBreadcrumb: FC<{
                         <BreadcrumbItem
                             key={title}
                             isCurrentPage={index === viewPath.path.length - 1}
-                            >
+                        >
                             <BreadcrumbLink
                                 as={Button}
                                 colorScheme={color.scheme}
                                 leftIcon={color.icon}
                                 onClick={() => handleOnBreadcrumLinkClick(view)}
-                                >
+                            >
                                 {title}
                             </BreadcrumbLink>
                         </BreadcrumbItem>

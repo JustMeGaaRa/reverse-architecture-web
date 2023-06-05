@@ -5,12 +5,14 @@ import {
     CardFooter,
     Flex,
     Icon,
+    IconButton,
     Image,
     Text,
 } from "@chakra-ui/react";
 import{
     EyeEmpty,
-    MediaImage
+    MediaImage,
+    MoreHoriz
 } from "iconoir-react";
 import { FC, PropsWithChildren } from "react";
 
@@ -27,9 +29,9 @@ export const ProjectCard: FC<PropsWithChildren<{
         <Card
             data-group
             backgroundColor={"transparent"}
-            borderRadius={16}
+            borderRadius={24}
             boxShadow={"none"}
-            padding={0}
+            padding={1}
             _hover={{
                 backgroundColor: "gray.100",
                 cursor: "pointer",
@@ -40,12 +42,12 @@ export const ProjectCard: FC<PropsWithChildren<{
                     alignItems={"center"}
                     borderColor={"gray.200"}
                     borderRadius={16}
-                    borderWidth={1}
+                    borderWidth={2}
                     height={"100%"}
                     justifyContent={"center"}
                     overflow={"hidden"}
                     _groupHover={{
-                        borderColor: "gray.700",
+                        borderColor: "yellow.900",
                     }}
                 >
                     {preview && (
@@ -79,13 +81,20 @@ export const ProjectCard: FC<PropsWithChildren<{
                     />
                 </Flex>
             </CardBody>
-            <CardFooter padding={2}>
+            <CardFooter
+                pl={3}
+                pr={2}
+                py={1}
+                justifyContent={"space-between"}
+                width={"100%"}
+            >
                 <Flex
                     direction={"column"}
                 >
                     <Text
                         color={"gray.700"}
-                        fontSize={18}
+                        fontSize={16}
+                        lineHeight={"20px"}
                         noOfLines={1}
                         _groupHover={{ color: "basic.white" }}
                     >
@@ -94,11 +103,19 @@ export const ProjectCard: FC<PropsWithChildren<{
                     <Text
                         color={"gray.500"}
                         fontSize={14}
+                        lineHeight={"18px"}
                         _groupHover={{ color: "gray.700" }}
                     >
                         {updated}
                     </Text>
                 </Flex>
+                <IconButton
+                    aria-label={"more options"}
+                    colorScheme={"gray"}
+                    icon={<MoreHoriz />}
+                    size={"md"}
+                    variant={"ghost"}
+                />
             </CardFooter>
         </Card>
     )

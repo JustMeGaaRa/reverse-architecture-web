@@ -60,12 +60,12 @@ export const WorkspacePreviewCard: FC<PropsWithChildren<{
                     alignItems={"center"}
                     borderColor={"gray.200"}
                     borderRadius={16}
-                    borderWidth={1}
+                    borderWidth={2}
                     height={"100%"}
                     justifyContent={"center"}
                     overflow={"hidden"}
                     _groupHover={{
-                        borderColor: "yellow.900"
+                        borderColor: "yellow.900",
                     }}
                     onClick={() => onPreviewClick && onPreviewClick()}
                 >

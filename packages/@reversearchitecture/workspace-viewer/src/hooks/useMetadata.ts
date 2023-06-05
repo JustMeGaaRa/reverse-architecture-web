@@ -75,6 +75,19 @@ export const useMetadata = () => {
         elementId: string,
         position: Position
     ) => {
+        const emptyMetadata = {
+            name: "",
+            lastModifiedDate: new Date(),
+            views: {
+                systemLandscape: undefined,
+                systemContexts: [],
+                containers: [],
+                components: [],
+                deployments: []
+            }
+        };
+        metadata = (metadata ?? emptyMetadata);
+        
         const updateViewMetadata = (metadata: IViewMetadata, elementId: string, position: Position) => {
             return {
                 ...metadata,

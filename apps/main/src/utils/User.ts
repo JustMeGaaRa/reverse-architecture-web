@@ -20,13 +20,13 @@ const defaultUsers = [
     {
         username: "will.zeppeli",
         fullname: "Will Zeppeli",
-        email: "",
+        email: undefined,
         avatar: undefined
     },
     {
         username: "dio.brando",
         fullname: "Dio Brando",
-        email: "",
+        email: undefined,
         avatar: undefined
     },
     {
@@ -38,55 +38,53 @@ const defaultUsers = [
     {
         username: "kars",
         fullname: "Kars",
-        email: "",
+        email: undefined,
         avatar: undefined
     },
     {
         username: "jotaro.kujo",
         fullname: "Jotaro Kujo",
-        email: "",
+        email: undefined,
         avatar: undefined
     },
     {
         username: "joseph.joestar",
         fullname: "Joseph Joestar",
-        email: "",
+        email: undefined,
         avatar: undefined
     },
     {
         username: "muhammad.avdol",
         fullname: "Muhammad Avdol",
-        email: "",
+        email: undefined,
         avatar: undefined
     },
     {
         username: "josuke.higashikata",
         fullname: "Josuke Higashikata",
-        email: "",
+        email: undefined,
         avatar: undefined
     },
     {
         username: "jolyne.cujoh",
         fullname: "Jolyne Cujoh",
-        email: "",
+        email: undefined,
         avatar: undefined
     },
     {
         username: "yoshikage.kira",
         fullname: "Yoshikage Kira",
-        email: "",
+        email: undefined,
         avatar: undefined
     },
     {
         username: "rohan.kishibe",
         fullname: "Rohan Kishibe",
-        email: "",
+        email: undefined,
         avatar: undefined
     }
 ]
 
-export const useAccount = () => {
-    return {
-        account: defaultUsers[0]
-    };
+export const createRandomUser = () => {
+    return defaultUsers.at(Math.floor(Math.random() * defaultUsers.length));
 }

@@ -1,11 +1,8 @@
 import {
-    Avatar,
-    AvatarGroup,
     Box,
     Divider,
     Flex,
-    HStack,
-    IconButton
+    HStack
 } from "@chakra-ui/react";
 import {
     Navigation,
@@ -18,45 +15,25 @@ import {
     Route,
     RouteList
 } from "@reversearchitecture/ui";
-import {
-    defaultTheme,
-    fetchTheme,
-    IWorkspaceTheme
-} from "@structurizr/dsl";
+import { defaultTheme, fetchTheme, IWorkspaceTheme } from "@structurizr/dsl";
 import {
     AddKeyframes,
-    AddUser,
     ChatLines,
     Code,
     HelpCircle,
     Timer
 } from "iconoir-react";
-import {
-    FC,
-    PropsWithChildren,
-    useEffect,
-    useState
-} from "react";
+import { FC, PropsWithChildren, useEffect, useState } from "react";
 import { Outlet } from "react-router";
 import {
+    useNavigationContext,
     WorkspaceMenu,
     WorkspaceThemeProvider
 } from "../../containers";
-import { useOnlineUsersStore } from "../../hooks";
 
 export const Workspace: FC<PropsWithChildren> = () => {
+    const { availableActions } = useNavigationContext();
     const [ theme, setTheme ] = useState<IWorkspaceTheme>(defaultTheme);
-    const { users } = useOnlineUsersStore();
-
-    
-    const colorSchemes = [
-        "blue",
-        "green",
-        "red",
-        "orange",
-        "yellow",
-        "purple",
-    ]
 
     useEffect(() => {
         fetchTheme(`https://raw.githubusercontent.com/JustMeGaaRa/reverse-architecture-community/main/theme.json`)
@@ -82,23 +59,7 @@ export const Workspace: FC<PropsWithChildren> = () => {
                     <WorkspaceMenu title={"Big Bank plc."} />
                 </HStack>
                 <HStack gap={2}>
-                    <AvatarGroup max={3} cursor={"pointer"}>
-                        {users.map((user, index) => (
-                            <Avatar
-                                key={user.username}
-                                colorScheme={colorSchemes[index % colorSchemes.length]}
-                                name={user.fullname}
-                                src={user.avatarUrl}
-                                title={user.fullname}
-                            />
-                        ))}
-                    </AvatarGroup>
-                    <IconButton
-                        aria-label={"share"}
-                        colorScheme={"gray"}
-                        icon={<AddUser />}
-                        size={"md"}
-                    />
+                    {availableActions.map(action => (action))}
                 </HStack>
             </PageHeader>
             <PageBody>
@@ -111,37 +72,15 @@ export const Workspace: FC<PropsWithChildren> = () => {
                             py={4}
                             height={"100%"}
                         >
-                            <Box>
-                                
-                            </Box>
+                            <Box />
                             <RouteList>
-                                <Route
-                                    icon={AddKeyframes}
-                                    title={"add frames"}
-                                    to={"add"}
-                                />
-                                <Route
-                                    icon={Code}
-                                    title={"code editor"}
-                                    to={"editor"}
-                                />
-                                <Route
-                                    icon={Timer}
-                                    title={"timer"}
-                                    to={"timer"}
-                                />
-                                <Route
-                                    icon={ChatLines}
-                                    title={"comments"}
-                                    to={"comments"}
-                                />
+                                <Route icon={AddKeyframes} title={"add frames"} to={"add"} />
+                                <Route icon={Code} title={"code editor"} to={"editor"} />
+                                <Route icon={Timer} title={"timer"} to={"timer"} />
+                                <Route icon={ChatLines} title={"comments"} to={"comments"} />
                             </RouteList>
                             <RouteList>
-                                <Route
-                                    icon={HelpCircle}
-                                    title={"help"}
-                                    to={"help"}
-                                />
+                                <Route icon={HelpCircle} title={"help"} to={"help"} />
                             </RouteList>
                         </Flex>
                     </NavigationSidebar>

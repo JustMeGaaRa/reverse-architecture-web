@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { LogOut, NavArrowUp, ProfileCircle } from "iconoir-react";
 import { FC, PropsWithChildren } from "react";
-import { useAccount } from "../../hooks";
+import { useAccount } from "../../containers";
 
 export const AccountMenu: FC<PropsWithChildren<{
     expanded: boolean;
@@ -30,6 +30,7 @@ export const AccountMenu: FC<PropsWithChildren<{
                 _hover={{
                     background: "gray.100"
                 }}
+                title={account.fullname}
             >
                 <Flex
                     alignItems={"center"}
@@ -51,9 +52,10 @@ export const AccountMenu: FC<PropsWithChildren<{
                                 direction={"column"}
                                 alignItems={"start"}
                                 flexGrow={1}
+                                textAlign={"left"}
                             >
-                                <Text fontSize={16}>{account.fullname}</Text>
-                                <Text fontSize={14} color={"gray.400"}>{account.email}</Text>
+                                <Text fontSize={16} noOfLines={1}>{account.fullname}</Text>
+                                <Text fontSize={14} noOfLines={1} color={"gray.400"}>{account.email}</Text>
                             </Flex>
                             <IconButton
                                 aria-label={"expand/collapse"}
