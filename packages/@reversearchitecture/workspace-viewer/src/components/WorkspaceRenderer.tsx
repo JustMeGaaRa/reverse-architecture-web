@@ -9,8 +9,9 @@ import {
     OnNodesChange,
     OnEdgesChange,
     NodeDragHandler,
+    OnInit,
 } from "@reactflow/core";
-import { FC, PropsWithChildren, useMemo } from "react";
+import { FC, forwardRef, MouseEventHandler, PropsWithChildren, useMemo } from "react";
 import {
     ReactFlowBoundaryNode,
     ReactFlowElementNode,
@@ -18,22 +19,26 @@ import {
 } from "./Nodes";
 import { ReactFlowBezierEdge } from "./Edges";
 
-export const WorkspaceRenderer: FC<PropsWithChildren<{
+export const WorkspaceRenderer = forwardRef<HTMLDivElement, PropsWithChildren<{
     nodes: any[];
     edges: any[];
+    onInitialize?: OnInit<any, any>;
     onNodesChange?: OnNodesChange;
     onEdgesChange?: OnEdgesChange;
     onNodeDragStop?: NodeDragHandler;
     onNodesDoubleClick?: NodeMouseHandler;
-}>> = ({
+    onMouseMove?: MouseEventHandler<HTMLDivElement>;
+}>>(({
     children,
     nodes,
     edges,
+    onInitialize,
     onNodesChange,
     onEdgesChange,
     onNodeDragStop,
-    onNodesDoubleClick
-}) => {
+    onNodesDoubleClick,
+    onMouseMove
+}, ref) => {
     const NodeTypes = useMemo(() => ({
         boundary: ReactFlowBoundaryNode,
         element: ReactFlowElementNode,
@@ -57,6 +62,7 @@ export const WorkspaceRenderer: FC<PropsWithChildren<{
 
     return (
         <ReactFlow
+            ref={ref}
             connectionMode={ConnectionMode.Loose}
             fitView
             fitViewOptions={FitViewOptions}
@@ -66,10 +72,13 @@ export const WorkspaceRenderer: FC<PropsWithChildren<{
             edges={edges}
             proOptions={{ hideAttribution: true }}
             snapGrid={[40, 40]}
+            style={{ position: "relative" }}
+            onInit={onInitialize}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onNodeDragStop={onNodeDragStop}
             onNodeDoubleClick={onNodesDoubleClick}
+            onMouseMove={onMouseMove}
         >
             <Background
                 variant={BackgroundVariant.Dots}
@@ -78,4 +87,6 @@ export const WorkspaceRenderer: FC<PropsWithChildren<{
             {children}
         </ReactFlow>
     );
-}
+});
+
+WorkspaceRenderer.displayName = "WorkspaceRenderer";

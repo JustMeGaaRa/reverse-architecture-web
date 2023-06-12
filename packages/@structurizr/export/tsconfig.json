@@ -1,0 +1,17 @@
+{
+    "display": "@structurizr/export",
+    "extends": "tsconfig/react-library.json",
+    "include": [
+        "./src/**/*"
+    ],
+    "exclude": [
+        "dist",
+        "build",
+        "node_modules"
+    ],
+    "compilerOptions": {
+        "strict": false,
+        "outDir": "./dist",
+        "rootDir": "./src",
+    }
+}

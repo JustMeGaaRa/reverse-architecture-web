@@ -1,4 +1,4 @@
-import { Avatar, AvatarGroup, IconButton, useToast } from "@chakra-ui/react";
+import { IconButton, useToast } from "@chakra-ui/react";
 import { WorkspaceBreadcrumb } from "@reversearchitecture/workspace-breadcrumb";
 import { WorkspaceToolbar } from "@reversearchitecture/workspace-toolbar";
 import { useMetadata, WorkspaceExplorer } from "@reversearchitecture/workspace-viewer";
@@ -11,16 +11,23 @@ import {
     IWorkspaceMetadata,
     Workspace
 } from "@structurizr/dsl";
+import { ReactFlowInstance } from "@reactflow/core";
 import { useStructurizrParser } from "@structurizr/react";
 import { AddUser } from "iconoir-react";
-import { FC, useCallback, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
-import { Awareness } from "y-protocols/awareness";
-import { useAccount, useNavigationContext, useWorkspaceTheme } from "../../../containers";
+import {
+    useAccount,
+    useNavigationContext,
+    UserAvatarGroup,
+    UserCursorGroup,
+    useWorkspaceTheme,
+    WorkspaceRoom
+} from "../../../containers";
 import { CommunityHubApi } from "../../../services";
-import { useUserPresence } from "../../../hooks";
+import { useSelfPresence } from "../../../hooks";
 
 export const WorkspaceViewerSheet: FC = () => {
     const { workspaceId } = useParams<{ workspaceId: string }>();
@@ -73,6 +80,7 @@ export const WorkspaceViewerSheet: FC = () => {
     const { account } = useAccount();
     const [ ydoc, setYdoc ] = useState<Y.Doc>();
     const [ provider, setProvider ] = useState<WebrtcProvider>();
+    const { setSelfPoint, setSelfPresence } = useSelfPresence();
 
     useEffect(() => {
         const ydoc = new Y.Doc();
@@ -90,11 +98,11 @@ export const WorkspaceViewerSheet: FC = () => {
 
     useEffect(() => {
         if(provider) {
-            provider.awareness.setLocalState(account);
+            setSelfPresence(provider.awareness, account);
     
             setAvailableActions([
                 (
-                    <OnlineUsers
+                    <UserAvatarGroup
                         key={"users-online"}
                         awareness={provider.awareness}
                     />
@@ -110,7 +118,13 @@ export const WorkspaceViewerSheet: FC = () => {
                 )
             ]);
         }
-    }, [account, provider, setAvailableActions]);
+    }, [account, provider, setSelfPresence, setAvailableActions]);
+
+    const [ reactFlow, setReactFlow ] = useState<ReactFlowInstance>();
+
+    const handleOnInitialize = useCallback((instance: ReactFlowInstance) => {
+        setReactFlow(instance);
+    }, [setReactFlow])
 
     const handleOnNodeDragStop = useCallback((event: React.MouseEvent, node: any) => {
         setMetadata(applyElementPosition(
@@ -121,43 +135,33 @@ export const WorkspaceViewerSheet: FC = () => {
         ));
     }, [metadata, selectedView, applyElementPosition]);
 
+    const handleOnMouseMove = useCallback((event: any) => {
+        if (reactFlow) {
+            setSelfPoint(provider?.awareness, event.viewportPoint)
+        }
+    }, [provider, reactFlow, setSelfPoint]);
+
     return (
         <ContextSheet>
-            <WorkspaceExplorer
-                workspace={workspace}
-                selectedView={selectedView}
-                onNodeDragStop={handleOnNodeDragStop}
-            >
-                <WorkspaceBreadcrumb />
-                <WorkspaceToolbar />
-                <WorkspaceZoom />
-            </WorkspaceExplorer>
+            <WorkspaceRoom>
+                <WorkspaceExplorer
+                    workspace={workspace}
+                    selectedView={selectedView}
+                    onInitialize={handleOnInitialize}
+                    onNodeDragStop={handleOnNodeDragStop}
+                    onMouseMove={handleOnMouseMove}
+                    >
+                    <WorkspaceBreadcrumb />
+                    <WorkspaceToolbar />
+                    <WorkspaceZoom />
+                    {provider && reactFlow &&  (
+                        <UserCursorGroup
+                            awareness={provider.awareness}
+                            viewport={reactFlow.getViewport()}
+                        />
+                    )}
+                </WorkspaceExplorer>
+            </WorkspaceRoom>
         </ContextSheet>
     );
-};
-
-const OnlineUsers: FC<{ awareness: Awareness }> = ({ awareness }) => {
-    const { users } = useUserPresence(awareness);
-    const colorSchemes = [
-        "blue",
-        "green",
-        "red",
-        "orange",
-        "yellow",
-        "purple",
-    ]
-
-    return (
-        <AvatarGroup max={5} cursor={"pointer"}>
-            {users.map((user, index) => (
-                <Avatar
-                    key={user.username}
-                    colorScheme={colorSchemes[index % colorSchemes.length]}
-                    name={user.fullname}
-                    src={user.avatarUrl}
-                    title={user.fullname}
-                />
-            ))}
-        </AvatarGroup>
-    )
 }

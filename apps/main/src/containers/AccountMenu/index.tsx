@@ -43,7 +43,7 @@ export const AccountMenu: FC<PropsWithChildren<{
                         color={"purple.900"}
                         name={account.fullname}
                         size={"lg"}
-                        src={account.avatar}
+                        src={account.avatarUrl}
                         title={account.fullname}
                     />
                     {expanded && (

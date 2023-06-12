@@ -1,12 +1,8 @@
 import { createContext } from "react";
+import { User } from "../../hooks";
 
 export const AccountContext = createContext<{
-    account?: {
-        username: string;
-        fullname: string;
-        email: string;
-        avatar: string;
-    };
+    account?: User;
 }>({});
 
 export const AccountProvider = AccountContext.Provider;

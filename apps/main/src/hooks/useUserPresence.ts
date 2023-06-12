@@ -1,14 +1,15 @@
 import { useSelf, useUsers } from "y-presence";
 import { Awareness } from "y-protocols/awareness";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 
 export interface User {
     username: string;
     fullname: string;
+    email?: string;
     avatarUrl: string;
-    point: { x: number, y: number };
+    point?: { x: number, y: number };
     color: string;
-    isActive: boolean;
+    isActive?: boolean;
 }
 
 export const useUserPresence = (awareness: Awareness) => {
@@ -16,16 +17,32 @@ export const useUserPresence = (awareness: Awareness) => {
     const others = useUsers(awareness, state => Array.from(state.entries()).filter(([id, user]) => id !== awareness.clientID).map(([, user]) => user) as User[]);
     const users = useUsers(awareness, state => Array.from(state.entries()).map(([, user]) => user) as User[]);
 
-    const setSelfPresence = useCallback((user: User) => {
-        if (awareness) {
-            awareness.setLocalState(user);
-        }
-    }, [awareness]);
-
     return {
         self,
         others,
-        users,
-        setSelfPresence
+        users
+    };
+}
+
+export const useSelfPresence = () => {
+    const [ self, setSelf ] = useState<User>();
+
+    const setSelfPoint = useCallback((awareness: Awareness, point: { x: number, y: number }) => {
+        if (awareness) {
+            awareness.setLocalState({ ...self, point });
+            setSelf({ ...self, point });
+        }
+    }, [self]);
+
+    const setSelfPresence = useCallback((awareness: Awareness, user: User) => {
+        if (awareness) {
+            awareness.setLocalState(user);
+            setSelf(user);
+        }
+    }, []);
+
+    return {
+        setSelfPresence,
+        setSelfPoint
     };
 }
