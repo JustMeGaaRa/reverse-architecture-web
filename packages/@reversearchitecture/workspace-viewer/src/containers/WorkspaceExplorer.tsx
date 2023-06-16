@@ -14,14 +14,11 @@ import {
     FC,
     PropsWithChildren,
     useCallback,
-    useRef,
     useState,
 } from "react";
-import { useReactFlowSelectedView } from "../hooks/useReactFlowSelectedView";
-import { WorkspaceRenderer } from "./WorkspaceRenderer";
-import { WorkspaceStoreUpdater } from "./WorkspaceStoreUpdater";
-import { useWorkspaceNavigation } from "../hooks/useWorkspaceNavigation";
-import { getViewportPoint } from "../utils/ReactFlow";
+import { WorkspaceRenderer, WorkspaceStoreUpdater } from "../containers";
+import { useWorkspaceNavigation, useReactFlowSelectedView } from "../hooks";
+import { getViewportPoint } from "../utils";
 
 type MousePosition = {
     relativePoint: { x: number, y: number },

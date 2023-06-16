@@ -6,6 +6,7 @@ export class Tag {
     public readonly name!: string;
 
     static Element = new Tag("Element");
+    static Group = new Tag("Group");
     static Person = new Tag("Person");
     static SoftwareSystem = new Tag("Software System");
     static Container = new Tag("Container");

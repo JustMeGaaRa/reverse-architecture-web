@@ -4,11 +4,20 @@ import {
     ContextSheetContent,
     ContextSheetHeader
 } from "@reversearchitecture/ui";
-import { WorkspaceBreadcrumb } from "@reversearchitecture/workspace-breadcrumb";
 import { WorkspaceEditor } from "@reversearchitecture/workspace-editor";
-import { useMetadata, WorkspaceExplorer } from "@reversearchitecture/workspace-viewer";
-import { WorkspaceZoom } from "@reversearchitecture/workspace-zoom";
-import { IWorkspaceMetadata, IView, Workspace, applyMetadata, applyTheme } from "@structurizr/dsl";
+import {
+    useMetadata,
+    WorkspaceBreadcrumbs,
+    WorkspaceExplorer,
+    WorkspaceZoomControls
+} from "@reversearchitecture/workspace-viewer";
+import {
+    IWorkspaceMetadata,
+    IView,
+    Workspace,
+    applyMetadata,
+    applyTheme
+} from "@structurizr/dsl";
 import { useStructurizrParser } from "@structurizr/react";
 import { FC, useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -122,8 +131,8 @@ export const CodeEditorSheet: FC = () => {
                         selectedView={selectedView}
                         onNodeDragStop={handleOnNodeDragStop}
                     >
-                        <WorkspaceBreadcrumb />
-                        <WorkspaceZoom />
+                        <WorkspaceBreadcrumbs />
+                        <WorkspaceZoomControls />
                     </WorkspaceExplorer>
                 </ContextSheet>
             </Flex>

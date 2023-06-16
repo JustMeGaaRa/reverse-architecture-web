@@ -1,8 +1,11 @@
 import { IconButton, useToast } from "@chakra-ui/react";
-import { WorkspaceBreadcrumb } from "@reversearchitecture/workspace-breadcrumb";
-import { WorkspaceToolbar } from "@reversearchitecture/workspace-toolbar";
-import { useMetadata, WorkspaceExplorer } from "@reversearchitecture/workspace-viewer";
-import { WorkspaceZoom } from "@reversearchitecture/workspace-zoom";
+import {
+    useMetadata,
+    WorkspaceBreadcrumbs,
+    WorkspaceExplorer,
+    WorkspaceToolbar,
+    WorkspaceZoomControls
+} from "@reversearchitecture/workspace-viewer";
 import { ContextSheet } from "@reversearchitecture/ui";
 import {
     applyMetadata,
@@ -150,10 +153,10 @@ export const WorkspaceViewerSheet: FC = () => {
                     onInitialize={handleOnInitialize}
                     onNodeDragStop={handleOnNodeDragStop}
                     onMouseMove={handleOnMouseMove}
-                    >
-                    <WorkspaceBreadcrumb />
+                >
+                    <WorkspaceBreadcrumbs />
                     <WorkspaceToolbar />
-                    <WorkspaceZoom />
+                    <WorkspaceZoomControls />
                     {provider && reactFlow &&  (
                         <UserCursorGroup
                             awareness={provider.awareness}

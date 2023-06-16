@@ -15,9 +15,8 @@ import {
 } from "@structurizr/dsl";
 import { useEdgesState, useNodesState } from "@reactflow/core";
 import { useEffect } from "react";
-import { ReactFlowJsonObjectBuilder } from "../services/ReactFlowJsonObjectBuilder";
-import { ReactFlowVisitor } from "../services/ReactFlowVisitor";
-import { useWorkspaceStore } from "../store/useWorkspaceStore";
+import { ReactFlowBuilder, ReactFlowVisitor } from "../types";
+import { useWorkspaceStore } from "../hooks";
 
 export const useReactFlowSelectedView = () => {
     const { workspace, selectedView, setViewPath } = useWorkspaceStore();
@@ -35,7 +34,7 @@ export const useReactFlowSelectedView = () => {
             [ ViewType.Deployment, new DeploymentViewStrategy(workspace, selectedView, selectedView["environment"])],
         ]);
 
-        const builder = new ReactFlowJsonObjectBuilder();
+        const builder = new ReactFlowBuilder();
         const visitor = new ReactFlowVisitor(workspace, selectedView, builder);
         const result = viewBuilders.get(selectedView.type)?.accept(visitor);
         const { nodes, edges } = builder.build();

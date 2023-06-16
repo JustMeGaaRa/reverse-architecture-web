@@ -28,13 +28,13 @@ import {
     ViewType,
     Workspace,
 } from "@structurizr/dsl";
-import { ReactFlowJsonObjectBuilder } from "./ReactFlowJsonObjectBuilder";
+import { ReactFlowBuilder } from "./ReactFlowBuilder";
 
 export class ReactFlowVisitor implements IVisitor {
     constructor(
         private workspace: Workspace,
         private selectedView: IView,
-        private builder: ReactFlowJsonObjectBuilder,
+        private builder: ReactFlowBuilder,
         private defaultPosition: Position = { x: 0, y: 0 },
         private defaultPadding: number = 50
     ) { }

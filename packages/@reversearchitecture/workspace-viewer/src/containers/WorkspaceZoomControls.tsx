@@ -7,18 +7,18 @@ import {
     MenuList
 } from "@chakra-ui/react";
 import {
-    ToolbalSection,
-    Toolbar
-} from "@reversearchitecture/workspace-viewer";
-import {
     Panel,
     useReactFlow,
     useStore
 } from "@reactflow/core";
 import { Minus, Plus } from "iconoir-react";
 import { FC, useMemo } from "react";
+import {
+    ToolbalSection,
+    Toolbar
+} from "../components";
 
-export const WorkspaceZoom: FC<{
+export const WorkspaceZoomControls: FC<{
     
 }> = ({
     

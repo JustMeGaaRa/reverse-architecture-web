@@ -11,13 +11,13 @@ import {
     NodeDragHandler,
     OnInit,
 } from "@reactflow/core";
-import { FC, forwardRef, MouseEventHandler, PropsWithChildren, useMemo } from "react";
+import { forwardRef, MouseEventHandler, PropsWithChildren, useMemo } from "react";
 import {
     ReactFlowBoundaryNode,
     ReactFlowElementNode,
-    ReactFlowDeploymentNode
-} from "./Nodes";
-import { ReactFlowBezierEdge } from "./Edges";
+    ReactFlowDeploymentNode,
+    ReactFlowBezierEdge
+} from "../components";
 
 export const WorkspaceRenderer = forwardRef<HTMLDivElement, PropsWithChildren<{
     nodes: any[];

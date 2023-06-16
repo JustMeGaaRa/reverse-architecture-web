@@ -1,7 +1,7 @@
 import { Node, Edge, ReactFlowJsonObject } from "@reactflow/core";
 import { IBuilder } from "@structurizr/dsl";
 
-export class ReactFlowJsonObjectBuilder implements IBuilder<ReactFlowJsonObject> {
+export class ReactFlowBuilder implements IBuilder<ReactFlowJsonObject> {
     constructor(
         private nodes: Array<Node> = [],
         private edges: Array<Edge> = [],

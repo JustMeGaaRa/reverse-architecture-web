@@ -1,15 +1,11 @@
-import {
-    IconButton
-} from "@chakra-ui/react";
-import * as DSL from "@structurizr/dsl";
-import {
-    ToolbalSection,
-    Toolbar,
-    useWorkspaceStore,
-    WorkspaceStore
-} from "@reversearchitecture/workspace-viewer";
+import { IconButton } from "@chakra-ui/react";
 import { Panel, useReactFlow } from "@reactflow/core";
-import { useInteractionMode } from "./useInteractionMode";
+import {
+    Component,
+    Container,
+    Person,
+    SoftwareSystem
+} from "@structurizr/dsl";
 import {
     BinMinus,
     Cancel,
@@ -24,13 +20,17 @@ import {
     Triangle,
     Undo
 } from "iconoir-react";
-import {
-    FC,
-    MouseEvent,
-    useCallback,
-} from "react";
+import { FC, useCallback } from "react";
 import { v4 } from "uuid";
-import { Component, Container, Person, SoftwareSystem } from "@structurizr/dsl";
+import {
+    ToolbalSection,
+    Toolbar
+} from "../components";
+import {
+    useInteractionMode, 
+    useWorkspaceStore,
+    WorkspaceStore
+} from "../hooks";
 
 const AllowElementsSelector = (state: WorkspaceStore) => {
     const isSystemLandscapView = state.selectedView?.type === "System Landscape"

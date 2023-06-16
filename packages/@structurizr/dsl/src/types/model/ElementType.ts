@@ -1,4 +1,5 @@
 export enum ElementType {
+    Group = "Group",
     Person = "Person",
     SoftwareSystem = "Software System",
     Container = "Container",

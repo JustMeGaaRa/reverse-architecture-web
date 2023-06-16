@@ -1,6 +1,6 @@
 import { IView, Workspace } from "@structurizr/dsl";
 import { FC, useEffect } from "react";
-import { useWorkspaceStore } from "../store/useWorkspaceStore";
+import { useWorkspaceStore } from "../hooks";
 
 export const WorkspaceStoreUpdater: FC<{
     workspace?: Workspace;

@@ -30,6 +30,7 @@ export const BoundaryElement: FC<{
 
     return (
         <Flex
+            backgroundColor={style.background}
             border={"dashed"}
             borderWidth={2}
             borderColor={style.stroke}
@@ -40,7 +41,6 @@ export const BoundaryElement: FC<{
             height={size.height}
             textColor={style.color}
         >
-            
             <BoundaryElementLabel
                 data={data}
                 style={style}
