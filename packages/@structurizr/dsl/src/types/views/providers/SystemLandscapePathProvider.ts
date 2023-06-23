@@ -1,7 +1,4 @@
-import { ISupportPath } from "../shared/ISupportPath";
-import { IView } from "../shared/IView";
-import { ViewType } from "../types/views/ViewType";
-import { Workspace } from "../types/Workspace";
+import { ISupportPath, IView, ViewType, Workspace } from "../../../";
 
 export class SystemLandscapePathProvider implements ISupportPath {
     getPath(workspace: Workspace, view: IView): Array<IView> {

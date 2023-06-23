@@ -2,10 +2,10 @@ import {
     Person,
     SoftwareSystem,
     IView,
-    IVisitor,
+    IElementVisitor,
     Workspace,
     ISupportVisitor
-} from "../";
+} from "../../../";
 
 export class SystemLandscapeViewStrategy implements ISupportVisitor {
     constructor(
@@ -13,7 +13,7 @@ export class SystemLandscapeViewStrategy implements ISupportVisitor {
         private view: IView
     ) {}
 
-    accept(visitor: IVisitor): void {
+    accept(visitor: IElementVisitor): void {
         const hasRelationship = (
             sourceIdentifier: string,
             targetIdentifier: string
@@ -47,7 +47,7 @@ export class SystemLandscapeViewStrategy implements ISupportVisitor {
                     group.people,
                     group.softwareSystems,
                     group.identifier
-                )
+                );
             });
 
         // 1.2. iterate over all software systems and find software system for the view

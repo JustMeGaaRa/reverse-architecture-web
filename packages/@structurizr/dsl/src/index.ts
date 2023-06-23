@@ -52,19 +52,21 @@ export * from "./shared/IBuilder";
 export * from "./shared/ISupportPath";
 export * from "./shared/ISupportVisitor";
 export * from "./shared/IView";
-export * from "./shared/IVisitor";
+export * from "./shared/IElementVisitor";
 export * from "./shared/IWorkspaceMetadata";
 
-export * from "./visitors/ComponentViewStrategy";
-export * from "./visitors/ContainerViewStrategy";
-export * from "./visitors/DeploymentViewStrategy";
-export * from "./visitors/SystemContextViewStrategy";
-export * from "./visitors/SystemLandscapeViewStrategy";
+export * from "./types/views/visitors/ComponentViewStrategy";
+export * from "./types/views/visitors/ContainerViewStrategy";
+export * from "./types/views/visitors/DeploymentViewStrategy";
+export * from "./types/views/visitors/SystemContextViewStrategy";
+export * from "./types/views/visitors/SystemLandscapeViewStrategy";
 
-export * from "./providers/SystemLandscapePathProvider";
-export * from "./providers/SystemContextPathProvider";
-export * from "./providers/ContainerPathProvider";
-export * from "./providers/ComponentPathProvider";
-export * from "./providers/DeploymentPathProvider";
+export * from "./types/views/providers/SystemLandscapePathProvider";
+export * from "./types/views/providers/SystemContextPathProvider";
+export * from "./types/views/providers/ContainerPathProvider";
+export * from "./types/views/providers/ComponentPathProvider";
+export * from "./types/views/providers/DeploymentPathProvider";
+
+export * from "./types/autolayout";
 
 export * from "./utils";

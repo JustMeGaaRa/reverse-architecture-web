@@ -11,19 +11,13 @@ import {
     Component,
     DeploymentNode,
     Relationship,
-    Workspace,
     Tag,
-    IVisitor,
+    IElementVisitor,
     IView,
     ContainerInstance,
-    ElementStyle,
     Group,
     InfrastructureNode,
-    Model,
-    RelationshipStyle,
     SoftwareSystemInstance,
-    Styles,
-    Views,
     IElementPosition
 } from "@structurizr/dsl";
 import { ElementHtmlUtils } from "./utils";
@@ -35,20 +29,12 @@ import {
 } from "./types";
 import { DrawioDiagramBuilder } from "./DrawioDiagramBuilder";
 
-export class DrawioExportVisitor implements IVisitor {
+export class DrawioExportVisitor implements IElementVisitor {
     constructor(
         private view: IView,
         private parentId: string | undefined,
         private builder: DrawioDiagramBuilder
     ) {}
-
-    visitWorkspace(workspace: Workspace) {
-        throw new Error("Method not implemented.");
-    }
-
-    visitModel(model: Model) {
-        throw new Error("Method not implemented.");
-    }
 
     visitGroup(group: Group, params?: { parentId?: string; }) {
         throw new Error("Method not implemented.");
@@ -190,22 +176,6 @@ export class DrawioExportVisitor implements IVisitor {
             }
         }
         this.builder.addMxObject(mxObject);
-    }
-
-    visitViews(views: Views) {
-        throw new Error("Method not implemented.");
-    }
-
-    visitStyles(styles: Styles) {
-        throw new Error("Method not implemented.");
-    }
-
-    visitElementStyle(elementStyle: ElementStyle) {
-        throw new Error("Method not implemented.");
-    }
-
-    visitRelationshipStyle(relationshipStyle: RelationshipStyle) {
-        throw new Error("Method not implemented.");
     }
 
     getMxObjects() {

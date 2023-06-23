@@ -1,4 +1,3 @@
-import { Model } from "../types/Model";
 import { Component } from "../types/model/Component";
 import { Container } from "../types/model/Container";
 import { ContainerInstance } from "../types/model/ContainerInstance";
@@ -9,14 +8,8 @@ import { Person } from "../types/model/Person";
 import { Relationship } from "../types/model/Relationship";
 import { SoftwareSystem } from "../types/model/SoftwareSystem";
 import { SoftwareSystemInstance } from "../types/model/SoftwareSystemInstance";
-import { Views } from "../types/Views";
-import { ElementStyle, RelationshipStyle } from "../types/views/Style";
-import { Styles } from "../types/views/Style";
-import { Workspace } from "../types/Workspace";
 
-export interface IVisitor {
-    visitWorkspace(workspace: Workspace): void;
-    visitModel(model: Model): void;
+export interface IElementVisitor {
     visitGroup(
         group: Group,
         params?: { parentId?: string }): void;
@@ -45,8 +38,4 @@ export interface IVisitor {
         containerInstance: ContainerInstance,
         params?: { parentId?: string }): void;
     visitRelationship(relationship: Relationship): void;
-    visitViews(views: Views): void;
-    visitStyles(styles: Styles): void;
-    visitElementStyle(elementStyle: ElementStyle): void;
-    visitRelationshipStyle(relationshipStyle: RelationshipStyle): void;
 }

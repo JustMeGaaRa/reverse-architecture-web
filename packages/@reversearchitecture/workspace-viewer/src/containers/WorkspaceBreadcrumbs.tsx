@@ -5,7 +5,6 @@ import {
     Button
 } from "@chakra-ui/react";
 import { Panel } from "@reactflow/core";
-import { IViewDefinition } from "@structurizr/dsl";
 import {
     Circle,
     Hexagon,
@@ -13,18 +12,14 @@ import {
     Square,
     Triangle,
 } from "iconoir-react";
-import { FC, useCallback } from "react";
+import { FC } from "react";
 import {
     useWorkspaceNavigation,
     useWorkspaceStore
 } from "../hooks";
 
-export const WorkspaceBreadcrumbs: FC<{
-    onClick?: (view: IViewDefinition) => void;
-}> = ({
-    onClick
-}) => {
-    const { navigate } = useWorkspaceNavigation();
+export const WorkspaceBreadcrumbs: FC = () => {
+    const { onViewChange } = useWorkspaceNavigation();
     const { workspace, viewPath } = useWorkspaceStore();
     
     const colorSchemes = [
@@ -66,11 +61,6 @@ export const WorkspaceBreadcrumbs: FC<{
         }))
     ]
 
-    const onNavigate = useCallback((view: IViewDefinition) => {
-        navigate(view);
-        onClick?.(view);
-    }, [navigate, onClick]);
-
     return (
         <Panel position={"top-left"}>
             <Breadcrumb separator={""}>
@@ -83,7 +73,7 @@ export const WorkspaceBreadcrumbs: FC<{
                             as={Button}
                             colorScheme={item.colorScheme}
                             leftIcon={item.icon}
-                            onClick={() => onNavigate(item.view)}
+                            onClick={() => onViewChange(item.view)}
                         >
                             {item.title}
                         </BreadcrumbLink>

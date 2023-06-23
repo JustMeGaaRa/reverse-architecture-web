@@ -8,7 +8,7 @@ export const useWorkspaceNavigation = () => {
     // TODO: refactor into useSelectedView hook
     const { workspace, setSelectedView } = useWorkspaceStore();
     
-    const navigate = useCallback((view: IViewDefinition) => {
+    const onViewChange = useCallback((view: IViewDefinition) => {
         // TODO: calculate the automatic layout and update the metadata
         const defaultView: IView = { type: ViewType.None, title: "None", identifier: "none", elements: [], relationships: [] };
         const selectedView = Array.from([workspace.views.systemLandscape]).find(x => x?.type === view?.type)
@@ -23,5 +23,5 @@ export const useWorkspaceNavigation = () => {
         setSelectedView(selectedView ?? unsetView ?? defaultView);
     }, [workspace, setSelectedView]);
 
-    return { navigate }
+    return { onViewChange }
 }

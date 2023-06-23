@@ -20,17 +20,17 @@ export class DeploymentNode implements Element {
         this.type = ElementType.DeploymentNode;
         this.identifier = params.identifier;
         this.name = params.name;
-        this.deploymentNodes = params.deploymentNodes;
-        this.infrastructureNodes = params.infrastructureNodes;
-        this.softwareSystemInstances = params.softwareSystemInstances;
-        this.containerInstances = params.containerInstances;
-        this.technology = params.technology;
+        this.deploymentNodes = params.deploymentNodes ?? [];
+        this.infrastructureNodes = params.infrastructureNodes ?? [];
+        this.softwareSystemInstances = params.softwareSystemInstances ?? [];
+        this.containerInstances = params.containerInstances ?? [];
+        this.technology = params.technology ?? [];
         this.description = params.description;
         this.instances = params.instances;
         this.url = params.url;
         this.properties = params.properties;
         this.perspectives = params.perspectives;
-        this.relationships = params.relationships;
+        this.relationships = params.relationships ?? [];
         this.tags = [
             Tag.Element,
             Tag.DeploymentNode,
@@ -41,16 +41,16 @@ export class DeploymentNode implements Element {
     public readonly type: ElementType.DeploymentNode;
     public readonly identifier: Identifier;
     public readonly name: string;
-    public readonly deploymentNodes?: DeploymentNode[];
-    public readonly infrastructureNodes?: InfrastructureNode[];
-    public readonly softwareSystemInstances?: SoftwareSystemInstance[];
-    public readonly containerInstances?: ContainerInstance[];
-    public readonly technology?: Technology[];
+    public readonly deploymentNodes: DeploymentNode[];
+    public readonly infrastructureNodes: InfrastructureNode[];
+    public readonly softwareSystemInstances: SoftwareSystemInstance[];
+    public readonly containerInstances: ContainerInstance[];
+    public readonly technology: Technology[];
     public readonly description?: string;
     public readonly instances?: number;
     public readonly tags: Tag[];
     public readonly url?: Url;
     public readonly properties?: Properties;
     public readonly perspectives?: Perspectives;
-    public readonly relationships?: Relationship[];
+    public readonly relationships: Relationship[];
 }

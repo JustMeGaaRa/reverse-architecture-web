@@ -7,7 +7,7 @@ import {
     ElementStyle,
     Group,
     InfrastructureNode,
-    IVisitor,
+    IElementVisitor,
     Model,
     Person,
     Relationship,
@@ -30,7 +30,7 @@ function indent(text: string) {
         .join('\n');
 }
 
-export class StructurizrExportVisitor implements IVisitor {
+export class StructurizrExportVisitor implements IElementVisitor {
     visitWorkspace(workspace: Workspace): string {
         const model = indent(this.visitModel(workspace.model));
         const views = indent(this.visitViews(workspace.views));

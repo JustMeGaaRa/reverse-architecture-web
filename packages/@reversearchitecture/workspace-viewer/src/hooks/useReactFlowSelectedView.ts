@@ -11,12 +11,14 @@ import {
     SystemContextPathProvider,
     ContainerPathProvider,
     ComponentPathProvider,
-    DeploymentPathProvider,
+    DeploymentPathProvider
 } from "@structurizr/dsl";
 import { useEdgesState, useNodesState } from "@reactflow/core";
 import { useEffect } from "react";
 import { ReactFlowBuilder, ReactFlowVisitor } from "../types";
 import { useWorkspaceStore } from "../hooks";
+import { BoundingBoxTreeVisitor } from "../types/BoundingBoxTreeVisitor";
+import { IBoundingBoxNode } from "../types/IBoundingBoxNode";
 
 export const useReactFlowSelectedView = () => {
     const { workspace, selectedView, setViewPath } = useWorkspaceStore();
@@ -34,10 +36,14 @@ export const useReactFlowSelectedView = () => {
             [ ViewType.Deployment, new DeploymentViewStrategy(workspace, selectedView, selectedView["environment"])],
         ]);
 
-        const builder = new ReactFlowBuilder();
-        const visitor = new ReactFlowVisitor(workspace, selectedView, builder);
-        const result = viewBuilders.get(selectedView.type)?.accept(visitor);
-        const { nodes, edges } = builder.build();
+        const boundingBoxNodes = new Map<string, IBoundingBoxNode>();
+        const boundingBoxVisitor = new BoundingBoxTreeVisitor(workspace, selectedView, boundingBoxNodes);
+        viewBuilders.get(selectedView.type)?.accept(boundingBoxVisitor);
+        
+        const reactFlowBuilder = new ReactFlowBuilder();
+        const reactFlowVisitor = new ReactFlowVisitor(workspace, selectedView, reactFlowBuilder, boundingBoxNodes);
+        viewBuilders.get(selectedView.type)?.accept(reactFlowVisitor);
+        const { nodes, edges } = reactFlowBuilder.build();
 
         const pathBuilders: Map<ViewType, ISupportPath> = new Map<ViewType, ISupportPath>([
             [ ViewType.SystemLandscape, new SystemLandscapePathProvider() ],

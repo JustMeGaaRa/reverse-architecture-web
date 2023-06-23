@@ -2,13 +2,13 @@ import {
     Person,
     SoftwareSystem,
     IView,
-    IVisitor,
+    IElementVisitor,
     Workspace,
     Container,
     Component,
     relationshipExists,
     ISupportVisitor
-} from "../";
+} from "../../../";
 
 export class ComponentViewStrategy implements ISupportVisitor {
     constructor(
@@ -16,7 +16,7 @@ export class ComponentViewStrategy implements ISupportVisitor {
         private view: IView,
     ) {}
 
-    accept(visitor: IVisitor): void {
+    accept(visitor: IElementVisitor): void {
         const hasRelationship = (
             sourceIdentifier: string,
             targetIdentifier: string
@@ -70,7 +70,7 @@ export class ComponentViewStrategy implements ISupportVisitor {
                     // 3.1.2. iterate over all groups in the container 
                     container.groups.forEach(group => {
                         // 3.1.2.1. include the component group as a boundary element
-                        visitor.visitGroup(group);
+                        visitor.visitGroup(group, { parentId: container.identifier });
 
                         // 3.1.2.2. include all components in the group
                         visitComponent(
@@ -98,31 +98,32 @@ export class ComponentViewStrategy implements ISupportVisitor {
             softwareSystems: Array<SoftwareSystem>
         ) => {
             // 2.1. iterate over all software systems
-            softwareSystems
-                .forEach(softwareSystem => {
-                    // 2.1.1. iterate over all groups in the software system
-                    softwareSystem.groups
-                        .forEach(group => visitContainer(
-                            people,
-                            softwareSystems,
-                            group.containers.concat(softwareSystem.containers)
-                        ));
-                    
-                    // 2.1.2. include all containers in the software systemZ
+            softwareSystems.forEach(softwareSystem => {
+                // 2.1.1. iterate over all groups in the software system
+                softwareSystem.groups.forEach(group => {
                     visitContainer(
                         people,
                         softwareSystems,
-                        softwareSystem.containers
+                        group.containers.concat(softwareSystem.containers)
                     );
                 });
+                
+                // 2.1.2. include all containers in the software systemZ
+                visitContainer(
+                    people,
+                    softwareSystems,
+                    softwareSystem.containers
+                );
+            });
         }
 
         // 1.1. iterate over all groups and find software system for the view
-        this.workspace.model.groups
-            .forEach(group => visitSoftwareSystem(
+        this.workspace.model.groups.forEach(group => {
+            visitSoftwareSystem(
                 group.people.concat(this.workspace.model.people),
                 group.softwareSystems.concat(this.workspace.model.softwareSystems)
-            ));
+            );
+        });
             
         // 1.2. iterate over all software systems and find software system for the view
         visitSoftwareSystem(

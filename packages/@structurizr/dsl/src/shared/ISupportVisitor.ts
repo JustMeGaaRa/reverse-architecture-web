@@ -1,5 +1,5 @@
-import { IVisitor } from "./IVisitor";
+import { IElementVisitor } from "./IElementVisitor";
 
 export interface ISupportVisitor {
-    accept(visitor: IVisitor): void;
+    accept(visitor: IElementVisitor): void;
 }

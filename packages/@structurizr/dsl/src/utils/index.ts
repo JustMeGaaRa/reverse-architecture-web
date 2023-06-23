@@ -1,11 +1,13 @@
-import { Workspace } from "../types/Workspace";
-import { IWorkspaceMetadata } from "../shared/IWorkspaceMetadata";
-import { IWorkspaceTheme } from "../shared/IWorkspaceMetadata";
-import { Identifier } from "../types/model/Identifier";
-import { SystemContextView } from "../types/views/SystemContextView";
-import { ContainerView } from "../types/views/ContainerView";
-import { ComponentView } from "../types/views/ComponentView";
-import { DeploymentView } from "../types/views/DeploymentView";
+import {
+    Workspace,
+    IWorkspaceMetadata,
+    IWorkspaceTheme,
+    Identifier,
+    SystemContextView,
+    ContainerView,
+    ComponentView,
+    DeploymentView
+} from "../";
 
 export const applyMetadata = (workspace: Workspace, metadata: IWorkspaceMetadata): Workspace => {
     return {

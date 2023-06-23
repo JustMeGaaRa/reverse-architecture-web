@@ -1,10 +1,10 @@
 import {
-    IVisitor,
+    IElementVisitor,
     IView,
     Workspace,
     DeploymentNode,
     ISupportVisitor
-} from "../";
+} from "../../../";
 
 export class DeploymentViewStrategy implements ISupportVisitor {
     constructor(
@@ -13,11 +13,8 @@ export class DeploymentViewStrategy implements ISupportVisitor {
         private environment: string
     ) {}
 
-    accept(visitor: IVisitor): void {
-        const visitDeploymentNode = (
-            deploymentNode: DeploymentNode,
-            parentId?: string
-        ) => {
+    accept(visitor: IElementVisitor): void {
+        const visitDeploymentNode = (deploymentNode: DeploymentNode, parentId?: string) => {
             visitor.visitDeploymentNode(deploymentNode, { parentId });
 
             deploymentNode.infrastructureNodes?.forEach(infrastructureNode => {

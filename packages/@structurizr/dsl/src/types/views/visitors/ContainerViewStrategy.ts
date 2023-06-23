@@ -3,11 +3,11 @@ import {
     Person,
     SoftwareSystem,
     IView,
-    IVisitor,
+    IElementVisitor,
     Workspace,
     relationshipExists,
     ISupportVisitor
-} from "../";
+} from "../../../";
 
 export class ContainerViewStrategy implements ISupportVisitor {
     constructor(
@@ -15,7 +15,7 @@ export class ContainerViewStrategy implements ISupportVisitor {
         private view: IView,
     ) {}
 
-    accept(visitor: IVisitor): void {
+    accept(visitor: IElementVisitor): void {
         const hasRelationship = (
             sourceIdentifier: string,
             targetIdentifier: string
@@ -50,7 +50,8 @@ export class ContainerViewStrategy implements ISupportVisitor {
 
         const visitSoftwareSystem = (
             people: Array<Person>,
-            softwareSystems: Array<SoftwareSystem>
+            softwareSystems: Array<SoftwareSystem>,
+            parentId?: string
         ) => {
             // 2.1. iterate over all software systems and find software system for the view
             softwareSystems
@@ -88,7 +89,8 @@ export class ContainerViewStrategy implements ISupportVisitor {
         this.workspace.model.groups
             .forEach(group => visitSoftwareSystem(
                 group.people.concat(this.workspace.model.people),
-                group.softwareSystems.concat(this.workspace.model.softwareSystems)
+                group.softwareSystems.concat(this.workspace.model.softwareSystems),
+                group.identifier
             ));
 
         // 1.2. iterate over all software systems and find software system for the view

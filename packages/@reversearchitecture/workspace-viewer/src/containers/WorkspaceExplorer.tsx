@@ -44,7 +44,7 @@ export const WorkspaceExplorer: FC<PropsWithChildren<{
     onMouseMove
 }) => {
     const { nodes, edges, onNodesChange, onEdgesChange } = useReactFlowSelectedView();
-    const { navigate } = useWorkspaceNavigation();
+    const { onViewChange } = useWorkspaceNavigation();
     const [ reactFlow, setReactFlow ] = useState<ReactFlowInstance>();
 
     const handleOnIntialize = useCallback((instance: ReactFlowInstance) => {
@@ -57,7 +57,7 @@ export const WorkspaceExplorer: FC<PropsWithChildren<{
 
         // do not handle the click for component elements as there is no such view type
         if (!element.tags.some(tag => tag.name === Tag.Person.name || tag.name === Tag.Component.name)) {
-            navigate({
+            onViewChange({
                 identifier: element.identifier,
                 type: element.tags.some(tag => tag.name === Tag.SoftwareSystem.name)
                     ? ViewType.Container
@@ -67,17 +67,19 @@ export const WorkspaceExplorer: FC<PropsWithChildren<{
         }
 
         onNodesDoubleClick?.(event, node);
-    }, [navigate, onNodesDoubleClick]);
+    }, [onViewChange, onNodesDoubleClick]);
 
     const handleOnNodeDragStop = useCallback((event: React.MouseEvent, node: any, nodes: any[]) => {
         onNodeDragStop?.(event, node);
     }, [onNodeDragStop]);
 
     const handleOnMouseMove = useCallback((event: any) => {
-        const boundingBox = event.currentTarget.getBoundingClientRect();
-        const pointOnTarget = { x: event.clientX - boundingBox.left, y: event.clientY - boundingBox.top };
-        const pointOnViewport = getViewportPoint(reactFlow.getViewport(), pointOnTarget);
-        onMouseMove?.({ relativePoint: pointOnTarget, viewportPoint: pointOnViewport });
+        if (reactFlow) {
+            const boundingBox = event.currentTarget.getBoundingClientRect();
+            const pointOnTarget = { x: event.clientX - boundingBox.left, y: event.clientY - boundingBox.top };
+            const pointOnViewport = getViewportPoint(reactFlow.getViewport(), pointOnTarget);
+            onMouseMove?.({ relativePoint: pointOnTarget, viewportPoint: pointOnViewport });
+        }
     }, [reactFlow, onMouseMove]);
 
     return (
