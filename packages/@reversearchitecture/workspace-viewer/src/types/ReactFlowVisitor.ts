@@ -7,7 +7,7 @@ import {
     findSoftwareSystem,
     Group,
     InfrastructureNode,
-    IView,
+    IViewDefinition,
     IElementVisitor,
     Person,
     Relationship,
@@ -26,7 +26,7 @@ import { ReactFlowBuilder } from "./ReactFlowBuilder";
 export class ReactFlowVisitor implements IElementVisitor {
     constructor(
         private workspace: Workspace,
-        private selectedView: IView,
+        private selectedView: IViewDefinition,
         private builder: ReactFlowBuilder,
         private branches: Map<string, IBoundingBoxNode>
     ) { }

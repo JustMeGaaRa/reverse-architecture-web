@@ -1,10 +1,10 @@
-import { IView, Workspace } from "@structurizr/dsl";
+import { IViewDefinition, Workspace } from "@structurizr/dsl";
 import { FC, useEffect } from "react";
 import { useWorkspaceStore } from "../hooks";
 
 export const WorkspaceStoreUpdater: FC<{
     workspace?: Workspace;
-    selectedView?: IView;
+    selectedView?: IViewDefinition;
 }> = ({
     workspace,
     selectedView,

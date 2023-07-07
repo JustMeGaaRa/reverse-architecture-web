@@ -1,11 +1,11 @@
 import { Properties } from "../model/Properties";
-import { IView } from "../../shared/IView";
-import { IElementPosition, IRelationshipPosition } from "../../shared/IWorkspaceMetadata";
+import { IViewDefinition } from "./IViewDefinition";
+import { IElementPosition, IRelationshipPosition } from "../../metadata/IViewMetadata";
 import { AutoLayout } from "./AutoLayout";
 import { ViewType } from "./ViewType";
 
-export class SystemLandscapeView implements IView {
-    constructor(values: Omit<IView, "type" | "identifier">) {
+export class SystemLandscapeViewDefinition implements IViewDefinition {
+    constructor(values: Omit<IViewDefinition, "type" | "identifier">) {
         Object.assign(this, values);
         this.identifier = "System Landscape";
         this.type = ViewType.SystemLandscape;

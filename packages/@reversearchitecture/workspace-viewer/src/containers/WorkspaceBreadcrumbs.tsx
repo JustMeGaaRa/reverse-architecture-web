@@ -5,6 +5,7 @@ import {
     Button
 } from "@chakra-ui/react";
 import { Panel } from "@reactflow/core";
+import { ViewKeys } from "@structurizr/dsl";
 import {
     Circle,
     Hexagon,
@@ -13,15 +14,14 @@ import {
     Triangle,
 } from "iconoir-react";
 import { FC } from "react";
-import {
-    useWorkspaceNavigation,
-    useWorkspaceStore
-} from "../hooks";
 
-export const WorkspaceBreadcrumbs: FC = () => {
-    const { onViewChange } = useWorkspaceNavigation();
-    const { workspace, viewPath } = useWorkspaceStore();
-    
+export const WorkspaceBreadcrumbs: FC<{
+    path: ViewKeys[];
+    onItemClick?: (view: ViewKeys) => void;
+}> = ({
+    path,
+    onItemClick
+}) => {
     const colorSchemes = [
         {
             scheme: "red",
@@ -44,22 +44,13 @@ export const WorkspaceBreadcrumbs: FC = () => {
             icon: (<Circle fontSize={6} color={"#32D74B"} />)
         }
     ];
-    const items = [
-        {
-            title: `Workspace - ${workspace.name}`,
-            colorScheme: colorSchemes.at(0).scheme,
-            icon: colorSchemes.at(0).icon,
-            isCurrentPage: viewPath.path.length === 0,
-            view: undefined
-        },
-        ...viewPath.path.map((view, index) => ({
-            title: `${view.type} - ${view.title}`,
-            colorScheme: colorSchemes[(index + 1) % colorSchemes.length].scheme,
-            icon: colorSchemes[(index + 1) % colorSchemes.length].icon,
-            isCurrentPage: index === viewPath.path.length - 1,
-            view: view
-        }))
-    ]
+    const items = path.map((view, index) => ({
+        title: `${view.type} - ${view.title}`,
+        colorScheme: colorSchemes[(index + 1) % colorSchemes.length].scheme,
+        icon: colorSchemes[(index + 1) % colorSchemes.length].icon,
+        isCurrentPage: index === path.length - 1,
+        view: view
+    }));
 
     return (
         <Panel position={"top-left"}>
@@ -73,7 +64,7 @@ export const WorkspaceBreadcrumbs: FC = () => {
                             as={Button}
                             colorScheme={item.colorScheme}
                             leftIcon={item.icon}
-                            onClick={() => onViewChange(item.view)}
+                            onClick={() => onItemClick(item.view)}
                         >
                             {item.title}
                         </BreadcrumbLink>

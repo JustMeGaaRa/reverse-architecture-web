@@ -3,8 +3,8 @@ import { IBuilder } from "@structurizr/dsl";
 
 export class ReactFlowBuilder implements IBuilder<ReactFlowJsonObject> {
     constructor(
-        private nodes: Array<Node> = [],
-        private edges: Array<Edge> = [],
+        private readonly nodes: Array<Node> = [],
+        private readonly edges: Array<Edge> = [],
     ) { }
 
     build(): ReactFlowJsonObject {

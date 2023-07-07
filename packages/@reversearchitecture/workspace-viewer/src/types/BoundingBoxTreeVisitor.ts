@@ -8,7 +8,7 @@ import {
     findSoftwareSystem,
     Group,
     InfrastructureNode,
-    IView,
+    IViewDefinition,
     IElementVisitor,
     Person,
     Relationship,
@@ -22,31 +22,22 @@ import {
     defaultElementStyle,
 } from "@structurizr/dsl";
 import { BoundingBox } from "./BoundingBox";
-import { BoundingBoxTree } from "./BoundingBoxTree";
-import { IBoundingBoxNode } from "./IBoundingBoxNode";
+import { BoundingBoxTreeBuilder } from "./BoundingBoxTreeBuilder";
 
 export class BoundingBoxTreeVisitor implements IElementVisitor {
-    private topLevelTreeId: string = "tree";
-
     constructor(
         private workspace: Workspace,
-        private selectedView: IView,
-        private branches: Map<string, IBoundingBoxNode>
-    ) {
-        this.branches.set(this.topLevelTreeId, new BoundingBoxTree());
-    }    
+        private selectedView: IViewDefinition,
+        private builder: BoundingBoxTreeBuilder,
+    ) { }    
 
     visitGroup(group: Group, params?: { parentId?: string }): void {
-        const parent = this.branches.get(params?.parentId ?? this.topLevelTreeId) as BoundingBoxTree;
-        const branch = parent.addBranch();
-        this.branches.set(group.identifier, branch);
+        this.builder.addBranch(group.identifier, params?.parentId);
     }
 
     visitPerson(person: Person, params?: { parentId?: string }): void {
         const box = getElementBox(this.workspace, this.selectedView, person);
-        const parent = this.branches.get(params?.parentId ?? this.topLevelTreeId) as BoundingBoxTree;
-        const leaf = parent.addLeaf(box);
-        this.branches.set(person.identifier, leaf);
+        this.builder.addLeaf(box, person.identifier, params?.parentId);
     }
     
     visitSoftwareSystem(softwareSystem: SoftwareSystem, params?: { parentId?: string }): void {
@@ -54,14 +45,11 @@ export class BoundingBoxTreeVisitor implements IElementVisitor {
             && softwareSystem.identifier === this.selectedView.identifier;
 
         if (isBoundary) {
-            const parent = this.branches.get(params?.parentId ?? this.topLevelTreeId) as BoundingBoxTree;
-            const branch = parent.addBranch();
-            this.branches.set(softwareSystem.identifier, branch);
-        } else {
+            this.builder.addBranch(softwareSystem.identifier, params?.parentId);
+        }
+        else {
             const box = getElementBox(this.workspace, this.selectedView, softwareSystem);
-            const parent = this.branches.get(params?.parentId ?? this.topLevelTreeId) as BoundingBoxTree;
-            const leaf = parent.addLeaf(box);
-            this.branches.set(softwareSystem.identifier, leaf);
+            this.builder.addLeaf(box, softwareSystem.identifier, params?.parentId);
         }
     }
 
@@ -70,51 +58,38 @@ export class BoundingBoxTreeVisitor implements IElementVisitor {
             && container.identifier === this.selectedView.identifier;
 
         if (isBoundary) {
-            const parent = this.branches.get(params?.parentId ?? this.topLevelTreeId) as BoundingBoxTree;
-            const branch = parent.addBranch();
-            this.branches.set(container.identifier, branch);
-        } else {
+            this.builder.addBranch(container.identifier, params?.parentId);
+        }
+        else {
             const box = getElementBox(this.workspace, this.selectedView, container);
-            const parent = this.branches.get(params?.parentId ?? this.topLevelTreeId) as BoundingBoxTree;
-            const leaf = parent.addLeaf(box);
-            this.branches.set(container.identifier, leaf);
+            this.builder.addLeaf(box, container.identifier, params?.parentId);
         }
     }
 
     visitComponent(component: Component, params?: { parentId?: string }): void {
         const box = getElementBox(this.workspace, this.selectedView, component);
-        const parent = this.branches.get(params?.parentId ?? this.topLevelTreeId) as BoundingBoxTree;
-        const leaf = parent.addLeaf(box);
-        this.branches.set(component.identifier, leaf);
+        this.builder.addLeaf(box, component.identifier, params?.parentId);
     }
 
     visitDeploymentNode(deploymentNode: DeploymentNode, params?: { parentId?: string }): void {
-        const parent = this.branches.get(params?.parentId ?? this.topLevelTreeId) as BoundingBoxTree;
-        const branch = parent.addBranch();
-        this.branches.set(deploymentNode.identifier, branch);
+        this.builder.addBranch(deploymentNode.identifier, params?.parentId);
     }
     
     visitInfrastructureNode(infrastructureNode: InfrastructureNode, params?: { parentId?: string }): void {
         const box = getElementBox(this.workspace, this.selectedView, infrastructureNode);
-        const parent = this.branches.get(params?.parentId ?? this.topLevelTreeId) as BoundingBoxTree;
-        const leaf = parent.addLeaf(box);
-        this.branches.set(infrastructureNode.identifier, leaf);
+        this.builder.addLeaf(box, infrastructureNode.identifier, params?.parentId);
     }
 
     visitSoftwareSystemInstance(softwareSystemInstance: SoftwareSystemInstance, params?: { parentId?: string }): void {
         const softwareSystem = findSoftwareSystem(this.workspace, softwareSystemInstance.softwareSystemIdentifier);
         const box = getElementBox(this.workspace, this.selectedView, softwareSystem, softwareSystemInstance.identifier);
-        const parent = this.branches.get(params?.parentId ?? this.topLevelTreeId) as BoundingBoxTree;
-        const leaf = parent.addLeaf(box);
-        this.branches.set(softwareSystemInstance.identifier, leaf);
+        this.builder.addLeaf(box, softwareSystemInstance.identifier, params?.parentId);
     }
 
     visitContainerInstance(containerInstance: ContainerInstance, params?: { parentId?: string }): void {
         const container = findContainer(this.workspace, containerInstance.containerIdentifier);
         const box = getElementBox(this.workspace, this.selectedView, container, containerInstance.identifier);
-        const parent = this.branches.get(params?.parentId ?? this.topLevelTreeId) as BoundingBoxTree;
-        const leaf = parent.addLeaf(box);
-        this.branches.set(containerInstance.identifier, leaf);
+        this.builder.addLeaf(box, containerInstance.identifier, params?.parentId);
     }
 
     visitRelationship(relationship: Relationship): void {
@@ -138,7 +113,7 @@ const createElementBox = (
 
 const getElementBox = (
     workspace: Workspace,
-    view: IView,
+    view: IViewDefinition,
     element: Element,
     elementId?: string
 ) => {

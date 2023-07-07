@@ -2,17 +2,17 @@ import {
     Container,
     Person,
     SoftwareSystem,
-    IView,
+    IViewDefinition,
     IElementVisitor,
     Workspace,
     relationshipExists,
     ISupportVisitor
-} from "../../../";
+} from "../..";
 
 export class ContainerViewStrategy implements ISupportVisitor {
     constructor(
         private workspace: Workspace,
-        private view: IView,
+        private view: IViewDefinition,
     ) {}
 
     accept(visitor: IElementVisitor): void {
@@ -65,12 +65,12 @@ export class ContainerViewStrategy implements ISupportVisitor {
                         .forEach(group => {
                             // 2.1.2.1 include the container group as a boundary element
                             visitor.visitGroup(group, { parentId: softwareSystem.identifier });
-
+                            
                             // 2.1.2.2 include all containers in the group
                             visitContainer(
                                 people,
                                 softwareSystems,
-                                group.containers.concat(softwareSystem.containers),
+                                group.containers,
                                 group.identifier
                             );
                         });

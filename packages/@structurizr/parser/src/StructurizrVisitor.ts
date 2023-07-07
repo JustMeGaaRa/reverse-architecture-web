@@ -1,13 +1,13 @@
 import {
     Component,
-    ComponentView,
+    ComponentViewDefinition,
     Configuration,
     Container,
     ContainerInstance,
-    ContainerView,
+    ContainerViewDefinition,
     DeploymentEnvironment,
     DeploymentNode,
-    DeploymentView,
+    DeploymentViewDefinition,
     ElementStyleProperties,
     ElementType,
     Group,
@@ -20,8 +20,8 @@ import {
     SoftwareSystemInstance,
     Style,
     Styles,
-    SystemContextView,
-    SystemLandscapeView,
+    SystemContextViewDefinition,
+    SystemLandscapeViewDefinition,
     Tag,
     Technology,
     Views,
@@ -363,7 +363,7 @@ export class StructurizrVisitor extends VisitorCtor {
         });
     }
 
-    systemLandscapeView(ctx: PropertyContext): SystemLandscapeView {
+    systemLandscapeView(ctx: PropertyContext): SystemLandscapeViewDefinition {
         return {
             type: ViewType.SystemLandscape,
             identifier: ctx.Identifier?.at(0)?.image,
@@ -374,7 +374,7 @@ export class StructurizrVisitor extends VisitorCtor {
         };
     }
 
-    systemContextView(ctx: PropertyContext): SystemContextView {
+    systemContextView(ctx: PropertyContext): SystemContextViewDefinition {
         return {
             type: ViewType.SystemContext,
             identifier: ctx.Identifier?.at(0)?.image,
@@ -385,7 +385,7 @@ export class StructurizrVisitor extends VisitorCtor {
         };
     }
 
-    containerView(ctx: PropertyContext): ContainerView {
+    containerView(ctx: PropertyContext): ContainerViewDefinition {
         return {
             type: ViewType.Container,
             identifier: ctx.Identifier?.at(0)?.image,
@@ -396,7 +396,7 @@ export class StructurizrVisitor extends VisitorCtor {
         };
     }
 
-    componentView(ctx: PropertyContext): ComponentView {
+    componentView(ctx: PropertyContext): ComponentViewDefinition {
         return {
             type: ViewType.Component,
             identifier: ctx.Identifier?.at(0)?.image,
@@ -407,7 +407,7 @@ export class StructurizrVisitor extends VisitorCtor {
         };
     }
 
-    deploymentView(ctx: PropertyContext): DeploymentView {
+    deploymentView(ctx: PropertyContext): DeploymentViewDefinition {
         return {
             type: ViewType.Deployment,
             identifier: ctx.Identifier?.at(0)?.image,

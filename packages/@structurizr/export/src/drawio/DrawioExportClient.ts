@@ -7,7 +7,7 @@ import {
     ContainerViewStrategy,
     DeploymentViewStrategy,
     ISupportVisitor,
-    SystemContextView,
+    IViewDefinition,
     SystemContextViewStrategy,
     Workspace
 } from "@structurizr/dsl";
@@ -19,7 +19,7 @@ import { v4 } from "uuid";
 
 export class DrawioExportClient implements IExportClient {
     export(workspace: Workspace): string {
-        const createView = (view: SystemContextView, client: ISupportVisitor) => {
+        const createView = (view: IViewDefinition, client: ISupportVisitor) => {
             const defaultParent: MXCell = {
                 _id: v4()
             };

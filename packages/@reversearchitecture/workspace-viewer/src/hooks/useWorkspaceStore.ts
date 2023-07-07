@@ -3,7 +3,7 @@ import {
     Container,
     DeploymentEnvironment,
     DeploymentNode,
-    IView,
+    IViewDefinition,
     Identifier,
     Person,
     Position,
@@ -17,11 +17,11 @@ import { create } from "zustand";
 
 export type WorkspaceStore = {
     workspace: Workspace;
-    selectedView?: IView;
+    selectedView?: IViewDefinition;
     viewPath: ViewPath;
     
     setWorkspace: Action<Workspace>;
-    setSelectedView: Action<IView>;
+    setSelectedView: Action<IViewDefinition>;
     setViewPath: Action<ViewPath>;
     setName: Action<string>;
     addPerson: Action<PersonParams>;
@@ -85,7 +85,7 @@ export const useWorkspaceStore = create<WorkspaceStore>((set) => ({
     setWorkspace: (workspace: Workspace) => {
         set({ workspace });
     },
-    setSelectedView: (view: IView) => {
+    setSelectedView: (view: IViewDefinition) => {
         set({ selectedView: view });
     },
     setViewPath: (path: ViewPath) => {

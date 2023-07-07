@@ -13,10 +13,11 @@ import {
 } from "@reversearchitecture/workspace-viewer";
 import {
     IWorkspaceMetadata,
-    IView,
+    IViewDefinition,
     Workspace,
     applyMetadata,
-    applyTheme
+    applyTheme,
+    IWorkspaceTheme
 } from "@structurizr/dsl";
 import { useStructurizrParser } from "@structurizr/react";
 import { FC, useCallback, useEffect, useState } from "react";
@@ -33,27 +34,13 @@ export const CodeEditorSheet: FC = () => {
     });
     const [ text, setText ] = useState("");
     const [ workspace, setWorkspace ] = useState(Workspace.Empty);
-    const [ selectedView, setSelectedView ] = useState<IView>();
+    const [ selectedView, setSelectedView ] = useState<IViewDefinition>();
     const [ metadata, setMetadata ] = useState<IWorkspaceMetadata>();
 
     const { applyElementPosition } = useMetadata();
     const parseWorkspace = useStructurizrParser();
     
     const toast = useToast();
-
-    const applyWorkspace = useCallback((workspace: Workspace, metadata?: IWorkspaceMetadata) => {
-        const updatedWorkspace = metadata
-            ? applyMetadata(workspace, metadata)
-            : workspace;
-        
-        setWorkspace(updatedWorkspace);
-        setSelectedView(selectedView
-            ?? updatedWorkspace.views.systemLandscape
-            ?? updatedWorkspace.views.systemContexts[0]
-            ?? updatedWorkspace.views.containers[0]
-            ?? updatedWorkspace.views.components[0]
-            ?? updatedWorkspace.views.deployments[0]);
-    }, [selectedView, setSelectedView, setWorkspace]);
 
     useEffect(() => {
         const fetchWorkspace = async (workspaceId: string) => {
@@ -67,9 +54,15 @@ export const CodeEditorSheet: FC = () => {
         
         fetchWorkspace(workspaceId)
             .then(({ text, metadata, theme }) => {
+                const workspace = parseWorkspace(text);
                 setText(text);
-                applyWorkspace(applyTheme(parseWorkspace(text), theme), metadata);
+                setWorkspace(applyMetadata(applyTheme(workspace, theme), metadata));
                 setMetadata(metadata);
+                setSelectedView(workspace.views.systemLandscape
+                    ?? workspace.views.systemContexts[0]
+                    ?? workspace.views.containers[0]
+                    ?? workspace.views.components[0]
+                    ?? workspace.views.deployments[0]);
             })
             .catch(error => {
                 toast({
@@ -81,12 +74,12 @@ export const CodeEditorSheet: FC = () => {
                     position: "bottom-right"
                 })
             })
-    }, [workspaceId, toast, setText, applyWorkspace, setMetadata, parseWorkspace]);
+    }, [workspaceId, toast, parseWorkspace]);
 
     const handleOnChange = useCallback((value: string) => {
         setText(value);
-        applyWorkspace(parseWorkspace(value), metadata);
-    }, [metadata, setText, applyWorkspace, parseWorkspace]);
+        setWorkspace(applyMetadata(parseWorkspace(text), metadata));
+    }, [parseWorkspace, text, metadata]);
 
     const handleOnNodeDragStop = useCallback((event: React.MouseEvent, node: any) => {
         const emptyMetadata = {
@@ -131,7 +124,7 @@ export const CodeEditorSheet: FC = () => {
                         selectedView={selectedView}
                         onNodeDragStop={handleOnNodeDragStop}
                     >
-                        <WorkspaceBreadcrumbs />
+                        {/* <WorkspaceBreadcrumbs /> */}
                         <WorkspaceZoomControls />
                     </WorkspaceExplorer>
                 </ContextSheet>

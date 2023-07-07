@@ -1,7 +1,7 @@
-import { ISupportPath, IView, ViewType, Workspace } from "../../../";
+import { ISupportPath, IViewDefinition, ViewType, Workspace } from "../..";
 
 export class ComponentPathProvider implements ISupportPath {
-    getPath(workspace: Workspace, view: IView): Array<IView> {
+    getPath(workspace: Workspace, view: IViewDefinition): Array<IViewDefinition> {
         const softwareSystems = workspace.model.groups
             .flatMap(group => group.softwareSystems)
             .concat(workspace.model.softwareSystems);

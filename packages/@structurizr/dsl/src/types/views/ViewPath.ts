@@ -1,5 +1,5 @@
-import { IViewDefinition } from "../../shared/IView";
+import { ViewKeys } from "./IViewDefinition";
 
 export interface ViewPath {
-    path: Array<IViewDefinition>;
+    path: Array<ViewKeys>;
 }

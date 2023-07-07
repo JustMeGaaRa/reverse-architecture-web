@@ -1,15 +1,15 @@
 import {
     IElementVisitor,
-    IView,
+    IViewDefinition,
     Workspace,
     DeploymentNode,
     ISupportVisitor
-} from "../../../";
+} from "../..";
 
 export class DeploymentViewStrategy implements ISupportVisitor {
     constructor(
         private workspace: Workspace,
-        private view: IView,
+        private view: IViewDefinition,
         private environment: string
     ) {}
 

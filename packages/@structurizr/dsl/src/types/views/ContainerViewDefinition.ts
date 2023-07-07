@@ -1,13 +1,13 @@
 import { Properties } from "../model/Properties";
-import { IView } from "../../shared/IView";
-import { IElementPosition, IRelationshipPosition } from "../../shared/IWorkspaceMetadata";
+import { IViewDefinition } from "./IViewDefinition";
+import { IElementPosition, IRelationshipPosition } from "../../metadata/IViewMetadata";
 import { AutoLayout } from "./AutoLayout";
 import { ViewType } from "./ViewType";
 
-export class ComponentView implements IView {
-    constructor(values: Omit<IView, "type">) {
+export class ContainerViewDefinition implements IViewDefinition {
+    constructor(values: Omit<IViewDefinition, "type">) {
         Object.assign(this, values);
-        this.type = ViewType.Component;
+        this.type = ViewType.Container;
     }
 
     public readonly type: ViewType;

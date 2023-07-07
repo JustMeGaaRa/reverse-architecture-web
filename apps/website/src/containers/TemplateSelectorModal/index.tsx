@@ -7,7 +7,7 @@ import {
     ModalOverlay,
     useDisclosure
 } from "@chakra-ui/react";
-import { useWorkspaceNavigation, useWorkspaceStore } from "@reversearchitecture/workspace-viewer";
+import { useWorkspaceStore } from "@reversearchitecture/workspace-viewer";
 import { FC, useCallback, useEffect, useState } from "react";
 import {
     TemplateSelector,
@@ -23,7 +23,7 @@ export const TemplateSelectorModal: FC<TemplateSelectorModalProps> = ({
 }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { workspace, setWorkspace } = useWorkspaceStore();
-    const { navigate } = useWorkspaceNavigation();
+    // const { navigate } = useWorkspaceNavigation();
     const [isInitialized, setIsInitialized] = useState(false);
 
     const onSelected = useCallback((template) => {
@@ -33,10 +33,10 @@ export const TemplateSelectorModal: FC<TemplateSelectorModalProps> = ({
 
     useEffect(() => {
         if (!isInitialized && workspace) {
-            navigate(workspace.views.systemContexts[0]);
+            // navigate(workspace.views.systemContexts[0]);
             setIsInitialized(true);
         }
-    }, [workspace, isInitialized, navigate, setIsInitialized]);
+    }, [workspace, isInitialized, setIsInitialized]);
 
     useEffect(() => onOpen(), [onOpen]);
 

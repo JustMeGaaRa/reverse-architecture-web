@@ -27,9 +27,11 @@
     "@reactflow/core": "^11.6.1",
     "@reactflow/node-resizer": "^2.1.0",
     "@structurizr/dsl": "*",
+    "elkjs": "0.8.2",
     "framer-motion": "7.9.1",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
+    "web-worker": "^1.2.0",
     "zustand": "^4.3.2"
   },
   "devDependencies": {

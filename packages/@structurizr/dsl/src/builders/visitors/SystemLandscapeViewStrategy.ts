@@ -1,16 +1,16 @@
 import {
     Person,
     SoftwareSystem,
-    IView,
+    IViewDefinition,
     IElementVisitor,
     Workspace,
     ISupportVisitor
-} from "../../../";
+} from "../..";
 
 export class SystemLandscapeViewStrategy implements ISupportVisitor {
     constructor(
         private workspace: Workspace,
-        private view: IView
+        private view: IViewDefinition
     ) {}
 
     accept(visitor: IElementVisitor): void {

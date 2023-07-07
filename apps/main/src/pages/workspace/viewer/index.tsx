@@ -1,5 +1,7 @@
 import { IconButton, useToast } from "@chakra-ui/react";
 import {
+    getView,
+    getViewPath,
     useMetadata,
     WorkspaceBreadcrumbs,
     WorkspaceExplorer,
@@ -10,8 +12,11 @@ import { ContextSheet } from "@reversearchitecture/ui";
 import {
     applyMetadata,
     applyTheme,
-    IView,
+    IViewDefinition,
+    ViewKeys,
     IWorkspaceMetadata,
+    Tag,
+    ViewType,
     Workspace
 } from "@structurizr/dsl";
 import { ReactFlowInstance } from "@reactflow/core";
@@ -35,7 +40,8 @@ import { useSelfPresence } from "../../../hooks";
 export const WorkspaceViewerSheet: FC = () => {
     const { workspaceId } = useParams<{ workspaceId: string }>();
     const [ workspace, setWorkspace ] = useState(Workspace.Empty);
-    const [ selectedView, setSelectedView ] = useState<IView>();
+    const [ selectedView, setSelectedView ] = useState<IViewDefinition>();
+    const [ path, setPath ] = useState<Array<ViewKeys>>([]);
     const [ metadata, setMetadata ] = useState<IWorkspaceMetadata>();
     const { theme } = useWorkspaceTheme();
     const { applyElementPosition } = useMetadata();
@@ -43,29 +49,26 @@ export const WorkspaceViewerSheet: FC = () => {
     const parseWorkspace = useStructurizrParser();
     const toast = useToast();
 
-    const applyWorkspace = useCallback((workspace: Workspace) => {
-        setWorkspace(workspace);
-        setSelectedView(selectedView
-            ?? workspace.views.systemLandscape
-            ?? workspace.views.systemContexts[0]
-            ?? workspace.views.containers[0]
-            ?? workspace.views.components[0]
-            ?? workspace.views.deployments[0]);
-    }, [selectedView, setSelectedView, setWorkspace]);
-
     useEffect(() => {
         const fetchWorkspace = async (workspaceId: string) => {
             const api = new CommunityHubApi();
             const workspaceText = await api.getWorkspaceText(workspaceId);
             const workspaceMetadata = await api.getWorkspaceMetadata(workspaceId);
+            const theme = await api.getWorkspaceTheme(workspaceId);
 
-            return { text: workspaceText, metadata: workspaceMetadata };
+            return { text: workspaceText, metadata: workspaceMetadata, theme: theme };
         }
         
         fetchWorkspace(workspaceId)
             .then(({ text, metadata }) => {
-                applyWorkspace(applyTheme(applyMetadata(parseWorkspace(text), metadata), theme));
+                const workspace = parseWorkspace(text);
+                setWorkspace(applyMetadata(applyTheme(workspace, theme), metadata));
                 setMetadata(metadata);
+                setSelectedView(workspace.views.systemLandscape
+                    ?? workspace.views.systemContexts[0]
+                    ?? workspace.views.containers[0]
+                    ?? workspace.views.components[0]
+                    ?? workspace.views.deployments[0]);
             })
             .catch(error => {
                 toast({
@@ -77,7 +80,7 @@ export const WorkspaceViewerSheet: FC = () => {
                     position: "bottom-right"
                 })
             })
-    }, [workspaceId, theme, toast, applyWorkspace, setMetadata, parseWorkspace]);
+    }, [workspaceId, theme, toast, parseWorkspace]);
     
     const { setAvailableActions } = useNavigationContext();
     const { account } = useAccount();
@@ -127,7 +130,29 @@ export const WorkspaceViewerSheet: FC = () => {
 
     const handleOnInitialize = useCallback((instance: ReactFlowInstance) => {
         setReactFlow(instance);
-    }, [setReactFlow])
+    }, [setReactFlow]);
+
+    const handleOnDoubleClick = useCallback((event: React.MouseEvent, node: any) => {
+        const element = node.data.element;
+
+        // do not handle the click for component elements as there is no such view type
+        if (!element.tags.some(tag => tag.name === Tag.Person.name || tag.name === Tag.Component.name)) {
+            setSelectedView({
+                identifier: element.identifier,
+                type: element.tags.some(tag => tag.name === Tag.SoftwareSystem.name)
+                    ? ViewType.Container
+                    : ViewType.Component,
+                title: element.name,
+                elements: [],
+                relationships: []
+            });
+        }
+    }, [setSelectedView]);
+
+    const handleOnViewItemClick = useCallback((view: ViewKeys) => {
+        setSelectedView(getView(workspace, view));
+        setPath(getViewPath(workspace, view));
+    }, [setSelectedView, workspace]);
 
     const handleOnNodeDragStop = useCallback((event: React.MouseEvent, node: any) => {
         setMetadata(applyElementPosition(
@@ -151,10 +176,14 @@ export const WorkspaceViewerSheet: FC = () => {
                     workspace={workspace}
                     selectedView={selectedView}
                     onInitialize={handleOnInitialize}
+                    onNodesDoubleClick={handleOnDoubleClick}
                     onNodeDragStop={handleOnNodeDragStop}
                     onMouseMove={handleOnMouseMove}
                 >
-                    <WorkspaceBreadcrumbs />
+                    <WorkspaceBreadcrumbs
+                        path={path}
+                        onItemClick={handleOnViewItemClick}
+                    />
                     <WorkspaceToolbar />
                     <WorkspaceZoomControls />
                     {provider && reactFlow &&  (

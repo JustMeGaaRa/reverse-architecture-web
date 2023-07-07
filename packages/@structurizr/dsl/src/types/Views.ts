@@ -1,11 +1,11 @@
 import { Properties } from "./model/Properties";
-import { ComponentView } from "./views/ComponentView";
-import { ContainerView } from "./views/ContainerView";
+import { ComponentViewDefinition } from "./views/ComponentViewDefinition";
+import { ContainerViewDefinition } from "./views/ContainerViewDefinition";
 import { Configuration } from "./views/Configuration";
-import { DeploymentView } from "./views/DeploymentView";
-import { SystemContextView } from "./views/SystemContextView";
-import { SystemLandscapeView } from "./views/SystemLandscapeView";
-import { IView } from "../shared/IView";
+import { DeploymentViewDefinition } from "./views/DeploymentViewDefinition";
+import { SystemContextViewDefinition } from "./views/SystemContextViewDefinition";
+import { SystemLandscapeViewDefinition } from "./views/SystemLandscapeViewDefinition";
+import { IViewDefinition } from "./views/IViewDefinition";
 
 export class Views {
     constructor(
@@ -23,14 +23,14 @@ export class Views {
         this.properties = params.properties ?? new Map<string, string>();
     }
 
-    public readonly systemLandscape?: SystemLandscapeView;
-    public readonly systemContexts: SystemContextView[];
-    public readonly containers: ContainerView[];
-    public readonly components: ComponentView[];
-    public readonly filtered: IView[];
-    public readonly dynamics: IView[];
-    public readonly deployments: DeploymentView[];
-    public readonly custom: IView[];
+    public readonly systemLandscape?: SystemLandscapeViewDefinition;
+    public readonly systemContexts: SystemContextViewDefinition[];
+    public readonly containers: ContainerViewDefinition[];
+    public readonly components: ComponentViewDefinition[];
+    public readonly filtered: IViewDefinition[];
+    public readonly dynamics: IViewDefinition[];
+    public readonly deployments: DeploymentViewDefinition[];
+    public readonly custom: IViewDefinition[];
     public readonly configuration: Configuration;
     public readonly properties?: Properties;
 }

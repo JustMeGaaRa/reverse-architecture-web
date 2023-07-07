@@ -13,7 +13,7 @@ import {
     Relationship,
     Tag,
     IElementVisitor,
-    IView,
+    IViewDefinition,
     ContainerInstance,
     Group,
     InfrastructureNode,
@@ -31,7 +31,7 @@ import { DrawioDiagramBuilder } from "./DrawioDiagramBuilder";
 
 export class DrawioExportVisitor implements IElementVisitor {
     constructor(
-        private view: IView,
+        private view: IViewDefinition,
         private parentId: string | undefined,
         private builder: DrawioDiagramBuilder
     ) {}

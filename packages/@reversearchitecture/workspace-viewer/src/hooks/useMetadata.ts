@@ -1,5 +1,5 @@
 import {
-    IViewDefinition,
+    ViewKeys,
     IViewMetadata,
     IWorkspaceMetadata,
     Position,
@@ -10,7 +10,7 @@ import { useCallback } from "react";
 export const useMetadata = () => {    
     const addViewLayout = useCallback((
         metadata: IWorkspaceMetadata,
-        view: IViewDefinition,
+        view: ViewKeys,
         viewMetadata: IViewMetadata
     ) => {
         switch (view.type) {
@@ -71,7 +71,7 @@ export const useMetadata = () => {
 
     const applyElementPosition = useCallback((
         metadata: IWorkspaceMetadata,
-        view: IViewDefinition,
+        view: ViewKeys,
         elementId: string,
         position: Position
     ) => {

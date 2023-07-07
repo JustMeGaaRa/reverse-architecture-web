@@ -1,17 +1,17 @@
 import {
     Person,
     SoftwareSystem,
-    IView,
+    IViewDefinition,
     IElementVisitor,
     Workspace,
     relationshipExists,
     ISupportVisitor
-} from "../../../";
+} from "../..";
 
 export class SystemContextViewStrategy implements ISupportVisitor {
     constructor(
         private workspace: Workspace,
-        private view: IView,
+        private view: IViewDefinition,
     ) {}
 
     accept(visitor: IElementVisitor): void {

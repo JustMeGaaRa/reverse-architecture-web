@@ -3,10 +3,10 @@ import {
     IWorkspaceMetadata,
     IWorkspaceTheme,
     Identifier,
-    SystemContextView,
-    ContainerView,
-    ComponentView,
-    DeploymentView
+    SystemContextViewDefinition,
+    ContainerViewDefinition,
+    ComponentViewDefinition,
+    DeploymentViewDefinition
 } from "../";
 
 export const applyMetadata = (workspace: Workspace, metadata: IWorkspaceMetadata): Workspace => {
@@ -19,28 +19,28 @@ export const applyMetadata = (workspace: Workspace, metadata: IWorkspaceMetadata
                 elements: metadata.views.systemLandscape?.elements ?? [],
                 relationships: metadata.views.systemLandscape?.relationships ?? []
             },
-            systemContexts: workspace.views.systemContexts.map((view: SystemContextView) => ({
+            systemContexts: workspace.views.systemContexts.map((view: SystemContextViewDefinition) => ({
                 ...view,
                 elements: metadata.views.systemContexts
                     .find(x => x.identifier === view.identifier)?.elements ?? [],
                 relationships: metadata.views.systemContexts
                     .find(x => x.identifier === view.identifier)?.relationships ?? []
             })),
-            containers: workspace.views.containers.map((view: ContainerView) => ({
+            containers: workspace.views.containers.map((view: ContainerViewDefinition) => ({
                 ...view,
                 elements: metadata.views.containers
                     .find(x => x.identifier === view.identifier)?.elements ?? [],
                 relationships: metadata.views.containers
                     .find(x => x.identifier === view.identifier)?.relationships ?? []
             })),
-            components: workspace.views.components.map((view: ComponentView) => ({
+            components: workspace.views.components.map((view: ComponentViewDefinition) => ({
                 ...view,
                 elements: metadata.views.components
                     .find(x => x.identifier === view.identifier)?.elements ?? [],
                 relationships: metadata.views.components
                     .find(x => x.identifier === view.identifier)?.relationships ?? []
             })),
-            deployments: workspace.views.deployments.map((view: DeploymentView) => ({
+            deployments: workspace.views.deployments.map((view: DeploymentViewDefinition) => ({
                 ...view,
                 elements: metadata.views.deployments
                     .find(x => x.identifier === view.identifier)?.elements ?? [],

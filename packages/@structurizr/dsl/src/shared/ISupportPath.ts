@@ -1,6 +1,6 @@
 import { Workspace } from "../types/Workspace";
-import { IView, IViewDefinition } from "./IView";
+import { IViewDefinition, ViewKeys } from "../types/views/IViewDefinition";
 
 export interface ISupportPath {
-    getPath: (workspace: Workspace, view: IView) => Array<IViewDefinition>;
+    getPath: (workspace: Workspace, view: IViewDefinition) => Array<ViewKeys>;
 }

@@ -1,5 +1,5 @@
 import {
-    IView,
+    IViewDefinition,
     Tag,
     ViewType,
     Workspace,
@@ -9,15 +9,18 @@ import {
     OnInit,
     ReactFlowInstance,
     ReactFlowProvider,
+    useEdgesState,
+    useNodesState,
 } from "@reactflow/core";
 import {
     FC,
     PropsWithChildren,
     useCallback,
+    useEffect,
     useState,
 } from "react";
 import { WorkspaceRenderer, WorkspaceStoreUpdater } from "../containers";
-import { useWorkspaceNavigation, useReactFlowSelectedView } from "../hooks";
+import { getViewGraph } from "../hooks";
 import { getViewportPoint } from "../utils";
 
 type MousePosition = {
@@ -29,7 +32,7 @@ type MouseMoveEventHandler = (event: MousePosition) => void;
 
 export const WorkspaceExplorer: FC<PropsWithChildren<{
     workspace?: Workspace;
-    selectedView?: IView;
+    selectedView?: IViewDefinition;
     onInitialize?: OnInit;
     onNodeDragStop?: NodeMouseHandler;
     onNodesDoubleClick?: NodeMouseHandler;
@@ -43,31 +46,25 @@ export const WorkspaceExplorer: FC<PropsWithChildren<{
     onNodesDoubleClick,
     onMouseMove
 }) => {
-    const { nodes, edges, onNodesChange, onEdgesChange } = useReactFlowSelectedView();
-    const { onViewChange } = useWorkspaceNavigation();
     const [ reactFlow, setReactFlow ] = useState<ReactFlowInstance>();
+    const [ nodes, setNodes, onNodesChange ] = useNodesState([]);
+    const [ edges, setEdges, onEdgesChange ] = useEdgesState([]);
+
+    useEffect(() => {
+        getViewGraph(workspace, selectedView)
+            .then(({ nodes, edges }) => {
+                setNodes(nodes);
+                setEdges(edges);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, [workspace, selectedView, setNodes, setEdges]);
 
     const handleOnIntialize = useCallback((instance: ReactFlowInstance) => {
         setReactFlow(instance);
         onInitialize?.(instance);
     }, [onInitialize]);
-
-    const handleOnDoubleClick = useCallback((event: React.MouseEvent, node: any) => {
-        const element = node.data.element;
-
-        // do not handle the click for component elements as there is no such view type
-        if (!element.tags.some(tag => tag.name === Tag.Person.name || tag.name === Tag.Component.name)) {
-            onViewChange({
-                identifier: element.identifier,
-                type: element.tags.some(tag => tag.name === Tag.SoftwareSystem.name)
-                    ? ViewType.Container
-                    : ViewType.Component,
-                title: element.name
-            });
-        }
-
-        onNodesDoubleClick?.(event, node);
-    }, [onViewChange, onNodesDoubleClick]);
 
     const handleOnNodeDragStop = useCallback((event: React.MouseEvent, node: any, nodes: any[]) => {
         onNodeDragStop?.(event, node);
@@ -95,7 +92,7 @@ export const WorkspaceExplorer: FC<PropsWithChildren<{
                 onEdgesChange={onEdgesChange}
                 onInitialize={handleOnIntialize}
                 onNodeDragStop={handleOnNodeDragStop}
-                onNodesDoubleClick={handleOnDoubleClick}
+                onNodesDoubleClick={onNodesDoubleClick}
                 onMouseMove={handleOnMouseMove}
             >
                 {children}
