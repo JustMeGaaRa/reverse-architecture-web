@@ -3,18 +3,21 @@ import {
     IViewDefinition,
     Workspace,
     DeploymentNode,
-    ISupportVisitor
+    ISupportVisitor,
+    IWorkspace,
+    IDeploymentNode,
+    IModel
 } from "../..";
 
 export class DeploymentViewStrategy implements ISupportVisitor {
     constructor(
-        private workspace: Workspace,
+        private model: IModel,
         private view: IViewDefinition,
         private environment: string
     ) {}
 
     accept(visitor: IElementVisitor): void {
-        const visitDeploymentNode = (deploymentNode: DeploymentNode, parentId?: string) => {
+        const visitDeploymentNode = (deploymentNode: IDeploymentNode, parentId?: string) => {
             visitor.visitDeploymentNode(deploymentNode, { parentId });
 
             deploymentNode.infrastructureNodes?.forEach(infrastructureNode => {
@@ -35,7 +38,7 @@ export class DeploymentViewStrategy implements ISupportVisitor {
         };
 
         // TODO: handle the deployment view scoped to a specific software system instance
-        this.workspace.model.deploymentEnvironments
+        this.model.deploymentEnvironments
             .filter(deploymentEnvironment => deploymentEnvironment.name === this.environment)
             // .filter(deploymentEnvironment => deploymentEnvironment.identifier === this.view.identifier)
             .forEach(deploymentEnvironment => {

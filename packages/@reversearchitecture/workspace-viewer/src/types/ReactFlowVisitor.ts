@@ -15,6 +15,19 @@ import {
     SoftwareSystemInstance,
     ViewType,
     Workspace,
+    IWorkspace,
+    IGroup,
+    IPerson,
+    ISoftwareSystem,
+    IContainer,
+    IComponent,
+    IDeploymentNode,
+    IInfrastructureNode,
+    ISoftwareSystemInstance,
+    IContainerInstance,
+    IRelationship,
+    IConfiguration,
+    IModel,
 } from "@structurizr/dsl";
 import {
     getNodeFromElement,
@@ -25,13 +38,14 @@ import { ReactFlowBuilder } from "./ReactFlowBuilder";
 
 export class ReactFlowVisitor implements IElementVisitor {
     constructor(
-        private workspace: Workspace,
+        private model: IModel,
+        private configuration: IConfiguration,
         private selectedView: IViewDefinition,
         private builder: ReactFlowBuilder,
         private branches: Map<string, IBoundingBoxNode>
     ) { }
 
-    visitGroup(group: Group, params?: { parentId?: string }): void {
+    visitGroup(group: IGroup, params?: { parentId?: string }): void {
         const box = this.branches.get(group.identifier);
         const node = getNodeFromElement({
             elementId: group.identifier,
@@ -40,23 +54,23 @@ export class ReactFlowVisitor implements IElementVisitor {
             parentId: params?.parentId,
             position: box.getRelativePosition(),
             size: box.getSize(),
-            styles: this.workspace.views.configuration.styles,
+            styles: this.configuration.styles,
         });
         this.builder.addNode(node);
     }
 
-    visitPerson(person: Person, params?: { parentId?: string }): void {
+    visitPerson(person: IPerson, params?: { parentId?: string }): void {
         const box = this.branches.get(person.identifier);
         const node = getNodeFromElement({
             element: person,
             position: box.getRelativePosition(),
             parentId: params?.parentId,
-            styles: this.workspace.views.configuration.styles,
+            styles: this.configuration.styles,
         });
         this.builder.addNode(node);
     }
     
-    visitSoftwareSystem(softwareSystem: SoftwareSystem, params?: { parentId?: string }): void {
+    visitSoftwareSystem(softwareSystem: ISoftwareSystem, params?: { parentId?: string }): void {
         const isBoundary = this.selectedView.type === ViewType.Container
             && softwareSystem.identifier === this.selectedView.identifier;
         const box = this.branches.get(softwareSystem.identifier);
@@ -66,12 +80,12 @@ export class ReactFlowVisitor implements IElementVisitor {
             parentId: params?.parentId,
             position: box.getRelativePosition(),
             size: box.getSize(),
-            styles: this.workspace.views.configuration.styles,
+            styles: this.configuration.styles,
         });
         this.builder.addNode(node);
     }
 
-    visitContainer(container: Container, params?: { parentId?: string }): void {
+    visitContainer(container: IContainer, params?: { parentId?: string }): void {
         const isBoundary = this.selectedView.type === ViewType.Component
             && container.identifier === this.selectedView.identifier;
         const box = this.branches.get(container.identifier);
@@ -82,75 +96,75 @@ export class ReactFlowVisitor implements IElementVisitor {
             parentId: params?.parentId,
             position: box.getRelativePosition(),
             size: box.getSize(),
-            styles: this.workspace.views.configuration.styles,
+            styles: this.configuration.styles,
         });
         this.builder.addNode(node);
     }
 
-    visitComponent(component: Component, params?: { parentId?: string }): void {
+    visitComponent(component: IComponent, params?: { parentId?: string }): void {
         const box = this.branches.get(component.identifier);
         const node = getNodeFromElement({
             element: component,
             position: box.getRelativePosition(),
             parentId: params?.parentId,
-            styles: this.workspace.views.configuration.styles,
+            styles: this.configuration.styles,
         });
         this.builder.addNode(node);
     }
 
-    visitDeploymentNode(deploymentNode: DeploymentNode, params?: { parentId?: string }): void {
+    visitDeploymentNode(deploymentNode: IDeploymentNode, params?: { parentId?: string }): void {
         const box = this.branches.get(deploymentNode.identifier);
         const node = getNodeFromElement({
             element: deploymentNode,
             parentId: params?.parentId,
             position: box.getRelativePosition(),
             size: box.getSize(),
-            styles: this.workspace.views.configuration.styles,
+            styles: this.configuration.styles,
         });
         this.builder.addNode(node);
     }
     
-    visitInfrastructureNode(infrastructureNode: InfrastructureNode, params?: { parentId?: string }): void {
+    visitInfrastructureNode(infrastructureNode: IInfrastructureNode, params?: { parentId?: string }): void {
         const box = this.branches.get(infrastructureNode.identifier);
         const node = getNodeFromElement({
             element: infrastructureNode,
             position: box.getRelativePosition(),
             parentId: params?.parentId,
-            styles: this.workspace.views.configuration.styles,
+            styles: this.configuration.styles,
         });
         this.builder.addNode(node);
     }
 
-    visitSoftwareSystemInstance(softwareSystemInstance: SoftwareSystemInstance, params?: { parentId?: string }): void {
-        const softwareSystem = findSoftwareSystem(this.workspace, softwareSystemInstance.softwareSystemIdentifier);
+    visitSoftwareSystemInstance(softwareSystemInstance: ISoftwareSystemInstance, params?: { parentId?: string }): void {
+        const softwareSystem = findSoftwareSystem(this.model, softwareSystemInstance.softwareSystemIdentifier);
         const box = this.branches.get(softwareSystemInstance.identifier);
         const node = getNodeFromElement({
             elementId: softwareSystemInstance.identifier,
             element: softwareSystem,
             position: box.getRelativePosition(),
             parentId: params?.parentId,
-            styles: this.workspace.views.configuration.styles,
+            styles: this.configuration.styles,
         });
         this.builder.addNode(node);
     }
 
-    visitContainerInstance(containerInstance: ContainerInstance, params?: { parentId?: string }): void {
-        const container = findContainer(this.workspace, containerInstance.containerIdentifier);
+    visitContainerInstance(containerInstance: IContainerInstance, params?: { parentId?: string }): void {
+        const container = findContainer(this.model, containerInstance.containerIdentifier);
         const box = this.branches.get(containerInstance.identifier);
         const node = getNodeFromElement({
             elementId: containerInstance.identifier,
             element: container,
             position: box.getRelativePosition(),
             parentId: params?.parentId,
-            styles: this.workspace.views.configuration.styles,
+            styles: this.configuration.styles,
         });
         this.builder.addNode(node);
     }
 
-    visitRelationship(relationship: Relationship): void {
+    visitRelationship(relationship: IRelationship): void {
         const edge = getEdgeFromRelationship({
             relationship,
-            styles: this.workspace.views.configuration.styles,
+            styles: this.configuration.styles,
         });
         this.builder.addEdge(edge);
     }

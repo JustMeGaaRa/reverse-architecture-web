@@ -1,18 +1,20 @@
 import { VStack, Text } from "@chakra-ui/react";
-import { Element, ElementStyleProperties, Tag } from "@structurizr/dsl";
+import { IElement, ElementStyleProperties, Tag } from "@structurizr/dsl";
 import { FC } from "react";
 
-export const formatExpandedTechnology = (data: Element) => {
+export const formatExpandedTechnology = (data: IElement) => {
     const type = data.tags.filter(x => x.name !== Tag.Element.name).at(0);
     if (!type) return "";
     
-    return data?.technology && data?.technology.length > 0
-        ? `[${type.name}: ${data.technology.map(x => x.name).join(", ")}]`
-        : `[${type.name}]`;
+    // return data?.technology && data?.technology.length > 0
+    //     ? `[${type.name}: ${data.technology.map(x => x.name).join(", ")}]`
+    //     : `[${type.name}]`;
+
+    return type.name;
 };
 
 export const BoundaryElementLabel: FC<{
-    data: Element;
+    data: IElement;
     style?: Partial<ElementStyleProperties>;
 }> = ({
     data,
@@ -28,6 +30,7 @@ export const BoundaryElementLabel: FC<{
                 fontSize={"medium"}
                 noOfLines={1}
                 textAlign={"center"}
+                opacity={0.9}
             >
                 {data.name}
             </Text>
@@ -36,6 +39,7 @@ export const BoundaryElementLabel: FC<{
                     fontSize={"small"}
                     noOfLines={1}
                     textAlign={"center"}
+                    opacity={0.4}
                 >
                     {formatExpandedTechnology(data)}
                 </Text>

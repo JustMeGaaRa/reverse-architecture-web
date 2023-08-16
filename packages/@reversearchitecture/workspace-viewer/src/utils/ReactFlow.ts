@@ -1,21 +1,21 @@
 import { Edge, Node } from "@reactflow/core";
 import {
-    Element,
+    IElement,
+    IRelationship,
     Position,
-    Relationship,
     Size,
     Styles,
     Tag,
 } from "@structurizr/dsl";
 
-export type ElementParams<TElement extends Element = any> = {
+export type ElementParams<TElement extends IElement = any> = {
     element: TElement;
     elementId?: string;
+    styles: Styles;
     parentId?: string;
     isBoundary?: boolean;
     position: Position;
     size?: Size;
-    styles: Styles;
 }
 
 export const getNodeFromElement = (params: ElementParams): Node => {
@@ -25,10 +25,12 @@ export const getNodeFromElement = (params: ElementParams): Node => {
             : undefined;
     };
 
-    const getNodeTypeByTag = (element: Element) => {
+    const getNodeTypeByTag = (element: IElement) => {
         return element.tags.some(x => x.name === Tag.DeploymentNode.name)
             ? "deploymentNode"
-            : undefined;
+            : element.tags.some(x => x.name === Tag.Group.name)
+                ? "boundary"
+                : undefined;
     }
 
     return {
@@ -50,7 +52,7 @@ export const getNodeFromElement = (params: ElementParams): Node => {
 }
 
 export type RelationshipParams = {
-    relationship: Relationship;
+    relationship: IRelationship;
     styles: Styles;
 }
 
@@ -64,24 +66,5 @@ export const getEdgeFromRelationship = (params: RelationshipParams): Edge => {
         },
         source: params.relationship.sourceIdentifier,
         target: params.relationship.targetIdentifier
-    };
-}
-
-type Viewport = {
-    x: number;
-    y: number;
-    zoom: number;
-}
-
-export const getRenderingPoint = (viewport: Viewport, point: Position) => {
-    return {
-        x: (point.x * viewport.zoom) + viewport.x,
-        y: (point.y * viewport.zoom) + viewport.y
-    };
-}
-export const getViewportPoint = (viewport: Viewport, point: Position) => {
-    return {
-        x: (point.x - viewport.x) / viewport.zoom,
-        y: (point.y - viewport.y) / viewport.zoom
     };
 }

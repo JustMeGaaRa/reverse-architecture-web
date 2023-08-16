@@ -1,209 +1,287 @@
 import { IconButton } from "@chakra-ui/react";
-import { Panel, useReactFlow } from "@reactflow/core";
+import { Panel, useOnSelectionChange, useReactFlow } from "@reactflow/core";
 import {
     Component,
     Container,
+    ElementType,
     Person,
-    SoftwareSystem
+    SoftwareSystem,
+    ViewType
 } from "@structurizr/dsl";
 import {
+    AddKeyframeAlt,
     BinMinus,
     Cancel,
     ChatAdd,
     Circle,
     CursorPointer,
     DragHandGesture,
+    FrameAltEmpty,
+    LayoutRight,
     Play,
     Redo,
     Rhombus,
     Square,
+    Text,
     Triangle,
     Undo
 } from "iconoir-react";
-import { FC, useCallback } from "react";
-import { v4 } from "uuid";
+import { FC, useCallback, useState } from "react";
 import {
-    ToolbalSection,
+    ToolbarSection,
     Toolbar
 } from "../components";
 import {
-    useInteractionMode, 
     useWorkspaceStore,
-    WorkspaceStore
+    usePresentationMode,
+    WorkspaceStore,
+    useSelectionMode,
+    useDraggingMode,
+    useTextEditMode,
+    useAddingElementMode
 } from "../hooks";
+import { useWorkspaceToolbarStore } from "../hooks/useWorkspaceToolbarStore";
 
-const AllowElementsSelector = (state: WorkspaceStore) => {
-    const isSystemLandscapView = state.selectedView?.type === "System Landscape"
-    const isSystemContextView = state.selectedView?.type === "System Context"
-    const isContainerView = state.selectedView?.type === "Container"
-    const isComponentView = state.selectedView?.type === "Component"
-    const isDeploymentView = state.selectedView?.type === "Deployment"
 
-    return {
-        allowPerson: isSystemLandscapView || isSystemContextView || isContainerView || isComponentView,
-        allowSoftwareSystem: isSystemLandscapView || isSystemContextView || isContainerView || isComponentView,
-        allowContainer: isContainerView || isComponentView,
-        allowComponent: isComponentView,
-        allowDeploymentNode: isDeploymentView
-    }
-}
 
-export const WorkspaceToolbar: FC<{
-    
-}> = ({
-
-}) => {
-    const { project } = useReactFlow();
-    const store = useWorkspaceStore();
+export const WorkspaceToolbar: FC = () => {
+    const {
+        isSelectionEnabled,
+        isDraggingEnabled,
+        isTextEditEnabled,
+        isPresentationEnabled,
+        isAddingElementEnabled,
+        addingElementType,
+    } = useWorkspaceToolbarStore();
+    const { enableSelectionMode } = useSelectionMode();
+    const { enableDraggingMode } = useDraggingMode();
+    const { enableTextEditMode } = useTextEditMode();
+    const { togglePresentationMode } = usePresentationMode();
     const {
         allowPerson,
         allowSoftwareSystem,
         allowContainer,
         allowComponent,
-        allowDeploymentNode
-    } = useWorkspaceStore(AllowElementsSelector);
-    const { isPresentationMode, isBuilderMode, toggleMode } = useInteractionMode();
+        allowDeploymentNode,
+        enableAddingElement
+    } = useAddingElementMode();
 
-    const onAddPerson = useCallback(() => {
-        const person = new Person({
-            identifier: v4(),
-            name: "Person",
-            description: "A person"
-        });
-        const position = project({ x: 0, y: 0 });
-        store.addPerson({ person, position });
-    }, [project, store]);
-
-    const onAddSoftwareSystem = useCallback(() => {
-        const softwareSystem = new SoftwareSystem({
-            identifier: v4(),
-            name: "Software System",
-            description: "A software system"
-        });
-        const position = project({ x: 0, y: 0 });
-        store.addSoftwareSystem({ softwareSystem, position });
-    }, [project, store]);
-
-    const onAddContainer = useCallback(() => {
-        const container = new Container({
-            identifier: v4(),
-            name: "Container",
-            description: "A container"
-        });
-        const position = project({ x: 0, y: 0 });
-        store.addContainer({ container, position, softwareSystemIdentifier: "" });
-    }, [project, store]);
-
-    const onAddComponent = useCallback(() => {
-        const component = new Component({
-            identifier: v4(),
-            name: "Component",
-            description: "A component"
-        });
-        const position = project({ x: 0, y: 0 });
-        store.addComponent({ component, position, containerIdentifier: "", softwareSystemIdentifier: "" });
-    }, [project, store]);
+    const { project, deleteElements } = useReactFlow();
+    const [ selection, setSelection ] = useState({ nodes: [], edges: [] });
+    useOnSelectionChange({ onChange: (selection) => { setSelection(selection) }});
 
     return (
         <Panel position={"bottom-center"}>
-            <Toolbar>
-                <ToolbalSection>
-                    <IconButton
-                        aria-label={"cursor"}
-                        isActive={isBuilderMode}
-                        icon={<CursorPointer />}
-                        title={"cursor"}
-                        onClick={toggleMode}
-                    />
-                    <IconButton
-                        aria-label={"drag"}
-                        isActive={isPresentationMode}
-                        icon={<DragHandGesture />}
-                        title={"drag"}
-                        onClick={toggleMode}
-                    />
-                </ToolbalSection>
-                
-                <ToolbalSection>
-                    {allowPerson && (
+            {!isPresentationEnabled && (
+                <Toolbar>
+                    <ToolbarSection>
                         <IconButton
-                            aria-label={"person"}
-                            icon={<Square />}
-                            title={"person"}
-                            onClick={onAddPerson}
+                            aria-label={"selection mode"}
+                            isActive={isSelectionEnabled}
+                            icon={<CursorPointer />}
+                            title={"selection mode"}
+                            _active={{
+                                backgroundColor: "yellow.100",
+                                color: "yellow.900"
+                            }}
+                            onClick={() => enableSelectionMode()}
                         />
-                    )}
-                    {allowSoftwareSystem && (
                         <IconButton
-                            aria-label={"software system"}
-                            icon={<Circle />}
-                            title={"software system"}
-                            onClick={onAddSoftwareSystem}
+                            aria-label={"dragging mode"}
+                            isActive={isDraggingEnabled}
+                            icon={<DragHandGesture />}
+                            title={"dragging mode"}
+                            _active={{
+                                backgroundColor: "yellow.100",
+                                color: "yellow.900"
+                            }}
+                            onClick={() => enableDraggingMode()}
                         />
-                    )}
-                    {allowContainer && (
-                        <IconButton
-                            aria-label={"container"}
-                            icon={<Triangle />}
-                            title={"container"}
-                            onClick={onAddContainer}
-                        />
-                    )}
-                    {allowComponent && (
-                        <IconButton
-                            aria-label={"component"}
-                            icon={<Rhombus />}
-                            title={"component"}
-                            onClick={onAddComponent}
-                        />
-                    )}
-                </ToolbalSection>
+                    </ToolbarSection>
 
-                <ToolbalSection>
-                    <IconButton
-                        aria-label={"comment"}
-                        icon={<ChatAdd />}
-                        title={"comment"}
-                    />
-                </ToolbalSection>
-
-                <ToolbalSection>
-                    <IconButton
-                        aria-label={"delete selected element"}
-                        icon={<BinMinus />}
-                        title={"delete selected"}
-                    />
-                    <IconButton
-                        aria-label={"undo last change"}
-                        icon={<Undo />}
-                        title={"undo last change"}
-                    />
-                    <IconButton
-                        aria-label={"redo last change"}
-                        icon={<Redo />}
-                        title={"redo last change"}
-                    />
-                </ToolbalSection>
-
-                <ToolbalSection>
-                    {isPresentationMode && (
+                    <ToolbarSection>
+                        {allowPerson && (
+                            <IconButton
+                                aria-label={"add person"}
+                                icon={<Square />}
+                                isActive={isAddingElementEnabled && addingElementType === ElementType.Person}
+                                title={"add person"}
+                                _active={{
+                                    backgroundColor: "yellow.100",
+                                    color: "yellow.900"
+                                }}
+                                onClick={() => enableAddingElement(ElementType.Person)}
+                            />
+                        )}
+                        {allowSoftwareSystem && (
+                            <IconButton
+                                aria-label={"add software system"}
+                                icon={<Circle />}
+                                isActive={isAddingElementEnabled && addingElementType === ElementType.SoftwareSystem}
+                                title={"add software system"}
+                                _active={{
+                                    backgroundColor: "yellow.100",
+                                    color: "yellow.900"
+                                }}
+                                onClick={() => enableAddingElement(ElementType.SoftwareSystem)}
+                            />
+                        )}
+                        {allowContainer && (
+                            <IconButton
+                                aria-label={"add container"}
+                                icon={<Triangle />}
+                                isActive={isAddingElementEnabled && addingElementType === ElementType.Container}
+                                title={"add container"}
+                                _active={{
+                                    backgroundColor: "yellow.100",
+                                    color: "yellow.900"
+                                }}
+                                onClick={() => enableAddingElement(ElementType.Container)}
+                            />
+                        )}
+                        {allowComponent && (
+                            <IconButton
+                                aria-label={"add component"}
+                                icon={<Rhombus />}
+                                isActive={isAddingElementEnabled && addingElementType === ElementType.Component}
+                                title={"add component"}
+                                _active={{
+                                    backgroundColor: "yellow.100",
+                                    color: "yellow.900"
+                                }}
+                                onClick={() => enableAddingElement(ElementType.Component)}
+                            />
+                        )}
                         <IconButton
-                            aria-label={"exit mode"}
-                            icon={<Cancel />}
-                            title={"exit mode"}
-                            onClick={toggleMode}
+                            aria-label={"add group"}
+                            icon={<AddKeyframeAlt />}
+                            isActive={isAddingElementEnabled && addingElementType === ElementType.Group}
+                            title={"add group"}
+                            _active={{
+                                backgroundColor: "yellow.100",
+                                color: "yellow.900"
+                            }}
+                            onClick={() => enableAddingElement(ElementType.Group)}
                         />
-                    )}
-                    {isBuilderMode && (
+                        {/* TODO: add icon butons for deployment and infrastructure nodes */}
+                    </ToolbarSection>
+
+                    <ToolbarSection>
                         <IconButton
-                            aria-label={"presentation"}
+                            aria-label={"text edit mode"}
+                            icon={<Text />}
+                            isActive={isTextEditEnabled}
+                            title={"text edit mode"}
+                            _active={{
+                                backgroundColor: "yellow.100",
+                                color: "yellow.900"
+                            }}
+                            onClick={() => enableTextEditMode()}
+                        />
+                        <IconButton
+                            aria-label={"multiselect"}
+                            icon={<FrameAltEmpty />}
+                            isActive={false}
+                            title={"multiselect"}
+                            _active={{
+                                backgroundColor: "yellow.100",
+                                color: "yellow.900"
+                            }}
+                        />
+                    </ToolbarSection>
+
+                    <ToolbarSection>
+                        <IconButton
+                            aria-label={"add comment"}
+                            icon={<ChatAdd />}
+                            title={"add comment"}
+                            _active={{
+                                backgroundColor: "yellow.100",
+                                color: "yellow.900"
+                            }}
+                        />
+                        <IconButton
+                            aria-label={"enable auto layout"}
+                            icon={<LayoutRight />}
+                            title={"enable auto layout"}
+                            _active={{
+                                backgroundColor: "yellow.100",
+                                color: "yellow.900"
+                            }}
+                        />
+                    </ToolbarSection>
+
+                    <ToolbarSection>
+                        <IconButton
+                            aria-label={"delete selected"}
+                            icon={<BinMinus />}
+                            isActive={(selection.nodes?.length > 0 || selection.edges?.length > 0)}
+                            title={"delete selected"}
+                            _active={{
+                                backgroundColor: "yellow.100",
+                                color: "yellow.900"
+                            }}
+                            onClick={() => deleteElements(selection)}
+                        />
+                        <IconButton
+                            aria-label={"undo last change"}
+                            icon={<Undo />}
+                            title={"undo last change"}
+                        />
+                        <IconButton
+                            aria-label={"redo last change"}
+                            icon={<Redo />}
+                            title={"redo last change"}
+                        />
+                    </ToolbarSection>
+
+                    <ToolbarSection>
+                        <IconButton
+                            aria-label={"enable presentation mode"}
                             icon={<Play />}
-                            title={"presentation"}
-                            onClick={toggleMode}
+                            title={"enable presentation mode"}
+                            onClick={() => togglePresentationMode()}
                         />
-                    )}
-                </ToolbalSection>
-            </Toolbar>
+                    </ToolbarSection>
+                </Toolbar>
+            )}
+
+            {isPresentationEnabled && (
+                <Toolbar>
+                    <ToolbarSection>
+                        <IconButton
+                            aria-label={"follow presenter"}
+                            icon={<CursorPointer />}
+                            title={"follow presenter"}
+                            _active={{
+                                backgroundColor: "yellow.100",
+                                color: "yellow.900"
+                            }}
+                        />
+                    </ToolbarSection>
+
+                    <ToolbarSection>
+                        <IconButton
+                            aria-label={"add comment"}
+                            icon={<ChatAdd />}
+                            title={"add comment"}
+                            _active={{
+                                backgroundColor: "yellow.100",
+                                color: "yellow.900"
+                            }}
+                        />
+                    </ToolbarSection>
+
+                    <ToolbarSection>
+                        <IconButton
+                            aria-label={"exit presentation mode"}
+                            icon={<Cancel />}
+                            title={"exit presentation mode"}
+                            onClick={() => togglePresentationMode()}
+                        />
+                    </ToolbarSection>
+                </Toolbar>
+            )}
         </Panel>
     )
 }

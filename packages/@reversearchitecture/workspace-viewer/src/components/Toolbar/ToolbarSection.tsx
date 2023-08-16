@@ -1,7 +1,7 @@
 import { ButtonGroup } from "@chakra-ui/react";
 import { FC, PropsWithChildren } from "react";
 
-export const ToolbalSection: FC<PropsWithChildren<{
+export const ToolbarSection: FC<PropsWithChildren<{
 
 }>> = ({
     children

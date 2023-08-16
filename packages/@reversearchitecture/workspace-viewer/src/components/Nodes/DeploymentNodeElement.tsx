@@ -5,6 +5,7 @@ import {
     ElementStyleProperties
 } from "@structurizr/dsl";
 import { FC, useCallback, useState } from "react";
+import { HexColor } from "../../utils";
 import { DeploymentNodeLabel } from "./DeploymentNodeLabel";
 
 export const DeploymentNodeElement: FC<{
@@ -30,15 +31,21 @@ export const DeploymentNodeElement: FC<{
 
     return (
         <Flex
-            background={style.background}
+            backgroundColor={HexColor.withAlpha(style.background, 0.1)}
+            backdropFilter={"auto"}
+            backdropBlur={"16px"}
             borderWidth={style.strokeWidth}
-            borderColor={style.stroke}
+            borderColor={HexColor.withAlpha(style.stroke, selected ? 0.7 : 0.4)}
+            cursor={"pointer"}
             align={"end"}
             justify={"start"}
             padding={2}
             width={size.width}
             height={size.height}
             textColor={style.color}
+            _hover={{
+                borderColor: HexColor.withAlpha(style.stroke, 0.7),
+            }}
         >
             <DeploymentNodeLabel
                 data={data}
@@ -46,10 +53,17 @@ export const DeploymentNodeElement: FC<{
             />
             <NodeResizer
                 isVisible={selected}
+                color={style.stroke}
                 minWidth={380}
                 minHeight={320}
-                handleStyle={{ width: 7, height: 7 }}
-                lineStyle={{ borderWidth: 0 }}
+                handleStyle={{
+                    borderWidth: 1,
+                    borderColor: HexColor.withAlpha(style.stroke, 0.7),
+                    borderRadius: 2,
+                    width: 7,
+                    height: 7,
+                }}
+                lineStyle={{ borderWidth: 1 }}
                 onResizeEnd={onResize}
             />
         </Flex>

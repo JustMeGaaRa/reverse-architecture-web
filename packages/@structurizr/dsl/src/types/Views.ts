@@ -1,26 +1,46 @@
-import { Properties } from "./model/Properties";
-import { ComponentViewDefinition } from "./views/ComponentViewDefinition";
-import { ContainerViewDefinition } from "./views/ContainerViewDefinition";
-import { Configuration } from "./views/Configuration";
-import { DeploymentViewDefinition } from "./views/DeploymentViewDefinition";
-import { SystemContextViewDefinition } from "./views/SystemContextViewDefinition";
-import { SystemLandscapeViewDefinition } from "./views/SystemLandscapeViewDefinition";
-import { IViewDefinition } from "./views/IViewDefinition";
+import {
+    ComponentViewDefinition,
+    Configuration,
+    ContainerViewDefinition,
+    DeploymentViewDefinition,
+    IComponentView,
+    IConfiguration,
+    IContainerView,
+    IDeploymentView,
+    ISupportImmutable,
+    ISystemContextView,
+    ISystemLandscapeView,
+    IViewDefinition,
+    Properties,
+    SystemContextViewDefinition,
+    SystemLandscapeViewDefinition
+} from "..";
 
-export class Views {
-    constructor(
-        params: Partial<Views>
-    ) {
-        this.systemLandscape = params.systemLandscape;
-        this.systemContexts = params.systemContexts ?? [];
-        this.containers = params.containers ?? [];
-        this.components = params.components ?? [];
-        this.deployments = params.deployments ?? [];
+export interface IViews {
+    systemLandscape?: ISystemLandscapeView;
+    systemContexts: ISystemContextView[];
+    containers: IContainerView[];
+    components: IComponentView[];
+    filtered: IViewDefinition[];
+    dynamics: IViewDefinition[];
+    deployments: IDeploymentView[];
+    custom: IViewDefinition[];
+    configuration: IConfiguration;
+    properties?: Properties;
+}
+
+export class Views implements ISupportImmutable<IViews> {
+    constructor(params: IViews) {
+        this.systemLandscape = params.systemLandscape ? new SystemLandscapeViewDefinition(params.systemLandscape) : undefined;
+        this.systemContexts = params.systemContexts ? params.systemContexts.map(s => new SystemContextViewDefinition(s)) : [];
+        this.containers = params.containers ? params.containers.map(c => new ContainerViewDefinition(c)) : [];
+        this.components = params.components ? params.components.map(c => new ComponentViewDefinition(c)) : [];
+        this.deployments = params.deployments ? params.deployments.map(d => new DeploymentViewDefinition(d)) : [];
         this.filtered = params.filtered ?? [];
         this.dynamics = params.dynamics ?? [];
         this.custom = params.custom ?? [];
-        this.configuration = params.configuration ?? new Configuration({});
-        this.properties = params.properties ?? new Map<string, string>();
+        this.configuration = params.configuration ? new Configuration(params.configuration) : undefined;
+        this.properties = params.properties;
     }
 
     public readonly systemLandscape?: SystemLandscapeViewDefinition;
@@ -33,4 +53,19 @@ export class Views {
     public readonly custom: IViewDefinition[];
     public readonly configuration: Configuration;
     public readonly properties?: Properties;
+
+    public toObject(): IViews {
+        return {
+            systemLandscape: this.systemLandscape?.toObject(),
+            systemContexts: this.systemContexts.map(s => s.toObject()),
+            containers: this.containers.map(c => c.toObject()),
+            components: this.components.map(c => c.toObject()),
+            deployments: this.deployments.map(d => d.toObject()),
+            filtered: this.filtered,
+            dynamics: this.dynamics,
+            custom: this.custom,
+            configuration: this.configuration.toObject(),
+            properties: this.properties
+        }
+    }
 }

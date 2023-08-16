@@ -110,7 +110,7 @@ export const Layout: FC<PropsWithChildren<{
                             </RouteList>
                         </Flex>
                         <Box py={4}>
-                            <Divider mb={2} background={"gray.200"} />
+                            <Divider mb={2} backgroundColor={"gray.200"} />
                             <AccountMenu expanded={isOpen} />
                         </Box>
                     </NavigationSidebar>

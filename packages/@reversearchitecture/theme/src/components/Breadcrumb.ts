@@ -17,16 +17,16 @@ export const Breadcrumb = defineMultiStyleConfig({
 
         },
         link: {
-            backgroundColor: mode("", "gray.100")(props),
-            borderColor: mode("", "gray.200")(props),
+            backgroundColor: mode("", "whiteAlpha.100")(props),
+            borderColor: mode("", "whiteAlpha.200")(props),
             borderWidth: 1,
-            color: mode("", "gray.700")(props),
             borderRadius: 8,
+            color: mode("", "whiteAlpha.700")(props),
             fontSize: "14px",
             height: "24px",
             _hover: {
-                backgroundColor: mode("", "gray.200")(props),
-                borderColor: mode("", "gray.400")(props),
+                backgroundColor: mode("", "whiteAlpha.200")(props),
+                borderColor: mode("", "whiteAlpha.400")(props),
                 color: mode("", "basic.white")(props),
                 textDecoration: "none"
             },

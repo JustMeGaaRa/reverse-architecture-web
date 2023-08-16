@@ -1,18 +1,35 @@
-import { Element } from "./Element";
-import { ElementType } from "./ElementType";
-import { Identifier } from "./Identifier";
-import { Perspectives } from "./Perspectives";
-import { Properties } from "./Properties";
-import { Relationship } from "./Relationship";
-import { Tag } from "./Tag";
-import { Technology } from "./Technology";
-import { Url } from "./Url";
+import {
+    IElement,
+    ElementType,
+    Identifier,
+    IRelationship,
+    ISupportImmutable,
+    Perspectives,
+    Properties,
+    Relationship,
+    Tag,
+    Technology,
+    Url
+} from "../..";
+
+export interface IComponent extends IElement {
+    type: ElementType.Component;
+    identifier: Identifier;
+    name: string;
+    technology: Technology[];
+    description?: string;
+    tags: Tag[];
+    url?: Url;
+    properties?: Properties;
+    perspectives?: Perspectives;
+    relationships: IRelationship[];
+}
 
 type ComponentParams =
-    Required<Pick<Component, "identifier" | "name">>
-    & Partial<Omit<Component, "identifier" | "name" | "type">>;
+    Required<Pick<IComponent, "name" | "identifier">>
+    & Partial<Omit<IComponent, "name"| "identifier">>;
 
-export class Component implements Element {
+export class Component implements IElement, ISupportImmutable<IComponent> {
     constructor(params: ComponentParams) {
         this.type = ElementType.Component;
         this.identifier = params.identifier;
@@ -22,11 +39,14 @@ export class Component implements Element {
         this.url = params.url;
         this.properties = params.properties;
         this.perspectives = params.perspectives;
-        this.relationships = params.relationships;
+        this.relationships = params.relationships ? params.relationships.map(r => new Relationship(r)) : [];
         this.tags = [
             Tag.Element,
             Tag.Component,
-            ...(params.tags ?? [])
+            ...(params.tags
+                ?.filter(x => x.name !== Tag.Element.name)
+                ?.filter(x => x.name !== Tag.Component.name) ?? []
+            )
         ]
     }
 
@@ -40,4 +60,19 @@ export class Component implements Element {
     public readonly properties?: Properties;
     public readonly perspectives?: Perspectives;
     public readonly relationships: Relationship[];
+
+    public toObject(): IComponent {
+        return {
+            type: this.type,
+            identifier: this.identifier,
+            name: this.name,
+            technology: this.technology,
+            description: this.description,
+            tags: this.tags,
+            url: this.url,
+            properties: this.properties,
+            perspectives: this.perspectives,
+            relationships: this.relationships.map(r => r.toObject())
+        }
+    }
 }

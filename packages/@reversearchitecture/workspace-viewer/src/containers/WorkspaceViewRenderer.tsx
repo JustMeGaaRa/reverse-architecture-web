@@ -16,10 +16,13 @@ import {
     ReactFlowBoundaryNode,
     ReactFlowElementNode,
     ReactFlowDeploymentNode,
-    ReactFlowBezierEdge
+    ReactFlowBezierEdge,
+    CircleOutlineMarker,
+    ArrowClosedMarker,
+    MarkerRefs
 } from "../components";
 
-export const WorkspaceRenderer = forwardRef<HTMLDivElement, PropsWithChildren<{
+export const WorkspaceViewRenderer = forwardRef<HTMLDivElement, PropsWithChildren<{
     nodes: any[];
     edges: any[];
     onInitialize?: OnInit<any, any>;
@@ -27,7 +30,9 @@ export const WorkspaceRenderer = forwardRef<HTMLDivElement, PropsWithChildren<{
     onEdgesChange?: OnEdgesChange;
     onNodeDragStop?: NodeDragHandler;
     onNodesDoubleClick?: NodeMouseHandler;
+    onNodeClick?: NodeMouseHandler;
     onMouseMove?: MouseEventHandler<HTMLDivElement>;
+    onPaneClick?: MouseEventHandler;
 }>>(({
     children,
     nodes,
@@ -37,7 +42,9 @@ export const WorkspaceRenderer = forwardRef<HTMLDivElement, PropsWithChildren<{
     onEdgesChange,
     onNodeDragStop,
     onNodesDoubleClick,
-    onMouseMove
+    onNodeClick,
+    onMouseMove,
+    onPaneClick
 }, ref) => {
     const NodeTypes = useMemo(() => ({
         boundary: ReactFlowBoundaryNode,
@@ -72,21 +79,26 @@ export const WorkspaceRenderer = forwardRef<HTMLDivElement, PropsWithChildren<{
             edges={edges}
             proOptions={{ hideAttribution: true }}
             snapGrid={[40, 40]}
-            style={{ position: "relative" }}
             onInit={onInitialize}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onNodeDragStop={onNodeDragStop}
             onNodeDoubleClick={onNodesDoubleClick}
+            onNodeClick={onNodeClick}
             onMouseMove={onMouseMove}
+            onPaneClick={onPaneClick}
         >
             <Background
                 variant={BackgroundVariant.Dots}
                 gap={[40, 40]}
             />
+            <MarkerRefs>
+                <CircleOutlineMarker />
+                <ArrowClosedMarker />
+            </MarkerRefs>
             {children}
         </ReactFlow>
     );
 });
 
-WorkspaceRenderer.displayName = "WorkspaceRenderer";
+WorkspaceViewRenderer.displayName = "WorkspaceRenderer";

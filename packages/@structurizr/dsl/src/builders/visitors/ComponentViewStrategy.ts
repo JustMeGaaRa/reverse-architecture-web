@@ -1,35 +1,31 @@
 import {
-    Person,
-    SoftwareSystem,
     IViewDefinition,
     IElementVisitor,
-    Workspace,
-    Container,
-    Component,
     relationshipExists,
-    ISupportVisitor
+    ISupportVisitor,
+    getRelationships,
+    hasRelationship,
+    IPerson,
+    ISoftwareSystem,
+    IContainer,
+    IComponent,
+    IModel
 } from "../..";
 
 export class ComponentViewStrategy implements ISupportVisitor {
     constructor(
-        private workspace: Workspace,
+        private model: IModel,
         private view: IViewDefinition,
     ) {}
 
     accept(visitor: IElementVisitor): void {
-        const hasRelationship = (
-            sourceIdentifier: string,
-            targetIdentifier: string
-        ) => {
-            return this.view.elements.find(x => x.id === sourceIdentifier)
-                && this.view.elements.find(x => x.id === targetIdentifier)
-        }
+        const relationships = getRelationships(this.model, true);
 
         const visitComponent = (
-            people: Array<Person>,
-            softwareSystems: Array<SoftwareSystem>,
-            containers: Array<Container>,
-            components: Array<Component>,
+            people: Array<IPerson>,
+            softwareSystems: Array<ISoftwareSystem>,
+            containers: Array<IContainer>,
+            components: Array<IComponent>,
             parentId?: string
         ) => {
             // 4.1. iterate over all components and include them
@@ -40,25 +36,25 @@ export class ComponentViewStrategy implements ISupportVisitor {
                     
                     // 4.1.2. include all people that are directly connected to the current component
                     people
-                        .filter(person => relationshipExists(this.workspace, component.identifier, person.identifier))
+                        .filter(person => relationshipExists(relationships, component.identifier, person.identifier))
                         .forEach(person => visitor.visitPerson(person));
 
                     // 4.1.3. include all software systems that are directly connected to the current component
                     softwareSystems
-                        .filter(softwareSystem => relationshipExists(this.workspace, component.identifier, softwareSystem.identifier))
+                        .filter(softwareSystem => relationshipExists(relationships, component.identifier, softwareSystem.identifier))
                         .forEach(softwareSystem => visitor.visitSoftwareSystem(softwareSystem));
 
                     // 4.1.4. include all containers that are directly connected to the current container
                     containers
-                        .filter(container => relationshipExists(this.workspace, component.identifier, container.identifier))
+                        .filter(container => relationshipExists(relationships, component.identifier, container.identifier))
                         .forEach(container => visitor.visitContainer(container));
                 });
         }
 
         const visitContainer = (
-            people: Array<Person>,
-            softwareSystems: Array<SoftwareSystem>,
-            containers: Array<Container>,
+            people: Array<IPerson>,
+            softwareSystems: Array<ISoftwareSystem>,
+            containers: Array<IContainer>,
         ) => {
             // 3.1. iterate over all containers to find the one for the view
             containers
@@ -94,8 +90,8 @@ export class ComponentViewStrategy implements ISupportVisitor {
         }
 
         const visitSoftwareSystem = (
-            people: Array<Person>,
-            softwareSystems: Array<SoftwareSystem>
+            people: Array<IPerson>,
+            softwareSystems: Array<ISoftwareSystem>
         ) => {
             // 2.1. iterate over all software systems
             softwareSystems.forEach(softwareSystem => {
@@ -118,21 +114,21 @@ export class ComponentViewStrategy implements ISupportVisitor {
         }
 
         // 1.1. iterate over all groups and find software system for the view
-        this.workspace.model.groups.forEach(group => {
+        this.model.groups.forEach(group => {
             visitSoftwareSystem(
-                group.people.concat(this.workspace.model.people),
-                group.softwareSystems.concat(this.workspace.model.softwareSystems)
+                group.people.concat(this.model.people),
+                group.softwareSystems.concat(this.model.softwareSystems)
             );
         });
             
         // 1.2. iterate over all software systems and find software system for the view
         visitSoftwareSystem(
-            this.workspace.model.people,
-            this.workspace.model.softwareSystems
+            this.model.people,
+            this.model.softwareSystems
         );
         
-        this.workspace.model.relationships
-            .filter(edge => hasRelationship(edge.sourceIdentifier, edge.targetIdentifier))
+        relationships
+            .filter(relationship => hasRelationship(this.view, relationship.sourceIdentifier, relationship.targetIdentifier))
             .forEach(relationship => visitor.visitRelationship(relationship));
     }
 }

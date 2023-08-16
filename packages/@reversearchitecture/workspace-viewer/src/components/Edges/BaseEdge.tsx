@@ -1,12 +1,13 @@
 import { FC, PropsWithChildren, CSSProperties } from "react";
+import { MarkerType } from "./MarkerType";
 
 type BaseEdgeProps = {
     path: string,
     labelX: number,
     labelY: number,
     style: CSSProperties,
-    markerEnd?: string,
-    markerStart?: string,
+    markerEnd?: MarkerType,
+    markerStart?: MarkerType,
     interactionWidth: number,
 }
 
@@ -23,16 +24,16 @@ export const BaseEdge: FC<PropsWithChildren<BaseEdgeProps>> = ({
             <path
                 className="react-flow__edge-path"
                 d={path}
-                fill="none"
+                fill={"none"}
                 style={style}
-                markerEnd={markerEnd}
-                markerStart={markerStart}
+                markerStart={`url(#${markerStart})`}
+                markerEnd={`url(#${markerEnd})`}
             />
             {interactionWidth && (
                 <path
                     className="react-flow__edge-interaction"
                     d={path}
-                    fill="none"
+                    fill={"none"}
                     strokeOpacity={0}
                     strokeWidth={interactionWidth}
                 />

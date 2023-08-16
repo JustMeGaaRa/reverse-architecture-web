@@ -17,14 +17,22 @@ export class BoundingBoxTreeBuilder implements IBuilder<Map<string, IBoundingBox
     }
 
     addBranch(identifier: string, parentId?: string) {
-        const parent = this.branches.get(parentId ?? this.topLevelTreeId) as BoundingBoxTree;
-        const branch = parent.addBranch();
-        this.branches.set(identifier, branch);
+        if (this.branches.has(parentId ?? this.topLevelTreeId)) {
+            const parent = this.branches.get(parentId ?? this.topLevelTreeId) as BoundingBoxTree;
+            if (!this.branches.has(identifier)) {
+                const branch = parent.addBranch();
+                this.branches.set(identifier, branch);
+            }
+        }
     }
 
     addLeaf(box: BoundingBox, identifier: string, parentId?: string) {
-        const parent = this.branches.get(parentId ?? this.topLevelTreeId) as BoundingBoxTree;
-        const leaf = parent.addLeaf(box);
-        this.branches.set(identifier, leaf);
+        if (this.branches.has(parentId ?? this.topLevelTreeId)) {
+            const parent = this.branches.get(parentId ?? this.topLevelTreeId) as BoundingBoxTree;
+            if (!this.branches.has(identifier)) {
+                const leaf = parent.addLeaf(box);
+                this.branches.set(identifier, leaf);
+            }
+        }
     }
 }

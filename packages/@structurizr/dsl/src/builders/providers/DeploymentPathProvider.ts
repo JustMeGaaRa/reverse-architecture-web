@@ -1,7 +1,7 @@
-import { ISupportPath, IViewDefinition, ViewType, Workspace } from "../..";
+import { ISupportPath, IViewDefinition, IWorkspace, ViewType, Workspace } from "../..";
 
 export class DeploymentPathProvider implements ISupportPath {
-    getPath(workspace: Workspace, view: IViewDefinition): Array<IViewDefinition> {
+    getPath(workspace: IWorkspace, view: IViewDefinition): Array<IViewDefinition> {
         for (let softwareSystem of workspace.model.softwareSystems) {
             if (softwareSystem.identifier === view.identifier) {
                 return [

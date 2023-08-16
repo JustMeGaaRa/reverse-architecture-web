@@ -1,30 +1,26 @@
 import {
-    Person,
-    SoftwareSystem,
     IViewDefinition,
     IElementVisitor,
-    Workspace,
-    ISupportVisitor
+    ISupportVisitor,
+    hasRelationship,
+    getRelationships,
+    IPerson,
+    ISoftwareSystem,
+    IModel
 } from "../..";
 
 export class SystemLandscapeViewStrategy implements ISupportVisitor {
     constructor(
-        private workspace: Workspace,
+        private model: IModel,
         private view: IViewDefinition
     ) {}
 
     accept(visitor: IElementVisitor): void {
-        const hasRelationship = (
-            sourceIdentifier: string,
-            targetIdentifier: string
-        ) => {
-            return this.view.elements.find(x => x.id === sourceIdentifier)
-                && this.view.elements.find(x => x.id === targetIdentifier)
-        }
-
+        const relationships = getRelationships(this.model, true);
+                
         const visitSoftwareSystems = (
-            people: Array<Person>,
-            softwareSystems: Array<SoftwareSystem>,
+            people: Array<IPerson>,
+            softwareSystems: Array<ISoftwareSystem>,
             parentId?: string
         ) => {
             // 2.1. include all people
@@ -37,7 +33,7 @@ export class SystemLandscapeViewStrategy implements ISupportVisitor {
         }
 
         // 1.1. iterate over all groups and find software system for the view
-        this.workspace.model.groups
+        this.model.groups
             .forEach(group => {
                 // 1.1.1.1. include the software system group as a boundary element
                 visitor.visitGroup(group);
@@ -52,12 +48,12 @@ export class SystemLandscapeViewStrategy implements ISupportVisitor {
 
         // 1.2. iterate over all software systems and find software system for the view
         visitSoftwareSystems(
-            this.workspace.model.people,
-            this.workspace.model.softwareSystems
+            this.model.people,
+            this.model.softwareSystems
         );
         
-        this.workspace.model.relationships
-            .filter(edge => hasRelationship(edge.sourceIdentifier, edge.targetIdentifier))
+        relationships
+            .filter(relationship => hasRelationship(this.view, relationship.sourceIdentifier, relationship.targetIdentifier))
             .forEach(relationship => visitor.visitRelationship(relationship));
     }
 }

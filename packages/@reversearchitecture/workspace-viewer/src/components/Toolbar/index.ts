@@ -1,2 +1,2 @@
-export * from "./ToolbalSection";
+export * from "./ToolbarSection";
 export * from "./Toolbar";

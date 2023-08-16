@@ -1,36 +1,60 @@
-import { Container } from "./Container";
-import { Group } from "./Group";
-import { Element } from "./Element";
-import { ElementType } from "./ElementType";
-import { Identifier } from "./Identifier";
-import { Perspectives } from "./Perspectives";
-import { Properties } from "./Properties";
-import { Relationship } from "./Relationship";
-import { Tag } from "./Tag";
-import { Technology } from "./Technology";
-import { Url } from "./Url";
+import {
+    Container,
+    IElement,
+    ElementType,
+    Group,
+    IContainer,
+    Identifier,
+    IGroup,
+    IRelationship,
+    ISupportImmutable,
+    Perspectives,
+    Properties,
+    Relationship,
+    Tag,
+    Technology,
+    Url
+} from "../..";
 
-type SoftwareSystemParams =
-    Required<Pick<SoftwareSystem, "identifier" | "name">>
-    & Partial<Omit<SoftwareSystem, "identifier" | "name" | "type">>;
+export interface ISoftwareSystem extends IElement {
+    type: ElementType.SoftwareSystem;
+    identifier: Identifier;
+    name: string;
+    groups: IGroup[];
+    containers: IContainer[];
+    technology: Technology[];
+    description?: string;
+    tags: Tag[];
+    url?: Url;
+    properties?: Properties;
+    perspectives?: Perspectives;
+    relationships: IRelationship[];
+}
 
-export class SoftwareSystem implements Element {
+export type SoftwareSystemParams =
+    Required<Pick<ISoftwareSystem, "name" | "identifier">>
+    & Partial<Omit<ISoftwareSystem, "name"| "identifier">>
+
+export class SoftwareSystem implements IElement, ISupportImmutable<ISoftwareSystem> {
     constructor(params: SoftwareSystemParams) {
         this.type = ElementType.SoftwareSystem;
         this.identifier = params.identifier;
         this.name = params.name;
-        this.groups = params.groups ?? [];
-        this.containers = params.containers ?? [];
+        this.groups = params.groups ? params.groups.map(g => new Group(g)) : [];
+        this.containers = params.containers ? params.containers.map(c => new Container(c)) : [];
         this.technology = params.technology ?? [];
         this.description = params.description;
         this.url = params.url;
         this.properties = params.properties;
         this.perspectives = params.perspectives;
-        this.relationships = params.relationships ?? [];
+        this.relationships = params.relationships ? params.relationships.map(r => new Relationship(r)) : [];
         this.tags = [
             Tag.Element,
             Tag.SoftwareSystem,
-            ...(params.tags ?? [])
+            ...(params.tags
+                ?.filter(x => x.name !== Tag.Element.name)
+                ?.filter(x => x.name !== Tag.SoftwareSystem.name) ?? []
+            )
         ]
     }
 
@@ -46,4 +70,38 @@ export class SoftwareSystem implements Element {
     public readonly properties?: Properties;
     public readonly perspectives?: Perspectives;
     public readonly relationships: Relationship[];
+
+    public toObject(): ISoftwareSystem {
+        return {
+            type: this.type,
+            identifier: this.identifier,
+            name: this.name,
+            groups: this.groups.map(g => g.toObject()),
+            containers: this.containers.map(c => c.toObject()),
+            technology: this.technology,
+            description: this.description,
+            tags: this.tags,
+            url: this.url,
+            properties: this.properties,
+            perspectives: this.perspectives,
+            relationships: this.relationships.map(r => r.toObject())
+        }
+    }
+
+    public addGroup(group: Group) {
+        this.groups.push(group);
+    }
+
+    public addContainer(container: Container, groupId?: Identifier) {
+        if (groupId) {
+            this.groups.find(g => g.identifier === groupId)?.addContainer(container);
+        }
+        else {
+            this.containers.push(container);
+        }
+    }
+
+    public addRelationship(relationship: Relationship) {
+        this.relationships.push(relationship);
+    }
 }

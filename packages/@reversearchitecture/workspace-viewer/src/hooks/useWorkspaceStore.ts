@@ -10,30 +10,40 @@ import {
     Relationship,
     Size,
     SoftwareSystem,
-    ViewPath,
     Workspace,
+    ViewType,
+    ViewKeys,
+    IWorkspace,
+    IModel,
+    IPerson,
+    ISoftwareSystem,
+    IRelationship,
+    IDeploymentEnvironment,
+    IGroup,
+    IContainer,
+    IComponent,
+    IDeploymentNode,
 } from "@structurizr/dsl";
 import { create } from "zustand";
 
 export type WorkspaceStore = {
-    workspace: Workspace;
-    selectedView?: IViewDefinition;
-    viewPath: ViewPath;
-    
-    setWorkspace: Action<Workspace>;
-    setSelectedView: Action<IViewDefinition>;
-    setViewPath: Action<ViewPath>;
-    setName: Action<string>;
-    addPerson: Action<PersonParams>;
-    addSoftwareSystem: Action<SoftwareSystemParams>;
-    addContainer: Action<ContainerParams>;
-    addComponent: Action<ComponentParams>;
-    addDeploymentEnvironment: Action<DeploymentEnvironmentParams>;
-    addDeploymentNode: Action<DeploymentNodeParams>;
-    addRelationship: Action<Relationship>;
+    workspace: IWorkspace;
+    selectedView: IViewDefinition;
+    selectedViewPath: Array<ViewKeys>;
 };
 
-export type Action<TParam> = (param: TParam) => void;
+export const useWorkspaceStore = create<WorkspaceStore>(() => ({
+    workspace: Workspace.Empty.toObject(),
+    selectedView: {
+        type: ViewType.SystemLandscape,
+        identifier: "SystemLandscape",
+        elements: [],
+        relationships: []
+    },
+    selectedViewPath: [],
+}));
+
+export type Action<TParam> = (state: WorkspaceStore, param: TParam) => void;
 
 export type Func<TParam, TResult> = (param: TParam) => TResult;
 
@@ -78,31 +88,9 @@ export type LayoutElementParams = {
     size: Size;
 };
 
-export const useWorkspaceStore = create<WorkspaceStore>((set) => ({
-    workspace: Workspace.Empty,
-    viewPath: { path: [] },
-    
-    setWorkspace: (workspace: Workspace) => {
-        set({ workspace });
-    },
-    setSelectedView: (view: IViewDefinition) => {
-        set({ selectedView: view });
-    },
-    setViewPath: (path: ViewPath) => {
-        set({ viewPath: path });
-    },
-    setName: (name: string) => {
-        set(state => ({
-            ...state,
-            workspace: {
-                ...state.workspace,
-                name: name,
-                lastModifiedDate: new Date()
-            }
-        }));
-    },
-    addPerson: ({ person }) => {
-        set((state) => ({
+namespace WorkspaceActions {
+    const addPerson: Action<PersonParams> = (state, { person }) => {
+        return {
             ...state,
             workspace: {
                 ...state.workspace,
@@ -115,135 +103,247 @@ export const useWorkspaceStore = create<WorkspaceStore>((set) => ({
                 },
                 lastModifiedDate: new Date()
             }
-        }));
-    },
-    addSoftwareSystem: ({ softwareSystem }) => {
-        set((state) => ({
+        };
+    }
+
+    const addSoftwareSystem: Action<SoftwareSystemParams> = (state, { softwareSystem }) => {
+        return {
             ...state,
             workspace: {
                 ...state.workspace,
-                model: {
-                    ...state.workspace.model,
-                    softwareSystems: [
-                        ...state.workspace.model.softwareSystems,
-                        softwareSystem
-                    ]
-                },
+                model: addSoftwareSystemAction(state.workspace.model, softwareSystem),
                 lastModifiedDate: new Date()
             }
-        }));
-    },
-    addContainer: ({ softwareSystemIdentifier, container }) => {
-        set((state) => ({
+        }
+    }
+
+    const addContainer: Action<ContainerParams> = (state, { softwareSystemIdentifier, container }) => {
+        return {
             ...state,
             workspace: {
                 ...state.workspace,
                 model: {
                     ...state.workspace.model,
-                    softwareSystems: state.workspace.model.softwareSystems.map(softwareSystem => {
-                        if (softwareSystem.identifier === softwareSystemIdentifier) {
-                            return {
-                                ...softwareSystem,
-                                containers: [
-                                    ...softwareSystem.containers,
-                                    container
-                                ]
-                            }
-                        }
-                        return softwareSystem;
-                    }
+                    softwareSystems: state.workspace.model.softwareSystems.map(softwareSystem =>
+                        softwareSystem.identifier === softwareSystemIdentifier
+                            ? addContainerAction(softwareSystem, container)
+                            : softwareSystem
                     )
                 },
                 lastModifiedDate: new Date()
             }
-        }));
-    },
-    addComponent: ({ softwareSystemIdentifier, containerIdentifier, component }) => {
-        set((state) => ({
+        }
+    }
+
+    const addComponent: Action<ComponentParams> = (state, { softwareSystemIdentifier, containerIdentifier, component }) => {
+        return {
             ...state,
             workspace: {
                 ...state.workspace,
                 model: {
                     ...state.workspace.model,
-                    softwareSystems: state.workspace.model.softwareSystems.map(softwareSystem => {
-                        if (softwareSystem.identifier === softwareSystemIdentifier) {
-                            return {
-                                ...softwareSystem,
-                                containers: softwareSystem.containers.map(container => {
-                                    if (container.identifier === containerIdentifier) {
-                                        return {
-                                            ...container,
-                                            components: [
-                                                ...container.components,
-                                                component
-                                            ]
-                                        }
-                                    }
-                                    return container;
-                                })
-                            }
+                    softwareSystems: state.workspace.model.softwareSystems.map(softwareSystem => 
+                        softwareSystem.identifier === softwareSystemIdentifier
+                        ? {
+                            ...softwareSystem,
+                            containers: softwareSystem.containers.map(container => 
+                                container.identifier === containerIdentifier
+                                    ? addComponentAction(container, component)
+                                    : container
+                            )
                         }
-                        return softwareSystem;
-                    })
+                        : softwareSystem
+                    )
                 }
             }
-        }));
-    },
-    addDeploymentEnvironment: ({ deploymentEnvironment }) => {
-        set((state) => ({
+        }
+    }
+
+    const addDeploymentEnvironment: Action<DeploymentEnvironmentParams> = (state, { deploymentEnvironment }) => {
+        return {
             ...state,
             workspace: {
                 ...state.workspace,
-                model: {
-                    ...state.workspace.model,
-                    deploymentEnvironments: [
-                        ...state.workspace.model.deploymentEnvironments,
-                        deploymentEnvironment
-                    ]
-                },
+                model: addDeploymentEnvironmentAction(state.workspace.model, deploymentEnvironment),
                 lastModifiedDate: new Date()
             }
-        }));
-    },
-    addDeploymentNode: ({ environment, deploymentNode }) => {
-        set((state) => ({
+        }
+    }
+
+    const addDeploymentNode: Action<DeploymentNodeParams> = (state, { environment, deploymentNode }) => {
+        return {
             ...state,
             workspace: {
                 ...state.workspace,
                 model: {
                     ...state.workspace.model,
-                    deploymentEnvironments: state.workspace.model.deploymentEnvironments.map(deploymentEnvironment => {
-                        if (deploymentEnvironment.name === environment) {
-                            return {
-                                ...deploymentEnvironment,
-                                deploymentNodes: [
-                                    ...deploymentEnvironment.deploymentNodes,
-                                    deploymentNode
-                                ]
-                            }
-                        }
-                        return deploymentEnvironment;
-                    }
+                    deploymentEnvironments: state.workspace.model.deploymentEnvironments.map(deploymentEnvironment =>
+                        deploymentEnvironment.name === environment
+                            ? addDeploymentNodeAction(deploymentEnvironment, deploymentNode)
+                            : deploymentEnvironment
                     )
                 },
                 lastModifiedDate: new Date()
             }
-        }));
-    },
-    addRelationship: (relationship: Relationship) => {
-        set((state) => ({
+        }
+    }
+
+    const addRelationship: Action<Relationship> = (state, relationship: Relationship) => {
+        return {
             ...state,
             workspace: {
                 ...state.workspace,
-                model: {
-                    ...state.workspace.model,
-                    relationships: [
-                        ...state.workspace.model.relationships,
-                        relationship
-                    ]
-                },
+                model: addRelationshipAction(state.workspace.model, relationship),
                 lastModifiedDate: new Date()
             }
-        }));
+        }
     }
-}));
+
+    function addPersonAction(model: IModel, person: IPerson) {
+        return {
+            ...model,
+            people: [
+                ...model.people.filter(p => p.identifier !== person.identifier),
+                person
+            ]
+        }
+    }
+    
+    function addSoftwareSystemAction(model: IModel, softwareSystem: ISoftwareSystem) {
+        return {
+            ...model,
+            softwareSystems: [
+                ...model.softwareSystems.filter(s => s.identifier !== softwareSystem.identifier),
+                softwareSystem
+            ]
+        }
+    }
+    
+    function addDeploymentEnvironmentAction(model: IModel, deploymentEnvironment: IDeploymentEnvironment) {
+        return {
+            ...model,
+            deploymentEnvironments: [
+                ...model.deploymentEnvironments
+                    .filter(d => d.identifier !== deploymentEnvironment.identifier),
+                deploymentEnvironment
+            ]
+        }
+    }
+    
+    function addRelationshipAction(model: IModel, relationship: IRelationship) {
+        return {
+            ...model,
+            relationships: [
+                ...model.relationships
+                    .filter(r => !(
+                        r.sourceIdentifier === relationship.sourceIdentifier
+                        && r.targetIdentifier === relationship.targetIdentifier
+                    )),
+                relationship
+            ]
+        }
+    }
+    
+    function addGroupAction(model: IModel, group: IGroup) {
+        return {
+            ...model,
+            groups: [
+                ...model.groups.filter(g => g.identifier !== group.identifier),
+                group
+            ]
+        }
+    }
+    
+    function removePersonAction(model: IModel, person: IPerson) {
+        return {
+            ...model,
+            people: model.people.filter(p => p.identifier !== person.identifier)
+        }
+    }
+    
+    function removeSoftwareSystemAction(model: IModel, softwareSystem: ISoftwareSystem) {
+        return {
+            ...model,
+            softwareSystems: model.softwareSystems.filter(s => s.identifier !== softwareSystem.identifier)
+        }
+    }
+    
+    function removeDeploymentEnvironmentAction(model: IModel, deploymentEnvironment: IDeploymentEnvironment) {
+        return {
+            ...model,
+            deploymentEnvironments: model.deploymentEnvironments
+                .filter(d => d.identifier !== deploymentEnvironment.identifier)
+        }
+    }
+    
+    function removeRelationshipAction(model: IModel, relationship: IRelationship) {
+        return {
+            ...model,
+            relationships: model.relationships
+                .filter(r => !(
+                    r.sourceIdentifier === relationship.sourceIdentifier
+                    && r.targetIdentifier === relationship.targetIdentifier
+                ))
+        }
+    }
+    
+    function removeGroupAction(model: IModel, group: IGroup) {
+        return {
+            ...model,
+            groups: model.groups.filter(g => g.identifier !== group.identifier)
+        }
+    }
+    
+    function addContainerAction(softwareSystem: ISoftwareSystem, container: IContainer) {
+        return {
+            ...softwareSystem,
+            containers: [
+                ...softwareSystem.containers.filter(x => x.identifier !== container.identifier),
+                container
+            ]
+        }
+    }
+    
+    function removeContainerAction(softwareSystem: ISoftwareSystem, container: IContainer) {
+        return {
+            ...softwareSystem,
+            containers: softwareSystem.containers.filter(x => x.identifier !== container.identifier)
+        }
+    }
+    
+    function addComponentAction(container: IContainer, component: IComponent) {
+        return {
+            ...container,
+            components: [
+                ...container.components.filter(x => x.identifier !== component.identifier),
+                component
+            ]
+        }
+    }
+    
+    function removeComponentAction(container: IContainer, component: IComponent) {
+        return {
+            ...container,
+            components: container.components.filter(x => x.identifier !== component.identifier)
+        }
+    }
+    
+    function addDeploymentNodeAction(deploymentEnvironment: IDeploymentEnvironment, deploymentNode: IDeploymentNode) {
+        return {
+            ...deploymentEnvironment,
+            deploymentNodes: [
+                ...deploymentEnvironment.deploymentNodes
+                    .filter(n => n.identifier !== deploymentNode.identifier),
+                deploymentNode
+            ]
+        }
+    }
+    
+    function removeDeploymentNodeAction(deploymentEnvironment: IDeploymentEnvironment, deploymentNode: IDeploymentNode) {
+        return {
+            ...deploymentEnvironment,
+            deploymentNodes: deploymentEnvironment.deploymentNodes
+                .filter(n => n.identifier !== deploymentNode.identifier)
+        }
+    }
+}

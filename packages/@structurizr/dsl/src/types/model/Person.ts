@@ -1,17 +1,33 @@
-import { Element } from "./Element";
-import { ElementType } from "./ElementType";
-import { Identifier } from "./Identifier";
-import { Perspectives } from "./Perspectives";
-import { Properties } from "./Properties";
-import { Relationship } from "./Relationship";
-import { Tag } from "./Tag";
-import { Url } from "./Url";
+import {
+    IElement,
+    ElementType,
+    Identifier,
+    IRelationship,
+    ISupportImmutable,
+    Perspectives,
+    Properties,
+    Relationship,
+    Tag,
+    Url
+} from "../..";
 
-type PersonParams = 
-    Required<Pick<Person, "identifier" | "name">>
-    & Partial<Omit<Person, "identifier" | "name" | "type">>;
+export interface IPerson extends IElement {
+    type: ElementType.Person;
+    identifier: Identifier;
+    name: string;
+    tags: Tag[];
+    description?: string;
+    url?: Url;
+    properties?: Properties;
+    perspectives?: Perspectives;
+    relationships: IRelationship[];
+}
 
-export class Person implements Omit<Element, "description" | "technology"> {
+type PersonParams =
+    Required<Pick<IPerson, "name" | "identifier">>
+    & Partial<Omit<IPerson, "name" | "identifier">>;
+
+export class Person implements Omit<IElement, "technology">, ISupportImmutable<IPerson> {
     constructor(params: PersonParams) {
         this.type = ElementType.Person;
         this.identifier = params.identifier;
@@ -20,11 +36,14 @@ export class Person implements Omit<Element, "description" | "technology"> {
         this.url = params.url;
         this.properties = params.properties;
         this.perspectives = params.perspectives;
-        this.relationships = params.relationships;
+        this.relationships = params.relationships ? params.relationships.map(r => new Relationship(r)) : [];
         this.tags = [
             Tag.Element,
             Tag.Person,
-            ...(params.tags ?? [])
+            ...(params.tags
+                ?.filter(x => x.name !== Tag.Element.name)
+                ?.filter(x => x.name !== Tag.Person.name) ?? []
+            )
         ]
     }
 
@@ -37,4 +56,18 @@ export class Person implements Omit<Element, "description" | "technology"> {
     public readonly properties?: Properties;
     public readonly perspectives?: Perspectives;
     public readonly relationships: Relationship[];
+
+    public toObject(): IPerson {
+        return {
+            type: this.type,
+            identifier: this.identifier,
+            name: this.name,
+            tags: this.tags,
+            description: this.description,
+            url: this.url,
+            properties: this.properties,
+            perspectives: this.perspectives,
+            relationships: this.relationships.map(r => r.toObject())
+        }
+    }
 }

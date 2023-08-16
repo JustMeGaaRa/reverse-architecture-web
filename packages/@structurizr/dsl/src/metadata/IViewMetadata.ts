@@ -14,3 +14,7 @@ export interface IElementPosition {
 export interface IRelationshipPosition {
     id: string;
 }
+
+export interface ISupportImmutable<T> {
+    toObject(): T;
+}

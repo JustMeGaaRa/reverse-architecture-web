@@ -1,23 +1,21 @@
-import { VStack, Text } from "@chakra-ui/react";
-import { Relationship } from "@structurizr/dsl";
+import { Text, VStack } from "@chakra-ui/react";
+import { Relationship, RelationshipStyleProperties } from "@structurizr/dsl";
 import { FC } from "react";
 
-export const formatRelationshipTechnology = (data: Relationship) => {
-    return data?.technology
-        && data?.technology.length > 0
-        && `[${data.technology.map(x => x.name).join(" / ")}]`;
-};
-
-export type RelationshipLabelProps = {
+export const RelationshipLabel: FC<{
     data: Relationship;
-}
-
-export const RelationshipLabel: FC<RelationshipLabelProps> = ({
-    data
+    selected?: boolean;
+    style?: Partial<RelationshipStyleProperties>;
+}> = ({
+    data,
+    selected,
+    style,
 }) => {
     return (
         <VStack
             align={"center"}
+            // TODO: handle color from theme
+            color={selected ? "whiteAlpha.900" : "whiteAlpha.800"}
             spacing={1}
         >
             {data.description && (
@@ -25,20 +23,33 @@ export const RelationshipLabel: FC<RelationshipLabelProps> = ({
                     fontSize={"xs"}
                     noOfLines={3}
                     textAlign={"center"}
-                    maxW={150}
                 >
                     {data.description}
                 </Text>
             )}
-            {data.technology && (
-                <Text
-                    fontSize={"x-small"}
-                    noOfLines={1}
-                    textAlign={"center"}
-                >
-                    {formatRelationshipTechnology(data)}
-                </Text>
-            )}
+            {/* {data.technology && data.technology.length > 0 && (
+                <HStack>
+                    {data.technology.map(tag => (
+                        <Box
+                            key={tag.name}
+                            borderColor={"whiteAlpha.700"}
+                            borderWidth={"1px"}
+                            borderRadius={"8px"}
+                            color={"whiteAlpha.700"}
+                            fontSize={"12px"}
+                            height={"18px"}
+                            lineHeight={"16px"}
+                            paddingX={"8px"}
+                            
+                            // fontSize={"x-small"}
+                            // noOfLines={1}
+                            // textAlign={"center"}
+                        >
+                            {tag.name}
+                        </Box>
+                    ))}
+                </HStack>
+            )} */}
         </VStack>
     );
 }

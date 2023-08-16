@@ -1,25 +1,23 @@
-import { Flex, HStack, StackDivider } from "@chakra-ui/react";
+import { HStack, StackDivider } from "@chakra-ui/react";
 import { FC, PropsWithChildren } from "react";
 
 export const Toolbar: FC<PropsWithChildren<{
     
 }>> = (props) => {
     return (
-        <Flex
+        <HStack
             alignItems={"center"}
+            divider={<StackDivider borderColor={"whiteAlpha.300"} />}
             justifyContent={"center"}
-            background={"gray.100"}
-            borderColor={"gray.200"}
+            backgroundColor={"whiteAlpha.100"}
+            backdropFilter={"blur(16px)"}
+            borderColor={"whiteAlpha.200"}
             borderWidth={1}
             borderRadius={16}
             height={12}
             px={1}
         >
-            <HStack
-                divider={<StackDivider />}
-            >
-                {props.children}
-            </HStack>
-        </Flex>
+            {props.children}
+        </HStack>
     );
 }

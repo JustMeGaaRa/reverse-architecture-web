@@ -1,41 +1,41 @@
-import { Component } from "../types/model/Component";
-import { Container } from "../types/model/Container";
-import { ContainerInstance } from "../types/model/ContainerInstance";
-import { DeploymentNode } from "../types/model/DeploymentNode";
-import { Group } from "../types/model/Group";
-import { InfrastructureNode } from "../types/model/InfrastructureNode";
-import { Person } from "../types/model/Person";
+import { Component, IComponent } from "../types/model/Component";
+import { Container, IContainer } from "../types/model/Container";
+import { ContainerInstance, IContainerInstance } from "../types/model/ContainerInstance";
+import { DeploymentNode, IDeploymentNode } from "../types/model/DeploymentNode";
+import { Group, IGroup } from "../types/model/Group";
+import { IInfrastructureNode, InfrastructureNode } from "../types/model/InfrastructureNode";
+import { IPerson, Person } from "../types/model/Person";
 import { Relationship } from "../types/model/Relationship";
-import { SoftwareSystem } from "../types/model/SoftwareSystem";
-import { SoftwareSystemInstance } from "../types/model/SoftwareSystemInstance";
+import { ISoftwareSystem, SoftwareSystem } from "../types/model/SoftwareSystem";
+import { ISoftwareSystemInstance, SoftwareSystemInstance } from "../types/model/SoftwareSystemInstance";
 
 export interface IElementVisitor {
     visitGroup(
-        group: Group,
+        group: IGroup,
         params?: { parentId?: string }): void;
     visitPerson(
-        person: Person,
+        person: IPerson,
         params?: { parentId?: string }): void;
     visitSoftwareSystem(
-        softwareSystem: SoftwareSystem,
+        softwareSystem: ISoftwareSystem,
         params?: { parentId?: string }): void;
     visitContainer(
-        container: Container,
+        container: IContainer,
         params?: { parentId?: string }): void;
     visitComponent(
-        component: Component,
+        component: IComponent,
         params?: { parentId?: string }): void;
     visitDeploymentNode(
-        deploymentNode: DeploymentNode,
+        deploymentNode: IDeploymentNode,
         params?: { parentId?: string }): void;
     visitInfrastructureNode(
-        infrastructureNode: InfrastructureNode,
+        infrastructureNode: IInfrastructureNode,
         params?: { parentId?: string }): void;
     visitSoftwareSystemInstance(
-        softwareSystemInstance: SoftwareSystemInstance,
+        softwareSystemInstance: ISoftwareSystemInstance,
         params?: { parentId?: string }): void;
     visitContainerInstance(
-        containerInstance: ContainerInstance,
+        containerInstance: IContainerInstance,
         params?: { parentId?: string }): void;
     visitRelationship(relationship: Relationship): void;
 }

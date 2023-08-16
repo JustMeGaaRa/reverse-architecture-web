@@ -1,23 +1,41 @@
-import { Identifier } from "./Identifier";
-import { Perspectives } from "./Perspectives";
-import { Properties } from "./Properties";
-import { Tag } from "./Tag";
-import { Url } from "./Url";
-import { Relationship } from "./Relationship";
-import { HealthCheck } from "./HealthCheck";
-import { ElementType } from "./ElementType";
+import {
+    ElementType,
+    HealthCheck,
+    Identifier,
+    IRelationship,
+    ISupportImmutable,
+    Perspectives,
+    Properties,
+    Relationship,
+    Tag,
+    Url
+} from "../..";
+
+export interface ISoftwareSystemInstance {
+    type: ElementType.SoftwareSystemInstance;
+    identifier?: Identifier;
+    softwareSystemIdentifier: Identifier;
+    deploymentGroups?: Identifier[];
+    relationships?: IRelationship[];
+    description?: string;
+    tags?: Tag[];
+    url?: Url;
+    properties?: Properties;
+    perspectives?: Perspectives;
+    healthCheck?: HealthCheck;
+}
 
 type SoftwareSystemInstanceParams =
-    Required<Pick<SoftwareSystemInstance, "softwareSystemIdentifier">>
-    & Partial<Omit<SoftwareSystemInstance, "softwareSystemIdentifier" | "type">>;
+    Required<Pick<ISoftwareSystemInstance, "softwareSystemIdentifier">>
+    & Partial<Omit<ISoftwareSystemInstance, "softwareSystemIdentifier" | "type">>;
 
-export class SoftwareSystemInstance {
+export class SoftwareSystemInstance implements ISupportImmutable<ISoftwareSystemInstance> {
     constructor(params: SoftwareSystemInstanceParams) {
         this.type = ElementType.SoftwareSystemInstance;
         this.identifier = params.identifier;
         this.softwareSystemIdentifier = params.softwareSystemIdentifier;
-        this.deploymentGroups = params.deploymentGroups;
-        this.relationships = params.relationships;
+        this.deploymentGroups = params.deploymentGroups ?? [];
+        this.relationships = params.relationships ? params.relationships.map(r => new Relationship(r)) : [];
         this.description = params.description;
         this.url = params.url;
         this.properties = params.properties;
@@ -25,7 +43,9 @@ export class SoftwareSystemInstance {
         this.healthCheck = params.healthCheck;
         this.tags = [
             Tag.SoftwareSystemInstance,
-            ...(params.tags ?? [])
+            ...(params.tags
+                ?.filter(x => x.name !== Tag.SoftwareSystemInstance.name) ?? []
+            )
         ];
     }
 
@@ -40,4 +60,20 @@ export class SoftwareSystemInstance {
     public readonly properties?: Properties;
     public readonly perspectives?: Perspectives;
     public readonly healthCheck?: HealthCheck;
+
+    public toObject(): ISoftwareSystemInstance {
+        return {
+            type: this.type,
+            identifier: this.identifier,
+            softwareSystemIdentifier: this.softwareSystemIdentifier,
+            deploymentGroups: this.deploymentGroups,
+            relationships: this.relationships?.map(r => r.toObject()),
+            description: this.description,
+            tags: this.tags,
+            url: this.url,
+            properties: this.properties,
+            perspectives: this.perspectives,
+            healthCheck: this.healthCheck
+        }
+    }
 }

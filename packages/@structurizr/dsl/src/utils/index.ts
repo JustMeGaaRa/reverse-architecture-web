@@ -6,10 +6,21 @@ import {
     SystemContextViewDefinition,
     ContainerViewDefinition,
     ComponentViewDefinition,
-    DeploymentViewDefinition
+    DeploymentViewDefinition,
+    Relationship,
+    IViewDefinition,
+    Container,
+    SoftwareSystem,
+    Component,
+    IWorkspace,
+    ISoftwareSystem,
+    IContainer,
+    IComponent,
+    IModel,
+    IRelationship
 } from "../";
 
-export const applyMetadata = (workspace: Workspace, metadata: IWorkspaceMetadata): Workspace => {
+export const applyMetadata = (workspace: IWorkspace, metadata: IWorkspaceMetadata): IWorkspace => {
     return {
         ...workspace,
         views: {
@@ -51,7 +62,7 @@ export const applyMetadata = (workspace: Workspace, metadata: IWorkspaceMetadata
     };
 }
 
-export const applyTheme = (workspace: Workspace, theme: IWorkspaceTheme): Workspace => {
+export const applyTheme = (workspace: IWorkspace, theme: IWorkspaceTheme): IWorkspace => {
     return {
         ...workspace,
         views: {
@@ -77,28 +88,129 @@ export const fetchTheme = async (url: string): Promise<IWorkspaceTheme> => {
     return theme;
 }
 
-export const findSoftwareSystem = (workspace: Workspace, identifier: Identifier) => {
-    return workspace?.model.softwareSystems
-        .concat(workspace?.model.groups.flatMap(x => x.softwareSystems))
+export const findSoftwareSystem = (model: IModel, identifier: Identifier) => {
+    return model.softwareSystems
+        .concat(model.groups.flatMap(x => x.softwareSystems))
         .find(x => x.identifier === identifier);
 }
 
-export const findContainer = (workspace: Workspace, identifier: Identifier) => {
-    return workspace?.model.softwareSystems
+export const findContainer = (model: IModel, identifier: Identifier) => {
+    return model.softwareSystems
         .flatMap(x => x.containers)
-        .concat(workspace?.model.groups
+        .concat(model.groups
             .flatMap(x => x.softwareSystems)
             .flatMap(x => x.containers))
         .find(x => x.identifier === identifier);
 }
 
 export const relationshipExists = (
-    workspace: Workspace,
+    relationships: Relationship[],
     sourceIdentifier: Identifier,
     targetIdentifier: Identifier
 ) => {
-    return workspace?.model.relationships.some(x => 
+    return relationships.some(x => 
         x.sourceIdentifier === sourceIdentifier && x.targetIdentifier === targetIdentifier
         || x.sourceIdentifier === targetIdentifier && x.targetIdentifier === sourceIdentifier
     )
+}
+
+export const hasRelationship = (
+    view: IViewDefinition,
+    sourceIdentifier: string,
+    targetIdentifier: string
+) => {
+    return view.elements.find(x => x.id === sourceIdentifier)
+        && view.elements.find(x => x.id === targetIdentifier)
+}
+
+export const getRelationships = (model: IModel, implied: boolean) => {
+    const relationships = Array.from<IRelationship>([]);
+
+    for (const relationship of model.relationships) {
+        // add relationship
+        relationships.push(relationship);
+    }
+    
+    getSoftwareSystemImpliedRelationships(
+        model.groups.flatMap(x => x.softwareSystems).concat(model.softwareSystems)
+    );
+
+    return relationships;
+
+    function getSoftwareSystemImpliedRelationships(
+        softwareSystems: ISoftwareSystem[]
+    ) {
+        for (const softwareSystem of softwareSystems) {
+            for (const relationship of softwareSystem.relationships) {
+                // add software system relationship
+                relationships.push(relationship);
+            }
+
+            getContainerImpliedRelationships(
+                softwareSystem.groups.flatMap(x => x.containers).concat(softwareSystem.containers),
+                softwareSystem.identifier
+            );
+        }
+    }
+
+    function getContainerImpliedRelationships(
+        containers: IContainer[],
+        softwareSystemIdentifier: Identifier
+    ) {
+        for (const container of containers) {
+            for (const relationship of container.relationships) {
+                // add container relationship
+                relationships.push(relationship);
+
+                // add implied software system relationship
+                relationships.push(new Relationship({
+                    sourceIdentifier: relationship.sourceIdentifier === container.identifier
+                        ? softwareSystemIdentifier
+                        : relationship.sourceIdentifier,
+                    targetIdentifier: relationship.targetIdentifier === container.identifier
+                        ? softwareSystemIdentifier
+                        : relationship.targetIdentifier
+                }));
+            }
+
+            getComponentImpliedRelationships(
+                container.groups.flatMap(x => x.components).concat(container.components),
+                container.identifier,
+                softwareSystemIdentifier
+            );
+        }
+    }
+
+    function getComponentImpliedRelationships(
+        components: IComponent[],
+        containerIdentifier: Identifier,
+        softwareSystemIdentifier: Identifier
+    ) {
+        for (const component of components) {
+            for (const relationship of component.relationships) {
+                // add component relationsip
+                relationships.push(relationship);
+
+                // add implied container relationship
+                relationships.push(new Relationship({
+                    sourceIdentifier: relationship.sourceIdentifier === component.identifier
+                        ? containerIdentifier
+                        : relationship.sourceIdentifier,
+                    targetIdentifier: relationship.targetIdentifier === component.identifier
+                        ? containerIdentifier
+                        : relationship.targetIdentifier
+                }));
+
+                // add implied software system relationship
+                relationships.push(new Relationship({
+                    sourceIdentifier: relationship.sourceIdentifier === component.identifier
+                        ? softwareSystemIdentifier
+                        : relationship.sourceIdentifier,
+                    targetIdentifier: relationship.targetIdentifier === component.identifier
+                        ? softwareSystemIdentifier
+                        : relationship.targetIdentifier
+                }));
+            }
+        }
+    }
 }

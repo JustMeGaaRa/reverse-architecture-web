@@ -1,11 +1,20 @@
-import { Terminology } from "../model/Terminology";
-import { Branding } from "../views/Branding";
-import { Styles } from "../views/Style";
+import {
+    Branding,
+    ISupportImmutable,
+    Styles,
+    Terminology
+} from "../..";
 
-export class Configuration {
-    constructor(
-        params: Partial<Configuration>
-    ) {
+export interface IConfiguration {
+    styles: Styles;
+    theme?: string;
+    themes: string[];
+    branding?: Branding;
+    terminology?: Terminology;
+}
+
+export class Configuration implements ISupportImmutable<IConfiguration> {
+    constructor(params: Partial<IConfiguration>) {
         this.styles = params.styles ?? {
             elements: [],
             relationships: []
@@ -21,4 +30,14 @@ export class Configuration {
     public readonly themes: string[];
     public readonly branding?: Branding;
     public readonly terminology?: Terminology;
+
+    public toObject(): IConfiguration {
+        return {
+            styles: this.styles,
+            theme: this.theme,
+            themes: this.themes,
+            branding: this.branding,
+            terminology: this.terminology
+        }
+    }
 }

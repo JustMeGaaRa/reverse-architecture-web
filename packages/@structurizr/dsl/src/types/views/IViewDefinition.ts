@@ -9,6 +9,7 @@ export interface IViewDefinition extends IViewMetadata {
     identifier: Identifier;
     key?: string;
     title?: string;
+    include?: string[];
     autoLayout?: AutoLayout;
     animation?: any;
     description?: string;

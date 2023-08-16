@@ -38,7 +38,7 @@ export const AccountMenu: FC<PropsWithChildren<{
                     px={2}
                 >
                     <Avatar
-                        background={"purple.200"}
+                        backgroundColor={"purple.200"}
                         borderColor={"purple.900"}
                         color={"purple.900"}
                         name={account.fullname}

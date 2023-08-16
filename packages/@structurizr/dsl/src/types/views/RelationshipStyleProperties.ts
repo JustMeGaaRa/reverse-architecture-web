@@ -15,7 +15,7 @@ export interface RelationshipStyleProperties {
     width: number;
 }
 
-export const defaultRelationshipStyle: RelationshipStyleProperties = {
+export const StructurizrRelationshipTagDefaultStyle: RelationshipStyleProperties = {
     color: "#707070",
     fontSize: 24,
     opacity: 100,

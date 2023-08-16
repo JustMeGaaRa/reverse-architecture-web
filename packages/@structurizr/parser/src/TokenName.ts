@@ -69,4 +69,5 @@ export enum TokenName {
     HexColorLiteral = "HexColorLiteral",
     BooleanLiteral = "BooleanLiteral",
     UrlLiteral = "UrlLiteral",
+    ThisLiteral = "This"
 }

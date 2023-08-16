@@ -1,23 +1,41 @@
-import { ElementType } from "./ElementType";
-import { HealthCheck } from "./HealthCheck";
-import { Identifier } from "./Identifier";
-import { Perspectives } from "./Perspectives";
-import { Properties } from "./Properties";
-import { Relationship } from "./Relationship";
-import { Tag } from "./Tag";
-import { Url } from "./Url";
+import {
+    ElementType,
+    HealthCheck,
+    Identifier,
+    IRelationship,
+    ISupportImmutable,
+    Perspectives,
+    Properties,
+    Relationship,
+    Tag,
+    Url
+} from "../..";
+
+export interface IContainerInstance {
+    type: ElementType.ContainerInstance;
+    identifier?: Identifier;
+    containerIdentifier: Identifier;
+    deploymentGroups?: Identifier[];
+    relationships?: IRelationship[];
+    description?: string;
+    tags?: Tag[];
+    url?: Url;
+    properties?: Properties;
+    perspectives?: Perspectives;
+    healthCheck?: HealthCheck;
+}
 
 type ContainerInstanceParams =
-    Required<Pick<ContainerInstance, "containerIdentifier">>
-    & Partial<Omit<ContainerInstance, "containerIdentifier" | "type">>;
+    Required<Pick<IContainerInstance, "containerIdentifier">>
+    & Partial<Omit<IContainerInstance, "containerIdentifier" | "type">>;
 
-export class ContainerInstance {
+export class ContainerInstance implements ISupportImmutable<IContainerInstance> {
     constructor(params: ContainerInstanceParams) {
         this.type = ElementType.ContainerInstance;
         this.identifier = params.identifier;
         this.containerIdentifier = params.containerIdentifier;
-        this.deploymentGroups = params.deploymentGroups;
-        this.relationships = params.relationships;
+        this.deploymentGroups = params.deploymentGroups ?? [];
+        this.relationships = params.relationships ? params.relationships.map(r => new Relationship(r)) : [];
         this.description = params.description;
         this.url = params.url;
         this.properties = params.properties;
@@ -25,7 +43,9 @@ export class ContainerInstance {
         this.healthCheck = params.healthCheck;
         this.tags = [
             Tag.ContainerInstance,
-            ...(params.tags ?? [])
+            ...(params.tags
+                ?.filter(x => x.name !== Tag.ContainerInstance.name) ?? []
+            )
         ];
     }
 
@@ -40,4 +60,20 @@ export class ContainerInstance {
     public readonly properties?: Properties;
     public readonly perspectives?: Perspectives;
     public readonly healthCheck?: HealthCheck;
+
+    public toObject(): IContainerInstance {
+        return {
+            type: this.type,
+            identifier: this.identifier,
+            containerIdentifier: this.containerIdentifier,
+            deploymentGroups: this.deploymentGroups,
+            relationships: this.relationships,
+            description: this.description,
+            tags: this.tags,
+            url: this.url,
+            properties: this.properties,
+            perspectives: this.perspectives,
+            healthCheck: this.healthCheck
+        }
+    }
 }

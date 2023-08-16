@@ -95,7 +95,7 @@ export const CommunityHub: FC<PropsWithChildren<{
             <ContextSheetHeader title={"Community Hub"} />
             <Divider />
             <ContextSheetContent>
-                <HStack overflowX={"scroll"} divider={<StackDivider />} gap={2}>
+                <HStack overflowX={"hidden"} divider={<StackDivider />} gap={2}>
                     <HStack>
                         {defaultFilters.map((filter) => (
                             <Tag

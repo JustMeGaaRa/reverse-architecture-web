@@ -1,6 +1,7 @@
 import { Flex } from "@chakra-ui/react";
 import { ElementStyleProperties } from "@structurizr/dsl";
 import { FC, PropsWithChildren } from "react";
+import { HexColor } from "../../utils";
 
 export type DefaultBoxProps = {
     style: ElementStyleProperties;
@@ -14,15 +15,20 @@ export const DefaultBox: FC<PropsWithChildren<DefaultBoxProps>> = ({
 }) => {
     return (
         <Flex
-            background={style.background}
+            backgroundColor={HexColor.withAlpha(style.background, 0.1)}
+            backdropFilter={"auto"}
+            backdropBlur={"8px"}
+            borderColor={HexColor.withAlpha(style.stroke, selected ? 0.7 : 0.4)}
             borderWidth={style.strokeWidth}
-            borderColor={style.stroke}
+            cursor={"pointer"}
             align={"center"}
             justify={"center"}
             padding={2}
             height={style.height}
             width={style.width}
-            textColor={"whiteAlpha.900"}
+            _hover={{
+                borderColor: HexColor.withAlpha(style.stroke, 0.7),
+            }}
         >
             {children}
         </Flex>

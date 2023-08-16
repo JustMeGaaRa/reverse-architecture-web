@@ -1,21 +1,29 @@
-import { Properties } from "./model/Properties";
-import { Model } from "./Model";
-import { Views } from "./Views";
+import {
+    IModel,
+    Model,
+    IViews,
+    Views,
+    ISupportImmutable,
+    Properties
+} from "../";
 
-type WorkspaceParams = 
-    Required<Pick<Workspace, "name" | "description">>
-    & Partial<Omit<Workspace, "name" | "description">>;
+export interface IWorkspace {
+    name?: string;
+    description?: string;
+    lastModifiedDate?: Date;
+    properties?: Properties;
+    model: IModel;
+    views: IViews;
+}
 
-export class Workspace {
-    constructor(
-        params: WorkspaceParams
-    ) {
+export class Workspace implements ISupportImmutable<IWorkspace> {
+    constructor(params: IWorkspace) {
         this.name = params.name;
         this.description = params.description;
         this.lastModifiedDate = params.lastModifiedDate ?? new Date();
         this.properties = params.properties;
-        this.model = new Model({});
-        this.views = new Views({});
+        this.model = new Model(params.model);
+        this.views = new Views(params.views);
     }
 
     public readonly name?: string;
@@ -27,6 +35,40 @@ export class Workspace {
 
     public static Empty = new Workspace({
         name: "Empty Workspace",
-        description: "An empty workspace."
+        description: "An empty workspace.",
+        model: {
+            people: [],
+            softwareSystems: [],
+            deploymentEnvironments: [],
+            relationships: [],
+            groups: []
+        },
+        views: {
+            systemContexts: [],
+            containers: [],
+            components: [],
+            dynamics: [],
+            deployments: [],
+            filtered: [],
+            custom: [],
+            configuration: {
+                styles: {
+                    elements: [],
+                    relationships: []
+                },
+                themes: []
+            },
+        }
     });
+
+    public toObject(): IWorkspace {
+        return {
+            name: this.name,
+            description: this.description,
+            lastModifiedDate: this.lastModifiedDate,
+            properties: this.properties,
+            model: this.model.toObject(),
+            views: this.views.toObject()
+        };
+    }
 }

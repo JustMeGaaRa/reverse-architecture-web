@@ -88,7 +88,7 @@ export const ProjectListContent: FC<PropsWithChildren<{
             <Divider />
             <ContextSheetContent padding={0}>
                 <Tabs height={"100%"}>
-                    <TabList background={"gray.30"} px={6} height={12}>
+                    <TabList backgroundColor={"gray.30"} px={6} height={12}>
                         <Tab>My projects</Tab>
                         <Tab>Shared</Tab>
                         <Tab>Archived</Tab>

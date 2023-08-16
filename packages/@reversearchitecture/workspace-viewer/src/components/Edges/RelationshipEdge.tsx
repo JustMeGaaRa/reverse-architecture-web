@@ -1,18 +1,19 @@
 import { Box, useColorModeValue } from "@chakra-ui/react";
 import {
-    defaultRelationshipStyle,
+    StructurizrRelationshipTagDefaultStyle,
     Relationship,
     RelationshipStyleProperties
 } from "@structurizr/dsl";
 import {
     EdgeLabelRenderer,
     useStore,
-    getBezierPath,
+    getBezierPath
 } from "@reactflow/core";
 import { FC, useCallback } from "react";
 import { RelationshipLabel } from "./RelationshipLabel";
 import { BaseEdge } from "./BaseEdge";
 import { getEdgeParams } from "./utils";
+import { MarkerType } from "./MarkerType";
 
 export const RelationshipBezierEdge: FC<{
     data: Relationship;
@@ -20,18 +21,18 @@ export const RelationshipBezierEdge: FC<{
     selected?: boolean;
 }> = ({
     data,
-    style = defaultRelationshipStyle,
+    style = StructurizrRelationshipTagDefaultStyle,
     selected = false,
 }) => {
-    const backgroundDefault = useColorModeValue("whiteAlpha.900", "gray.200");
-    const backgroundHighlight = useColorModeValue("whiteAlpha.900", "gray.200");
-    const background = selected
+    const backgroundDefault = useColorModeValue("whiteAlpha.100", "transparent");
+    const backgroundHighlight = useColorModeValue("whiteAlpha.100", "gray.500");
+    const backgroundColor = selected
         ? backgroundDefault
         : backgroundHighlight;
     
-    const borderDefault = useColorModeValue("blackAlpha.200", "whiteAlpha.200");
-    const borderHightlight = useColorModeValue("blackAlpha.400", "whiteAlpha.400");
-    const border = selected
+    const borderDefault = useColorModeValue("whiteAlpha.400", "transparent");
+    const borderHightlight = useColorModeValue("whiteAlpha.700", "whiteAlpha.700");
+    const borderColor = selected
         ? borderDefault
         : borderHightlight;
     
@@ -51,26 +52,28 @@ export const RelationshipBezierEdge: FC<{
             labelX={labelX}
             labelY={labelY}
             style={{
-                width: style.thikness
+                width: style.thikness,
+                // TODO: handle stroke color from theme
+                stroke: selected ? "#B9BABA" : "#8A8B8C"
             }}
-            interactionWidth={style.thikness * 2}
-            // TODO: resolve marker end style
-            // markerEnd={{ type: MarkerType.Arrow }}
+            interactionWidth={20}
+            markerStart={MarkerType.CircleOutline}
+            markerEnd={MarkerType.ArrowClosed}
         >
             <EdgeLabelRenderer>
                 <Box
-                    background={background}
-                    boxShadow={"lg"}
-                    border={border}
-                    borderWidth={1}
+                    // TODO: handle background color from theme
+                    // backgroundColor={backgroundColor}
+                    borderColor={selected ? "whiteAlpha.700" : "transparent"}
                     borderRadius={"lg"}
-                    className="nodrag nopan"
+                    borderWidth={1}
+                    className={"nodrag nopan"}
                     padding={1}
                     position={"absolute"}
                     transform={`translate(-50%, -50%) translate(${labelX}px,${labelY}px)`}
                     maxWidth={style.width}
                 >
-                    <RelationshipLabel data={data} />
+                    <RelationshipLabel data={data} selected={selected} />
                 </Box>
             </EdgeLabelRenderer>
         </BaseEdge>

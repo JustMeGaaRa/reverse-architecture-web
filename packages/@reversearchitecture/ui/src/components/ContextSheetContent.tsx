@@ -11,7 +11,8 @@ export const ContextSheetContent: FC<PropsWithChildren<{
         <Box
             boxSizing={"border-box"}
             padding={padding}
-            height={"calc(100% - 80px)"}
+            height={"calc(100% - 81px)"}
+            overflow={"hidden"}
         >
             {children}
         </Box>

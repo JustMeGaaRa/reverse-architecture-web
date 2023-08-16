@@ -1,5 +1,5 @@
 import {
-    defaultRelationshipStyle,
+    StructurizrRelationshipTagDefaultStyle,
     foldStyles,
     Relationship,
     RelationshipStyle,
@@ -21,7 +21,7 @@ export function ReactFlowEdgeWrapper(EdgeElement: FC<{
         selected
     }) {
         const edgeStyle = useMemo(() => foldStyles(
-            defaultRelationshipStyle,
+            StructurizrRelationshipTagDefaultStyle,
             data.style,
             data.relationship.tags
         ), [data.relationship.tags, data.style]);
@@ -29,7 +29,7 @@ export function ReactFlowEdgeWrapper(EdgeElement: FC<{
         return (
             <EdgeElement
                 data={data.relationship}
-                style={edgeStyle ?? defaultRelationshipStyle}
+                style={edgeStyle ?? StructurizrRelationshipTagDefaultStyle}
                 selected={selected}
             />
         )

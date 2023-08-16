@@ -21,7 +21,7 @@ export interface ElementStyleProperties {
     width: number;
 }
 
-export const defaultElementStyle: ElementStyleProperties = {
+export const StructurizrElementTagDefaultStyle: ElementStyleProperties = {
     shape: ShapeType.Box,
     icon: "",
     width: 450,

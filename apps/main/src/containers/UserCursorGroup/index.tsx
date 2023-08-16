@@ -1,16 +1,14 @@
 import { Box,Text } from "@chakra-ui/react";
-import { useViewport, Viewport } from "@reactflow/core";
-import { getRenderingPoint } from "@reversearchitecture/workspace-viewer";
+import { useViewportUtils } from "@reversearchitecture/workspace-viewer";
 import { FC } from "react";
 import { Awareness } from "y-protocols/awareness";
 import { useUserPresence } from "../../hooks";
 
 export const UserCursorGroup: FC<{
     awareness: Awareness,
-    viewport: Viewport,
 }> = ({ awareness }) => {
     const { others } = useUserPresence(awareness);
-    const viewport = useViewport();
+    const { getRenderingPoint } = useViewportUtils();
 
     return (
         <>
@@ -18,7 +16,7 @@ export const UserCursorGroup: FC<{
                 <UserCursor
                     key={user.username}
                     colorScheme={user.color}
-                    point={getRenderingPoint(viewport, user.point)}
+                    point={getRenderingPoint(user.point)}
                     name={user.fullname}
                 />
             ))}

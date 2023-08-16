@@ -15,7 +15,8 @@ import {
     Route,
     RouteList
 } from "@reversearchitecture/ui";
-import { defaultTheme, fetchTheme, IWorkspaceTheme } from "@structurizr/dsl";
+import { ReverseArchitectureTheme } from "@reversearchitecture/workspace-viewer";
+import { fetchTheme, IWorkspaceTheme } from "@structurizr/dsl";
 import {
     AddKeyframes,
     ChatLines,
@@ -33,17 +34,7 @@ import {
 
 export const Workspace: FC<PropsWithChildren> = () => {
     const { availableActions } = useNavigationContext();
-    const [ theme, setTheme ] = useState<IWorkspaceTheme>(defaultTheme);
-
-    useEffect(() => {
-        fetchTheme(`https://raw.githubusercontent.com/JustMeGaaRa/reverse-architecture-community/main/theme.json`)
-            .then(theme => {
-                setTheme(theme);
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    }, []);
+    const [ theme ] = useState<IWorkspaceTheme>(ReverseArchitectureTheme);
 
     return (
         <Page>

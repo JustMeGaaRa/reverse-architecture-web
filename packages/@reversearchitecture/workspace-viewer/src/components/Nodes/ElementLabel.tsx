@@ -1,56 +1,87 @@
-import { VStack, Text } from "@chakra-ui/react";
-import { Element, ElementStyleProperties, Tag } from "@structurizr/dsl";
+import { Box, Editable, EditableInput, EditablePreview, EditableTextarea, HStack, Text, VStack } from "@chakra-ui/react";
+import { IElement, ElementStyleProperties, Tag as ElementTag } from "@structurizr/dsl";
 import { FC } from "react";
 
-export const formatElementTechnology = (data: Element) => {
-    const type = data.tags.filter(x => x.name !== Tag.Element.name).at(0);
-    if (!type) return "";
-    
-    return data?.technology && data?.technology.length > 0
-        ? `[${type.name}: ${data.technology.map(x => x.name).join(", ")}]`
-        : `[${type.name}]`;
+export const formatElementTag = (data: IElement) => {
+    const type = data.tags.filter(x => x.name !== ElementTag.Element.name).at(0);
+    return type.name;
 };
 
 export const ElementLabel: FC<{
-    data: Element;
+    data: IElement;
     showDescription?: boolean;
+    selected?: boolean;
     style?: Partial<ElementStyleProperties>;
 }> = ({
     data,
     showDescription,
+    selected,
     style
 }) => {
     return (
         <VStack
             align={"center"}
+            alignContent={"center"}
             color={style.color}
-            spacing={0}
+            height={"100%"}
+            justify={"center"}
+            spacing={2}
+            width={"100%"}
         >
             <Text
-                as={"b"}
-                fontSize={"larger"}
-                noOfLines={1}
+                fontSize={"14px"}
+                noOfLines={2}
+                padding={1}
                 textAlign={"center"}
+                width={"100%"}
             >
                 {data.name}
             </Text>
+            
             <Text
-                fontSize={"small"}
+                fontSize={"12px"}
                 noOfLines={1}
+                opacity={0.4}
                 textAlign={"center"}
             >
-                {formatElementTechnology(data)}
+                {formatElementTag(data)}
             </Text>
             {showDescription && data.description && (
                 <Text
-                    fontSize={"medium"}
-                    noOfLines={3}
-                    paddingTop={4}
+                    flexShrink={1}
+                    flexGrow={2}
+                    fontSize={"12px"}
+                    noOfLines={4}
+                    padding={1}
                     textAlign={"center"}
+                    width={"100%"}
                 >
                     {data.description}
                 </Text>
             )}
+            <HStack
+                justify={"center"}
+                padding={1}
+                height={26}
+                width={"100%"}
+            >
+                {data.technology && data.technology.map(tag => (
+                    <Text
+                        key={tag.name}
+                        borderColor={"whiteAlpha.700"}
+                        borderWidth={1}
+                        borderRadius={"8px"}
+                        color={"whiteAlpha.700"}
+                        fontSize={"12px"}
+                        height={"18px"}
+                        lineHeight={"16px"}
+                        noOfLines={1}
+                        paddingX={"8px"}
+                    >
+                        {tag.name}
+                    </Text>
+                ))}
+            </HStack>
         </VStack>
     );
 }

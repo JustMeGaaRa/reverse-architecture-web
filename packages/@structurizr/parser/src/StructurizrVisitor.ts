@@ -29,6 +29,7 @@ import {
     Workspace
 } from "@structurizr/dsl";
 import { StructurizrParser } from "./StructurizrParser";
+import { TokenName } from "./TokenName";
 
 const parser = new StructurizrParser();
 const VisitorCtor = parser.getBaseCstVisitorConstructorWithDefaults();
@@ -133,10 +134,20 @@ export class StructurizrVisitor extends VisitorCtor {
         elementProperties?: any
     }): SoftwareSystem {
         const name = trimQuotes(ctx.StringLiteral?.at(0)?.image);
+        const identifier = ctx.Identifier?.at(0)?.image ?? name;
         const properties = this.visit(ctx.elementProperties);
+        const relationships = ctx.relationship
+            ?.map<Relationship>((x) => this.visit(x))
+            ?.map((x) => {
+                return new Relationship({
+                    ...x,
+                    sourceIdentifier: x.sourceIdentifier.toLocaleUpperCase() === TokenName.ThisLiteral.toLocaleUpperCase() ? identifier : x.sourceIdentifier,
+                    targetIdentifier: x.targetIdentifier.toLocaleUpperCase() === TokenName.ThisLiteral.toLocaleUpperCase() ? identifier : x.targetIdentifier
+                });
+            });
 
         return new SoftwareSystem({
-            identifier: ctx.Identifier?.at(0)?.image ?? name,
+            identifier: identifier,
             name: properties?.name ?? name,
             technology: [],
             description: properties?.description
@@ -146,7 +157,7 @@ export class StructurizrVisitor extends VisitorCtor {
                 .concat(properties?.tags ?? []),
             groups: ctx.group?.map((x) => this.visit(x)),
             containers: ctx.container?.map((x) => this.visit(x)),
-            relationships: ctx.relationship?.map((x) => this.visit(x))
+            relationships: relationships
         });
     }
 
@@ -159,10 +170,20 @@ export class StructurizrVisitor extends VisitorCtor {
         elementProperties?: any
     }): Container {
         const name = trimQuotes(ctx.StringLiteral?.at(0)?.image);
+        const identifier = ctx.Identifier?.at(0)?.image ?? name;
         const properties = this.visit(ctx.elementProperties);
+        const relationships = ctx.relationship
+            ?.map<Relationship>((x) => this.visit(x))
+            ?.map((x) => {
+                return new Relationship({
+                    ...x,
+                    sourceIdentifier: x.sourceIdentifier.toLocaleUpperCase() === TokenName.ThisLiteral.toLocaleUpperCase() ? identifier : x.sourceIdentifier,
+                    targetIdentifier: x.targetIdentifier.toLocaleUpperCase() === TokenName.ThisLiteral.toLocaleUpperCase() ? identifier : x.targetIdentifier
+                });
+            });
         
         return new Container({
-            identifier: ctx.Identifier?.at(0)?.image ?? name,
+            identifier: identifier,
             name: properties?.name ?? name,
             description: properties?.description
                 ?? trimQuotes(ctx.StringLiteral?.at(1)?.image),
@@ -174,7 +195,7 @@ export class StructurizrVisitor extends VisitorCtor {
                 .concat(properties?.tags ?? []),
             groups: ctx.group?.map((x) => this.visit(x)),
             components: ctx.component?.map((x) => this.visit(x)),
-            relationships: ctx.relationship?.map((x) => this.visit(x))
+            relationships: relationships
         });
     }
 
@@ -185,10 +206,20 @@ export class StructurizrVisitor extends VisitorCtor {
         elementProperties?: any
     }): Component {
         const name = trimQuotes(ctx.StringLiteral?.at(0)?.image);
+        const identifier = ctx.Identifier?.at(0)?.image ?? name;
         const properties = this.visit(ctx.elementProperties);
+        const relationships = ctx.relationship
+            ?.map<Relationship>((x) => this.visit(x))
+            ?.map((x) => {
+                return new Relationship({
+                    ...x,
+                    sourceIdentifier: x.sourceIdentifier.toLocaleUpperCase() === TokenName.ThisLiteral.toLocaleUpperCase() ? identifier : x.sourceIdentifier,
+                    targetIdentifier: x.targetIdentifier.toLocaleUpperCase() === TokenName.ThisLiteral.toLocaleUpperCase() ? identifier : x.targetIdentifier
+                });
+            });
 
         return new Component({
-            identifier: ctx.Identifier?.at(0)?.image ?? name,
+            identifier: identifier,
             name: properties?.name ?? name,
             description: properties?.description
                 ?? trimQuotes(ctx.StringLiteral?.at(1)?.image),
@@ -198,7 +229,7 @@ export class StructurizrVisitor extends VisitorCtor {
             tags: Tag
                 .from(trimQuotes(ctx.StringLiteral?.at(3)?.image))
                 .concat(properties?.tags ?? []),
-            relationships: ctx.relationship?.map((x) => this.visit(x))
+            relationships: relationships
         });
     }
 

@@ -1,21 +1,23 @@
 import {
-    defaultElementStyle,
-    Element,
+    StructurizrElementTagDefaultStyle,
+    IElement,
     ElementStyle,
     ElementStyleProperties,
     foldStyles
 } from "@structurizr/dsl";
 import { NodeProps } from "@reactflow/core";
 import { FC, useMemo } from "react";
+import { ReverseArchitectureElementStyle } from "../../types";
+import { useTextEditMode, useWorkspaceToolbarStore } from "../../hooks";
 
 export function ReactFlowNodeWrapper(NodeElement: FC<{
-    data: Element;
+    data: IElement;
     style: ElementStyleProperties;
     width?: number;
     height?: number;
     selected?: boolean;
 }>): FC<NodeProps<{
-    element: Element;
+    element: IElement;
     style: ElementStyle;
     width?: number;
     height?: number;
@@ -26,18 +28,19 @@ export function ReactFlowNodeWrapper(NodeElement: FC<{
         selected,
     }) {
         const elementStyle = useMemo(() => foldStyles(
-                defaultElementStyle,
+                ReverseArchitectureElementStyle,
                 data.style,
                 data.element.tags
         ), [data.style, data.element.tags]);
+        const { isTextEditEnabled } = useWorkspaceToolbarStore();
 
         return (
             <NodeElement
                 data={data.element}
-                style={elementStyle ?? defaultElementStyle}
+                style={elementStyle}
                 width={data.width}
                 height={data.height}
-                selected={data.draggedOver || selected}
+                selected={data.draggedOver || selected || isTextEditEnabled}
             />
         )
     }

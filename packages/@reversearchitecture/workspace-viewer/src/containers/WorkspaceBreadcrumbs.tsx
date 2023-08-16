@@ -5,7 +5,7 @@ import {
     Button
 } from "@chakra-ui/react";
 import { Panel } from "@reactflow/core";
-import { ViewKeys } from "@structurizr/dsl";
+import { ComponentPathProvider, ContainerPathProvider, DeploymentPathProvider, ISupportPath, SystemContextPathProvider, SystemLandscapePathProvider, ViewKeys, ViewType } from "@structurizr/dsl";
 import {
     Circle,
     Hexagon,
@@ -13,60 +13,79 @@ import {
     Square,
     Triangle,
 } from "iconoir-react";
-import { FC } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
+import { useWorkspace, useWorkspaceStore } from "../hooks";
 
-export const WorkspaceBreadcrumbs: FC<{
-    path: ViewKeys[];
-    onItemClick?: (view: ViewKeys) => void;
-}> = ({
-    path,
-    onItemClick
-}) => {
-    const colorSchemes = [
-        {
-            scheme: "red",
-            icon: (<Hexagon fontSize={6} color={"#FF453A"} />)
-        },
-        {
-            scheme: "yellow",
-            icon: (<Triangle fontSize={6} color={"#E3FB51"} />)
-        },
-        {
-            scheme: "blue",
-            icon: (<Square fontSize={6} color={"#0A84FF"} />)
-        },
-        {
-            scheme: "purple",
-            icon: (<Rhombus fontSize={6} color={"#BF5AF2"} />)
-        },
-        {
-            scheme: "green",
-            icon: (<Circle fontSize={6} color={"#32D74B"} />)
-        }
-    ];
-    const items = path.map((view, index) => ({
-        title: `${view.type} - ${view.title}`,
-        colorScheme: colorSchemes[(index + 1) % colorSchemes.length].scheme,
-        icon: colorSchemes[(index + 1) % colorSchemes.length].icon,
-        isCurrentPage: index === path.length - 1,
-        view: view
-    }));
+export const WorkspaceBreadcrumbs: FC = () => {
+    const [ links, setLinks ] = useState<Array<{
+        title: string;
+        color: string;
+        icon: any;
+        isActive: boolean;
+        data: any;
+    }>>([]);
+    const { workspace, selectedView } = useWorkspaceStore();
+    const { setSelectedView } = useWorkspace();
+
+    useEffect(() => {
+        const colorSchemes = [
+            {
+                scheme: "red",
+                icon: (<Hexagon fontSize={6} color={"#FF453A"} />)
+            },
+            {
+                scheme: "yellow",
+                icon: (<Triangle fontSize={6} color={"#E3FB51"} />)
+            },
+            {
+                scheme: "blue",
+                icon: (<Square fontSize={6} color={"#0A84FF"} />)
+            },
+            {
+                scheme: "purple",
+                icon: (<Rhombus fontSize={6} color={"#BF5AF2"} />)
+            },
+            {
+                scheme: "green",
+                icon: (<Circle fontSize={6} color={"#32D74B"} />)
+            }
+        ];
+
+        const pathBuilders: Map<ViewType, ISupportPath> = new Map<ViewType, ISupportPath>([
+            [ ViewType.SystemLandscape, new SystemLandscapePathProvider() ],
+            [ ViewType.SystemContext, new SystemContextPathProvider() ],
+            [ ViewType.Container, new ContainerPathProvider() ],
+            [ ViewType.Component, new ComponentPathProvider() ],
+            [ ViewType.Deployment, new DeploymentPathProvider() ],
+        ]);
+        const path = pathBuilders.get(selectedView.type)?.getPath(workspace, selectedView) ?? [];
+
+        setLinks(path.map((view, index) => ({
+            title: `${view.type} - ${view.title}`,
+            color: colorSchemes[(index + 1) % colorSchemes.length].scheme,
+            icon: colorSchemes[(index + 1) % colorSchemes.length].icon,
+            isActive: index === path.length - 1,
+            data: view
+        })));
+    }, [workspace, selectedView]);
+
+    const handleOnViewItemClick = useCallback((view: ViewKeys) => setSelectedView(view), [setSelectedView]);
 
     return (
         <Panel position={"top-left"}>
             <Breadcrumb separator={""}>
-                {items.map(item => (
-                    <BreadcrumbItem
-                        key={item.title}
-                        isCurrentPage={item.isCurrentPage}
-                    >
+                {links.map(link => (
+                    <BreadcrumbItem key={link.title} isCurrentPage={link.isActive}>
                         <BreadcrumbLink
                             as={Button}
-                            colorScheme={item.colorScheme}
-                            leftIcon={item.icon}
-                            onClick={() => onItemClick(item.view)}
+                            backdropFilter={"auto"}
+                            backdropBlur={"8px"}
+                            colorScheme={link.isActive ? link.color : "whiteAlpha"}
+                            leftIcon={link.icon}
+                            onClick={() => handleOnViewItemClick(link.data)}
+                            title={link.title}
                         >
-                            {item.title}
+                            {link.title}
                         </BreadcrumbLink>
                     </BreadcrumbItem>
                 ))}
