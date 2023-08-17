@@ -10,12 +10,14 @@ import {
     NodeMouseHandler,
     useEdgesState,
     useNodesState,
+    useReactFlow,
 } from "@reactflow/core";
 import {
     FC,
     PropsWithChildren,
     useCallback,
     useEffect,
+    useRef,
 } from "react";
 import { WorkspaceViewRenderer } from "../containers";
 import {
@@ -61,32 +63,34 @@ export const ComponentView: FC<PropsWithChildren<{
     }, [model, configuration, view, setNodes, setEdges]);
 
     // NOTE: following handlers are used to add elements when respective mode is enabled
+    const reactFlowRef = useRef(null)
     const { isAddingElementEnabled, addingElementType } = useWorkspaceToolbarStore();
     const { getViewportPoint } = useViewportUtils();
     
     const handleOnNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
-        if (isAddingElementEnabled) {
-            const boxOffset = event.currentTarget.getBoundingClientRect();
-            const mousePoint = { clientX: event.clientX, clientY: event.clientY};
-            const targetPoint = { x: mousePoint.clientX - boxOffset.left, y: mousePoint.clientY - boxOffset.top };
+        if (reactFlowRef.current && isAddingElementEnabled) {
+            const parentOffset = reactFlowRef.current.getBoundingClientRect();
+            const mousePoint = { x: event.clientX, y: event.clientY};
+            const targetPoint = { x: mousePoint.x - parentOffset.left, y: mousePoint.y - parentOffset.top };
             const viewportPoint = getViewportPoint(targetPoint);
+            const viewportTargetPoint = { x: viewportPoint.x - node.positionAbsolute.x, y: viewportPoint.y - node.positionAbsolute.y };
 
             switch (addingElementType) {
                 case ElementType.Group:
-                    addGroup(viewportPoint);
+                    addGroup(viewportTargetPoint);
                     break;
                 case ElementType.Component:
-                    addComponent(viewportPoint, node.id);
+                    addComponent(viewportTargetPoint, node.id);
                     break;
             }
         }
-    }, [isAddingElementEnabled, addingElementType, getViewportPoint, addGroup, addComponent]);
+    }, [reactFlowRef, isAddingElementEnabled, addingElementType, getViewportPoint, addGroup, addComponent]);
 
     const handleOnPaneClick = useCallback((event: React.MouseEvent) => {
-        if (isAddingElementEnabled) {
-            const boxOffset = event.currentTarget.getBoundingClientRect();
-            const mousePoint = { clientX: event.clientX, clientY: event.clientY};
-            const targetPoint = { x: mousePoint.clientX - boxOffset.left, y: mousePoint.clientY - boxOffset.top };
+        if (reactFlowRef.current && isAddingElementEnabled) {
+            const parentOffset = reactFlowRef.current.getBoundingClientRect();
+            const mousePoint = { x: event.clientX, y: event.clientY};
+            const targetPoint = { x: mousePoint.x - parentOffset.left, y: mousePoint.y - parentOffset.top };
             const viewportPoint = getViewportPoint(targetPoint);
 
             switch (addingElementType) {
@@ -101,10 +105,11 @@ export const ComponentView: FC<PropsWithChildren<{
                     break;
             }
         }
-    }, [isAddingElementEnabled, addingElementType, getViewportPoint, addSoftwareSystem, addPerson, addContainer]);
+    }, [reactFlowRef, isAddingElementEnabled, addingElementType, getViewportPoint, addSoftwareSystem, addPerson, addContainer]);
 
     return (
         <WorkspaceViewRenderer
+            ref={reactFlowRef}
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}

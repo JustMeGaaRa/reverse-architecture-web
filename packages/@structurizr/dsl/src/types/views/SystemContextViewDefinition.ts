@@ -26,8 +26,12 @@ export interface ISystemContextView extends IViewDefinition {
     relationships: Array<IRelationshipPosition>;
 }
 
+type SystemContextViewDefinitionValues =
+    Required<Pick<ISystemContextView, "identifier">>
+    & Partial<Omit<ISystemContextView, "type" | "identifier">>;
+
 export class SystemContextViewDefinition implements IViewDefinition, ISupportImmutable<ISystemContextView> {
-    constructor(values: Omit<ISystemContextView, "type">) {
+    constructor(values: SystemContextViewDefinitionValues) {
         this.type = ViewType.SystemContext;
         this.identifier = values.identifier;
         this.key = values.key;

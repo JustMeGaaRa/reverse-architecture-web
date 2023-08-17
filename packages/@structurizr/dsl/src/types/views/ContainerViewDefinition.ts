@@ -26,8 +26,12 @@ export interface IContainerView extends IViewDefinition {
     relationships: Array<IRelationshipPosition>;
 }
 
+type ContainerViewValues =
+    Required<Pick<IContainerView, "identifier">>
+    & Partial<Omit<IContainerView, "type" | "identifier">>;
+
 export class ContainerViewDefinition implements IViewDefinition, ISupportImmutable<IContainerView> {
-    constructor(values: Omit<IContainerView, "type">) {
+    constructor(values: ContainerViewValues) {
         this.type = ViewType.Container;
         this.identifier = values.identifier;
         this.key = values.key;

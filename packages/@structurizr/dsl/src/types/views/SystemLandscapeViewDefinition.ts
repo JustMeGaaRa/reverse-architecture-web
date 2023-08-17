@@ -26,8 +26,12 @@ export interface ISystemLandscapeView extends IViewDefinition {
     relationships: Array<IRelationshipPosition>;
 }
 
+type SystemLandscapeViewDefinitionValues =
+    Required<Pick<ISystemLandscapeView, "identifier">>
+    & Partial<Omit<ISystemLandscapeView, "type" | "identifier">>;
+
 export class SystemLandscapeViewDefinition implements IViewDefinition, ISupportImmutable<ISystemLandscapeView> {
-    constructor(values: Omit<ISystemLandscapeView, "type" | "identifier">) {
+    constructor(values: SystemLandscapeViewDefinitionValues) {
         this.type = ViewType.SystemLandscape;
         this.identifier = "System Landscape";
         this.key = values.key;

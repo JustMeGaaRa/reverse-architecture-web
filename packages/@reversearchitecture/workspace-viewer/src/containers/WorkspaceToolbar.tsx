@@ -1,13 +1,6 @@
-import { IconButton } from "@chakra-ui/react";
-import { Panel, useOnSelectionChange, useReactFlow } from "@reactflow/core";
-import {
-    Component,
-    Container,
-    ElementType,
-    Person,
-    SoftwareSystem,
-    ViewType
-} from "@structurizr/dsl";
+import { Box, IconButton } from "@chakra-ui/react";
+import { useOnSelectionChange, useReactFlow } from "@reactflow/core";
+import { ElementType } from "@structurizr/dsl";
 import {
     AddKeyframeAlt,
     BinMinus,
@@ -26,15 +19,13 @@ import {
     Triangle,
     Undo
 } from "iconoir-react";
-import { FC, useCallback, useState } from "react";
+import { FC, useState } from "react";
 import {
     ToolbarSection,
     Toolbar
 } from "../components";
 import {
-    useWorkspaceStore,
     usePresentationMode,
-    WorkspaceStore,
     useSelectionMode,
     useDraggingMode,
     useTextEditMode,
@@ -71,7 +62,7 @@ export const WorkspaceToolbar: FC = () => {
     useOnSelectionChange({ onChange: (selection) => { setSelection(selection) }});
 
     return (
-        <Panel position={"bottom-center"}>
+        <Box position={"absolute"} bottom={4} left={"50%"} transform={"translateX(-50%)"} zIndex={5}>
             {!isPresentationEnabled && (
                 <Toolbar>
                     <ToolbarSection>
@@ -282,6 +273,6 @@ export const WorkspaceToolbar: FC = () => {
                     </ToolbarSection>
                 </Toolbar>
             )}
-        </Panel>
+        </Box>
     )
 }

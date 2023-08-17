@@ -1,5 +1,5 @@
 import { Flex } from "@chakra-ui/react";
-import { Element } from "@structurizr/dsl";
+import { IElement } from "@structurizr/dsl";
 import {
     ReactFlowState,
     useReactFlow,

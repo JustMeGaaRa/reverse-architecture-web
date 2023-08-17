@@ -1,11 +1,20 @@
 import {
+    Box,
     Breadcrumb,
     BreadcrumbItem,
     BreadcrumbLink,
     Button
 } from "@chakra-ui/react";
-import { Panel } from "@reactflow/core";
-import { ComponentPathProvider, ContainerPathProvider, DeploymentPathProvider, ISupportPath, SystemContextPathProvider, SystemLandscapePathProvider, ViewKeys, ViewType } from "@structurizr/dsl";
+import {
+    ComponentPathProvider,
+    ContainerPathProvider,
+    DeploymentPathProvider,
+    ISupportPath,
+    SystemContextPathProvider,
+    SystemLandscapePathProvider,
+    ViewKeys,
+    ViewType
+} from "@structurizr/dsl";
 import {
     Circle,
     Hexagon,
@@ -72,7 +81,7 @@ export const WorkspaceBreadcrumbs: FC = () => {
     const handleOnViewItemClick = useCallback((view: ViewKeys) => setSelectedView(view), [setSelectedView]);
 
     return (
-        <Panel position={"top-left"}>
+        <Box position={"absolute"} top={4} left={4} zIndex={5}>
             <Breadcrumb separator={""}>
                 {links.map(link => (
                     <BreadcrumbItem key={link.title} isCurrentPage={link.isActive}>
@@ -90,6 +99,6 @@ export const WorkspaceBreadcrumbs: FC = () => {
                     </BreadcrumbItem>
                 ))}
             </Breadcrumb>
-        </Panel>
+        </Box>
     )
 }

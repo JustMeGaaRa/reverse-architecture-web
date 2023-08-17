@@ -1,4 +1,5 @@
 import {
+    Box,
     Button,
     IconButton,
     Menu,
@@ -6,11 +7,7 @@ import {
     MenuItem,
     MenuList
 } from "@chakra-ui/react";
-import {
-    Panel,
-    useReactFlow,
-    useStore
-} from "@reactflow/core";
+import { useReactFlow, useStore } from "@reactflow/core";
 import { Minus, Plus } from "iconoir-react";
 import { FC, useMemo } from "react";
 import {
@@ -30,7 +27,7 @@ export const WorkspaceZoomControls: FC = () => {
     ], [zoomTo, fitView]);
 
     return (
-        <Panel position={"bottom-right"}>
+        <Box position={"absolute"} bottom={4} right={4} zIndex={5}>
             <Toolbar>
                 <ToolbarSection>
                     <IconButton
@@ -63,6 +60,6 @@ export const WorkspaceZoomControls: FC = () => {
                     />
                 </ToolbarSection>
             </Toolbar>
-        </Panel>
+        </Box>
     )
 }

@@ -27,7 +27,7 @@ export interface IComponent extends IElement {
 
 type ComponentParams =
     Required<Pick<IComponent, "name" | "identifier">>
-    & Partial<Omit<IComponent, "name"| "identifier">>;
+    & Partial<Omit<IComponent, "type" | "name"| "identifier">>;
 
 export class Component implements IElement, ISupportImmutable<IComponent> {
     constructor(params: ComponentParams) {

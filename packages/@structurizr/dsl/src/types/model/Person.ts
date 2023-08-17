@@ -25,7 +25,7 @@ export interface IPerson extends IElement {
 
 type PersonParams =
     Required<Pick<IPerson, "name" | "identifier">>
-    & Partial<Omit<IPerson, "name" | "identifier">>;
+    & Partial<Omit<IPerson, "type" | "name" | "identifier">>;
 
 export class Person implements Omit<IElement, "technology">, ISupportImmutable<IPerson> {
     constructor(params: PersonParams) {

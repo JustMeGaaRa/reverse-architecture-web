@@ -36,8 +36,12 @@ export interface IDeploymentNode extends IElement {
     relationships: IRelationship[];
 }
 
+type DeploymentNodeValues =
+    Required<Pick<IDeploymentNode, "identifier" | "name">>
+    & Partial<Omit<IDeploymentNode, "type" | "identifier" | "name">>;
+
 export class DeploymentNode implements IElement, ISupportImmutable<IDeploymentNode> {
-    constructor(params: IDeploymentNode) {
+    constructor(params: DeploymentNodeValues) {
         this.type = ElementType.DeploymentNode;
         this.identifier = params.identifier;
         this.name = params.name;

@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { Panel, useReactFlow } from "@reactflow/core";
 import {
-    ToolbalSection,
+    ToolbarSection,
     Toolbar,
     useWorkspaceStore
 } from "@reversearchitecture/workspace-viewer";
@@ -59,7 +59,7 @@ export const ActivityPanel: FC<{
                 </Toolbar>
 
                 <Toolbar>
-                    <ToolbalSection>
+                    <ToolbarSection>
                         <HomeButton />
                         <SharePopover link={link} onCopy={clipboardCopy} />
                         <Menu>
@@ -85,7 +85,7 @@ export const ActivityPanel: FC<{
                             icon={<HelpCircle />}
                             title={"Help"}
                         />
-                    </ToolbalSection>
+                    </ToolbarSection>
                 </Toolbar>
 
             </HStack>

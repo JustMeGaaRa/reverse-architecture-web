@@ -58,11 +58,11 @@ export class StructurizrVisitor extends VisitorCtor {
         model: any;
         views: any }
     ): Workspace {
-        return {
+        return new Workspace({
             name: trimQuotes(ctx.StringLiteral?.at(0)?.image),
             model: this.visit(ctx.model),
             views: this.visit(ctx.views)
-        };
+        });
     }
 
     model(ctx: {
@@ -387,6 +387,9 @@ export class StructurizrVisitor extends VisitorCtor {
             containers: ctx.containerView?.map((x) => this.visit(x)) ?? [],
             components: ctx.componentView?.map((x) => this.visit(x)) ?? [],
             deployments: ctx.deploymentView?.map((x) => this.visit(x)) ?? [],
+            filtered: [],
+            custom: [],
+            dynamics: [],
             configuration: new Configuration({
                 styles: this.visit(ctx.styles),
                 themes: themes ? [themes] : []
@@ -395,59 +398,59 @@ export class StructurizrVisitor extends VisitorCtor {
     }
 
     systemLandscapeView(ctx: PropertyContext): SystemLandscapeViewDefinition {
-        return {
-            type: ViewType.SystemLandscape,
+        return new SystemLandscapeViewDefinition({
             identifier: ctx.Identifier?.at(0)?.image,
             key: trimQuotes(ctx.StringLiteral?.at(0)?.image),
             description: trimQuotes(ctx.StringLiteral?.at(1)?.image),
+            include: [],
             elements: [],
             relationships: []
-        };
+        });
     }
 
     systemContextView(ctx: PropertyContext): SystemContextViewDefinition {
-        return {
-            type: ViewType.SystemContext,
+        return new SystemContextViewDefinition({
             identifier: ctx.Identifier?.at(0)?.image,
             key: trimQuotes(ctx.StringLiteral?.at(0)?.image),
             description: trimQuotes(ctx.StringLiteral?.at(1)?.image),
+            include: [],
             elements: [],
             relationships: []
-        };
+        });
     }
 
     containerView(ctx: PropertyContext): ContainerViewDefinition {
-        return {
-            type: ViewType.Container,
+        return new ContainerViewDefinition({
             identifier: ctx.Identifier?.at(0)?.image,
             key: trimQuotes(ctx.StringLiteral?.at(0)?.image),
             description: trimQuotes(ctx.StringLiteral?.at(1)?.image),
+            include: [],
             elements: [],
             relationships: []
-        };
+        });
     }
 
     componentView(ctx: PropertyContext): ComponentViewDefinition {
-        return {
-            type: ViewType.Component,
+        return new ComponentViewDefinition({
             identifier: ctx.Identifier?.at(0)?.image,
             key: trimQuotes(ctx.StringLiteral?.at(0)?.image),
             description: trimQuotes(ctx.StringLiteral?.at(1)?.image),
+            include: [],
             elements: [],
             relationships: []
-        };
+        });
     }
 
     deploymentView(ctx: PropertyContext): DeploymentViewDefinition {
-        return {
-            type: ViewType.Deployment,
+        return new DeploymentViewDefinition({
             identifier: ctx.Identifier?.at(0)?.image,
             environment: trimQuotes(ctx.StringLiteral?.at(0)?.image),
             key: trimQuotes(ctx.StringLiteral?.at(1)?.image),
             description: trimQuotes(ctx.StringLiteral?.at(2)?.image),
+            include: [],
             elements: [],
             relationships: []
-        };
+        });
     }
 
     styles(ctx: {

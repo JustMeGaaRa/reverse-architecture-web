@@ -27,7 +27,7 @@ export interface IGroup extends IElement {
 
 type GroupParams =
     Required<Pick<IGroup, "name" | "identifier">>
-    & Partial<Omit<IGroup, "name" | "identifier">>;
+    & Partial<Omit<IGroup, "type" | "name" | "identifier">>;
 
 export class Group implements IElement, ISupportImmutable<IGroup> {
     constructor(params: GroupParams) {

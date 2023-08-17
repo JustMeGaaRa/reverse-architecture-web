@@ -4,21 +4,21 @@ import {
     MxObject,
 } from "@justmegaara/mxgraph";
 import {
-    Element,
+    IElement,
     Person,
-    SoftwareSystem,
-    Container,
-    Component,
-    DeploymentNode,
     Relationship,
     Tag,
     IElementVisitor,
     IViewDefinition,
-    ContainerInstance,
     Group,
-    InfrastructureNode,
-    SoftwareSystemInstance,
-    IElementPosition
+    IElementPosition,
+    IComponent,
+    IContainer,
+    IContainerInstance,
+    IDeploymentNode,
+    IInfrastructureNode,
+    ISoftwareSystem,
+    ISoftwareSystemInstance
 } from "@structurizr/dsl";
 import { ElementHtmlUtils } from "./utils";
 import {
@@ -81,7 +81,7 @@ export class DrawioExportVisitor implements IElementVisitor {
         this.builder.addMxObject(mxObject);
     }
 
-    visitSoftwareSystem(softwareSystem: SoftwareSystem, params?: { parentId?: string }) {
+    visitSoftwareSystem(softwareSystem: ISoftwareSystem, params?: { parentId?: string }) {
         const mxObject = this.fromElement(
             params?.parentId ?? this.parentId,
             softwareSystem,
@@ -92,7 +92,7 @@ export class DrawioExportVisitor implements IElementVisitor {
         this.builder.addMxObject(mxObject);
     }
 
-    visitContainer(container: Container, params?: { parentId?: string }) {
+    visitContainer(container: IContainer, params?: { parentId?: string }) {
         const mxObject = this.fromElement(
             params?.parentId ?? this.parentId,
             container,
@@ -103,7 +103,7 @@ export class DrawioExportVisitor implements IElementVisitor {
         this.builder.addMxObject(mxObject);
     }
 
-    visitComponent(component: Component, params?: { parentId?: string }) {
+    visitComponent(component: IComponent, params?: { parentId?: string }) {
         const mxObject = this.fromElement(
             params?.parentId ?? this.parentId,
             component,
@@ -114,7 +114,7 @@ export class DrawioExportVisitor implements IElementVisitor {
         this.builder.addMxObject(mxObject);
     }
 
-    visitDeploymentNode(deploymentNode: DeploymentNode, params?: { parentId?: string }) {
+    visitDeploymentNode(deploymentNode: IDeploymentNode, params?: { parentId?: string }) {
         const mxObject = this.fromElementScope(
             params?.parentId ?? this.parentId,
             deploymentNode,
@@ -123,15 +123,15 @@ export class DrawioExportVisitor implements IElementVisitor {
         this.builder.addMxObject(mxObject);
     }
 
-    visitInfrastructureNode(infrastructureNode: InfrastructureNode, params?: { parentId?: string; }) {
+    visitInfrastructureNode(infrastructureNode: IInfrastructureNode, params?: { parentId?: string; }) {
         throw new Error("Method not implemented.");
     }
 
-    visitSoftwareSystemInstance(softwareSystemInstance: SoftwareSystemInstance, params?: { parentId?: string; }) {
+    visitSoftwareSystemInstance(softwareSystemInstance: ISoftwareSystemInstance, params?: { parentId?: string; }) {
         throw new Error("Method not implemented.");
     }
 
-    visitContainerInstance(containerInstance: ContainerInstance, params?: { parentId?: string; }) {
+    visitContainerInstance(containerInstance: IContainerInstance, params?: { parentId?: string; }) {
         throw new Error("Method not implemented.");
     }
 
@@ -188,7 +188,7 @@ export class DrawioExportVisitor implements IElementVisitor {
 
     private fromElement(
         parent: string | undefined,
-        node: Element,
+        node: IElement,
         position: IElementPosition | undefined,
         fillColor: string,
         strokeColor: string,
@@ -236,7 +236,7 @@ export class DrawioExportVisitor implements IElementVisitor {
 
     private fromElementScope(
         parent: string | undefined,
-        node: Element,
+        node: IElement,
         position: IElementPosition | undefined
     ): MxObject {
         return {

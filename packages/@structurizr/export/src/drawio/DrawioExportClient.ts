@@ -8,8 +8,8 @@ import {
     DeploymentViewStrategy,
     ISupportVisitor,
     IViewDefinition,
-    SystemContextViewStrategy,
-    Workspace
+    IWorkspace,
+    SystemContextViewStrategy
 } from "@structurizr/dsl";
 import { DrawioExportVisitor } from "./DrawioExportVisitor";
 import { DrawioDiagramBuilder } from "./DrawioDiagramBuilder";
@@ -18,7 +18,7 @@ import { XMLBuilder } from "fast-xml-parser";
 import { v4 } from "uuid";
 
 export class DrawioExportClient implements IExportClient {
-    export(workspace: Workspace): string {
+    export(workspace: IWorkspace): string {
         const createView = (view: IViewDefinition, client: ISupportVisitor) => {
             const defaultParent: MXCell = {
                 _id: v4()
@@ -46,18 +46,18 @@ export class DrawioExportClient implements IExportClient {
                 _host: "reversearchitecture.io",
                 _type: "browser",
                 diagram: [
-                    // fromView(this.workspace, view, new SystemContextViewStrategy(workspace, view)),
+                    createView(workspace.views.systemLandscape, new SystemContextViewStrategy(workspace.model, workspace.views.systemLandscape)),
                     ...workspace.views.systemContexts.map(view => {
-                        return createView(view, new SystemContextViewStrategy(workspace, view))
+                        return createView(view, new SystemContextViewStrategy(workspace.model, view))
                     }),
                     ...workspace.views.containers.map(view => {
-                        return createView(view, new ContainerViewStrategy(workspace, view))
+                        return createView(view, new ContainerViewStrategy(workspace.model, view))
                     }),
                     ...workspace.views.components.map(view => {
-                        return createView(view, new ComponentViewStrategy(workspace, view))
+                        return createView(view, new ComponentViewStrategy(workspace.model, view))
                     }),
                     ...workspace.views.deployments.map(view => {
-                        return createView(view, new DeploymentViewStrategy(workspace, view, view.environment))
+                        return createView(view, new DeploymentViewStrategy(workspace.model, view, view.environment))
                     })
                 ]
             }

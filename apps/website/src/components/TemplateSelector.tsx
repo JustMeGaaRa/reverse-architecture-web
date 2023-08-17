@@ -41,7 +41,7 @@ const TemplateItem: FC<TemplateItemProps> = ({
 
     return (
         <Card
-            background={defaultBackground}
+            backgroundColor={defaultBackground}
             borderColor={defaultBorder}
             width={200}
             height={200}

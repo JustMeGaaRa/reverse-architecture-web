@@ -28,9 +28,9 @@ export interface IDeploymentView extends IViewDefinition {
     relationships: Array<IRelationshipPosition>;
 }
 
-type DeploymentViewValues = Omit<IDeploymentView, "type"> & {
-    environment: string;
-};
+type DeploymentViewValues = 
+    Required<Pick<IDeploymentView, "identifier" | "environment">>
+    & Partial<Omit<IDeploymentView, "type" | "identifier" | "environment">>;
 
 export class DeploymentViewDefinition implements IViewDefinition, ISupportImmutable<IDeploymentView> {
     constructor(values: DeploymentViewValues) {

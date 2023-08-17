@@ -126,9 +126,8 @@ export const WorkspaceExplorer: FC<PropsWithChildren<{
                 workspace={workspace}
                 metadata={metadata}
             />
-            {/* <WorkspaceBreadcrumbs /> */}
-            {/* <WorkspaceZoomControls /> */}
-            <WorkspaceToolbar />
+
+            {children}
 
             {systemLandscape && (
                 <SystemLandscapeView
@@ -178,8 +177,6 @@ export const WorkspaceExplorer: FC<PropsWithChildren<{
                     onNodesDoubleClick={handleOnDoubleClick}
                 />
             ))}
-
-            {children}
         </ReactFlowProvider>
     )
 }

@@ -8,7 +8,7 @@ export const Sandbox: FC = () => {
     return (
         <Box
             height={"100vh"}
-            background={useColorModeValue("", "#1E1E1E")}
+            backgroundColor={useColorModeValue("", "#1E1E1E")}
         >
         </Box>
     );

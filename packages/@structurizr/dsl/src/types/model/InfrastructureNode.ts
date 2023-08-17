@@ -25,8 +25,12 @@ export interface IInfrastructureNode {
     relationships: IRelationship[];
 }
 
+type InfrastructureNodeValues =
+    Required<Pick<IInfrastructureNode, "identifier" | "name">>
+    & Partial<Omit<IInfrastructureNode, "type" | "identifier" | "name">>;
+
 export class InfrastructureNode implements IElement, ISupportImmutable<IInfrastructureNode> {
-    constructor(params: IInfrastructureNode) {
+    constructor(params: InfrastructureNodeValues) {
         this.type = ElementType.InfrastructureNode;
         this.identifier = params.identifier;
         this.name = params.name;

@@ -7,6 +7,7 @@ import {
 } from "@reversearchitecture/workspace-viewer";
 import { ContextSheet } from "@reversearchitecture/ui";
 import {
+    applyMetadata,
     applyTheme,
     IWorkspaceMetadata,
     Workspace
@@ -51,7 +52,7 @@ export const WorkspaceViewerSheet: FC = () => {
         fetchWorkspace(workspaceId)
             .then(({ text, metadata }) => {
                 const workspace = parseWorkspace(text);
-                setWorkspace(applyTheme(workspace, theme));
+                setWorkspace(applyMetadata(applyTheme(workspace, theme), metadata));
                 setMetadata(metadata);
             })
             .catch(error => {
@@ -115,7 +116,6 @@ export const WorkspaceViewerSheet: FC = () => {
         setSelfPoint(provider?.awareness, event.viewportPoint)
     }, [provider, setSelfPoint]);
 
-    // TODO: encapsulate the ReactFlowProvider internally to abstract away the framework used in case it changes in future
     return (
         <ContextSheet>
             <WorkspaceRoom>
@@ -124,9 +124,9 @@ export const WorkspaceViewerSheet: FC = () => {
                     metadata={metadata}
                     onMouseMove={handleOnMouseMove}
                 >
-                    {/* <WorkspaceBreadcrumbs />
+                    <WorkspaceBreadcrumbs />
                     <WorkspaceToolbar />
-                    <WorkspaceZoomControls /> */}
+                    <WorkspaceZoomControls />
                     {/* {provider && (
                         <UserCursorGroup awareness={provider.awareness} />
                     )} */}

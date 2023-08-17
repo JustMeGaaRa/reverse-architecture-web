@@ -43,8 +43,7 @@ export const createEmptyElement = (type: ElementType) => {
                 softwareSystems: [],
                 containers: [],
                 components: [],
-                tags: [],
-                type: ElementType.Group,
+                tags: []
             });
             return element;
         case ElementType.Person:
@@ -52,8 +51,7 @@ export const createEmptyElement = (type: ElementType) => {
                 identifier: `person_${v4()}`,
                 name: "Person",
                 relationships: [],
-                tags: [],
-                type: ElementType.Person,
+                tags: []
             });
             return person;
         case ElementType.SoftwareSystem:
@@ -64,8 +62,7 @@ export const createEmptyElement = (type: ElementType) => {
                 relationships: [],
                 tags: [],
                 groups: [],
-                technology: [],
-                type: ElementType.SoftwareSystem,
+                technology: []
             });
             return softwareSystem;
         case ElementType.Container:
@@ -76,8 +73,7 @@ export const createEmptyElement = (type: ElementType) => {
                 relationships: [],
                 tags: [],
                 technology: [],
-                groups: [],
-                type: ElementType.Container,
+                groups: []
             });
             return container;
         case ElementType.Component:
@@ -86,8 +82,7 @@ export const createEmptyElement = (type: ElementType) => {
                 name: "Component",
                 relationships: [],
                 tags: [],
-                technology: [],
-                type: ElementType.Component,
+                technology: []
             });
             return component;
         case ElementType.DeploymentNode:
@@ -100,8 +95,7 @@ export const createEmptyElement = (type: ElementType) => {
                 infrastructureNodes: [],
                 relationships: [],
                 technology: [],
-                tags: [],
-                type: ElementType.DeploymentNode,
+                tags: []
             });
             return deploymentNode;
         case ElementType.InfrastructureNode:
@@ -109,8 +103,7 @@ export const createEmptyElement = (type: ElementType) => {
                 identifier: `infrastructureNode_${v4()}`,
                 name: "Infrastructure Node",
                 relationships: [],
-                tags: [],
-                type: ElementType.InfrastructureNode,
+                tags: []
             });
             return infrastructureNode;
     }

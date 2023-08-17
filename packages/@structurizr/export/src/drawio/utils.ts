@@ -1,8 +1,8 @@
-import { Element, Relationship, Technology } from "@structurizr/dsl";
+import { IElement, Relationship, Technology } from "@structurizr/dsl";
 import { EdgeStyle, NodeStyle } from "./types";
 
 export class ElementHtmlUtils {
-    static elementHtmlBuilder(element: Element) {
+    static elementHtmlBuilder(element: IElement) {
         const htmlObject = html(
             font(
                 { fontSize: 16 },

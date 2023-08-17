@@ -33,7 +33,7 @@ export interface ISoftwareSystem extends IElement {
 
 export type SoftwareSystemParams =
     Required<Pick<ISoftwareSystem, "name" | "identifier">>
-    & Partial<Omit<ISoftwareSystem, "name"| "identifier">>
+    & Partial<Omit<ISoftwareSystem, "type" | "name"| "identifier">>
 
 export class SoftwareSystem implements IElement, ISupportImmutable<ISoftwareSystem> {
     constructor(params: SoftwareSystemParams) {

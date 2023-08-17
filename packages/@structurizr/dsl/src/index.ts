@@ -41,7 +41,6 @@ export * from "./types/views/ShapeType";
 export * from "./types/views/Style";
 export * from "./types/views/SystemContextViewDefinition";
 export * from "./types/views/SystemLandscapeViewDefinition";
-export * from "./types/views/ViewPath";
 export * from "./types/views/ViewType";
 export * from "./types/views/IWorkspaceTheme";
 

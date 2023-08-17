@@ -33,7 +33,7 @@ export interface IContainer extends IElement {
 
 type ContainerParams =
     Required<Pick<IContainer, "name" | "identifier">>
-    & Partial<Omit<IContainer, "name"| "identifier">>;
+    & Partial<Omit<IContainer, "type" | "name"| "identifier">>;
 
 export class Container implements IElement, ISupportImmutable<IContainer> {
     constructor(params: ContainerParams) {

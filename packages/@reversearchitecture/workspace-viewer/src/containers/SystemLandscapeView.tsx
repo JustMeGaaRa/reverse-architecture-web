@@ -3,6 +3,7 @@ import {
     IConfiguration,
     IModel,
     ISystemLandscapeView,
+    Position,
     SystemLandscapeViewStrategy,
 } from "@structurizr/dsl";
 import {
@@ -16,6 +17,7 @@ import {
     PropsWithChildren,
     useCallback,
     useEffect,
+    useRef,
 } from "react";
 import { WorkspaceViewRenderer } from "../containers";
 import {
@@ -59,40 +61,53 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
     }, [model, configuration, view, setNodes, setEdges]);
 
     // NOTE: following handlers are used to add elements when respective mode is enabled
+    const reactFlowRef = useRef(null)
     const { isAddingElementEnabled, addingElementType } = useWorkspaceToolbarStore();
     const { getViewportPoint } = useViewportUtils();
     
-    const addElement = useCallback((elementType: ElementType, point: any, boxOffset: DOMRect, parentId?: string) => {
-        if (isAddingElementEnabled) {
-            const targetPoint = { x: point.clientX - boxOffset.left, y: point.clientY - boxOffset.top };
+    const handleOnNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
+        if (reactFlowRef.current && isAddingElementEnabled) {
+            const parentOffset = reactFlowRef.current.getBoundingClientRect();
+            const mousePoint = { x: event.clientX, y: event.clientY };
+            const targetPoint = { x: mousePoint.x - parentOffset.left, y: mousePoint.y - parentOffset.top };
+            const viewportPoint = getViewportPoint(targetPoint);
+            const viewportTargetPoint = { x: viewportPoint.x - node.positionAbsolute.x, y: viewportPoint.y - node.positionAbsolute.y };
+
+            switch (addingElementType) {
+                case ElementType.SoftwareSystem:
+                    addSoftwareSystem(viewportTargetPoint, node.id);
+                    break;
+                case ElementType.Person:
+                    addPerson(viewportTargetPoint, node.id);
+                    break;
+            }
+        }
+    }, [reactFlowRef, addingElementType, isAddingElementEnabled, getViewportPoint, addSoftwareSystem, addPerson]);
+
+    const handleOnPaneClick = useCallback((event: React.MouseEvent) => {
+        if (reactFlowRef.current && isAddingElementEnabled) {
+            const parentOffset = reactFlowRef.current.getBoundingClientRect();
+            const mousePoint = { x: event.clientX, y: event.clientY };
+            const targetPoint = { x: mousePoint.x - parentOffset.left, y: mousePoint.y - parentOffset.top };
             const viewportPoint = getViewportPoint(targetPoint);
 
-            switch (elementType) {
+            switch (addingElementType) {
                 case ElementType.Group:
                     addGroup(viewportPoint);
                     break;
                 case ElementType.SoftwareSystem:
-                    addSoftwareSystem(viewportPoint, parentId);
+                    addSoftwareSystem(viewportPoint);
                     break;
                 case ElementType.Person:
-                    addPerson(viewportPoint, parentId);
+                    addPerson(viewportPoint);
                     break;
             }
         }
-    }, [isAddingElementEnabled, getViewportPoint, addGroup, addSoftwareSystem, addPerson]);
-
-    const handleOnNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
-        const mousePoint = { clientX: event.clientX, clientY: event.clientY};
-        addElement(addingElementType, mousePoint, event.currentTarget.getBoundingClientRect(), node.id);
-    }, [addElement, addingElementType]);
-
-    const handleOnPaneClick = useCallback((event: React.MouseEvent) => {
-        const mousePoint = { clientX: event.clientX, clientY: event.clientY};
-        addElement(addingElementType, mousePoint, event.currentTarget.getBoundingClientRect());
-    }, [addElement, addingElementType]);
+    }, [reactFlowRef, addingElementType, isAddingElementEnabled, getViewportPoint, addGroup, addSoftwareSystem, addPerson]);
 
     return (
         <WorkspaceViewRenderer
+            ref={reactFlowRef}
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}

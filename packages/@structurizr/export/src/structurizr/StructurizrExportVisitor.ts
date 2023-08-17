@@ -1,22 +1,22 @@
 import {
-    Component,
-    Container,
-    ContainerInstance,
-    DeploymentEnvironment,
-    DeploymentNode,
     ElementStyle,
-    Group,
-    InfrastructureNode,
     IElementVisitor,
-    Model,
-    Person,
-    Relationship,
     RelationshipStyle,
-    SoftwareSystem,
-    SoftwareSystemInstance,
     Styles,
-    Views,
-    Workspace
+    IComponent,
+    IContainer,
+    IContainerInstance,
+    IDeploymentEnvironment,
+    IDeploymentNode,
+    IGroup,
+    IInfrastructureNode,
+    IModel,
+    IPerson,
+    IRelationship,
+    ISoftwareSystem,
+    ISoftwareSystemInstance,
+    IWorkspace,
+    IViews
 } from "@structurizr/dsl";
 
 function line(line: string) {
@@ -31,13 +31,13 @@ function indent(text: string) {
 }
 
 export class StructurizrExportVisitor implements IElementVisitor {
-    visitWorkspace(workspace: Workspace): string {
+    visitWorkspace(workspace: IWorkspace): string {
         const model = indent(this.visitModel(workspace.model));
         const views = indent(this.visitViews(workspace.views));
         return `workspace "${workspace.name}" "${workspace.description}" {\n${model}\n${views}\n}`;
     }
 
-    visitModel(model: Model): string {
+    visitModel(model: IModel): string {
         const people = indent((model.people ?? [])
             .map(x => this.visitPerson(x)).join("\n"));
         const softwareSystems = indent((model.softwareSystems ?? [])
@@ -49,17 +49,17 @@ export class StructurizrExportVisitor implements IElementVisitor {
         return `model {\n${people}\n${softwareSystems}\n${environments}\n${relationships}\n}`;
     }
 
-    visitGroup(group: Group, params?: { parentId?: string; }): string {
+    visitGroup(group: IGroup, params?: { parentId?: string; }): string {
         return "";
     }
     
-    visitPerson(person: Person, params?: { parentId?: string; }): string {
+    visitPerson(person: IPerson, params?: { parentId?: string; }): string {
         const rels = indent((person.relationships ?? [])
             .map(x => this.visitRelationship(x)).join("\n"));
         return `${person.identifier} = person "${person.name}" "${person.description ?? ""}" {\n${rels}\n}`;
     }
 
-    visitSoftwareSystem(softwareSystem: SoftwareSystem, params?: { parentId?: string; }): string {
+    visitSoftwareSystem(softwareSystem: ISoftwareSystem, params?: { parentId?: string; }): string {
         const containers = indent((softwareSystem.containers ?? [])
             .map(x => this.visitContainer(x)).join("\n"));
         const rels = indent((softwareSystem.relationships ?? [])
@@ -69,7 +69,7 @@ export class StructurizrExportVisitor implements IElementVisitor {
             : "";
     }
 
-    visitContainer(container: Container, params?: { parentId?: string; }): string {
+    visitContainer(container: IContainer, params?: { parentId?: string; }): string {
         const components = indent((container.components ?? [])
             .map(x => this.visitComponent(x)).join("\n"));
         const rels = indent((container.relationships ?? [])
@@ -79,13 +79,13 @@ export class StructurizrExportVisitor implements IElementVisitor {
             : "";
     }
 
-    visitComponent(component: Component, params?: { parentId?: string; }): string {
+    visitComponent(component: IComponent, params?: { parentId?: string; }): string {
         return component
             ? `${component.identifier} = component "${component.name}" "${component.description ?? ""}"`
             : "";
     }
 
-    visitDeploymentEnvironment(environment: DeploymentEnvironment): string {
+    visitDeploymentEnvironment(environment: IDeploymentEnvironment): string {
         const deploymentNodes = indent((environment.deploymentNodes ?? [])
             .map(x => this.visitDeploymentNode(x)).join("\n"));
         return environment
@@ -93,7 +93,7 @@ export class StructurizrExportVisitor implements IElementVisitor {
             : "";
     }
 
-    visitDeploymentNode(deploymentNode: DeploymentNode, params?: { parentId?: string; }): string {
+    visitDeploymentNode(deploymentNode: IDeploymentNode, params?: { parentId?: string; }): string {
         // TODO: visit infrastructure nodes
         const deploymentNodes = indent((deploymentNode.deploymentNodes ?? [])
             .map(x => this.visitDeploymentNode(x)).join("\n"));
@@ -106,23 +106,23 @@ export class StructurizrExportVisitor implements IElementVisitor {
             : "";
     }
 
-    visitInfrastructureNode(infrastructureNode: InfrastructureNode, params?: { parentId?: string; }): string {
+    visitInfrastructureNode(infrastructureNode: IInfrastructureNode, params?: { parentId?: string; }): string {
         return "";
     }
     
-    visitSoftwareSystemInstance(instance: SoftwareSystemInstance, params?: { parentId?: string; }): string {
+    visitSoftwareSystemInstance(instance: ISoftwareSystemInstance, params?: { parentId?: string; }): string {
         return `${instance.identifier} = softwareSystemInstance "${instance.softwareSystemIdentifier}"`;
     }
 
-    visitContainerInstance(instance: ContainerInstance, params?: { parentId?: string; }): string {
+    visitContainerInstance(instance: IContainerInstance, params?: { parentId?: string; }): string {
         return `${instance.identifier} = containerInstance "${instance.containerIdentifier}"`;
     }
 
-    visitRelationship(relationship: Relationship): string {
+    visitRelationship(relationship: IRelationship): string {
         return `${relationship.sourceIdentifier} -> ${relationship.targetIdentifier} "${relationship.description ?? ""}"`;
     }
 
-    visitViews(views: Views): string {
+    visitViews(views: IViews): string {
         const styles = line(indent(this.visitStyles(views.configuration.styles)));
         return `views {\n${styles}\n}`;
     }

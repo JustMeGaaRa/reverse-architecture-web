@@ -104,7 +104,7 @@ export const findContainer = (model: IModel, identifier: Identifier) => {
 }
 
 export const relationshipExists = (
-    relationships: Relationship[],
+    relationships: IRelationship[],
     sourceIdentifier: Identifier,
     targetIdentifier: Identifier
 ) => {

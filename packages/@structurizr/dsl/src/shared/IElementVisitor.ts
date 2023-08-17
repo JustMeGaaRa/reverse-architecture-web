@@ -1,13 +1,15 @@
-import { Component, IComponent } from "../types/model/Component";
-import { Container, IContainer } from "../types/model/Container";
-import { ContainerInstance, IContainerInstance } from "../types/model/ContainerInstance";
-import { DeploymentNode, IDeploymentNode } from "../types/model/DeploymentNode";
-import { Group, IGroup } from "../types/model/Group";
-import { IInfrastructureNode, InfrastructureNode } from "../types/model/InfrastructureNode";
-import { IPerson, Person } from "../types/model/Person";
-import { Relationship } from "../types/model/Relationship";
-import { ISoftwareSystem, SoftwareSystem } from "../types/model/SoftwareSystem";
-import { ISoftwareSystemInstance, SoftwareSystemInstance } from "../types/model/SoftwareSystemInstance";
+import {
+    IComponent,
+    IContainer,
+    IContainerInstance,
+    IDeploymentNode,
+    IGroup,
+    IInfrastructureNode,
+    IPerson,
+    IRelationship,
+    ISoftwareSystem,
+    ISoftwareSystemInstance
+} from "../";
 
 export interface IElementVisitor {
     visitGroup(
@@ -37,5 +39,5 @@ export interface IElementVisitor {
     visitContainerInstance(
         containerInstance: IContainerInstance,
         params?: { parentId?: string }): void;
-    visitRelationship(relationship: Relationship): void;
+    visitRelationship(relationship: IRelationship): void;
 }

@@ -14,7 +14,7 @@ export const UserCursor: FC<UserCursorProps> = ({
         <Box
             key={user.username}
             position={"absolute"}
-            background={user.color}
+            backgroundColor={user.color}
             borderRadius={"full"}
             borderWidth={1}
             borderColor={"rgba(255, 255, 255, 0.1)"}

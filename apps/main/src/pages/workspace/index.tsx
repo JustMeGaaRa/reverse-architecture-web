@@ -22,7 +22,8 @@ import {
     ChatLines,
     Code,
     HelpCircle,
-    Timer
+    Settings,
+    Svg3DSelectSolid
 } from "iconoir-react";
 import { FC, PropsWithChildren, useEffect, useState } from "react";
 import { Outlet } from "react-router";
@@ -65,10 +66,10 @@ export const Workspace: FC<PropsWithChildren> = () => {
                         >
                             <Box />
                             <RouteList>
-                                <Route icon={AddKeyframes} title={"add frames"} to={"add"} />
+                                <Route icon={Svg3DSelectSolid} title={"diagram"} to={"diagram"} />
                                 <Route icon={Code} title={"code editor"} to={"editor"} />
-                                <Route icon={Timer} title={"timer"} to={"timer"} />
                                 <Route icon={ChatLines} title={"comments"} to={"comments"} />
+                                <Route icon={Settings} title={"settings"} to={"settings"} />
                             </RouteList>
                             <RouteList>
                                 <Route icon={HelpCircle} title={"help"} to={"help"} />

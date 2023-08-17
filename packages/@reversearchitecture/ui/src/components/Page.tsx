@@ -11,6 +11,7 @@ export const Page: FC<PropsWithChildren<{
             backgroundColor={"basic.eerie-black"}
             direction={"column"}
             height={"100vh"}
+            overflow={"hidden"}
         >
             {children}
         </Flex>

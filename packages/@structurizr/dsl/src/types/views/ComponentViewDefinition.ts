@@ -27,8 +27,12 @@ export interface IComponentView extends IViewDefinition {
     relationships: Array<IRelationshipPosition>;
 }
 
+type ComponentViewValues =
+    Required<Pick<IComponentView, "identifier">>
+    & Partial<Omit<IComponentView, "type" | "identifier">>;
+
 export class ComponentViewDefinition implements IViewDefinition, ISupportImmutable<IComponentView> {
-    constructor(values: Omit<IComponentView, "type">) {
+    constructor(values: ComponentViewValues) {
         this.type = ViewType.Component;
         this.identifier = values.identifier;
         this.key = values.key;
