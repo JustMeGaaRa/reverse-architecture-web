@@ -1,8 +1,11 @@
 import {
+    All,
     AutoLayout,
     Component,
     Container,
     Group,
+    IAutoLayout,
+    Identifier,
     IElementPosition,
     IRelationshipPosition,
     ISupportImmutable,
@@ -17,8 +20,9 @@ export interface IComponentView extends IViewDefinition {
     type: ViewType;
     identifier: string;
     key?: string;
-    include: string[];
-    autoLayout?: AutoLayout;
+    include?: Array<Identifier | All>;
+    exclude?: Array<Identifier>;
+    autoLayout?: IAutoLayout;
     animation?: any;
     title?: string;
     description?: string;
@@ -38,7 +42,8 @@ export class ComponentViewDefinition implements IViewDefinition, ISupportImmutab
         this.key = values.key;
         this.description = values.description;
         this.include = values.include ?? [];
-        this.autoLayout = values.autoLayout;
+        this.exclude = values.exclude ?? [];
+        this.autoLayout = values.autoLayout ? new AutoLayout(values.autoLayout) : undefined;
         this.animation = values.animation;
         this.title = values.title;
         this.properties = values.properties;
@@ -46,17 +51,18 @@ export class ComponentViewDefinition implements IViewDefinition, ISupportImmutab
         this.relationships = values.relationships ?? [];
     }
 
-    public readonly type: ViewType;
-    public readonly identifier: string;
-    public readonly key?: string;
-    public readonly include: string[];
-    public readonly autoLayout?: AutoLayout;
-    public readonly animation?: any;
-    public readonly title?: string;
-    public readonly description?: string;
-    public readonly properties?: Properties;
-    public readonly elements: Array<IElementPosition>;
-    public readonly relationships: Array<IRelationshipPosition>;
+    public type: ViewType;
+    public identifier: string;
+    public key?: string;
+    public include: Array<Identifier | All>;
+    public exclude: Array<Identifier>;
+    public autoLayout?: AutoLayout;
+    public animation?: any;
+    public title?: string;
+    public description?: string;
+    public properties?: Properties;
+    public elements: Array<IElementPosition>;
+    public relationships: Array<IRelationshipPosition>;
 
     public toObject(): IComponentView {
         return {
@@ -64,7 +70,7 @@ export class ComponentViewDefinition implements IViewDefinition, ISupportImmutab
             identifier: this.identifier,
             key: this.key,
             include: this.include,
-            autoLayout: this.autoLayout,
+            autoLayout: this.autoLayout?.toObject(),
             animation: this.animation,
             title: this.title,
             description: this.description,
@@ -97,5 +103,9 @@ export class ComponentViewDefinition implements IViewDefinition, ISupportImmutab
     public addComponent(component: Component, position: Position) {
         this.include.push(component.identifier);
         this.elements.push({ id: component.identifier, x: position.x, y: position.y });
+    }
+
+    public setAutoLayout(enabled: boolean) {
+        this.autoLayout = enabled ? new AutoLayout() : undefined;
     }
 }

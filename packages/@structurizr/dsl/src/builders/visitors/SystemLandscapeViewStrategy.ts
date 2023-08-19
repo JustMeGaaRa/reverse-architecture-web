@@ -2,7 +2,7 @@ import {
     IViewDefinition,
     IElementVisitor,
     ISupportVisitor,
-    hasRelationship,
+    relationshipExistsBetweenElements,
     getRelationships,
     IPerson,
     ISoftwareSystem,
@@ -16,35 +16,32 @@ export class SystemLandscapeViewStrategy implements ISupportVisitor {
     ) {}
 
     accept(visitor: IElementVisitor): void {
-        const relationships = getRelationships(this.model, true);
-                
         const visitSoftwareSystems = (
             people: Array<IPerson>,
             softwareSystems: Array<ISoftwareSystem>,
             parentId?: string
         ) => {
             // 2.1. include all people
-            people
-                .forEach(person => visitor.visitPerson(person, { parentId }));
+            people.forEach(person => visitor.visitPerson(person, { parentId }));
 
             // 2.1. include all software systems
-            softwareSystems
-                .forEach(softwareSystem => visitor.visitSoftwareSystem(softwareSystem, { parentId }));
+            softwareSystems.forEach(softwareSystem => visitor.visitSoftwareSystem(softwareSystem, { parentId }));
         }
 
-        // 1.1. iterate over all groups and find software system for the view
-        this.model.groups
-            .forEach(group => {
-                // 1.1.1.1. include the software system group as a boundary element
-                visitor.visitGroup(group);
+        const relationships = getRelationships(this.model, true);
 
-                // 1.1.1.2. include people and software systems in the group
-                visitSoftwareSystems(
-                    group.people,
-                    group.softwareSystems,
-                    group.identifier
-                );
-            });
+        // 1.1. iterate over all groups and find software system for the view
+        this.model.groups.forEach(group => {
+            // 1.1.1.1. include the software system group as a boundary element
+            visitor.visitGroup(group);
+
+            // 1.1.1.2. include people and software systems in the group
+            visitSoftwareSystems(
+                group.people,
+                group.softwareSystems,
+                group.identifier
+            );
+        });
 
         // 1.2. iterate over all software systems and find software system for the view
         visitSoftwareSystems(
@@ -53,7 +50,7 @@ export class SystemLandscapeViewStrategy implements ISupportVisitor {
         );
         
         relationships
-            .filter(relationship => hasRelationship(this.view, relationship.sourceIdentifier, relationship.targetIdentifier))
+            .filter(relationship => relationshipExistsBetweenElements(this.view, relationship))
             .forEach(relationship => visitor.visitRelationship(relationship));
     }
 }

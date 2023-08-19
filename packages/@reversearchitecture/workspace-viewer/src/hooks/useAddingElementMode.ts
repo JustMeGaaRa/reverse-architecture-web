@@ -36,7 +36,7 @@ export const useAddingElementMode = () => {
     }, []);
 
     return {
-        allowGroup: true,
+        allowGroup: isSystemLandscapView || isContainerView || isComponentView,
         allowPerson: isSystemLandscapView || isSystemContextView || isContainerView || isComponentView,
         allowSoftwareSystem: isSystemLandscapView || isSystemContextView || isContainerView || isComponentView,
         allowContainer: isContainerView || isComponentView,

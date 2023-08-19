@@ -27,7 +27,7 @@ export const WorkspaceZoomControls: FC = () => {
     ], [zoomTo, fitView]);
 
     return (
-        <Box position={"absolute"} bottom={4} right={4} zIndex={5}>
+        <Box position={"absolute"} bottom={4} right={4}>
             <Toolbar>
                 <ToolbarSection>
                     <IconButton

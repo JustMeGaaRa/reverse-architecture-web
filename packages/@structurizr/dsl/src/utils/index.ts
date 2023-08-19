@@ -103,7 +103,7 @@ export const findContainer = (model: IModel, identifier: Identifier) => {
         .find(x => x.identifier === identifier);
 }
 
-export const relationshipExists = (
+export const relationshipExistsOverall = (
     relationships: IRelationship[],
     sourceIdentifier: Identifier,
     targetIdentifier: Identifier
@@ -114,13 +114,13 @@ export const relationshipExists = (
     )
 }
 
-export const hasRelationship = (
-    view: IViewDefinition,
-    sourceIdentifier: string,
-    targetIdentifier: string
-) => {
-    return view.elements.find(x => x.id === sourceIdentifier)
-        && view.elements.find(x => x.id === targetIdentifier)
+export const relationshipExistsBetweenElements = (view: IViewDefinition, relationship: IRelationship) => {
+    return view.elements.find(x => x.id === relationship.sourceIdentifier)
+        && view.elements.find(x => x.id === relationship.targetIdentifier)
+}
+
+export const elementIncludedInView = (view: IViewDefinition, elementIdentifier: Identifier) => {
+    return view.include.some(identifier => identifier === elementIdentifier);
 }
 
 export const getRelationships = (model: IModel, implied: boolean) => {

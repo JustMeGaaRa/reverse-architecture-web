@@ -11,7 +11,7 @@ export class AutoLayout {
                 .map(node => ({
                     id: node.id,
                     height: (node.height ?? 200) * 2,
-                    width: (node.width ?? 300) * 2,
+                    width: (node.width ?? 200) * 2,
                     children: mapChildren(node.id)
                 }));
         }

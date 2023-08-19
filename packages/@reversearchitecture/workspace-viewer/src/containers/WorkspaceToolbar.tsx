@@ -6,17 +6,22 @@ import {
     BinMinus,
     Cancel,
     ChatAdd,
+    Component,
     Circle,
     CursorPointer,
     DragHandGesture,
     FrameAltEmpty,
+    Keyframe,
+    KeyframesCouple,
+    Keyframes,
     LayoutRight,
     Play,
     Redo,
     Rhombus,
+    Server,
     Square,
     Text,
-    Triangle,
+    User,
     Undo
 } from "iconoir-react";
 import { FC, useState } from "react";
@@ -29,7 +34,8 @@ import {
     useSelectionMode,
     useDraggingMode,
     useTextEditMode,
-    useAddingElementMode
+    useAddingElementMode,
+    useAutoLayoutMode
 } from "../hooks";
 import { useWorkspaceToolbarStore } from "../hooks/useWorkspaceToolbarStore";
 
@@ -37,6 +43,7 @@ import { useWorkspaceToolbarStore } from "../hooks/useWorkspaceToolbarStore";
 
 export const WorkspaceToolbar: FC = () => {
     const {
+        isAutoLayoutEnabled,
         isSelectionEnabled,
         isDraggingEnabled,
         isTextEditEnabled,
@@ -44,6 +51,7 @@ export const WorkspaceToolbar: FC = () => {
         isAddingElementEnabled,
         addingElementType,
     } = useWorkspaceToolbarStore();
+    const { toggleAutoLayout } = useAutoLayoutMode();
     const { enableSelectionMode } = useSelectionMode();
     const { enableDraggingMode } = useDraggingMode();
     const { enableTextEditMode } = useTextEditMode();
@@ -53,6 +61,7 @@ export const WorkspaceToolbar: FC = () => {
         allowSoftwareSystem,
         allowContainer,
         allowComponent,
+        allowGroup,
         allowDeploymentNode,
         enableAddingElement
     } = useAddingElementMode();
@@ -62,7 +71,7 @@ export const WorkspaceToolbar: FC = () => {
     useOnSelectionChange({ onChange: (selection) => { setSelection(selection) }});
 
     return (
-        <Box position={"absolute"} bottom={4} left={"50%"} transform={"translateX(-50%)"} zIndex={5}>
+        <Box position={"absolute"} bottom={4} left={"50%"} transform={"translateX(-50%)"}>
             {!isPresentationEnabled && (
                 <Toolbar>
                     <ToolbarSection>
@@ -93,10 +102,10 @@ export const WorkspaceToolbar: FC = () => {
                     <ToolbarSection>
                         {allowPerson && (
                             <IconButton
-                                aria-label={"add person"}
-                                icon={<Square />}
+                                aria-label={"person mode"}
+                                icon={<User />}
                                 isActive={isAddingElementEnabled && addingElementType === ElementType.Person}
-                                title={"add person"}
+                                title={"person mode"}
                                 _active={{
                                     backgroundColor: "yellow.100",
                                     color: "yellow.900"
@@ -106,10 +115,10 @@ export const WorkspaceToolbar: FC = () => {
                         )}
                         {allowSoftwareSystem && (
                             <IconButton
-                                aria-label={"add software system"}
-                                icon={<Circle />}
+                                aria-label={"software system mode"}
+                                icon={<Keyframe />}
                                 isActive={isAddingElementEnabled && addingElementType === ElementType.SoftwareSystem}
-                                title={"add software system"}
+                                title={"software system mode"}
                                 _active={{
                                     backgroundColor: "yellow.100",
                                     color: "yellow.900"
@@ -119,10 +128,10 @@ export const WorkspaceToolbar: FC = () => {
                         )}
                         {allowContainer && (
                             <IconButton
-                                aria-label={"add container"}
-                                icon={<Triangle />}
+                                aria-label={"container mode"}
+                                icon={<KeyframesCouple />}
                                 isActive={isAddingElementEnabled && addingElementType === ElementType.Container}
-                                title={"add container"}
+                                title={"container mode"}
                                 _active={{
                                     backgroundColor: "yellow.100",
                                     color: "yellow.900"
@@ -132,10 +141,10 @@ export const WorkspaceToolbar: FC = () => {
                         )}
                         {allowComponent && (
                             <IconButton
-                                aria-label={"add component"}
-                                icon={<Rhombus />}
+                                aria-label={"component moe"}
+                                icon={<Keyframes />}
                                 isActive={isAddingElementEnabled && addingElementType === ElementType.Component}
-                                title={"add component"}
+                                title={"component mode"}
                                 _active={{
                                     backgroundColor: "yellow.100",
                                     color: "yellow.900"
@@ -143,17 +152,19 @@ export const WorkspaceToolbar: FC = () => {
                                 onClick={() => enableAddingElement(ElementType.Component)}
                             />
                         )}
-                        <IconButton
-                            aria-label={"add group"}
-                            icon={<AddKeyframeAlt />}
-                            isActive={isAddingElementEnabled && addingElementType === ElementType.Group}
-                            title={"add group"}
-                            _active={{
-                                backgroundColor: "yellow.100",
-                                color: "yellow.900"
-                            }}
-                            onClick={() => enableAddingElement(ElementType.Group)}
-                        />
+                        {allowGroup && (
+                            <IconButton
+                                aria-label={"group mode"}
+                                icon={<AddKeyframeAlt />}
+                                isActive={isAddingElementEnabled && addingElementType === ElementType.Group}
+                                title={"group mode"}
+                                _active={{
+                                    backgroundColor: "yellow.100",
+                                    color: "yellow.900"
+                                }}
+                                onClick={() => enableAddingElement(ElementType.Group)}
+                            />
+                        )}
                         {/* TODO: add icon butons for deployment and infrastructure nodes */}
                     </ToolbarSection>
 
@@ -194,11 +205,13 @@ export const WorkspaceToolbar: FC = () => {
                         <IconButton
                             aria-label={"enable auto layout"}
                             icon={<LayoutRight />}
+                            isActive={isAutoLayoutEnabled}
                             title={"enable auto layout"}
                             _active={{
                                 backgroundColor: "yellow.100",
                                 color: "yellow.900"
                             }}
+                            onClick={() => toggleAutoLayout()}
                         />
                     </ToolbarSection>
 

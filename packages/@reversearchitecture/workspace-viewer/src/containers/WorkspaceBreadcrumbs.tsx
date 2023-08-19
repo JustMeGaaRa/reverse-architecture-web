@@ -81,7 +81,7 @@ export const WorkspaceBreadcrumbs: FC = () => {
     const handleOnViewItemClick = useCallback((view: ViewKeys) => setSelectedView(view), [setSelectedView]);
 
     return (
-        <Box position={"absolute"} top={4} left={4} zIndex={5}>
+        <Box position={"absolute"} top={4} left={4}>
             <Breadcrumb separator={""}>
                 {links.map(link => (
                     <BreadcrumbItem key={link.title} isCurrentPage={link.isActive}>

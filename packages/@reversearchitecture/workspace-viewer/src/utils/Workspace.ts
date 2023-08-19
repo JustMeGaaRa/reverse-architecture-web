@@ -122,21 +122,21 @@ export const getView = (workspace: IWorkspace, viewDefinition?: ViewKeys) => {
         ?? workspace.views.containers.find(x => x.type === viewDefinition?.type && x.identifier === viewDefinition?.identifier)
         ?? workspace.views.components.find(x => x.type === viewDefinition?.type && x.identifier === viewDefinition?.identifier)
         ?? workspace.views.deployments.find(x => x.type === viewDefinition?.type && x.identifier === viewDefinition?.identifier);
-    const defaultView = workspace.views.systemLandscape
+        const defaultView = workspace.views.systemLandscape
         ?? workspace.views.systemContexts.at(0)
         ?? workspace.views.containers.at(0)
         ?? workspace.views.components.at(0)
         ?? workspace.views.deployments.at(0);
-
+    
     return existingView ?? defaultView ?? emptyView;
 }
 
-export const getReactFlowObject = async (
+export const getReactFlowObject = (
     strategy: ISupportVisitor,
     model: IModel,
     configuration: IConfiguration,
     selectedView: IViewDefinition
-): Promise<ReactFlowJsonObject> => {
+): ReactFlowJsonObject => {
     // TODO: get rid of this bounding box logic and rely on metadata or ELK autolayout instead
     const boundingBoxTreeBuilder = new BoundingBoxTreeBuilder();
     const boundingBoxTreeVisitor = new BoundingBoxTreeVisitor(model, configuration, selectedView, boundingBoxTreeBuilder);
@@ -146,10 +146,5 @@ export const getReactFlowObject = async (
     const reactFlowBuilder = new ReactFlowBuilder();
     const reactFlowVisitor = new ReactFlowVisitor(model, configuration, selectedView, reactFlowBuilder, boundingBoxTree);
     strategy?.accept(reactFlowVisitor);
-    const reactFlow = reactFlowBuilder.build();
-
-    const shouldAutoLayout = selectedView.autoLayout || selectedView.elements.length === 0;
-    return shouldAutoLayout
-        ? await new AutoLayout().execute(reactFlow)
-        : reactFlow;
+    return reactFlowBuilder.build();
 }

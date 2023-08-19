@@ -18,11 +18,14 @@ import {
     useCallback,
     useEffect,
     useRef,
+    useState,
 } from "react";
 import { WorkspaceViewRenderer } from "../containers";
 import {
+    useAutoLayoutEffect,
     useSystemLandscapeView,
     useViewportUtils,
+    useWorkspace,
     useWorkspaceToolbarStore
 } from "../hooks";
 import { getReactFlowObject } from "../utils";
@@ -41,37 +44,49 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
 }) => {
     const [ nodes, setNodes, onNodesChange ] = useNodesState([]);
     const [ edges, setEdges, onEdgesChange ] = useEdgesState([]);
+
+    useAutoLayoutEffect();
+
+    useEffect(() => {
+        const strategy = new SystemLandscapeViewStrategy(model, view);
+        const reactFlowObject = getReactFlowObject(strategy, model, configuration, view);
+        setNodes(reactFlowObject.nodes);
+        setEdges(reactFlowObject.edges);
+    }, [model, configuration, view, setNodes, setEdges]);
     
+    const { zoomIntoElement } = useWorkspace();
+    const handleOnDoubleClick = useCallback((event: React.MouseEvent, node: Node) => {
+        zoomIntoElement(node.data.element);
+        onNodesDoubleClick?.(event, node);
+    }, [onNodesDoubleClick, zoomIntoElement]);
+
+    // NOTE: following handlers are used to add elements when respective mode is enabled
+    const reactFlowRef = useRef(null)
+    const {
+        isAddingElementEnabled,
+        addingElementType
+    } = useWorkspaceToolbarStore();
     const {
         addGroup,
         addSoftwareSystem,
         addPerson,
         addRelationship,
     } = useSystemLandscapeView();
-
-    useEffect(() => {
-        const updateReactFlow = async () => {
-            const strategy = new SystemLandscapeViewStrategy(model, view);
-            const reactFlowObject = await getReactFlowObject(strategy, model, configuration, view);
-            setNodes(reactFlowObject.nodes);
-            setEdges(reactFlowObject.edges);
-        }
-
-        updateReactFlow();
-    }, [model, configuration, view, setNodes, setEdges]);
-
-    // NOTE: following handlers are used to add elements when respective mode is enabled
-    const reactFlowRef = useRef(null)
-    const { isAddingElementEnabled, addingElementType } = useWorkspaceToolbarStore();
     const { getViewportPoint } = useViewportUtils();
     
     const handleOnNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
         if (reactFlowRef.current && isAddingElementEnabled) {
             const parentOffset = reactFlowRef.current.getBoundingClientRect();
             const mousePoint = { x: event.clientX, y: event.clientY };
-            const targetPoint = { x: mousePoint.x - parentOffset.left, y: mousePoint.y - parentOffset.top };
+            const targetPoint = {
+                x: mousePoint.x - parentOffset.left,
+                y: mousePoint.y - parentOffset.top
+            };
             const viewportPoint = getViewportPoint(targetPoint);
-            const viewportTargetPoint = { x: viewportPoint.x - node.positionAbsolute.x, y: viewportPoint.y - node.positionAbsolute.y };
+            const viewportTargetPoint = {
+                x: viewportPoint.x - node.positionAbsolute.x,
+                y: viewportPoint.y - node.positionAbsolute.y
+            };
 
             switch (addingElementType) {
                 case ElementType.SoftwareSystem:
@@ -82,13 +97,23 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
                     break;
             }
         }
-    }, [reactFlowRef, addingElementType, isAddingElementEnabled, getViewportPoint, addSoftwareSystem, addPerson]);
+    }, [
+        reactFlowRef,
+        addingElementType,
+        isAddingElementEnabled,
+        getViewportPoint,
+        addSoftwareSystem,
+        addPerson
+    ]);
 
     const handleOnPaneClick = useCallback((event: React.MouseEvent) => {
         if (reactFlowRef.current && isAddingElementEnabled) {
             const parentOffset = reactFlowRef.current.getBoundingClientRect();
             const mousePoint = { x: event.clientX, y: event.clientY };
-            const targetPoint = { x: mousePoint.x - parentOffset.left, y: mousePoint.y - parentOffset.top };
+            const targetPoint = {
+                x: mousePoint.x - parentOffset.left,
+                y: mousePoint.y - parentOffset.top
+            };
             const viewportPoint = getViewportPoint(targetPoint);
 
             switch (addingElementType) {
@@ -103,7 +128,15 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
                     break;
             }
         }
-    }, [reactFlowRef, addingElementType, isAddingElementEnabled, getViewportPoint, addGroup, addSoftwareSystem, addPerson]);
+    }, [
+        reactFlowRef,
+        addingElementType,
+        isAddingElementEnabled,
+        getViewportPoint,
+        addGroup,
+        addSoftwareSystem,
+        addPerson
+    ]);
 
     return (
         <WorkspaceViewRenderer
@@ -113,7 +146,7 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             // onNodeDragStop={handleOnNodeDragStop}
-            onNodesDoubleClick={onNodesDoubleClick}
+            onNodesDoubleClick={handleOnDoubleClick}
             onNodeClick={handleOnNodeClick}
             // onMouseMove={handleOnMouseMove}
             onPaneClick={handleOnPaneClick}

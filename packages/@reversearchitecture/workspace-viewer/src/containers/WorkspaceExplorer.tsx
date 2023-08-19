@@ -60,29 +60,8 @@ export const WorkspaceExplorer: FC<PropsWithChildren<{
     onNodesDoubleClick,
     onMouseMove
 }) => {
-    const { setSelectedView } = useWorkspace();
-    const { setElementPosition } = useMetadata();
-    
-    // NOTE: used to zoom into the element of choice
-    const handleOnDoubleClick = useCallback((event: React.MouseEvent, node: Node) => {
-        if (node.data.element.tags.some(tag => tag.name === Tag.SoftwareSystem.name)) {
-            setSelectedView({
-                identifier: node.data.element.identifier,
-                type: ViewType.Container
-            });
-        }
-
-        if (node.data.element.tags.some(tag => tag.name === Tag.Container.name)) {
-            setSelectedView({
-                identifier: node.data.element.identifier,
-                type: ViewType.Component
-            });
-        }
-
-        onNodesDoubleClick?.(event, node);
-    }, [onNodesDoubleClick, setSelectedView]);
-
     // NOTE: used to update the element position in the metadata
+    const { setElementPosition } = useMetadata();
     const { selectedView } = useWorkspaceStore();
     const handleOnNodeDragStop = useCallback((event: React.MouseEvent, node: any, nodes: any[]) => {
         setElementPosition(selectedView, node.data.element.identifier, node.position);
@@ -107,18 +86,18 @@ export const WorkspaceExplorer: FC<PropsWithChildren<{
         containers,
         components,
         deployments
-    } = {
-        systemLandscape: workspace.views.systemLandscape?.identifier === selectedView.identifier
+    } = useWorkspaceStore(state => ({
+        systemLandscape: workspace.views.systemLandscape?.identifier === selectedView?.identifier
             ? workspace.views.systemLandscape : undefined,
         systemContexts: workspace.views.systemContexts
-            .filter(view => view.type === selectedView.type && view.identifier === selectedView.identifier),
+            .filter(view => view.type === selectedView?.type && view.identifier === selectedView?.identifier),
         containers: workspace.views.containers
-            .filter(view => view.type === selectedView.type && view.identifier === selectedView.identifier),
+            .filter(view => view.type === selectedView?.type && view.identifier === selectedView?.identifier),
         components: workspace.views.components
-            .filter(view => view.type === selectedView.type && view.identifier === selectedView.identifier),
+            .filter(view => view.type === selectedView?.type && view.identifier === selectedView?.identifier),
         deployments: workspace.views.deployments
-            .filter(view => view.type === selectedView.type && view.identifier === selectedView.identifier && view.environment === selectedView["environment"]),
-    }
+            .filter(view => view.type === selectedView?.type && view.identifier === selectedView?.identifier && view.environment === selectedView?.["environment"]),
+    }));
 
     return (
         <ReactFlowProvider>
@@ -127,14 +106,11 @@ export const WorkspaceExplorer: FC<PropsWithChildren<{
                 metadata={metadata}
             />
 
-            {children}
-
             {systemLandscape && (
                 <SystemLandscapeView
                     model={workspace.model}
                     configuration={workspace.views.configuration}
                     view={workspace.views.systemLandscape}
-                    onNodesDoubleClick={handleOnDoubleClick}
                 />
             )}
 
@@ -144,7 +120,6 @@ export const WorkspaceExplorer: FC<PropsWithChildren<{
                     model={workspace.model}
                     configuration={workspace.views.configuration}
                     view={view}
-                    onNodesDoubleClick={handleOnDoubleClick}
                 />
             ))}
 
@@ -154,7 +129,6 @@ export const WorkspaceExplorer: FC<PropsWithChildren<{
                     model={workspace.model}
                     configuration={workspace.views.configuration}
                     view={view}
-                    onNodesDoubleClick={handleOnDoubleClick}
                 />
             ))}
 
@@ -164,7 +138,6 @@ export const WorkspaceExplorer: FC<PropsWithChildren<{
                     model={workspace.model}
                     configuration={workspace.views.configuration}
                     view={view}
-                    onNodesDoubleClick={handleOnDoubleClick}
                 />
             ))}
 
@@ -174,9 +147,10 @@ export const WorkspaceExplorer: FC<PropsWithChildren<{
                     model={workspace.model}
                     configuration={workspace.views.configuration}
                     view={view}
-                    onNodesDoubleClick={handleOnDoubleClick}
                 />
             ))}
+
+            {children}
         </ReactFlowProvider>
     )
 }

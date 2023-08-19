@@ -11,6 +11,7 @@ export type WorkspaceToolbarState = {
     isMultiSelectEnabled: boolean;
     isCommentAddingEnabled: boolean;
     isPresentationEnabled: boolean;
+    isAutoLayoutEnabled: boolean;
 }
 
 export const useWorkspaceToolbarStore = create<WorkspaceToolbarState>(() => ({
@@ -23,4 +24,5 @@ export const useWorkspaceToolbarStore = create<WorkspaceToolbarState>(() => ({
     isMultiSelectEnabled: false,
     isCommentAddingEnabled: false,
     isPresentationEnabled: false,
+    isAutoLayoutEnabled: false
 }));

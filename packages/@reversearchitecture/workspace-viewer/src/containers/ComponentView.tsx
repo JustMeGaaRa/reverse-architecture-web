@@ -21,8 +21,10 @@ import {
 } from "react";
 import { WorkspaceViewRenderer } from "../containers";
 import {
+    useAutoLayoutEffect,
     useComponentView,
     useViewportUtils,
+    useWorkspace,
     useWorkspaceToolbarStore
 } from "../hooks";
 import { getReactFlowObject } from "../utils";
@@ -51,16 +53,20 @@ export const ComponentView: FC<PropsWithChildren<{
         addRelationship,
     } = useComponentView(view.identifier);
 
-    useEffect(() => {
-        const updateReactFlow = async () => {
-            const strategy = new ComponentViewStrategy(model, view);
-            const reactFlowObject = await getReactFlowObject(strategy, model, configuration, view);
-            setNodes(reactFlowObject.nodes);
-            setEdges(reactFlowObject.edges);
-        }
+    useAutoLayoutEffect();
 
-        updateReactFlow();
+    useEffect(() => {
+        const strategy = new ComponentViewStrategy(model, view);
+        const reactFlowObject = getReactFlowObject(strategy, model, configuration, view);
+        setNodes(reactFlowObject.nodes);
+        setEdges(reactFlowObject.edges);
     }, [model, configuration, view, setNodes, setEdges]);
+    
+    const { zoomIntoElement } = useWorkspace();
+    const handleOnDoubleClick = useCallback((event: React.MouseEvent, node: Node) => {
+        zoomIntoElement(node.data.element);
+        onNodesDoubleClick?.(event, node);
+    }, [onNodesDoubleClick, zoomIntoElement]);
 
     // NOTE: following handlers are used to add elements when respective mode is enabled
     const reactFlowRef = useRef(null)
@@ -71,9 +77,15 @@ export const ComponentView: FC<PropsWithChildren<{
         if (reactFlowRef.current && isAddingElementEnabled) {
             const parentOffset = reactFlowRef.current.getBoundingClientRect();
             const mousePoint = { x: event.clientX, y: event.clientY};
-            const targetPoint = { x: mousePoint.x - parentOffset.left, y: mousePoint.y - parentOffset.top };
+            const targetPoint = {
+                x: mousePoint.x - parentOffset.left,
+                y: mousePoint.y - parentOffset.top
+            };
             const viewportPoint = getViewportPoint(targetPoint);
-            const viewportTargetPoint = { x: viewportPoint.x - node.positionAbsolute.x, y: viewportPoint.y - node.positionAbsolute.y };
+            const viewportTargetPoint = {
+                x: viewportPoint.x - node.positionAbsolute.x,
+                y: viewportPoint.y - node.positionAbsolute.y
+            };
 
             switch (addingElementType) {
                 case ElementType.Group:
@@ -84,13 +96,23 @@ export const ComponentView: FC<PropsWithChildren<{
                     break;
             }
         }
-    }, [reactFlowRef, isAddingElementEnabled, addingElementType, getViewportPoint, addGroup, addComponent]);
+    }, [
+        reactFlowRef,
+        isAddingElementEnabled,
+        addingElementType,
+        getViewportPoint,
+        addGroup,
+        addComponent
+    ]);
 
     const handleOnPaneClick = useCallback((event: React.MouseEvent) => {
         if (reactFlowRef.current && isAddingElementEnabled) {
             const parentOffset = reactFlowRef.current.getBoundingClientRect();
             const mousePoint = { x: event.clientX, y: event.clientY};
-            const targetPoint = { x: mousePoint.x - parentOffset.left, y: mousePoint.y - parentOffset.top };
+            const targetPoint = {
+                x: mousePoint.x - parentOffset.left,
+                y: mousePoint.y - parentOffset.top
+            };
             const viewportPoint = getViewportPoint(targetPoint);
 
             switch (addingElementType) {
@@ -105,7 +127,15 @@ export const ComponentView: FC<PropsWithChildren<{
                     break;
             }
         }
-    }, [reactFlowRef, isAddingElementEnabled, addingElementType, getViewportPoint, addSoftwareSystem, addPerson, addContainer]);
+    }, [
+        reactFlowRef,
+        isAddingElementEnabled,
+        addingElementType,
+        getViewportPoint,
+        addSoftwareSystem,
+        addPerson,
+        addContainer
+    ]);
 
     return (
         <WorkspaceViewRenderer
@@ -115,7 +145,7 @@ export const ComponentView: FC<PropsWithChildren<{
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             // onNodeDragStop={handleOnNodeDragStop}
-            onNodesDoubleClick={onNodesDoubleClick}
+            onNodesDoubleClick={handleOnDoubleClick}
             onNodeClick={handleOnNodeClick}
             // onMouseMove={handleOnMouseMove}
             onPaneClick={handleOnPaneClick}
