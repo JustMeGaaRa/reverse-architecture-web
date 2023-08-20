@@ -5,16 +5,28 @@ import {
     Identifier,
     Position,
     Relationship,
-    Workspace
+    Workspace,
+    WorkspaceMetadata
 } from "@structurizr/dsl";
 import { useCallback } from "react";
 import { v4 } from "uuid";
-import { useWorkspaceStore } from "../hooks";
+import { useWorkspaceMetadataStore, useWorkspaceStore } from "../hooks";
 import { getNodeFromElement, getEdgeFromRelationship } from "../utils";
 
 export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
     const { workspace } = useWorkspaceStore();
+    const { metadata } = useWorkspaceMetadataStore();
     const { setNodes, setEdges } = useReactFlow();
+    
+    // NOTE: the software system added can either be an existing one or a new one
+    // The existing system is included in the view, while the new one is also added to the model
+    const addSoftwareSystem = useCallback((position: Position) => {
+    }, []);
+    
+    // NOTE: the person added can either be an existing one or a new one
+    // The existing person is included in the view, while the new one is also added to the model
+    const addPerson = useCallback((position: Position) => {
+    }, []);
     
     const addGroup = useCallback((position: Position) => {
         const group = new Group({
@@ -44,16 +56,6 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
         });
         setNodes(nodes => [...nodes, node]);
     }, [systemSoftwareIdentifier, workspace, setNodes]);
-    
-    // NOTE: the software system added can either be an existing one or a new one
-    // The existing system is included in the view, while the new one is also added to the model
-    const addSoftwareSystem = useCallback((position: Position) => {
-    }, []);
-    
-    // NOTE: the person added can either be an existing one or a new one
-    // The existing person is included in the view, while the new one is also added to the model
-    const addPerson = useCallback((position: Position) => {
-    }, []);
     
     const addContainer = useCallback((position: Position, groupId?: Identifier) => {
         const container = new Container({
@@ -105,11 +107,24 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
         setEdges(edges => [...edges, edge]);
     }, [workspace, setEdges]);
 
+    const setElementPosition = useCallback((elementId: string, position: Position) => {
+        const builder = new WorkspaceMetadata(metadata);
+        builder.views.containers
+            .filter(x => x.identifier === systemSoftwareIdentifier)
+            .forEach(x => x.setElementPosition(elementId, position));
+
+        useWorkspaceMetadataStore.setState(state => ({
+            ...state,
+            metadata: builder.toObject()
+        }));
+    }, [systemSoftwareIdentifier, metadata]);
+
     return {
         addGroup,
         addSoftwareSystem,
         addPerson,
         addContainer,
-        addRelationship
+        addRelationship,
+        setElementPosition
     }
 }

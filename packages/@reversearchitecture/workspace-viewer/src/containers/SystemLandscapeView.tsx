@@ -17,6 +17,7 @@ import {
     PropsWithChildren,
     useCallback,
     useEffect,
+    useMemo,
     useRef,
     useState,
 } from "react";
@@ -25,43 +26,29 @@ import {
     useAutoLayoutEffect,
     useSystemLandscapeView,
     useViewportUtils,
+    useViewRenderingEffect,
     useWorkspace,
     useWorkspaceToolbarStore
 } from "../hooks";
-import { getReactFlowObject } from "../utils";
 
 export const SystemLandscapeView: FC<PropsWithChildren<{
     model: IModel;
     configuration: IConfiguration;
     view: ISystemLandscapeView;
+    onNodeDragStop?: NodeMouseHandler;
     onNodesDoubleClick?: NodeMouseHandler;
 }>> = ({
     children,
     model,
     configuration,
     view,
+    onNodeDragStop,
     onNodesDoubleClick
 }) => {
     const [ nodes, setNodes, onNodesChange ] = useNodesState([]);
     const [ edges, setEdges, onEdgesChange ] = useEdgesState([]);
-
-    useAutoLayoutEffect();
-
-    useEffect(() => {
-        const strategy = new SystemLandscapeViewStrategy(model, view);
-        const reactFlowObject = getReactFlowObject(strategy, model, configuration, view);
-        setNodes(reactFlowObject.nodes);
-        setEdges(reactFlowObject.edges);
-    }, [model, configuration, view, setNodes, setEdges]);
-    
-    const { zoomIntoElement } = useWorkspace();
-    const handleOnDoubleClick = useCallback((event: React.MouseEvent, node: Node) => {
-        zoomIntoElement(node.data.element);
-        onNodesDoubleClick?.(event, node);
-    }, [onNodesDoubleClick, zoomIntoElement]);
-
-    // NOTE: following handlers are used to add elements when respective mode is enabled
-    const reactFlowRef = useRef(null)
+    const reactFlowRef = useRef(null);
+    const strategy = useMemo(() => new SystemLandscapeViewStrategy(model, view), [model, view]);
     const {
         isAddingElementEnabled,
         addingElementType
@@ -71,9 +58,25 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
         addSoftwareSystem,
         addPerson,
         addRelationship,
+        setElementPosition
     } = useSystemLandscapeView();
+    const { zoomIntoElement } = useWorkspace();
     const { getViewportPoint } = useViewportUtils();
-    
+
+    useAutoLayoutEffect();
+    useViewRenderingEffect(strategy);
+
+    const handleOnNodeDragStop = useCallback((event: React.MouseEvent, node: any, nodes: any[]) => {
+        setElementPosition(node.data.element.identifier, node.position);
+        onNodeDragStop?.(event, node);
+    }, [onNodeDragStop, setElementPosition]);
+
+    const handleOnDoubleClick = useCallback((event: React.MouseEvent, node: Node) => {
+        zoomIntoElement(node.data.element);
+        onNodesDoubleClick?.(event, node);
+    }, [onNodesDoubleClick, zoomIntoElement]);
+
+    // NOTE: following handlers are used to add elements when respective mode is enabled
     const handleOnNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
         if (reactFlowRef.current && isAddingElementEnabled) {
             const parentOffset = reactFlowRef.current.getBoundingClientRect();
@@ -87,13 +90,14 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
                 x: viewportPoint.x - node.positionAbsolute.x,
                 y: viewportPoint.y - node.positionAbsolute.y
             };
+            const groupId = node.data.element.type === ElementType.Group ? node.id : undefined;
 
             switch (addingElementType) {
                 case ElementType.SoftwareSystem:
-                    addSoftwareSystem(viewportTargetPoint, node.id);
+                    addSoftwareSystem(viewportTargetPoint, groupId);
                     break;
                 case ElementType.Person:
-                    addPerson(viewportTargetPoint, node.id);
+                    addPerson(viewportTargetPoint, groupId);
                     break;
             }
         }
@@ -145,7 +149,7 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
             edges={edges}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
-            // onNodeDragStop={handleOnNodeDragStop}
+            onNodeDragStop={handleOnNodeDragStop}
             onNodesDoubleClick={handleOnDoubleClick}
             onNodeClick={handleOnNodeClick}
             // onMouseMove={handleOnMouseMove}

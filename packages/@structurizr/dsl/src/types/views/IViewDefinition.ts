@@ -1,10 +1,13 @@
-import { IAutoLayout } from "./AutoLayout";
-import { ViewType } from "./ViewType";
-import { Properties } from "../model/Properties";
-import { All, Identifier } from "../model/Identifier";
-import { IViewMetadata } from "../../metadata/IViewMetadata";
+import {
+    All,
+    Identifier,
+    Properties,
+    ViewType,
+    IAutoLayout,
+    IViewDefinitionMetadata
+} from "../..";
 
-export interface IViewDefinition extends IViewMetadata {
+export interface IViewDefinition extends IViewDefinitionMetadata {
     type: ViewType;
     identifier: Identifier;
     key?: string;

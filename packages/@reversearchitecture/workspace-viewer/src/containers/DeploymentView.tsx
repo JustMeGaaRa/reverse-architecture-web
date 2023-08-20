@@ -16,78 +16,113 @@ import {
     PropsWithChildren,
     useCallback,
     useEffect,
+    useMemo,
+    useRef,
 } from "react";
 import { WorkspaceViewRenderer } from "../containers";
 import {
+    useAutoLayoutEffect,
     useDeploymentView,
     useViewportUtils,
+    useViewRenderingEffect,
     useWorkspaceToolbarStore
 } from "../hooks";
-import { getReactFlowObject } from "../utils";
 
 export const DeploymentView: FC<PropsWithChildren<{
     model: IModel;
     configuration: IConfiguration;
     view: IDeploymentView;
+    onNodeDragStop?: NodeMouseHandler;
     onNodesDoubleClick?: NodeMouseHandler;
 }>> = ({
     children,
     model,
     configuration,
     view,
+    onNodeDragStop,
     onNodesDoubleClick
 }) => {
     const [ nodes, setNodes, onNodesChange ] = useNodesState([]);
     const [ edges, setEdges, onEdgesChange ] = useEdgesState([]);
-    
+    const reactFlowRef = useRef(null);
+    const strategy = useMemo(() => new DeploymentViewStrategy(model, view, view["environment"]), [model, view]);
+    const {
+        isAddingElementEnabled,
+        addingElementType
+    } = useWorkspaceToolbarStore();
     const {
         addDeploymentNode,
         addInfrastructureNode,
         addSoftwareSystemInstance,
         addContainerInstance,
         addRelationship,
+        setElementPosition
     } = useDeploymentView(view.identifier, view.environment);
+    const { getViewportPoint } = useViewportUtils();
 
-    useEffect(() => {
-        const updateReactFlow = async () => {
-            const strategy = new DeploymentViewStrategy(model, view, view.environment);
-            const reactFlowObject = await getReactFlowObject(strategy, model, configuration, view);
-            setNodes(reactFlowObject.nodes);
-            setEdges(reactFlowObject.edges);
-        }
+    useAutoLayoutEffect();
+    useViewRenderingEffect(strategy);
 
-        updateReactFlow();
-    }, [model, configuration, view, setNodes, setEdges]);
+    const handleOnNodeDragStop = useCallback((event: React.MouseEvent, node: any, nodes: any[]) => {
+        setElementPosition(node.data.element.identifier, node.position);
+        onNodeDragStop?.(event, node);
+    }, [onNodeDragStop, setElementPosition]);
 
     // NOTE: following handlers are used to add elements when respective mode is enabled
-    const { isAddingElementEnabled, addingElementType } = useWorkspaceToolbarStore();
-    const { getViewportPoint } = useViewportUtils();
-    
-    const addElement = useCallback((elementType: ElementType, point: any, boxOffset: DOMRect, parentId?: string) => {
-        if (isAddingElementEnabled) {
-            const targetPoint = { x: point.clientX - boxOffset.left, y: point.clientY - boxOffset.top };
-            const viewportPoint = getViewportPoint(targetPoint);
-            // TODO: add element based on type
-        }
-    }, [isAddingElementEnabled, getViewportPoint]);
-
     const handleOnNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
-        const mousePoint = { clientX: event.clientX, clientY: event.clientY};
-        addElement(addingElementType, mousePoint, event.currentTarget.getBoundingClientRect(), node.id);
-    }, [addElement, addingElementType]);
+        if (reactFlowRef.current && isAddingElementEnabled) {
+            const parentOffset = reactFlowRef.current.getBoundingClientRect();
+            const mousePoint = { x: event.clientX, y: event.clientY};
+            const targetPoint = {
+                x: mousePoint.x - parentOffset.left,
+                y: mousePoint.y - parentOffset.top
+            };
+            const viewportPoint = getViewportPoint(targetPoint);
+            const viewportTargetPoint = {
+                x: viewportPoint.x - node.positionAbsolute.x,
+                y: viewportPoint.y - node.positionAbsolute.y
+            };
+
+            switch (addingElementType) {
+                // TODO: add element based on type
+            }
+        }
+    }, [
+        reactFlowRef,
+        isAddingElementEnabled,
+        addingElementType,
+        getViewportPoint,
+    ]);
 
     const handleOnPaneClick = useCallback((event: React.MouseEvent) => {
-        const mousePoint = { clientX: event.clientX, clientY: event.clientY};
-        addElement(addingElementType, mousePoint, event.currentTarget.getBoundingClientRect());
-    }, [addElement, addingElementType]);
+        if (reactFlowRef.current && isAddingElementEnabled) {
+            const parentOffset = reactFlowRef.current.getBoundingClientRect();
+            const mousePoint = { x: event.clientX, y: event.clientY};
+            const targetPoint = {
+                x: mousePoint.x - parentOffset.left,
+                y: mousePoint.y - parentOffset.top
+            };
+            const viewportPoint = getViewportPoint(targetPoint);
+
+            switch (addingElementType) {
+                // TODO: add element based on type
+            }
+        }
+    }, [
+        reactFlowRef,
+        isAddingElementEnabled,
+        addingElementType,
+        getViewportPoint,
+    ]);
 
     return (
         <WorkspaceViewRenderer
+            ref={reactFlowRef}
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
-            // onNodeDragStop={handleOnNodeDragStop}
+            onNodeDragStop={handleOnNodeDragStop}
             onNodesDoubleClick={onNodesDoubleClick}
             onNodeClick={handleOnNodeClick}
             // onMouseMove={handleOnMouseMove}

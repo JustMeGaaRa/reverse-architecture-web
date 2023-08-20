@@ -34,7 +34,7 @@ export const WorkspaceBreadcrumbs: FC = () => {
         data: any;
     }>>([]);
     const { workspace, selectedView } = useWorkspaceStore();
-    const { setSelectedView } = useWorkspace();
+    const { zoomIntoView } = useWorkspace();
 
     useEffect(() => {
         const colorSchemes = [
@@ -78,7 +78,7 @@ export const WorkspaceBreadcrumbs: FC = () => {
         })));
     }, [workspace, selectedView]);
 
-    const handleOnViewItemClick = useCallback((view: ViewKeys) => setSelectedView(view), [setSelectedView]);
+    const handleOnViewItemClick = useCallback(zoomIntoView, [zoomIntoView]);
 
     return (
         <Box position={"absolute"} top={4} left={4}>

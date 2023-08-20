@@ -43,19 +43,19 @@ export * from "./types/views/SystemContextViewDefinition";
 export * from "./types/views/SystemLandscapeViewDefinition";
 export * from "./types/views/ViewType";
 export * from "./types/views/IWorkspaceTheme";
+export * from "./types/views/IViewDefinition";
 
 export * from "./types/Model";
 export * from "./types/Views";
 export * from "./types/Workspace";
+export * from "./types/WorkspaceMetadata";
 
 export * from "./shared/IBuilder";
 export * from "./shared/ISupportPath";
 export * from "./shared/ISupportVisitor";
-export * from "./types/views/IViewDefinition";
 export * from "./shared/IElementVisitor";
+export * from "./shared/ISupportImmutable";
 
-export * from "./metadata/IWorkspaceMetadata";
-export * from "./metadata/IViewMetadata";
 
 export * from "./builders/visitors/ComponentViewStrategy";
 export * from "./builders/visitors/ContainerViewStrategy";

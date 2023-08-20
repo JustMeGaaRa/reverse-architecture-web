@@ -1,5 +1,4 @@
 import {
-    StructurizrElementTagDefaultStyle,
     IElement,
     ElementStyle,
     ElementStyleProperties,
@@ -8,7 +7,7 @@ import {
 import { NodeProps } from "@reactflow/core";
 import { FC, useMemo } from "react";
 import { ReverseArchitectureElementStyle } from "../../types";
-import { useTextEditMode, useWorkspaceToolbarStore } from "../../hooks";
+import { useWorkspaceToolbarStore } from "../../hooks";
 
 export function ReactFlowNodeWrapper(NodeElement: FC<{
     data: IElement;
@@ -21,7 +20,6 @@ export function ReactFlowNodeWrapper(NodeElement: FC<{
     style: ElementStyle;
     width?: number;
     height?: number;
-    draggedOver?: boolean;
 }>> {
     return function WrappedNode({
         data,
@@ -40,7 +38,7 @@ export function ReactFlowNodeWrapper(NodeElement: FC<{
                 style={elementStyle}
                 width={data.width}
                 height={data.height}
-                selected={data.draggedOver || selected || isTextEditEnabled}
+                selected={selected || isTextEditEnabled}
             />
         )
     }

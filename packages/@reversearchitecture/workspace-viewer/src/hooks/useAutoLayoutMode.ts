@@ -10,7 +10,6 @@ export const useAutoLayoutMode = () => {
 
     const toggleAutoLayout = useCallback(() => {
         const isAutoLayoutEnabled = selectedView.autoLayout !== undefined;
-
         const builder = new Workspace(workspace);
 
         builder.views.systemLandscape?.type === selectedView.type

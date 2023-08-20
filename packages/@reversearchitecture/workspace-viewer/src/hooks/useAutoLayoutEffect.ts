@@ -7,6 +7,7 @@ export const useAutoLayoutEffect = () => {
     const { selectedView } = useWorkspaceStore();
     const { toObject, setNodes, setEdges } = useReactFlow();
 
+    // NOTE: this effect will triggern whenever the selectedView changes
     useEffect(() => {
         const getReactFlowAuto = async (reactFlowObject: ReactFlowJsonObject) => {
             const autoLayout = new AutoLayout();

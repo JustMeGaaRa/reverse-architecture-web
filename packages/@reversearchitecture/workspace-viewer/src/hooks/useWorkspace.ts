@@ -21,16 +21,8 @@ export const useWorkspace = () => {
     const { workspace } = useWorkspaceStore();
     const { setNodes, setEdges } = useReactFlow();
     const { setState } = useStoreApi();
-    
-    const setWorkspace = useCallback((workspace: IWorkspace) => {
-        useWorkspaceStore.setState(state => ({
-            ...state,
-            workspace,
-            selectedView: getView(workspace)
-        }));
-    }, []);
 
-    const setSelectedView = useCallback((view: ViewKeys) => {
+    const zoomIntoView = useCallback((view: ViewKeys) => {
         const getStrategy = (type: ViewType, selectedView: IViewDefinition) => {
             switch (type) {
                 case ViewType.SystemLandscape:
@@ -47,16 +39,8 @@ export const useWorkspace = () => {
         }
 
         const selectedView = getView(workspace, view);
-
-        useWorkspaceStore.setState(state => ({
-            ...state,
-            selectedView
-        }));
-
-        useWorkspaceToolbarStore.setState(state => ({
-            ...state,
-            isAutoLayoutEnabled: selectedView.autoLayout !== undefined
-        }));
+        useWorkspaceStore.setState({ selectedView });
+        useWorkspaceToolbarStore.setState({ isAutoLayoutEnabled: selectedView.autoLayout !== undefined });
         
         const strategy = getStrategy(view.type, selectedView);
         const reactFlowObject = getReactFlowObject(
@@ -65,30 +49,29 @@ export const useWorkspace = () => {
             workspace.views.configuration,
             selectedView
         );
+        
         setNodes(reactFlowObject.nodes);
         setEdges(reactFlowObject.edges);
 
-        setState({
-            // NOTE: nodes should be draggable if we turn off auto layout
-            nodesDraggable: selectedView.autoLayout === undefined,
-        })
+        // NOTE: nodes should be draggable if we turn off auto layout
+        setState({ nodesDraggable: selectedView.autoLayout === undefined });
     }, [workspace, setState, setNodes, setEdges]);
 
     const zoomIntoElement = useCallback((element: IElement) => {
         if (element.tags.some(tag => tag.name === Tag.SoftwareSystem.name)) {
-            setSelectedView({
+            zoomIntoView({
                 identifier: element.identifier,
                 type: ViewType.Container
             });
         }
 
         if (element.tags.some(tag => tag.name === Tag.Container.name)) {
-            setSelectedView({
+            zoomIntoView({
                 identifier: element.identifier,
                 type: ViewType.Component
             });
         }
-    }, [setSelectedView]);
+    }, [zoomIntoView]);
 
     const addElements = useCallback((element: IElement, position: Position, parentId?: string) => {
 
@@ -99,8 +82,7 @@ export const useWorkspace = () => {
     }, []);
 
     return {
-        setWorkspace,
-        setSelectedView,
+        zoomIntoView,
         zoomIntoElement,
         addElements,
         deleteElements

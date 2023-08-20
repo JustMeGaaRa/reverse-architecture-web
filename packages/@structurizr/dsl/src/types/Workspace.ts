@@ -3,8 +3,8 @@ import {
     Model,
     IViews,
     Views,
-    ISupportImmutable,
-    Properties
+    Properties,
+    ISupportImmutable
 } from "../";
 
 export interface IWorkspace {

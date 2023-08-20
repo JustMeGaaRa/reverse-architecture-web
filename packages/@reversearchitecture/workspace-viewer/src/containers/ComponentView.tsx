@@ -17,6 +17,7 @@ import {
     PropsWithChildren,
     useCallback,
     useEffect,
+    useMemo,
     useRef,
 } from "react";
 import { WorkspaceViewRenderer } from "../containers";
@@ -24,26 +25,33 @@ import {
     useAutoLayoutEffect,
     useComponentView,
     useViewportUtils,
+    useViewRenderingEffect,
     useWorkspace,
     useWorkspaceToolbarStore
 } from "../hooks";
-import { getReactFlowObject } from "../utils";
 
 export const ComponentView: FC<PropsWithChildren<{
     model: IModel;
     configuration: IConfiguration;
     view: IComponentView;
+    onNodeDragStop?: NodeMouseHandler;
     onNodesDoubleClick?: NodeMouseHandler;
 }>> = ({
     children,
     model,
     configuration,
     view,
+    onNodeDragStop,
     onNodesDoubleClick
 }) => {
     const [ nodes, setNodes, onNodesChange ] = useNodesState([]);
     const [ edges, setEdges, onEdgesChange ] = useEdgesState([]);
-    
+    const reactFlowRef = useRef(null);
+    const strategy = useMemo(() => new ComponentViewStrategy(model, view), [model, view]);
+    const {
+        isAddingElementEnabled,
+        addingElementType
+    } = useWorkspaceToolbarStore();
     const {
         addGroup,
         addSoftwareSystem,
@@ -51,28 +59,25 @@ export const ComponentView: FC<PropsWithChildren<{
         addContainer,
         addComponent,
         addRelationship,
+        setElementPosition
     } = useComponentView(view.identifier);
+    const { zoomIntoElement } = useWorkspace();
+    const { getViewportPoint } = useViewportUtils();
 
     useAutoLayoutEffect();
+    useViewRenderingEffect(strategy);
 
-    useEffect(() => {
-        const strategy = new ComponentViewStrategy(model, view);
-        const reactFlowObject = getReactFlowObject(strategy, model, configuration, view);
-        setNodes(reactFlowObject.nodes);
-        setEdges(reactFlowObject.edges);
-    }, [model, configuration, view, setNodes, setEdges]);
-    
-    const { zoomIntoElement } = useWorkspace();
+    const handleOnNodeDragStop = useCallback((event: React.MouseEvent, node: any, nodes: any[]) => {
+        setElementPosition(node.data.element.identifier, node.position);
+        onNodeDragStop?.(event, node);
+    }, [onNodeDragStop, setElementPosition]);
+
     const handleOnDoubleClick = useCallback((event: React.MouseEvent, node: Node) => {
         zoomIntoElement(node.data.element);
         onNodesDoubleClick?.(event, node);
     }, [onNodesDoubleClick, zoomIntoElement]);
 
     // NOTE: following handlers are used to add elements when respective mode is enabled
-    const reactFlowRef = useRef(null)
-    const { isAddingElementEnabled, addingElementType } = useWorkspaceToolbarStore();
-    const { getViewportPoint } = useViewportUtils();
-    
     const handleOnNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
         if (reactFlowRef.current && isAddingElementEnabled) {
             const parentOffset = reactFlowRef.current.getBoundingClientRect();
@@ -86,13 +91,14 @@ export const ComponentView: FC<PropsWithChildren<{
                 x: viewportPoint.x - node.positionAbsolute.x,
                 y: viewportPoint.y - node.positionAbsolute.y
             };
+            const groupId = node.data.element.type === ElementType.Group ? node.id : undefined;
 
             switch (addingElementType) {
                 case ElementType.Group:
                     addGroup(viewportTargetPoint);
                     break;
                 case ElementType.Component:
-                    addComponent(viewportTargetPoint, node.id);
+                    addComponent(viewportTargetPoint, groupId);
                     break;
             }
         }
@@ -144,7 +150,7 @@ export const ComponentView: FC<PropsWithChildren<{
             edges={edges}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
-            // onNodeDragStop={handleOnNodeDragStop}
+            onNodeDragStop={handleOnNodeDragStop}
             onNodesDoubleClick={handleOnDoubleClick}
             onNodeClick={handleOnNodeClick}
             // onMouseMove={handleOnMouseMove}

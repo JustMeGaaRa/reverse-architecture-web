@@ -1,3 +1,4 @@
+import { Workspace } from "@structurizr/dsl";
 import {
     StructurizrLexer,
     StructurizrParser,
@@ -9,20 +10,17 @@ export const useStructurizrParser = () => {
     const parseStructurizr = useCallback((text: string) => {
         const parseText = (workspaceText: string) => {
             const parser = new StructurizrParser();
-            parser.reset();
             parser.input = StructurizrLexer.tokenize(workspaceText).tokens;
-            const workspaceCst = parser.workspace();
-            return workspaceCst;
+            return parser.workspace();
         }
 
-        const parseCst = (workspaceCst: any) => {
+        const parseCst = (workspaceCst: any): Workspace => {
             const visitor = new StructurizrVisitor();
-            const workspace = visitor.visit(workspaceCst);
-            return workspace;
+            return visitor.visit(workspaceCst);
         }
 
         return parseCst(parseText(text));
     }, []);
 
-    return parseStructurizr;
+    return { parseStructurizr };
 }

@@ -5,15 +5,17 @@ import {
     Identifier,
     Position,
     Relationship,
-    Workspace
+    Workspace,
+    WorkspaceMetadata
 } from "@structurizr/dsl";
 import { useCallback } from "react";
 import { v4 } from "uuid";
-import { useWorkspaceStore } from "../hooks";
+import { useWorkspaceMetadataStore, useWorkspaceStore } from "../hooks";
 import { getNodeFromElement, getEdgeFromRelationship } from "../utils";
 
 export const useComponentView = (containerIdentifier: Identifier) => {
     const { workspace } = useWorkspaceStore();
+    const { metadata } = useWorkspaceMetadataStore();
     const { setNodes, setEdges } = useReactFlow();
     
     const addGroup = useCallback((position: Position) => {
@@ -111,12 +113,25 @@ export const useComponentView = (containerIdentifier: Identifier) => {
         setEdges(edges => [...edges, edge]);
     }, [workspace, setEdges]);
 
+    const setElementPosition = useCallback((elementId: string, position: Position) => {
+        const builder = new WorkspaceMetadata(metadata);
+        builder.views.components
+            .filter(x => x.identifier === containerIdentifier)
+            .forEach(x => x.setElementPosition(elementId, position));
+
+        useWorkspaceMetadataStore.setState(state => ({
+            ...state,
+            metadata: builder.toObject()
+        }));
+    }, [containerIdentifier, metadata]);
+
     return {
         addGroup,
         addSoftwareSystem,
         addPerson,
         addContainer,
         addComponent,
-        addRelationship
+        addRelationship,
+        setElementPosition
     }
 }

@@ -47,8 +47,8 @@ export const WorkspaceViewRenderer = forwardRef<HTMLDivElement, PropsWithChildre
     onPaneClick
 }, ref) => {
     const NodeTypes = useMemo(() => ({
-        boundary: ReactFlowBoundaryNode,
         element: ReactFlowElementNode,
+        boundary: ReactFlowBoundaryNode,
         deploymentNode: ReactFlowDeploymentNode,
     }), []);
     

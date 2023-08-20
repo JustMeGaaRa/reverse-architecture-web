@@ -17,6 +17,7 @@ import {
     PropsWithChildren,
     useCallback,
     useEffect,
+    useMemo,
     useRef,
     useState,
 } from "react";
@@ -25,45 +26,30 @@ import {
     useAutoLayoutEffect,
     useSystemContextView,
     useViewportUtils,
+    useViewRenderingEffect,
     useWorkspace,
     useWorkspaceStore,
     useWorkspaceToolbarStore
 } from "../hooks";
-import { getReactFlowObject } from "../utils";
 
 export const SystemContextView: FC<PropsWithChildren<{
     model: IModel;
     configuration: IConfiguration;
     view: ISystemContextView;
+    onNodeDragStop?: NodeMouseHandler;
     onNodesDoubleClick?: NodeMouseHandler;
 }>> = ({
     children,
     model,
     configuration,
     view,
+    onNodeDragStop,
     onNodesDoubleClick
 }) => {
     const [ nodes, setNodes, onNodesChange ] = useNodesState([]);
     const [ edges, setEdges, onEdgesChange ] = useEdgesState([]);
-
-    useAutoLayoutEffect();
-
-    const [ isInitialized, setInitialized ] = useState(false);
-    useEffect(() => {
-        const strategy = new SystemContextViewStrategy(model, view);
-        const reactFlowObject = getReactFlowObject(strategy, model, configuration, view);
-        setNodes(reactFlowObject.nodes);
-        setEdges(reactFlowObject.edges);
-    }, [model, configuration, view, setNodes, setEdges]);
-    
-    const { zoomIntoElement } = useWorkspace();
-    const handleOnDoubleClick = useCallback((event: React.MouseEvent, node: Node) => {
-        zoomIntoElement(node.data.element);
-        onNodesDoubleClick?.(event, node);
-    }, [onNodesDoubleClick, zoomIntoElement]);
-
-    // NOTE: following handlers are used to add elements when respective mode is enabled
-    const reactFlowRef = useRef(null)
+    const reactFlowRef = useRef(null);
+    const strategy = useMemo(() => new SystemContextViewStrategy(model, view), [model, view]);
     const {
         isAddingElementEnabled,
         addingElementType
@@ -73,9 +59,25 @@ export const SystemContextView: FC<PropsWithChildren<{
         addSoftwareSystem,
         addPerson,
         addRelationship,
+        setElementPosition
     } = useSystemContextView(view.identifier);
+    const { zoomIntoElement } = useWorkspace();
     const { getViewportPoint } = useViewportUtils();
 
+    useAutoLayoutEffect();
+    useViewRenderingEffect(strategy);
+
+    const handleOnNodeDragStop = useCallback((event: React.MouseEvent, node: any, nodes: any[]) => {
+        setElementPosition(node.data.element.identifier, node.position);
+        onNodeDragStop?.(event, node);
+    }, [onNodeDragStop, setElementPosition]);
+
+    const handleOnDoubleClick = useCallback((event: React.MouseEvent, node: Node) => {
+        zoomIntoElement(node.data.element);
+        onNodesDoubleClick?.(event, node);
+    }, [onNodesDoubleClick, zoomIntoElement]);
+
+    // NOTE: following handlers are used to add elements when respective mode is enabled
     const handleOnNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
         if (reactFlowRef.current && isAddingElementEnabled) {
             const parentOffset = reactFlowRef.current.getBoundingClientRect();
@@ -147,7 +149,7 @@ export const SystemContextView: FC<PropsWithChildren<{
             edges={edges}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
-            // onNodeDragStop={handleOnNodeDragStop}
+            onNodeDragStop={handleOnNodeDragStop}
             onNodesDoubleClick={handleOnDoubleClick}
             onNodeClick={handleOnNodeClick}
             // onMouseMove={handleOnMouseMove}
