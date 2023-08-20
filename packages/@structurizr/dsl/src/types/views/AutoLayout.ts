@@ -1,4 +1,4 @@
-import { ISupportImmutable } from "../../metadata/IViewMetadata";
+import { ISupportImmutable } from "../../";
 import { AutoLayoutDirection } from "./AutoLayoutDirection";
 
 export interface IAutoLayout {

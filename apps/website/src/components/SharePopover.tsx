@@ -41,7 +41,7 @@ export const SharePopover: FC<SharePopoverProps> = ({
                 />
             </PopoverTrigger>
             <PopoverContent
-                background={useColorModeValue("whiteAlpha.900", "rgba(31, 33, 35, 1)")}
+                backgroundColor={useColorModeValue("whiteAlpha.900", "rgba(31, 33, 35, 1)")}
             >
                 <PopoverCloseButton />
                 <PopoverHeader>Share Diagram</PopoverHeader>
