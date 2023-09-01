@@ -1,4 +1,5 @@
 import {
+    IViewDefinition,
     IWorkspace,
     IWorkspaceMetadata,
     ViewType,
@@ -29,6 +30,7 @@ import {
 
 export const WorkspaceExplorer: FC<PropsWithChildren<{
     workspace: IWorkspace;
+    view: IViewDefinition;
     metadata: IWorkspaceMetadata;
     onInitialize?: OnInit;
     onNodeDragStop?: NodeMouseHandler;
@@ -36,6 +38,7 @@ export const WorkspaceExplorer: FC<PropsWithChildren<{
 }>> = ({
     children,
     workspace,
+    view,
     metadata
 }) => {
     // NOTE: used to track the user cursor position
@@ -53,6 +56,7 @@ export const WorkspaceExplorer: FC<PropsWithChildren<{
         <ReactFlowProvider>
             <WorkspaceStoreUpdater
                 workspace={workspace}
+                view={view}
                 metadata={metadata}
             />
 

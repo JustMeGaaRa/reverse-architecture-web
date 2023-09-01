@@ -1,7 +1,10 @@
 import "@reactflow/core/dist/style.css";
 import '@reactflow/node-resizer/dist/style.css';
 
-import { Background, BackgroundVariant } from "@reactflow/background";
+import {
+    Background,
+    BackgroundVariant
+} from "@reactflow/background";
 import {
     ReactFlow,
     ConnectionMode,
@@ -10,8 +13,16 @@ import {
     OnEdgesChange,
     NodeDragHandler,
     OnInit,
+    OnConnectStart,
+    OnConnectEnd,
+    OnConnect,
 } from "@reactflow/core";
-import { forwardRef, MouseEventHandler, PropsWithChildren, useMemo } from "react";
+import {
+    forwardRef,
+    MouseEventHandler,
+    PropsWithChildren,
+    useMemo
+} from "react";
 import {
     ReactFlowBoundaryNode,
     ReactFlowElementNode,
@@ -33,6 +44,9 @@ export const WorkspaceViewRenderer = forwardRef<HTMLDivElement, PropsWithChildre
     onNodeClick?: NodeMouseHandler;
     onMouseMove?: MouseEventHandler<HTMLDivElement>;
     onPaneClick?: MouseEventHandler;
+    onConnect?: OnConnect;
+    onConnectStart?: OnConnectStart;
+    onConnectEnd?: OnConnectEnd;
 }>>(({
     children,
     nodes,
@@ -44,7 +58,10 @@ export const WorkspaceViewRenderer = forwardRef<HTMLDivElement, PropsWithChildre
     onNodesDoubleClick,
     onNodeClick,
     onMouseMove,
-    onPaneClick
+    onPaneClick,
+    onConnect,
+    onConnectStart,
+    onConnectEnd
 }, ref) => {
     const NodeTypes = useMemo(() => ({
         element: ReactFlowElementNode,
@@ -87,6 +104,9 @@ export const WorkspaceViewRenderer = forwardRef<HTMLDivElement, PropsWithChildre
             onNodeClick={onNodeClick}
             onMouseMove={onMouseMove}
             onPaneClick={onPaneClick}
+            onConnect={onConnect}
+            onConnectStart={onConnectStart}
+            onConnectEnd={onConnectEnd}
         >
             <Background
                 variant={BackgroundVariant.Dots}

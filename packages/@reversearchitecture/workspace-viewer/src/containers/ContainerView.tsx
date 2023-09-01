@@ -6,6 +6,7 @@ import {
     ContainerViewStrategy,
 } from "@structurizr/dsl";
 import {
+    Connection,
     Node,
     NodeMouseHandler,
     useEdgesState,
@@ -137,6 +138,10 @@ export const ContainerView: FC<PropsWithChildren<{
         addPerson
     ]);
 
+    const handleOnConnect = useCallback((connection: Connection) => {
+        addRelationship(connection.source, connection.target);
+    }, [addRelationship]);
+
     return (
         <WorkspaceViewRenderer
             ref={reactFlowRef}
@@ -149,6 +154,7 @@ export const ContainerView: FC<PropsWithChildren<{
             onNodeClick={handleOnNodeClick}
             // onMouseMove={handleOnMouseMove}
             onPaneClick={handleOnPaneClick}
+            onConnect={handleOnConnect}
         >
             {children}
         </WorkspaceViewRenderer>

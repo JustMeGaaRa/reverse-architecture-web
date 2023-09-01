@@ -6,6 +6,7 @@ import {
     IDeploymentView,
 } from "@structurizr/dsl";
 import {
+    Connection,
     Node,
     NodeMouseHandler,
     useEdgesState,
@@ -115,6 +116,10 @@ export const DeploymentView: FC<PropsWithChildren<{
         getViewportPoint,
     ]);
 
+    const handleOnConnect = useCallback((connection: Connection) => {
+        addRelationship(connection.source, connection.target);
+    }, [addRelationship]);
+
     return (
         <WorkspaceViewRenderer
             ref={reactFlowRef}
@@ -127,6 +132,7 @@ export const DeploymentView: FC<PropsWithChildren<{
             onNodeClick={handleOnNodeClick}
             // onMouseMove={handleOnMouseMove}
             onPaneClick={handleOnPaneClick}
+            onConnect={handleOnConnect}
         >
             {children}
         </WorkspaceViewRenderer>

@@ -122,6 +122,7 @@ export const WorkspaceViewerSheet: FC = () => {
             <WorkspaceRoom>
                 <WorkspaceExplorer
                     workspace={workspace}
+                    view={workspace.views.systemLandscape}
                     metadata={metadata}
                     // onMouseMove={handleOnMouseMove}
                 >

@@ -1,19 +1,20 @@
 import { Flex, Box, Icon, } from "@chakra-ui/react";
 import { ChevronLeftIcon, ChevronUpIcon, ChevronRightIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { IElement, ElementStyleProperties, ShapeType } from "@structurizr/dsl";
-import { Handle, Position } from "@reactflow/core";
+import { Handle, Position, useStore } from "@reactflow/core";
 import { FC, PropsWithChildren } from "react";
 import { ElementLabel } from "./ElementLabel";
 import { DefaultBox, RoundedBox } from "../Shapes";
 import { HexColor } from "../../utils";
 
-const ElementInteractiveHandle: FC<{
+const ElementInteractiveHandle: FC<PropsWithChildren<{
     backgroundColor?: string;
     borderColor?: string;
     borderWidth?: number;
     position: Position;
     visibility: "hidden" | "visible";
-}> = ({
+}>> = ({
+    children,
     backgroundColor,
     borderColor,
     borderWidth,
@@ -49,11 +50,13 @@ const ElementInteractiveHandle: FC<{
             position={"absolute"}
             visibility={visibility}
         >
-            <Icon
-                as={iconPosition[position]}
+            <Flex
+                position={"relative"}
                 backgroundColor={borderColor}
                 borderRadius={"full"}
                 borderColor={borderColor}
+                alignItems={"center"}
+                justifyContent={"center"}
                 color={borderColor}
                 height={"8px"}
                 width={"8px"}
@@ -65,7 +68,40 @@ const ElementInteractiveHandle: FC<{
                     height: "24px",
                     width: "24px",
                 }}
-            />
+                _hover={{
+                    backgroundColor: "yellow.900",
+                    borderColor: "yellow.900",
+                    color: "yellow.900"
+                }}
+            >
+
+                <Icon
+                    as={iconPosition[position]}
+                    height={"100%"}
+                    width={"100%"}
+                    position={"absolute"}
+                >
+                </Icon>
+                <Handle
+                    key={`handle-source-${position}`}
+                    id={`handle-source-${position}`}
+                    type={"source"}
+                    position={position}
+                    style={{
+                        background: "none",
+                        border: "none",
+                        top: "auto",
+                        left: "auto",
+                        right: "auto",
+                        bottom: "auto",
+                        minWidth: "8px",
+                        minHeight: "8px",
+                        height: "100%",
+                        width: "100%",
+                        transform: "none",
+                    }}
+                />
+            </Flex>
         </Flex>
     )
 }
@@ -84,6 +120,7 @@ export function ElementShapeWhapper(ShapeComponent: FC<PropsWithChildren<{
         selected,
     }) {
         const positions = [Position.Left, Position.Top, Position.Right, Position.Bottom];
+        const isTarget = useStore(state => state.connectionNodeId && state.connectionNodeId !== data.identifier);
 
         return (
             <ShapeComponent data-group style={style} selected={selected}>
@@ -94,16 +131,7 @@ export function ElementShapeWhapper(ShapeComponent: FC<PropsWithChildren<{
                         borderColor={HexColor.withAlpha(style.stroke, 0.7)}
                         borderWidth={style.strokeWidth}
                         position={position}
-                        visibility={selected ? "visible" : "hidden"}
-                    />
-                ))}
-                {positions.map((position) => (
-                    <Handle
-                        key={`handle-connect-${position}`}
-                        id={`handle-connect-${position}`}
-                        type={"source"}
-                        position={position}
-                        style={{ visibility: "hidden" }}
+                        visibility={selected || isTarget ? "visible" : "hidden"}
                     />
                 ))}
                 <ElementLabel data={data} style={style} selected={selected} showDescription />

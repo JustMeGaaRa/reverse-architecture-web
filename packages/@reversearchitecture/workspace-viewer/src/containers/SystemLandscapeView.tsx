@@ -7,14 +7,18 @@ import {
     SystemLandscapeViewStrategy,
 } from "@structurizr/dsl";
 import {
+    Connection,
     Node,
     NodeMouseHandler,
+    OnConnectStartParams,
     useEdgesState,
     useNodesState,
 } from "@reactflow/core";
 import {
     FC,
     PropsWithChildren,
+    MouseEvent,
+    TouchEvent,
     useCallback,
     useEffect,
     useMemo,
@@ -45,8 +49,8 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
     onNodeDragStop,
     onNodesDoubleClick
 }) => {
-    const [ nodes, setNodes, onNodesChange ] = useNodesState([]);
-    const [ edges, setEdges, onEdgesChange ] = useEdgesState([]);
+    const [ nodes, , onNodesChange ] = useNodesState([]);
+    const [ edges, , onEdgesChange ] = useEdgesState([]);
     const reactFlowRef = useRef(null);
     const strategy = useMemo(() => new SystemLandscapeViewStrategy(model, view), [model, view]);
     const {
@@ -142,6 +146,10 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
         addPerson
     ]);
 
+    const handleOnConnect = useCallback((connection: Connection) => {
+        addRelationship(connection.source, connection.target);
+    }, [addRelationship]);
+
     return (
         <WorkspaceViewRenderer
             ref={reactFlowRef}
@@ -154,6 +162,7 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
             onNodeClick={handleOnNodeClick}
             // onMouseMove={handleOnMouseMove}
             onPaneClick={handleOnPaneClick}
+            onConnect={handleOnConnect}
         >
             {children}
         </WorkspaceViewRenderer>

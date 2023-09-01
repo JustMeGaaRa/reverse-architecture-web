@@ -1,10 +1,11 @@
 import { Flex } from "@chakra-ui/react";
+import { useReactFlow } from "@reactflow/core";
 import { NodeResizer } from "@reactflow/node-resizer";
 import {
     IElement,
     ElementStyleProperties,
 } from "@structurizr/dsl";
-import { FC, useCallback, useState  } from "react";
+import { FC, useCallback } from "react";
 import { HexColor } from "../../utils";
 import { BoundaryElementLabel } from "./BoundaryElementLabel";
 
@@ -21,10 +22,24 @@ export const BoundaryElement: FC<{
     height,
     selected,
 }) => {
-    const [size, setSize] = useState({ width, height });
+    // TODO: consider using useResizeObserver
+    // TODO: consider moving logic specific to reactflow outside of this component
+    // TODO: set element size in the workspace view metadata
+    const { setNodes } = useReactFlow();
     const onResize = useCallback((event, params) => {
-        setSize({ width: params.width, height: params.height });
-    }, []);
+        setNodes(nodes => {
+            return nodes.filter(node => node.id !== data.identifier
+                ? node
+                : {
+                    ...node,
+                    data: {
+                        ...node.data,
+                        width: params.width,
+                        height: params.height,
+                    }
+                })
+        });
+    }, [data.identifier, setNodes]);
 
     return (
         <Flex
@@ -38,8 +53,8 @@ export const BoundaryElement: FC<{
             align={"end"}
             justify={"start"}
             padding={2}
-            width={size.width}
-            height={size.height}
+            width={width}
+            height={height}
             textColor={style.color}
             _hover={{
                 borderColor: HexColor.withAlpha(style.stroke, 0.7),
