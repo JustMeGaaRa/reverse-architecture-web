@@ -1,4 +1,5 @@
 import { ISupportImmutable } from "../shared/ISupportImmutable";
+import { Identifier } from "./model/Identifier";
 import { Position } from "./views/Position";
 
 export interface IElementPosition {
@@ -14,7 +15,7 @@ export interface IRelationshipPosition {
 }
 
 export interface IViewDefinitionMetadata {
-    identifier: string;
+    identifier: Identifier;
     key?: string;
     elements: Array<IElementPosition>;
     relationships: Array<IRelationshipPosition>;
@@ -24,11 +25,11 @@ export class ViewDefinitionMetadata implements ISupportImmutable<IViewDefinition
     constructor(values: IViewDefinitionMetadata) {
         this.identifier = values.identifier;
         this.key = values.key;
-        this.elements = values.elements;
-        this.relationships = values.relationships;
+        this.elements = values.elements ?? [];
+        this.relationships = values.relationships ?? [];
     }
 
-    public identifier: string;
+    public identifier: Identifier;
     public key?: string;
     public elements: Array<IElementPosition>;
     public relationships: Array<IRelationshipPosition>;

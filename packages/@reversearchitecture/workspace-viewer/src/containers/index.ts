@@ -1,4 +1,4 @@
-export * from "./WorkspaceBreadcrumbs"
+export * from "./WorkspaceNavigation"
 export * from "./WorkspaceExplorer";
 export * from "./WorkspaceViewRenderer";
 export * from "./WorkspaceStoreUpdater";

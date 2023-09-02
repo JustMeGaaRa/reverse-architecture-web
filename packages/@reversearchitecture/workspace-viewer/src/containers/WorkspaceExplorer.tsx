@@ -22,11 +22,7 @@ import {
     ComponentView,
     DeploymentView
 } from "../containers";
-import {
-    useViewportUtils,
-    useWorkspaceStore,
-    WorkspaceViewsSelector
-} from "../hooks";
+import { useWorkspaceStore } from "../hooks";
 
 export const WorkspaceExplorer: FC<PropsWithChildren<{
     workspace: IWorkspace;
@@ -92,13 +88,13 @@ export const WorkspaceExplorer: FC<PropsWithChildren<{
                 />
             )}
 
-            {/* {selectedView?.type === ViewType.Deployment && (
+            {store.selectedView?.type === ViewType.Deployment && (
                 <DeploymentView
                     model={workspace.model}
                     configuration={workspace.views.configuration}
-                    view={selectedView}
+                    view={store.selectedView as any}
                 />
-            )} */}
+            )}
 
             {children}
         </ReactFlowProvider>

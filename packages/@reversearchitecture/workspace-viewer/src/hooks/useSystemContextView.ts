@@ -6,43 +6,16 @@ import {
     Position,
     Relationship,
     SoftwareSystem,
-    Workspace,
-    WorkspaceMetadata
+    Workspace
 } from "@structurizr/dsl";
 import { useCallback } from "react";
 import { v4 } from "uuid";
-import { useWorkspaceMetadataStore, useWorkspaceStore } from "../hooks";
+import { useWorkspaceStore } from "../hooks";
 import { getNodeFromElement, getEdgeFromRelationship } from "../utils";
 
 export const useSystemContextView = (systemSoftwareIdentifier: Identifier) => {
     const { workspace } = useWorkspaceStore();
-    const { metadata } = useWorkspaceMetadataStore();
     const { setNodes, setEdges } = useReactFlow();
-
-    const addGroup = useCallback((position: Position) => {
-        const group = new Group({
-            identifier: `group_${v4()}`,
-            name: "Group",
-        })
-
-        const builder = new Workspace(workspace);
-        builder.views.systemContexts
-            .find(x => x.identifier === systemSoftwareIdentifier)
-            ?.addGroup(group, position);
-        builder.model.addGroup(group);
-
-        useWorkspaceStore.setState(state => ({
-            ...state,
-            workspace: builder.toObject()
-        }));
-
-        const node = getNodeFromElement({
-            element: group,
-            position,
-            styles: workspace.views.configuration.styles
-        });
-        setNodes(nodes => [...nodes, node]);
-    }, [systemSoftwareIdentifier, workspace, setNodes]);
     
     const addSoftwareSystem = useCallback((position: Position, groupId?: Identifier) => {
         const softwareSystem = new SoftwareSystem({
@@ -96,6 +69,31 @@ export const useSystemContextView = (systemSoftwareIdentifier: Identifier) => {
         });
         setNodes(nodes => [...nodes, node]);
     }, [systemSoftwareIdentifier, workspace, setNodes]);
+
+    const addGroup = useCallback((position: Position) => {
+        const group = new Group({
+            identifier: `group_${v4()}`,
+            name: "Group",
+        })
+
+        const builder = new Workspace(workspace);
+        builder.views.systemContexts
+            .find(x => x.identifier === systemSoftwareIdentifier)
+            ?.addGroup(group, position);
+        builder.model.addGroup(group);
+
+        useWorkspaceStore.setState(state => ({
+            ...state,
+            workspace: builder.toObject()
+        }));
+
+        const node = getNodeFromElement({
+            element: group,
+            position,
+            styles: workspace.views.configuration.styles
+        });
+        setNodes(nodes => [...nodes, node]);
+    }, [systemSoftwareIdentifier, workspace, setNodes]);
     
     const addRelationship = useCallback((sourceIdentifier: Identifier, targetIdentifier: Identifier) => {
         const relationship = new Relationship({
@@ -119,16 +117,16 @@ export const useSystemContextView = (systemSoftwareIdentifier: Identifier) => {
     }, [workspace, setEdges]);
 
     const setElementPosition = useCallback((elementId: string, position: Position) => {
-        const builder = new WorkspaceMetadata(metadata);
+        const builder = new Workspace(workspace);
         builder.views.systemContexts
             .filter(x => x.identifier === systemSoftwareIdentifier)
             .forEach(x => x.setElementPosition(elementId, position));
 
-        useWorkspaceMetadataStore.setState(state => ({
+        useWorkspaceStore.setState(state => ({
             ...state,
-            metadata: builder.toObject()
+            workspace: builder.toObject()
         }));
-    }, [systemSoftwareIdentifier, metadata]);
+    }, [systemSoftwareIdentifier, workspace]);
 
     return {
         addGroup,

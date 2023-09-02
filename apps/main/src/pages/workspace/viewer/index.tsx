@@ -1,6 +1,6 @@
 import { IconButton, useToast } from "@chakra-ui/react";
 import {
-    WorkspaceBreadcrumbs,
+    WorkspaceNavigation,
     WorkspaceExplorer,
     WorkspaceToolbar,
     WorkspaceZoomControls
@@ -126,7 +126,7 @@ export const WorkspaceViewerSheet: FC = () => {
                     metadata={metadata}
                     // onMouseMove={handleOnMouseMove}
                 >
-                    <WorkspaceBreadcrumbs />
+                    <WorkspaceNavigation />
                     <WorkspaceToolbar />
                     <WorkspaceZoomControls />
                     {/* {provider && (

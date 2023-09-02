@@ -3,9 +3,9 @@ import {
     ViewType,
     ViewKeys,
     IWorkspace,
+    IViewDefinition,
     IWorkspaceMetadata,
     WorkspaceMetadata,
-    IViewDefinition,
 } from "@structurizr/dsl";
 import { create } from "zustand";
 
@@ -13,6 +13,7 @@ export type WorkspaceStore = {
     workspace: IWorkspace;
     selectedView: IViewDefinition;
     selectedViewPath: Array<ViewKeys>;
+    metadata: IWorkspaceMetadata;
 };
 
 export const useWorkspaceStore = create<WorkspaceStore>(() => ({
@@ -24,15 +25,8 @@ export const useWorkspaceStore = create<WorkspaceStore>(() => ({
         relationships: []
     },
     selectedViewPath: [],
-}));
-
-export type WorkspaceMetadataStore = {
-    metadata: IWorkspaceMetadata;
-}
-
-export const useWorkspaceMetadataStore = create<WorkspaceMetadataStore>(() => ({
     metadata: WorkspaceMetadata.Empty.toObject()
-}))
+}));
 
 export const WorkspaceViewsSelector = (state: WorkspaceStore) => {
     const selectedView = state.selectedView;
@@ -56,7 +50,3 @@ export const WorkspaceViewsSelector = (state: WorkspaceStore) => {
                 && view.environment === selectedView?.["environment"]),
     }
 }
-
-export type Action<TParam> = (state: WorkspaceStore, param: TParam) => void;
-
-export type Func<TParam, TResult> = (param: TParam) => TResult;

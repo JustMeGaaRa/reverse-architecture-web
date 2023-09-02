@@ -94,58 +94,58 @@ export const CommunityHub: FC<PropsWithChildren<{
         <ContextSheet>
             <ContextSheetHeader title={"Community Hub"} />
             <Divider />
-            <ContextSheetContent>
-                <HStack overflowX={"hidden"} divider={<StackDivider />} gap={2}>
-                    <HStack>
-                        {defaultFilters.map((filter) => (
-                            <Tag
-                                key={filter.tag}
-                                className={selectedFilter === filter.tag ? "active" : ""}
-                                cursor={"pointer"}
-                                size={"md"}
-                                onClick={() => onFilterClick(filter.tag)}
-                            >
-                                <TagLeftIcon boxSize={5} as={filter.icon} />
-                                <TagLabel>{filter.tag}</TagLabel>
-                            </Tag>
-                        ))}
+            <ContextSheetContent padding={0}>
+                <Box padding={6} height={"100%"} overflowY={"scroll"}>
+                    <HStack overflowX={"hidden"} divider={<StackDivider />} gap={2}>
+                        <HStack>
+                            {defaultFilters.map((filter) => (
+                                <Tag
+                                    key={filter.tag}
+                                    className={selectedFilter === filter.tag ? "active" : ""}
+                                    cursor={"pointer"}
+                                    size={"md"}
+                                    onClick={() => onFilterClick(filter.tag)}
+                                >
+                                    <TagLeftIcon boxSize={5} as={filter.icon} />
+                                    <TagLabel>{filter.tag}</TagLabel>
+                                </Tag>
+                            ))}
+                        </HStack>
+                        <HStack>
+                            {filters.map((tag) => (
+                                <Tag
+                                    key={tag}
+                                    className={selectedFilter === tag ? "active" : ""}
+                                    cursor={"pointer"}
+                                    size={"md"}
+                                    onClick={() => onFilterClick(tag)}
+                                >
+                                    {capitalize(tag)}
+                                </Tag>
+                            ))}
+                        </HStack>
                     </HStack>
-                    <HStack>
-                        {filters.map((tag) => (
-                            <Tag
-                                key={tag}
-                                className={selectedFilter === tag ? "active" : ""}
-                                cursor={"pointer"}
-                                size={"md"}
-                                onClick={() => onFilterClick(tag)}
-                            >
-                                {capitalize(tag)}
-                            </Tag>
-                        ))}
-                    </HStack>
-                </HStack>
-                <Divider height={16} border={0} />
-                {workspaces.length > 0 ? (
-                    <Box height={"100%"} overflowY={"scroll"}>
-                        <WorkspaceCardView
-                            workspaces={workspaces.filter(x => x.tags.includes(selectedFilter) || selectedFilter === "Explore")}
-                            onClick={onWorkspaceClick}
-                        />
-                    </Box>
-                ) : (
-                    <Flex
-                        alignItems={"center"}
-                        justifyContent={"center"}
-                        height={"100%"}
-                        width={"100%"}
-                    >
-                        <EmptyContent
-                            icon={Folder}
-                            title={"No community workspaces available yet"}
-                            description={"To get started, click the \"Create New Project\" button to create a new project."}
-                        />
-                    </Flex>
-                )}
+                    <Divider height={16} border={0} />
+                    {workspaces.length > 0 ? (
+                            <WorkspaceCardView
+                                workspaces={workspaces.filter(x => x.tags.includes(selectedFilter) || selectedFilter === "Explore")}
+                                onClick={onWorkspaceClick}
+                            />
+                    ) : (
+                        <Flex
+                            alignItems={"center"}
+                            justifyContent={"center"}
+                            height={"100%"}
+                            width={"100%"}
+                        >
+                            <EmptyContent
+                                icon={Folder}
+                                title={"No community workspaces available yet"}
+                                description={"To get started, click the \"Create New Project\" button to create a new project."}
+                            />
+                        </Flex>
+                    )}
+                </Box>
             </ContextSheetContent>
         </ContextSheet>
     );

@@ -11,13 +11,11 @@ import {
     NodeMouseHandler,
     useEdgesState,
     useNodesState,
-    useReactFlow,
 } from "@reactflow/core";
 import {
     FC,
     PropsWithChildren,
     useCallback,
-    useEffect,
     useMemo,
     useRef,
 } from "react";
@@ -25,9 +23,9 @@ import { WorkspaceViewRenderer } from "../containers";
 import {
     useAutoLayoutEffect,
     useComponentView,
+    useViewNavigation,
     useViewportUtils,
     useViewRenderingEffect,
-    useWorkspace,
     useWorkspaceToolbarStore
 } from "../hooks";
 
@@ -45,8 +43,8 @@ export const ComponentView: FC<PropsWithChildren<{
     onNodeDragStop,
     onNodesDoubleClick
 }) => {
-    const [ nodes, setNodes, onNodesChange ] = useNodesState([]);
-    const [ edges, setEdges, onEdgesChange ] = useEdgesState([]);
+    const [ nodes, , onNodesChange ] = useNodesState([]);
+    const [ edges, , onEdgesChange ] = useEdgesState([]);
     const reactFlowRef = useRef(null);
     const strategy = useMemo(() => new ComponentViewStrategy(model, view), [model, view]);
     const {
@@ -62,7 +60,7 @@ export const ComponentView: FC<PropsWithChildren<{
         addRelationship,
         setElementPosition
     } = useComponentView(view.identifier);
-    const { zoomIntoElement } = useWorkspace();
+    const { zoomIntoElement } = useViewNavigation();
     const { getViewportPoint } = useViewportUtils();
 
     useAutoLayoutEffect();

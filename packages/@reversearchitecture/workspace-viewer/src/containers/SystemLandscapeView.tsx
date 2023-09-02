@@ -3,35 +3,29 @@ import {
     IConfiguration,
     IModel,
     ISystemLandscapeView,
-    Position,
     SystemLandscapeViewStrategy,
 } from "@structurizr/dsl";
 import {
     Connection,
     Node,
     NodeMouseHandler,
-    OnConnectStartParams,
     useEdgesState,
     useNodesState,
 } from "@reactflow/core";
 import {
     FC,
     PropsWithChildren,
-    MouseEvent,
-    TouchEvent,
     useCallback,
-    useEffect,
     useMemo,
     useRef,
-    useState,
 } from "react";
 import { WorkspaceViewRenderer } from "../containers";
 import {
     useAutoLayoutEffect,
     useSystemLandscapeView,
+    useViewNavigation,
     useViewportUtils,
     useViewRenderingEffect,
-    useWorkspace,
     useWorkspaceToolbarStore
 } from "../hooks";
 
@@ -64,7 +58,7 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
         addRelationship,
         setElementPosition
     } = useSystemLandscapeView();
-    const { zoomIntoElement } = useWorkspace();
+    const { zoomIntoElement } = useViewNavigation();
     const { getViewportPoint } = useViewportUtils();
 
     useAutoLayoutEffect();

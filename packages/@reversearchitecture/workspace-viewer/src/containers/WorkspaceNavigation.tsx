@@ -23,9 +23,9 @@ import {
     Triangle,
 } from "iconoir-react";
 import { FC, useCallback, useEffect, useState } from "react";
-import { useWorkspace, useWorkspaceStore } from "../hooks";
+import { useViewNavigation, useWorkspaceStore } from "../hooks";
 
-export const WorkspaceBreadcrumbs: FC = () => {
+export const WorkspaceNavigation: FC = () => {
     const [ links, setLinks ] = useState<Array<{
         title: string;
         color: string;
@@ -34,7 +34,7 @@ export const WorkspaceBreadcrumbs: FC = () => {
         data: any;
     }>>([]);
     const { workspace, selectedView } = useWorkspaceStore();
-    const { zoomIntoView } = useWorkspace();
+    const { zoomIntoView } = useViewNavigation();
 
     useEffect(() => {
         const colorSchemes = [

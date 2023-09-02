@@ -5,17 +5,15 @@ import {
     Identifier,
     Position,
     Relationship,
-    Workspace,
-    WorkspaceMetadata
+    Workspace
 } from "@structurizr/dsl";
 import { useCallback } from "react";
 import { v4 } from "uuid";
-import { useWorkspaceMetadataStore, useWorkspaceStore } from "../hooks";
+import { useWorkspaceStore } from "../hooks";
 import { getNodeFromElement, getEdgeFromRelationship } from "../utils";
 
 export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
     const { workspace } = useWorkspaceStore();
-    const { metadata } = useWorkspaceMetadataStore();
     const { setNodes, setEdges } = useReactFlow();
     
     // NOTE: the software system added can either be an existing one or a new one
@@ -27,35 +25,6 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
     // The existing person is included in the view, while the new one is also added to the model
     const addPerson = useCallback((position: Position) => {
     }, []);
-    
-    const addGroup = useCallback((position: Position) => {
-        const group = new Group({
-            identifier: `group_${v4()}`,
-            name: "Group",
-        })
-
-        const builder = new Workspace(workspace);
-        builder.views.containers
-            .find(x => x.identifier === systemSoftwareIdentifier)
-            ?.addGroup(group, position);
-        builder.model
-            .findSoftwareSystem(systemSoftwareIdentifier)
-            .addGroup(group);
-
-        useWorkspaceStore.setState(state => ({
-            ...state,
-            workspace: builder.toObject()
-        }));
-
-        // NOTE: in this context the group can only be added as a child of the software system
-        const node = getNodeFromElement({
-            element: group,
-            position,
-            parentId: systemSoftwareIdentifier,
-            styles: workspace.views.configuration.styles
-        });
-        setNodes(nodes => [...nodes, node]);
-    }, [systemSoftwareIdentifier, workspace, setNodes]);
     
     const addContainer = useCallback((position: Position, groupId?: Identifier) => {
         const container = new Container({
@@ -86,6 +55,35 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
         setNodes(nodes => [...nodes, node]);
     }, [systemSoftwareIdentifier, workspace, setNodes]);
     
+    const addGroup = useCallback((position: Position) => {
+        const group = new Group({
+            identifier: `group_${v4()}`,
+            name: "Group",
+        })
+
+        const builder = new Workspace(workspace);
+        builder.views.containers
+            .find(x => x.identifier === systemSoftwareIdentifier)
+            ?.addGroup(group, position);
+        builder.model
+            .findSoftwareSystem(systemSoftwareIdentifier)
+            .addGroup(group);
+
+        useWorkspaceStore.setState(state => ({
+            ...state,
+            workspace: builder.toObject()
+        }));
+
+        // NOTE: in this context the group can only be added as a child of the software system
+        const node = getNodeFromElement({
+            element: group,
+            position,
+            parentId: systemSoftwareIdentifier,
+            styles: workspace.views.configuration.styles
+        });
+        setNodes(nodes => [...nodes, node]);
+    }, [systemSoftwareIdentifier, workspace, setNodes]);
+    
     const addRelationship = useCallback((sourceIdentifier: Identifier, targetIdentifier: Identifier) => {
         const relationship = new Relationship({
             sourceIdentifier,
@@ -108,16 +106,16 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
     }, [workspace, setEdges]);
 
     const setElementPosition = useCallback((elementId: string, position: Position) => {
-        const builder = new WorkspaceMetadata(metadata);
+        const builder = new Workspace(workspace);
         builder.views.containers
             .filter(x => x.identifier === systemSoftwareIdentifier)
             .forEach(x => x.setElementPosition(elementId, position));
 
-        useWorkspaceMetadataStore.setState(state => ({
+        useWorkspaceStore.setState(state => ({
             ...state,
-            metadata: builder.toObject()
+            workspace: builder.toObject()
         }));
-    }, [systemSoftwareIdentifier, metadata]);
+    }, [systemSoftwareIdentifier, workspace]);
 
     return {
         addGroup,

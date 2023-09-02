@@ -7,6 +7,7 @@ export * from "./useDraggingMode";
 export * from "./usePresentationMode";
 export * from "./useSelectionMode";
 export * from "./useTextEditMode";
+export * from "./useViewNavigation";
 export * from "./useViewportUtils";
 export * from "./useViewRenderingEffect";
 export * from "./useWorkspace";

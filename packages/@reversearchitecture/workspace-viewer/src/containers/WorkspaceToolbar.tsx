@@ -6,8 +6,6 @@ import {
     BinMinus,
     Cancel,
     ChatAdd,
-    Component,
-    Circle,
     CursorPointer,
     DragHandGesture,
     FrameAltEmpty,
@@ -17,9 +15,6 @@ import {
     LayoutRight,
     Play,
     Redo,
-    Rhombus,
-    Server,
-    Square,
     Text,
     User,
     Undo
@@ -35,11 +30,9 @@ import {
     useDraggingMode,
     useTextEditMode,
     useAddingElementMode,
-    useAutoLayoutMode
+    useAutoLayoutMode,
+    useWorkspaceToolbarStore
 } from "../hooks";
-import { useWorkspaceToolbarStore } from "../hooks/useWorkspaceToolbarStore";
-
-
 
 export const WorkspaceToolbar: FC = () => {
     const {

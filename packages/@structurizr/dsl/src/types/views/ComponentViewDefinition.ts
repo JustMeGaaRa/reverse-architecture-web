@@ -80,6 +80,18 @@ export class ComponentViewDefinition implements IViewDefinition, ISupportImmutab
         }
     }
 
+    public setElementPosition(elementId: string, position: Position) {
+        this.elements = this.elements
+            .map(element => element.id === elementId ? { ...element, ...position } : element);
+    }
+
+    public setRelationshipPosition(relationshipId: string) {
+        this.relationships = [
+            ...this.relationships.filter(x => x.id !== relationshipId),
+            { id: relationshipId }
+        ]
+    }
+
     public addGroup(group: Group, position: Position) {
         this.include.push(group.identifier);
         this.elements.push({ id: group.identifier, x: position.x, y: position.y });

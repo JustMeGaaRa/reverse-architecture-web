@@ -1,4 +1,5 @@
 import {
+    AspectRatio,
     Box,
     Card,
     CardBody,
@@ -38,48 +39,52 @@ export const ProjectCard: FC<PropsWithChildren<{
             }}
         >
             <CardBody px={0} py={1}>
-                <Flex
-                    alignItems={"center"}
-                    borderColor={"gray.200"}
-                    borderRadius={16}
-                    borderWidth={2}
-                    height={"100%"}
-                    justifyContent={"center"}
-                    overflow={"hidden"}
-                    _groupHover={{
-                        borderColor: "yellow.900",
-                    }}
-                >
-                    {preview && (
-                        <Image
-                            alt={"Project Preview Image"}
-                            src={preview}
-                            transitionProperty={"all"}
-                            transitionDuration={"0.3s"}
-                            transitionTimingFunction={"ease"}
-                            _groupHover={{ opacity: .4, transform: "scale(2)" }}
-                        />
-                    )}
-                    {!preview && (
+                <AspectRatio ratio={4/3}>
+                    <Flex
+                        alignItems={"center"}
+                        borderColor={"gray.200"}
+                        borderRadius={16}
+                        borderWidth={2}
+                        height={"100%"}
+                        justifyContent={"center"}
+                        overflow={"hidden"}
+                        _groupHover={{
+                            borderColor: "yellow.900",
+                        }}
+                    >
+                        {preview && (
+                            <Image
+                                alt={"Project Preview Image"}
+                                height={"100%"}
+                                width={"100%"}
+                                src={preview}
+                                transitionProperty={"all"}
+                                transitionDuration={"0.3s"}
+                                transitionTimingFunction={"ease"}
+                                _groupHover={{ opacity: .4, transform: "scale(2)" }}
+                            />
+                        )}
+                        {!preview && (
+                            <Icon
+                                as={MediaImage}
+                                color={"gray.700"}
+                                fontSize={32}
+                                strokeWidth={1}
+                                _groupHover={{ display: "none" }}
+                            />
+                        )}
+                        
                         <Icon
-                            as={MediaImage}
-                            color={"gray.700"}
-                            fontSize={32}
+                            as={EyeEmpty}
+                            color={"gray.900"}
+                            display={"none"}
+                            fontSize={40}
+                            position={"absolute"}
                             strokeWidth={1}
-                            _groupHover={{ display: "none" }}
+                            _groupHover={{ display: "block" }}
                         />
-                    )}
-                    
-                    <Icon
-                        as={EyeEmpty}
-                        color={"gray.900"}
-                        display={"none"}
-                        fontSize={40}
-                        position={"absolute"}
-                        strokeWidth={1}
-                        _groupHover={{ display: "block" }}
-                    />
-                </Flex>
+                    </Flex>
+                </AspectRatio>
             </CardBody>
             <CardFooter
                 pl={3}

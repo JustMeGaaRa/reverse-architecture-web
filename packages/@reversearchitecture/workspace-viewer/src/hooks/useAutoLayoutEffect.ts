@@ -15,10 +15,11 @@ export const useAutoLayoutEffect = () => {
             return reactFlowAuto;
         }
 
-        const reactFlowObject = toObject();
         const shouldAutoLayout = selectedView.autoLayout || selectedView.elements.length === 0;
-
+        
         if (shouldAutoLayout) {
+            const reactFlowObject = toObject();
+            
             getReactFlowAuto(reactFlowObject)
                 .then(reactFlowAuto => {
                     setNodes(reactFlowAuto.nodes);

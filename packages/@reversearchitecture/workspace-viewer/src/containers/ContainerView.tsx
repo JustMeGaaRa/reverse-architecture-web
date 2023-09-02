@@ -16,7 +16,6 @@ import {
     FC,
     PropsWithChildren,
     useCallback,
-    useEffect,
     useMemo,
     useRef,
 } from "react";
@@ -24,9 +23,9 @@ import { WorkspaceViewRenderer } from "../containers";
 import {
     useAutoLayoutEffect,
     useContainerView,
+    useViewNavigation,
     useViewportUtils,
     useViewRenderingEffect,
-    useWorkspace,
     useWorkspaceToolbarStore
 } from "../hooks";
 
@@ -44,8 +43,8 @@ export const ContainerView: FC<PropsWithChildren<{
     onNodeDragStop,
     onNodesDoubleClick
 }) => {
-    const [ nodes, setNodes, onNodesChange ] = useNodesState([]);
-    const [ edges, setEdges, onEdgesChange ] = useEdgesState([]);
+    const [ nodes, , onNodesChange ] = useNodesState([]);
+    const [ edges, , onEdgesChange ] = useEdgesState([]);
     const reactFlowRef = useRef(null);
     const strategy = useMemo(() => new ContainerViewStrategy(model, view), [model, view]);
     const {
@@ -60,7 +59,7 @@ export const ContainerView: FC<PropsWithChildren<{
         addRelationship,
         setElementPosition
     } = useContainerView(view.identifier);
-    const { zoomIntoElement } = useWorkspace();
+    const { zoomIntoElement } = useViewNavigation();
     const { getViewportPoint } = useViewportUtils();
 
     useAutoLayoutEffect();

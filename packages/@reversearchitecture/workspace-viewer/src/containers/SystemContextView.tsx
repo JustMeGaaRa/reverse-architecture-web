@@ -3,7 +3,6 @@ import {
     IConfiguration,
     IModel,
     ISystemContextView,
-    Position,
     SystemContextViewStrategy,
 } from "@structurizr/dsl";
 import {
@@ -17,19 +16,16 @@ import {
     FC,
     PropsWithChildren,
     useCallback,
-    useEffect,
     useMemo,
     useRef,
-    useState,
 } from "react";
 import { WorkspaceViewRenderer } from "../containers";
 import {
     useAutoLayoutEffect,
     useSystemContextView,
+    useViewNavigation,
     useViewportUtils,
     useViewRenderingEffect,
-    useWorkspace,
-    useWorkspaceStore,
     useWorkspaceToolbarStore
 } from "../hooks";
 
@@ -47,8 +43,8 @@ export const SystemContextView: FC<PropsWithChildren<{
     onNodeDragStop,
     onNodesDoubleClick
 }) => {
-    const [ nodes, setNodes, onNodesChange ] = useNodesState([]);
-    const [ edges, setEdges, onEdgesChange ] = useEdgesState([]);
+    const [ nodes, , onNodesChange ] = useNodesState([]);
+    const [ edges, , onEdgesChange ] = useEdgesState([]);
     const reactFlowRef = useRef(null);
     const strategy = useMemo(() => new SystemContextViewStrategy(model, view), [model, view]);
     const {
@@ -62,7 +58,7 @@ export const SystemContextView: FC<PropsWithChildren<{
         addRelationship,
         setElementPosition
     } = useSystemContextView(view.identifier);
-    const { zoomIntoElement } = useWorkspace();
+    const { zoomIntoElement } = useViewNavigation();
     const { getViewportPoint } = useViewportUtils();
 
     useAutoLayoutEffect();

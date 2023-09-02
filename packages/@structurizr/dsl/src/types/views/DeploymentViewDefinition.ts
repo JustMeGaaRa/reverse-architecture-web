@@ -84,6 +84,20 @@ export class DeploymentViewDefinition implements IViewDefinition, ISupportImmuta
         }
     }
 
+    public setElementPosition(elementId: string, position: Position) {
+        this.elements = [
+            ...this.elements.filter(x => x.id !== elementId),
+            { id: elementId, x: position.x, y: position.y }
+        ]
+    }
+
+    public setRelationshipPosition(relationshipId: string) {
+        this.relationships = [
+            ...this.relationships.filter(x => x.id !== relationshipId),
+            { id: relationshipId }
+        ]
+    }
+
     public addSoftwareSystem(softwareSystem: SoftwareSystem, position: Position) {
         this.include.push(softwareSystem.identifier);
         this.elements.push({ id: softwareSystem.identifier, x: position.x, y: position.y });

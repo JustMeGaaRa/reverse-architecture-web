@@ -5,48 +5,16 @@ import {
     Identifier,
     Position,
     Relationship,
-    Workspace,
-    WorkspaceMetadata
+    Workspace
 } from "@structurizr/dsl";
 import { useCallback } from "react";
 import { v4 } from "uuid";
-import { useWorkspaceMetadataStore, useWorkspaceStore } from "../hooks";
+import { useWorkspaceStore } from "../hooks";
 import { getNodeFromElement, getEdgeFromRelationship } from "../utils";
 
 export const useComponentView = (containerIdentifier: Identifier) => {
     const { workspace } = useWorkspaceStore();
-    const { metadata } = useWorkspaceMetadataStore();
     const { setNodes, setEdges } = useReactFlow();
-    
-    const addGroup = useCallback((position: Position) => {
-        const group = new Group({
-            identifier: `group_${v4()}`,
-            name: "Group",
-        })
-
-        const builder = new Workspace(workspace);
-        builder.views.components
-            .find(x => x.identifier === containerIdentifier)
-            ?.addGroup(group, position);
-        builder.model
-            .findContainer(containerIdentifier)
-            .addGroup(group);
-
-        useWorkspaceStore.setState(state => ({
-            ...state,
-            workspace: builder.toObject()
-        }));
-
-        // NOTE: in this context the group can only be added as a child of the container
-        const node = getNodeFromElement({
-            element: group,
-            position,
-            parentId: containerIdentifier,
-            styles: workspace.views.configuration.styles
-        });
-        setNodes(nodes => [...nodes, node]);
-    }, [containerIdentifier, workspace, setNodes]);
-    
     
     // NOTE: the software system added can either be an existing one or a new one
     // The existing system is included in the view, while the new one is also added to the model
@@ -92,6 +60,35 @@ export const useComponentView = (containerIdentifier: Identifier) => {
         setNodes(nodes => [...nodes, node]);
     }, [containerIdentifier, workspace, setNodes]);
     
+    const addGroup = useCallback((position: Position) => {
+        const group = new Group({
+            identifier: `group_${v4()}`,
+            name: "Group",
+        })
+
+        const builder = new Workspace(workspace);
+        builder.views.components
+            .find(x => x.identifier === containerIdentifier)
+            ?.addGroup(group, position);
+        builder.model
+            .findContainer(containerIdentifier)
+            .addGroup(group);
+
+        useWorkspaceStore.setState(state => ({
+            ...state,
+            workspace: builder.toObject()
+        }));
+
+        // NOTE: in this context the group can only be added as a child of the container
+        const node = getNodeFromElement({
+            element: group,
+            position,
+            parentId: containerIdentifier,
+            styles: workspace.views.configuration.styles
+        });
+        setNodes(nodes => [...nodes, node]);
+    }, [containerIdentifier, workspace, setNodes]);
+    
     const addRelationship = useCallback((sourceIdentifier: Identifier, targetIdentifier: Identifier) => {
         const relationship = new Relationship({
             sourceIdentifier,
@@ -114,16 +111,16 @@ export const useComponentView = (containerIdentifier: Identifier) => {
     }, [workspace, setEdges]);
 
     const setElementPosition = useCallback((elementId: string, position: Position) => {
-        const builder = new WorkspaceMetadata(metadata);
+        const builder = new Workspace(workspace);
         builder.views.components
             .filter(x => x.identifier === containerIdentifier)
             .forEach(x => x.setElementPosition(elementId, position));
 
-        useWorkspaceMetadataStore.setState(state => ({
+        useWorkspaceStore.setState(state => ({
             ...state,
-            metadata: builder.toObject()
+            workspace: builder.toObject()
         }));
-    }, [containerIdentifier, metadata]);
+    }, [containerIdentifier, workspace]);
 
     return {
         addGroup,

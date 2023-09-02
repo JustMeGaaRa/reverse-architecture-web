@@ -17,5 +17,5 @@ export const useViewRenderingEffect = (strategy: ISupportVisitor) => {
         );
         setNodes(reactFlowObject.nodes);
         setEdges(reactFlowObject.edges);
-    }, [strategy, workspace, selectedView, setNodes, setEdges]);
+    }, [selectedView]);
 }

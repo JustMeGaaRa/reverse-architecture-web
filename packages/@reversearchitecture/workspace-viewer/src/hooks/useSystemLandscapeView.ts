@@ -6,41 +6,16 @@ import {
     Position,
     Relationship,
     SoftwareSystem,
-    Workspace,
-    WorkspaceMetadata
+    Workspace
 } from "@structurizr/dsl";
 import { useCallback } from "react";
 import { v4 } from "uuid";
-import { useWorkspaceMetadataStore, useWorkspaceStore } from "../hooks";
+import { useWorkspaceStore } from "../hooks";
 import { getNodeFromElement, getEdgeFromRelationship } from "../utils";
 
 export const useSystemLandscapeView = () => {
     const { workspace } = useWorkspaceStore();
-    const { metadata } = useWorkspaceMetadataStore();
     const { setNodes, setEdges } = useReactFlow();
-
-    const addGroup = useCallback((position: Position) => {
-        const group = new Group({
-            identifier: `group_${v4()}`,
-            name: "Group",
-        })
-
-        const builder = new Workspace(workspace);
-        builder.views.systemLandscape?.addGroup(group, position);
-        builder.model.addGroup(group);
-
-        useWorkspaceStore.setState(state => ({
-            ...state,
-            workspace: builder.toObject()
-        }));
-
-        const node = getNodeFromElement({
-            element: group,
-            position,
-            styles: workspace.views.configuration.styles
-        });
-        setNodes(nodes => [...nodes, node]);
-    }, [workspace, setNodes]);
     
     const addSoftwareSystem = useCallback((position: Position, groupId?: Identifier) => {
         const softwareSystem = new SoftwareSystem({
@@ -89,6 +64,29 @@ export const useSystemLandscapeView = () => {
         });
         setNodes(nodes => [...nodes, node]);
     }, [workspace, setNodes]);
+
+    const addGroup = useCallback((position: Position) => {
+        const group = new Group({
+            identifier: `group_${v4()}`,
+            name: "Group",
+        })
+
+        const builder = new Workspace(workspace);
+        builder.views.systemLandscape?.addGroup(group, position);
+        builder.model.addGroup(group);
+
+        useWorkspaceStore.setState(state => ({
+            ...state,
+            workspace: builder.toObject()
+        }));
+
+        const node = getNodeFromElement({
+            element: group,
+            position,
+            styles: workspace.views.configuration.styles
+        });
+        setNodes(nodes => [...nodes, node]);
+    }, [workspace, setNodes]);
     
     const addRelationship = useCallback((sourceIdentifier: Identifier, targetIdentifier: Identifier) => {
         const relationship = new Relationship({
@@ -112,14 +110,14 @@ export const useSystemLandscapeView = () => {
     }, [workspace, setEdges]);
 
     const setElementPosition = useCallback((elementId: string, position: Position) => {
-        const builder = new WorkspaceMetadata(metadata);
+        const builder = new Workspace(workspace);
         builder.views.systemLandscape?.setElementPosition(elementId, position);
 
-        useWorkspaceMetadataStore.setState(state => ({
+        useWorkspaceStore.setState(state => ({
             ...state,
-            metadata: builder.toObject()
+            workspace: builder.toObject()
         }));
-    }, [metadata]);
+    }, [workspace]);
 
     return {
         addGroup,
