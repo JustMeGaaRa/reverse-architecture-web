@@ -1,8 +1,6 @@
 import { useContext } from "react"
-import { WorkspaceThemeContext } from "../";
+import { WorkspaceThemeContext } from "./context";
 
 export const useWorkspaceTheme = () => {
-    const { theme } = useContext(WorkspaceThemeContext);
-
-    return { theme }
+    return useContext(WorkspaceThemeContext);
 }

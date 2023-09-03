@@ -15,28 +15,22 @@ import {
     Route,
     RouteList
 } from "@reversearchitecture/ui";
-import { ReverseArchitectureTheme } from "@reversearchitecture/workspace-viewer";
-import { fetchTheme, IWorkspaceTheme } from "@structurizr/dsl";
 import {
-    AddKeyframes,
     ChatLines,
     Code,
     HelpCircle,
     Settings,
     Svg3DSelectSolid
 } from "iconoir-react";
-import { FC, PropsWithChildren, useEffect, useState } from "react";
+import { FC, PropsWithChildren } from "react";
 import { Outlet } from "react-router";
 import {
-    useNavigationContext,
+    NavigationTarget,
     WorkspaceMenu,
     WorkspaceThemeProvider
 } from "../../containers";
 
 export const Workspace: FC<PropsWithChildren> = () => {
-    const { availableActions } = useNavigationContext();
-    const [ theme ] = useState<IWorkspaceTheme>(ReverseArchitectureTheme);
-
     return (
         <Page>
             <PageHeader>
@@ -51,7 +45,7 @@ export const Workspace: FC<PropsWithChildren> = () => {
                     <WorkspaceMenu title={"Big Bank plc."} />
                 </HStack>
                 <HStack gap={2}>
-                    {availableActions.map(action => (action))}
+                    <NavigationTarget />
                 </HStack>
             </PageHeader>
             <PageBody>
@@ -77,7 +71,7 @@ export const Workspace: FC<PropsWithChildren> = () => {
                         </Flex>
                     </NavigationSidebar>
                     <NavigationContent>
-                        <WorkspaceThemeProvider value={{ theme }}>
+                        <WorkspaceThemeProvider>
                             <Outlet />
                         </WorkspaceThemeProvider>
                     </NavigationContent>

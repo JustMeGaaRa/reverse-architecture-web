@@ -19,10 +19,9 @@ import { useParams } from "react-router-dom";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
 import {
+    NavigationSource,
     useAccount,
-    useNavigationContext,
     UserAvatarGroup,
-    UserCursorGroup,
     useWorkspaceTheme,
     WorkspaceRoom
 } from "../../../containers";
@@ -69,7 +68,6 @@ export const WorkspaceViewerSheet: FC = () => {
         // setWorkspace(Workspace.Empty);
     }, [workspaceId, theme, toast, parseStructurizr]);
     
-    const { setAvailableActions } = useNavigationContext();
     const { account } = useAccount();
     const [ ydoc, setYdoc ] = useState<Y.Doc>();
     const [ provider, setProvider ] = useState<WebrtcProvider>();
@@ -92,26 +90,8 @@ export const WorkspaceViewerSheet: FC = () => {
     useEffect(() => {
         if(provider) {
             setSelfPresence(provider.awareness, account);
-    
-            setAvailableActions([
-                (
-                    <UserAvatarGroup
-                        key={"users-online"}
-                        awareness={provider.awareness}
-                    />
-                ),
-                (
-                    <IconButton
-                        key={"users-add"}
-                        aria-label={"share"}
-                        colorScheme={"gray"}
-                        icon={<AddUser />}
-                        size={"md"}
-                    />
-                )
-            ]);
         }
-    }, [account, provider, setSelfPresence, setAvailableActions]);
+    }, [account, provider, setSelfPresence]);
 
     const handleOnMouseMove = useCallback((event: any) => {
         setSelfPoint(provider?.awareness, event.viewportPoint)
@@ -119,6 +99,21 @@ export const WorkspaceViewerSheet: FC = () => {
 
     return (
         <ContextSheet>
+            <NavigationSource>
+                {provider?.awareness && (
+                    <UserAvatarGroup
+                        key={"users-online"}
+                        awareness={provider.awareness}
+                    />
+                )}
+                <IconButton
+                    key={"users-add"}
+                    aria-label={"share"}
+                    colorScheme={"gray"}
+                    icon={<AddUser />}
+                    size={"md"}
+                />
+            </NavigationSource>
             <WorkspaceRoom>
                 <WorkspaceExplorer
                     workspace={workspace}

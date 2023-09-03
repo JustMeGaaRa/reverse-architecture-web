@@ -1,4 +1,4 @@
-import { Box, Divider, Flex } from "@chakra-ui/react";
+import { Divider, Flex } from "@chakra-ui/react";
 import {
     ContextSheet,
     ContextSheetContent,
@@ -6,22 +6,13 @@ import {
     EmptyContent
 } from "@reversearchitecture/ui";
 import { Folder } from "iconoir-react";
-import { FC, PropsWithChildren, useEffect } from "react";
-import { useNavigationContext } from "../../../containers";
+import { FC, PropsWithChildren } from "react";
+import { NavigationSource } from "../../../containers";
 
-export const Dashboard: FC<PropsWithChildren<{
-
-}>> = ({
-
-}) => {
-    const { setAvailableActions } = useNavigationContext();
-
-    useEffect(() => {
-        setAvailableActions([]);
-    }, [setAvailableActions]);
-
+export const Dashboard: FC<PropsWithChildren> = () => {
     return (
         <ContextSheet>
+            <NavigationSource />
             <ContextSheetHeader title={"Dashboard"} />
             <Divider />
             <ContextSheetContent>

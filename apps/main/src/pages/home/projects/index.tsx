@@ -32,44 +32,13 @@ import {
     useEffect,
     useState
 } from "react";
-import { useNavigationContext } from "../../../containers";
+import { NavigationSource } from "../../../containers";
 import { ProjectApi } from "../../../services";
 import { useContentViewMode } from "./hooks";
 
-export const ProjectListContent: FC<PropsWithChildren<{
-
-}>> = ({
-    
-}) => {
-    const { setAvailableActions } = useNavigationContext();
+export const ProjectListContent: FC<PropsWithChildren> = () => {
     const { view, setView } = useContentViewMode("card");
     const [ projects, setProjects ] = useState([]);
-
-    useEffect(() => {
-        setAvailableActions([
-            (
-                <Button
-                    aria-label={"create new project"}
-                    key={"create-new-project"}
-                    colorScheme={"yellow"}
-                    isDisabled={true}
-                    leftIcon={<AddPageAlt />}
-                >
-                    Create New Project
-                </Button>
-            ),
-            (
-                <IconButton
-                    aria-label={"import workspace"}
-                    key={"import-workspace"}
-                    colorScheme={"gray"}
-                    icon={<Upload />}
-                    isDisabled={true}
-                    title={"Import Workspace"}
-                />
-            )
-        ])
-    }, [setAvailableActions]);
 
     useEffect(() => {
         const api = new ProjectApi();
@@ -84,6 +53,25 @@ export const ProjectListContent: FC<PropsWithChildren<{
 
     return (
         <ContextSheet>
+            <NavigationSource>
+                <Button
+                    aria-label={"create new project"}
+                    key={"create-new-project"}
+                    colorScheme={"yellow"}
+                    isDisabled={true}
+                    leftIcon={<AddPageAlt />}
+                >
+                    Create New Project
+                </Button>
+                <IconButton
+                    aria-label={"import workspace"}
+                    key={"import-workspace"}
+                    colorScheme={"gray"}
+                    icon={<Upload />}
+                    isDisabled={true}
+                    title={"Import Workspace"}
+                />
+            </NavigationSource>
             <ContextSheetHeader title={"All Projects"} />
             <Divider />
             <ContextSheetContent padding={0}>

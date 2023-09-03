@@ -29,15 +29,12 @@ import {
 } from "iconoir-react";
 import { FC, PropsWithChildren } from "react";
 import { Outlet } from "react-router";
-import { AccountMenu } from "../../containers";
-import { useNavigationContext } from "../../containers";
+import {
+    AccountMenu,
+    NavigationTarget,
+} from "../../containers";
 
-export const Layout: FC<PropsWithChildren<{
-
-}>> = ({
-    
-}) => {
-    const { availableActions } = useNavigationContext();
+export const Layout: FC<PropsWithChildren> = () => {
     const { isOpen, onToggle } = useDisclosure();
 
     return (
@@ -52,7 +49,7 @@ export const Layout: FC<PropsWithChildren<{
                 </Box>
                 <Box>
                     <ButtonGroup size={"lg"} variant={"outline"}>
-                        {availableActions.map(action => (action))}
+                        <NavigationTarget />
                     </ButtonGroup>
                 </Box>
             </PageHeader>

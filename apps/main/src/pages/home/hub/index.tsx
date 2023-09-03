@@ -31,15 +31,10 @@ import {
     useState
 } from "react";
 import { useNavigate } from "react-router-dom";
-import { useNavigationContext } from "../../../containers";
+import { NavigationSource } from "../../../containers";
 import { CommunityHubApi } from "../../../services";
 
-export const CommunityHub: FC<PropsWithChildren<{
-
-}>> = ({
-
-}) => {
-    const { setAvailableActions } = useNavigationContext();
+export const CommunityHub: FC<PropsWithChildren> = () => {
     const [ workspaces, setWorkspaces ] = useState([]);
     const [ filters, setFilters ] = useState([]);
     const [ selectedFilter, setSelectedFilter ] = useState("Explore");
@@ -49,22 +44,6 @@ export const CommunityHub: FC<PropsWithChildren<{
         { tag: "Popular", icon: FireFlame }
     ];
     const navigate = useNavigate();
-
-    useEffect(() => {
-        setAvailableActions([
-            (
-                <Button
-                    aria-label={"publish workspace"}
-                    key={"publish-workspace"}
-                    colorScheme={"yellow"}
-                    isDisabled={true}
-                    leftIcon={<AddPageAlt />}
-                >
-                    {"Publish Workspace"}
-                </Button>
-            )
-        ])
-    }, [setAvailableActions]);
 
     useEffect(() => {
         const api = new CommunityHubApi();
@@ -92,6 +71,17 @@ export const CommunityHub: FC<PropsWithChildren<{
 
     return (
         <ContextSheet>
+            <NavigationSource>
+                <Button
+                    aria-label={"publish workspace"}
+                    key={"publish-workspace"}
+                    colorScheme={"yellow"}
+                    isDisabled={true}
+                    leftIcon={<AddPageAlt />}
+                >
+                    Publish Workspace
+                </Button>
+            </NavigationSource>
             <ContextSheetHeader title={"Community Hub"} />
             <Divider />
             <ContextSheetContent padding={0}>
