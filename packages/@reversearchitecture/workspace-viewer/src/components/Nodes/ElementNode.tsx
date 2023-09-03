@@ -63,7 +63,6 @@ const ElementInteractiveHandle: FC<PropsWithChildren<{
                 transition={"all 0.1s ease-in-out"}
                 _groupHover={{
                     backgroundColor: backgroundColor,
-                    borderColor: borderColor,
                     borderWidth: borderWidth,
                     height: "24px",
                     width: "24px",
@@ -90,10 +89,7 @@ const ElementInteractiveHandle: FC<PropsWithChildren<{
                     style={{
                         background: "none",
                         border: "none",
-                        top: "auto",
-                        left: "auto",
-                        right: "auto",
-                        bottom: "auto",
+                        inset: "auto",
                         minWidth: "8px",
                         minHeight: "8px",
                         height: "100%",
@@ -131,9 +127,26 @@ export function ElementShapeWhapper(ShapeComponent: FC<PropsWithChildren<{
                         borderColor={HexColor.withAlpha(style.stroke, 0.7)}
                         borderWidth={style.strokeWidth}
                         position={position}
-                        visibility={selected || isTarget ? "visible" : "hidden"}
+                        visibility={selected ? "visible" : "hidden"}
                     />
                 ))}
+                {isTarget && (
+                    <Handle
+                        id={"handle-target"}
+                        type={"target"}
+                        position={Position.Left}
+                        style={{
+                            backgroundColor: HexColor.withAlpha(style.background, 0.1),
+                            backdropFilter: "blur(16px)",
+                            border: "none",
+                            borderRadius: "16px",
+                            inset: "auto",
+                            transform: "none",
+                            height: "100%",
+                            width: "100%",
+                        }}
+                    />
+                )}
                 <ElementLabel data={data} style={style} selected={selected} showDescription />
             </ShapeComponent>
         );
