@@ -31,7 +31,8 @@ import {
     useTextEditMode,
     useAddingElementMode,
     useAutoLayoutMode,
-    useWorkspaceToolbarStore
+    useWorkspaceToolbarStore,
+    useCommentingMode
 } from "../hooks";
 
 export const WorkspaceToolbar: FC = () => {
@@ -42,6 +43,7 @@ export const WorkspaceToolbar: FC = () => {
         isTextEditEnabled,
         isPresentationEnabled,
         isAddingElementEnabled,
+        isCommentAddingEnabled,
         addingElementType,
     } = useWorkspaceToolbarStore();
     const { toggleAutoLayout } = useAutoLayoutMode();
@@ -49,6 +51,7 @@ export const WorkspaceToolbar: FC = () => {
     const { enableDraggingMode } = useDraggingMode();
     const { enableTextEditMode } = useTextEditMode();
     const { togglePresentationMode } = usePresentationMode();
+    const { enableCommentingMode } = useCommentingMode();
     const {
         allowPerson,
         allowSoftwareSystem,
@@ -189,11 +192,13 @@ export const WorkspaceToolbar: FC = () => {
                         <IconButton
                             aria-label={"add comment"}
                             icon={<ChatAdd />}
+                            isActive={isCommentAddingEnabled}
                             title={"add comment"}
                             _active={{
                                 backgroundColor: "yellow.100",
                                 color: "yellow.900"
                             }}
+                            onClick={() => enableCommentingMode()}
                         />
                         <IconButton
                             aria-label={"enable auto layout"}

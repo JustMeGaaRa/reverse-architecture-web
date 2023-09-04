@@ -5,6 +5,9 @@ import {
     HStack
 } from "@chakra-ui/react";
 import {
+    WorkspaceThemeProvider
+} from "@reversearchitecture/workspace-viewer";
+import {
     Navigation,
     NavigationContent,
     NavigationHomeButton,
@@ -27,7 +30,6 @@ import { Outlet } from "react-router";
 import {
     NavigationTarget,
     WorkspaceMenu,
-    WorkspaceThemeProvider
 } from "../../containers";
 
 export const Workspace: FC<PropsWithChildren> = () => {

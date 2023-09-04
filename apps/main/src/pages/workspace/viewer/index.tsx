@@ -13,6 +13,7 @@ import {
     WorkspaceMetadata
 } from "@structurizr/dsl";
 import { useStructurizrParser } from "@structurizr/react";
+import { useWorkspaceTheme } from "@reversearchitecture/workspace-viewer";
 import { AddUser } from "iconoir-react";
 import { FC, useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -22,7 +23,6 @@ import {
     NavigationSource,
     useAccount,
     UserAvatarGroup,
-    useWorkspaceTheme,
     WorkspaceRoom
 } from "../../../containers";
 import { CommunityHubApi } from "../../../services";

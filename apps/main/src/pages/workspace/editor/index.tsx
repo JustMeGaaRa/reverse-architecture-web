@@ -12,6 +12,7 @@ import {
 import { useStructurizrParser } from "@structurizr/react";
 import { FC, useCallback, useState } from "react";
 import { useParams } from "react-router-dom";
+import { WorkspaceViewerSheet } from "../viewer";
 
 export const CodeEditorSheet: FC = () => {
     const { workspaceId } = useParams<{ workspaceId: string }>();
@@ -48,8 +49,7 @@ export const CodeEditorSheet: FC = () => {
                         />
                     </ContextSheetContent>
                 </Box>
-                <ContextSheet>
-                </ContextSheet>
+                <WorkspaceViewerSheet />
             </Flex>
         </ContextSheet>
     );

@@ -22,5 +22,5 @@ export const useDraggingMode = () => {
         })
     }, [setState]);
 
-    return { enableDraggingMode }
+    return { enableDraggingMode };
 }

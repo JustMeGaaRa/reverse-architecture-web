@@ -48,6 +48,7 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
     const reactFlowRef = useRef(null);
     const strategy = useMemo(() => new SystemLandscapeViewStrategy(model, view), [model, view]);
     const {
+        isCommentAddingEnabled,
         isAddingElementEnabled,
         addingElementType
     } = useWorkspaceToolbarStore();
@@ -109,14 +110,15 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
     ]);
 
     const handleOnPaneClick = useCallback((event: React.MouseEvent) => {
+        const parentOffset = reactFlowRef.current.getBoundingClientRect();
+        const mousePoint = { x: event.clientX, y: event.clientY };
+        const targetPoint = {
+            x: mousePoint.x - parentOffset.left,
+            y: mousePoint.y - parentOffset.top
+        };
+        const viewportPoint = getViewportPoint(targetPoint);
+
         if (reactFlowRef.current && isAddingElementEnabled) {
-            const parentOffset = reactFlowRef.current.getBoundingClientRect();
-            const mousePoint = { x: event.clientX, y: event.clientY };
-            const targetPoint = {
-                x: mousePoint.x - parentOffset.left,
-                y: mousePoint.y - parentOffset.top
-            };
-            const viewportPoint = getViewportPoint(targetPoint);
 
             switch (addingElementType) {
                 case ElementType.Group:
@@ -130,10 +132,15 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
                     break;
             }
         }
+
+        if (isCommentAddingEnabled) {
+            
+        }
     }, [
         reactFlowRef,
         addingElementType,
         isAddingElementEnabled,
+        isCommentAddingEnabled,
         getViewportPoint,
         addGroup,
         addSoftwareSystem,
