@@ -1,13 +1,17 @@
 import { useState } from "react";
 
-export type ContentViewMode = "table" | "card";
+export enum ContentViewMode {
+    Table = "table",
+    Card = "card"
+};
 
 export const useContentViewMode = (mode: ContentViewMode) => {
-    
     const [ view, setView ] = useState<ContentViewMode>(mode);
 
     const toggleView = () => {
-        setView(view === "table" ? "card" : "table");
+        setView(view === ContentViewMode.Table
+            ? ContentViewMode.Card
+            : ContentViewMode.Table);
     }
 
     return {

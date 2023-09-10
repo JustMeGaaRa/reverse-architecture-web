@@ -1,6 +1,7 @@
 import { useStoreApi } from "@reactflow/core";
 import {
     IElement,
+    Position,
     Tag,
     ViewKeys,
     ViewType
@@ -18,11 +19,12 @@ export const useViewNavigation = () => {
 
     const zoomIntoView = useCallback((view: ViewKeys) => {
         const selectedView = getView(workspace, view);
-        useWorkspaceStore.setState({ selectedView });
-        useWorkspaceToolbarStore.setState({ isAutoLayoutEnabled: selectedView.autoLayout !== undefined });
-
+        const isAutoLayoutEnabled = selectedView.autoLayout !== undefined;
+        
+        useWorkspaceStore.setState(state => ({ ...state, selectedView }));
+        useWorkspaceToolbarStore.setState(state => ({ ...state, isAutoLayoutEnabled }));
         // NOTE: nodes should be draggable if we turn off auto layout
-        setState({ nodesDraggable: selectedView.autoLayout === undefined });
+        setState({ nodesDraggable: !isAutoLayoutEnabled });
     }, [workspace, setState]);
 
     const zoomIntoElement = useCallback((element: IElement) => {
@@ -41,8 +43,13 @@ export const useViewNavigation = () => {
         }
     }, [zoomIntoView]);
 
+    const setMousePosition = useCallback((position: Position) => {
+        useWorkspaceStore.setState(state => ({ ...state, mousePosition: position }));
+    }, []);
+
     return {
         zoomIntoView,
-        zoomIntoElement
+        zoomIntoElement,
+        setMousePosition
     }
 }

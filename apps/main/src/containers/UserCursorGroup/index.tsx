@@ -1,18 +1,13 @@
 import { Box,Text } from "@chakra-ui/react";
 import { useViewportUtils } from "@reversearchitecture/workspace-viewer";
 import { FC } from "react";
-import { Awareness } from "y-protocols/awareness";
-import { useUserPresence } from "../../hooks";
 
-export const UserCursorGroup: FC<{
-    awareness: Awareness,
-}> = ({ awareness }) => {
-    const { others } = useUserPresence(awareness);
+export const UserCursorGroup: FC<{ users: Array<any> }> = ({ users }) => {
     const { getRenderingPoint } = useViewportUtils();
 
     return (
         <>
-            {others.filter(x => x.point).map(user => (
+            {users.filter(x => x.point).map(user => (
                 <UserCursor
                     key={user.username}
                     colorScheme={user.color}

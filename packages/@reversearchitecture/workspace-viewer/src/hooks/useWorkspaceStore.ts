@@ -6,6 +6,7 @@ import {
     IViewDefinition,
     IWorkspaceMetadata,
     WorkspaceMetadata,
+    Position,
 } from "@structurizr/dsl";
 import { create } from "zustand";
 
@@ -14,6 +15,7 @@ export type WorkspaceStore = {
     selectedView: IViewDefinition;
     selectedViewPath: Array<ViewKeys>;
     metadata: IWorkspaceMetadata;
+    mousePosition?: Position;
 };
 
 export const useWorkspaceStore = create<WorkspaceStore>(() => ({
@@ -25,7 +27,7 @@ export const useWorkspaceStore = create<WorkspaceStore>(() => ({
         relationships: []
     },
     selectedViewPath: [],
-    metadata: WorkspaceMetadata.Empty.toObject()
+    metadata: WorkspaceMetadata.Empty.toObject(),
 }));
 
 export const WorkspaceViewsSelector = (state: WorkspaceStore) => {

@@ -11,7 +11,20 @@ export const Shortcut: FC<{
     return (
         <HStack divider={<>{separator}</>}>
             {keys.map((key) => (
-                <Kbd key={key}>{key}</Kbd>
+                <Kbd
+                    key={key}
+                    backgroundColor={"whiteAlpha.200"}
+                    borderRadius={"12px"}
+                    borderWidth={0}
+                    fontSize={"16px"}
+                    fontWeight={"normal"}
+                    height={"32px"}
+                    display={"flex"}
+                    alignItems={"center"}
+                    justifyContent={"center"}
+                >
+                    {key}
+                </Kbd>
             ))}
         </HStack>
     )

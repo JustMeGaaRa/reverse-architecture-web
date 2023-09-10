@@ -48,7 +48,7 @@ export const Layout: FC<PropsWithChildren> = () => {
                     <Search />
                 </Box>
                 <Box>
-                    <ButtonGroup size={"lg"} variant={"outline"}>
+                    <ButtonGroup size={"md"} variant={"outline"}>
                         <NavigationTarget />
                     </ButtonGroup>
                 </Box>

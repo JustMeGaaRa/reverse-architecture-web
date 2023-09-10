@@ -24,25 +24,24 @@ export const AccountMenu: FC<PropsWithChildren<{
     return (                  
         <Menu placement={"top-end"}>
             <MenuButton
-                borderRadius={24}
-                height={"64px"}
+                borderRadius={20}
                 width={"100%"}
-                _hover={{
-                    background: "gray.100"
-                }}
                 title={account.fullname}
+                _hover={{
+                    background: "whiteAlpha.100"
+                }}
             >
                 <Flex
                     alignItems={"center"}
                     gap={4}
-                    px={2}
+                    padding={3}
                 >
                     <Avatar
                         backgroundColor={"purple.200"}
                         borderColor={"purple.900"}
                         color={"purple.900"}
                         name={account.fullname}
-                        size={"lg"}
+                        size={"md"}
                         src={account.avatarUrl}
                         title={account.fullname}
                     />
@@ -55,11 +54,11 @@ export const AccountMenu: FC<PropsWithChildren<{
                                 textAlign={"left"}
                             >
                                 <Text fontSize={16} noOfLines={1}>{account.fullname}</Text>
-                                <Text fontSize={14} noOfLines={1} color={"gray.400"}>{account.email}</Text>
+                                <Text fontSize={14} noOfLines={1} color={"whiteAlpha.400"}>{account.email}</Text>
                             </Flex>
                             <IconButton
                                 aria-label={"expand/collapse"}
-                                colorScheme={"gray"}
+                                colorScheme={"whiteAlpha"}
                                 icon={<NavArrowUp />}
                                 variant={"ghost"}
                             />

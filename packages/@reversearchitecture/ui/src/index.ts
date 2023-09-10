@@ -20,5 +20,7 @@ export * from "./components/RouteList";
 export * from "./components/RouteSection";
 export * from "./components/Search";
 export * from "./components/Shortcut";
+export * from "./components/Toolbar";
+export * from "./components/ToolbarSection";
 export * from "./components/WorkspaceCardView";
 export * from "./components/WorkspacePreviewCard";

@@ -2,7 +2,6 @@ import {
     Box,
     Divider,
     Flex,
-    VStack
 } from "@chakra-ui/react";
 import {
     ContextSheet,
@@ -10,14 +9,14 @@ import {
     ContextSheetHeader
 } from "@reversearchitecture/ui";
 import { FC, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { WorkspaceViewerSheet } from "../viewer";
 import {
     CommentsProvider,
     CommentThread,
     IComment
 } from "../../../containers";
-import { useParams } from "react-router-dom";
-import { CommentApi } from "../../../services/CommentApi";
+import { CommentApi } from "../../../services";
 
 export const CommentsSheet: FC = () => {
     const { workspaceId } = useParams<{ workspaceId: string }>();
@@ -36,18 +35,18 @@ export const CommentsSheet: FC = () => {
                 direction={"row"}
                 height={"100%"}
             >
-                <Box width={"400px"}>
-                    <ContextSheetHeader title={"All Comments"} />
-                    <Divider />
-                    <ContextSheetContent padding={0}>
-                        <Box overflowY={"scroll"} height={"100%"}>
-                            <CommentsProvider>
+                <CommentsProvider>
+                    <Box width={"400px"}>
+                        <ContextSheetHeader title={"All Comments"} />
+                        <Divider />
+                        <ContextSheetContent padding={0}>
+                            <Box overflowY={"scroll"} height={"100%"}>
                                 <CommentThread comments={comments} />
-                            </CommentsProvider>
-                        </Box>
-                    </ContextSheetContent>
-                </Box>
-                <WorkspaceViewerSheet />
+                            </Box>
+                        </ContextSheetContent>
+                    </Box>
+                    <WorkspaceViewerSheet />
+                </CommentsProvider>
             </Flex>
         </ContextSheet>
     );

@@ -4,8 +4,10 @@ import { ProjectCard } from "./ProjectCard";
 
 export const ProjectCardView: FC<{
     projects: any[];
+    onRemove?: (data: any[]) => void;
 }> = ({
-    projects
+    projects,
+    onRemove
 }) => {
     const gridColumns = useBreakpointValue({ base: 1, md: 2, lg: 3, xl: 4, "2xl": 5 });
 

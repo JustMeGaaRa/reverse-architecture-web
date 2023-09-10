@@ -59,7 +59,7 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
         addRelationship,
         setElementPosition
     } = useSystemLandscapeView();
-    const { zoomIntoElement } = useViewNavigation();
+    const { zoomIntoElement, setMousePosition } = useViewNavigation();
     const { getViewportPoint } = useViewportUtils();
 
     useAutoLayoutEffect();
@@ -147,6 +147,18 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
         addPerson
     ]);
 
+    // NOTE: used to track the user cursor position
+    const handleOnMouseMove = useCallback((event: any) => {
+        const parentOffset = reactFlowRef.current.getBoundingClientRect();
+        const mousePoint = { x: event.clientX, y: event.clientY };
+        const targetPoint = {
+            x: mousePoint.x - parentOffset.left,
+            y: mousePoint.y - parentOffset.top
+        };
+        const viewportPoint = getViewportPoint(targetPoint);
+        setMousePosition(viewportPoint);
+    }, [reactFlowRef, getViewportPoint, setMousePosition]);
+
     const handleOnConnect = useCallback((connection: Connection) => {
         addRelationship(connection.source, connection.target);
     }, [addRelationship]);
@@ -161,7 +173,7 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
             onNodeDragStop={handleOnNodeDragStop}
             onNodesDoubleClick={handleOnDoubleClick}
             onNodeClick={handleOnNodeClick}
-            // onMouseMove={handleOnMouseMove}
+            onMouseMove={handleOnMouseMove}
             onPaneClick={handleOnPaneClick}
             onConnect={handleOnConnect}
         >

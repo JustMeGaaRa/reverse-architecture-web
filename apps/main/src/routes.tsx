@@ -61,7 +61,7 @@ export const routes = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <Navigate to={"diagram"} />
+                element: <WorkspaceViewerSheet />
             },
             {
                 path: "diagram",

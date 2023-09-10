@@ -1,6 +1,8 @@
 import { IComment } from "../containers";
 
 export class CommentApi {
+    private comments: Array<IComment>;
+
     constructor(
         private readonly baseUrl: string = ""
     ) { }
@@ -114,6 +116,18 @@ export class CommentApi {
             },
         ];
 
+        this.comments = commentArray;
         return Promise.resolve(commentArray);
+    }
+
+    async addComment(comment: IComment): Promise<IComment> {
+        this.comments.push(comment);
+        return Promise.resolve(comment);
+    }
+
+    async removeComment(commentId: string): Promise<IComment> {
+        const comment = this.comments.find((comment) => comment.commentId === commentId);
+        this.comments = this.comments.filter((comment) => comment.commentId !== commentId);
+        return Promise.resolve(comment);
     }
 }
