@@ -63,9 +63,9 @@ export const Workspace: FC<PropsWithChildren> = () => {
                             <Box />
                             <RouteList>
                                 <Route icon={Svg3DSelectSolid} title={"diagram"} to={"diagram"} />
-                                <Route icon={Code} title={"code editor"} to={"editor"} />
+                                <Route icon={Code} isDisabled={true} title={"code editor"} to={"editor"} />
                                 <Route icon={ChatLines} title={"comments"} to={"comments"} />
-                                <Route icon={Settings} title={"settings"} to={"settings"} />
+                                <Route icon={Settings} isDisabled={true} title={"settings"} to={"settings"} />
                             </RouteList>
                             <RouteList>
                                 <Route icon={HelpCircle} title={"help"} to={"help"} />

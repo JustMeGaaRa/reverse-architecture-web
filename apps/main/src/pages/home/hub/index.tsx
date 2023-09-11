@@ -14,7 +14,6 @@ import {
     ContextSheetContent,
     ContextSheetHeader,
     EmptyContent,
-    WorkspaceCardView
 } from "@reversearchitecture/ui";
 import {
     AddPageAlt,
@@ -31,7 +30,10 @@ import {
     useState
 } from "react";
 import { useNavigate } from "react-router-dom";
-import { NavigationSource } from "../../../containers";
+import {
+    NavigationSource,
+    WorkspaceCardView,
+} from "../../../containers";
 import { CommunityHubApi } from "../../../services";
 
 export const CommunityHub: FC<PropsWithChildren> = () => {

@@ -18,9 +18,6 @@ import {
     ContextSheetContent,
     ContextSheetHeader,
     EmptyContent,
-    ProjectCardView,
-    ProjectTableView,
-    TableProvider,
     Toolbar,
     ToolbarSection
 } from "@reversearchitecture/ui";
@@ -41,7 +38,12 @@ import {
     useEffect,
     useState
 } from "react";
-import { NavigationSource } from "../../../containers";
+import {
+    ProjectCardView,
+    ProjectTableView,
+    ProjectTableProvider,
+    NavigationSource
+} from "../../../containers";
 import { ProjectApi } from "../../../services";
 import { ContentViewMode, useContentViewMode } from "./hooks";
 
@@ -61,8 +63,8 @@ export const ProjectListContent: FC<PropsWithChildren> = () => {
             });
     }, [api]);
 
-    const handleOnRemove = useCallback((data: any[]) => {
-        data.forEach(item => {
+    const handleOnRemove = useCallback(() => {
+        selected.forEach(item => {
             api.removeProject(item.projectId);
         });
         api.getProjects()
@@ -72,7 +74,7 @@ export const ProjectListContent: FC<PropsWithChildren> = () => {
             .catch(error => {
                 console.error(error);
             });
-    }, [api, setProjects]);
+    }, [api, selected, setProjects]);
 
     const handleOnClose = useCallback(() => {
         setSelected([]);
@@ -118,13 +120,13 @@ export const ProjectListContent: FC<PropsWithChildren> = () => {
                         >
                             <IconButton
                                 aria-label={"card view"}
-                                isActive={view === "card"}
+                                isActive={view === ContentViewMode.Card}
                                 icon={<ViewGrid />}
                                 onClick={() => setView(ContentViewMode.Card)}
                             />
                             <IconButton
                                 aria-label={"table view"}
-                                isActive={view === "table"}
+                                isActive={view === ContentViewMode.Table}
                                 icon={<List />}
                                 onClick={() => setView(ContentViewMode.Table)}
                             />
@@ -133,20 +135,34 @@ export const ProjectListContent: FC<PropsWithChildren> = () => {
                     <TabPanels height={"calc(100% - 42px)"}>
                         <TabPanel height={"100%"}>
                             <Box padding={6} height={"100%"} overflowY={"scroll"}>
-                                {view === ContentViewMode.Card && (
+                                {projects.length === 0 && (
+                                    <Flex
+                                        alignItems={"center"}
+                                        justifyContent={"center"}
+                                        height={"100%"}
+                                        width={"100%"}
+                                    >
+                                        <EmptyContent
+                                            icon={Folder}
+                                            title={"No projects"}
+                                            description={"To get started, click the \"Create New Project\" button to create a new project."}
+                                        />
+                                    </Flex>
+                                )}
+                                {projects.length > 0 && view === ContentViewMode.Card && (
                                     <ProjectCardView
                                         projects={projects}
                                         onRemove={handleOnRemove}
                                     />
                                 )}
-                                {view === ContentViewMode.Table && (
-                                    <TableProvider>
+                                {projects.length > 0 && view === ContentViewMode.Table && (
+                                    <ProjectTableProvider>
                                         <ProjectTableView
                                             projects={projects}
                                             onSelected={setSelected}
                                             onRemove={handleOnRemove}
                                         />
-                                    </TableProvider>
+                                    </ProjectTableProvider>
                                 )}
                             </Box>
                         </TabPanel>
@@ -184,19 +200,22 @@ export const ProjectListContent: FC<PropsWithChildren> = () => {
                     <Box position={"absolute"} bottom={4} left={"50%"} transform={"translateX(-50%)"}>
                         <Toolbar>
                             <ToolbarSection>
-                                <Text paddingX={2}>{`${selected.length} item(s) selected`}</Text>
+                                <Text paddingX={2}>
+                                    {`${selected.length} item(s) selected`}
+                                </Text>
                             </ToolbarSection>
                             <ToolbarSection>
                                 <IconButton
                                     aria-label={"copy"}
                                     icon={<Copy />}
+                                    isDisabled={true}
                                     title={"copy"}
                                 />
                                 <IconButton
                                     aria-label={"remove"}
                                     icon={<BinMinus />}
                                     title={"remove"}
-                                    onClick={() => handleOnRemove(selected)}
+                                    onClick={handleOnRemove}
                                 />
                             </ToolbarSection>
                             <ToolbarSection>
