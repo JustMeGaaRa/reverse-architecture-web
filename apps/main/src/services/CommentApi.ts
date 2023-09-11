@@ -1,14 +1,12 @@
-import { IComment } from "../containers";
+import { CommentInfo } from "../model";
 
 export class CommentApi {
-    private comments: Array<IComment>;
+    private comments: Map<string, Array<CommentInfo>>;
 
     constructor(
         private readonly baseUrl: string = ""
-    ) { }
-
-    async getComments(workspaceId: string): Promise<Array<IComment>> {
-        const commentArray = [
+    ) {
+        const commentsArray = [
             {
                 commentId: "comment-1",
                 author: "Vitalik Skovron",
@@ -116,18 +114,24 @@ export class CommentApi {
             },
         ];
 
-        this.comments = commentArray;
-        return Promise.resolve(commentArray);
+        this.comments = new Map<string, Array<CommentInfo>>();
+        this.comments.set("big-bank-plc", commentsArray);
     }
 
-    async addComment(comment: IComment): Promise<IComment> {
-        this.comments.push(comment);
+    async getComments(workspaceId: string): Promise<Array<CommentInfo>> {
+        const list = this.comments.get(workspaceId) ?? [];
+        return Promise.resolve(list);
+    }
+
+    async saveComment(workspaceId: string, comment: CommentInfo): Promise<CommentInfo> {
+        const list = this.comments.get(workspaceId) ?? [];
+        this.comments.set(workspaceId, list.concat(comment));
         return Promise.resolve(comment);
     }
 
-    async removeComment(commentId: string): Promise<IComment> {
-        const comment = this.comments.find((comment) => comment.commentId === commentId);
-        this.comments = this.comments.filter((comment) => comment.commentId !== commentId);
-        return Promise.resolve(comment);
+    async deleteComment(workspaceId: string, commentId: string): Promise<void> {
+        const list = this.comments.get(workspaceId)?.filter(x => x.commentId !== commentId) ?? [];
+        this.comments.set(workspaceId, list);
+        return Promise.resolve();
     }
 }

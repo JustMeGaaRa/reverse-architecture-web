@@ -1,4 +1,4 @@
-export interface IComment {
+export type CommentInfo = {
     commentId: string;
     author: string;
     text: string;

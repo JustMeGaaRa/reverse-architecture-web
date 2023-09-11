@@ -1,12 +1,12 @@
 import { useContext, useEffect } from "react";
+import { CommentInfo } from "../../model";
 import { CommentContext } from "./context";
-import { IComment } from "./types";
 
 export const useComments = () => {
     return useContext(CommentContext);
 }
 
-export const useOnSelectedCommentChange = (callback: (comment?: IComment) => void) => {
+export const useOnSelectedCommentChange = (callback: (comment?: CommentInfo) => void) => {
     const { selectedCommentId, comments } = useComments();
 
     useEffect(() => {

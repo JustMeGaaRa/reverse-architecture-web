@@ -65,7 +65,7 @@ export const ProjectListContent: FC<PropsWithChildren> = () => {
 
     const handleOnRemove = useCallback(() => {
         selected.forEach(item => {
-            api.removeProject(item.projectId);
+            api.deleteProject(item.projectId);
         });
         api.getProjects()
             .then(projects => {

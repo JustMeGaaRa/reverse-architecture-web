@@ -5,8 +5,12 @@ import {
     WorkspaceToolbar,
     WorkspaceZoomControls
 } from "@reversearchitecture/workspace-viewer";
-import { ContextSheet } from "@reversearchitecture/ui";
-import { useWorkspaceTheme } from "@reversearchitecture/workspace-viewer";
+import {
+    ContextSheet
+} from "@reversearchitecture/ui";
+import {
+    useWorkspaceTheme
+} from "@reversearchitecture/workspace-viewer";
 import {
     applyMetadata,
     applyTheme,
@@ -43,20 +47,13 @@ export const WorkspaceViewerSheet: FC = () => {
     const toast = useToast();
 
     useEffect(() => {
-        const fetchWorkspace = async (workspaceId: string) => {
-            const api = new CommunityHubApi();
-            const structurizrDslText = await api.getWorkspaceText(workspaceId);
-            const workspaceMetadata = await api.getWorkspaceMetadata(workspaceId);
-
-            return { structurizrDslText, workspaceMetadata };
-        }
-        
-        fetchWorkspace(workspaceId)
-            .then(({ structurizrDslText, workspaceMetadata }) => {
-                const builder = parseStructurizr(structurizrDslText);
-                const workspaceObject = applyMetadata(applyTheme(builder.toObject(), theme), workspaceMetadata);
+        const api = new CommunityHubApi();
+        api.getWorkspace(workspaceId)
+            .then(info => {
+                const builder = parseStructurizr(info.text);
+                const workspaceObject = applyMetadata(applyTheme(builder.toObject(), info.theme ?? theme), info.metadata);
                 setWorkspace(workspaceObject);
-                setMetadata(workspaceMetadata);
+                setMetadata(info.metadata);
             })
             .catch(error => {
                 toast({

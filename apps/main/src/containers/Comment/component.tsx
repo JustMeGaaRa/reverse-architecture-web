@@ -7,7 +7,9 @@ import {
     Text,
     VStack
 } from "@chakra-ui/react";
-import { useWorkspaceTheme } from "@reversearchitecture/workspace-viewer";
+import {
+    useWorkspaceTheme
+} from "@reversearchitecture/workspace-viewer";
 import {
     CheckCircle,
     MoreHoriz
@@ -19,9 +21,9 @@ import {
     useEffect,
     useState
 } from "react";
+import { CommentInfo } from "../../model";
 import { CommentContext } from "./context";
 import { useComments } from "./hooks";
-import { IComment } from "./types";
 
 export const Comment: FC<{
     commentId: string;
@@ -92,11 +94,7 @@ export const Comment: FC<{
     )
 }
 
-export const CommentThread: FC<{
-    comments: IComment[];
-}> = ({
-    comments: commentArray
-}) => {
+export const CommentThread: FC<{ comments: CommentInfo[]; }> = ({ comments: commentArray }) => {
     const {
         comments,
         selectedCommentId,

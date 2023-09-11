@@ -14,13 +14,13 @@ import { WorkspaceViewerSheet } from "../viewer";
 import {
     CommentsProvider,
     CommentThread,
-    IComment
 } from "../../../containers";
 import { CommentApi } from "../../../services";
+import { CommentInfo } from "../../../model";
 
 export const CommentsSheet: FC = () => {
     const { workspaceId } = useParams<{ workspaceId: string }>();
-    const [ comments, setComments ] = useState<Array<IComment>>([]);
+    const [ comments, setComments ] = useState<Array<CommentInfo>>([]);
 
     useEffect(() => {
         const api = new CommentApi();
