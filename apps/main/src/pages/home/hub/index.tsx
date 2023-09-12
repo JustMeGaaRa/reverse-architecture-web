@@ -7,7 +7,8 @@ import {
     StackDivider,
     Tag,
     TagLabel,
-    TagLeftIcon
+    TagLeftIcon,
+    useDisclosure,
 } from "@chakra-ui/react";
 import {
     ContextSheet,
@@ -32,12 +33,16 @@ import {
 import { useNavigate } from "react-router-dom";
 import {
     NavigationSource,
+    PublishWorkspaceModal,
     WorkspaceCardView,
 } from "../../../containers";
+import { WorkspaceInfo } from "../../../model";
 import { CommunityHubApi } from "../../../services";
 
 export const CommunityHub: FC<PropsWithChildren> = () => {
-    const [ workspaces, setWorkspaces ] = useState([]);
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const [ communityApi ] = useState(new CommunityHubApi());
+    const [ workspaces, setWorkspaces ] = useState<Array<WorkspaceInfo>>([]);
     const [ filters, setFilters ] = useState([]);
     const [ selectedFilter, setSelectedFilter ] = useState("Explore");
     const defaultFilters = [
@@ -47,9 +52,10 @@ export const CommunityHub: FC<PropsWithChildren> = () => {
     ];
     const navigate = useNavigate();
 
+    const filtered = workspaces.filter(x => x.tags.includes(selectedFilter) || selectedFilter === "Explore");
+
     useEffect(() => {
-        const api = new CommunityHubApi();
-        api.getWorkspaces()
+        communityApi.getWorkspaces()
             .then(workspaces => {
                 setWorkspaces(workspaces);
                 setFilters(Array.from(new Set(workspaces.flatMap(x => x.tags))));
@@ -57,7 +63,7 @@ export const CommunityHub: FC<PropsWithChildren> = () => {
             .catch(error => {
                 console.error(error);
             });
-    }, []);
+    }, [communityApi]);
 
     const onFilterClick = useCallback((filter) => {
         setSelectedFilter(filter);
@@ -78,12 +84,20 @@ export const CommunityHub: FC<PropsWithChildren> = () => {
                     aria-label={"publish workspace"}
                     key={"publish-workspace"}
                     colorScheme={"yellow"}
-                    isDisabled={true}
                     leftIcon={<AddPageAlt />}
+                    onClick={onOpen}
                 >
                     Publish Workspace
                 </Button>
             </NavigationSource>
+
+            <PublishWorkspaceModal
+                workspaces={workspaces}
+                isOpen={isOpen}
+                onClose={onClose}
+                onPublish={() => {}}
+            />
+
             <ContextSheetHeader title={"Community Hub"} />
             <Divider />
             <ContextSheetContent padding={0}>
@@ -118,12 +132,13 @@ export const CommunityHub: FC<PropsWithChildren> = () => {
                         </HStack>
                     </HStack>
                     <Divider height={16} border={0} />
-                    {workspaces.length > 0 ? (
-                            <WorkspaceCardView
-                                workspaces={workspaces.filter(x => x.tags.includes(selectedFilter) || selectedFilter === "Explore")}
-                                onClick={onWorkspaceClick}
-                            />
-                    ) : (
+                    {workspaces.length > 0 && (
+                        <WorkspaceCardView
+                            workspaces={filtered}
+                            onClick={onWorkspaceClick}
+                        />
+                    )}
+                    {workspaces.length === 0 && (
                         <Flex
                             alignItems={"center"}
                             justifyContent={"center"}

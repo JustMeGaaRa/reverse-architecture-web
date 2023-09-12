@@ -1,17 +1,18 @@
 import {
+    Box,
+    Button,
+    ButtonGroup,
+    Divider,
+    Flex,
+    IconButton,
     Tabs,
     Tab,
     TabList,
     TabPanel,
     TabPanels,
-    Flex,
-    IconButton,
-    ButtonGroup,
-    Box,
-    Divider,
-    Button,
     Text,
-    ScaleFade
+    ScaleFade,
+    useDisclosure,
 } from "@chakra-ui/react";
 import {
     ContextSheet,
@@ -42,13 +43,15 @@ import {
     ProjectCardView,
     ProjectTableView,
     ProjectTableProvider,
-    NavigationSource
+    NavigationSource,
+    CreateProjectModal
 } from "../../../containers";
 import { ProjectApi } from "../../../services";
 import { ContentViewMode, useContentViewMode } from "./hooks";
 
 export const ProjectListContent: FC<PropsWithChildren> = () => {
     const { view, setView } = useContentViewMode(ContentViewMode.Card);
+    const { isOpen, onOpen, onClose } = useDisclosure();
     const [ api ] = useState(new ProjectApi());
     const [ projects, setProjects ] = useState([]);
     const [ selected, setSelected ] = useState<any[]>([]);
@@ -87,8 +90,8 @@ export const ProjectListContent: FC<PropsWithChildren> = () => {
                     aria-label={"create new project"}
                     key={"create-new-project"}
                     colorScheme={"yellow"}
-                    isDisabled={true}
                     leftIcon={<AddPageAlt />}
+                    onClick={onOpen}
                 >
                     Create New Project
                 </Button>
@@ -101,6 +104,13 @@ export const ProjectListContent: FC<PropsWithChildren> = () => {
                     title={"Import Workspace"}
                 />
             </NavigationSource>
+
+            <CreateProjectModal
+                isOpen={isOpen}
+                onClose={onClose}
+                onCreate={() => {}}
+            />
+
             <ContextSheetHeader title={"All Projects"} />
             <Divider />
             <ContextSheetContent padding={0}>
@@ -196,7 +206,7 @@ export const ProjectListContent: FC<PropsWithChildren> = () => {
                         </TabPanel>
                     </TabPanels>
                 </Tabs>
-                <ScaleFade initialScale={0.8} in={selected.length > 0}>
+                <ScaleFade in={selected.length > 0}>
                     <Box position={"absolute"} bottom={4} left={"50%"} transform={"translateX(-50%)"}>
                         <Toolbar>
                             <ToolbarSection>

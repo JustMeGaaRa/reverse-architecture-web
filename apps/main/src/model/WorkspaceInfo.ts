@@ -3,6 +3,7 @@ import { IWorkspaceMetadata, IWorkspaceTheme } from "@structurizr/dsl";
 export type WorkspaceInfo = {
     workspaceId: string;
     name: string;
+    createdBy?: string;
     updated: Date;
     updatedBy: string;
     tags: Array<string>;

@@ -14,6 +14,12 @@ export class WorkspaceApi {
         return Promise.resolve(list);
     }
 
+    async getWorkspacesByAuthor(authorId: string): Promise<Array<WorkspaceInfo>> {
+        const list = this.workspaces.get(authorId) ?? [];
+        const filtered = list.filter(x => x.createdBy === authorId);
+        return Promise.resolve(filtered);
+    }
+
     async getWorkspace(projectId: string, workspaceId: string): Promise<WorkspaceInfo> {
         const list = this.workspaces.get(projectId)?.filter(x => x.workspaceId === workspaceId) ?? [];
         return Promise.resolve(list?.at(0));
