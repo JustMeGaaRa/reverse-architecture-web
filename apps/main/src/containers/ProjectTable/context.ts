@@ -1,9 +1,9 @@
 import { createContext } from "react";
-import { TableRowData } from "./types";
+import { ItemData } from "./types";
 
 export const TableContext = createContext<{
-    data: TableRowData[];
-    setData: (data: TableRowData[]) => void;
+    data: ItemData[];
+    setData: (data: ItemData[]) => void;
 }>({
     data: [],
     setData: () => {}

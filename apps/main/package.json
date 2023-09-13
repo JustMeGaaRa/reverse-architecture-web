@@ -31,6 +31,7 @@
     "@structurizr/dsl": "*",
     "@structurizr/parser": "*",
     "@structurizr/react": "*",
+    "formik": "^2.4.4",
     "framer-motion": "7.9.1",
     "iconoir-react": "^6.3.0",
     "react": "^18.0.0",

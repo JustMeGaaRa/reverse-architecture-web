@@ -2,7 +2,6 @@ import {
     Box,
     Button,
     Divider,
-    Flex,
     HStack,
     StackDivider,
     Tag,
@@ -14,13 +13,11 @@ import {
     ContextSheet,
     ContextSheetContent,
     ContextSheetHeader,
-    EmptyContent,
 } from "@reversearchitecture/ui";
 import {
     AddPageAlt,
     Compass,
     FireFlame,
-    Folder,
     SunLight
 } from "iconoir-react";
 import {
@@ -34,7 +31,7 @@ import { useNavigate } from "react-router-dom";
 import {
     NavigationSource,
     PublishWorkspaceModal,
-    WorkspaceCardView,
+    WorkspaceList,
 } from "../../../containers";
 import { WorkspaceInfo } from "../../../model";
 import { CommunityHubApi } from "../../../services";
@@ -45,13 +42,13 @@ export const CommunityHub: FC<PropsWithChildren> = () => {
     const [ workspaces, setWorkspaces ] = useState<Array<WorkspaceInfo>>([]);
     const [ filters, setFilters ] = useState([]);
     const [ selectedFilter, setSelectedFilter ] = useState("Explore");
+    const navigate = useNavigate();
+
     const defaultFilters = [
         { tag: "Explore", icon: Compass },
         { tag: "New", icon: SunLight },
         { tag: "Popular", icon: FireFlame }
     ];
-    const navigate = useNavigate();
-
     const filtered = workspaces.filter(x => x.tags.includes(selectedFilter) || selectedFilter === "Explore");
 
     useEffect(() => {
@@ -65,11 +62,16 @@ export const CommunityHub: FC<PropsWithChildren> = () => {
             });
     }, [communityApi]);
 
-    const onFilterClick = useCallback((filter) => {
+    const handleOnPublish = useCallback((workspace: WorkspaceInfo) => {
+        communityApi.publishWorkspace(workspace);
+        setWorkspaces(workspaces.concat(workspace));
+    }, [communityApi, workspaces, setWorkspaces]);
+
+    const handleOnFilterClick = useCallback((filter) => {
         setSelectedFilter(filter);
     }, []);
 
-    const onWorkspaceClick = useCallback((workspace) => {
+    const handleOnWorkspaceClick = useCallback((workspace: WorkspaceInfo) => {
         navigate(`/workspace/${workspace.workspaceId}`);
     }, [navigate]);
 
@@ -95,13 +97,13 @@ export const CommunityHub: FC<PropsWithChildren> = () => {
                 workspaces={workspaces}
                 isOpen={isOpen}
                 onClose={onClose}
-                onPublish={() => {}}
+                onPublish={handleOnPublish}
             />
 
             <ContextSheetHeader title={"Community Hub"} />
             <Divider />
             <ContextSheetContent padding={0}>
-                <Box padding={6} height={"100%"} overflowY={"scroll"}>
+                <Box height={"100%"} padding={6} overflowY={"scroll"}>
                     <HStack overflowX={"hidden"} divider={<StackDivider />} gap={2}>
                         <HStack>
                             {defaultFilters.map((filter) => (
@@ -110,7 +112,7 @@ export const CommunityHub: FC<PropsWithChildren> = () => {
                                     className={selectedFilter === filter.tag ? "active" : ""}
                                     cursor={"pointer"}
                                     size={"md"}
-                                    onClick={() => onFilterClick(filter.tag)}
+                                    onClick={() => handleOnFilterClick(filter.tag)}
                                 >
                                     <TagLeftIcon boxSize={5} as={filter.icon} />
                                     <TagLabel>{filter.tag}</TagLabel>
@@ -124,7 +126,7 @@ export const CommunityHub: FC<PropsWithChildren> = () => {
                                     className={selectedFilter === tag ? "active" : ""}
                                     cursor={"pointer"}
                                     size={"md"}
-                                    onClick={() => onFilterClick(tag)}
+                                    onClick={() => handleOnFilterClick(tag)}
                                 >
                                     {capitalize(tag)}
                                 </Tag>
@@ -132,26 +134,12 @@ export const CommunityHub: FC<PropsWithChildren> = () => {
                         </HStack>
                     </HStack>
                     <Divider height={16} border={0} />
-                    {workspaces.length > 0 && (
-                        <WorkspaceCardView
-                            workspaces={filtered}
-                            onClick={onWorkspaceClick}
-                        />
-                    )}
-                    {workspaces.length === 0 && (
-                        <Flex
-                            alignItems={"center"}
-                            justifyContent={"center"}
-                            height={"100%"}
-                            width={"100%"}
-                        >
-                            <EmptyContent
-                                icon={Folder}
-                                title={"No community workspaces available yet"}
-                                description={"To get started, click the \"Create New Project\" button to create a new project."}
-                            />
-                        </Flex>
-                    )}
+                    <WorkspaceList
+                        workspaces={filtered}
+                        emptyTitle={"No community workspaces available yet"}
+                        emptyDescription={"To get started, click the \"Create New Project\" button to create a new project."}
+                        onClick={handleOnWorkspaceClick}
+                    />
                 </Box>
             </ContextSheetContent>
         </ContextSheet>

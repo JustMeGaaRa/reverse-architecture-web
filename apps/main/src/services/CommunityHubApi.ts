@@ -37,4 +37,9 @@ export class CommunityHubApi {
             theme,
         };
     }
+
+    async publishWorkspace(workspace: WorkspaceInfo): Promise<WorkspaceInfo> {
+        // TODO: publish the workspace to the community hub
+        return Promise.resolve(workspace);
+    }
 }

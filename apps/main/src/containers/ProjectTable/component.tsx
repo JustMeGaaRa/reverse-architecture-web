@@ -20,7 +20,7 @@ import {
 } from "react";
 import { TableContext } from "./context";
 import { useOnCheckedChange, useTable } from "./hooks";
-import { TableRowCheckedState, TableRowData } from "./types";
+import { ItemCheckedState, ItemData } from "./types";
 
 export const ProjectTableView: FC<{
     projects: any[],
@@ -74,33 +74,23 @@ export const ProjectTableView: FC<{
     )
 }
 
-export const ProjectTableProvider: FC<PropsWithChildren> = ({ children }) => {
-    const [ data, setData ] = useState<TableRowData[]>([]);
-
-    return (
-        <TableContext.Provider value={{ data, setData }}>
-            {children}
-        </TableContext.Provider>
-    )
-}
-
 export const TableHeader: FC<{ columns: string[]; }> = ({ columns }) => {
     const { data, selectAllRows } = useTable();
 
-    const checkedCount = data.filter(row => row.checked === TableRowCheckedState.Checked).length;
+    const checkedCount = data.filter(row => row.checked === ItemCheckedState.Checked).length;
     const totalCount = data.length;
     const checkedState = checkedCount === totalCount
-        ? TableRowCheckedState.Checked
+        ? ItemCheckedState.Checked
         : checkedCount > 0
-            ? TableRowCheckedState.Indeterminate
-            : TableRowCheckedState.Unchecked;
-    const isChecked = checkedState === TableRowCheckedState.Checked;
-    const isIndeterminate = checkedState === TableRowCheckedState.Indeterminate;
+            ? ItemCheckedState.Indeterminate
+            : ItemCheckedState.Unchecked;
+    const isChecked = checkedState === ItemCheckedState.Checked;
+    const isIndeterminate = checkedState === ItemCheckedState.Indeterminate;
 
     const handleOnChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
         const checked = event.target.checked
-            ? TableRowCheckedState.Checked
-            : TableRowCheckedState.Unchecked;
+            ? ItemCheckedState.Checked
+            : ItemCheckedState.Unchecked;
         selectAllRows(checked);
     }, [selectAllRows]);
     
@@ -126,7 +116,7 @@ export const TableHeader: FC<{ columns: string[]; }> = ({ columns }) => {
 export const TableRow: FC<{
     data: any;
     columns: string[];
-    checked?: TableRowCheckedState;
+    checked?: ItemCheckedState;
     onClick?: () => void;
 }> = ({
     columns,
@@ -136,12 +126,12 @@ export const TableRow: FC<{
 }) => {
     const { selectSingleRow } = useTable();
 
-    const isChecked = checked === TableRowCheckedState.Checked;
+    const isChecked = checked === ItemCheckedState.Checked;
 
     const handleOnChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
         const checked = event.target.checked
-            ? TableRowCheckedState.Checked
-            : TableRowCheckedState.Unchecked;
+            ? ItemCheckedState.Checked
+            : ItemCheckedState.Unchecked;
         selectSingleRow(data.projectId, checked);
     }, [data, selectSingleRow]);
 
@@ -175,5 +165,15 @@ export const TableRow: FC<{
                 />
             </Td>
         </Tr>
+    )
+}
+
+export const ProjectProvider: FC<PropsWithChildren> = ({ children }) => {
+    const [ data, setData ] = useState<ItemData[]>([]);
+
+    return (
+        <TableContext.Provider value={{ data, setData }}>
+            {children}
+        </TableContext.Provider>
     )
 }

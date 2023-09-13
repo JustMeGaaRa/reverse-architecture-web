@@ -1,10 +1,10 @@
-export type TableRowData = {
+export type ItemData = {
     key: string;
-    checked: TableRowCheckedState;
+    checked: ItemCheckedState;
     data: any;
 }
 
-export enum TableRowCheckedState {
+export enum ItemCheckedState {
     Checked = "checked",
     Unchecked = "unchecked",
     Indeterminate = "indeterminate",

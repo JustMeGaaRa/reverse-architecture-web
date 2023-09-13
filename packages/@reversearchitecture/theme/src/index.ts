@@ -6,6 +6,7 @@ import { Checkbox } from "./components/Checkbox";
 import { List } from "./components/List";
 import { Menu } from "./components/Menu";
 import { Modal } from "./components/Modal";
+import { Radio } from "./components/Radio";
 import { Tabs } from "./components/Tabs";
 import { Tag } from "./components/Tag";
 import { colors } from "./foundations/Colors";
@@ -20,6 +21,7 @@ export const theme =  extendTheme({
         List,
         Menu,
         Modal,
+        // Radio,x
         Tabs,
         Tag
     },

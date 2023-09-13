@@ -3,7 +3,6 @@ import {
     Button,
     ButtonGroup,
     Divider,
-    Flex,
     IconButton,
     Tabs,
     Tab,
@@ -18,7 +17,6 @@ import {
     ContextSheet,
     ContextSheetContent,
     ContextSheetHeader,
-    EmptyContent,
     Toolbar,
     ToolbarSection
 } from "@reversearchitecture/ui";
@@ -27,7 +25,6 @@ import {
     BinMinus,
     Cancel,
     Copy,
-    Folder,
     List,
     Upload,
     ViewGrid
@@ -40,48 +37,46 @@ import {
     useState
 } from "react";
 import {
-    ProjectCardView,
-    ProjectTableView,
-    ProjectTableProvider,
     NavigationSource,
-    CreateProjectModal
+    CreateProjectModal,
+    ProjectList
 } from "../../../containers";
+import { ContentViewMode, useContentViewMode } from "../../../hooks";
+import { ProjectInfo } from "../../../model";
 import { ProjectApi } from "../../../services";
-import { ContentViewMode, useContentViewMode } from "./hooks";
 
 export const ProjectListContent: FC<PropsWithChildren> = () => {
-    const { view, setView } = useContentViewMode(ContentViewMode.Card);
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const [ api ] = useState(new ProjectApi());
+    const [ projectApi ] = useState(new ProjectApi());
     const [ projects, setProjects ] = useState([]);
-    const [ selected, setSelected ] = useState<any[]>([]);
+    const [ selectedProjects, setSelectedProjects ] = useState<any[]>([]);
+    const { view, setView } = useContentViewMode(ContentViewMode.Card);
 
     useEffect(() => {
-        api.getProjects()
+        projectApi.getProjects()
             .then(projects => {
                 setProjects(projects);
             })
             .catch(error => {
                 console.error(error);
             });
-    }, [api]);
+    }, [projectApi]);
+    
+    const handleOnCreate = useCallback((project: ProjectInfo) => {
+        projectApi.saveProject(project);
+        setProjects(projects.concat(project));
+    }, [projectApi, projects, setProjects]);
 
     const handleOnRemove = useCallback(() => {
-        selected.forEach(item => {
-            api.deleteProject(item.projectId);
+        selectedProjects.map(item => {
+            projectApi.deleteProject(item.projectId);
         });
-        api.getProjects()
-            .then(projects => {
-                setProjects(projects);
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    }, [api, selected, setProjects]);
+        setProjects(projects.filter(x => !selectedProjects.some(y => y.projectId === x.projectId)));
+    }, [projectApi, selectedProjects, projects, setProjects]);
 
     const handleOnClose = useCallback(() => {
-        setSelected([]);
-    }, [setSelected]);
+        setSelectedProjects([]);
+    }, [setSelectedProjects]);
 
     return (
         <ContextSheet>
@@ -108,7 +103,7 @@ export const ProjectListContent: FC<PropsWithChildren> = () => {
             <CreateProjectModal
                 isOpen={isOpen}
                 onClose={onClose}
-                onCreate={() => {}}
+                onCreate={handleOnCreate}
             />
 
             <ContextSheetHeader title={"All Projects"} />
@@ -119,7 +114,6 @@ export const ProjectListContent: FC<PropsWithChildren> = () => {
                         <Tab>My projects</Tab>
                         <Tab>Shared</Tab>
                         <Tab>Archived</Tab>
-                        
                         <ButtonGroup
                             alignSelf={"center"}
                             colorScheme={"gray"}
@@ -142,76 +136,45 @@ export const ProjectListContent: FC<PropsWithChildren> = () => {
                             />
                         </ButtonGroup>
                     </TabList>
-                    <TabPanels height={"calc(100% - 42px)"}>
-                        <TabPanel height={"100%"}>
-                            <Box padding={6} height={"100%"} overflowY={"scroll"}>
-                                {projects.length === 0 && (
-                                    <Flex
-                                        alignItems={"center"}
-                                        justifyContent={"center"}
-                                        height={"100%"}
-                                        width={"100%"}
-                                    >
-                                        <EmptyContent
-                                            icon={Folder}
-                                            title={"No projects"}
-                                            description={"To get started, click the \"Create New Project\" button to create a new project."}
-                                        />
-                                    </Flex>
-                                )}
-                                {projects.length > 0 && view === ContentViewMode.Card && (
-                                    <ProjectCardView
-                                        projects={projects}
-                                        onRemove={handleOnRemove}
-                                    />
-                                )}
-                                {projects.length > 0 && view === ContentViewMode.Table && (
-                                    <ProjectTableProvider>
-                                        <ProjectTableView
-                                            projects={projects}
-                                            onSelected={setSelected}
-                                            onRemove={handleOnRemove}
-                                        />
-                                    </ProjectTableProvider>
-                                )}
-                            </Box>
+                    <TabPanels height={"calc(100% - 42px)"} padding={6} overflowY={"scroll"}>
+                        <TabPanel>
+                            <ProjectList
+                                projects={projects}
+                                view={view}
+                                emptyTitle={"No projects"}
+                                emptyDescription={"To get started, click the \"Create New Project\" button to create a new project."}
+                                onSelected={setSelectedProjects}
+                                onRemove={handleOnRemove}
+                            />
                         </TabPanel>
-                        <TabPanel height={"100%"}>
-                            <Flex
-                                alignItems={"center"}
-                                justifyContent={"center"}
-                                height={"100%"}
-                                width={"100%"}
-                            >
-                                <EmptyContent
-                                    icon={Folder}
-                                    title={"No shared projects"}
-                                    description={"To get started, click the \"Create New Project\" button to create a new project."}
-                                />
-                            </Flex>
+                        <TabPanel>
+                            <ProjectList
+                                projects={[]}
+                                view={view}
+                                emptyTitle={"No shared projects"}
+                                emptyDescription={"To get started, click the \"Create New Project\" button to create a new project."}
+                                onSelected={setSelectedProjects}
+                                onRemove={handleOnRemove}
+                            />
                         </TabPanel>
-                        <TabPanel height={"100%"}>
-                            <Flex
-                                alignItems={"center"}
-                                justifyContent={"center"}
-                                height={"100%"}
-                                width={"100%"}
-                            >
-                                <EmptyContent
-                                    icon={Folder}
-                                    title={"No archived projects"}
-                                    description={"To get started, click the \"Create New Project\" button to create a new project."}
-                                />
-                            </Flex>
+                        <TabPanel>
+                            <ProjectList
+                                projects={[]}
+                                view={view}
+                                emptyTitle={"No archived projects"}
+                                emptyDescription={"To get started, click the \"Create New Project\" button to create a new project."}
+                                onSelected={setSelectedProjects}
+                                onRemove={handleOnRemove}
+                            />
                         </TabPanel>
                     </TabPanels>
                 </Tabs>
-                <ScaleFade in={selected.length > 0}>
+                <ScaleFade in={selectedProjects.length > 0}>
                     <Box position={"absolute"} bottom={4} left={"50%"} transform={"translateX(-50%)"}>
                         <Toolbar>
                             <ToolbarSection>
                                 <Text paddingX={2}>
-                                    {`${selected.length} item(s) selected`}
+                                    {`${selectedProjects.length} item(s) selected`}
                                 </Text>
                             </ToolbarSection>
                             <ToolbarSection>
