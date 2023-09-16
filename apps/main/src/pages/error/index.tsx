@@ -1,13 +1,14 @@
-import { Flex, HStack, Heading } from "@chakra-ui/react";
+import { Flex, HStack } from "@chakra-ui/react";
 import {
     EmptyContent,
-    Logo,
-    NavigationBackButton,
+    ReverseArchitectureLogo,
     Page,
     PageBody,
     PageHeader,
+    PageSidebar,
+    PageHomeButton,
 } from "@reversearchitecture/ui";
-import { CloudError } from "iconoir-react";
+import { ArrowLeft, CloudError } from "iconoir-react";
 import { FC } from "react";
 import { useNavigate, useRouteError } from "react-router";
 
@@ -20,27 +21,21 @@ export const ErrorPage: FC<{
 
     return (
         <Page>
-            <PageHeader>
-                <HStack gap={2}>
-                    <NavigationBackButton
-                        onClick={() => navigate(-1)}
-                    />
-                    <Logo />
-                </HStack>
-            </PageHeader>
+            <PageSidebar>
+                <PageHomeButton
+                    icon={<ArrowLeft />}
+                    onClick={() => navigate(-1)}
+                />
+            </PageSidebar>
             <PageBody>
-                <Flex
-                    alignItems={"center"}
-                    justifyContent={"center"}
-                    height={"100%"}
-                    width={"100%"}
-                >
-                    <EmptyContent
-                        icon={CloudError}
-                        title={name}
-                        description={message}
-                    />
-                </Flex>
+                <PageHeader>
+                </PageHeader>
+
+                <EmptyContent
+                    icon={CloudError}
+                    title={name}
+                    description={message}
+                />
             </PageBody>
         </Page>
     )

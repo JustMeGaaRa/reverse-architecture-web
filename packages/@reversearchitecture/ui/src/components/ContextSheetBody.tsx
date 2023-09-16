@@ -1,17 +1,11 @@
 import { Box } from "@chakra-ui/react";
 import { FC, PropsWithChildren } from "react";
 
-export const ContextSheetContent: FC<PropsWithChildren<{
-    padding?: number
-}>> = ({
-    children,
-    padding = 6
-}) => {
+export const ContextSheetBody: FC<PropsWithChildren> = ({ children }) => {
     return (
         <Box
             boxSizing={"border-box"}
-            padding={padding}
-            height={"calc(100% - 81px)"}
+            flexGrow={1}
             overflow={"hidden"}
         >
             {children}

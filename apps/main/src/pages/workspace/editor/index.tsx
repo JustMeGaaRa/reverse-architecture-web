@@ -1,8 +1,9 @@
 import { Box, Divider, Flex } from "@chakra-ui/react";
 import {
     ContextSheet,
-    ContextSheetContent,
-    ContextSheetHeader
+    ContextSheetBody,
+    ContextSheetHeader,
+    ContextSheetTitle
 } from "@reversearchitecture/ui";
 import { WorkspaceEditor } from "@reversearchitecture/workspace-editor";
 import {
@@ -40,14 +41,18 @@ export const CodeEditorSheet: FC = () => {
                 height={"100%"}
             >
                 <Box width={"1200px"}>
-                    <ContextSheetHeader title={"Code Editor"} />
+                    <ContextSheetHeader>
+                        <ContextSheetTitle title={"Code Editor"} />
+                    </ContextSheetHeader>
+
                     <Divider />
-                    <ContextSheetContent padding={0}>
+                    
+                    <ContextSheetBody>
                         <WorkspaceEditor
                             value={text}
                             onChange={handleOnChange}
                         />
-                    </ContextSheetContent>
+                    </ContextSheetBody>
                 </Box>
                 <WorkspaceViewerSheet />
             </Flex>

@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { FC, PropsWithChildren } from "react";
 
 export const ContextSheet: FC<PropsWithChildren<{
@@ -7,17 +7,18 @@ export const ContextSheet: FC<PropsWithChildren<{
     children
 }) => {
     return (
-        <Box
-            backgroundColor={"gray.50"}
+        <Flex
+            backgroundColor={"whiteAlpha.50"}
             borderRadius={"24px 0px 0px 0px"}
             borderLeftWidth={1}
             borderTopWidth={1}
-            borderColor={"gray.200"}
-            width={"100%"}
+            borderColor={"whiteAlpha.200"}
+            direction={"column"}
             height={"100%"}
+            width={"100%"}
             position={"relative"}
         >
             {children}
-        </Box>
+        </Flex>
     )
 }

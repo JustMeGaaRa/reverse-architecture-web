@@ -2,7 +2,9 @@ export type ProjectInfo = {
     projectId: string;
     name: string;
     description?: string;
-    updated: string;
-    updatedBy: string;
-    url: string;
+    coverUrl: string;
+    createdDate: string;
+    createdBy: string;
+    lastModifiedDate: string;
+    lastModifiedBy: string;
 }

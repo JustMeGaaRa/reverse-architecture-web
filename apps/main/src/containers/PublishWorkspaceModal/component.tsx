@@ -30,6 +30,7 @@ import {
     Text,
     Textarea,
     useSteps,
+    useToken,
     VStack
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
@@ -58,7 +59,22 @@ export const PublishWorkspaceModal: FC<{
     const steps = [
         { title: "Select the project you want to publish" },
         { title: "Describe your future publication" }
-    ]
+    ];
+    const [ whiteAlpha200, yellow900 ] = useToken("colors", ["whiteAlpha.200", "yellow.900"]);
+    const indicatorActiveStyle = {
+        borderColor: yellow900,
+        backgroundColor: yellow900,
+        borderWidth: 2,
+        height: 4,
+        width: 24
+    }
+    const indicatorInactiveStyle = {
+        borderColor: whiteAlpha200,
+        backgroundColor: whiteAlpha200,
+        borderWidth: 2,
+        height: 4,
+        width: 6
+    }
 
     const {
         values,
@@ -69,8 +85,8 @@ export const PublishWorkspaceModal: FC<{
     } = useFormik<WorkspaceInfo>({
         initialValues: {
             workspaceId: v4(),
-            name: "My new awesome arhitecture",
-            description: "This is a description of my new awesome architecture",
+            name: "",
+            description: "",
             updated: new Date(),
             updatedBy: "",
             tags: [],
@@ -139,8 +155,9 @@ export const PublishWorkspaceModal: FC<{
                                     {steps.map((step, index) => (
                                         <Step key={index}>
                                             <StepIndicator
-                                                height={"4px"}
-                                                width={index === activeStep ? "24px" : "6px"}
+                                                style={index === activeStep
+                                                    ? indicatorActiveStyle
+                                                    : indicatorInactiveStyle}
                                             />
                                         </Step>
                                     ))}

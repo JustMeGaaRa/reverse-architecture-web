@@ -15,8 +15,9 @@ import {
 } from "@chakra-ui/react";
 import {
     ContextSheet,
-    ContextSheetContent,
+    ContextSheetBody,
     ContextSheetHeader,
+    ContextSheetTitle,
     Toolbar,
     ToolbarSection
 } from "@reversearchitecture/ui";
@@ -81,23 +82,25 @@ export const ProjectListContent: FC<PropsWithChildren> = () => {
     return (
         <ContextSheet>
             <NavigationSource>
-                <Button
-                    aria-label={"create new project"}
-                    key={"create-new-project"}
-                    colorScheme={"yellow"}
-                    leftIcon={<AddPageAlt />}
-                    onClick={onOpen}
-                >
-                    Create New Project
-                </Button>
-                <IconButton
-                    aria-label={"import workspace"}
-                    key={"import-workspace"}
-                    colorScheme={"gray"}
-                    icon={<Upload />}
-                    isDisabled={true}
-                    title={"Import Workspace"}
-                />
+                <ButtonGroup size={"md"} variant={"outline"}>
+                    <Button
+                        aria-label={"create new project"}
+                        key={"create-new-project"}
+                        colorScheme={"yellow"}
+                        leftIcon={<AddPageAlt />}
+                        onClick={onOpen}
+                    >
+                        Create New Project
+                    </Button>
+                    <IconButton
+                        aria-label={"import workspace"}
+                        key={"import-workspace"}
+                        colorScheme={"gray"}
+                        icon={<Upload />}
+                        isDisabled={true}
+                        title={"Import Workspace"}
+                    />
+                </ButtonGroup>
             </NavigationSource>
 
             <CreateProjectModal
@@ -106,11 +109,15 @@ export const ProjectListContent: FC<PropsWithChildren> = () => {
                 onCreate={handleOnCreate}
             />
 
-            <ContextSheetHeader title={"All Projects"} />
+            <ContextSheetHeader>
+                <ContextSheetTitle title={"All Projects"} />
+            </ContextSheetHeader>
+
             <Divider />
-            <ContextSheetContent padding={0}>
+            
+            <ContextSheetBody>
                 <Tabs height={"100%"}>
-                    <TabList backgroundColor={"whiteAlpha.50"} px={6} height={12}>
+                    <TabList backgroundColor={"whiteAlpha.50"} height={12} paddingX={6}>
                         <Tab>My projects</Tab>
                         <Tab>Shared</Tab>
                         <Tab>Archived</Tab>
@@ -181,7 +188,7 @@ export const ProjectListContent: FC<PropsWithChildren> = () => {
                                 <IconButton
                                     aria-label={"copy"}
                                     icon={<Copy />}
-                                    isDisabled={true}
+                                    isDisabled
                                     title={"copy"}
                                 />
                                 <IconButton
@@ -202,7 +209,7 @@ export const ProjectListContent: FC<PropsWithChildren> = () => {
                         </Toolbar>
                     </Box>
                 </ScaleFade>
-            </ContextSheetContent>
+            </ContextSheetBody>
         </ContextSheet>
     )
 }

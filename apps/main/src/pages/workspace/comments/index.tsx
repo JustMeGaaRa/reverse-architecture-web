@@ -5,8 +5,9 @@ import {
 } from "@chakra-ui/react";
 import {
     ContextSheet,
-    ContextSheetContent,
-    ContextSheetHeader
+    ContextSheetBody,
+    ContextSheetHeader,
+    ContextSheetTitle
 } from "@reversearchitecture/ui";
 import { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -37,13 +38,17 @@ export const CommentsSheet: FC = () => {
             >
                 <CommentsProvider>
                     <Box width={"400px"}>
-                        <ContextSheetHeader title={"All Comments"} />
+                        <ContextSheetHeader>
+                            <ContextSheetTitle title={"All Comments"} />
+                        </ContextSheetHeader>
+
                         <Divider />
-                        <ContextSheetContent padding={0}>
+
+                        <ContextSheetBody>
                             <Box overflowY={"scroll"} height={"100%"}>
                                 <CommentThread comments={comments} />
                             </Box>
-                        </ContextSheetContent>
+                        </ContextSheetBody>
                     </Box>
                     <WorkspaceViewerSheet />
                 </CommentsProvider>

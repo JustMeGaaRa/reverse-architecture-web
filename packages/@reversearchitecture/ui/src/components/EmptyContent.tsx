@@ -12,24 +12,32 @@ export const EmptyContent: FC<{
 }) => {
     return (
         <Flex
-            alignItems={"center"}
-            direction={"column"}
-            textAlign={"center"}
-            maxWidth={500}
+            justifyContent={"center"}
+            height={"100%"}
+            width={"100%"}
         >
-            <Icon as={icon} fontSize={70} strokeWidth={.4} mb={4} />
-            <Text
-                fontSize={20}
-                color={"basic.white"}
+            <Flex
+                alignItems={"center"}
+                direction={"column"}
+                textAlign={"center"}
+                maxWidth={500}
+                position={"relative"}
+                top={"20vh"}
             >
-                {title}
-            </Text>
-            <Text
-                fontSize={16}
-                color={"gray.700"}
-            >
-                {description}
-            </Text>
+                <Icon as={icon} fontSize={70} strokeWidth={.4} mb={4} />
+                <Text
+                    fontSize={20}
+                    color={"basic.white"}
+                >
+                    {title}
+                </Text>
+                <Text
+                    fontSize={16}
+                    color={"gray.700"}
+                >
+                    {description}
+                </Text>
+            </Flex>
         </Flex>
     );
 }

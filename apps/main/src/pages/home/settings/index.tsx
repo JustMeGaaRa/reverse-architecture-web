@@ -1,8 +1,9 @@
 import { Box, Divider, Flex } from "@chakra-ui/react";
 import {
     ContextSheet,
-    ContextSheetContent,
+    ContextSheetBody,
     ContextSheetHeader,
+    ContextSheetTitle,
     Route,
     RouteList,
     RouteSection
@@ -11,9 +12,7 @@ import { ProfileCircle } from "iconoir-react";
 import { FC } from "react";
 import { Outlet } from "react-router";
 
-export const Settings: FC<{
-
-}> = () => {
+export const Settings: FC = () => {
     return (
         <ContextSheet>
             <Flex
@@ -24,49 +23,56 @@ export const Settings: FC<{
                     height={"100%"}
                     width={"400px"}
                 >
-                    <ContextSheetHeader title={"Settings"} />
+                    <ContextSheetHeader>
+                        <ContextSheetTitle title={"Settings"} />
+                    </ContextSheetHeader>
+
                     <Divider />
-                    <ContextSheetContent padding={2}>
-                        <RouteSection title={"Section 1"}>
-                            <RouteList size={"md"}>
-                                <Route
-                                    isExpanded
-                                    icon={ProfileCircle}
-                                    title={"Personal Profile"}
-                                    to={"profile"}
-                                />
-                                <Route
-                                    isExpanded
-                                    icon={ProfileCircle}
-                                    title={"Text"}
-                                    to={"text"}
-                                />
-                                <Route
-                                    isExpanded
-                                    icon={ProfileCircle}
-                                    title={"Text"}
-                                    to={"text"}
-                                />
-                            </RouteList>
-                        </RouteSection>
-                        <RouteSection title={"Section 2"}>
-                            <RouteList size={"md"}>
-                                <Route
-                                    isExpanded
-                                    icon={ProfileCircle}
-                                    title={"Text"}
-                                    to={"text"}
-                                />
-                                <Route
-                                    isExpanded
-                                    icon={ProfileCircle}
-                                    title={"Text"}
-                                    to={"text"}
-                                />
-                            </RouteList>
-                        </RouteSection>
-                    </ContextSheetContent>
+
+                    <ContextSheetBody>
+                        <Box padding={2} height={"100%"}>
+                            <RouteSection title={"Section 1"}>
+                                <RouteList size={"md"}>
+                                    <Route
+                                        isExpanded
+                                        icon={ProfileCircle}
+                                        title={"Personal Profile"}
+                                        to={"profile"}
+                                    />
+                                    <Route
+                                        isExpanded
+                                        icon={ProfileCircle}
+                                        title={"Text"}
+                                        to={"text"}
+                                    />
+                                    <Route
+                                        isExpanded
+                                        icon={ProfileCircle}
+                                        title={"Text"}
+                                        to={"text"}
+                                    />
+                                </RouteList>
+                            </RouteSection>
+                            <RouteSection title={"Section 2"}>
+                                <RouteList size={"md"}>
+                                    <Route
+                                        isExpanded
+                                        icon={ProfileCircle}
+                                        title={"Text"}
+                                        to={"text"}
+                                    />
+                                    <Route
+                                        isExpanded
+                                        icon={ProfileCircle}
+                                        title={"Text"}
+                                        to={"text"}
+                                    />
+                                </RouteList>
+                            </RouteSection>
+                        </Box>
+                    </ContextSheetBody>
                 </Box>
+                
                 <Outlet />
             </Flex>
         </ContextSheet>

@@ -1,20 +1,16 @@
-import { Box, Heading } from "@chakra-ui/react";
-import { FC } from "react";
+import { Box } from "@chakra-ui/react";
+import { FC, PropsWithChildren } from "react";
 
-export const ContextSheetHeader: FC<{ title: string }> = ({ title }) => {
+export const ContextSheetHeader: FC<PropsWithChildren> = ({ children }) => {
     return (
         <Box
             boxSizing={"border-box"}
-            padding={6}
+            flexBasis={"80px"}
+            flexGrow={0}
+            flexShrink={0}
             height={"80px"}
         >
-            <Heading
-                as={"h4"}
-                fontSize={32}
-                noOfLines={1}
-            >
-                {title}
-            </Heading>
+            {children}
         </Box>
     )
 }

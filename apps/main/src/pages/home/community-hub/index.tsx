@@ -2,6 +2,7 @@ import {
     Box,
     Button,
     Divider,
+    Flex,
     HStack,
     StackDivider,
     Tag,
@@ -11,8 +12,9 @@ import {
 } from "@chakra-ui/react";
 import {
     ContextSheet,
-    ContextSheetContent,
+    ContextSheetBody,
     ContextSheetHeader,
+    ContextSheetTitle,
 } from "@reversearchitecture/ui";
 import {
     AddPageAlt,
@@ -100,48 +102,55 @@ export const CommunityHub: FC<PropsWithChildren> = () => {
                 onPublish={handleOnPublish}
             />
 
-            <ContextSheetHeader title={"Community Hub"} />
+            <ContextSheetHeader>
+                <ContextSheetTitle title={"Community Hub"} />
+            </ContextSheetHeader>
+
             <Divider />
-            <ContextSheetContent padding={0}>
-                <Box height={"100%"} padding={6} overflowY={"scroll"}>
-                    <HStack overflowX={"hidden"} divider={<StackDivider />} gap={2}>
-                        <HStack>
-                            {defaultFilters.map((filter) => (
-                                <Tag
-                                    key={filter.tag}
-                                    className={selectedFilter === filter.tag ? "active" : ""}
-                                    cursor={"pointer"}
-                                    size={"md"}
-                                    onClick={() => handleOnFilterClick(filter.tag)}
-                                >
-                                    <TagLeftIcon boxSize={5} as={filter.icon} />
-                                    <TagLabel>{filter.tag}</TagLabel>
-                                </Tag>
-                            ))}
+
+            <ContextSheetBody>
+                <Flex direction={"column"} height={"100%"}>
+                    <Box flexBasis={"80px"} flexGrow={0} flexShrink={0} padding={6}>
+                        <HStack overflowX={"hidden"} divider={<StackDivider />} gap={2}>
+                            <HStack>
+                                {defaultFilters.map((filter) => (
+                                    <Tag
+                                        key={filter.tag}
+                                        className={selectedFilter === filter.tag ? "active" : ""}
+                                        cursor={"pointer"}
+                                        size={"md"}
+                                        onClick={() => handleOnFilterClick(filter.tag)}
+                                    >
+                                        <TagLeftIcon boxSize={5} as={filter.icon} />
+                                        <TagLabel>{filter.tag}</TagLabel>
+                                    </Tag>
+                                ))}
+                            </HStack>
+                            <HStack>
+                                {filters.map((tag) => (
+                                    <Tag
+                                        key={tag}
+                                        className={selectedFilter === tag ? "active" : ""}
+                                        cursor={"pointer"}
+                                        size={"md"}
+                                        onClick={() => handleOnFilterClick(tag)}
+                                    >
+                                        {capitalize(tag)}
+                                    </Tag>
+                                ))}
+                            </HStack>
                         </HStack>
-                        <HStack>
-                            {filters.map((tag) => (
-                                <Tag
-                                    key={tag}
-                                    className={selectedFilter === tag ? "active" : ""}
-                                    cursor={"pointer"}
-                                    size={"md"}
-                                    onClick={() => handleOnFilterClick(tag)}
-                                >
-                                    {capitalize(tag)}
-                                </Tag>
-                            ))}
-                        </HStack>
-                    </HStack>
-                    <Divider height={16} border={0} />
-                    <WorkspaceList
-                        workspaces={filtered}
-                        emptyTitle={"No community workspaces available yet"}
-                        emptyDescription={"To get started, click the \"Create New Project\" button to create a new project."}
-                        onClick={handleOnWorkspaceClick}
-                    />
-                </Box>
-            </ContextSheetContent>
+                    </Box>
+                    <Box flexGrow={1} overflowY={"scroll"} padding={6}>
+                        <WorkspaceList
+                            workspaces={filtered}
+                            emptyTitle={"No community workspaces available yet"}
+                            emptyDescription={"To get started, click the \"Create New Project\" button to create a new project."}
+                            onClick={handleOnWorkspaceClick}
+                        />
+                    </Box>
+                </Flex>
+            </ContextSheetBody>
         </ContextSheet>
     );
 }

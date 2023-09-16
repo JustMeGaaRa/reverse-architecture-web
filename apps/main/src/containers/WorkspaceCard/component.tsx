@@ -13,10 +13,13 @@ import {
     Icon,
     Image,
     Tag,
+    TagLabel,
+    TagLeftIcon,
+    TagRightIcon,
     Text,
     useBreakpointValue
 } from "@chakra-ui/react";
-import { ArrowTrCircle, MediaImage } from "iconoir-react";
+import { ArrowTrCircle, MediaImage, Heart } from "iconoir-react";
 import { FC, PropsWithChildren } from "react";
 
 export const WorkspacePreviewCard: FC<PropsWithChildren<{
@@ -108,7 +111,7 @@ export const WorkspacePreviewCard: FC<PropsWithChildren<{
                         color={"gray.700"}
                         size={"sm"}
                     >
-                        788 used
+                        <TagLabel>788 used</TagLabel>
                     </Tag>
                     <Tag
                         backgroundColor={"gray.200"}
@@ -116,7 +119,8 @@ export const WorkspacePreviewCard: FC<PropsWithChildren<{
                         color={"gray.700"}
                         size={"sm"}
                     >
-                        47 liked
+                        <TagLeftIcon as={Heart} />
+                        <TagLabel>47 liked</TagLabel>
                     </Tag>
                 </HStack>
                 <Button
@@ -129,7 +133,7 @@ export const WorkspacePreviewCard: FC<PropsWithChildren<{
                     variant={"outline"}
                     onClick={() => onUseTemplateClick?.()}
                 >
-                    Use template
+                    Use
                 </Button>
             </CardFooter>
         </Card>

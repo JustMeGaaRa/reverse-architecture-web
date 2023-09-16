@@ -33,10 +33,12 @@ export const ProjectTableView: FC<{
     onSelected,
     onRemove
 }) => {
-    const columns = [
-        "name",
-        "updated",
-        "updatedBy",
+    const columns: TableColumnInfo[] = [
+        { title: "Name", name: "name" },
+        { title: "Created Date", name: "createdDate" },
+        { title: "Created By", name: "createdBy" },
+        { title: "Last Modified Date", name: "lastModifiedDate" },
+        { title: "Last Modified By", name: "lastModifiedBy" },
     ];
     const { data, setTableRows } = useTable();
 
@@ -74,7 +76,12 @@ export const ProjectTableView: FC<{
     )
 }
 
-export const TableHeader: FC<{ columns: string[]; }> = ({ columns }) => {
+type TableColumnInfo = {
+    title: string;
+    name: string;
+}
+
+export const TableHeader: FC<{ columns: TableColumnInfo[] }> = ({ columns }) => {
     const { data, selectAllRows } = useTable();
 
     const checkedCount = data.filter(row => row.checked === ItemCheckedState.Checked).length;
@@ -103,9 +110,9 @@ export const TableHeader: FC<{ columns: string[]; }> = ({ columns }) => {
                     onChange={handleOnChange}
                 />
             </Th>
-            {columns.map((name: any) => (
+            {columns.map(({ title, name }) => (
                 <Th key={name}>
-                    {name}
+                    {title}
                 </Th>
             ))}
             <Th width={12} />
@@ -115,7 +122,7 @@ export const TableHeader: FC<{ columns: string[]; }> = ({ columns }) => {
 
 export const TableRow: FC<{
     data: any;
-    columns: string[];
+    columns: TableColumnInfo[];
     checked?: ItemCheckedState;
     onClick?: () => void;
 }> = ({
@@ -149,7 +156,7 @@ export const TableRow: FC<{
                     onChange={handleOnChange}
                 />
             </Td>
-            {columns.map((name: any) => (
+            {columns.map(({ name }) => (
                 <Td key={name}>
                     {data[name]}
                 </Td>

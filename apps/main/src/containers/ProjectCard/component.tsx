@@ -20,6 +20,7 @@ import {
     FC,
     PropsWithChildren
 } from "react";
+import { ProjectInfo } from "../../model";
 
 export const ProjectCard: FC<PropsWithChildren<{
     name: string;
@@ -131,8 +132,8 @@ export const ProjectCard: FC<PropsWithChildren<{
 }
 
 export const ProjectCardView: FC<{
-    projects: any[];
-    onRemove?: (data: any[]) => void;
+    projects: ProjectInfo[];
+    onRemove?: (data: ProjectInfo[]) => void;
 }> = ({
     projects,
     onRemove
@@ -145,8 +146,8 @@ export const ProjectCardView: FC<{
                 <ProjectCard
                     key={project.name}
                     name={project.name}
-                    updated={project.updated}
-                    preview={project.url}
+                    updated={project.lastModifiedDate}
+                    preview={project.coverUrl}
                 />
             ))}
         </Grid>

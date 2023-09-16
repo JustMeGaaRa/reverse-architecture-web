@@ -26,20 +26,13 @@ export const ProjectList: FC<{
     onRemove
 }) => {
     return (
-        <Box height={"100%"}>
+        <Box>
             {projects.length === 0 && (
-                <Flex
-                    alignItems={"center"}
-                    justifyContent={"center"}
-                    height={"100%"}
-                    width={"100%"}
-                >
-                    <EmptyContent
-                        icon={Folder}
-                        title={emptyTitle}
-                        description={emptyDescription}
-                    />
-                </Flex>
+                <EmptyContent
+                    icon={Folder}
+                    title={emptyTitle}
+                    description={emptyDescription}
+                />
             )}
             {projects.length > 0 && view === ContentViewMode.Card && (
                 <ProjectProvider>

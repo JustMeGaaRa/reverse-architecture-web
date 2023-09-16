@@ -17,20 +17,13 @@ export const WorkspaceList: FC<{
     onClick
 }) => {
     return (
-        <Box height={"100%"}>
+        <Box>
             {workspaces.length === 0 && (
-                <Flex
-                    alignItems={"center"}
-                    justifyContent={"center"}
-                    height={"100%"}
-                    width={"100%"}
-                >
-                    <EmptyContent
-                        icon={Folder}
-                        title={emptyTitle}
-                        description={emptyDescription}
-                    />
-                </Flex>
+                <EmptyContent
+                    icon={Folder}
+                    title={emptyTitle}
+                    description={emptyDescription}
+                />
             )}
             {workspaces.length > 0 && (
                 <WorkspaceCardView

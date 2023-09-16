@@ -19,6 +19,7 @@ import { useFormik } from "formik";
 import { FC } from "react";
 import { v4 } from "uuid";
 import { ProjectInfo } from "../../model";
+import { useAccount } from "../AccountProvider";
 
 export const CreateProjectModal: FC<{
     isOpen: boolean;
@@ -29,6 +30,7 @@ export const CreateProjectModal: FC<{
     onClose,
     onCreate
 }) => {
+    const { account } = useAccount();
     const {
         values,
         errors,
@@ -39,10 +41,12 @@ export const CreateProjectModal: FC<{
         initialValues: {
             projectId: v4(),
             name: "",
-            updated: `Edited on ${new Date().toLocaleDateString()}`,
-            updatedBy: "pavlo@rvrs.io",
-            url: "",
-            description: ""
+            description: "",
+            createdBy: account.email,
+            createdDate: new Date().toLocaleDateString(),
+            lastModifiedBy: account.email,
+            lastModifiedDate: new Date().toLocaleDateString(),
+            coverUrl: "",
         },
         onSubmit: (values, actions) => {
             onCreate(values);
@@ -125,16 +129,16 @@ export const CreateProjectModal: FC<{
                         </VStack>
                     </ModalBody>
                     <ModalFooter padding={4}>
-                        <ButtonGroup justifyContent={"space-between"} width={"100%"}>
-                            <Button colorScheme={"gray"}>
-                                Cancel
-                            </Button>
+                        <ButtonGroup justifyContent={"right"} width={"100%"}>
                             <Button
                                 colorScheme={"yellow"}
                                 isLoading={isSubmitting}
                                 type={"submit"}
                             >
                                 Create
+                            </Button>
+                            <Button colorScheme={"gray"}>
+                                Cancel
                             </Button>
                         </ButtonGroup>
                     </ModalFooter>
