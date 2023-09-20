@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { LogOut, NavArrowUp, ProfileCircle } from "iconoir-react";
 import { FC, PropsWithChildren } from "react";
-import { useAccount } from "../../containers";
+import { useAccount } from "../../features";
 
 export const AccountMenu: FC<PropsWithChildren<{
     expanded: boolean;

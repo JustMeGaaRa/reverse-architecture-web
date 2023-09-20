@@ -8,5 +8,6 @@ export * from "./WorkspaceNavigation"
 export * from "./WorkspaceStoreUpdater";
 export * from "./WorkspaceThemeProvider";
 export * from "./WorkspaceToolbar";
+export * from "./WorkspaceUndoRedoControls";
 export * from "./WorkspaceViewRenderer";
 export * from "./WorkspaceZoomControls";

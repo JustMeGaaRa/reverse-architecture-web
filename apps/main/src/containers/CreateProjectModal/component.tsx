@@ -18,8 +18,7 @@ import {
 import { useFormik } from "formik";
 import { FC } from "react";
 import { v4 } from "uuid";
-import { ProjectInfo } from "../../model";
-import { useAccount } from "../AccountProvider";
+import { ProjectInfo, useAccount } from "../../features";
 
 export const CreateProjectModal: FC<{
     isOpen: boolean;
@@ -73,8 +72,7 @@ export const CreateProjectModal: FC<{
                     borderRadius={24}
                     backgroundColor={"basic.eerie-black"}
                     boxShadow={"none"}
-                    height={"60vh"}
-                    maxHeight={"600px"}
+                    height={"600px"}
                 >
                     <ModalHeader textAlign={"center"}>
                         Create New Project

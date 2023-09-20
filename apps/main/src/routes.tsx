@@ -3,17 +3,16 @@ import {
     Navigate
 } from "react-router-dom";
 import {
-    Layout,
-    CommunityHub,
-    Dashboard,
+    AuthenticatePage,
+    CommunityHubPage,
+    DashboardPage,
     ErrorPage,
-    ProjectListContent,
-    Settings,
-    Workspace,
-    ProfileSheet,
-    CodeEditorSheet,
-    CommentsSheet,
-    WorkspaceViewerSheet
+    Layout,
+    ProjectListPage,
+    ProfileSettingsPage,
+    SettingsPage,
+    WorkspacePage,
+    WorkspaceExplorerPage,
 } from "./pages";
 
 export const routes = createBrowserRouter([
@@ -24,23 +23,23 @@ export const routes = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <Navigate to={"hub"} />
+                element: <Navigate to={"community"} />
             },
             {
                 path: "dashboard",
-                element: <Dashboard />
+                element: <DashboardPage />
             },
             {
                 path: "projects",
-                element: <ProjectListContent />
+                element: <ProjectListPage />
             },
             {
-                path: "hub",
-                element: <CommunityHub />
+                path: "community",
+                element: <CommunityHubPage />,
             },
             {
                 path: "settings",
-                element: <Settings />,
+                element: <SettingsPage />,
                 children: [
                     {
                         index: true,
@@ -48,32 +47,24 @@ export const routes = createBrowserRouter([
                     },
                     {
                         path: "profile",
-                        element: <ProfileSheet />
+                        element: <ProfileSettingsPage />
                     }
                 ]
             }
         ]
     },
     {
-        path: "/workspace/:workspaceId",
-        element: <Workspace />,
+        path: "/signin",
+        element: <AuthenticatePage />,
+    },
+    {
+        path: "/workspaces/:workspaceId",
+        element: <WorkspacePage />,
         errorElement: <ErrorPage />,
         children: [
             {
                 index: true,
-                element: <WorkspaceViewerSheet />
-            },
-            {
-                path: "diagram",
-                element: <WorkspaceViewerSheet />
-            },
-            {
-                path: "editor",
-                element: <CodeEditorSheet />
-            },
-            {
-                path: "comments",
-                element: <CommentsSheet />
+                element: <WorkspaceExplorerPage />
             }
         ]
     }

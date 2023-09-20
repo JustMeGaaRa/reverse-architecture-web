@@ -41,7 +41,7 @@ import {
 } from "iconoir-react";
 import { FC, useState } from "react";
 import { v4 } from "uuid";
-import { WorkspaceInfo } from "../../model";
+import { WorkspaceInfo } from "../../features";
 
 export const PublishWorkspaceModal: FC<{
     workspaces: WorkspaceInfo[];
@@ -117,8 +117,7 @@ export const PublishWorkspaceModal: FC<{
                     borderRadius={24}
                     backgroundColor={"basic.eerie-black"}
                     boxShadow={"none"}
-                    height={"60vh"}
-                    maxHeight={"800px"}
+                    height={"700px"}
                 >
                     <ModalHeader textAlign={"center"}>
                         Publish to Community

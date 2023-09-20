@@ -14,10 +14,8 @@ import {
     Keyframes,
     LayoutRight,
     Play,
-    Redo,
     Text,
     User,
-    Undo
 } from "iconoir-react";
 import { FC, useState } from "react";
 import {
@@ -224,16 +222,6 @@ export const WorkspaceToolbar: FC = () => {
                                 color: "yellow.900"
                             }}
                             onClick={() => deleteElements(selection)}
-                        />
-                        <IconButton
-                            aria-label={"undo last change"}
-                            icon={<Undo />}
-                            title={"undo last change"}
-                        />
-                        <IconButton
-                            aria-label={"redo last change"}
-                            icon={<Redo />}
-                            title={"redo last change"}
                         />
                     </ToolbarSection>
 

@@ -42,7 +42,6 @@ export const Button: ComponentStyleConfig = {
                 color: mode("", `${props.colorScheme}.800`)(props),
             },
             _disabled: {
-                backgroundColor: mode("", `${props.colorScheme}.100`)(props),
                 color: mode("", `${props.colorScheme}.400`)(props),
             }
         }),

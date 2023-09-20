@@ -28,14 +28,6 @@ export const WorkspaceNavigation: FC = () => {
     const { workspace, selectedView } = useWorkspaceStore();
     const { getViewAccentColor } = useWorkspaceTheme();
     const { zoomIntoView } = useViewNavigation();
-    
-    const icons = [
-        <Hexagon key={"hexagon"} fontSize={6} color={"#FF453A"} />,
-        <Triangle key={"triangle"} fontSize={6} color={"#E3FB51"} />,
-        <Square key={"square"} fontSize={6} color={"#0A84FF"} />,
-        <Rhombus key={"rhombus"} fontSize={6} color={"#BF5AF2"} />,
-        <Circle key={"circle"} fontSize={6} color={"#32D74B"} />
-    ];
 
     const pathBuilders: Map<ViewType, ISupportPath> = new Map<ViewType, ISupportPath>([
         [ ViewType.SystemLandscape, new SystemLandscapePathProvider() ],
@@ -48,7 +40,6 @@ export const WorkspaceNavigation: FC = () => {
     const links = path.map((view, index) => ({
         title: `${view.type} - ${view.title}`,
         colorScheme: getViewAccentColor(view.type),
-        icon: icons[(index + 1) % icons.length],
         isActive: index === path.length - 1,
         data: view
     }));
@@ -65,7 +56,6 @@ export const WorkspaceNavigation: FC = () => {
                             backdropFilter={"auto"}
                             backdropBlur={"16px"}
                             colorScheme={link.isActive ? link.colorScheme : "whiteAlpha"}
-                            leftIcon={link.icon}
                             title={link.title}
                             onClick={() => handleOnViewItemClick(link.data)}
                         >
