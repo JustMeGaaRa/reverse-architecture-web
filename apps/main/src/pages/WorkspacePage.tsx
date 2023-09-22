@@ -125,7 +125,7 @@ export const WorkspacePage: FC<PropsWithChildren> = () => {
                     <HStack gap={2}>
                         <Divider
                             borderWidth={1}
-                            color={"gray.200"}
+                            color={"whiteAlpha.200"}
                             height={"32px"}
                             orientation={"vertical"}
                         />

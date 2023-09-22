@@ -3,7 +3,10 @@ import {
     Breadcrumb,
     BreadcrumbItem,
     BreadcrumbLink,
-    Button
+    Button,
+    HStack,
+    Select,
+    StackDivider
 } from "@chakra-ui/react";
 import {
     ComponentPathProvider,
@@ -48,22 +51,34 @@ export const WorkspaceNavigation: FC = () => {
 
     return (
         <Box position={"absolute"} top={4} left={4}>
-            <Breadcrumb separator={""}>
-                {links.map(link => (
-                    <BreadcrumbItem key={link.title} isCurrentPage={link.isActive}>
-                        <BreadcrumbLink
-                            as={Button}
-                            backdropFilter={"auto"}
-                            backdropBlur={"16px"}
-                            colorScheme={link.isActive ? link.colorScheme : "whiteAlpha"}
-                            title={link.title}
-                            onClick={() => handleOnViewItemClick(link.data)}
-                        >
-                            {link.title}
-                        </BreadcrumbLink>
-                    </BreadcrumbItem>
-                ))}
-            </Breadcrumb>
+            <HStack divider={<StackDivider borderColor={"whiteAlpha.200"} />}>
+                <Select
+                    backgroundColor={"whiteAlpha.200"}
+                    backdropFilter={"blur(8px)"}
+                    borderRadius={8}
+                    color={"whiteAlpha.700"}
+                    size={"xs"}
+                    variant={"filled"}
+                >
+                    <option value={"systemLandscape"}>System Landscape</option>
+                    <option value={"systemContext"}>System Context</option>
+                    <option value={"deployment"}>Deployment</option>
+                </Select>
+                <Breadcrumb separator={""}>
+                    {links.map(link => (
+                        <BreadcrumbItem key={link.title} isCurrentPage={link.isActive}>
+                            <BreadcrumbLink
+                                as={Button}
+                                colorScheme={link.isActive ? link.colorScheme : "whiteAlpha"}
+                                title={link.title}
+                                onClick={() => handleOnViewItemClick(link.data)}
+                            >
+                                {link.title}
+                            </BreadcrumbLink>
+                        </BreadcrumbItem>
+                    ))}
+                </Breadcrumb>
+            </HStack>
         </Box>
     )
 }

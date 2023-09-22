@@ -4,5 +4,6 @@ export * from "./NavigationProvider";
 export * from "./PublishWorkspaceModal";
 export * from "./UserAvatarGroup";
 export * from "./UserCursorGroup";
+export * from "./WorkspaceCommentGroup";
 export * from "./WorkspaceMenu";
 export * from "./WorkspaceRoom";

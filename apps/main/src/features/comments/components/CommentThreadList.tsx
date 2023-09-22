@@ -10,11 +10,11 @@ import {
     useCallback,
     useEffect,
 } from "react";
-import { CommentCard } from "../components";
+import { CommentThreadRefrence } from ".";
 import { useCommentsStore } from "../hooks";
 import { CommentThread } from "../types";
 
-export const CommentList: FC<{
+export const CommentThreadList: FC<{
     commentThreads: CommentThread[];
 }> = ({
     commentThreads: threads
@@ -38,13 +38,13 @@ export const CommentList: FC<{
     return (
         <VStack padding={2} gap={1}>
             {commentThreads.map(thread => (
-                <CommentCard
+                <CommentThreadRefrence
                     key={thread.commentThreadId}
                     commentThreadId={thread.commentThreadId}
-                    author={thread.author}
-                    source={thread.metadata.view}
-                    text={thread.text}
-                    createdAt={thread.createdDate}
+                    author={thread.comments.at(0).author}
+                    text={thread.comments.at(0).text}
+                    createdAt={thread.comments.at(0).createdDate}
+                    reference={thread.metadata.view}
                     onClick={() => handleOnClick(thread)}
                 />
             ))}

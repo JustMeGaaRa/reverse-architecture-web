@@ -1,4 +1,4 @@
-import { CommentThread } from "../types";
+import { CommentInfo, CommentThread } from "../types";
 
 export class CommentApi {
     private comments: Map<string, Array<CommentThread>>;
@@ -8,10 +8,14 @@ export class CommentApi {
     ) {
         const commentThread1: CommentThread = {
             commentThreadId: "comment-thread-1",
-            author: "Josuke Higashikata",
-            text: "Some comment content example here, long text to test layout.",
-            createdDate: "2021-01-01",
-            replies: [
+            comments: [
+                {
+                    commentId: "comment-0",
+                    commentThreadId: "comment-thread-1",
+                    author: "Josuke Higashikata",
+                    text: "Some comment content example here, long text to test layout.",
+                    createdDate: "2021-01-01",
+                },
                 {
                     commentId: "comment-1",
                     commentThreadId: "comment-thread-1",
@@ -57,15 +61,19 @@ export class CommentApi {
             ],
             metadata: {
                 view: { type: "System Landscape", id: "System Landscape" },
-                position: { x: 500, y: 500 }
+                position: { x: 100, y: 100 }
             }
         }
         const commentThread2: CommentThread = {
             commentThreadId: "comment-thread-2",
-            author: "Noriaki Kakyoin",
-            text: "Some comment content example here, long text to test layout.",
-            createdDate: "2021-01-01",
-            replies: [
+            comments: [
+                {
+                    commentId: "comment-7",
+                    commentThreadId: "comment-thread-2",
+                    author: "Noriaki Kakyoin",
+                    text: "Some comment content example here, long text to test layout.",
+                    createdDate: "2021-01-01",
+                },
                 {
                     commentId: "comment-12",
                     commentThreadId: "comment-thread-2",
@@ -95,10 +103,14 @@ export class CommentApi {
         }
         const commentThread3: CommentThread = {
             commentThreadId: "comment-thread-3",
-            author: "Joseph Joestar",
-            text: "Some comment content example here, long text to test layout.",
-            createdDate: "2021-01-01",
-            replies: [
+            comments: [
+                {
+                    commentId: "comment-10",
+                    commentThreadId: "comment-thread-3",
+                    author: "Joseph Joestar",
+                    text: "Some comment content example here, long text to test layout.",
+                    createdDate: "2021-01-01",
+                },
                 {
                     commentId: "comment-8",
                     commentThreadId: "comment-thread-3",
@@ -121,10 +133,14 @@ export class CommentApi {
         }
         const commentThread4: CommentThread = {
             commentThreadId: "comment-thread-4",
-            author: "Rudol von Stroheim",
-            text: "Some comment content example here, long text to test layout.",
-            createdDate: "2021-01-01",
-            replies: [
+            comments: [
+                {
+                    commentId: "comment-15",
+                    commentThreadId: "comment-thread-4",
+                    author: "Rudol von Stroheim",
+                    text: "Some comment content example here, long text to test layout.",
+                    createdDate: "2021-01-01",
+                },
                 {
                     commentId: "comment-11",
                     commentThreadId: "comment-thread-4",
@@ -148,20 +164,29 @@ export class CommentApi {
         ]);
     }
 
-    async getComments(workspaceId: string): Promise<Array<CommentThread>> {
+    async getCommentThreads(workspaceId: string): Promise<Array<CommentThread>> {
         const list = this.comments.get(workspaceId) ?? [];
         return Promise.resolve(list);
     }
 
-    async saveComment(workspaceId: string, comment: CommentThread): Promise<CommentThread> {
+    async saveCommentThread(workspaceId: string, comment: CommentThread): Promise<CommentThread> {
         const list = this.comments.get(workspaceId) ?? [];
         this.comments.set(workspaceId, list.concat(comment));
         return Promise.resolve(comment);
     }
 
-    async deleteComment(workspaceId: string, commentId: string): Promise<void> {
+    async deleteCommentThread(workspaceId: string, commentId: string): Promise<void> {
         const list = this.comments.get(workspaceId)?.filter(x => x.commentThreadId !== commentId) ?? [];
         this.comments.set(workspaceId, list);
         return Promise.resolve();
+    }
+
+    async saveCommentThreadReply(workspaceId: string, commentThreadId: string, comment: CommentInfo): Promise<CommentThread> {
+        const list = this.comments.get(workspaceId) ?? [];
+        const commentThread = list.find(x => x.commentThreadId === commentThreadId);
+        if (commentThread) {
+            commentThread.comments.push(comment);
+        }
+        return Promise.resolve(commentThread);
     }
 }

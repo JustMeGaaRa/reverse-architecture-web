@@ -1,19 +1,20 @@
 import { Box,Text } from "@chakra-ui/react";
-import { useViewportUtils } from "@reversearchitecture/workspace-viewer";
+import { ForeignElement } from "@reversearchitecture/workspace-viewer";
 import { FC } from "react";
 
 export const UserCursorGroup: FC<{ users: Array<any> }> = ({ users }) => {
-    const { getRenderingPoint } = useViewportUtils();
-
     return (
         <>
             {users.filter(x => x.point).map(user => (
-                <UserCursor
+                <ForeignElement
                     key={user.username}
-                    colorScheme={user.color}
-                    point={getRenderingPoint(user.point)}
-                    name={user.fullname}
-                />
+                    position={user.point}
+                >
+                    <UserCursor
+                        colorScheme={user.color}
+                        name={user.fullname}
+                    />
+                </ForeignElement>
             ))}
         </>
     )
@@ -21,21 +22,15 @@ export const UserCursorGroup: FC<{ users: Array<any> }> = ({ users }) => {
 
 const UserCursor: FC<{
     colorScheme: string,
-    point: { x: number, y: number },
     name: string,
 }> = ({
     colorScheme,
-    point,
     name
 }) => {
     return (
         <Box
             data-group
             cursor={"pointer"}
-            position={"absolute"}
-            left={point.x}
-            top={point.y}
-            zIndex={5}
         >
             <Box
                 backgroundColor={`${colorScheme}.900`}

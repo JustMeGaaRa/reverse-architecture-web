@@ -2,6 +2,7 @@ import { IWorkspaceMetadata, IWorkspaceTheme } from "@structurizr/dsl";
 
 export type WorkspaceInfo = {
     workspaceId: string;
+    projectId?: string;
     name: string;
     description?: string;
     createdBy?: string;
@@ -10,7 +11,7 @@ export type WorkspaceInfo = {
     // TODO: rename to lastModifiedBy
     updatedBy: string;
     tags: Array<string>;
-    
+ 
     text: string;
     metadata?: IWorkspaceMetadata;
     theme?: IWorkspaceTheme;

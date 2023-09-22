@@ -39,6 +39,7 @@ import {
     NavigationSource,
     UserAvatarGroup,
     UserCursorGroup,
+    WorkspaceCommentGroup,
     WorkspaceRoom,
     WorkspaceRoomProvider,
     WorkspaceUser
@@ -46,9 +47,8 @@ import {
 import {
     CommentApi,
     CommentThread,
-    CommentThreadGroup,
-    CommentsProvider,
-    CommentList,
+    CommentProvider,
+    CommentThreadList,
     CommunityHubApi,
     WorkspaceApi,
     WorkspaceInfo,
@@ -57,11 +57,12 @@ import {
 
 export const WorkspaceExplorerPage: FC = () => {
     const { workspaceId } = useParams<{ workspaceId: string }>();
-    const [ queryParams, setQueryParams ] = useSearchParams([
+    const [ queryParams ] = useSearchParams([
         ["list", "false"],
         ["comments", "false"],
         ["editor", "false"],
-        ["settings", "false"]
+        ["settings", "false"],
+        ["projectId", ""]
     ]);
     const [ workspace, setWorkspace ] = useState(Workspace.Empty.toObject());
     const [ metadata, setMetadata ] = useState(WorkspaceMetadata.Empty.toObject());
@@ -70,7 +71,8 @@ export const WorkspaceExplorerPage: FC = () => {
         showWorkspaces: queryParams.get("list") === "true",
         showComments: queryParams.get("comments") === "true",
         showCodeEditor: queryParams.get("editor") === "true",
-        showSettings: queryParams.get("settings") === "true"
+        showSettings: queryParams.get("settings") === "true",
+        projectId: queryParams.get("projectId") ?? ""
     };
 
     // comment list
@@ -78,21 +80,20 @@ export const WorkspaceExplorerPage: FC = () => {
 
     useEffect(() => {
         const api = new CommentApi();
-        api.getComments(workspaceId)
+        api.getCommentThreads(workspaceId)
             .then(comments => setCommentThreads(comments))
             .catch(error => console.error(error));
     }, [workspaceId]);
     
     // workspace list
-    const { projectId } = useParams<{ projectId: string }>();
     const [ workspaces, setWorkspaces ] = useState<Array<WorkspaceInfo>>([]);
 
     useEffect(() => {
         const workspaceApi = new WorkspaceApi();
-        workspaceApi.getWorkspaces(projectId)
+        workspaceApi.getWorkspaces(state.projectId)
             .then(workspaces => setWorkspaces(workspaces))
             .catch(error => console.error(error));
-    }, [projectId]);
+    }, [state.projectId]);
 
     // code editor
     const [ text, setText ] = useState("");
@@ -136,7 +137,7 @@ export const WorkspaceExplorerPage: FC = () => {
                 direction={"row"}
                 height={"100%"}
             >
-                <CommentsProvider>
+                <CommentProvider>
                     {state.showComments && (
                         <Flex direction={"column"} width={"400px"}>
                             <ContextSheetHeader>
@@ -148,7 +149,7 @@ export const WorkspaceExplorerPage: FC = () => {
 
                             <ContextSheetBody>
                                 <Box overflowY={"scroll"} height={"100%"}>
-                                    <CommentList commentThreads={commentThreads} />
+                                    <CommentThreadList commentThreads={commentThreads} />
                                 </Box>
                             </ContextSheetBody>
                         </Flex>
@@ -204,6 +205,13 @@ export const WorkspaceExplorerPage: FC = () => {
                     <ContextSheet>
                         <NavigationSource>
                             <UserAvatarGroup users={users} />
+                            <Divider
+                                borderWidth={1}
+                                color={"whiteAlpha.200"}
+                                height={"32px"}
+                                marginX={2}
+                                orientation={"vertical"}
+                            />
                             <IconButton
                                 aria-label={"share"}
                                 colorScheme={"gray"}
@@ -222,7 +230,7 @@ export const WorkspaceExplorerPage: FC = () => {
                                     view={workspace.views.systemLandscape}
                                     metadata={metadata}
                                 >
-                                    <CommentThreadGroup />
+                                    <WorkspaceCommentGroup />
                                     <WorkspaceNavigation />
                                     <WorkspaceUndoRedoControls />
                                     <WorkspaceToolbar />
@@ -233,7 +241,7 @@ export const WorkspaceExplorerPage: FC = () => {
                         </WorkspaceRoomProvider>
                     </ContextSheet>
 
-                </CommentsProvider>
+                </CommentProvider>
             </Flex>
         </ContextSheet>
     );

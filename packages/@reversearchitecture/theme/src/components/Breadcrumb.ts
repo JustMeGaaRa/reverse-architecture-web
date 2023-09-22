@@ -14,15 +14,15 @@ export const Breadcrumb = defineMultiStyleConfig({
         item: {
         },
         separator: {
-
         },
         link: {
             backgroundColor: mode("", "whiteAlpha.100")(props),
+            backdropFilter: "blur(8px)",
             borderColor: mode("", "whiteAlpha.200")(props),
             borderWidth: 1,
             borderRadius: 8,
             color: mode("", "whiteAlpha.700")(props),
-            fontSize: "14px",
+            fontSize: "12px",
             height: "24px",
             _hover: {
                 backgroundColor: mode("", "whiteAlpha.200")(props),

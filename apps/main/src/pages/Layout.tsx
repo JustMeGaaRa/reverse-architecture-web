@@ -97,7 +97,7 @@ export const Layout: FC<PropsWithChildren> = () => {
                     <Box padding={2}>
                         <AccountMenu expanded={isOpen} />
                     </Box>
-                    <Divider backgroundColor={"gray.200"} />
+                    <Divider backgroundColor={"whiteAlpha.200"} />
                     <PageSidebarToggleButton
                         isExpanded={isOpen}
                         onClick={onToggle}

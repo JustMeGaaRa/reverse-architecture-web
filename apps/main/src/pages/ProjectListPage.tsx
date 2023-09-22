@@ -85,7 +85,7 @@ export const ProjectListPage: FC<PropsWithChildren> = () => {
     }, [setSelectedProjects]);
 
     const handleOnProjectClick = useCallback((project: ProjectInfo) => {
-        navigate(`/workspaces/${"big-bank-plc"}?list=true`)
+        navigate(`/workspaces/${"big-bank-plc"}?list=true&projectId=${project.projectId}`)
     }, [navigate]);
 
     return (
