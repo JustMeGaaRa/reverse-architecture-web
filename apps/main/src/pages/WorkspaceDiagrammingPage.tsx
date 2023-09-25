@@ -3,8 +3,6 @@ import {
     Divider,
     Flex,
     IconButton,
-    List,
-    ListItem,
     useToast
 } from "@chakra-ui/react";
 import {
@@ -50,30 +48,24 @@ import {
     CommentProvider,
     CommentThreadList,
     CommunityHubApi,
-    WorkspaceApi,
-    WorkspaceInfo,
     useAccount
 } from "../features";
 
-export const WorkspaceExplorerPage: FC = () => {
+export const WorkspaceDiagrammingPage: FC = () => {
     const { workspaceId } = useParams<{ workspaceId: string }>();
     const [ queryParams ] = useSearchParams([
-        ["list", "false"],
-        ["comments", "false"],
         ["editor", "false"],
+        ["comments", "false"],
         ["settings", "false"],
-        ["projectId", ""]
     ]);
+    const sidebars = {
+        editor: queryParams.get("editor") === "true",
+        comments: queryParams.get("comments") === "true",
+        settings: queryParams.get("settings") === "true",
+    };
     const [ workspace, setWorkspace ] = useState(Workspace.Empty.toObject());
     const [ metadata, setMetadata ] = useState(WorkspaceMetadata.Empty.toObject());
     const { parseStructurizr } = useStructurizrParser();
-    const state = {
-        showWorkspaces: queryParams.get("list") === "true",
-        showComments: queryParams.get("comments") === "true",
-        showCodeEditor: queryParams.get("editor") === "true",
-        showSettings: queryParams.get("settings") === "true",
-        projectId: queryParams.get("projectId") ?? ""
-    };
 
     // comment list
     const [ commentThreads, setCommentThreads ] = useState<Array<CommentThread>>([]);
@@ -84,16 +76,6 @@ export const WorkspaceExplorerPage: FC = () => {
             .then(comments => setCommentThreads(comments))
             .catch(error => console.error(error));
     }, [workspaceId]);
-    
-    // workspace list
-    const [ workspaces, setWorkspaces ] = useState<Array<WorkspaceInfo>>([]);
-
-    useEffect(() => {
-        const workspaceApi = new WorkspaceApi();
-        workspaceApi.getWorkspaces(state.projectId)
-            .then(workspaces => setWorkspaces(workspaces))
-            .catch(error => console.error(error));
-    }, [state.projectId]);
 
     // code editor
     const [ text, setText ] = useState("");
@@ -138,7 +120,7 @@ export const WorkspaceExplorerPage: FC = () => {
                 height={"100%"}
             >
                 <CommentProvider>
-                    {state.showComments && (
+                    {sidebars.comments && (
                         <Flex direction={"column"} width={"400px"}>
                             <ContextSheetHeader>
                                 <ContextSheetTitle title={"All Comments"} />
@@ -154,37 +136,8 @@ export const WorkspaceExplorerPage: FC = () => {
                             </ContextSheetBody>
                         </Flex>
                     )}
-                    
-                    {state.showWorkspaces && (
-                        <Flex direction={"column"} width={"400px"}>
-                            <ContextSheetHeader>
-                                <ContextSheetTitle title={"Workspaces"} />
-                                <ContextSheetCloseButton />
-                            </ContextSheetHeader>
 
-                            <Divider />
-
-                            <ContextSheetBody>
-                                <Box overflowY={"scroll"} height={"100%"} padding={2} gap={1}>
-                                    <List>
-                                        {workspaces.map(workspace => (
-                                            <ListItem
-                                                key={workspace.workspaceId}
-                                                aria-label={workspace.name}
-                                                cursor={"pointer"}
-                                                display={"block"}
-                                                title={workspace.name}
-                                            >
-                                                {workspace.name}
-                                            </ListItem>
-                                        ))}
-                                    </List>
-                                </Box>
-                            </ContextSheetBody>
-                        </Flex>
-                    )}
-
-                    {state.showCodeEditor && (
+                    {sidebars.editor && (
                         <Flex direction={"column"} width={"1200px"}>
                             <ContextSheetHeader>
                                 <ContextSheetTitle title={"Code Editor"} />

@@ -189,4 +189,13 @@ export class CommentApi {
         }
         return Promise.resolve(commentThread);
     }
+
+    async deleteCommentThreadReply(workspaceId: string, commentThreadId: string, commentId: string): Promise<void> {
+        const list = this.comments.get(workspaceId) ?? [];
+        const commentThread = list.find(x => x.commentThreadId === commentThreadId);
+        if (commentThread) {
+            commentThread.comments = commentThread.comments.filter(x => x.commentId !== commentId);
+        }
+        return Promise.resolve();
+    }
 }

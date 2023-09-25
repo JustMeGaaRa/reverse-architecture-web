@@ -1,15 +1,12 @@
 import { List } from "@chakra-ui/react";
 import { FC, PropsWithChildren } from "react";
 
-export const RouteList: FC<PropsWithChildren<{
-    size?: "sm" | "md" | "lg"
-}>> = ({
-    children,
-    size = "lg"
+export const RouteList: FC<PropsWithChildren> = ({
+    children
 }) => {
     return (
         <List
-            size={size}
+            size={"lg"}
             spacing={1}
             width={"100%"}
         >

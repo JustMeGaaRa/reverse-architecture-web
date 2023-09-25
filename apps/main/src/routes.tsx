@@ -8,11 +8,12 @@ import {
     DashboardPage,
     ErrorPage,
     Layout,
-    ProjectListPage,
+    WorkspaceListPage,
     ProfileSettingsPage,
     SettingsPage,
     WorkspacePage,
-    WorkspaceExplorerPage,
+    WorkspaceDiagrammingPage,
+    WorkspaceModelingPage,
 } from "./pages";
 
 export const routes = createBrowserRouter([
@@ -30,8 +31,8 @@ export const routes = createBrowserRouter([
                 element: <DashboardPage />
             },
             {
-                path: "projects",
-                element: <ProjectListPage />
+                path: "workspaces",
+                element: <WorkspaceListPage />
             },
             {
                 path: "community",
@@ -64,7 +65,15 @@ export const routes = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <WorkspaceExplorerPage />
+                element: <Navigate to={"diagramming"} />
+            },
+            {
+                path: "diagramming",
+                element: <WorkspaceDiagrammingPage />
+            },
+            {
+                path: "modeling",
+                element: <WorkspaceModelingPage />
             }
         ]
     }

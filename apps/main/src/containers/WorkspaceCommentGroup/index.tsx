@@ -72,7 +72,7 @@ export const WorkspaceCommentGroup: FC = () => {
                         commentThread={thread}
                         onClick={handleOnBadgeClick}
                     />
-                    <ScaleFade in={thread.commentThreadId === selectedThreadId} >
+                    <ScaleFade in={thread.commentThreadId === selectedThreadId}>
                         <CommentThreadCard
                             commentThread={thread}
                             onReply={(text) => handleOnReply(thread.commentThreadId, text)}

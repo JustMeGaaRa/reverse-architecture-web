@@ -1,5 +1,4 @@
-import { Box, Heading, IconButton } from "@chakra-ui/react";
-import { Cancel } from "iconoir-react";
+import { Heading } from "@chakra-ui/react";
 import { FC } from "react";
 
 export const ContextSheetTitle: FC<{ title: string }> = ({ title }) => {
@@ -12,18 +11,5 @@ export const ContextSheetTitle: FC<{ title: string }> = ({ title }) => {
         >
             {title}
         </Heading>
-    )
-}
-
-export const ContextSheetCloseButton: FC = () => {
-    return (
-        <IconButton
-            aria-label={"close context sheet"}
-            colorScheme={"gray"}
-            icon={<Cancel />}
-            title={"close context sheet"}
-            variant={"ghost"}
-            onClick={() => { }}
-        />
     )
 }

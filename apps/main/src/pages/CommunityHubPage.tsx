@@ -32,12 +32,12 @@ import {
 import { useNavigate } from "react-router-dom";
 import {
     NavigationSource,
-    PublishWorkspaceModal,
+    WorkspacePublishingModal,
 } from "../containers";
 import {
     CommunityHubApi,
     WorkspaceInfo,
-    WorkspaceList
+    CommunityTemplateList
 } from "../features";
 
 export const CommunityHubPage: FC<PropsWithChildren> = () => {
@@ -97,7 +97,7 @@ export const CommunityHubPage: FC<PropsWithChildren> = () => {
                 </Button>
             </NavigationSource>
 
-            <PublishWorkspaceModal
+            <WorkspacePublishingModal
                 workspaces={workspaces}
                 isOpen={isOpen}
                 onClose={onClose}
@@ -144,7 +144,7 @@ export const CommunityHubPage: FC<PropsWithChildren> = () => {
                         </HStack>
                     </Box>
                     <Box flexGrow={1} overflowY={"scroll"} padding={6}>
-                        <WorkspaceList
+                        <CommunityTemplateList
                             workspaces={filtered}
                             emptyTitle={"No community workspaces available yet"}
                             emptyDescription={"To get started, click the \"Create New Project\" button to create a new project."}

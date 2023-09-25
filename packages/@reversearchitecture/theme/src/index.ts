@@ -18,7 +18,7 @@ export const theme =  extendTheme({
         Button,
         Breadcrumb,
         Checkbox,
-        List,
+        // List,
         Menu,
         Modal,
         // Radio,x

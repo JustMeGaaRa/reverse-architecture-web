@@ -1,5 +1,6 @@
 import {
     Box,
+    Button,
     ButtonGroup,
     Divider,
     Flex,
@@ -24,8 +25,9 @@ import {
     ChatLines,
     Code,
     HelpCircle,
-    HomeSimple,
+    NavArrowLeft,
     Settings,
+    ViewStructureUp,
 } from "iconoir-react";
 import { FC, PropsWithChildren } from "react";
 import { Outlet, useNavigate } from "react-router";
@@ -34,13 +36,13 @@ import {
     WorkspaceMenu,
 } from "../containers";
 import { useSearchParams } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 export const WorkspacePage: FC<PropsWithChildren> = () => {
     const navigate = useNavigate();
     const [ queryParams, setQueryParams ] = useSearchParams([
-        ["list", "false"],
-        ["comments", "false"],
         ["editor", "false"],
+        ["comments", "false"],
         ["settings", "false"]
     ]);
     
@@ -48,7 +50,7 @@ export const WorkspacePage: FC<PropsWithChildren> = () => {
         <Page>
             <PageSidebar>
                 <PageHomeButton
-                    icon={<HomeSimple />}
+                    icon={<NavArrowLeft />}
                     onClick={() => navigate("/")}
                 />
                 <Flex
@@ -65,17 +67,6 @@ export const WorkspacePage: FC<PropsWithChildren> = () => {
                         spacing={1}
                         variant={"ghost"}
                     >
-                        <IconButton
-                            aria-label={"workspaces"}
-                            icon={<AppleShortcuts />}
-                            isActive={queryParams.get("list") === "true"}
-                            title={"workspaces"}
-                            _active={{
-                                backgroundColor: "whiteAlpha.200",
-                                color: "yellow.900"
-                            }}
-                            onClick={() => setQueryParams({ list: "true" })}
-                        />
                         <IconButton
                             aria-label={"editor"}
                             icon={<Code />}
@@ -131,6 +122,40 @@ export const WorkspacePage: FC<PropsWithChildren> = () => {
                         />
                         <WorkspaceMenu title={"Big Bank plc."} />
                     </HStack>
+                    <ButtonGroup
+                        borderRadius={"16px"}
+                        borderColor={"whiteAlpha.200"}
+                        borderWidth={1}
+                        colorScheme={"gray"}
+                        spacing={0}
+                        padding={1}
+                        variant={"ghost"}
+                    >
+                        <Button
+                            as={NavLink}
+                            leftIcon={<AppleShortcuts />}
+                            title={"diagramming"}
+                            to={"diagramming"}
+                            _activeLink={{
+                                backgroundColor: "whiteAlpha.200",
+                                color: "yellow.900"
+                            }}
+                        >
+                            Diagramming
+                        </Button>
+                        <Button
+                            as={NavLink}
+                            leftIcon={<ViewStructureUp />}
+                            title={"modeling"}
+                            to={"modeling"}
+                            _activeLink={{
+                                backgroundColor: "whiteAlpha.200",
+                                color: "purple.900"
+                            }}
+                        >
+                            Modeling
+                        </Button>
+                    </ButtonGroup>
                     <HStack gap={2} mr={4}>
                         <NavigationTarget />
                     </HStack>

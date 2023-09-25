@@ -1,5 +1,6 @@
 export * from "./ContextSheet";
 export * from "./ContextSheetBody";
+export * from "./ContextSheetCloseButton";
 export * from "./ContextSheetHeader";
 export * from "./ContextSheetTitle";
 export * from "./EmptyContent";

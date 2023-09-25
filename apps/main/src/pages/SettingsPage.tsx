@@ -32,7 +32,7 @@ export const SettingsPage: FC = () => {
                     <ContextSheetBody>
                         <Box padding={2} height={"100%"}>
                             <RouteSection title={"Section 1"}>
-                                <RouteList size={"md"}>
+                                <RouteList>
                                     <Route
                                         isExpanded
                                         icon={ProfileCircle}
@@ -54,7 +54,7 @@ export const SettingsPage: FC = () => {
                                 </RouteList>
                             </RouteSection>
                             <RouteSection title={"Section 2"}>
-                                <RouteList size={"md"}>
+                                <RouteList>
                                     <Route
                                         isExpanded
                                         icon={ProfileCircle}

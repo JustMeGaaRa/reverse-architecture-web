@@ -60,8 +60,8 @@ export const Layout: FC<PropsWithChildren> = () => {
                         <Route
                             isExpanded={isOpen}
                             icon={MultiplePagesEmpty}
-                            title={"All Projects"}
-                            to={"projects"}
+                            title={"Workspaces"}
+                            to={"workspaces"}
                         />
                         <Route
                             isExpanded={isOpen}

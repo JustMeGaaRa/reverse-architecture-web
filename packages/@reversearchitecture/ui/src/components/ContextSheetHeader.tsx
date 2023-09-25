@@ -1,4 +1,4 @@
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Flex, HStack } from "@chakra-ui/react";
 import { FC, PropsWithChildren } from "react";
 
 export const ContextSheetHeader: FC<PropsWithChildren> = ({ children }) => {
@@ -11,17 +11,15 @@ export const ContextSheetHeader: FC<PropsWithChildren> = ({ children }) => {
             flexGrow={0}
             flexShrink={0}
             height={"80px"}
+            position={"relative"}
         >
-            <Flex
-                alignItems={"center"}
-                justifyContent={"space-between"}
-                paddingY={6}
-                paddingLeft={6}
-                paddingRight={2}
+            <HStack
+                gap={2}
+                padding={6}
                 width={"100%"}
             >
                 {children}
-            </Flex>
+            </HStack>
         </Flex>
     )
 }

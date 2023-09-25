@@ -15,15 +15,16 @@ import {
     Textarea,
     VStack
 } from "@chakra-ui/react";
+import { Workspace } from "@structurizr/dsl";
 import { useFormik } from "formik";
 import { FC } from "react";
 import { v4 } from "uuid";
-import { ProjectInfo, useAccount } from "../../features";
+import { useAccount, WorkspaceInfo } from "../../features";
 
-export const CreateProjectModal: FC<{
+export const WorkspaceCreationModal: FC<{
     isOpen: boolean;
     onClose: () => void;
-    onCreate: (project: ProjectInfo) => void;
+    onCreate: (workspace: WorkspaceInfo) => void;
 }> = ({
     isOpen,
     onClose,
@@ -36,16 +37,14 @@ export const CreateProjectModal: FC<{
         isSubmitting,
         handleChange,
         handleSubmit
-    } = useFormik<ProjectInfo>({
+    } = useFormik<WorkspaceInfo>({
         initialValues: {
-            projectId: v4(),
+            workspaceId: v4(),
             name: "",
-            description: "",
-            createdBy: account.email,
-            createdDate: new Date().toLocaleDateString(),
-            lastModifiedBy: account.email,
-            lastModifiedDate: new Date().toLocaleDateString(),
-            coverUrl: "",
+            tags: [],
+            text: JSON.stringify(Workspace.Empty.toObject()),
+            updatedBy: account.email,
+            updated: new Date()
         },
         onSubmit: (values, actions) => {
             onCreate(values);

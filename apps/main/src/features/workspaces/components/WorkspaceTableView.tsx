@@ -5,18 +5,20 @@ import {
     Thead,
 } from "@chakra-ui/react";
 import { FC, useEffect } from "react";
-import { ProjectInfo, TableColumnInfo } from "../types";
-import { TableHeader, TableRow,  } from "../components";
+import { TableHeader, TableRow,  } from ".";
 import { useOnCheckedChange, useTable } from "../hooks";
+import { WorkspaceGroupInfo, TableColumnInfo, WorkspaceInfo } from "../types";
 
-export const ProjectTableView: FC<{
-    projects: any[],
-    onClick?: (project: ProjectInfo) => void;
-    onSelected?: (selected: any[]) => void;
-    onRemove?: (data: any[]) => void;
+export const WorkspaceTableView: FC<{
+    groups: WorkspaceGroupInfo[],
+    onClick?: (workspace: WorkspaceInfo) => void;
+    onGroupClick?: (group: WorkspaceGroupInfo) => void;
+    onSelected?: (selected: WorkspaceGroupInfo[]) => void;
+    onRemove?: (groups: WorkspaceGroupInfo[]) => void;
 }> = ({
-    projects,
+    groups,
     onClick,
+    onGroupClick,
     onSelected,
     onRemove
 }) => {
@@ -29,10 +31,7 @@ export const ProjectTableView: FC<{
     ];
     const { data, setTableRows } = useTable();
 
-    useEffect(() => {
-        setTableRows(projects);
-    }, [projects, setTableRows]);
-
+    useEffect(() => setTableRows(groups), [groups, setTableRows]);
     useOnCheckedChange(onSelected);
 
     return (

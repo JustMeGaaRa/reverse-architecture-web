@@ -53,12 +53,18 @@ export const WorkspaceNavigation: FC = () => {
         <Box position={"absolute"} top={4} left={4}>
             <HStack divider={<StackDivider borderColor={"whiteAlpha.200"} />}>
                 <Select
-                    backgroundColor={"whiteAlpha.200"}
+                    backgroundColor={"whiteAlpha.100"}
+                    borderWidth={1}
                     backdropFilter={"blur(8px)"}
                     borderRadius={8}
                     color={"whiteAlpha.700"}
                     size={"xs"}
                     variant={"filled"}
+                    _hover={{
+                        backgroundColor: "whiteAlpha.200",
+                        borderColor: "whiteAlpha.400",
+                        color: "basic.white"
+                    }}
                 >
                     <option value={"systemLandscape"}>System Landscape</option>
                     <option value={"systemContext"}>System Context</option>
