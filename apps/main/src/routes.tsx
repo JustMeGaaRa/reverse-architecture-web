@@ -3,17 +3,18 @@ import {
     Navigate
 } from "react-router-dom";
 import {
-    AuthenticatePage,
-    CommunityHubPage,
+    CommunityPage,
     DashboardPage,
     ErrorPage,
     Layout,
     WorkspaceListPage,
     ProfileSettingsPage,
     SettingsPage,
+    SignInPage,
     WorkspacePage,
-    WorkspaceDiagrammingPage,
-    WorkspaceModelingPage,
+    WorkspaceExplorerPage,
+    AuthorizePage,
+    CommunityTemplatePage,
 } from "./pages";
 
 export const routes = createBrowserRouter([
@@ -36,7 +37,11 @@ export const routes = createBrowserRouter([
             },
             {
                 path: "community",
-                element: <CommunityHubPage />,
+                element: <CommunityPage />,
+            },
+            {
+                path: "community/:workspaceId",
+                element: <CommunityTemplatePage />
             },
             {
                 path: "settings",
@@ -56,7 +61,11 @@ export const routes = createBrowserRouter([
     },
     {
         path: "/signin",
-        element: <AuthenticatePage />,
+        element: <SignInPage />,
+    },
+    {
+        path: "/authorize",
+        element: <AuthorizePage />
     },
     {
         path: "/workspaces/:workspaceId",
@@ -65,15 +74,7 @@ export const routes = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <Navigate to={"diagramming"} />
-            },
-            {
-                path: "diagramming",
-                element: <WorkspaceDiagrammingPage />
-            },
-            {
-                path: "modeling",
-                element: <WorkspaceModelingPage />
+                element: <WorkspaceExplorerPage />
             }
         ]
     }

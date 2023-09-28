@@ -32,6 +32,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import {
     NavigationSource,
+    RepositorySelectModal,
     WorkspacePublishingModal,
 } from "../containers";
 import {
@@ -40,8 +41,17 @@ import {
     CommunityTemplateList
 } from "../features";
 
-export const CommunityHubPage: FC<PropsWithChildren> = () => {
-    const { isOpen, onOpen, onClose } = useDisclosure();
+export const CommunityPage: FC<PropsWithChildren> = () => {
+    const {
+        isOpen: isOpenWorkspace,
+        onOpen: onOpenWorkspace,
+        onClose: onCloseWorkspace
+    } = useDisclosure();
+    const {
+        isOpen: isOpenRepository,
+        onOpen: onOpenRepository,
+        onClose: onCloseRepository
+    } = useDisclosure();
     const [ communityApi ] = useState(new CommunityHubApi());
     const [ workspaces, setWorkspaces ] = useState<Array<WorkspaceInfo>>([]);
     const [ filters, setFilters ] = useState([]);
@@ -76,7 +86,7 @@ export const CommunityHubPage: FC<PropsWithChildren> = () => {
     }, []);
 
     const handleOnWorkspaceClick = useCallback((workspace: WorkspaceInfo) => {
-        navigate(`/workspaces/${workspace.workspaceId}`);
+        navigate(`/community/${workspace.workspaceId}`);
     }, [navigate]);
 
     const capitalize = (str: string) => {
@@ -91,7 +101,7 @@ export const CommunityHubPage: FC<PropsWithChildren> = () => {
                     key={"publish-workspace"}
                     colorScheme={"yellow"}
                     leftIcon={<AddPageAlt />}
-                    onClick={onOpen}
+                    onClick={onOpenWorkspace}
                 >
                     Publish Workspace
                 </Button>
@@ -99,13 +109,18 @@ export const CommunityHubPage: FC<PropsWithChildren> = () => {
 
             <WorkspacePublishingModal
                 workspaces={workspaces}
-                isOpen={isOpen}
-                onClose={onClose}
+                isOpen={isOpenWorkspace}
+                onClose={onCloseWorkspace}
                 onPublish={handleOnPublish}
             />
 
+            <RepositorySelectModal
+                isOpen={isOpenRepository}
+                onClose={onCloseRepository}
+            />
+
             <ContextSheetHeader>
-                <ContextSheetTitle title={"Community Hub"} />
+                <ContextSheetTitle title={"Community"} />
             </ContextSheetHeader>
 
             <Divider />

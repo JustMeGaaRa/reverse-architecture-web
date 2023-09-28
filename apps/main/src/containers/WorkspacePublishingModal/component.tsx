@@ -87,8 +87,10 @@ export const WorkspacePublishingModal: FC<{
             workspaceId: v4(),
             name: "",
             description: "",
-            updated: new Date(),
-            updatedBy: "",
+            createdDate: new Date().toLocaleDateString(),
+            createdBy: "",
+            lastModifiedDate: new Date().toLocaleDateString(),
+            lastModifiedBy: "",
             tags: [],
             text: "",
         },
@@ -103,7 +105,6 @@ export const WorkspacePublishingModal: FC<{
         <Modal
             isOpen={isOpen}
             isCentered
-            closeOnOverlayClick={false}
             motionPreset={"slideInBottom"}
             onClose={onClose}
         >

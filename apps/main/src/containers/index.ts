@@ -1,5 +1,6 @@
 export * from "./AccountMenu";
 export * from "./NavigationProvider";
+export * from "./RepositorySelectModal";
 export * from "./UserAvatarGroup";
 export * from "./UserCursorGroup";
 export * from "./WorkspaceCommentGroup";

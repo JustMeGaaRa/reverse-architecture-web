@@ -1,11 +1,9 @@
-import { Box } from "@chakra-ui/react";
 // TODO: consider making this component/feature less dependent on the workspace-viewer package
 import { EmptyContent } from "@reversearchitecture/ui";
 import { Folder } from "iconoir-react";
 import { FC } from "react";
 import {
     WorkspaceCardView,
-    WorkspaceProvider,
     WorkspaceTableView
 } from ".";
 import {
@@ -14,54 +12,51 @@ import {
 } from "../types";
 
 export const WorkspaceList: FC<{
-    groups: WorkspaceGroupInfo[];
     workspaces: WorkspaceInfo[];
     view: "card" | "table";
+    isGrouped?: boolean;
     emptyTitle?: string;
     emptyDescription?: string;
-    onSelected?: (selected: WorkspaceGroupInfo[]) => void;
-    onRemove?: (groups: WorkspaceGroupInfo[]) => void;
-    onClick?: (workspace: WorkspaceInfo) => void;
-    onGroupClick?: (group: WorkspaceGroupInfo) => void;
+    onClick?: (workspace: WorkspaceInfo | WorkspaceGroupInfo) => void;
+    onSelected?: (workspaces: Array<number>) => void;
+    onRemove?: (workspaces: Array<WorkspaceInfo | WorkspaceGroupInfo>) => void;
 }> = ({
-    groups,
     workspaces,
     view,
+    isGrouped,
     emptyTitle,
     emptyDescription,
+    onClick,
     onSelected,
     onRemove,
-    onClick,
-    onGroupClick
 }) => {
     return (
-        <Box>
-            <WorkspaceProvider>
-                {groups.length === 0 && workspaces.length === 0 && (
-                    <EmptyContent
-                        icon={Folder}
-                        title={emptyTitle}
-                        description={emptyDescription}
-                    />
-                )}
-                {(groups.length > 0 || workspaces.length > 0) && view === "card" && (
-                    <WorkspaceCardView
-                        groups={groups}
-                        workspaces={workspaces}
-                        onClick={onClick}
-                        onGroupClick={onGroupClick}
-                        onGroupRemove={onRemove}
-                    />
-                )}
-                {(groups.length > 0 || workspaces.length > 0) && view === "table" && (
-                    <WorkspaceTableView
-                        groups={groups}
-                        onSelected={onSelected}
-                        onRemove={onRemove}
-                        onClick={onClick}
-                    />
-                )}
-            </WorkspaceProvider>
-        </Box>
+        <>
+            {workspaces.length === 0 && (
+                <EmptyContent
+                    icon={Folder}
+                    title={emptyTitle}
+                    description={emptyDescription}
+                />
+            )}
+            {workspaces.length > 0 && view === "card" && (
+                <WorkspaceCardView
+                    workspaces={workspaces}
+                    isGrouped={isGrouped}
+                    onClick={onClick}
+                    onSelected={onSelected}
+                    onRemove={onRemove}
+                />
+            )}
+            {workspaces.length > 0 && view === "table" && (
+                <WorkspaceTableView
+                    workspaces={workspaces}
+                    isGrouped={isGrouped}
+                    onClick={onClick}
+                    onSelected={onSelected}
+                    onRemove={onRemove}
+                />
+            )}
+        </>
     )
 }

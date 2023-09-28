@@ -1,64 +1,64 @@
+import { FC } from "react";
 import {
-    Table,
-    TableContainer,
-    Tbody,
-    Thead,
-} from "@chakra-ui/react";
-import { FC, useEffect } from "react";
-import { TableHeader, TableRow,  } from ".";
-import { useOnCheckedChange, useTable } from "../hooks";
-import { WorkspaceGroupInfo, TableColumnInfo, WorkspaceInfo } from "../types";
+    SelectionContainerProvider,
+    WorkspaceTableRow,
+    WorkspaceGroupTableRow,
+    WorkspaceTable,
+} from "../components";
+import { TableColumnInfo, WorkspaceGroupInfo, WorkspaceInfo } from "../types";
+import { groupWorkspaces } from "../utils";
 
 export const WorkspaceTableView: FC<{
-    groups: WorkspaceGroupInfo[],
-    onClick?: (workspace: WorkspaceInfo) => void;
-    onGroupClick?: (group: WorkspaceGroupInfo) => void;
-    onSelected?: (selected: WorkspaceGroupInfo[]) => void;
-    onRemove?: (groups: WorkspaceGroupInfo[]) => void;
+    workspaces: WorkspaceInfo[];
+    isGrouped?: boolean;
+    onClick?: (workspace: WorkspaceInfo | WorkspaceGroupInfo) => void;
+    onSelected?: (workspaces: Array<number>) => void;
+    onRemove?: (workspaces: Array<WorkspaceInfo | WorkspaceGroupInfo>) => void;
 }> = ({
-    groups,
+    workspaces,
+    isGrouped,
     onClick,
-    onGroupClick,
     onSelected,
     onRemove
 }) => {
+    const nameof = function<T>(name: keyof T) { return name; };
     const columns: TableColumnInfo[] = [
-        { title: "Name", name: "name" },
-        { title: "Created Date", name: "createdDate" },
-        { title: "Created By", name: "createdBy" },
-        { title: "Last Modified Date", name: "lastModifiedDate" },
-        { title: "Last Modified By", name: "lastModifiedBy" },
+        { title: "Name", name: nameof<WorkspaceInfo>("name") },
+        { title: "Created Date", name: nameof<WorkspaceInfo>("createdDate") },
+        { title: "Created By", name: nameof<WorkspaceInfo>("createdBy") },
+        { title: "Last Modified Date", name: nameof<WorkspaceInfo>("lastModifiedDate") },
+        { title: "Last Modified By", name: nameof<WorkspaceInfo>("lastModifiedBy") },
     ];
-    const { data, setTableRows } = useTable();
-
-    useEffect(() => setTableRows(groups), [groups, setTableRows]);
-    useOnCheckedChange(onSelected);
+    const groups = groupWorkspaces(workspaces);
 
     return (
-        <TableContainer>
-            <Table
-                size={"sm"}
-                style={{
-                    borderCollapse: "separate",
-                    borderSpacing: "0 4px"
-                }}
-                variant={"unstyled"}
-            >
-                <Thead>
-                    <TableHeader columns={columns} />
-                </Thead>
-                <Tbody>
-                    {data.map((item) => (
-                        <TableRow
-                            key={item.key}
-                            columns={columns}
-                            data={item.data}
-                            checked={item.checked}
-                            onClick={() => onClick?.(item.data)}
-                        />
-                    ))}
-                </Tbody>
-            </Table>
-        </TableContainer>
+        <SelectionContainerProvider>
+            <WorkspaceTable columns={columns} onSelected={onSelected}>
+                {isGrouped && groups.filter(group => group.name !== undefined).map(group => (
+                    <WorkspaceGroupTableRow
+                        key={group.name}
+                        columns={columns}
+                        group={group}
+                        onClick={() => onClick?.(group)}
+                    />
+                ))}
+                {isGrouped && groups.filter(group => group.name === undefined).flatMap(group => group.workspaces).map(workspace => (
+                    <WorkspaceTableRow
+                        key={workspace.workspaceId}
+                        columns={columns}
+                        workspace={workspace}
+                        onClick={() => onClick?.(workspace)}
+                    />
+                ))}
+                {!isGrouped && workspaces.map(workspace => (
+                    <WorkspaceTableRow
+                        key={workspace.workspaceId}
+                        columns={columns}
+                        workspace={workspace}
+                        onClick={() => onClick?.(workspace)}
+                    />
+                ))}
+            </WorkspaceTable>
+        </SelectionContainerProvider>
     )
 }

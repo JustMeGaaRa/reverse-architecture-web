@@ -51,14 +51,16 @@ import {
     useAccount
 } from "../features";
 
-export const WorkspaceDiagrammingPage: FC = () => {
+export const WorkspaceExplorerPage: FC = () => {
     const { workspaceId } = useParams<{ workspaceId: string }>();
     const [ queryParams ] = useSearchParams([
+        ["mode", "diagramming"],
         ["editor", "false"],
         ["comments", "false"],
         ["settings", "false"],
     ]);
-    const sidebars = {
+    const queryState = {
+        mode: queryParams.get("mode") ?? "diagramming",
         editor: queryParams.get("editor") === "true",
         comments: queryParams.get("comments") === "true",
         settings: queryParams.get("settings") === "true",
@@ -120,7 +122,7 @@ export const WorkspaceDiagrammingPage: FC = () => {
                 height={"100%"}
             >
                 <CommentProvider>
-                    {sidebars.comments && (
+                    {queryState.comments && (
                         <Flex direction={"column"} width={"400px"}>
                             <ContextSheetHeader>
                                 <ContextSheetTitle title={"All Comments"} />
@@ -137,7 +139,7 @@ export const WorkspaceDiagrammingPage: FC = () => {
                         </Flex>
                     )}
 
-                    {sidebars.editor && (
+                    {queryState.editor && (
                         <Flex direction={"column"} width={"1200px"}>
                             <ContextSheetHeader>
                                 <ContextSheetTitle title={"Code Editor"} />
@@ -178,18 +180,25 @@ export const WorkspaceDiagrammingPage: FC = () => {
                                 onChange={(users) => setUsers(users)}
                             >
                                 <WorkspaceUser account={account} />
-                                <WorkspaceExplorer
-                                    workspace={workspace}
-                                    view={workspace.views.systemLandscape}
-                                    metadata={metadata}
-                                >
-                                    <WorkspaceCommentGroup />
-                                    <WorkspaceNavigation />
-                                    <WorkspaceUndoRedoControls />
-                                    <WorkspaceToolbar />
-                                    <WorkspaceZoomControls />
-                                    <UserCursorGroup users={users} />
-                                </WorkspaceExplorer>
+
+                                {queryState.mode === "diagramming" && (
+                                    <WorkspaceExplorer
+                                        workspace={workspace}
+                                        view={workspace.views.systemLandscape}
+                                        metadata={metadata}
+                                    >
+                                        <WorkspaceCommentGroup />
+                                        <WorkspaceNavigation />
+                                        <WorkspaceUndoRedoControls />
+                                        <WorkspaceToolbar />
+                                        <WorkspaceZoomControls />
+                                        <UserCursorGroup users={users} />
+                                    </WorkspaceExplorer>
+                                )}
+
+                                {queryState.mode === "modeling" && (
+                                    <></>
+                                )}
                             </WorkspaceRoom>
                         </WorkspaceRoomProvider>
                     </ContextSheet>

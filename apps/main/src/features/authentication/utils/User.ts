@@ -1,6 +1,6 @@
 const defaultUsers = [
     {
-        username: "jonathen.joestar",
+        username: "jonathan.joestar",
         fullname: "Jonathan Joestar",
         email: "joseph.joestar@rvrs.io",
     },

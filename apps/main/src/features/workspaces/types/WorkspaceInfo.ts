@@ -2,21 +2,16 @@ import { IWorkspaceMetadata, IWorkspaceTheme } from "@structurizr/dsl";
 
 export type WorkspaceInfo = {
     workspaceId: string;
-    groupId?: string;
     name: string;
     description?: string;
-    createdBy?: string;
-    // TODO: rename to createdDate
-    updated: Date;
-    // TODO: rename to lastModifiedBy
-    updatedBy: string;
+    createdBy: string;
+    createdDate: string;
+    lastModifiedDate: string;
+    lastModifiedBy: string;
+    coverUrl?: string;
+    group?: string;
     tags: Array<string>;
- 
     text: string;
     metadata?: IWorkspaceMetadata;
     theme?: IWorkspaceTheme;
-    
-    // TODO: remove this after refactoring
-    author?: string;
-    preview?: string;
 }

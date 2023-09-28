@@ -1,7 +1,9 @@
 import {
     AspectRatio,
+    Box,
     Button,
     ButtonGroup,
+    Flex,
     FormControl,
     Image,
     Input,
@@ -13,7 +15,9 @@ import {
     ModalHeader,
     ModalOverlay,
     Textarea,
-    VStack
+    Text,
+    VStack,
+    Highlight
 } from "@chakra-ui/react";
 import { Workspace } from "@structurizr/dsl";
 import { useFormik } from "formik";
@@ -41,10 +45,12 @@ export const WorkspaceCreationModal: FC<{
         initialValues: {
             workspaceId: v4(),
             name: "",
+            createdBy: account.email,
+            createdDate: new Date().toLocaleDateString(),
+            lastModifiedBy: account.email,
+            lastModifiedDate: new Date().toLocaleDateString(),
             tags: [],
             text: JSON.stringify(Workspace.Empty.toObject()),
-            updatedBy: account.email,
-            updated: new Date()
         },
         onSubmit: (values, actions) => {
             onCreate(values);
@@ -71,59 +77,83 @@ export const WorkspaceCreationModal: FC<{
                     borderRadius={24}
                     backgroundColor={"basic.eerie-black"}
                     boxShadow={"none"}
-                    height={"600px"}
                 >
                     <ModalHeader textAlign={"center"}>
                         Create New Project
                     </ModalHeader>
                     <ModalCloseButton />
                     <ModalBody padding={2}>
-                        <VStack
-                            backgroundColor={"whiteAlpha.50"}
-                            borderRadius={16}
-                            gap={4}
-                            height={"100%"}
-                            padding={4}
-                        >
-                            <AspectRatio
-                                borderColor={"whiteAlpha.200"}
-                                borderWidth={2}
+                        <Flex direction={"column"} gap={2} height={"100%"}>
+                            <Box
+                                backgroundColor={"whiteAlpha.50"}
                                 borderRadius={16}
-                                overflow={"hidden"}
-                                ratio={16 / 9}
+                                padding={4}
+                                flexGrow={0}
                                 width={"100%"}
                             >
-                                <Image
-                                    alt={""}
-                                    height={"100%"}
+                                <Text
+                                    color={"basic.white"}
+                                    fontSize={"24px"}
+                                >
+                                    <Highlight
+                                        query={account.fullname}
+                                        styles={{ color: "yellow.900" }}
+                                    >
+                                        {`Welcome ${account.fullname}`}
+                                    </Highlight>
+                                </Text>
+                                <Text fontSize={"16px"} color={"whiteAlpha.700"}>
+                                    Let’s quickly create a new workspace draft. All workspaces will be synchronised with the repository.
+                                </Text>
+                            </Box>
+                            <VStack
+                                backgroundColor={"whiteAlpha.50"}
+                                borderRadius={16}
+                                flexGrow={1}
+                                gap={4}
+                                padding={4}
+                                width={"100%"}
+                            >
+                                <AspectRatio
+                                    borderColor={"whiteAlpha.200"}
+                                    borderWidth={2}
+                                    borderRadius={16}
+                                    overflow={"hidden"}
+                                    ratio={16 / 9}
                                     width={"100%"}
-                                    objectFit={"cover"}
-                                    src={"https://images.pexels.com/photos/7135121/pexels-photo-7135121.jpeg?cs=srgb&dl=pexels-codioful-%28formerly-gradienta%29-7135121.jpg&fm=jpg"}
-                                />
-                            </AspectRatio>
-                            <FormControl isRequired>
-                                <Input
-                                    name={"name"}
-                                    borderWidth={2}
-                                    borderRadius={16}
-                                    placeholder={"Enter project name"}
-                                    value={values.name}
-                                    onChange={handleChange}
-                                />
-                            </FormControl>
-                            <FormControl flexGrow={1}>
-                                <Textarea
-                                    name={"description"}
-                                    borderWidth={2}
-                                    borderRadius={16}
-                                    height={"100%"}
-                                    placeholder={"Enter project description"}
-                                    resize={"none"}
-                                    value={values.description}
-                                    onChange={handleChange}
-                                />
-                            </FormControl>
-                        </VStack>
+                                >
+                                    <Image
+                                        alt={""}
+                                        height={"100%"}
+                                        width={"100%"}
+                                        objectFit={"cover"}
+                                        src={"https://images.pexels.com/photos/7135121/pexels-photo-7135121.jpeg?cs=srgb&dl=pexels-codioful-%28formerly-gradienta%29-7135121.jpg&fm=jpg"}
+                                    />
+                                </AspectRatio>
+                                <FormControl isRequired>
+                                    <Input
+                                        name={"name"}
+                                        borderWidth={2}
+                                        borderRadius={16}
+                                        placeholder={"Enter project name"}
+                                        value={values.name}
+                                        onChange={handleChange}
+                                    />
+                                </FormControl>
+                                <FormControl flexGrow={1}>
+                                    <Textarea
+                                        name={"description"}
+                                        borderWidth={2}
+                                        borderRadius={16}
+                                        height={"100%"}
+                                        placeholder={"Enter project description"}
+                                        resize={"none"}
+                                        value={values.description}
+                                        onChange={handleChange}
+                                    />
+                                </FormControl>
+                            </VStack>
+                        </Flex>
                     </ModalBody>
                     <ModalFooter padding={4}>
                         <ButtonGroup justifyContent={"right"} width={"100%"}>

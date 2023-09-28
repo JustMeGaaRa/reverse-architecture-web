@@ -4,6 +4,15 @@ import {
 } from "@structurizr/dsl";
 import { WorkspaceInfo } from "../types";
 
+type Workspace = {
+    workspaceId: string;
+    name: string;
+    updated: string;
+    author?: string;
+    preview?: string;
+    tags: Array<string>;
+}
+
 export class CommunityHubApi {
     constructor(
         private readonly baseUrl: string = "https://raw.githubusercontent.com/JustMeGaaRa/reverse-architecture-community/main/workspaces"
@@ -11,15 +20,37 @@ export class CommunityHubApi {
 
     async getWorkspaces(): Promise<Array<WorkspaceInfo>> {
         const response = await fetch(`${this.baseUrl}/list.json`);
-        const { values } = await response.json();
-        return values;
+        const { values } = await response.json() as { values: Workspace[] };
+        return values.map<WorkspaceInfo>(info => ({
+            workspaceId: info.workspaceId,
+            name: info.name,
+            createdBy: info.author,
+            createdDate: info.updated,
+            lastModifiedBy: info.author,
+            lastModifiedDate: info.updated,
+            coverUrl: info.preview,
+            tags: info.tags,
+            text: "",
+        }));
     }
 
     async getWorkspace(workspaceId: string): Promise<WorkspaceInfo> {
         // TODO: cache this call temporary until we have a proper API
         const workspaceListResponse = await fetch(`${this.baseUrl}/list.json`);
         const { values } = workspaceListResponse.ok ? await workspaceListResponse.json() : { values: [] };
-        const workspaceInfo = values.find(workspace => workspace.id === workspaceId);
+        const workspaceInfo = (values as Workspace[])
+            .map<WorkspaceInfo>(info => ({
+                workspaceId: info.workspaceId,
+                name: info.name,
+                createdBy: info.author,
+                createdDate: info.updated,
+                lastModifiedBy: info.author,
+                lastModifiedDate: info.updated,
+                coverUrl: info.preview,
+                tags: info.tags,
+                text: "",
+            }))
+            .find(workspace => workspace.workspaceId === workspaceId);
 
         const workspaceDslResponse = await fetch(`${this.baseUrl}/${workspaceId}/workspace.dsl`);
         const text = workspaceDslResponse.ok ? await workspaceDslResponse.text() as string : "";

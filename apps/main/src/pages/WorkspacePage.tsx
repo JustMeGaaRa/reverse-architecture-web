@@ -45,13 +45,18 @@ export const WorkspacePage: FC<PropsWithChildren> = () => {
         ["comments", "false"],
         ["settings", "false"]
     ]);
+    const queryState = {
+        editor: queryParams.get("editor") === "true",
+        comments: queryParams.get("comments") === "true",
+        settings: queryParams.get("settings") === "true"
+    }
     
     return (
         <Page>
             <PageSidebar>
                 <PageHomeButton
                     icon={<NavArrowLeft />}
-                    onClick={() => navigate("/")}
+                    onClick={() => navigate(-1)}
                 />
                 <Flex
                     direction={"column"}
@@ -70,7 +75,7 @@ export const WorkspacePage: FC<PropsWithChildren> = () => {
                         <IconButton
                             aria-label={"editor"}
                             icon={<Code />}
-                            isActive={queryParams.get("editor") === "true"}
+                            isActive={queryState.editor}
                             title={"code editor"}
                             _active={{
                                 backgroundColor: "whiteAlpha.200",
@@ -81,7 +86,7 @@ export const WorkspacePage: FC<PropsWithChildren> = () => {
                         <IconButton
                             aria-label={"comments"}
                             icon={<ChatLines />}
-                            isActive={queryParams.get("comments") === "true"}
+                            isActive={queryState.comments}
                             title={"comments"}
                             _active={{
                                 backgroundColor: "whiteAlpha.200",
@@ -92,7 +97,7 @@ export const WorkspacePage: FC<PropsWithChildren> = () => {
                         <IconButton
                             aria-label={"settings"}
                             icon={<Settings />}
-                            isActive={queryParams.get("settings") === "true"}
+                            isActive={queryState.settings}
                             isDisabled
                             title={"settings"}
                             _active={{
@@ -132,26 +137,26 @@ export const WorkspacePage: FC<PropsWithChildren> = () => {
                         variant={"ghost"}
                     >
                         <Button
-                            as={NavLink}
+                            isActive={queryParams.get("mode") !== "modeling"}
                             leftIcon={<AppleShortcuts />}
                             title={"diagramming"}
-                            to={"diagramming"}
-                            _activeLink={{
+                            _active={{
                                 backgroundColor: "whiteAlpha.200",
                                 color: "yellow.900"
                             }}
+                            onClick={() => setQueryParams({ mode: "diagramming" })}
                         >
                             Diagramming
                         </Button>
                         <Button
-                            as={NavLink}
+                            isActive={queryParams.get("mode") === "modeling"}
                             leftIcon={<ViewStructureUp />}
                             title={"modeling"}
-                            to={"modeling"}
-                            _activeLink={{
+                            _active={{
                                 backgroundColor: "whiteAlpha.200",
                                 color: "purple.900"
                             }}
+                            onClick={() => setQueryParams({ mode: "modeling" })}
                         >
                             Modeling
                         </Button>

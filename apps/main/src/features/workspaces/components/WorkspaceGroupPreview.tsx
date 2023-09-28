@@ -8,7 +8,12 @@ import {
     Text,
 } from "@chakra-ui/react";
 import { MediaImage } from "iconoir-react";
-import { FC } from "react";
+import { FC, useCallback } from "react";
+import {
+    useSelectionItem,
+    useSelectionContainer,
+    useOnPressHold
+} from "../hooks";
 import { WorkspaceGroupInfo } from "../types";
 
 export const WorkspaceGroupPreview: FC<{
@@ -19,25 +24,55 @@ export const WorkspaceGroupPreview: FC<{
     onPreviewClick
 }) => {
     const [first, second, third, ...rest] = group.workspaces;
+    const {
+        isSelectionModeOn,
+        turnOnSelectionMode,
+        turnOffSelectionMode,
+        toggleSelected
+    } = useSelectionContainer();
+    const { index, isSelected } = useSelectionItem();
+
+    const { onStartHold, onCancelHold } = useOnPressHold(() => {
+        turnOnSelectionMode();
+        toggleSelected(index);
+    });
+
+    const handleOnMouseDown = useCallback(() => {
+        onStartHold();
+    }, [onStartHold]);
+
+    const handleOnMouseUp = useCallback(() => {
+        onCancelHold();
+    }, [onCancelHold]);
+
+    const handleOnPreviewClick = useCallback(() => {
+        if (isSelectionModeOn) {
+            toggleSelected(index);
+        }
+        else {
+            onPreviewClick?.();
+        }
+    }, [index, isSelectionModeOn, onPreviewClick, toggleSelected]);
 
     return (
         <Box
             backgroundColor={"whiteAlpha.100"}
-            borderColor={"transparent"}
+            borderColor={isSelected ? "yellow.900" : "transparent"}
             borderRadius={16}
             borderWidth={2}
             height={"100%"}
             width={"100%"}
-            _groupHover={{
-                borderColor: "yellow.900",
-            }}
-            onClick={() => onPreviewClick?.()}
+            _groupHover={{ borderColor: "yellow.900" }}
+            onMouseDown={handleOnMouseDown}
+            onMouseUp={handleOnMouseUp}
+            onClick={handleOnPreviewClick}
         >
             <SimpleGrid
                 gap={1}
                 padding={1}
                 columns={2}
-                _groupHover={{ opacity: .4 }}
+                opacity={isSelected ? 0.4 : 1}
+                _groupHover={{ opacity: 0.4 }}
             >
                 {[first, second, third].map(workspace => (
                     <AspectRatio key={workspace?.workspaceId} ratio={2/1}>
@@ -52,10 +87,10 @@ export const WorkspaceGroupPreview: FC<{
                                     height={"100%"}
                                     width={"100%"}
                                 >
-                                    {workspace.preview && (
+                                    {workspace.coverUrl && (
                                         <Image
-                                            alt={"Project Preview Image"}
-                                            src={workspace.preview}
+                                            alt={"workspace preview image"}
+                                            src={workspace.coverUrl}
                                             transitionProperty={"all"}
                                             transitionDuration={"0.3s"}
                                             transitionTimingFunction={"ease"}
@@ -63,7 +98,7 @@ export const WorkspaceGroupPreview: FC<{
                                         />
                                     )}
                                     
-                                    {!workspace.preview && (
+                                    {!workspace.coverUrl && (
                                         <Icon
                                             as={MediaImage}
                                             color={"whiteAlpha.700"}

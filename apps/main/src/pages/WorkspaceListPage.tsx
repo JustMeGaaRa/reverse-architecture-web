@@ -27,6 +27,7 @@ import {
     AddPageAlt,
     BinMinus,
     Cancel,
+    Combine,
     Copy,
     List,
     NavArrowLeft,
@@ -50,21 +51,20 @@ import {
     WorkspaceApi,
     WorkspaceList,
     WorkspaceInfo,
-    WorkspaceGroupInfo
+    WorkspaceGroupInfo,
+    isWorkspace
 } from "../features";
 
 export const WorkspaceListPage: FC<PropsWithChildren> = () => {
     const [ queryParams, setQueryParams ] = useSearchParams([
         ["shared", "false"],
         ["archived", "false"],
-        ["groupId", ""]
+        ["group", ""]
     ]);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [ workspaceApi ] = useState(new WorkspaceApi());
-    const [ groups, setGroups ] = useState([]);
     const [ workspaces, setWorkspaces ] = useState([]);
-    const [ selectedGroups, setSelectedGroups ] = useState<WorkspaceGroupInfo[]>();
-    const [ selectedWorkspaces, setSelectedWorkspaces ] = useState<any[]>([]);
+    const [ selected, setSelected ] = useState<any[]>([]);
     const { view, setView } = useContentViewMode(ContentViewMode.Card);
     const { account } = useAccount();
     const navigate = useNavigate();
@@ -72,50 +72,44 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
     const queryState = {
         shared: queryParams.get("shared") === "true",
         archived: queryParams.get("archived") === "true",
-        groupId: queryParams.get("groupId")
+        group: queryParams.get("group")
     }
-    const tabIndex = queryState.groupId ? 3 : queryState.archived ? 2 : queryState.shared ? 1 : 0;
-    const queryGroup = groups.find(x => x.groupId === queryState.groupId);
+    const tabIndex = queryState.group ? 3 : queryState.archived ? 2 : queryState.shared ? 1 : 0;
 
     useEffect(() => {
-        workspaceApi.getGroups()
-            .then(groups => {
-                setGroups(groups);
-            })
-            .catch(error => {
-                console.error(error);
-            });
-        workspaceApi.getWorkspacesByAuthor(account.name)
-            .then(workspaces => {
-                setWorkspaces(workspaces);
-            })
-            .catch(error => {
-                console.error(error);
-            });
+        workspaceApi.getWorkspaces()
+            .then(workspaces => setWorkspaces(workspaces))
+            .catch(error => console.error(error));
     }, [workspaceApi, account]);
     
     const handleOnCreate = useCallback((workspace: WorkspaceInfo) => {
-        // TODO: use real groupId
-        workspaceApi.saveWorkspace(undefined, workspace);
-        setWorkspaces(workspaces.concat(workspace));
-    }, [workspaceApi, workspaces, setWorkspaces]);
+        workspaceApi.saveWorkspace(workspace.workspaceId, workspace)
+            .then(workspaces => setWorkspaces(workspaces))
+            .catch(error => console.error(error));
+    }, [workspaceApi, setWorkspaces]);
+
+    const handleOnGroup = useCallback(() => {
+
+    }, []);
 
     const handleOnRemove = useCallback(() => {
-        selectedWorkspaces.map(workspace =>  workspaceApi.deleteWorkspace(undefined, workspace.workspaceId));
-        setWorkspaces(workspaces.filter(x => !selectedWorkspaces.some(y => y.workspaceId === x.workspaceId)));
-    }, [workspaceApi, selectedWorkspaces, workspaces, setWorkspaces]);
+        workspaceApi.deleteWorkspace(selected.map(x => x.workspaceId))
+            .then(workspaces => setWorkspaces(workspaces))
+            .catch(error => console.error(error));
+    }, [workspaceApi, selected, setWorkspaces]);
 
     const handleOnClose = useCallback(() => {
-        setSelectedWorkspaces([]);
-    }, [setSelectedWorkspaces]);
+        setSelected([]);
+    }, [setSelected]);
 
-    const handleOnWorkspaceClick = useCallback((workspace: WorkspaceInfo) => {
-        navigate(`/workspaces/${workspace.groupId}`)
-    }, [navigate]);
-
-    const handleOnGroupClick = useCallback((group: WorkspaceGroupInfo) => {
-        setQueryParams({ groupId: group.groupId });
-    }, [setQueryParams]);
+    const handleOnWorkspaceClick = useCallback((element: WorkspaceInfo | WorkspaceGroupInfo) => {
+        if (isWorkspace(element)) {
+            navigate(`/workspaces/${element.workspaceId}`);
+        }
+        else {
+            setQueryParams({ group: element.name });
+        }
+    }, [navigate, setQueryParams]);
 
     return (
         <ContextSheet>
@@ -148,17 +142,17 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
             />
 
             <ContextSheetHeader>
-                {queryState.groupId && (
+                {!!queryState.group && (
                     <IconButton
                         aria-label={"back to workspaces"}
                         colorScheme={"gray"}
                         icon={<NavArrowLeft />}
                         title={"back to workspaces"}
                         variant={"ghost"}
-                        onClick={() => setQueryParams({})}
+                        onClick={() => setQueryParams({ })}
                     />
                 )}
-                <ContextSheetTitle title={queryGroup?.name ?? "Workspaces"} />
+                <ContextSheetTitle title={!!queryState.group ? queryState.group : "Workspaces"} />
             </ContextSheetHeader>
 
             <Divider />
@@ -167,25 +161,22 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                 <Tabs height={"100%"} index={tabIndex}>
                     <TabList backgroundColor={"whiteAlpha.50"} height={12} paddingX={6}>
                         <Tab
-                            visibility={queryState.groupId ? "hidden" : "visible"}
+                            visibility={!!queryState.group ? "hidden" : "visible"}
                             onClick={() => setQueryParams({})}
                         >
                             Workspaces
                         </Tab>
                         <Tab
-                            visibility={queryState.groupId ? "hidden" : "visible"}
+                            visibility={!!queryState.group ? "hidden" : "visible"}
                             onClick={() => setQueryParams({ shared: "true" })}
                         >
                             Shared
                         </Tab>
                         <Tab
-                            visibility={queryState.groupId ? "hidden" : "visible"}
+                            visibility={!!queryState.group ? "hidden" : "visible"}
                             onClick={() => setQueryParams({ archived: "true" })}
                         >
                             Archived
-                        </Tab>
-                        <Tab visibility={"hidden"}>
-                            Group
                         </Tab>
                         <ButtonGroup
                             alignSelf={"center"}
@@ -199,12 +190,20 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                                 aria-label={"card view"}
                                 isActive={view === ContentViewMode.Card}
                                 icon={<ViewGrid />}
+                                _active={{
+                                    backgroundColor: "whiteAlpha.200",
+                                    color: "yellow.900"
+                                }}
                                 onClick={() => setView(ContentViewMode.Card)}
                             />
                             <IconButton
                                 aria-label={"table view"}
                                 isActive={view === ContentViewMode.Table}
                                 icon={<List />}
+                                _active={{
+                                    backgroundColor: "whiteAlpha.200",
+                                    color: "yellow.900"
+                                }}
                                 onClick={() => setView(ContentViewMode.Table)}
                             />
                         </ButtonGroup>
@@ -212,64 +211,69 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                     <TabPanels height={"calc(100% - 42px)"} padding={6} overflowY={"scroll"}>
                         <TabPanel>
                             <WorkspaceList
-                                groups={groups}
                                 workspaces={workspaces}
                                 view={view}
+                                isGrouped={true}
                                 emptyTitle={"No workspaces"}
                                 emptyDescription={"To get started, click the \"Create Workspace\" button to create a new project."}
                                 onClick={handleOnWorkspaceClick}
-                                onGroupClick={handleOnGroupClick}
-                                onSelected={setSelectedWorkspaces}
+                                onSelected={setSelected}
                                 onRemove={handleOnRemove}
                             />
                         </TabPanel>
                         <TabPanel>
                             <WorkspaceList
-                                groups={[]}
                                 workspaces={[]}
                                 view={view}
+                                isGrouped={true}
                                 emptyTitle={"No shared workspaces"}
                                 emptyDescription={"To get started, click the \"Create Workspace\" button to create a new project."}
-                                onSelected={setSelectedWorkspaces}
-                                onRemove={handleOnRemove}
                                 onClick={handleOnWorkspaceClick}
+                                onSelected={setSelected}
+                                onRemove={handleOnRemove}
                             />
                         </TabPanel>
                         <TabPanel>
                             <WorkspaceList
-                                groups={[]}
                                 workspaces={[]}
                                 view={view}
+                                isGrouped={true}
                                 emptyTitle={"No archived workspaces"}
                                 emptyDescription={"To get started, click the \"Create Workspace\" button to create a new project."}
-                                onSelected={setSelectedWorkspaces}
-                                onRemove={handleOnRemove}
                                 onClick={handleOnWorkspaceClick}
+                                onSelected={setSelected}
+                                onRemove={handleOnRemove}
                             />
                         </TabPanel>
                         <TabPanel>
                             <WorkspaceList
-                                groups={[]}
-                                workspaces={queryGroup?.workspaces || []}
+                                workspaces={workspaces?.filter(x => x.group === queryState.group) || []}
                                 view={view}
+                                isGrouped={false}
                                 emptyTitle={"No workspaces"}
                                 emptyDescription={"To get started, click the \"Create Workspace\" button to create a new project."}
-                                onSelected={setSelectedWorkspaces}
-                                onRemove={handleOnRemove}
                                 onClick={handleOnWorkspaceClick}
+                                onSelected={setSelected}
+                                onRemove={handleOnRemove}
                             />
                         </TabPanel>
                     </TabPanels>
                 </Tabs>
-                <ScaleFade in={selectedWorkspaces.length > 0}>
+                <ScaleFade in={selected.length > 0}>
                     <Box position={"absolute"} bottom={4} left={"50%"} transform={"translateX(-50%)"}>
                         <Toolbar>
                             <ToolbarSection>
                                 <Text paddingX={2}>
-                                    {`${selectedWorkspaces.length} item(s) selected`}
+                                    {`${selected.length} item(s) selected`}
                                 </Text>
                             </ToolbarSection>
                             <ToolbarSection>
+                                <IconButton
+                                    aria-label={"group elements"}
+                                    icon={<Combine />}
+                                    title={"group elements"}
+                                    onClick={handleOnGroup}
+                                />
                                 <IconButton
                                     aria-label={"copy"}
                                     icon={<Copy />}

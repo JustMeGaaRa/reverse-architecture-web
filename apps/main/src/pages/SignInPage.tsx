@@ -7,28 +7,43 @@ import {
     Divider,
     Flex,
     HStack,
+    Link,
     Text,
 } from "@chakra-ui/react";
 import { Page, ReverseArchitectureLogo } from "@reversearchitecture/ui";
+// import { App } from "octokit";
 import { GitHub } from "iconoir-react";
 import { FC } from "react";
 
-export const AuthenticatePage: FC = () => {
+// export const app = new App({
+//     appId: "395983",
+//     privateKey: "",
+//     oauth: {
+//         clientId: "",
+//         clientSecret: "",
+//     },
+// });
+
+export const SignInPage: FC = () => {
+
     return (
         <Page>
             <Flex
                 alignItems={"center"}
-                justifyContent={"center"}
+                justifyContent={"right"}
                 height={"100%"}
                 width={"100%"}
+                padding={"64px"}
             >
                 <Card
                     backgroundColor={"whiteAlpha.50"}
+                    backdropFilter={"blur(8px)"}
                     borderColor={"whiteAlpha.200"}
-                    borderRadius={24}
+                    borderRadius={32}
                     borderWidth={1}
+                    height={"100%"}
                     width={"640px"}
-                    margin={8}
+                    padding={16}
                 >
                     <CardHeader>
                         <Flex
@@ -43,7 +58,7 @@ export const AuthenticatePage: FC = () => {
                         </Flex>
                     </CardHeader>
                     <CardBody>
-                        <Flex direction={"column"} margin={"80px"}>
+                        <Flex direction={"column"}>
                             <Text color={"basic.white"} fontSize={32}>
                                 Welcome to Reversio
                             </Text>
@@ -51,7 +66,14 @@ export const AuthenticatePage: FC = () => {
                                 Sign up or Log In to optimise your app architecture in real time, join our community to get started today!
                             </Text>
                             <Divider border={"transparent"} my={4} />
-                            <Button colorScheme={"gray"} leftIcon={<GitHub />}>
+                            <Button
+                                as={Link}
+                                colorScheme={"gray"}
+                                leftIcon={<GitHub />}
+                                size={"lg"}
+                                textDecoration={"none"}
+                                href={`https://github.com/login/oauth/authorize?client_id=${""}&state=${"abcdefg"}`}
+                            >
                                 Sign In with GitHub
                             </Button>
                         </Flex>

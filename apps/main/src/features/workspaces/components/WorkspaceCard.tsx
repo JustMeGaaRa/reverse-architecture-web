@@ -8,6 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { MoreHoriz } from "iconoir-react";
 import { FC, PropsWithChildren } from "react";
+import { useSelectionItem } from "../hooks";
 
 export const WorkspaceCard: FC<PropsWithChildren<{
     name: string;
@@ -17,17 +18,17 @@ export const WorkspaceCard: FC<PropsWithChildren<{
     name,
     lastModifiedDate
 }) => {
+    const { isSelected } = useSelectionItem();
+
     return (
         <Card
             data-group
-            backgroundColor={"transparent"}
+            backgroundColor={isSelected ? "whiteAlpha.100" : "transparent"}
             borderRadius={16}
             boxShadow={"none"}
+            cursor={"pointer"}
             padding={1}
-            _hover={{
-                backgroundColor: "whiteAlpha.100",
-                cursor: "pointer",
-            }}
+            _hover={{ backgroundColor: isSelected ? "whiteAlpha.200" : "whiteAlpha.100" }}
         >
             <CardBody px={0} py={1}>
                 {children}
@@ -42,19 +43,18 @@ export const WorkspaceCard: FC<PropsWithChildren<{
             >
                 <Flex direction={"column"}>
                     <Text
-                        color={"whiteAlpha.700"}
+                        color={"whiteAlpha.800"}
                         fontSize={16}
                         lineHeight={"20px"}
                         noOfLines={1}
-                        _groupHover={{ color: "basic.white" }}
+                        _groupHover={{ color: isSelected ? "basic.white" : "whiteAlpha.800" }}
                     >
                         {name}
                     </Text>
                     <Text
-                        color={"whiteAlpha.500"}
+                        color={isSelected ? "whiteAlpha.700" : "gray.700"}
                         fontSize={14}
                         lineHeight={"18px"}
-                        _groupHover={{ color: "whiteAlpha.700" }}
                     >
                         {lastModifiedDate}
                     </Text>

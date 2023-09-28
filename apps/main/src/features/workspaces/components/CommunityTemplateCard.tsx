@@ -42,16 +42,16 @@ export const CommunityTemplateCard: FC<PropsWithChildren<{
                 <Flex>
                     <Avatar
                         colorScheme={"purple"}
-                        name={workspace.author}
+                        name={workspace.createdBy}
                         size={"md"}
-                        title={workspace.author}
+                        title={workspace.createdBy}
                     />
                     <Flex direction={"column"} px={2}>
                         <Text color={"basic.white"} fontSize={14}>
                             {workspace.name}
                         </Text>
                         <Text color={"whiteAlpha.700"} fontSize={12}>
-                            {workspace.author}
+                            {workspace.createdBy}
                         </Text>
                     </Flex>
                 </Flex>
