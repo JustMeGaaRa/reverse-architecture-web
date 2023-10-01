@@ -164,6 +164,11 @@ export class CommentApi {
         ]);
     }
 
+    async getCommentThreadById(workspaceId: string, commentThreadId: string): Promise<CommentThread> {
+        const list = this.comments.get(workspaceId)?.find(x => x.commentThreadId === commentThreadId);
+        return Promise.resolve(list);
+    }
+
     async getCommentThreads(workspaceId: string): Promise<Array<CommentThread>> {
         const list = this.comments.get(workspaceId) ?? [];
         return Promise.resolve(list);

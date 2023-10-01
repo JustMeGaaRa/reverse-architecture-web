@@ -30,8 +30,13 @@ export const WorkspaceCard: FC<PropsWithChildren<{
             padding={1}
             _hover={{ backgroundColor: isSelected ? "whiteAlpha.200" : "whiteAlpha.100" }}
         >
-            <CardBody px={0} py={1}>
-                {children}
+            <CardBody padding={0}>
+                <Flex
+                    alignItems={"center"}
+                    justifyContent={"center"}
+                >
+                    {children}
+                </Flex>
             </CardBody>
             <CardFooter
                 paddingLeft={3}
@@ -65,6 +70,8 @@ export const WorkspaceCard: FC<PropsWithChildren<{
                     icon={<MoreHoriz />}
                     size={"md"}
                     variant={"ghost"}
+                    visibility={"hidden"}
+                    _groupHover={{ visibility: "visible" }}
                 />
             </CardFooter>
         </Card>

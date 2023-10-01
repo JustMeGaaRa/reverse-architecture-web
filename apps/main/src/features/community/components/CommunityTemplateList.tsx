@@ -4,7 +4,7 @@ import { EmptyContent } from "@reversearchitecture/ui";
 import { Folder } from "iconoir-react";
 import { FC } from "react";
 import { CommunityCardView } from "../components";
-import { WorkspaceInfo } from "../types";
+import { WorkspaceInfo } from "../../";
 
 export const CommunityTemplateList: FC<{
     workspaces: WorkspaceInfo[];

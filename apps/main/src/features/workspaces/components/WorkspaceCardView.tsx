@@ -1,7 +1,6 @@
 import { FC } from "react";
 import {
     SelectionContainerProvider,
-    WorkspaceCard,
     WorkspaceGroupPreview,
     WorkspacePreview,
     WorkspaceCards
@@ -28,42 +27,25 @@ export const WorkspaceCardView: FC<{
         <SelectionContainerProvider>
             <WorkspaceCards onSelected={onSelected}>
                 {isGrouped && groups.filter(group => group.name !== undefined).map(group => (
-                    <WorkspaceCard
+                    <WorkspaceGroupPreview
                         key={group.name}
-                        name={group.name}
-                        lastModifiedDate={group.lastModifiedDate}
-                    >
-                        <WorkspaceGroupPreview
-                            group={group}
-                            onPreviewClick={() => onClick?.(group)}
-                        />
-                    </WorkspaceCard>
+                        group={group}
+                        onPreviewClick={() => onClick?.(group)}
+                    />
                 ))}
                 {isGrouped && groups.filter(group => group.name === undefined).flatMap(group => group.workspaces).map(workspace => (
-                    <WorkspaceCard
+                    <WorkspacePreview
                         key={workspace.workspaceId}
-                        name={workspace.name}
-                        lastModifiedDate={workspace.lastModifiedDate}
-                    >
-                        <WorkspacePreview
-                            key={workspace.workspaceId}
-                            workspace={workspace}
-                            onPreviewClick={() => onClick?.(workspace)}
-                        />
-                    </WorkspaceCard>
+                        workspace={workspace}
+                        onPreviewClick={() => onClick?.(workspace)}
+                    />
                 ))}
                 {!isGrouped && workspaces.map(workspace => (
-                    <WorkspaceCard
+                    <WorkspacePreview
                         key={workspace.workspaceId}
-                        name={workspace.name}
-                        lastModifiedDate={workspace.lastModifiedDate}
-                    >
-                        <WorkspacePreview
-                            key={workspace.workspaceId}
-                            workspace={workspace}
-                            onPreviewClick={() => onClick?.(workspace)}
-                        />
-                    </WorkspaceCard>
+                        workspace={workspace}
+                        onPreviewClick={() => onClick?.(workspace)}
+                    />
                 ))}
             </WorkspaceCards>
         </SelectionContainerProvider>

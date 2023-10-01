@@ -60,6 +60,7 @@ export class StructurizrVisitor extends VisitorCtor {
     ): Workspace {
         return new Workspace({
             name: trimQuotes(ctx.StringLiteral?.at(0)?.image),
+            description: trimQuotes(ctx.StringLiteral?.at(1)?.image),
             model: this.visit(ctx.model),
             views: this.visit(ctx.views)
         });

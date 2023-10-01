@@ -88,7 +88,6 @@ export const WorkspaceViewRenderer = forwardRef<HTMLDivElement, PropsWithChildre
         <ReactFlow
             ref={ref}
             connectionMode={ConnectionMode.Loose}
-            fitView
             fitViewOptions={FitViewOptions}
             nodeTypes={NodeTypes}
             nodes={nodes}
@@ -109,8 +108,9 @@ export const WorkspaceViewRenderer = forwardRef<HTMLDivElement, PropsWithChildre
             onConnectEnd={onConnectEnd}
         >
             <Background
+                gap={50}
+                size={2}
                 variant={BackgroundVariant.Dots}
-                gap={[40, 40]}
             />
             <MarkerRefs>
                 <CircleOutlineMarker />

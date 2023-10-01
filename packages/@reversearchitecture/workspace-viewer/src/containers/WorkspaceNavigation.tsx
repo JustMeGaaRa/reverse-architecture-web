@@ -17,13 +17,6 @@ import {
     SystemLandscapePathProvider,
     ViewType
 } from "@structurizr/dsl";
-import {
-    Circle,
-    Hexagon,
-    Rhombus,
-    Square,
-    Triangle,
-} from "iconoir-react";
 import { FC, useCallback } from "react";
 import { useViewNavigation, useWorkspaceStore, useWorkspaceTheme } from "../hooks";
 
@@ -50,41 +43,39 @@ export const WorkspaceNavigation: FC = () => {
     const handleOnViewItemClick = useCallback(zoomIntoView, [zoomIntoView]);
 
     return (
-        <Box position={"absolute"} top={4} left={4}>
-            <HStack divider={<StackDivider borderColor={"whiteAlpha.200"} />}>
-                <Select
-                    backgroundColor={"whiteAlpha.100"}
-                    borderWidth={1}
-                    backdropFilter={"blur(8px)"}
-                    borderRadius={8}
-                    color={"whiteAlpha.700"}
-                    size={"xs"}
-                    variant={"filled"}
-                    _hover={{
-                        backgroundColor: "whiteAlpha.200",
-                        borderColor: "whiteAlpha.400",
-                        color: "basic.white"
-                    }}
-                >
-                    <option value={"systemLandscape"}>System Landscape</option>
-                    <option value={"systemContext"}>System Context</option>
-                    <option value={"deployment"}>Deployment</option>
-                </Select>
-                <Breadcrumb separator={""}>
-                    {links.map(link => (
-                        <BreadcrumbItem key={link.title} isCurrentPage={link.isActive}>
-                            <BreadcrumbLink
-                                as={Button}
-                                colorScheme={link.isActive ? link.colorScheme : "whiteAlpha"}
-                                title={link.title}
-                                onClick={() => handleOnViewItemClick(link.data)}
-                            >
-                                {link.title}
-                            </BreadcrumbLink>
-                        </BreadcrumbItem>
-                    ))}
-                </Breadcrumb>
-            </HStack>
-        </Box>
+        <HStack divider={<StackDivider borderColor={"whiteAlpha.200"} />}>
+            <Select
+                backgroundColor={"whiteAlpha.100"}
+                borderWidth={1}
+                backdropFilter={"blur(8px)"}
+                borderRadius={8}
+                color={"whiteAlpha.700"}
+                size={"xs"}
+                variant={"filled"}
+                _hover={{
+                    backgroundColor: "whiteAlpha.200",
+                    borderColor: "whiteAlpha.400",
+                    color: "basic.white"
+                }}
+            >
+                <option value={"systemLandscape"}>System Landscape</option>
+                <option value={"systemContext"}>System Context</option>
+                <option value={"deployment"}>Deployment</option>
+            </Select>
+            <Breadcrumb separator={""}>
+                {links.map(link => (
+                    <BreadcrumbItem key={link.title} isCurrentPage={link.isActive}>
+                        <BreadcrumbLink
+                            as={Button}
+                            colorScheme={link.isActive ? link.colorScheme : "whiteAlpha"}
+                            title={link.title}
+                            onClick={() => handleOnViewItemClick(link.data)}
+                        >
+                            {link.title}
+                        </BreadcrumbLink>
+                    </BreadcrumbItem>
+                ))}
+            </Breadcrumb>
+        </HStack>
     )
 }

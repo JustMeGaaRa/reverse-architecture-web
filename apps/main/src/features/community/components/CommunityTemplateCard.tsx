@@ -1,5 +1,7 @@
 import {
+    AspectRatio,
     Avatar,
+    Box,
     Button,
     Card,
     CardBody,
@@ -7,15 +9,16 @@ import {
     CardHeader,
     Flex,
     HStack,
+    Icon,
+    Image,
     Tag,
     TagLabel,
     TagLeftIcon,
     Text,
 } from "@chakra-ui/react";
-import { ArrowTrCircle, Heart, UserCircle } from "iconoir-react";
+import { ArrowTrCircle, Heart, MediaImage, UserCircle } from "iconoir-react";
 import { FC, PropsWithChildren } from "react";
-import { WorkspacePreview } from "../components";
-import { WorkspaceInfo } from "../types";
+import { WorkspaceInfo } from "../../";
 
 export const CommunityTemplateCard: FC<PropsWithChildren<{
     workspace: WorkspaceInfo;
@@ -57,10 +60,51 @@ export const CommunityTemplateCard: FC<PropsWithChildren<{
                 </Flex>
             </CardHeader>
             <CardBody px={0} py={1}>
-                <WorkspacePreview
-                    workspace={workspace}
-                    onPreviewClick={onPreviewClick}
-                />
+                <Box
+                    backgroundColor={"whiteAlpha.100"}
+                    borderRadius={16}
+                    borderWidth={2}
+                    height={"100%"}
+                    width={"100%"}
+                    _groupHover={{ borderColor: "yellow.900" }}
+                    onClick={onPreviewClick}
+                >
+                    <AspectRatio ratio={2/1}>
+                        <Box>
+                            {workspace && (
+                                <Flex
+                                    backgroundColor={"whiteAlpha.100"}
+                                    borderRadius={13}
+                                    height={"100%"}
+                                    width={"100%"}
+                                    alignItems={"center"}
+                                    justifyContent={"center"}
+                                    overflow={"hidden"}
+                                >
+                                    {workspace.coverUrl && (
+                                        <Image
+                                            alt={"workspace preview image"}
+                                            src={workspace.coverUrl}
+                                            transitionProperty={"all"}
+                                            transitionDuration={"0.3s"}
+                                            transitionTimingFunction={"ease"}
+                                            _groupHover={{ opacity: 0.4, transform: "scale(2)" }}
+                                        />
+                                    )}
+
+                                    {!workspace.coverUrl && (
+                                        <Icon
+                                            as={MediaImage}
+                                            color={"whiteAlpha.700"}
+                                            fontSize={32}
+                                            strokeWidth={1}
+                                        />
+                                    )}
+                                </Flex>
+                            )}
+                        </Box>
+                    </AspectRatio>
+                </Box>
             </CardBody>
             <CardFooter
                 padding={1}
@@ -81,7 +125,7 @@ export const CommunityTemplateCard: FC<PropsWithChildren<{
                 <Button
                     colorScheme={"gray"}
                     leftIcon={<ArrowTrCircle />}
-                    pr={4}
+                    paddingRight={4}
                     size={"sm"}
                     variant={"outline"}
                     onClick={() => onUseTemplateClick?.()}

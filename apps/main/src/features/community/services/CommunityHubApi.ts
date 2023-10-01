@@ -2,7 +2,7 @@ import {
     IWorkspaceMetadata,
     IWorkspaceTheme
 } from "@structurizr/dsl";
-import { WorkspaceInfo } from "../types";
+import { WorkspaceInfo } from "../../";
 
 type Workspace = {
     workspaceId: string;

@@ -9,11 +9,14 @@ export const CommentCard: FC<{
 }) => {
     return (
         <Flex
-            backgroundColor={"whiteAlpha.50"}
             borderRadius={"16px"}
+            cursor={"pointer"}
             gap={2}
             padding={2}
-            maxWidth={"300px"}
+            width={"100%"}
+            _hover={{
+                backgroundColor: "whiteAlpha.50"
+            }}
         >
             <Flex>
                 <Avatar
@@ -25,13 +28,13 @@ export const CommentCard: FC<{
                 />
             </Flex>
             <Flex direction={"column"}>
-                <Text fontSize={"12px"} color={"gray.900"}>
+                <Text fontSize={"12px"} color={"basic.white"}>
                     {comment.author}
                 </Text>
                 <Text fontSize={"12px"} color={"gray.700"}>
                     {comment.createdDate}
                 </Text>
-                <Text fontSize={"14px"} color={"gray.900"}>
+                <Text fontSize={"14px"} color={"gray.900"} pt={1}>
                     {comment.text}
                 </Text>
             </Flex>

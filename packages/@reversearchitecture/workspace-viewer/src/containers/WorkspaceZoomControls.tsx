@@ -15,7 +15,11 @@ import {
     Toolbar
 } from "../components";
 
-export const WorkspaceZoomControls: FC = () => {
+export const WorkspaceZoomControls: FC<{
+    size?: "xs" | "sm" | "md" | "lg";
+}> = ({
+    size = "md"
+}) => {
     const zoom = useStore((state) => (state.transform[2] * 100));
     const { getNodes, zoomTo, zoomIn, zoomOut, fitView, setCenter } = useReactFlow();
 
@@ -35,39 +39,37 @@ export const WorkspaceZoomControls: FC = () => {
     ], [fitView, focusCenter, zoomTo]);
 
     return (
-        <Box position={"absolute"} bottom={4} right={4}>
-            <Toolbar>
-                <ToolbarSection>
-                    <IconButton
-                        aria-label={"zoom out"}
-                        title={"zoom out"}
-                        icon={<Minus />}
-                        onClick={() => zoomOut()}
-                    />
-                    <Menu>
-                        <MenuButton as={Button}>
-                            {`${zoom.toFixed(0)}%`}
-                        </MenuButton>
-                        <MenuList>
-                            {items.map(item => (
-                                <MenuItem
-                                    key={item.title}
-                                    command={item.command}
-                                    onClick={item.onClick}
-                                >
-                                    {item.title}
-                                </MenuItem>
-                            ))}
-                        </MenuList>
-                    </Menu>
-                    <IconButton
-                        aria-label={"zoom in"}
-                        title={"zoom in"}
-                        icon={<Plus />}
-                        onClick={() => zoomIn()}
-                    />
-                </ToolbarSection>
-            </Toolbar>
-        </Box>
+        <Toolbar size={size}>
+            <ToolbarSection size={size}>
+                <IconButton
+                    aria-label={"zoom out"}
+                    icon={<Minus />}
+                    title={"zoom out"}
+                    onClick={() => zoomOut()}
+                />
+                <Menu>
+                    <MenuButton as={Button}>
+                        {`${zoom.toFixed(0)}%`}
+                    </MenuButton>
+                    <MenuList>
+                        {items.map(item => (
+                            <MenuItem
+                                key={item.title}
+                                command={item.command}
+                                onClick={item.onClick}
+                            >
+                                {item.title}
+                            </MenuItem>
+                        ))}
+                    </MenuList>
+                </Menu>
+                <IconButton
+                    aria-label={"zoom in"}
+                    title={"zoom in"}
+                    icon={<Plus />}
+                    onClick={() => zoomIn()}
+                />
+            </ToolbarSection>
+        </Toolbar>
     )
 }

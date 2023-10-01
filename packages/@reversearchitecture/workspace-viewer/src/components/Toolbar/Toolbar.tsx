@@ -1,7 +1,31 @@
 import { HStack, StackDivider } from "@chakra-ui/react";
 import { FC, PropsWithChildren } from "react";
 
-export const Toolbar: FC<PropsWithChildren> = ({ children }) => {
+export const Toolbar: FC<PropsWithChildren<{
+    size?: "xs" | "sm" | "md" | "lg";
+}>> = ({
+    children,
+    size = "md"
+}) => {
+    const styles = {
+        xs: {
+            borderRadius: 8,
+            padding: 0
+        },
+        sm: {
+            borderRadius: 12,
+            padding: 0
+        },
+        md: {
+            borderRadius: 16,
+            padding: 1
+        },
+        lg: {
+            borderRadius: 24,
+            padding: 2
+        }
+    }
+
     return (
         <HStack
             alignItems={"center"}
@@ -11,9 +35,7 @@ export const Toolbar: FC<PropsWithChildren> = ({ children }) => {
             backdropFilter={"blur(16px)"}
             borderColor={"whiteAlpha.200"}
             borderWidth={1}
-            borderRadius={16}
-            height={12}
-            px={1}
+            {...styles[size]}
         >
             {children}
         </HStack>

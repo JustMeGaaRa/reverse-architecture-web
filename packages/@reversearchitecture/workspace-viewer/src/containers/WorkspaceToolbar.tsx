@@ -65,7 +65,7 @@ export const WorkspaceToolbar: FC = () => {
     useOnSelectionChange({ onChange: (selection) => { setSelection(selection) }});
 
     return (
-        <Box position={"absolute"} bottom={4} left={"50%"} transform={"translateX(-50%)"}>
+        <>
             {!isPresentationEnabled && (
                 <Toolbar>
                     <ToolbarSection>
@@ -272,6 +272,6 @@ export const WorkspaceToolbar: FC = () => {
                     </ToolbarSection>
                 </Toolbar>
             )}
-        </Box>
+        </>
     )
 }

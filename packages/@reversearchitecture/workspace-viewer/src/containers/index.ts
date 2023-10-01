@@ -4,6 +4,7 @@ export * from "./DeploymentView";
 export * from "./SystemContextView";
 export * from "./SystemLandscapeView";
 export * from "./WorkspaceExplorer";
+export * from "./WorkspaceScaleToolbar";
 export * from "./WorkspaceNavigation"
 export * from "./WorkspaceStoreUpdater";
 export * from "./WorkspaceThemeProvider";

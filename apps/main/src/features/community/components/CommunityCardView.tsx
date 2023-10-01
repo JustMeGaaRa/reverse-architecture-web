@@ -1,7 +1,7 @@
 import { Grid, useBreakpointValue } from "@chakra-ui/react";
 import { FC } from "react";
 import { CommunityTemplateCard } from "../components";
-import { WorkspaceInfo } from "../types";
+import { WorkspaceInfo } from "../../";
 
 export const CommunityCardView: FC<{
     workspaces: WorkspaceInfo[];

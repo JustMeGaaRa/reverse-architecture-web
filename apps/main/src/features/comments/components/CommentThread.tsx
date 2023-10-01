@@ -47,6 +47,7 @@ export const CommentThreadCard: FC<{
             borderWidth={1}
             direction={"column"}
             maxHeight={"500px"}
+            maxWidth={"300px"}
         >
             <Flex
                 flexGrow={0}
@@ -103,6 +104,8 @@ export const CommentThreadCard: FC<{
                 padding={2}
             >
                 <Avatar
+                    colorScheme={"purple"}
+                    // TODO: replace with current user
                     name={commentThread.comments.at(0).author}
                     size={"sm"}
                     title={commentThread.comments.at(0).author}

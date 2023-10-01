@@ -18,7 +18,8 @@ import {
     WorkspaceToolbar,
     WorkspaceZoomControls,
     useWorkspaceTheme,
-    WorkspaceUndoRedoControls
+    WorkspaceUndoRedoControls,
+    Panel
 } from "@reversearchitecture/workspace-viewer";
 import {
     WorkspaceEditor
@@ -188,11 +189,20 @@ export const WorkspaceExplorerPage: FC = () => {
                                         metadata={metadata}
                                     >
                                         <WorkspaceCommentGroup />
-                                        <WorkspaceNavigation />
-                                        <WorkspaceUndoRedoControls />
-                                        <WorkspaceToolbar />
-                                        <WorkspaceZoomControls />
                                         <UserCursorGroup users={users} />
+                                        
+                                        <Panel position={"top-left"}>
+                                            <WorkspaceNavigation />
+                                        </Panel>
+                                        <Panel position={"bottom-left"}>
+                                            <WorkspaceUndoRedoControls />
+                                        </Panel>
+                                        <Panel position={"bottom-center"}>
+                                            <WorkspaceToolbar />
+                                        </Panel>
+                                        <Panel position={"bottom-right"}>
+                                            <WorkspaceZoomControls />
+                                        </Panel>
                                     </WorkspaceExplorer>
                                 )}
 
