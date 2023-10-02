@@ -15,13 +15,21 @@ export const WorkspaceEditor: FC<{
         monacoRef.current = editor;
         monaco.languages.register({ id: "structurizr-dsl" });
         monaco.languages.setMonarchTokensProvider("structurizr-dsl", StructurizrLanguage);
+        monaco.editor.defineTheme("reverse-architecture", {
+            base: "vs-dark",
+            inherit: true,
+            rules: [],
+            colors: {
+                "editor.background": "#1D1F20"
+            }
+        })
     }, []);
     
     return (
         <>
             <Editor
                 height={"100%"}
-                theme={"vs-dark"}
+                theme={"reverse-architecture"}
                 defaultLanguage={"structurizr-dsl"}
                 value={value}
                 options={{
@@ -29,10 +37,12 @@ export const WorkspaceEditor: FC<{
                     autoClosingBrackets: "always",
                     autoClosingQuotes: "always",
                     padding: { top: 16, bottom: 16 },
-                    fontLigatures: true
+                    fontLigatures: true,
+                    scrollbar: { verticalScrollbarSize: 4 },
+                    wordWrap: "on",
                 }}
                 onMount={handleOnMount}
-                onChange={(value, event) => onChange && onChange(value)}
+                onChange={(value, event) => onChange?.(value)}
             />
         </>
     )

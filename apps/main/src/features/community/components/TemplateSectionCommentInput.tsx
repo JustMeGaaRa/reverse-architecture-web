@@ -16,6 +16,7 @@ export const TemplateSectionCommentInput: FC<{
                     width={"100%"}
                 >
                     <Avatar
+                        colorScheme={"purple"}
                         flexGrow={0}
                         flexShrink={0}
                         name={author}

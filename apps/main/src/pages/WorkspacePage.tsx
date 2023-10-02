@@ -36,7 +36,6 @@ import {
     WorkspaceMenu,
 } from "../containers";
 import { useSearchParams } from "react-router-dom";
-import { NavLink } from "react-router-dom";
 
 export const WorkspacePage: FC<PropsWithChildren> = () => {
     const navigate = useNavigate();
@@ -109,7 +108,8 @@ export const WorkspacePage: FC<PropsWithChildren> = () => {
                     </ButtonGroup>
                     <RouteList>
                         <Route
-                            icon={HelpCircle}
+                            icon={<HelpCircle />}
+                            isDisabled
                             title={"help"}
                             to={"help"}
                         />

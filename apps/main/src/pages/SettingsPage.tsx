@@ -31,41 +31,13 @@ export const SettingsPage: FC = () => {
 
                     <ContextSheetBody>
                         <Box padding={2} height={"100%"}>
-                            <RouteSection title={"Section 1"}>
-                                <RouteList>
+                            <RouteSection title={"Account"}>
+                                <RouteList size={"md"}>
                                     <Route
                                         isExpanded
-                                        icon={ProfileCircle}
+                                        icon={<ProfileCircle />}
                                         title={"Personal Profile"}
                                         to={"profile"}
-                                    />
-                                    <Route
-                                        isExpanded
-                                        icon={ProfileCircle}
-                                        title={"Text"}
-                                        to={"text"}
-                                    />
-                                    <Route
-                                        isExpanded
-                                        icon={ProfileCircle}
-                                        title={"Text"}
-                                        to={"text"}
-                                    />
-                                </RouteList>
-                            </RouteSection>
-                            <RouteSection title={"Section 2"}>
-                                <RouteList>
-                                    <Route
-                                        isExpanded
-                                        icon={ProfileCircle}
-                                        title={"Text"}
-                                        to={"text"}
-                                    />
-                                    <Route
-                                        isExpanded
-                                        icon={ProfileCircle}
-                                        title={"Text"}
-                                        to={"text"}
                                     />
                                 </RouteList>
                             </RouteSection>

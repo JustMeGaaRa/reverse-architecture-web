@@ -53,19 +53,19 @@ export const Layout: FC<PropsWithChildren> = () => {
                         <Route
                             isDisabled={true}
                             isExpanded={isOpen}
-                            icon={HomeSimple}
+                            icon={<HomeSimple />}
                             title={"Dashboard"}
                             to={"dashboard"}
                         />
                         <Route
                             isExpanded={isOpen}
-                            icon={MultiplePagesEmpty}
+                            icon={<MultiplePagesEmpty />}
                             title={"Workspaces"}
                             to={"workspaces"}
                         />
                         <Route
                             isExpanded={isOpen}
-                            icon={Internet}
+                            icon={<Internet />}
                             title={"Community"}
                             to={"community"}
                         />
@@ -74,20 +74,20 @@ export const Layout: FC<PropsWithChildren> = () => {
                         <Route
                             isDisabled={true}
                             isExpanded={isOpen}
-                            icon={BellNotification}
+                            icon={<BellNotification />}
                             title={"Notifications"}
                             to={"notifications"}
                         />
                         <Route
                             isExpanded={isOpen}
-                            icon={Settings}
+                            icon={<Settings />}
                             title={"Settings"}
                             to={"settings"}
                         />
                         <Route
                             isDisabled={true}
                             isExpanded={isOpen}
-                            icon={HelpCircle}
+                            icon={<HelpCircle />}
                             title={"Help & Feedback"}
                             to={"help"}
                         />

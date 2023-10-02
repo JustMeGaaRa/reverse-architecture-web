@@ -172,6 +172,7 @@ export const WorkspaceExplorerPage: FC = () => {
                                 aria-label={"share"}
                                 colorScheme={"gray"}
                                 icon={<AddUser />}
+                                isDisabled
                                 size={"md"}
                             />
                         </NavigationSource>

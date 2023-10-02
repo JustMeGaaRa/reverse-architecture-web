@@ -1,4 +1,4 @@
-import { Flex, Text } from "@chakra-ui/react";
+import { Stack, Text } from "@chakra-ui/react";
 import { FC, PropsWithChildren } from "react";
 
 export const RouteSection: FC<PropsWithChildren<{
@@ -10,9 +10,11 @@ export const RouteSection: FC<PropsWithChildren<{
     gap = 2
 }) => {
     return (
-        <Flex direction={"column"} gap={gap} py={4}>
-            <Text px={3} fontSize={12} color={"gray.400"}>{title}</Text>
+        <Stack direction={"column"} gap={gap} py={4}>
+            <Text px={3} fontSize={12} color={"gray.400"}>
+                {title}
+            </Text>
             {children}
-        </Flex>
+        </Stack>
     )
 }

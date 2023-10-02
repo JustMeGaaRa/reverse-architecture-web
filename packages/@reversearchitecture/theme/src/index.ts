@@ -3,7 +3,6 @@ import { Avatar } from "./components/Avatar";
 import { Breadcrumb } from "./components/Breadcrumb";
 import { Button } from "./components/Button";
 import { Checkbox } from "./components/Checkbox";
-import { List } from "./components/List";
 import { Menu } from "./components/Menu";
 import { Modal } from "./components/Modal";
 import { Radio } from "./components/Radio";
@@ -18,7 +17,6 @@ export const theme =  extendTheme({
         Button,
         Breadcrumb,
         Checkbox,
-        // List,
         Menu,
         Modal,
         // Radio,x

@@ -1,4 +1,4 @@
-import { ListIcon, ListItem } from "@chakra-ui/react";
+import { Button, IconButton } from "@chakra-ui/react";
 import { FC } from "react";
 import { NavLink } from "react-router-dom";
 
@@ -15,50 +15,52 @@ export const Route: FC<{
     isDisabled = false,
     isExpanded = false
 }) => {
-    return (
-        <ListItem
-            as={NavLink}
+    return isExpanded ? (
+        <Button
+            as={isDisabled ? undefined : NavLink}
             aria-label={title ?? to}
-            
-            borderRadius={16}
-            fontSize={"16px"}
-            height={"48px"}
-            width={"100%"}
-            padding={"12px"}
-
-            className={isDisabled ? "disabled" : ""}
-            color={"gray.700"}
-            style={{ pointerEvents: isDisabled ? "none" : "auto" }}
-            display={"block"}
-            
+            isDisabled={isDisabled}
+            leftIcon={icon}
+            justifyContent={"left"}
+            cursor={isDisabled ? "none" : "pointer"}
+            paddingLeft={"11px"}
+            to={to}
+            title={title}
             transitionProperty={"all"}
             transitionDuration={"normal"}
             transitionTimingFunction={"ease"}
-            to={to}
-            title={title}
-            
-            _hover={{
-                backgroundColor: "gray.100",
-                color: "basic.white",
-            }}
+            width={"100%"}
             _active={{
-                backgroundColor: "gray.100",
+                backgroundColor: "whiteAlpha.100",
                 color: "yellow.900",
             }}
             _activeLink={{
-                backgroundColor: "gray.100",
+                backgroundColor: "whiteAlpha.100",
                 color: "yellow.900",
             }}
-            _disabled={{
-                color: "gray.200",
-            }}
-            // "&.disabled": {
-            //     color: mode("", "gray.200")(props),
-            //     cursor: "not-allowed",
-            // }
         >
-            <ListIcon as={icon} fontSize={"24px"} />
-            {isExpanded && title}
-        </ListItem>
+            {title}
+        </Button>
+    ) : (
+        <IconButton
+            as={isDisabled ? undefined : NavLink}
+            aria-label={title ?? to}
+            icon={icon}
+            isDisabled={isDisabled}
+            cursor={isDisabled ? "none" : "pointer"}
+            to={to}
+            title={title}
+            transitionProperty={"all"}
+            transitionDuration={"normal"}
+            transitionTimingFunction={"ease"}
+            _active={{
+                backgroundColor: "whiteAlpha.100",
+                color: "yellow.900",
+            }}
+            _activeLink={{
+                backgroundColor: "whiteAlpha.100",
+                color: "yellow.900",
+            }}
+        />
     )
 }
