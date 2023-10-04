@@ -1,5 +1,4 @@
 import {
-    Box,
     Breadcrumb,
     BreadcrumbItem,
     BreadcrumbLink,
@@ -34,7 +33,7 @@ export const WorkspaceNavigation: FC = () => {
     ]);
     const path = pathBuilders.get(selectedView.type)?.getPath(workspace, selectedView) ?? [];
     const links = path.map((view, index) => ({
-        title: `${view.type} - ${view.title}`,
+        title: view.title,
         colorScheme: getViewAccentColor(view.type),
         isActive: index === path.length - 1,
         data: view

@@ -81,7 +81,29 @@ export const Button: ComponentStyleConfig = {
                 borderWidth: 1,
                 color: mode("", `${props.colorScheme}.400`)(props),
             }
-        })
+        }),
+        menuitem: (props) => ({
+            color: mode("", "gray.800")(props),
+            _hover: {
+                backgroundColor: mode("", "whiteAlpha.100")(props),
+                color: mode("", "basic.white")(props),
+            },
+            _focus: {
+                backgroundColor: mode("", "whiteAlpha.200")(props),
+                color: mode("", `${props.colorScheme}.900`)(props),
+            },
+            _active: {
+                backgroundColor: mode("", "whiteAlpha.100")(props),
+                color: mode("", `${props.colorScheme}.900`)(props),
+            },
+            _activeLink: {
+                backgroundColor: mode("", "whiteAlpha.100")(props),
+                color: mode("", `${props.colorScheme}.900`)(props),
+            },
+            _disabled: {
+                color: mode("", "gray.200")(props),
+            }
+        }),
     },
     defaultProps: {
         colorScheme: "yellow",

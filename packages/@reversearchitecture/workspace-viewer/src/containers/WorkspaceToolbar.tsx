@@ -74,10 +74,6 @@ export const WorkspaceToolbar: FC = () => {
                             isActive={isSelectionEnabled}
                             icon={<CursorPointer />}
                             title={"selection mode"}
-                            _active={{
-                                backgroundColor: "yellow.100",
-                                color: "yellow.900"
-                            }}
                             onClick={() => enableSelectionMode()}
                         />
                         <IconButton
@@ -85,10 +81,6 @@ export const WorkspaceToolbar: FC = () => {
                             isActive={isDraggingEnabled}
                             icon={<DragHandGesture />}
                             title={"dragging mode"}
-                            _active={{
-                                backgroundColor: "yellow.100",
-                                color: "yellow.900"
-                            }}
                             onClick={() => enableDraggingMode()}
                         />
                     </ToolbarSection>
@@ -100,10 +92,6 @@ export const WorkspaceToolbar: FC = () => {
                                 icon={<User />}
                                 isActive={isAddingElementEnabled && addingElementType === ElementType.Person}
                                 title={"person mode"}
-                                _active={{
-                                    backgroundColor: "yellow.100",
-                                    color: "yellow.900"
-                                }}
                                 onClick={() => enableAddingElement(ElementType.Person)}
                             />
                         )}
@@ -113,10 +101,6 @@ export const WorkspaceToolbar: FC = () => {
                                 icon={<Keyframe />}
                                 isActive={isAddingElementEnabled && addingElementType === ElementType.SoftwareSystem}
                                 title={"software system mode"}
-                                _active={{
-                                    backgroundColor: "yellow.100",
-                                    color: "yellow.900"
-                                }}
                                 onClick={() => enableAddingElement(ElementType.SoftwareSystem)}
                             />
                         )}
@@ -126,10 +110,6 @@ export const WorkspaceToolbar: FC = () => {
                                 icon={<KeyframesCouple />}
                                 isActive={isAddingElementEnabled && addingElementType === ElementType.Container}
                                 title={"container mode"}
-                                _active={{
-                                    backgroundColor: "yellow.100",
-                                    color: "yellow.900"
-                                }}
                                 onClick={() => enableAddingElement(ElementType.Container)}
                             />
                         )}
@@ -139,10 +119,6 @@ export const WorkspaceToolbar: FC = () => {
                                 icon={<Keyframes />}
                                 isActive={isAddingElementEnabled && addingElementType === ElementType.Component}
                                 title={"component mode"}
-                                _active={{
-                                    backgroundColor: "yellow.100",
-                                    color: "yellow.900"
-                                }}
                                 onClick={() => enableAddingElement(ElementType.Component)}
                             />
                         )}
@@ -152,10 +128,6 @@ export const WorkspaceToolbar: FC = () => {
                                 icon={<AddKeyframeAlt />}
                                 isActive={isAddingElementEnabled && addingElementType === ElementType.Group}
                                 title={"group mode"}
-                                _active={{
-                                    backgroundColor: "yellow.100",
-                                    color: "yellow.900"
-                                }}
                                 onClick={() => enableAddingElement(ElementType.Group)}
                             />
                         )}
@@ -168,10 +140,6 @@ export const WorkspaceToolbar: FC = () => {
                             icon={<Text />}
                             isActive={isTextEditEnabled}
                             title={"text edit mode"}
-                            _active={{
-                                backgroundColor: "yellow.100",
-                                color: "yellow.900"
-                            }}
                             onClick={() => enableTextEditMode()}
                         />
                         <IconButton
@@ -179,10 +147,6 @@ export const WorkspaceToolbar: FC = () => {
                             icon={<FrameAltEmpty />}
                             isActive={false}
                             title={"multiselect"}
-                            _active={{
-                                backgroundColor: "yellow.100",
-                                color: "yellow.900"
-                            }}
                         />
                     </ToolbarSection>
 
@@ -192,10 +156,6 @@ export const WorkspaceToolbar: FC = () => {
                             icon={<ChatAdd />}
                             isActive={isCommentAddingEnabled}
                             title={"add comment"}
-                            _active={{
-                                backgroundColor: "yellow.100",
-                                color: "yellow.900"
-                            }}
                             onClick={() => enableCommentingMode()}
                         />
                         <IconButton
@@ -203,10 +163,6 @@ export const WorkspaceToolbar: FC = () => {
                             icon={<LayoutRight />}
                             isActive={isAutoLayoutEnabled}
                             title={"enable auto layout"}
-                            _active={{
-                                backgroundColor: "yellow.100",
-                                color: "yellow.900"
-                            }}
                             onClick={() => toggleAutoLayout()}
                         />
                     </ToolbarSection>
@@ -217,10 +173,6 @@ export const WorkspaceToolbar: FC = () => {
                             icon={<BinMinus />}
                             isActive={(selection.nodes?.length > 0 || selection.edges?.length > 0)}
                             title={"delete selected"}
-                            _active={{
-                                backgroundColor: "yellow.100",
-                                color: "yellow.900"
-                            }}
                             onClick={() => deleteElements(selection)}
                         />
                     </ToolbarSection>
@@ -243,10 +195,6 @@ export const WorkspaceToolbar: FC = () => {
                             aria-label={"follow presenter"}
                             icon={<CursorPointer />}
                             title={"follow presenter"}
-                            _active={{
-                                backgroundColor: "yellow.100",
-                                color: "yellow.900"
-                            }}
                         />
                     </ToolbarSection>
 
@@ -255,10 +203,6 @@ export const WorkspaceToolbar: FC = () => {
                             aria-label={"add comment"}
                             icon={<ChatAdd />}
                             title={"add comment"}
-                            _active={{
-                                backgroundColor: "yellow.100",
-                                color: "yellow.900"
-                            }}
                         />
                     </ToolbarSection>
 

@@ -30,14 +30,6 @@ export const Route: FC<{
             transitionDuration={"normal"}
             transitionTimingFunction={"ease"}
             width={"100%"}
-            _active={{
-                backgroundColor: "whiteAlpha.100",
-                color: "yellow.900",
-            }}
-            _activeLink={{
-                backgroundColor: "whiteAlpha.100",
-                color: "yellow.900",
-            }}
         >
             {title}
         </Button>
@@ -53,14 +45,6 @@ export const Route: FC<{
             transitionProperty={"all"}
             transitionDuration={"normal"}
             transitionTimingFunction={"ease"}
-            _active={{
-                backgroundColor: "whiteAlpha.100",
-                color: "yellow.900",
-            }}
-            _activeLink={{
-                backgroundColor: "whiteAlpha.100",
-                color: "yellow.900",
-            }}
         />
     )
 }

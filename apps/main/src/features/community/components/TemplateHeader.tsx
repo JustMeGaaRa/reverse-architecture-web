@@ -15,7 +15,10 @@ export const TemplateHeader: FC<{
             <InformationHeader
                 title={(
                     <Text color={"whiteAlpha.700"} fontSize={"12px"}>
-                        <Highlight query={"Research & Design"} styles={{ color: "yellow.900" }}>
+                        <Highlight
+                            query={"Research & Design"}
+                            styles={{ color: "yellow.900" }}
+                        >
                             {"Community -> Research & Design"}
                         </Highlight>
                     </Text>

@@ -9,12 +9,12 @@ export const ToolbarSection: FC<PropsWithChildren<{
 }) => {
     return (
         <ButtonGroup
-            colorScheme={"gray"}
+            colorScheme={"yellow"}
             gap={0}
             orientation={"horizontal"}
             spacing={0}
             size={size}
-            variant={"ghost"}
+            variant={"menuitem"}
         >
             {children}
         </ButtonGroup>
