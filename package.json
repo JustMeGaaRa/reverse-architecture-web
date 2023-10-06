@@ -1,5 +1,5 @@
 {
-  "name": "turbo-example",
+  "name": "reversearchitecture",
   "version": "0.0.0",
   "private": true,
   "workspaces": [
@@ -8,7 +8,8 @@
     "packages/@justmegaara/*",
     "packages/@monaco-editor/*",
     "packages/@reversearchitecture/*",
-    "packages/@structurizr/*"
+    "packages/@structurizr/*",
+    "packages/@workspace/*"
   ],
   "scripts": {
     "build": "turbo run build",

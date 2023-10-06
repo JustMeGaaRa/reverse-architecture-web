@@ -115,6 +115,14 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
         <ContextSheet>
             <NavigationSource>
                 <ButtonGroup size={"md"} variant={"outline"}>
+                    <IconButton
+                        aria-label={"import workspace"}
+                        key={"import-workspace"}
+                        colorScheme={"gray"}
+                        icon={<Upload />}
+                        isDisabled={true}
+                        title={"Import Workspace"}
+                    />
                     <Button
                         aria-label={"create new project"}
                         key={"create-new-project"}
@@ -124,14 +132,6 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                     >
                         Create Workspace
                     </Button>
-                    <IconButton
-                        aria-label={"import workspace"}
-                        key={"import-workspace"}
-                        colorScheme={"gray"}
-                        icon={<Upload />}
-                        isDisabled={true}
-                        title={"Import Workspace"}
-                    />
                 </ButtonGroup>
             </NavigationSource>
 

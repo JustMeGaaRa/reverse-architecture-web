@@ -1,7 +1,9 @@
 import { Avatar, Box, Button, Flex, Text } from "@chakra-ui/react";
 import { AddUser } from "iconoir-react";
 import { FC } from "react";
-import { InformationHeader, WorkspaceInfo } from "../..";
+import { InformationHeader } from "../components";
+// TODO: consider moving this dependency
+import { WorkspaceInfo } from "../..";
 
 export const TemplateSectionCreator: FC<{
     information: WorkspaceInfo;

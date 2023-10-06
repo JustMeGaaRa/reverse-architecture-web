@@ -1,16 +1,8 @@
-import {
-    VStack
-} from "@chakra-ui/react";
+import { VStack } from "@chakra-ui/react";
 // TODO: consider making this component/feature less dependent on the workspace-viewer package
-import {
-    useViewNavigation,
-} from "@reversearchitecture/workspace-viewer";
-import {
-    FC,
-    useCallback,
-    useEffect,
-} from "react";
-import { CommentThreadRefrence } from ".";
+import { useViewNavigation } from "@workspace/core";
+import { FC, useCallback, useEffect } from "react";
+import { CommentThreadRefrence } from "../components";
 import { useCommentsStore } from "../hooks";
 import { CommentThread } from "../types";
 

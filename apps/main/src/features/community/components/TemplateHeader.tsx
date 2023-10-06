@@ -1,7 +1,9 @@
 import { Box, Button, Heading, Highlight, Text } from "@chakra-ui/react";
 import { ArrowTrCircle } from "iconoir-react";
 import { FC } from "react";
-import { InformationHeader, WorkspaceInfo } from "../..";
+import { InformationHeader } from "../components";
+// TODO: consider moving this dependency
+import { WorkspaceInfo } from "../..";
 
 export const TemplateHeader: FC<{
     information: WorkspaceInfo;

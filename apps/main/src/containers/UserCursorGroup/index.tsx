@@ -1,5 +1,5 @@
 import { Box,Text } from "@chakra-ui/react";
-import { ForeignElement } from "@reversearchitecture/workspace-viewer";
+import { ForeignElement } from "@workspace/core";
 import { FC } from "react";
 
 export const UserCursorGroup: FC<{ users: Array<any> }> = ({ users }) => {

@@ -12,18 +12,16 @@ import {
     ContextSheetHeader,
     ContextSheetTitle
 } from "@reversearchitecture/ui";
+import { WorkspaceEditor } from "@workspace/code-editor";
+import { Panel, useWorkspaceTheme } from "@workspace/core";
 import {
-    WorkspaceNavigation,
-    WorkspaceExplorer,
+    WorkspaceUndoRedoControls,
     WorkspaceToolbar,
     WorkspaceZoomControls,
-    useWorkspaceTheme,
-    WorkspaceUndoRedoControls,
-    Panel
-} from "@reversearchitecture/workspace-viewer";
-import {
-    WorkspaceEditor
-} from "@reversearchitecture/workspace-editor";
+} from "@workspace/controls";
+import { WorkspaceExplorer } from "@workspace/diagramming";
+import { WorkspaceModeler } from "@workspace/modeling";
+import { WorkspaceNavigation } from "@workspace/navigation";
 import {
     applyMetadata,
     applyTheme,
@@ -208,7 +206,16 @@ export const WorkspaceExplorerPage: FC = () => {
                                 )}
 
                                 {queryState.mode === "modeling" && (
-                                    <></>
+                                    <WorkspaceModeler
+                                        workspace={workspace}
+                                    >
+                                        <Panel position={"bottom-left"}>
+                                            <WorkspaceUndoRedoControls />
+                                        </Panel>
+                                        <Panel position={"bottom-right"}>
+                                            <WorkspaceZoomControls />
+                                        </Panel>
+                                    </WorkspaceModeler>
                                 )}
                             </WorkspaceRoom>
                         </WorkspaceRoomProvider>

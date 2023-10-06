@@ -11,16 +11,13 @@ import {
     useDisclosure
 } from "@chakra-ui/react";
 import {
-    Panel,
-    WorkspaceScaleToolbar,
-    WorkspaceExplorer,
-    WorkspaceNavigation,
-    WorkspaceZoomControls
-} from "@reversearchitecture/workspace-viewer";
-import {
     IWorkspace,
     IWorkspaceMetadata,
 } from "@structurizr/dsl";
+import { Panel } from "@workspace/core";
+import { WorkspaceScaleToolbar, WorkspaceZoomControls } from "@workspace/controls";
+import { WorkspaceExplorer } from "@workspace/diagramming";
+import { WorkspaceNavigation } from "@workspace/navigation";
 import {
     BookmarkEmpty,
     ChatLines,

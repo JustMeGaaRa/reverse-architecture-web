@@ -5,7 +5,6 @@ import {
     ContextSheetHeader,
     ContextSheetTitle
 } from "@reversearchitecture/ui";
-import { useWorkspaceTheme } from "@reversearchitecture/workspace-viewer";
 import {
     applyMetadata,
     applyTheme,
@@ -13,6 +12,7 @@ import {
     WorkspaceMetadata
 } from "@structurizr/dsl";
 import { useStructurizrParser } from "@structurizr/react";
+import { useWorkspaceTheme } from "@workspace/core";
 import { FC, useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { NavigationSource } from "../containers";

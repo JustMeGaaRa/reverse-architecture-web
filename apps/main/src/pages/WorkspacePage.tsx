@@ -7,9 +7,7 @@ import {
     HStack,
     IconButton
 } from "@chakra-ui/react";
-import {
-    WorkspaceThemeProvider
-} from "@reversearchitecture/workspace-viewer";
+import { WorkspaceThemeProvider } from "@workspace/core";
 import {
     PageContent,
     PageSidebar,
@@ -30,12 +28,15 @@ import {
     ViewStructureUp,
 } from "iconoir-react";
 import { FC, PropsWithChildren } from "react";
-import { Outlet, useNavigate } from "react-router";
+import {
+    Outlet,
+    useNavigate,
+    useSearchParams
+} from "react-router-dom";
 import {
     NavigationTarget,
     WorkspaceMenu,
 } from "../containers";
-import { useSearchParams } from "react-router-dom";
 
 export const WorkspacePage: FC<PropsWithChildren> = () => {
     const navigate = useNavigate();

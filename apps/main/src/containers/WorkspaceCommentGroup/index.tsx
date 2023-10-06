@@ -2,7 +2,7 @@ import { ScaleFade } from "@chakra-ui/react";
 import {
     ForeignElement,
     useWorkspaceStore
-} from "@reversearchitecture/workspace-viewer";
+} from "@workspace/core";
 import { FC, useCallback, useState } from "react";
 import { v4 } from "uuid";
 import {

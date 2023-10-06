@@ -1,13 +1,11 @@
-import {
+import { 
     ButtonGroup,
     Flex,
     IconButton,
     Text,
 } from "@chakra-ui/react";
 // TODO: consider making this component/feature less dependent on the workspace-viewer package
-import {
-    useWorkspaceTheme
-} from "@reversearchitecture/workspace-viewer";
+import { useWorkspaceTheme } from "@workspace/core";
 import { CheckCircle, MoreHoriz } from "iconoir-react";
 import { FC } from "react";
 import { useCommentsStore } from "../hooks";
