@@ -32,6 +32,7 @@
     "@workspace/code-editor": "*",
     "@workspace/controls": "*",
     "@workspace/diagramming": "*",
+    "@workspace/live": "*",
     "@workspace/modeling": "*",
     "@workspace/navigation": "*",
     "formik": "^2.4.4",

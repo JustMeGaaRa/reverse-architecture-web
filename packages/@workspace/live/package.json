@@ -1,0 +1,48 @@
+{
+  "name": "@workspace/live",
+  "version": "0.1.0",
+  "description": "A Structurizr workspace components for real-time collaboration.",
+  "main": "dist/index.js",
+  "keywords": [
+    "reverse-architecture",
+    "real-time",
+    "live",
+    "collaborative",
+    "architecture",
+    "c4",
+    "c4-model",
+    "structurizr",
+    "workspace"
+  ],
+  "author": "JustMeGaaRa",
+  "license": "MIT",
+  "scripts": {
+    "build": "npx tsc",
+    "dev": "npx tsc -w",
+    "lint": "eslint \"**/*.ts*\""
+  },
+  "dependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-scripts": "5.0.1",
+    "y-webrtc": "^10.2.5",
+    "y-protocols": "^1.0.5",
+    "yjs": "^13.5.47",
+    "zustand": "^4.3.2"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "eslint": "^7.32.0",
+    "eslint-config-custom": "*",
+    "tsconfig": "*",
+    "typescript": "^4.5.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JustMeGaaRa/reverse-architecture-web.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JustMeGaaRa/reverse-architecture-web/issues"
+  }
+}
