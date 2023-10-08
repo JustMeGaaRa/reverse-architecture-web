@@ -14,10 +14,9 @@
   "scripts": {
     "build": "npx tsc"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
-    "typescript": "^4.9.5"
+    "typescript": "^5.2.2"
   },
   "repository": {
     "type": "git",

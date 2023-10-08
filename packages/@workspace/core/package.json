@@ -20,14 +20,14 @@
   },
   "dependencies": {
     "@chakra-ui/react": "^2.5.1",
-    "@emotion/react": "11.10.5",
-    "@emotion/styled": "11.10.5",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@reactflow/background": "^11.1.10",
     "@reactflow/core": "^11.6.1",
     "@reactflow/node-resizer": "^2.1.0",
     "@structurizr/dsl": "*",
     "elkjs": "0.8.2",
-    "framer-motion": "7.9.1",
+    "framer-motion": "^10.16.4",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "web-worker": "^1.2.0",
@@ -36,10 +36,10 @@
   "devDependencies": {
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
-    "eslint": "^7.32.0",
+    "eslint": "^8.51.0",
     "eslint-config-custom": "*",
     "tsconfig": "*",
-    "typescript": "^4.5.2"
+    "typescript": "^5.2.2"
   },
   "repository": {
     "type": "git",

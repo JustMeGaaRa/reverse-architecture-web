@@ -11,18 +11,8 @@ import {
     Text,
 } from "@chakra-ui/react";
 import { Page, ReverseArchitectureLogo } from "@reversearchitecture/ui";
-// import { App } from "octokit";
 import { GitHub } from "iconoir-react";
 import { FC } from "react";
-
-// export const app = new App({
-//     appId: "395983",
-//     privateKey: "",
-//     oauth: {
-//         clientId: "",
-//         clientSecret: "",
-//     },
-// });
 
 export const SignInPage: FC = () => {
 
@@ -72,7 +62,7 @@ export const SignInPage: FC = () => {
                                 leftIcon={<GitHub />}
                                 size={"lg"}
                                 textDecoration={"none"}
-                                href={`https://github.com/login/oauth/authorize?client_id=${""}&state=${"abcdefg"}`}
+                                href={``}
                             >
                                 Sign In with GitHub
                             </Button>
