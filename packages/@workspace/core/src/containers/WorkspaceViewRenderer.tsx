@@ -78,7 +78,7 @@ export const WorkspaceViewRenderer = forwardRef<HTMLDivElement, PropsWithChildre
     }), []);
 
     const FitViewOptions = useMemo(() => ({
-        padding: 0.2,
+        padding: 0.3,
         duration: 500,
         maxZoom: 5,
         minZoom: 0.1
@@ -89,6 +89,7 @@ export const WorkspaceViewRenderer = forwardRef<HTMLDivElement, PropsWithChildre
             ref={ref}
             connectionMode={ConnectionMode.Loose}
             fitViewOptions={FitViewOptions}
+            fitView
             nodeTypes={NodeTypes}
             nodes={nodes}
             edgeTypes={EdgeTypes}

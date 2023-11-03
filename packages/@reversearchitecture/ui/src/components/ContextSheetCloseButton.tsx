@@ -2,7 +2,11 @@ import { Flex, IconButton } from "@chakra-ui/react";
 import { Cancel } from "iconoir-react";
 import { FC } from "react";
 
-export const ContextSheetCloseButton: FC = () => {
+export const ContextSheetCloseButton: FC<{
+    onClick?: () => void;
+}> = ({
+    onClick
+}) => {
     return (
         <Flex
             alignItems={"center"}
@@ -19,7 +23,7 @@ export const ContextSheetCloseButton: FC = () => {
                 icon={<Cancel />}
                 title={"close context sheet"}
                 variant={"ghost"}
-                onClick={() => { }}
+                onClick={onClick}
             />
         </Flex>
     )

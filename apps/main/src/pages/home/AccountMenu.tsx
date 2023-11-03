@@ -56,12 +56,7 @@ export const AccountMenu: FC<PropsWithChildren<{
                                 <Text fontSize={16} noOfLines={1}>{account.fullname}</Text>
                                 <Text fontSize={14} noOfLines={1} color={"whiteAlpha.400"}>{account.email}</Text>
                             </Flex>
-                            <IconButton
-                                aria-label={"expand/collapse"}
-                                colorScheme={"whiteAlpha"}
-                                icon={<NavArrowUp />}
-                                variant={"ghost"}
-                            />
+                            <NavArrowUp />
                         </>
                     )}
                 </Flex>

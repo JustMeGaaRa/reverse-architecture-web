@@ -1,24 +1,32 @@
 import { Button, IconButton } from "@chakra-ui/react";
 import { FC } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, To } from "react-router-dom";
+import { usePageSidebar } from "../hooks";
 
 export const Route: FC<{
-    to: string,
-    icon: any,
-    title?: string,
-    isDisabled?: boolean,
-    isExpanded?: boolean
+    to?: To;
+    icon: any;
+    title: string;
+    isActive?: boolean;
+    isDisabled?: boolean;
+    isExpanded?: boolean;
+    onClick?: () => void;
 }> = ({
     to,
     icon,
     title,
+    isActive = false,
     isDisabled = false,
-    isExpanded = false
+    isExpanded = false,
+    onClick
 }) => {
-    return isExpanded ? (
+    const { sidebarOptions } = usePageSidebar();
+
+    return sidebarOptions.isOpen || isExpanded ? (
         <Button
-            as={isDisabled ? undefined : NavLink}
-            aria-label={title ?? to}
+            as={to !== undefined ? NavLink : undefined}
+            aria-label={title}
+            isActive={isActive}
             isDisabled={isDisabled}
             leftIcon={icon}
             justifyContent={"left"}
@@ -30,14 +38,16 @@ export const Route: FC<{
             transitionDuration={"normal"}
             transitionTimingFunction={"ease"}
             width={"100%"}
+            onClick={onClick}
         >
             {title}
         </Button>
     ) : (
         <IconButton
-            as={isDisabled ? undefined : NavLink}
-            aria-label={title ?? to}
+            as={to !== undefined ? NavLink : undefined}
+            aria-label={title}
             icon={icon}
+            isActive={isActive}
             isDisabled={isDisabled}
             cursor={isDisabled ? "none" : "pointer"}
             to={to}
@@ -45,6 +55,7 @@ export const Route: FC<{
             transitionProperty={"all"}
             transitionDuration={"normal"}
             transitionTimingFunction={"ease"}
+            onClick={onClick}
         />
-    )
+    );
 }

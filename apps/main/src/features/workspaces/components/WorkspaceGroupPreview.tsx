@@ -80,8 +80,8 @@ export const WorkspaceGroupPreview: FC<{
                     opacity={isSelected ? 0.4 : 1}
                     _groupHover={{ opacity: 0.4 }}
                 >
-                    {[first, second, third].map(workspace => (
-                        <AspectRatio key={workspace?.workspaceId} ratio={2/1}>
+                    {[first, second, third].map((workspace, index) => (
+                        <AspectRatio key={index} ratio={2/1}>
                             <Box>
                                 {workspace && (
                                     <Flex

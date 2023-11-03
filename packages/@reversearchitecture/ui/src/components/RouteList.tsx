@@ -10,10 +10,10 @@ export const RouteList: FC<PropsWithChildren<{
     return (
         <ButtonGroup
             colorScheme={"yellow"}
+            orientation={"vertical"}
             size={size}
             spacing={1}
             variant={"menuitem"}
-            orientation={"vertical"}
             width={"100%"}
         >
             {children}

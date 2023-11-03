@@ -6,12 +6,11 @@ import {
     CommunityPage,
     DashboardPage,
     ErrorPage,
-    HomeLayoutPage,
+    LayoutPage,
     WorkspaceListPage,
-    ProfileSettingsPage,
+    ProfileSettingsContent,
     SettingsPage,
     SignInPage,
-    WorkspaceLayoutPage,
     WorkspaceContentPage,
     AuthorizePage,
     CommunityTemplatePage,
@@ -20,7 +19,7 @@ import {
 export const routes = createBrowserRouter([
     {
         path: "/",
-        element: <HomeLayoutPage />,
+        element: <LayoutPage />,
         errorElement: <ErrorPage />,
         children: [
             {
@@ -34,6 +33,11 @@ export const routes = createBrowserRouter([
             {
                 path: "workspaces",
                 element: <WorkspaceListPage />
+            },
+            {
+                path: "/workspaces/:workspaceId",
+                element: <WorkspaceContentPage />,
+                errorElement: <ErrorPage />
             },
             {
                 path: "community",
@@ -53,7 +57,7 @@ export const routes = createBrowserRouter([
                     },
                     {
                         path: "profile",
-                        element: <ProfileSettingsPage />
+                        element: <ProfileSettingsContent />
                     }
                 ]
             }
@@ -66,16 +70,5 @@ export const routes = createBrowserRouter([
     {
         path: "/authorize",
         element: <AuthorizePage />
-    },
-    {
-        path: "/workspaces/:workspaceId",
-        element: <WorkspaceLayoutPage />,
-        errorElement: <ErrorPage />,
-        children: [
-            {
-                index: true,
-                element: <WorkspaceContentPage />
-            }
-        ]
     }
 ]);

@@ -4,7 +4,7 @@ import {
     ContextSheetBody,
     ContextSheetHeader,
     ContextSheetTitle,
-    NavigationSource
+    HeaderContentSource
 } from "@reversearchitecture/ui";
 import {
     applyMetadata,
@@ -66,7 +66,7 @@ export const CommunityTemplatePage: FC = () => {
 
     return (
         <ContextSheet>
-            <NavigationSource />
+            <HeaderContentSource section={"right"} />
             
             <ContextSheetHeader>
                 <ContextSheetTitle title={"Community"} />

@@ -10,14 +10,15 @@ import {
     Link,
     Text,
 } from "@chakra-ui/react";
-import { Page, ReverseArchitectureLogo } from "@reversearchitecture/ui";
+import { ReverseArchitectureSvg } from "@reversearchitecture/ui";
 import { GitHub } from "iconoir-react";
 import { FC } from "react";
+import { AuthenticationLayout } from "../signin";
 
 export const SignInPage: FC = () => {
 
     return (
-        <Page>
+        <AuthenticationLayout>
             <Flex
                 alignItems={"center"}
                 justifyContent={"right"}
@@ -40,7 +41,7 @@ export const SignInPage: FC = () => {
                             justifyContent={"space-between"}
                         >
                             <HStack>
-                                <ReverseArchitectureLogo />
+                                <ReverseArchitectureSvg />
                                 <Text color={"yellow.900"} fontSize={32}>
                                     RVRS.IO
                                 </Text>
@@ -73,6 +74,6 @@ export const SignInPage: FC = () => {
                     </CardFooter>
                 </Card>
             </Flex>
-        </Page>
+        </AuthenticationLayout>
     )
 }

@@ -1,6 +1,7 @@
 import {
     Box,
     Button,
+    ButtonGroup,
     Divider,
     Flex,
     HStack,
@@ -15,7 +16,8 @@ import {
     ContextSheetBody,
     ContextSheetHeader,
     ContextSheetTitle,
-    NavigationSource,
+    usePageHeader,
+    usePageSidebar,
 } from "@reversearchitecture/ui";
 import {
     AddPageAlt,
@@ -28,6 +30,7 @@ import {
     PropsWithChildren,
     useCallback,
     useEffect,
+    useMemo,
     useState
 } from "react";
 import { useNavigate } from "react-router-dom";
@@ -36,25 +39,28 @@ import {
     WorkspaceInfo,
     CommunityTemplateList
 } from "../../../features";
-import { WorkspacePublishingModal } from "./WorkspacePublishingModal";
+import {
+    HomePageLayoutContent,
+    WorkspacePublishingModal
+} from "../../home";
 
 export const CommunityPage: FC<PropsWithChildren> = () => {
-    const {
-        isOpen: isOpenWorkspace,
-        onOpen: onOpenWorkspace,
-        onClose: onCloseWorkspace
-    } = useDisclosure();
+    const { setShowSidebarButton } = usePageSidebar();
+    const { setHeaderContent } = usePageHeader();
+    const { isOpen, onOpen, onClose } = useDisclosure();
     const [ communityApi ] = useState(new CommunityHubApi());
     const [ workspaces, setWorkspaces ] = useState<Array<WorkspaceInfo>>([]);
     const [ filters, setFilters ] = useState([]);
     const [ selectedFilter, setSelectedFilter ] = useState("Explore");
     const navigate = useNavigate();
 
-    const defaultFilters = [
-        { tag: "Explore", icon: Compass },
-        { tag: "New", icon: SunLight },
-        { tag: "Popular", icon: FireFlame }
-    ];
+    const defaultFilters = useMemo(() => {
+        return [
+            { tag: "Explore", icon: Compass },
+            { tag: "New", icon: SunLight },
+            { tag: "Popular", icon: FireFlame }
+        ];
+    }, []);
     const filtered = workspaces.filter(x => x.tags.includes(selectedFilter) || selectedFilter === "Explore");
 
     useEffect(() => {
@@ -66,12 +72,7 @@ export const CommunityPage: FC<PropsWithChildren> = () => {
             .catch(error => {
                 console.error(error);
             });
-    }, [communityApi]);
-
-    const handleOnPublish = useCallback((workspace: WorkspaceInfo) => {
-        communityApi.publishWorkspace(workspace);
-        setWorkspaces(workspaces.concat(workspace));
-    }, [communityApi, workspaces, setWorkspaces]);
+    }, [communityApi, setShowSidebarButton]);
 
     const handleOnFilterClick = useCallback((filter) => {
         setSelectedFilter(filter);
@@ -85,76 +86,88 @@ export const CommunityPage: FC<PropsWithChildren> = () => {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
+    const handleOnPublish = useCallback((workspace: WorkspaceInfo) => {
+        communityApi.publishWorkspace(workspace);
+        setWorkspaces(workspaces.concat(workspace));
+    }, [communityApi, workspaces, setWorkspaces]);
+
+    useEffect(() => {
+        setHeaderContent({
+            right: (
+                <ButtonGroup key={"community-page-actions"} gap={2} mr={4}>
+                    <Button
+                        aria-label={"publish workspace"}
+                        colorScheme={"yellow"}
+                        leftIcon={<AddPageAlt />}
+                        onClick={onOpen}
+                    >
+                        Publish Workspace
+                    </Button>
+                </ButtonGroup>
+            )
+        })
+    }, [setHeaderContent, onOpen]);
+
     return (
-        <ContextSheet>
-            <NavigationSource>
-                <Button
-                    aria-label={"publish workspace"}
-                    key={"publish-workspace"}
-                    colorScheme={"yellow"}
-                    leftIcon={<AddPageAlt />}
-                    onClick={onOpenWorkspace}
-                >
-                    Publish Workspace
-                </Button>
-            </NavigationSource>
+        <HomePageLayoutContent>
+            <ContextSheet>
+                <WorkspacePublishingModal
+                    workspaces={workspaces}
+                    isOpen={isOpen}
+                    onClose={onClose}
+                    onPublish={handleOnPublish}
+                />
 
-            <WorkspacePublishingModal
-                workspaces={workspaces}
-                isOpen={isOpenWorkspace}
-                onClose={onCloseWorkspace}
-                onPublish={handleOnPublish}
-            />
+                <ContextSheetHeader>
+                    <ContextSheetTitle title={"Community"} />
+                </ContextSheetHeader>
 
-            <ContextSheetHeader>
-                <ContextSheetTitle title={"Community"} />
-            </ContextSheetHeader>
+                <Divider />
 
-            <Divider />
-
-            <ContextSheetBody>
-                <Flex direction={"column"} height={"100%"}>
-                    <Box flexBasis={"80px"} flexGrow={0} flexShrink={0} padding={6}>
-                        <HStack overflowX={"hidden"} divider={<StackDivider />} gap={2}>
-                            <HStack>
-                                {defaultFilters.map((filter) => (
-                                    <Tag
-                                        key={filter.tag}
-                                        className={selectedFilter === filter.tag ? "active" : ""}
-                                        cursor={"pointer"}
-                                        size={"md"}
-                                        onClick={() => handleOnFilterClick(filter.tag)}
-                                    >
-                                        <TagLeftIcon boxSize={5} as={filter.icon} />
-                                        <TagLabel>{filter.tag}</TagLabel>
-                                    </Tag>
-                                ))}
+                <ContextSheetBody>
+                    <Flex direction={"column"} height={"100%"}>
+                        <Box flexBasis={"80px"} flexGrow={0} flexShrink={0} padding={6}>
+                            <HStack overflowX={"hidden"} divider={<StackDivider />} gap={2}>
+                                <HStack>
+                                    {defaultFilters.map((filter) => (
+                                        <Tag
+                                            key={filter.tag}
+                                            className={selectedFilter === filter.tag ? "active" : ""}
+                                            cursor={"pointer"}
+                                            size={"md"}
+                                            onClick={() => handleOnFilterClick(filter.tag)}
+                                        >
+                                            <TagLeftIcon boxSize={5} as={filter.icon} />
+                                            <TagLabel>{filter.tag}</TagLabel>
+                                        </Tag>
+                                    ))}
+                                </HStack>
+                                <HStack>
+                                    {filters.map((tag) => (
+                                        <Tag
+                                            key={tag}
+                                            className={selectedFilter === tag ? "active" : ""}
+                                            cursor={"pointer"}
+                                            size={"md"}
+                                            onClick={() => handleOnFilterClick(tag)}
+                                        >
+                                            {capitalize(tag)}
+                                        </Tag>
+                                    ))}
+                                </HStack>
                             </HStack>
-                            <HStack>
-                                {filters.map((tag) => (
-                                    <Tag
-                                        key={tag}
-                                        className={selectedFilter === tag ? "active" : ""}
-                                        cursor={"pointer"}
-                                        size={"md"}
-                                        onClick={() => handleOnFilterClick(tag)}
-                                    >
-                                        {capitalize(tag)}
-                                    </Tag>
-                                ))}
-                            </HStack>
-                        </HStack>
-                    </Box>
-                    <Box flexGrow={1} overflowY={"scroll"} padding={6}>
-                        <CommunityTemplateList
-                            workspaces={filtered}
-                            emptyTitle={"No community workspaces available yet"}
-                            emptyDescription={"To get started, click the \"Create New Project\" button to create a new project."}
-                            onClick={handleOnWorkspaceClick}
-                        />
-                    </Box>
-                </Flex>
-            </ContextSheetBody>
-        </ContextSheet>
+                        </Box>
+                        <Box flexGrow={1} overflowY={"scroll"} padding={6}>
+                            <CommunityTemplateList
+                                workspaces={filtered}
+                                emptyTitle={"No community workspaces available yet"}
+                                emptyDescription={"To get started, click the \"Create New Project\" button to create a new project."}
+                                onClick={handleOnWorkspaceClick}
+                            />
+                        </Box>
+                    </Flex>
+                </ContextSheetBody>
+            </ContextSheet>
+        </HomePageLayoutContent>
     );
 }

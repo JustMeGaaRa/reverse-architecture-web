@@ -1,6 +1,5 @@
 import {
     Box,
-    Button,
     ButtonGroup,
     Divider,
     IconButton,
@@ -11,7 +10,7 @@ import {
     TabPanels,
     Text,
     ScaleFade,
-    useDisclosure,
+    Button,
 } from "@chakra-ui/react";
 import {
     ContentViewMode,
@@ -19,10 +18,10 @@ import {
     ContextSheetBody,
     ContextSheetHeader,
     ContextSheetTitle,
-    NavigationSource,
     Toolbar,
     ToolbarSection,
-    useContentViewMode
+    useContentViewMode,
+    usePageHeader
 } from "@reversearchitecture/ui";
 import {
     AddPageAlt,
@@ -45,40 +44,48 @@ import {
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { v4 } from "uuid";
 import {
-    useAccount,
     WorkspaceApi,
     WorkspaceList,
     WorkspaceInfo,
     WorkspaceGroupInfo,
+    useAccount,
     isWorkspace
 } from "../../../features";
+import { HomePageLayoutContent } from "../../home";
+
+export enum WorkspaceListTabs {
+    All = "all",
+    Shared = "shared",
+    Archived = "archived"
+}
 
 export const WorkspaceListPage: FC<PropsWithChildren> = () => {
-    const [ queryParams, setQueryParams ] = useSearchParams([
-        ["shared", "false"],
-        ["archived", "false"],
-        ["group", ""]
-    ]);
-    const { isOpen, onOpen, onClose } = useDisclosure();
+    const { setHeaderContent } = usePageHeader();
+    const [ queryParams, setQueryParam ] = useSearchParams([[ "tab", WorkspaceListTabs.All ]]);
+    const { view, setView } = useContentViewMode(ContentViewMode.Card);
+    const { account } = useAccount();
     const [ workspaceApi ] = useState(new WorkspaceApi());
     const [ workspaces, setWorkspaces ] = useState([]);
     const [ selected, setSelected ] = useState<any[]>([]);
-    const { view, setView } = useContentViewMode(ContentViewMode.Card);
-    const { account } = useAccount();
     const navigate = useNavigate();
-
-    const queryState = {
-        shared: queryParams.get("shared") === "true",
-        archived: queryParams.get("archived") === "true",
-        group: queryParams.get("group")
-    }
-    const tabIndex = queryState.group ? 3 : queryState.archived ? 2 : queryState.shared ? 1 : 0;
+    
+    const tabIndex = queryParams.get("group")
+        ? 3
+        : queryParams.get("tab") === WorkspaceListTabs.Archived
+            ? 2
+            : queryParams.get("tab") === WorkspaceListTabs.Shared
+                ? 1
+                : 0;
 
     useEffect(() => {
         workspaceApi.getWorkspaces()
             .then(workspaces => setWorkspaces(workspaces))
             .catch(error => console.error(error));
     }, [workspaceApi, account]);
+
+    const handleOnGroup = useCallback(() => {
+
+    }, []);
     
     const handleOnCreate = useCallback(() => {
         const workspaceId = v4();
@@ -87,10 +94,6 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
             .then(workspaces => setWorkspaces(workspaces))
             .catch(error => console.error(error));
     }, [workspaceApi, setWorkspaces]);
-
-    const handleOnGroup = useCallback(() => {
-
-    }, []);
 
     const handleOnRemove = useCallback(() => {
         workspaceApi.deleteWorkspace(selected.map(x => x.workspaceId))
@@ -107,25 +110,26 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
             navigate(`/workspaces/${element.workspaceId}`);
         }
         else {
-            setQueryParams({ group: element.name });
+            setQueryParam(params => {
+                params.set("group", element.name);
+                return new URLSearchParams(params);
+            });
         }
-    }, [navigate, setQueryParams]);
+    }, [navigate, setQueryParam]);
 
-    return (
-        <ContextSheet>
-            <NavigationSource>
-                <ButtonGroup size={"md"} variant={"outline"}>
+    useEffect(() => {
+        setHeaderContent({
+            right: (
+                <ButtonGroup key={"workspace-list-actions"} mr={4}>
                     <IconButton
                         aria-label={"import workspace"}
-                        key={"import-workspace"}
                         colorScheme={"gray"}
                         icon={<Upload />}
-                        isDisabled={true}
+                        isDisabled
                         title={"Import Workspace"}
                     />
                     <Button
                         aria-label={"create new project"}
-                        key={"create-new-project"}
                         colorScheme={"yellow"}
                         leftIcon={<AddPageAlt />}
                         onClick={handleOnCreate}
@@ -133,166 +137,172 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                         Create Workspace
                     </Button>
                 </ButtonGroup>
-            </NavigationSource>
+            )
+        })
+    }, [setHeaderContent, handleOnCreate]);
 
-            <ContextSheetHeader>
-                {!!queryState.group && (
-                    <IconButton
-                        aria-label={"back to workspaces"}
-                        colorScheme={"gray"}
-                        icon={<NavArrowLeft />}
-                        title={"back to workspaces"}
-                        variant={"ghost"}
-                        onClick={() => setQueryParams({ })}
-                    />
-                )}
-                <ContextSheetTitle title={!!queryState.group ? queryState.group : "Workspaces"} />
-            </ContextSheetHeader>
-
-            <Divider />
-            
-            <ContextSheetBody>
-                <Tabs height={"100%"} index={tabIndex}>
-                    <TabList backgroundColor={"whiteAlpha.50"} height={12} paddingX={6}>
-                        <Tab
-                            visibility={!!queryState.group ? "hidden" : "visible"}
-                            onClick={() => setQueryParams({})}
-                        >
-                            Workspaces
-                        </Tab>
-                        <Tab
-                            visibility={!!queryState.group ? "hidden" : "visible"}
-                            onClick={() => setQueryParams({ shared: "true" })}
-                        >
-                            Shared
-                        </Tab>
-                        <Tab
-                            visibility={!!queryState.group ? "hidden" : "visible"}
-                            onClick={() => setQueryParams({ archived: "true" })}
-                        >
-                            Archived
-                        </Tab>
-                        <ButtonGroup
-                            alignSelf={"center"}
+    return (
+        <HomePageLayoutContent>
+            <ContextSheet>
+                <ContextSheetHeader>
+                    {!!queryParams.get("group") && (
+                        <IconButton
+                            aria-label={"back to workspaces"}
                             colorScheme={"gray"}
-                            position={"absolute"}
-                            right={4}
-                            size={"sm"}
+                            icon={<NavArrowLeft />}
+                            title={"back to workspaces"}
                             variant={"ghost"}
-                        >
-                            <IconButton
-                                aria-label={"card view"}
-                                isActive={view === ContentViewMode.Card}
-                                icon={<ViewGrid />}
-                                _active={{
-                                    backgroundColor: "whiteAlpha.200",
-                                    color: "yellow.900"
-                                }}
-                                onClick={() => setView(ContentViewMode.Card)}
-                            />
-                            <IconButton
-                                aria-label={"table view"}
-                                isActive={view === ContentViewMode.Table}
-                                icon={<List />}
-                                _active={{
-                                    backgroundColor: "whiteAlpha.200",
-                                    color: "yellow.900"
-                                }}
-                                onClick={() => setView(ContentViewMode.Table)}
-                            />
-                        </ButtonGroup>
-                    </TabList>
-                    <TabPanels height={"calc(100% - 42px)"} padding={6} overflowY={"scroll"}>
-                        <TabPanel>
-                            <WorkspaceList
-                                workspaces={workspaces}
-                                view={view}
-                                isGrouped={true}
-                                emptyTitle={"No workspaces"}
-                                emptyDescription={"To get started, click the \"Create Workspace\" button to create a new project."}
-                                onClick={handleOnWorkspaceClick}
-                                onSelected={setSelected}
-                                onRemove={handleOnRemove}
-                            />
-                        </TabPanel>
-                        <TabPanel>
-                            <WorkspaceList
-                                workspaces={[]}
-                                view={view}
-                                isGrouped={true}
-                                emptyTitle={"No shared workspaces"}
-                                emptyDescription={"To get started, click the \"Create Workspace\" button to create a new project."}
-                                onClick={handleOnWorkspaceClick}
-                                onSelected={setSelected}
-                                onRemove={handleOnRemove}
-                            />
-                        </TabPanel>
-                        <TabPanel>
-                            <WorkspaceList
-                                workspaces={[]}
-                                view={view}
-                                isGrouped={true}
-                                emptyTitle={"No archived workspaces"}
-                                emptyDescription={"To get started, click the \"Create Workspace\" button to create a new project."}
-                                onClick={handleOnWorkspaceClick}
-                                onSelected={setSelected}
-                                onRemove={handleOnRemove}
-                            />
-                        </TabPanel>
-                        <TabPanel>
-                            <WorkspaceList
-                                workspaces={workspaces?.filter(x => x.group === queryState.group) || []}
-                                view={view}
-                                isGrouped={false}
-                                emptyTitle={"No workspaces"}
-                                emptyDescription={"To get started, click the \"Create Workspace\" button to create a new project."}
-                                onClick={handleOnWorkspaceClick}
-                                onSelected={setSelected}
-                                onRemove={handleOnRemove}
-                            />
-                        </TabPanel>
-                    </TabPanels>
-                </Tabs>
-                <ScaleFade in={selected.length > 0}>
-                    <Box position={"absolute"} bottom={4} left={"50%"} transform={"translateX(-50%)"}>
-                        <Toolbar>
-                            <ToolbarSection>
-                                <Text paddingX={2}>
-                                    {`${selected.length} item(s) selected`}
-                                </Text>
-                            </ToolbarSection>
-                            <ToolbarSection>
+                            onClick={() => setQueryParam({ })}
+                        />
+                    )}
+                    <ContextSheetTitle title={!!queryParams.get("group") ? queryParams.get("group") : "Workspaces"} />
+                </ContextSheetHeader>
+
+                <Divider />
+                
+                <ContextSheetBody>
+                    <Tabs height={"100%"} index={tabIndex}>
+                        <TabList backgroundColor={"whiteAlpha.50"} height={12} paddingX={6}>
+                            <Tab
+                                visibility={!!queryParams.get("group") ? "hidden" : "visible"}
+                                onClick={() => setQueryParam({ tab: WorkspaceListTabs.All })}
+                            >
+                                Workspaces
+                            </Tab>
+                            <Tab
+                                visibility={!!queryParams.get("group") ? "hidden" : "visible"}
+                                onClick={() => setQueryParam({ tab: WorkspaceListTabs.Shared })}
+                            >
+                                Shared
+                            </Tab>
+                            <Tab
+                                visibility={!!queryParams.get("group") ? "hidden" : "visible"}
+                                onClick={() => setQueryParam({ tab: WorkspaceListTabs.Archived })}
+                            >
+                                Archived
+                            </Tab>
+                            <ButtonGroup
+                                alignSelf={"center"}
+                                colorScheme={"gray"}
+                                position={"absolute"}
+                                right={4}
+                                size={"sm"}
+                                variant={"ghost"}
+                            >
                                 <IconButton
-                                    aria-label={"group elements"}
-                                    icon={<Combine />}
-                                    title={"group elements"}
-                                    onClick={handleOnGroup}
+                                    aria-label={"card view"}
+                                    isActive={view === ContentViewMode.Card}
+                                    icon={<ViewGrid />}
+                                    _active={{
+                                        backgroundColor: "whiteAlpha.200",
+                                        color: "yellow.900"
+                                    }}
+                                    onClick={() => setView(ContentViewMode.Card)}
                                 />
                                 <IconButton
-                                    aria-label={"copy"}
-                                    icon={<Copy />}
-                                    isDisabled
-                                    title={"copy"}
+                                    aria-label={"table view"}
+                                    isActive={view === ContentViewMode.Table}
+                                    icon={<List />}
+                                    _active={{
+                                        backgroundColor: "whiteAlpha.200",
+                                        color: "yellow.900"
+                                    }}
+                                    onClick={() => setView(ContentViewMode.Table)}
                                 />
-                                <IconButton
-                                    aria-label={"remove"}
-                                    icon={<BinMinus />}
-                                    title={"remove"}
-                                    onClick={handleOnRemove}
+                            </ButtonGroup>
+                        </TabList>
+                        <TabPanels height={"calc(100% - 42px)"} padding={6} overflowY={"scroll"}>
+                            <TabPanel>
+                                <WorkspaceList
+                                    workspaces={workspaces}
+                                    view={view}
+                                    isGrouped={true}
+                                    emptyTitle={"No workspaces"}
+                                    emptyDescription={"To get started, click the \"Create Workspace\" button to create a new project."}
+                                    onClick={handleOnWorkspaceClick}
+                                    onSelected={setSelected}
+                                    onRemove={handleOnRemove}
                                 />
-                            </ToolbarSection>
-                            <ToolbarSection>
-                                <IconButton
-                                    aria-label={"close"}
-                                    icon={<Cancel />}
-                                    title={"close"}
-                                    onClick={handleOnClose}
+                            </TabPanel>
+                            <TabPanel>
+                                <WorkspaceList
+                                    workspaces={[]}
+                                    view={view}
+                                    isGrouped={true}
+                                    emptyTitle={"No shared workspaces"}
+                                    emptyDescription={"To get started, click the \"Create Workspace\" button to create a new project."}
+                                    onClick={handleOnWorkspaceClick}
+                                    onSelected={setSelected}
+                                    onRemove={handleOnRemove}
                                 />
-                            </ToolbarSection>
-                        </Toolbar>
-                    </Box>
-                </ScaleFade>
-            </ContextSheetBody>
-        </ContextSheet>
+                            </TabPanel>
+                            <TabPanel>
+                                <WorkspaceList
+                                    workspaces={[]}
+                                    view={view}
+                                    isGrouped={true}
+                                    emptyTitle={"No archived workspaces"}
+                                    emptyDescription={"To get started, click the \"Create Workspace\" button to create a new project."}
+                                    onClick={handleOnWorkspaceClick}
+                                    onSelected={setSelected}
+                                    onRemove={handleOnRemove}
+                                />
+                            </TabPanel>
+                            <TabPanel>
+                                <WorkspaceList
+                                    workspaces={workspaces?.filter(x => x.group === queryParams.get("group")) || []}
+                                    view={view}
+                                    isGrouped={false}
+                                    emptyTitle={"No workspaces"}
+                                    emptyDescription={"To get started, click the \"Create Workspace\" button to create a new project."}
+                                    onClick={handleOnWorkspaceClick}
+                                    onSelected={setSelected}
+                                    onRemove={handleOnRemove}
+                                />
+                            </TabPanel>
+                        </TabPanels>
+                    </Tabs>
+                    <ScaleFade in={selected.length > 0}>
+                        <Box position={"absolute"} bottom={4} left={"50%"} transform={"translateX(-50%)"}>
+                            <Toolbar>
+                                <ToolbarSection>
+                                    <Text paddingX={2}>
+                                        {`${selected.length} item(s) selected`}
+                                    </Text>
+                                </ToolbarSection>
+                                <ToolbarSection>
+                                    <IconButton
+                                        aria-label={"group elements"}
+                                        icon={<Combine />}
+                                        title={"group elements"}
+                                        onClick={handleOnGroup}
+                                    />
+                                    <IconButton
+                                        aria-label={"copy"}
+                                        icon={<Copy />}
+                                        isDisabled
+                                        title={"copy"}
+                                    />
+                                    <IconButton
+                                        aria-label={"remove"}
+                                        icon={<BinMinus />}
+                                        title={"remove"}
+                                        onClick={handleOnRemove}
+                                    />
+                                </ToolbarSection>
+                                <ToolbarSection>
+                                    <IconButton
+                                        aria-label={"close"}
+                                        icon={<Cancel />}
+                                        title={"close"}
+                                        onClick={handleOnClose}
+                                    />
+                                </ToolbarSection>
+                            </Toolbar>
+                        </Box>
+                    </ScaleFade>
+                </ContextSheetBody>
+            </ContextSheet>
+        </HomePageLayoutContent>
     )
 }

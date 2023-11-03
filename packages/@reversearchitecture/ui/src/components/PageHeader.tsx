@@ -1,9 +1,10 @@
 import { Flex } from "@chakra-ui/react";
 import { FC, PropsWithChildren } from "react";
-import { usePageContext } from "./PageProvider";
+import { usePageHeader } from "../hooks";
 
 export const PageHeader: FC<PropsWithChildren> = ({ children}) => {
-    const { headerHeight } = usePageContext();
+    const { headerOptions } = usePageHeader();
+    const { height } = headerOptions;
 
     return (
         <Flex
@@ -12,9 +13,10 @@ export const PageHeader: FC<PropsWithChildren> = ({ children}) => {
             alignItems={"center"}
             flexGrow={0}
             flexShrink={0}
-            flexBasis={`${headerHeight}px`}
-            minHeight={`${headerHeight}px`}
-            height={`${headerHeight}px`}
+            flexBasis={`${height}px`}
+            minHeight={`${height}px`}
+            height={`${height}px`}
+            position={"relative"}
         >
             {children}
         </Flex>

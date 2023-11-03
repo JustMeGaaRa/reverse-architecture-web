@@ -1,31 +1,53 @@
-import { createContext, FC, PropsWithChildren, useContext, useState } from "react";
-
-export const PageContext = createContext<{
-    isSidebarOpened: boolean;
-    sidebarWidth: [number, number];
-    headerHeight: number;
-}>({
-    isSidebarOpened: false,
-    sidebarWidth: [80, 320],
-    headerHeight: 80
-})
+import { FC, PropsWithChildren, useCallback, useState } from "react";
+import { PageContext } from "../contexts";
+import { HeaderOptions, PageOptions, SetStateAction, SidebarOptions } from "../types";
 
 export const PageProvider: FC<PropsWithChildren> = ({ children }) => {
-    const [ state, setState ] = useState();
-    
+    const [ state, setState ] = useState<PageOptions>({
+        sidebarOptions: {
+            isOpen: false,
+            showButton: true,
+            width: [80, 320],
+            sections: {
+                logo: [],
+                top: [],
+                middle: [],
+                bottom: [],
+            }
+        },
+        headerOptions: {
+            height: 80,
+            sections: {
+                left: [],
+                middle: [],
+                right: [],
+            }
+        }
+    });
+
+    const setHeaderOptions = useCallback((func: SetStateAction<HeaderOptions>) => {
+        setState(state => ({
+            ...state,
+            headerOptions: func(state.headerOptions)
+        }));
+    }, []);
+
+    const setSidebarOptions = useCallback((func: SetStateAction<SidebarOptions>) => {
+        setState(state => ({
+            ...state,
+            sidebarOptions: func(state.sidebarOptions)
+        }));
+    }, []);
+
     return (
         <PageContext.Provider
             value={{
-                isSidebarOpened: false,
-                sidebarWidth: [80, 320],
-                headerHeight: 80
+                ...state,
+                setHeaderOptions,
+                setSidebarOptions
             }}
         >
             {children}
         </PageContext.Provider>
     )
-}
-
-export const usePageContext = () => {
-    return useContext(PageContext);
 }

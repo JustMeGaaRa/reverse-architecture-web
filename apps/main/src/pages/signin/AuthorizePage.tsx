@@ -1,14 +1,10 @@
-import { Page } from "@reversearchitecture/ui";
-import { FC, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { FC } from "react";
+import { AuthenticationLayout } from "../signin";
 
 export const AuthorizePage: FC = () => {
-    const [ queryParams ] = useSearchParams([
-        ["code", ""]
-    ]);
-
     return (
-        <Page>
-        </Page>
+        <AuthenticationLayout>
+            
+        </AuthenticationLayout>
     )
 }

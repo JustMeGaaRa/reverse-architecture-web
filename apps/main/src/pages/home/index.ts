@@ -1,6 +1,6 @@
 export * from "./AccountMenu";
-export * from "./HomeLayoutPage";
 export * from "./RepositorySelectModal";
+export * from "./HomePageLayoutContent";
 export * from "./community";
 export * from "./dashboard";
 export * from "./settings";

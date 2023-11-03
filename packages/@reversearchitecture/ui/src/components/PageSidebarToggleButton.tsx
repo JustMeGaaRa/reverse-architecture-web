@@ -1,15 +1,16 @@
 import { Button, IconButton } from "@chakra-ui/react";
 import { FastArrowLeft, FastArrowRight } from "iconoir-react";
-import { FC, PropsWithChildren } from "react";
+import { FC } from "react";
+import { usePageSidebar } from "../hooks";
 
-export const PageSidebarToggleButton: FC<PropsWithChildren<{
-    isExpanded: boolean,
-    onClick: () => void
-}>> = ({
-    isExpanded,
-    onClick
+export const PageSidebarToggleButton: FC<{
+    isVisible?: boolean;
+}> = ({
+    isVisible = true
 }) => {
-    return isExpanded ? (
+    const { sidebarOptions, toggleSidebar } = usePageSidebar();
+    
+    return isVisible ? (sidebarOptions.isOpen ? (
         <Button
             aria-label={"page sidebar toggle"}
             borderRadius={0}
@@ -20,7 +21,7 @@ export const PageSidebarToggleButton: FC<PropsWithChildren<{
             size={"sm"}
             variant={"ghost"}
             width={"100%"}
-            onClick={onClick}
+            onClick={() => toggleSidebar()}
         />
     ) : (
         <IconButton
@@ -31,7 +32,9 @@ export const PageSidebarToggleButton: FC<PropsWithChildren<{
             size={"sm"}
             variant={"ghost"}
             width={"100%"}
-            onClick={onClick}
+            onClick={() => toggleSidebar()}
         />
+    )) : (
+        <></>
     )
 }
