@@ -60,6 +60,7 @@ export * from "./shared/ISupportImmutable";
 export * from "./builders/visitors/ComponentViewStrategy";
 export * from "./builders/visitors/ContainerViewStrategy";
 export * from "./builders/visitors/DeploymentViewStrategy";
+export * from "./builders/visitors/ModelViewStrategy";
 export * from "./builders/visitors/SystemContextViewStrategy";
 export * from "./builders/visitors/SystemLandscapeViewStrategy";
 

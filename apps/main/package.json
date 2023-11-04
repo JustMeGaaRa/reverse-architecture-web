@@ -29,6 +29,7 @@
     "@structurizr/dsl": "*",
     "@structurizr/parser": "*",
     "@structurizr/react": "*",
+    "@structurizr/export": "*",
     "@workspace/code-editor": "*",
     "@workspace/controls": "*",
     "@workspace/diagramming": "*",

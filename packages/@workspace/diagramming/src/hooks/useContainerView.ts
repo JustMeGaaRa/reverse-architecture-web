@@ -7,26 +7,26 @@ import {
     Relationship,
     Workspace
 } from "@structurizr/dsl";
-import {
-    useWorkspaceStore,
-    getNodeFromElement,
-    getEdgeFromRelationship
-} from "@workspace/core";
+import { useWorkspaceStore } from "@workspace/core";
 import { useCallback } from "react";
 import { v4 } from "uuid";
+import {
+    getNodeFromElement,
+    getEdgeFromRelationship
+} from "../utils";
 
 export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
     const { workspace } = useWorkspaceStore();
     const { setNodes, setEdges } = useReactFlow();
     
-    // NOTE: the software system added can either be an existing one or a new one
-    // The existing system is included in the view, while the new one is also added to the model
-    const addSoftwareSystem = useCallback((position: Position) => {
-    }, []);
-    
     // NOTE: the person added can either be an existing one or a new one
     // The existing person is included in the view, while the new one is also added to the model
     const addPerson = useCallback((position: Position) => {
+    }, []);
+    
+    // NOTE: the software system added can either be an existing one or a new one
+    // The existing system is included in the view, while the new one is also added to the model
+    const addSoftwareSystem = useCallback((position: Position) => {
     }, []);
     
     const addContainer = useCallback((position: Position, groupId?: Identifier) => {

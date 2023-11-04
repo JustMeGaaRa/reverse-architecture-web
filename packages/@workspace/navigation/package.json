@@ -27,7 +27,7 @@
     "@reactflow/core": "^11.6.1",
     "@reactflow/node-resizer": "^2.1.0",
     "@structurizr/dsl": "*",
-    "@workspace/core": "*",
+    "@workspace/diagramming": "*",
     "elkjs": "0.8.2",
     "framer-motion": "^10.16.4",
     "react": "^18.0.0",

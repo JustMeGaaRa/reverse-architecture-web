@@ -17,10 +17,10 @@ import {
     ViewType
 } from "@structurizr/dsl";
 import {
-    useViewNavigation,
     useWorkspaceStore,
     useWorkspaceTheme
 } from "@workspace/core";
+import { useViewNavigation } from "@workspace/diagramming";
 import { FC, useCallback } from "react";
 
 export const WorkspaceNavigation: FC = () => {

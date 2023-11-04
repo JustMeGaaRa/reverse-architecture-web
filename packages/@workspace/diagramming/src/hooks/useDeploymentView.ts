@@ -8,12 +8,12 @@ import {
     SoftwareSystem,
     Workspace
 } from "@structurizr/dsl";
+import { useWorkspaceStore } from "@workspace/core";
+import { useCallback } from "react";
 import {
-    useWorkspaceStore,
     getNodeFromElement,
     getEdgeFromRelationship
-} from "@workspace/core";
-import { useCallback } from "react";
+} from "../utils";
 
 export const useDeploymentView = (viewIdentifier: Identifier, environment: string) => {
     const { workspace } = useWorkspaceStore();

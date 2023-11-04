@@ -10,8 +10,6 @@ import {
     ContextSheetCloseButton,
     ContextSheetHeader,
     ContextSheetTitle,
-    usePageHeader,
-    usePageSidebar
 } from "@reversearchitecture/ui";
 import { WorkspaceEditor } from "@workspace/code-editor";
 import { Panel, useWorkspaceTheme } from "@workspace/core";
@@ -59,7 +57,6 @@ import {
 } from "../../workspace";
 
 export const WorkspaceContentPage: FC = () => {
-    const { setShowSidebarButton } = usePageSidebar();
     const { workspaceId } = useParams<{ workspaceId: string }>();
     const [ queryParams, setQueryParam ] = useSearchParams([[ "mode", WorkspaceContentMode.Diagramming ]]);
     const { parseStructurizr } = useStructurizrParser();
@@ -74,13 +71,14 @@ export const WorkspaceContentPage: FC = () => {
         api.getCommentThreads(workspaceId)
             .then(comments => setCommentThreads(comments))
             .catch(error => console.error(error));
-    }, [workspaceId, setShowSidebarButton]);
+    }, [workspaceId]);
 
     // code editor
     const [ text, setText ] = useState("");
 
-    const handleOnChange = useCallback((value: string) => {
+    const handleOnTextChange = useCallback((value: string) => {
         setText(value);
+        // TODO: use debounce to defer the workspace parsing by 500ms
         setWorkspace(parseStructurizr(text));
     }, [parseStructurizr, text]);
     
@@ -112,6 +110,12 @@ export const WorkspaceContentPage: FC = () => {
                 })
             })
     }, [workspaceId, theme, toast, parseStructurizr]);
+
+    const handleOnWorkspaceChange = useCallback((workspace: Workspace) => {
+        // TODO: subscribe with this handler to workspace object changes
+        // TODO: use structurizr exporter to export the workspace to text
+        setText(workspace.toString());
+    }, []);
 
     const handleOnClosePanel = useCallback(() => {
         setQueryParam(params => {
@@ -157,7 +161,7 @@ export const WorkspaceContentPage: FC = () => {
                                 <ContextSheetBody>
                                     <WorkspaceEditor
                                         value={text}
-                                        onChange={handleOnChange}
+                                        onChange={handleOnTextChange}
                                     />
                                 </ContextSheetBody>
                             </Flex>
@@ -213,6 +217,9 @@ export const WorkspaceContentPage: FC = () => {
                                         <WorkspaceModeler
                                             workspace={workspace}
                                         >
+                                            <Panel position={"top-left"}>
+                                                <WorkspaceNavigation />
+                                            </Panel>
                                             <Panel position={"bottom-left"}>
                                                 <WorkspaceUndoRedoControls />
                                             </Panel>

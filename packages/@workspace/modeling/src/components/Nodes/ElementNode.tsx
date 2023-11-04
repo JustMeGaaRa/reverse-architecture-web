@@ -22,7 +22,7 @@ export const ElementNode: FC<{ id: string; data: any }> = ({ id, data }) => {
                     name: "Software System",
                     tags: [{ name: "Software System" }]
                 },
-                position: { x: currentNode.position.x, y: currentNode.position.y + 200 },
+                position: { x: currentNode.position.x, y: currentNode.position.y + 400 },
                 connectable: false,
                 draggable: false,
             }
@@ -61,11 +61,11 @@ export const ElementNode: FC<{ id: string; data: any }> = ({ id, data }) => {
             borderColor={"whiteAlpha.800"}
             borderRadius={"2xl"}
             borderWidth={2}
-            height={"100px"}
+            height={"200px"}
             width={"200px"}
             onClick={handleOnClick}
         >
-            <ElementLabel data={data} />
+            <ElementLabel data={data.element} />
             <Handle id={"handle-1"} type={"target"} position={Position.Top} />
             <Handle id={"handle-2"} type={"source"} position={Position.Bottom} />
         </Box>

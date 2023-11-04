@@ -2777,6 +2777,7 @@
     "@reversearchitecture/theme" "*"
     "@reversearchitecture/ui" "*"
     "@structurizr/dsl" "*"
+    "@structurizr/export" "*"
     "@structurizr/parser" "*"
     "@structurizr/react" "*"
     "@workspace/code-editor" "*"
@@ -2888,7 +2889,7 @@
   version "0.1.0"
   resolved "file:packages/@structurizr/dsl"
 
-"@structurizr/export@file:C:\\Users\\pavlo\\Documents\\GitHub\\justmegaara.reverse-architecture-web\\packages\\@structurizr\\export":
+"@structurizr/export@*", "@structurizr/export@file:C:\\Users\\pavlo\\Documents\\GitHub\\justmegaara.reverse-architecture-web\\packages\\@structurizr\\export":
   version "0.1.0"
   resolved "file:packages/@structurizr/export"
   dependencies:
@@ -3921,7 +3922,7 @@
     "@reactflow/core" "^11.6.1"
     "@reactflow/node-resizer" "^2.1.0"
     "@structurizr/dsl" "*"
-    "@workspace/core" "*"
+    "@workspace/diagramming" "*"
     elkjs "0.8.2"
     framer-motion "^10.16.4"
     react "^18.0.0"

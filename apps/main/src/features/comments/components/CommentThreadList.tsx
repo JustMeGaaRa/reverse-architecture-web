@@ -1,6 +1,6 @@
 import { VStack } from "@chakra-ui/react";
 // TODO: consider making this component/feature less dependent on the workspace-viewer package
-import { useViewNavigation } from "@workspace/core";
+import { useViewNavigation } from "@workspace/diagramming";
 import { FC, useCallback, useEffect } from "react";
 import { CommentThreadRefrence } from "../components";
 import { useCommentsStore } from "../hooks";

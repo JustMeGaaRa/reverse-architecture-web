@@ -3,8 +3,8 @@ import { IElement, Tag } from "@structurizr/dsl";
 import { FC } from "react";
 
 export const formatElementTag = (data: IElement) => {
-    const type = data.tags.filter(x => x.name !== Tag.Element.name).at(0);
-    return type.name;
+    const type = data.tags?.filter(x => x.name !== Tag.Element.name).at(0);
+    return type?.name;
 };
 
 export const ElementLabel: FC<{

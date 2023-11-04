@@ -7,13 +7,13 @@ import {
     Relationship,
     Workspace
 } from "@structurizr/dsl";
-import {
-    useWorkspaceStore,
-    getNodeFromElement,
-    getEdgeFromRelationship
-} from "@workspace/core";
+import { useWorkspaceStore } from "@workspace/core";
 import { useCallback } from "react";
 import { v4 } from "uuid";
+import {
+    getNodeFromElement,
+    getEdgeFromRelationship
+} from "../utils";
 
 export const useComponentView = (containerIdentifier: Identifier) => {
     const { workspace } = useWorkspaceStore();
