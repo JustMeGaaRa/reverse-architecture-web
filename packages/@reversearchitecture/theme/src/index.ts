@@ -19,7 +19,7 @@ export const theme =  extendTheme({
         Checkbox,
         Menu,
         Modal,
-        // Radio,x
+        // Radio,
         Tabs,
         Tag
     },

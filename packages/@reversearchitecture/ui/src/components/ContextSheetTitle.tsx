@@ -1,15 +1,14 @@
-import { Heading } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { FC } from "react";
 
 export const ContextSheetTitle: FC<{ title: string }> = ({ title }) => {
     return (
-        <Heading
+        <Box
             as={"h5"}
-            fontSize={24}
-            fontWeight={"normal"}
             noOfLines={1}
+            textStyle={"h5"}
         >
             {title}
-        </Heading>
+        </Box>
     )
 }
