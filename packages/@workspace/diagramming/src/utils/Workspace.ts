@@ -1,38 +1,38 @@
 import {
-    ViewType,
     ISupportVisitor,
     ViewKeys,
     IViewDefinition,
     IWorkspace,
     IModel,
-    IConfiguration
+    IConfiguration,
+    ViewType
 } from "@structurizr/dsl";
 import { ReactFlowJsonObject } from "@reactflow/core";
 import { ReactFlowBuilder } from "@workspace/core";
 import { ReactFlowVisitor } from "../types";
 
 export const getView = (workspace: IWorkspace, viewDefinition?: ViewKeys) => {
-    const emptyView: IViewDefinition = {
-        type: ViewType.None,
-        title: "None",
-        identifier: "none",
+    const defaultView: IViewDefinition = {
+        type: viewDefinition?.type ?? ViewType.SystemContext,
+        title: viewDefinition?.title ?? viewDefinition?.type ?? ViewType.SystemContext,
+        identifier: viewDefinition?.identifier ?? "default",
         elements: [],
         relationships: []
     };
-    const existingView =
+    const existingByIdentifier =
         [workspace.views.systemLandscape].find(x => x?.type === viewDefinition?.type)
         ?? workspace.views.systemContexts.find(x => x.type === viewDefinition?.type && x.identifier === viewDefinition?.identifier)
         ?? workspace.views.containers.find(x => x.type === viewDefinition?.type && x.identifier === viewDefinition?.identifier)
         ?? workspace.views.components.find(x => x.type === viewDefinition?.type && x.identifier === viewDefinition?.identifier)
         ?? workspace.views.deployments.find(x => x.type === viewDefinition?.type && x.identifier === viewDefinition?.identifier);
-    const defaultView =
-        workspace.views.systemLandscape
-        ?? workspace.views.systemContexts.at(0)
-        ?? workspace.views.containers.at(0)
-        ?? workspace.views.components.at(0)
-        ?? workspace.views.deployments.at(0);
+    const existingByType = 
+        [workspace.views.systemLandscape].find(x => x?.type === viewDefinition?.type)
+        ?? workspace.views.systemContexts.find(x => x.type === viewDefinition?.type)
+        ?? workspace.views.containers.find(x => x.type === viewDefinition?.type)
+        ?? workspace.views.components.find(x => x.type === viewDefinition?.type)
+        ?? workspace.views.deployments.find(x => x.type === viewDefinition?.type);
     
-    return existingView ?? defaultView ?? emptyView;
+    return existingByIdentifier ?? existingByType ?? defaultView;
 }
 
 export const getReactFlowObject = (

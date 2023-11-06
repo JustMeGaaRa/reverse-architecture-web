@@ -59,7 +59,7 @@ export class StructurizrVisitor extends VisitorCtor {
         views: any }
     ): Workspace {
         return new Workspace({
-            name: trimQuotes(ctx.StringLiteral?.at(0)?.image),
+            name: trimQuotes(ctx.StringLiteral?.at(0)?.image) ?? "Empty Workspace",
             description: trimQuotes(ctx.StringLiteral?.at(1)?.image),
             model: this.visit(ctx.model),
             views: this.visit(ctx.views)
@@ -311,18 +311,24 @@ export class StructurizrVisitor extends VisitorCtor {
     }
 
     softwareSystemInstance(ctx: PropertyContext): SoftwareSystemInstance {
+        const identifier = ctx.Identifier?.at(0)?.image;
+        const softwareSystemIdentifier = ctx.Identifier?.at(1)?.image ?? identifier;
+
         return new SoftwareSystemInstance({
-            identifier: ctx.Identifier?.at(0)?.image,
-            softwareSystemIdentifier: ctx.Identifier?.at(1)?.image,
+            identifier: identifier ?? softwareSystemIdentifier,
+            softwareSystemIdentifier: softwareSystemIdentifier,
             // deploymentGroups: ctx.StringLiteral?.at(0)?.image,
             tags: Tag.from(trimQuotes(ctx.StringLiteral?.at(1)?.image))
         });
     }
 
     containerInstance(ctx: PropertyContext): ContainerInstance {
+        const identifier = ctx.Identifier?.at(0)?.image;
+        const containerIdentifier = ctx.Identifier?.at(1)?.image ?? identifier;
+
         return new ContainerInstance({
-            identifier: ctx.Identifier?.at(0)?.image,
-            containerIdentifier: ctx.Identifier?.at(1)?.image,
+            identifier: identifier ?? containerIdentifier,
+            containerIdentifier: containerIdentifier,
             // deploymentGroups: ctx.StringLiteral?.at(0)?.image,
             tags: Tag.from(trimQuotes(ctx.StringLiteral?.at(1)?.image))
         });

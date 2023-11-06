@@ -16,7 +16,12 @@ import {
     ISoftwareSystem,
     ISoftwareSystemInstance,
     IWorkspace,
-    IViews
+    IViews,
+    Technology,
+    Tag,
+    ISystemContextView,
+    IContainerView,
+    IDeploymentView
 } from "@structurizr/dsl";
 
 function line(line: string) {
@@ -40,17 +45,27 @@ export class StructurizrExportVisitor implements IElementVisitor {
     visitModel(model: IModel): string {
         const people = indent((model.people ?? [])
             .map(x => this.visitPerson(x)).join("\n"));
+        const groups = indent((model.groups ?? [])
+            .map(x => this.visitGroup(x)).join("\n"));
         const softwareSystems = indent((model.softwareSystems ?? [])
             .map(x => this.visitSoftwareSystem(x)).join("\n"));
         const environments = indent((model.deploymentEnvironments ?? [])
             .map(x => this.visitDeploymentEnvironment(x)).join("\n"));
         const relationships = indent((model.relationships ?? [])
             .map(x => this.visitRelationship(x)).join("\n"));
-        return `model {\n${people}\n${softwareSystems}\n${environments}\n${relationships}\n}`;
+        return `model {\n${people}\n${groups}\n${softwareSystems}\n${environments}\n${relationships}\n}`;
     }
 
     visitGroup(group: IGroup, params?: { parentId?: string; }): string {
-        return "";
+        const people = indent((group.people ?? [])
+            .map(x => this.visitPerson(x)).join("\n"));
+        const softwareSystems = indent((group.softwareSystems ?? [])
+            .map(x => this.visitSoftwareSystem(x)).join("\n"));
+        const containers = indent((group.containers ?? [])
+            .map(x => this.visitContainer(x)).join("\n"));
+        const components = indent((group.components ?? [])
+            .map(x => this.visitComponent(x)).join("\n"));
+        return `group "${group.name}" {\n${people}\n${softwareSystems}\n${containers}\n${components}\n}`;
     }
     
     visitPerson(person: IPerson, params?: { parentId?: string; }): string {
@@ -97,12 +112,14 @@ export class StructurizrExportVisitor implements IElementVisitor {
         // TODO: visit infrastructure nodes
         const deploymentNodes = indent((deploymentNode.deploymentNodes ?? [])
             .map(x => this.visitDeploymentNode(x)).join("\n"));
+        const infrastructureNodes = indent((deploymentNode.infrastructureNodes ?? [])
+            .map(x => this.visitInfrastructureNode(x)).join("\n"));
         const systems = indent((deploymentNode.softwareSystemInstances ?? [])
             .map(x => this.visitSoftwareSystemInstance(x)).join("\n"));
         const containers = indent((deploymentNode.containerInstances ?? [])
             .map(x => this.visitContainerInstance(x)).join("\n"));
         return deploymentNode
-            ? `deploymentNode "${deploymentNode.name}" {\n${deploymentNodes}\n${systems}\n${containers}\n}`
+            ? `deploymentNode "${deploymentNode.name}" "${deploymentNode.description}" {\n${deploymentNodes}\n${infrastructureNodes}\n${systems}\n${containers}\n}`
             : "";
     }
 
@@ -123,8 +140,38 @@ export class StructurizrExportVisitor implements IElementVisitor {
     }
 
     visitViews(views: IViews): string {
+        const systemLandscape = indent((views.systemLandscape ? [views.systemLandscape] : [])
+            .map(x => this.visitSystemLandscapeView(x)).join("\n"));
+        const systemContext = indent((views.systemContexts ?? [])
+            .map(x => this.visitSystemContextView(x)).join("\n"));
+        const containers = indent((views.containers ?? [])
+            .map(x => this.visitContainerView(x)).join("\n"));
+        const components = indent((views.components ?? [])
+            .map(x => this.visitComponentView(x)).join("\n"));
+        const deployments = indent((views.deployments ?? [])
+            .map(x => this.visitDeploymentView(x)).join("\n"));
         const styles = line(indent(this.visitStyles(views.configuration.styles)));
-        return `views {\n${styles}\n}`;
+        return `views {\n${systemLandscape}\n${systemContext}\n${containers}\n${components}\n${deployments}\n${styles}\n}`;
+    }
+
+    visitSystemLandscapeView(view: ISystemContextView): string {
+        return `systemLandscape "${view.title}" {\n${indent("include *")}\n${indent("autoLayout")}\n}`;
+    }
+
+    visitSystemContextView(view: ISystemContextView): string {
+        return `systemContext ${view.identifier} "${view.key}" {\n${indent("include *")}\n${indent("autoLayout")}\n}`;
+    }
+
+    visitContainerView(view: IContainerView): string {
+        return `container ${view.identifier} "${view.key}" {\n${indent("include *")}\n${indent("autoLayout")}\n}`;
+    }
+
+    visitComponentView(view: IContainerView): string {
+        return `component ${view.identifier} "${view.key}" {\n${indent("include *")}\n${indent("autoLayout")}\n}`;
+    }
+
+    visitDeploymentView(view: IDeploymentView): string {
+        return `deployment ${view.identifier} "${view.environment}" "${view.key}" {\n${indent("include *")}\n${indent("autoLayout")}\n}`;
     }
 
     visitStyles(styles: Styles): string {
@@ -134,26 +181,34 @@ export class StructurizrExportVisitor implements IElementVisitor {
     }
 
     visitElementStyle(elementStyle: ElementStyle): string {
-        return !elementStyle ? "" : Object.keys(elementStyle)
-            .map(tag => {
-                const style: any = elementStyle[tag];
+        return !elementStyle ? "" : elementStyle
+            .map(style => {
                 const properties = Object.keys(style)
+                    .filter(property => property !== "tag" && property !== "properties")
                     .map(property => line(indent(`${property} ${style[property]}`)))
                     .join("");
-                return `element "${tag}" {\n${properties}\n}`;
+                return `element "${style.tag}" {\n${properties}\n}`;
             })
             .join("\n");
     }
 
     visitRelationshipStyle(relationshipStyle: RelationshipStyle): string {
-        return !relationshipStyle ? "" : Object.keys(relationshipStyle)
-            .map(tag => {
-                const style: any = relationshipStyle[tag];
+        return !relationshipStyle ? "" : relationshipStyle
+            .map(style => {
                 const properties = Object.keys(style)
+                    .filter(property => property !== "tag" && property !== "properties")
                     .map(property => line(indent(`${property} ${style[property]}`)))
                     .join("");
-                return `element "${tag}" {\n${properties}\n}`;
+                return `relationship "${style.tag}" {\n${properties}\n}`;
             })
             .join("\n");
+    }
+
+    visitTechnology(technology: Technology[]): string {
+        return !technology ? "" : technology.map(x => x.name).join(", ");
+    }
+
+    visitTags(tags: Tag[]): string {
+        return !tags ? "" : tags.map(x => x.name).join(", ");
     }
 }

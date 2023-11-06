@@ -15,6 +15,7 @@ import {
 import {
     Workspace,
 } from "@structurizr/dsl";
+import { useWorkspaceStore } from "@workspace/core";
 import {
     AddUser,
     AppleShortcuts,
@@ -54,7 +55,7 @@ export const WorkspacePageLayoutContent: FC<PropsWithChildren> = ({ children }) 
     const { setHeaderContent } = usePageHeader();
     const [ queryParams, setQueryParam ] = useSearchParams([[ "mode", WorkspaceContentMode.Diagramming ]]);
     const navigate = useNavigate();
-    const [ workspace ] = useState(Workspace.Empty.toObject());
+    const { workspace } = useWorkspaceStore();
     // TODO: get users from workspace room
     const [ users ] = useState<Array<any>>([]);
 

@@ -11,6 +11,7 @@ import {
     IModel,
     IContainerView,
     ContainerViewStrategy,
+    IWorkspace,
 } from "@structurizr/dsl";
 import {
     WorkspaceViewRenderer,
@@ -36,13 +37,14 @@ export const ContainerView: FC<PropsWithChildren<{
     model: IModel;
     configuration: IConfiguration;
     view: IContainerView;
+    onWorkspaceChange?: (workspace: IWorkspace) => void;
     onNodeDragStop?: NodeMouseHandler;
     onNodesDoubleClick?: NodeMouseHandler;
 }>> = ({
     children,
     model,
-    configuration,
     view,
+    onWorkspaceChange,
     onNodeDragStop,
     onNodesDoubleClick
 }) => {
@@ -69,9 +71,9 @@ export const ContainerView: FC<PropsWithChildren<{
     useViewRenderingEffect(strategy);
 
     const handleOnNodeDragStop = useCallback((event: React.MouseEvent, node: any, nodes: any[]) => {
-        setElementPosition(node.data.element.identifier, node.position);
+        onWorkspaceChange(setElementPosition(node.data.element.identifier, node.position));
         onNodeDragStop?.(event, node);
-    }, [onNodeDragStop, setElementPosition]);
+    }, [onNodeDragStop, setElementPosition, onWorkspaceChange]);
 
     const handleOnDoubleClick = useCallback((event: React.MouseEvent, node: Node) => {
         zoomIntoElement(node.data.element);
@@ -96,10 +98,10 @@ export const ContainerView: FC<PropsWithChildren<{
 
             switch (addingElementType) {
                 case ElementType.Group:
-                    addGroup(viewportTargetPoint);
+                    onWorkspaceChange(addGroup(viewportTargetPoint));
                     break;
                 case ElementType.Container:
-                    addContainer(viewportTargetPoint, groupId);
+                    onWorkspaceChange(addContainer(viewportTargetPoint, groupId));
                     break;
             }
         }
@@ -109,7 +111,8 @@ export const ContainerView: FC<PropsWithChildren<{
         addingElementType,
         getViewportPoint,
         addGroup,
-        addContainer
+        addContainer,
+        onWorkspaceChange
     ]);
 
     const handleOnPaneClick = useCallback((event: React.MouseEvent) => {
@@ -124,10 +127,10 @@ export const ContainerView: FC<PropsWithChildren<{
 
             switch (addingElementType) {
                 case ElementType.SoftwareSystem:
-                    addSoftwareSystem(viewportPoint);
+                    onWorkspaceChange(addSoftwareSystem(viewportPoint));
                     break;
                 case ElementType.Person:
-                    addPerson(viewportPoint);
+                    onWorkspaceChange(addPerson(viewportPoint));
                     break;
             }
         }
@@ -137,12 +140,13 @@ export const ContainerView: FC<PropsWithChildren<{
         addingElementType,
         getViewportPoint,
         addSoftwareSystem,
-        addPerson
+        addPerson,
+        onWorkspaceChange
     ]);
 
     const handleOnConnect = useCallback((connection: Connection) => {
-        addRelationship(connection.source, connection.target);
-    }, [addRelationship]);
+        onWorkspaceChange(addRelationship(connection.source, connection.target));
+    }, [addRelationship, onWorkspaceChange]);
 
     return (
         <WorkspaceViewRenderer

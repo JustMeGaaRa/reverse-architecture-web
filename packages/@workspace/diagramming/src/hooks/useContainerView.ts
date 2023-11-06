@@ -22,12 +22,16 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
     // NOTE: the person added can either be an existing one or a new one
     // The existing person is included in the view, while the new one is also added to the model
     const addPerson = useCallback((position: Position) => {
-    }, []);
+        const builder = new Workspace(workspace);
+        return builder.toObject();
+    }, [workspace]);
     
     // NOTE: the software system added can either be an existing one or a new one
     // The existing system is included in the view, while the new one is also added to the model
     const addSoftwareSystem = useCallback((position: Position) => {
-    }, []);
+        const builder = new Workspace(workspace);
+        return builder.toObject();
+    }, [workspace]);
     
     const addContainer = useCallback((position: Position, groupId?: Identifier) => {
         const container = new Container({
@@ -56,6 +60,8 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
             styles: workspace.views.configuration.styles
         });
         setNodes(nodes => [...nodes, node]);
+
+        return builder.toObject();
     }, [systemSoftwareIdentifier, workspace, setNodes]);
     
     const addGroup = useCallback((position: Position) => {
@@ -85,6 +91,8 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
             styles: workspace.views.configuration.styles
         });
         setNodes(nodes => [...nodes, node]);
+        
+        return builder.toObject();
     }, [systemSoftwareIdentifier, workspace, setNodes]);
     
     const addRelationship = useCallback((sourceIdentifier: Identifier, targetIdentifier: Identifier) => {
@@ -106,6 +114,8 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
             styles: workspace.views.configuration.styles
         });
         setEdges(edges => [...edges, edge]);
+
+        return builder.toObject();
     }, [workspace, setEdges]);
 
     const setElementPosition = useCallback((elementId: string, position: Position) => {
@@ -118,6 +128,8 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
             ...state,
             workspace: builder.toObject()
         }));
+
+        return builder.toObject();
     }, [systemSoftwareIdentifier, workspace]);
 
     return {

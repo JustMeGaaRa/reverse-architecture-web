@@ -16,7 +16,7 @@ import {
 } from "@structurizr/dsl";
 import { Panel } from "@workspace/core";
 import { WorkspaceScaleToolbar, WorkspaceZoomControls } from "@workspace/controls";
-import { WorkspaceExplorer } from "@workspace/diagramming";
+import { WorkspaceDiagramming } from "@workspace/diagramming";
 import { WorkspaceNavigation } from "@workspace/navigation";
 import {
     BookmarkEmpty,
@@ -119,7 +119,7 @@ export const TemplateOverview: FC<{
                 transitionDuration={"0.3s"}
                 transitionTimingFunction={"ease"}
             >
-                <WorkspaceExplorer
+                <WorkspaceDiagramming
                     workspace={workspace}
                     view={workspace.views.systemLandscape}
                     metadata={metadata}
@@ -135,7 +135,7 @@ export const TemplateOverview: FC<{
                             onReduceClick={handleOnReduceClick}
                         />
                     </Panel>
-                </WorkspaceExplorer>
+                </WorkspaceDiagramming>
             </Flex>
             <Flex width={"600px"} position={"relative"}>
                 <Flex

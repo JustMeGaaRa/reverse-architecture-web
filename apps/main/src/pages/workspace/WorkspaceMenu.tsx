@@ -7,14 +7,23 @@ import {
     MenuItem,
     MenuList
 } from "@chakra-ui/react";
+import { StructurizrExportClient } from "@structurizr/export";
+import { useWorkspaceStore } from "@workspace/core";
 import { NavArrowDown } from "iconoir-react";
-import { FC } from "react";
+import { FC, useCallback } from "react";
 
 export const WorkspaceMenu: FC<{
     title: string;
 }> = ({
     title
 }) => {
+    const { workspace } = useWorkspaceStore();
+
+    const handleOnExportClick = useCallback(() => {
+        const exportClient = new StructurizrExportClient();
+        console.log(exportClient.export(workspace));
+    }, [workspace]);
+
     return (
         <Menu>
             <MenuButton
@@ -27,15 +36,11 @@ export const WorkspaceMenu: FC<{
             </MenuButton>
             <MenuList>
                 <MenuGroup>
-                    <MenuItem>Export</MenuItem>
-                    <MenuItem>Mark as favorite</MenuItem>
-                    <MenuItem>Preferences</MenuItem>
+                    <MenuItem onClick={handleOnExportClick}>Export</MenuItem>
                 </MenuGroup>
                 <MenuDivider />
                 <MenuGroup>
-                    <MenuItem>Move to</MenuItem>
                     <MenuItem>Rename</MenuItem>
-                    <MenuItem>Archive</MenuItem>
                 </MenuGroup>
             </MenuList>
         </Menu>

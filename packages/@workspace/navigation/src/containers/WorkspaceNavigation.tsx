@@ -21,7 +21,7 @@ import {
     useWorkspaceTheme
 } from "@workspace/core";
 import { useViewNavigation } from "@workspace/diagramming";
-import { FC, useCallback } from "react";
+import { ChangeEvent, FC, useCallback } from "react";
 
 export const WorkspaceNavigation: FC = () => {
     const { workspace, selectedView } = useWorkspaceStore();
@@ -43,7 +43,14 @@ export const WorkspaceNavigation: FC = () => {
         data: view
     }));
 
-    const handleOnViewItemClick = useCallback(zoomIntoView, [zoomIntoView]);
+    const handleOnViewItemClick = useCallback((viewKeys) => {
+        zoomIntoView(viewKeys);
+    }, [zoomIntoView]);
+
+    const handleOnViewTypeChange = useCallback((event: ChangeEvent<HTMLSelectElement>) => {
+        const selectedViewType = event.target.value as ViewType;
+        zoomIntoView({ type: selectedViewType, identifier: undefined });
+    }, [zoomIntoView]);
 
     return (
         <HStack divider={<StackDivider borderColor={"whiteAlpha.200"} />}>
@@ -60,10 +67,11 @@ export const WorkspaceNavigation: FC = () => {
                     borderColor: "whiteAlpha.400",
                     color: "basic.white"
                 }}
+                onChange={handleOnViewTypeChange}
             >
-                <option value={"systemLandscape"}>System Landscape</option>
-                <option value={"systemContext"}>System Context</option>
-                <option value={"deployment"}>Deployment</option>
+                <option value={ViewType.SystemLandscape}>{ViewType.SystemLandscape}</option>
+                <option value={ViewType.SystemContext}>{ViewType.SystemContext}</option>
+                <option value={ViewType.Deployment}>{ViewType.Deployment}</option>
             </Select>
             <Breadcrumb separator={""}>
                 {links.map(link => (

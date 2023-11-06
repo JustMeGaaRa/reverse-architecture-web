@@ -18,13 +18,13 @@ import {
     WorkspaceToolbar,
     WorkspaceZoomControls,
 } from "@workspace/controls";
-import { WorkspaceExplorer } from "@workspace/diagramming";
+import { WorkspaceDiagramming } from "@workspace/diagramming";
 import {
     WorkspaceRoom,
     WorkspaceRoomProvider,
     WorkspaceUser
 } from "@workspace/live";
-import { WorkspaceModeler } from "@workspace/modeling";
+import { WorkspaceModeling } from "@workspace/modeling";
 import { WorkspaceNavigation } from "@workspace/navigation";
 import {
     applyMetadata,
@@ -55,6 +55,7 @@ import {
     WorkspaceContentMode,
     WorkspaceContentPanel
 } from "../../workspace";
+import { StructurizrExportClient } from "@structurizr/export";
 
 export const WorkspaceContentPage: FC = () => {
     const { workspaceId } = useParams<{ workspaceId: string }>();
@@ -72,6 +73,13 @@ export const WorkspaceContentPage: FC = () => {
             .then(comments => setCommentThreads(comments))
             .catch(error => console.error(error));
     }, [workspaceId]);
+
+    const handleOnClosePanel = useCallback(() => {
+        setQueryParam(params => {
+            params.delete("panel");
+            return new URLSearchParams(params);
+        });
+    }, [setQueryParam]);
 
     // code editor
     const [ text, setText ] = useState("");
@@ -111,17 +119,24 @@ export const WorkspaceContentPage: FC = () => {
             })
     }, [workspaceId, theme, toast, parseStructurizr]);
 
+    useEffect(() => {
+        const viewType = queryParams.get("type");
+        const viewIdentifier = queryParams.get("identifier");
+        // TODO: navigate to view if type and identifier are present in the query params
+    }, [queryParams]);
+
     const handleOnWorkspaceChange = useCallback((workspace: Workspace) => {
-        // TODO: subscribe with this handler to workspace object changes
-        // TODO: use structurizr exporter to export the workspace to text
-        setText(workspace.toString());
+        const structurizrExporter = new StructurizrExportClient();
+        const structurizrText = structurizrExporter.export(workspace);
+        setText(structurizrText);
     }, []);
 
-    const handleOnClosePanel = useCallback(() => {
+    const handleOnWorkspaceViewChange = useCallback((view: any) => {
+        // TODO: add view type and identifier to the query params
         setQueryParam(params => {
-            params.delete("panel");
+            params.set("view", view.identifier);
             return new URLSearchParams(params);
-        });
+        })
     }, [setQueryParam]);
 
     return (
@@ -190,10 +205,12 @@ export const WorkspaceContentPage: FC = () => {
                                     <WorkspaceUser account={account} />
 
                                     {queryParams.get("mode") === WorkspaceContentMode.Diagramming && (
-                                        <WorkspaceExplorer
+                                        <WorkspaceDiagramming
                                             workspace={workspace}
                                             view={workspace.views.systemLandscape}
                                             metadata={metadata}
+                                            onWorkspaceChange={handleOnWorkspaceChange}
+                                            onWorkspaceViewChange={handleOnWorkspaceViewChange}
                                         >
                                             <WorkspaceCommentGroup commentThreads={commentThreads} />
                                             <UserCursorGroup users={users} />
@@ -210,12 +227,13 @@ export const WorkspaceContentPage: FC = () => {
                                             <Panel position={"bottom-right"}>
                                                 <WorkspaceZoomControls />
                                             </Panel>
-                                        </WorkspaceExplorer>
+                                        </WorkspaceDiagramming>
                                     )}
 
                                     {queryParams.get("mode") === WorkspaceContentMode.Modeling && (
-                                        <WorkspaceModeler
+                                        <WorkspaceModeling
                                             workspace={workspace}
+                                            onWorkspaceChange={handleOnWorkspaceChange}
                                         >
                                             <Panel position={"top-left"}>
                                                 <WorkspaceNavigation />
@@ -226,7 +244,7 @@ export const WorkspaceContentPage: FC = () => {
                                             <Panel position={"bottom-right"}>
                                                 <WorkspaceZoomControls />
                                             </Panel>
-                                        </WorkspaceModeler>
+                                        </WorkspaceModeling>
                                     )}
                                 </WorkspaceRoom>
                             </WorkspaceRoomProvider>

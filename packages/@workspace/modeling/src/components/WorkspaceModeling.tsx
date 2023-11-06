@@ -11,11 +11,13 @@ import {
 import { FC, PropsWithChildren } from "react";
 import { ModelView } from "../components";
 
-export const WorkspaceModeler: FC<PropsWithChildren<{
+export const WorkspaceModeling: FC<PropsWithChildren<{
     workspace: IWorkspace;
+    onWorkspaceChange?: (workspace: IWorkspace) => void;
 }>> = ({
     children,
     workspace,
+    onWorkspaceChange
 }) => {
     const store = useWorkspaceStore();
     
@@ -27,6 +29,7 @@ export const WorkspaceModeler: FC<PropsWithChildren<{
 
             <ModelView
                 model={store.workspace.model}
+                onWorkspaceChange={onWorkspaceChange}
             />
 
             {children}

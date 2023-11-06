@@ -11,6 +11,7 @@ import {
     IModel,
     DeploymentViewStrategy,
     IDeploymentView,
+    IWorkspace,
 } from "@structurizr/dsl";
 import {
     WorkspaceViewRenderer,
@@ -37,6 +38,7 @@ export const DeploymentView: FC<PropsWithChildren<{
     model: IModel;
     configuration: IConfiguration;
     view: IDeploymentView;
+    onWorkspaceChange?: (workspace: IWorkspace) => void;
     onNodeDragStop?: NodeMouseHandler;
     onNodesDoubleClick?: NodeMouseHandler;
 }>> = ({
@@ -44,13 +46,14 @@ export const DeploymentView: FC<PropsWithChildren<{
     model,
     configuration,
     view,
+    onWorkspaceChange,
     onNodeDragStop,
     onNodesDoubleClick
 }) => {
     const [ nodes, setNodes, onNodesChange ] = useNodesState([]);
     const [ edges, setEdges, onEdgesChange ] = useEdgesState([]);
     const reactFlowRef = useRef(null);
-    const strategy = useMemo(() => new DeploymentViewStrategy(model, view, view["environment"]), [model, view]);
+    const strategy = useMemo(() => new DeploymentViewStrategy(model, view, view.environment), [model, view]);
     const {
         isAddingElementEnabled,
         addingElementType

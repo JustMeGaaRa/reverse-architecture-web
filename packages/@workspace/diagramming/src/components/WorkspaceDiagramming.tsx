@@ -19,15 +19,19 @@ import {
     WorkspaceViewStoreUpdater
 } from "../components";
 
-export const WorkspaceExplorer: FC<PropsWithChildren<{
+export const WorkspaceDiagramming: FC<PropsWithChildren<{
     workspace: IWorkspace;
     view: IViewDefinition;
     metadata: IWorkspaceMetadata;
+    onWorkspaceChange?: (workspace: IWorkspace) => void;
+    onWorkspaceViewChange?: (view: IViewDefinition) => void;
 }>> = ({
     children,
     workspace,
     view,
-    metadata
+    metadata,
+    onWorkspaceChange,
+    onWorkspaceViewChange
 }) => {
     const store = useWorkspaceStore();
 
@@ -48,6 +52,7 @@ export const WorkspaceExplorer: FC<PropsWithChildren<{
                     model={store.workspace.model}
                     configuration={store.workspace.views.configuration}
                     view={store.selectedView}
+                    onWorkspaceChange={onWorkspaceChange}
                 />
             )}
 
@@ -56,6 +61,7 @@ export const WorkspaceExplorer: FC<PropsWithChildren<{
                     model={store.workspace.model}
                     configuration={store.workspace.views.configuration}
                     view={store.selectedView}
+                    onWorkspaceChange={onWorkspaceChange}
                 />
             )}
 
@@ -64,6 +70,7 @@ export const WorkspaceExplorer: FC<PropsWithChildren<{
                     model={store.workspace.model}
                     configuration={store.workspace.views.configuration}
                     view={store.selectedView}
+                    onWorkspaceChange={onWorkspaceChange}
                 />
             )}
 
@@ -72,6 +79,7 @@ export const WorkspaceExplorer: FC<PropsWithChildren<{
                     model={store.workspace.model}
                     configuration={store.workspace.views.configuration}
                     view={store.selectedView}
+                    onWorkspaceChange={onWorkspaceChange}
                 />
             )}
 
@@ -80,6 +88,7 @@ export const WorkspaceExplorer: FC<PropsWithChildren<{
                     model={workspace.model}
                     configuration={workspace.views.configuration}
                     view={store.selectedView as any}
+                    onWorkspaceChange={onWorkspaceChange}
                 />
             )}
 

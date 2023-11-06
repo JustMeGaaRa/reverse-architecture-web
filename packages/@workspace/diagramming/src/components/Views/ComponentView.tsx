@@ -11,6 +11,7 @@ import {
     IModel,
     IComponentView,
     ComponentViewStrategy,
+    IWorkspace,
 } from "@structurizr/dsl";
 import {
     WorkspaceViewRenderer,
@@ -36,6 +37,7 @@ export const ComponentView: FC<PropsWithChildren<{
     model: IModel;
     configuration: IConfiguration;
     view: IComponentView;
+    onWorkspaceChange?: (workspace: IWorkspace) => void;
     onNodeDragStop?: NodeMouseHandler;
     onNodesDoubleClick?: NodeMouseHandler;
 }>> = ({
@@ -43,6 +45,7 @@ export const ComponentView: FC<PropsWithChildren<{
     model,
     configuration,
     view,
+    onWorkspaceChange,
     onNodeDragStop,
     onNodesDoubleClick
 }) => {

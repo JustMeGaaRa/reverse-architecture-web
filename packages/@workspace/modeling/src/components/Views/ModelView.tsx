@@ -3,47 +3,60 @@ import {
     BackgroundVariant
 } from "@reactflow/background";
 import {
-    ConnectionMode,
-    ReactFlow,
     useEdgesState,
     useNodesState
 } from "@reactflow/core";
-import { IModel, ModelViewStrategy } from "@structurizr/dsl";
-import { useAutoLayoutEffect } from "@workspace/core";
-import { FC, PropsWithChildren, useMemo } from "react";
-import { useModelRenderingEffect } from "../../hooks";
-import { EdgeTypes, NodeTypes } from "../../utils";
+import {
+    IModel,
+    IWorkspace,
+    ModelViewStrategy
+} from "@structurizr/dsl";
+import {
+    WorkspaceViewRenderer,
+    useAutoLayoutEffect,
+    useViewportUtils
+} from "@workspace/core";
+import {
+    FC,
+    PropsWithChildren,
+    useMemo,
+    useRef
+} from "react";
+import { EdgeTypes, NodeTypes } from "../../components";
+import { useModelRenderingEffect, useModelView } from "../../hooks";
 
 export const ModelView: FC<PropsWithChildren<{
     model: IModel;
+    onWorkspaceChange?: (workspace: IWorkspace) => void;
 }>> = ({
     children,
-    model
+    model,
+    onWorkspaceChange
 }) => {
-    const FitViewOptions = useMemo(() => ({
-        padding: 0.2,
-        duration: 500,
-        maxZoom: 5,
-        minZoom: 0.1
-    }), []);
-
-    const strategy = useMemo(() => new ModelViewStrategy(model), [model]);
     const [ nodes, , onNodesChange ] = useNodesState([]);
     const [ edges, , onEdgesChange ] = useEdgesState([]);
+    const reactFlowRef = useRef(null);
+    const strategy = useMemo(() => new ModelViewStrategy(model), [model]);
+    const {
+        addPerson,
+        addSoftwareSystem,
+        addContainer,
+        addComponent,
+        addDeploymentNode,
+        addInfrastructureNode
+    } = useModelView();
+    const { getViewportPoint } = useViewportUtils();
 
     useAutoLayoutEffect();
     useModelRenderingEffect(strategy);
 
     return (
-        <ReactFlow
-            connectionMode={ConnectionMode.Strict}
-            fitViewOptions={FitViewOptions}
+        <WorkspaceViewRenderer
+            ref={reactFlowRef}
             nodeTypes={NodeTypes}
             nodes={nodes}
             edgeTypes={EdgeTypes}
             edges={edges}
-            proOptions={{ hideAttribution: true }}
-            snapGrid={[50, 50]}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
         >
@@ -54,6 +67,6 @@ export const ModelView: FC<PropsWithChildren<{
                 variant={BackgroundVariant.Dots}
             />
             {children}
-        </ReactFlow>
+        </WorkspaceViewRenderer>
     )
 }

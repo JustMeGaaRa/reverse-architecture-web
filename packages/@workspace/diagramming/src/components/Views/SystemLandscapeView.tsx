@@ -10,6 +10,7 @@ import {
     IConfiguration,
     IModel,
     ISystemLandscapeView,
+    IWorkspace,
     SystemLandscapeViewStrategy,
 } from "@structurizr/dsl";
 import {
@@ -36,6 +37,7 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
     model: IModel;
     configuration: IConfiguration;
     view: ISystemLandscapeView;
+    onWorkspaceChange?: (workspace: IWorkspace) => void;
     onNodeDragStop?: NodeMouseHandler;
     onNodesDoubleClick?: NodeMouseHandler;
 }>> = ({
@@ -43,6 +45,7 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
     model,
     configuration,
     view,
+    onWorkspaceChange,
     onNodeDragStop,
     onNodesDoubleClick
 }) => {
