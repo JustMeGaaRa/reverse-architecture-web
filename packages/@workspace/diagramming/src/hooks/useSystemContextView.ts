@@ -45,6 +45,8 @@ export const useSystemContextView = (systemSoftwareIdentifier: Identifier) => {
             styles: workspace.views.configuration.styles
         });
         setNodes(nodes => [...nodes, node]);
+
+        return builder.toObject();
     }, [systemSoftwareIdentifier, workspace, setNodes]);
     
     const addPerson = useCallback((position: Position, groupId?: Identifier) => {
@@ -71,6 +73,8 @@ export const useSystemContextView = (systemSoftwareIdentifier: Identifier) => {
             styles: workspace.views.configuration.styles
         });
         setNodes(nodes => [...nodes, node]);
+
+        return builder.toObject();
     }, [systemSoftwareIdentifier, workspace, setNodes]);
 
     const addGroup = useCallback((position: Position) => {
@@ -96,6 +100,8 @@ export const useSystemContextView = (systemSoftwareIdentifier: Identifier) => {
             styles: workspace.views.configuration.styles
         });
         setNodes(nodes => [...nodes, node]);
+
+        return builder.toObject();
     }, [systemSoftwareIdentifier, workspace, setNodes]);
     
     const addRelationship = useCallback((sourceIdentifier: Identifier, targetIdentifier: Identifier) => {
@@ -117,6 +123,8 @@ export const useSystemContextView = (systemSoftwareIdentifier: Identifier) => {
             styles: workspace.views.configuration.styles
         });
         setEdges(edges => [...edges, edge]);
+
+        return builder.toObject();
     }, [workspace, setEdges]);
 
     const setElementPosition = useCallback((elementId: string, position: Position) => {
@@ -129,12 +137,14 @@ export const useSystemContextView = (systemSoftwareIdentifier: Identifier) => {
             ...state,
             workspace: builder.toObject()
         }));
+
+        return builder.toObject();
     }, [systemSoftwareIdentifier, workspace]);
 
     return {
-        addGroup,
-        addSoftwareSystem,
         addPerson,
+        addSoftwareSystem,
+        addGroup,
         addRelationship,
         setElementPosition
     }

@@ -1,10 +1,13 @@
 import { useReactFlow } from "@reactflow/core";
 import {
     Component,
+    Container,
     Group,
     Identifier,
+    Person,
     Position,
     Relationship,
+    SoftwareSystem,
     Workspace
 } from "@structurizr/dsl";
 import { useWorkspaceStore } from "@workspace/core";
@@ -19,20 +22,99 @@ export const useComponentView = (containerIdentifier: Identifier) => {
     const { workspace } = useWorkspaceStore();
     const { setNodes, setEdges } = useReactFlow();
     
-    // NOTE: the software system added can either be an existing one or a new one
-    // The existing system is included in the view, while the new one is also added to the model
-    const addSoftwareSystem = useCallback((position: Position) => {
-    }, []);
-    
     // NOTE: the person added can either be an existing one or a new one
     // The existing person is included in the view, while the new one is also added to the model
     const addPerson = useCallback((position: Position) => {
-    }, []);
+        const person = new Person({
+            identifier: `person_${v4()}`,
+            name: "Person",
+        })
+        
+        const builder = new Workspace(workspace);
+        builder.model
+            .addPerson(person);
+        builder.views.components
+            .find(x => x.identifier === containerIdentifier)
+            ?.addPerson(person, position);
+
+        useWorkspaceStore.setState(state => ({
+            ...state,
+            workspace: builder.toObject()
+        }));
+
+        // NOTE: in this context the person can only be added outside of container
+        const node = getNodeFromElement({
+            element: person,
+            position,
+            styles: workspace.views.configuration.styles
+        });
+        setNodes(nodes => [...nodes, node]);
+
+        return builder.toObject();
+    }, [containerIdentifier, setNodes, workspace]);
+    
+    // NOTE: the software system added can either be an existing one or a new one
+    // The existing system is included in the view, while the new one is also added to the model
+    const addSoftwareSystem = useCallback((position: Position) => {
+        const softwareSystem = new SoftwareSystem({
+            identifier: `softwareSystem_${v4()}`,
+            name: "Software System",
+        })
+        
+        const builder = new Workspace(workspace);
+        builder.model
+            .addSoftwareSystem(softwareSystem);
+        builder.views.components
+            .find(x => x.identifier === containerIdentifier)
+            ?.addSoftwareSystem(softwareSystem, position);
+
+        useWorkspaceStore.setState(state => ({
+            ...state,
+            workspace: builder.toObject()
+        }));
+
+        // NOTE: in this context the software system can only be added outside of container
+        const node = getNodeFromElement({
+            element: softwareSystem,
+            position,
+            styles: workspace.views.configuration.styles
+        });
+        setNodes(nodes => [...nodes, node]);
+
+        return builder.toObject();
+    }, [containerIdentifier, setNodes, workspace]);
     
     // NOTE: the container added can either be an existing one or a new one
     // The existing container is included in the view, while the new one is also added to the model
     const addContainer = useCallback((position: Position) => {
-    }, []);
+        const container = new Container({
+            identifier: `container_${v4()}`,
+            name: "Container",
+        })
+        
+        const builder = new Workspace(workspace);
+        builder.model
+            .findContainerParent(containerIdentifier)
+            .addContainer(container);
+        builder.views.components
+            .find(x => x.identifier === containerIdentifier)
+            ?.addContainer(container, position);
+
+        useWorkspaceStore.setState(state => ({
+            ...state,
+            workspace: builder.toObject()
+        }));
+
+        // NOTE: in this context the container can only be added outside of container
+        const node = getNodeFromElement({
+            element: container,
+            position,
+            styles: workspace.views.configuration.styles
+        });
+        setNodes(nodes => [...nodes, node]);
+
+        return builder.toObject();
+    }, [containerIdentifier, setNodes, workspace]);
     
     const addComponent = useCallback((position: Position, groupId?: Identifier) => {
         const component = new Component({
@@ -61,6 +143,8 @@ export const useComponentView = (containerIdentifier: Identifier) => {
             styles: workspace.views.configuration.styles
         });
         setNodes(nodes => [...nodes, node]);
+
+        return builder.toObject();
     }, [containerIdentifier, workspace, setNodes]);
     
     const addGroup = useCallback((position: Position) => {
@@ -90,6 +174,8 @@ export const useComponentView = (containerIdentifier: Identifier) => {
             styles: workspace.views.configuration.styles
         });
         setNodes(nodes => [...nodes, node]);
+
+        return builder.toObject();
     }, [containerIdentifier, workspace, setNodes]);
     
     const addRelationship = useCallback((sourceIdentifier: Identifier, targetIdentifier: Identifier) => {
@@ -111,6 +197,8 @@ export const useComponentView = (containerIdentifier: Identifier) => {
             styles: workspace.views.configuration.styles
         });
         setEdges(edges => [...edges, edge]);
+
+        return builder.toObject();
     }, [workspace, setEdges]);
 
     const setElementPosition = useCallback((elementId: string, position: Position) => {
@@ -123,14 +211,16 @@ export const useComponentView = (containerIdentifier: Identifier) => {
             ...state,
             workspace: builder.toObject()
         }));
+
+        return builder.toObject();
     }, [containerIdentifier, workspace]);
 
     return {
-        addGroup,
-        addSoftwareSystem,
         addPerson,
+        addSoftwareSystem,
         addContainer,
         addComponent,
+        addGroup,
         addRelationship,
         setElementPosition
     }

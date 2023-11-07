@@ -89,4 +89,21 @@ export class Model implements ISupportImmutable<IModel> {
             .concat(groupContainers)
             .find(x => x.identifier === identifier);
     }
+
+    public findContainerParent(containerId: Identifier): SoftwareSystem | undefined {
+        return this.softwareSystems
+            .concat(this.groups.flatMap(x => x.softwareSystems))
+            .find(x => x.containers.some(c => c.identifier === containerId));
+    }
+
+    public findComponentParent(componentId: Identifier): Container | undefined {
+        const groupContainers = this.groups
+            .flatMap(x => x.softwareSystems)
+            .flatMap(x => x.containers);
+        const softwareSystemContainers = this.softwareSystems
+            .flatMap(x => x.containers);
+        return softwareSystemContainers
+            .concat(groupContainers)
+            .find(x => x.components.some(c => c.identifier === componentId));
+    }
 }

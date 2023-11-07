@@ -3,8 +3,10 @@ import {
     Container,
     Group,
     Identifier,
+    Person,
     Position,
     Relationship,
+    SoftwareSystem,
     Workspace
 } from "@structurizr/dsl";
 import { useWorkspaceStore } from "@workspace/core";
@@ -22,16 +24,64 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
     // NOTE: the person added can either be an existing one or a new one
     // The existing person is included in the view, while the new one is also added to the model
     const addPerson = useCallback((position: Position) => {
+        const person = new Person({
+            identifier: `person_${v4()}`,
+            name: "Person",
+        })
+        
         const builder = new Workspace(workspace);
+        builder.model
+            .addPerson(person);
+        builder.views.containers
+            .find(x => x.identifier === systemSoftwareIdentifier)
+            ?.addPerson(person, position);
+
+        useWorkspaceStore.setState(state => ({
+            ...state,
+            workspace: builder.toObject()
+        }));
+
+        // NOTE: in this context the person can only be added outside of container
+        const node = getNodeFromElement({
+            element: person,
+            position,
+            styles: workspace.views.configuration.styles
+        });
+        setNodes(nodes => [...nodes, node]);
+
         return builder.toObject();
-    }, [workspace]);
+    }, [systemSoftwareIdentifier, setNodes, workspace]);
     
     // NOTE: the software system added can either be an existing one or a new one
     // The existing system is included in the view, while the new one is also added to the model
     const addSoftwareSystem = useCallback((position: Position) => {
+        const softwareSystem = new SoftwareSystem({
+            identifier: `softwareSystem_${v4()}`,
+            name: "Software System",
+        })
+        
         const builder = new Workspace(workspace);
+        builder.model
+            .addSoftwareSystem(softwareSystem);
+        builder.views.containers
+            .find(x => x.identifier === systemSoftwareIdentifier)
+            ?.addSoftwareSystem(softwareSystem, position);
+
+        useWorkspaceStore.setState(state => ({
+            ...state,
+            workspace: builder.toObject()
+        }));
+
+        // NOTE: in this context the software system can only be added outside of container
+        const node = getNodeFromElement({
+            element: softwareSystem,
+            position,
+            styles: workspace.views.configuration.styles
+        });
+        setNodes(nodes => [...nodes, node]);
+
         return builder.toObject();
-    }, [workspace]);
+    }, [systemSoftwareIdentifier, setNodes, workspace]);
     
     const addContainer = useCallback((position: Position, groupId?: Identifier) => {
         const container = new Container({
@@ -133,10 +183,10 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
     }, [systemSoftwareIdentifier, workspace]);
 
     return {
-        addGroup,
-        addSoftwareSystem,
         addPerson,
+        addSoftwareSystem,
         addContainer,
+        addGroup,
         addRelationship,
         setElementPosition
     }

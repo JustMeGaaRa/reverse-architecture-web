@@ -9,6 +9,7 @@ import {
     IRelationshipPosition,
     ISupportImmutable,
     IViewDefinition,
+    Person,
     Position,
     Properties,
     SoftwareSystem,
@@ -101,7 +102,7 @@ export class ContainerViewDefinition implements IViewDefinition, ISupportImmutab
         this.elements.push({ id: softwareSystem.identifier, x: position.x, y: position.y });
     }
 
-    public addPerson(person: SoftwareSystem, position: Position) {
+    public addPerson(person: Person, position: Position) {
         this.include.push(person.identifier);
         this.elements.push({ id: person.identifier, x: position.x, y: position.y });
     }

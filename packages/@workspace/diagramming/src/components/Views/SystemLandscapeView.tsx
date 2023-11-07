@@ -43,7 +43,6 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
 }>> = ({
     children,
     model,
-    configuration,
     view,
     onWorkspaceChange,
     onNodeDragStop,
@@ -72,9 +71,9 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
     useViewRenderingEffect(strategy);
 
     const handleOnNodeDragStop = useCallback((event: React.MouseEvent, node: any, nodes: any[]) => {
-        setElementPosition(node.data.element.identifier, node.position);
+        onWorkspaceChange(setElementPosition(node.data.element.identifier, node.position));
         onNodeDragStop?.(event, node);
-    }, [onNodeDragStop, setElementPosition]);
+    }, [onNodeDragStop, onWorkspaceChange, setElementPosition]);
 
     const handleOnDoubleClick = useCallback((event: React.MouseEvent, node: Node) => {
         zoomIntoElement(node.data.element);
@@ -99,10 +98,10 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
 
             switch (addingElementType) {
                 case ElementType.SoftwareSystem:
-                    addSoftwareSystem(viewportTargetPoint, groupId);
+                    onWorkspaceChange(addSoftwareSystem(viewportTargetPoint, groupId));
                     break;
                 case ElementType.Person:
-                    addPerson(viewportTargetPoint, groupId);
+                    onWorkspaceChange(addPerson(viewportTargetPoint, groupId));
                     break;
             }
         }
@@ -110,6 +109,7 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
         reactFlowRef,
         addingElementType,
         isAddingElementEnabled,
+        onWorkspaceChange,
         getViewportPoint,
         addSoftwareSystem,
         addPerson
@@ -128,25 +128,26 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
 
             switch (addingElementType) {
                 case ElementType.Group:
-                    addGroup(viewportPoint);
+                    onWorkspaceChange(addGroup(viewportPoint));
                     break;
                 case ElementType.SoftwareSystem:
-                    addSoftwareSystem(viewportPoint);
+                    onWorkspaceChange(addSoftwareSystem(viewportPoint));
                     break;
                 case ElementType.Person:
-                    addPerson(viewportPoint);
+                    onWorkspaceChange(addPerson(viewportPoint));
                     break;
             }
         }
 
         if (isCommentAddingEnabled) {
-            
+            // TODO: move the logic of adding comments outside of component
         }
     }, [
         reactFlowRef,
         addingElementType,
         isAddingElementEnabled,
         isCommentAddingEnabled,
+        onWorkspaceChange,
         getViewportPoint,
         addGroup,
         addSoftwareSystem,
@@ -166,8 +167,8 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
     }, [reactFlowRef, getViewportPoint, setMousePosition]);
 
     const handleOnConnect = useCallback((connection: Connection) => {
-        addRelationship(connection.source, connection.target);
-    }, [addRelationship]);
+        onWorkspaceChange(addRelationship(connection.source, connection.target));
+    }, [addRelationship, onWorkspaceChange]);
 
     return (
         <WorkspaceViewRenderer

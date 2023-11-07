@@ -73,7 +73,7 @@ export const ContainerView: FC<PropsWithChildren<{
     const handleOnNodeDragStop = useCallback((event: React.MouseEvent, node: any, nodes: any[]) => {
         onWorkspaceChange(setElementPosition(node.data.element.identifier, node.position));
         onNodeDragStop?.(event, node);
-    }, [onNodeDragStop, setElementPosition, onWorkspaceChange]);
+    }, [onNodeDragStop, onWorkspaceChange, setElementPosition]);
 
     const handleOnDoubleClick = useCallback((event: React.MouseEvent, node: Node) => {
         zoomIntoElement(node.data.element);
@@ -109,10 +109,10 @@ export const ContainerView: FC<PropsWithChildren<{
         reactFlowRef,
         isAddingElementEnabled,
         addingElementType,
+        onWorkspaceChange,
         getViewportPoint,
         addGroup,
         addContainer,
-        onWorkspaceChange
     ]);
 
     const handleOnPaneClick = useCallback((event: React.MouseEvent) => {
@@ -138,10 +138,10 @@ export const ContainerView: FC<PropsWithChildren<{
         reactFlowRef,
         isAddingElementEnabled,
         addingElementType,
+        onWorkspaceChange,
         getViewportPoint,
         addSoftwareSystem,
         addPerson,
-        onWorkspaceChange
     ]);
 
     const handleOnConnect = useCallback((connection: Connection) => {

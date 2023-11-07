@@ -43,7 +43,6 @@ export const ComponentView: FC<PropsWithChildren<{
 }>> = ({
     children,
     model,
-    configuration,
     view,
     onWorkspaceChange,
     onNodeDragStop,
@@ -73,9 +72,9 @@ export const ComponentView: FC<PropsWithChildren<{
     useViewRenderingEffect(strategy);
 
     const handleOnNodeDragStop = useCallback((event: React.MouseEvent, node: any, nodes: any[]) => {
-        setElementPosition(node.data.element.identifier, node.position);
+        onWorkspaceChange(setElementPosition(node.data.element.identifier, node.position));
         onNodeDragStop?.(event, node);
-    }, [onNodeDragStop, setElementPosition]);
+    }, [onNodeDragStop, onWorkspaceChange, setElementPosition]);
 
     const handleOnDoubleClick = useCallback((event: React.MouseEvent, node: Node) => {
         zoomIntoElement(node.data.element);
@@ -100,10 +99,10 @@ export const ComponentView: FC<PropsWithChildren<{
 
             switch (addingElementType) {
                 case ElementType.Group:
-                    addGroup(viewportTargetPoint);
+                    onWorkspaceChange(addGroup(viewportTargetPoint));
                     break;
                 case ElementType.Component:
-                    addComponent(viewportTargetPoint, groupId);
+                    onWorkspaceChange(addComponent(viewportTargetPoint, groupId));
                     break;
             }
         }
@@ -111,6 +110,7 @@ export const ComponentView: FC<PropsWithChildren<{
         reactFlowRef,
         isAddingElementEnabled,
         addingElementType,
+        onWorkspaceChange,
         getViewportPoint,
         addGroup,
         addComponent
@@ -128,13 +128,13 @@ export const ComponentView: FC<PropsWithChildren<{
 
             switch (addingElementType) {
                 case ElementType.SoftwareSystem:
-                    addSoftwareSystem(viewportPoint);
+                    onWorkspaceChange(addSoftwareSystem(viewportPoint));
                     break;
                 case ElementType.Person:
-                    addPerson(viewportPoint);
+                    onWorkspaceChange(addPerson(viewportPoint));
                     break;
                 case ElementType.Container:
-                    addContainer(viewportPoint);
+                    onWorkspaceChange(addContainer(viewportPoint));
                     break;
             }
         }
@@ -142,6 +142,7 @@ export const ComponentView: FC<PropsWithChildren<{
         reactFlowRef,
         isAddingElementEnabled,
         addingElementType,
+        onWorkspaceChange,
         getViewportPoint,
         addSoftwareSystem,
         addPerson,
@@ -149,8 +150,8 @@ export const ComponentView: FC<PropsWithChildren<{
     ]);
 
     const handleOnConnect = useCallback((connection: Connection) => {
-        addRelationship(connection.source, connection.target);
-    }, [addRelationship]);
+        onWorkspaceChange(addRelationship(connection.source, connection.target));
+    }, [addRelationship, onWorkspaceChange]);
 
     return (
         <WorkspaceViewRenderer

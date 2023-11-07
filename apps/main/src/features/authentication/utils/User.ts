@@ -2,187 +2,223 @@ const defaultUsers = [
     {
         username: "jonathan.joestar",
         fullname: "Jonathan Joestar",
-        email: "joseph.joestar@rvrs.io",
+        email: "joseph.joestar@restruct.io",
     },
     {
         username: "will.zeppeli",
         fullname: "Will A. Zeppeli",
-        email: undefined,
+        email: "will.zeppeli@restruct.io",
     },
     {
         username: "robert.speedwagon",
         fullname: "Robert E. O. Speedwagon",
-        email: undefined,
-    },
-    {
-        username: "dio.brando",
-        fullname: "Dio Brando",
-        email: undefined,
+        email: "robert.speedwagon@restruct.io",
     },
     {
         username: "erina.pendleton",
         fullname: "Erina Pendleton",
-        email: undefined,
+        email: "erina.pendleton@restruct.io",
     },
     {
-        username: "george.joestar.i",
-        fullname: "George Joestar I",
-        email: undefined,
-    },
-    {
-        username: "poco",
-        fullname: "Poco",
-        email: undefined,
-    },
-    {
-        username: "pocos.sister",
-        fullname: "Poco's Sister",
-        email: undefined,
+        username: "dio.brando",
+        fullname: "Dio Brando",
+        email: "dio.brando@restruct.io",
     },
     {
         username: "mary.joestar",
         fullname: "Mary Joestar",
-        email: undefined,
+        email: "mary.joestar@restruct.io",
     },
     {
         username: "joseph.joestar",
         fullname: "Joseph Joestar",
-        email: undefined,
+        email: "joseph.joestar@restruct.io",
     },
     {
         username: "caesar.zeppeli",
         fullname: "Caesar Anthonio Zeppeli",
-        email: undefined,
+        email: "caesar.zeppeli@restruct.io",
     },
     {
         username: "lisa.lisa",
         fullname: "Lisa Lisa",
-        email: undefined,
+        email: "lisa.lisa@restruct.io",
     },
     {
         username: "rudol.von.stroheim",
         fullname: "Rudol von Stroheim",
-        email: undefined,
+        email: "rudol.von.stroheim@restruct.io",
     },
     {
-        username: "messina",
-        fullname: "Messina",
-        email: undefined,
-    },
-    {
-        username: "loggins",
-        fullname: "Loggins",
-        email: undefined,
+        username: "erina.joestar",
+        fullname: "Erina Joestar",
+        email: "erina.joestar@restruct.io",
     },
     {
         username: "suzi.q",
         fullname: "Suzi Q",
-        email: undefined,
-    },
-    {
-        username: "kars",
-        fullname: "Kars",
-        email: undefined,
-    },
-    {
-        username: "esidisi",
-        fullname: "Esidisi",
-        email: undefined,
-    },
-    {
-        username: "wamuu",
-        fullname: "Wamuu",
-        email: undefined,
-    },
-    {
-        username: "santana",
-        fullname: "Santana",
-        email: undefined,
+        email: "suzi.q@restruct.io",
     },
     {
         username: "mario.zeppeli",
         fullname: "Mario Zeppeli",
-        email: undefined,
+        email: "mario.zeppeli@restruct.io",
     },
     {
-        username: "george.joestar.ii",
-        fullname: "George Joestar II",
-        email: undefined,
+        username: "messina",
+        fullname: "Messina",
+        email: "messina@restruct.io",
+    },
+    {
+        username: "loggins",
+        fullname: "Loggins",
+        email: "loggins@restruct.io",
+    },
+    {
+        username: "kars",
+        fullname: "Kars",
+        email: "kars@restruct.io",
+    },
+    {
+        username: "esidisi",
+        fullname: "Esidisi",
+        email: "esidisi@restruct.io",
+    },
+    {
+        username: "wamuu",
+        fullname: "Wamuu",
+        email: "wamuu@restruct.io",
+    },
+    {
+        username: "santana",
+        fullname: "Santana",
+        email: "santana@restruct.io",
     },
     {
         username: "jotaro.kujo",
         fullname: "Jotaro Kujo",
-        email: undefined,
+        email: "jotaro.kujo@restruct.io",
     },
     {
         username: "muhammad.avdol",
         fullname: "Muhammad Avdol",
-        email: undefined,
+        email: "muhammad.avdol@restruct.io",
     },
     {
         username: "noria.kakyoin",
         fullname: "Noriaki Kakyoin",
-        email: undefined,
+        email: "noria.kakyoin@restruct.io",
     },
     {
-        username: "jean.pierre.polnareff",
+        username: "jean.polnareff",
         fullname: "Jean Pierre Polnareff",
-        email: undefined,
-    },
-    {
-        username: "iggy",
-        fullname: "Iggy",
-        email: undefined,
-    },
-    {
-        username: "holy.kujo",
-        fullname: "Holy Kujo",
-        email: undefined,
+        email: "jean.polnareff@restruct.io",
     },
     {
         username: "josuke.higashikata",
         fullname: "Josuke Higashikata",
-        email: undefined,
+        email: "josuke.higashikata@restruct.io",
     },
     {
         username: "koihi.hirose",
         fullname: "Koichi Hirose",
-        email: undefined,
+        email: "koihi.hirose@restruct.io",
     },
     {
         username: "okuyasu.nijimura",
         fullname: "Okuyasu Nijimura",
-        email: undefined,
+        email: "okuyasu.nijimura@restruct.io",
     },
     {
         username: "rohan.kishibe",
         fullname: "Rohan Kishibe",
-        email: undefined,
+        email: "rohan.kishibe@restruct.io",
     },
     {
-        username: "keicho.nijimura",
-        fullname: "Keicho Nijimura",
-        email: undefined,
+        username: "yoshikage.kira",
+        fullname: "Yoshikage Kira",
+        email: "yoshikage.kira@restruct.io",
     },
     {
-        username: "tomoko.higashikata",
-        fullname: "Tomoko Higashikata",
-        email: undefined,
+        username: "giorno.giovanna",
+        fullname: "Giorno Giovanna",
+        email: "giorno.giovanna@restruct.io",
     },
     {
-        username: "ayana.hirose",
-        fullname: "Ayana Hirose",
-        email: undefined,
+        username: "bruno.bucciarati",
+        fullname: "Bruno Bucciarati",
+        email: "bruno.bucciarati@restruct.io",
+    },
+    {
+        username: "leone.abbacchio",
+        fullname: "Leone Abbacchio",
+        email: "leone.abbacchio@restruct.io",
+    },
+    {
+        username: "guido.mista",
+        fullname: "Guido Mista",
+        email: "guido.mista@restruct.io",
+    },
+    {
+        username: "narancia.ghirga",
+        fullname: "Narancia Ghirga",
+        email: "narancia.ghirga@restruct.io",
+    },
+    {
+        username: "pannacotta.fugo",
+        fullname: "Pannacotta Fugo",
+        email: "pannacotta.fugo@restruct.io",
+    },
+    {
+        username: "trish.una",
+        fullname: "Trish Una",
+        email: "trish.una@restruct.io",
+    },
+    {
+        username: "jolyne.cujoh",
+        fullname: "Jolyne Cujoh",
+        email: "jolyne.cujoh@restruct.io",
+    },
+    {
+        username: "ermes.costello",
+        fullname: "Ermes Costello",
+        email: "ermes.costello@restruct.io",
+    },
+    {
+        username: "foo.fighters",
+        fullname: "Foo Fighters",
+        email: "foo.fighters@restruct.io",
+    },
+    {
+        username: "emporio.alnino",
+        fullname: "Emporio Alnino",
+        email: "emporio.alnino@restruct.io",
+    },
+    {
+        username: "weather.report",
+        fullname: "Weather Report",
+        email: "weather.report@restruct.io",
+    },
+    {
+        username: "narciso.anasui",
+        fullname: "Narciso Anasui",
+        email: "narciso.anasui@restruct.io",
+    },
+    {
+        username: "enrico.pucci",
+        fullname: "Enrico Pucci",
+        email: "enrico.pucci@restruct.io",
     }
 ]
 
 const colorSchemes = [
+    "gray",
     "blue",
     "green",
     "red",
     "orange",
     "yellow",
-    "purple",
+    "purple"
 ]
 
 export const createRandomUser = () => {
@@ -190,4 +226,11 @@ export const createRandomUser = () => {
         ...defaultUsers.at(Math.floor(Math.random() * defaultUsers.length)),
         color: colorSchemes.at(Math.floor(Math.random() * colorSchemes.length))
     };
+}
+
+export const createDefaultUser = () => {
+    return {
+        ...defaultUsers.at(0),
+        color: colorSchemes.at(0)
+    }
 }
