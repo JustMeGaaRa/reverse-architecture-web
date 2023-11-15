@@ -23,6 +23,8 @@ import {
     useContentViewMode,
     usePageHeader
 } from "@reversearchitecture/ui";
+import { Workspace } from "@structurizr/dsl";
+import { StructurizrExportClient } from "@structurizr/export";
 import {
     AddPageAlt,
     BinMinus,
@@ -39,6 +41,7 @@ import {
     PropsWithChildren,
     useCallback,
     useEffect,
+    useMemo,
     useState
 } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -64,7 +67,7 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
     const [ queryParams, setQueryParam ] = useSearchParams([[ "tab", WorkspaceListTabs.All ]]);
     const { view, setView } = useContentViewMode(ContentViewMode.Card);
     const { account } = useAccount();
-    const [ workspaceApi ] = useState(new WorkspaceApi());
+    const { workspaceApi } = useMemo(() => ({ workspaceApi: new WorkspaceApi() }), []);
     const [ workspaces, setWorkspaces ] = useState([]);
     const [ selected, setSelected ] = useState<any[]>([]);
     const navigate = useNavigate();
@@ -87,21 +90,34 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
 
     }, []);
     
-    const handleOnCreate = useCallback(() => {
+    const handleOnWorkspaceCreate = useCallback(() => {
+        // TODO: encapsulate the creation of a new empty workspace
+        const structurizrExportClient = new StructurizrExportClient();
         const workspaceId = v4();
-        const workspace = {} as WorkspaceInfo;
+        const workspace: WorkspaceInfo = {
+            workspaceId,
+            name: "New Workspace",
+            createdBy: account.username,
+            createdDate: new Date().toLocaleString(),
+            lastModifiedBy: account.username,
+            lastModifiedDate: new Date().toLocaleString(),
+            tags: [],
+            content: {
+                text: structurizrExportClient.export(Workspace.Empty.toObject()),
+            }
+        };
         workspaceApi.saveWorkspace(workspaceId, workspace)
             .then(workspaces => setWorkspaces(workspaces))
             .catch(error => console.error(error));
-    }, [workspaceApi, setWorkspaces]);
+    }, [account.username, workspaceApi]);
 
-    const handleOnRemove = useCallback(() => {
+    const handleOnWorkspaceRemove = useCallback(() => {
         workspaceApi.deleteWorkspace(selected.map(x => x.workspaceId))
             .then(workspaces => setWorkspaces(workspaces))
             .catch(error => console.error(error));
     }, [workspaceApi, selected, setWorkspaces]);
 
-    const handleOnClose = useCallback(() => {
+    const handleOnWorkspaceCancelSelected = useCallback(() => {
         setSelected([]);
     }, [setSelected]);
 
@@ -132,14 +148,14 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                         aria-label={"create new project"}
                         colorScheme={"yellow"}
                         leftIcon={<AddPageAlt />}
-                        onClick={handleOnCreate}
+                        onClick={handleOnWorkspaceCreate}
                     >
                         Create Workspace
                     </Button>
                 </ButtonGroup>
             )
         })
-    }, [setHeaderContent, handleOnCreate]);
+    }, [setHeaderContent, handleOnWorkspaceCreate]);
 
     return (
         <HomePageLayoutContent>
@@ -221,7 +237,7 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                                     emptyDescription={"To get started, click the \"Create Workspace\" button to create a new project."}
                                     onClick={handleOnWorkspaceClick}
                                     onSelected={setSelected}
-                                    onRemove={handleOnRemove}
+                                    onRemove={handleOnWorkspaceRemove}
                                 />
                             </TabPanel>
                             <TabPanel>
@@ -233,7 +249,7 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                                     emptyDescription={"To get started, click the \"Create Workspace\" button to create a new project."}
                                     onClick={handleOnWorkspaceClick}
                                     onSelected={setSelected}
-                                    onRemove={handleOnRemove}
+                                    onRemove={handleOnWorkspaceRemove}
                                 />
                             </TabPanel>
                             <TabPanel>
@@ -245,7 +261,7 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                                     emptyDescription={"To get started, click the \"Create Workspace\" button to create a new project."}
                                     onClick={handleOnWorkspaceClick}
                                     onSelected={setSelected}
-                                    onRemove={handleOnRemove}
+                                    onRemove={handleOnWorkspaceRemove}
                                 />
                             </TabPanel>
                             <TabPanel>
@@ -257,7 +273,7 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                                     emptyDescription={"To get started, click the \"Create Workspace\" button to create a new project."}
                                     onClick={handleOnWorkspaceClick}
                                     onSelected={setSelected}
-                                    onRemove={handleOnRemove}
+                                    onRemove={handleOnWorkspaceRemove}
                                 />
                             </TabPanel>
                         </TabPanels>
@@ -287,7 +303,7 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                                         aria-label={"remove"}
                                         icon={<BinMinus />}
                                         title={"remove"}
-                                        onClick={handleOnRemove}
+                                        onClick={handleOnWorkspaceRemove}
                                     />
                                 </ToolbarSection>
                                 <ToolbarSection>
@@ -295,7 +311,7 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                                         aria-label={"close"}
                                         icon={<Cancel />}
                                         title={"close"}
-                                        onClick={handleOnClose}
+                                        onClick={handleOnWorkspaceCancelSelected}
                                     />
                                 </ToolbarSection>
                             </Toolbar>

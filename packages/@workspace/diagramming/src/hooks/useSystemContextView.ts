@@ -22,7 +22,7 @@ export const useSystemContextView = (systemSoftwareIdentifier: Identifier) => {
     
     const addSoftwareSystem = useCallback((position: Position, groupId?: Identifier) => {
         const softwareSystem = new SoftwareSystem({
-            identifier: `softwareSystem_${v4()}`,
+            identifier: `softwareSystem_${new String(v4()).substring(0, 8)}`,
             name: "Software System",
         })
         
@@ -51,7 +51,7 @@ export const useSystemContextView = (systemSoftwareIdentifier: Identifier) => {
     
     const addPerson = useCallback((position: Position, groupId?: Identifier) => {
         const person = new Person({
-            identifier: `person_${v4()}`,
+            identifier: `person_${new String(v4()).substring(0, 8)}`,
             name: "Person",
         })
         
@@ -79,7 +79,7 @@ export const useSystemContextView = (systemSoftwareIdentifier: Identifier) => {
 
     const addGroup = useCallback((position: Position) => {
         const group = new Group({
-            identifier: `group_${v4()}`,
+            identifier: `group_${new String(v4()).substring(0, 8)}`,
             name: "Group",
         })
 

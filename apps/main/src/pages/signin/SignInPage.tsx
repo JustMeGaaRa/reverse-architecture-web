@@ -4,18 +4,33 @@ import {
     CardBody,
     CardFooter,
     CardHeader,
-    Divider,
     Flex,
-    HStack,
-    Link,
+    Input,
+    Select,
     Text,
+    VStack,
 } from "@chakra-ui/react";
 import { ReverseArchitectureSvg } from "@reversearchitecture/ui";
 import { GitHub } from "iconoir-react";
-import { FC } from "react";
+import { FC, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { defaultUsers, useAccount } from "../../features";
 import { AuthenticationLayout } from "../signin";
 
 export const SignInPage: FC = () => {
+    const { setAccount } = useAccount();
+    const navigate = useNavigate();
+
+    const handleOnSignInClick = useCallback(() => {
+        // TODO: implement authentication via GitHub and get account details
+        // TODO: get values from the inputs
+        setAccount({
+            username: "JustMeGaaRa",
+            fullname: "JustMeGaaRa",
+            email: "justmegaara@restruct.io"
+        });
+        navigate("/");
+    }, [navigate, setAccount]);
 
     return (
         <AuthenticationLayout>
@@ -37,37 +52,37 @@ export const SignInPage: FC = () => {
                     padding={16}
                 >
                     <CardHeader>
-                        <Flex
-                            justifyContent={"space-between"}
-                        >
-                            <HStack>
-                                <ReverseArchitectureSvg />
-                                <Text color={"yellow.900"} fontSize={32}>
-                                    RVRS.IO
-                                </Text>
-                            </HStack>
-                        </Flex>
+                        <ReverseArchitectureSvg showText />
                     </CardHeader>
                     <CardBody>
-                        <Flex direction={"column"}>
-                            <Text color={"basic.white"} fontSize={32}>
-                                Welcome to Reversio
-                            </Text>
-                            <Text color={"whiteAlpha.700"} fontSize={16}>
-                                Sign up or Log In to optimise your app architecture in real time, join our community to get started today!
-                            </Text>
-                            <Divider border={"transparent"} my={4} />
+                        <VStack spacing={8}>
+                            <Flex direction={"column"} width={"100%"}>
+                                <Text color={"basic.white"} fontSize={32}>
+                                    Welcome to Restruct
+                                </Text>
+                                <Text color={"whiteAlpha.700"} fontSize={16}>
+                                    Sign up or Log In to optimise your app architecture in real time, join our community to get started today!
+                                </Text>
+                            </Flex>
+                            <Flex direction={"column"} width={"100%"} gap={4}>
+                                <Select variant={"filled"} defaultValue={defaultUsers[0].fullname}>
+                                    {defaultUsers.map(user => (
+                                        <option key={user.username} value={user.username}>{user.fullname}</option>
+                                    ))}
+                                </Select>
+                                <Input variant={"filled"} defaultValue={"reverse-architecture-community"} />
+                            </Flex>
                             <Button
-                                as={Link}
                                 colorScheme={"gray"}
                                 leftIcon={<GitHub />}
                                 size={"lg"}
                                 textDecoration={"none"}
-                                href={``}
+                                width={"100%"}
+                                onClick={handleOnSignInClick}
                             >
                                 Sign In with GitHub
                             </Button>
-                        </Flex>
+                        </VStack>
                     </CardBody>
                     <CardFooter>
                         <Text color={"whiteAlpha.700"}>© Copyright 2023 Reversio Corporation </Text>

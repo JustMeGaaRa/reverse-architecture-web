@@ -5,6 +5,6 @@ import { StructurizrExportVisitor } from "./StructurizrExportVisitor";
 export class StructurizrExportClient implements IExportClient {
     export(workspace: IWorkspace): string {
         const visitor = new StructurizrExportVisitor();
-        return visitor.visitWorkspace(workspace);
+        return visitor.visitWorkspace(workspace).join("\n");
     }
 }

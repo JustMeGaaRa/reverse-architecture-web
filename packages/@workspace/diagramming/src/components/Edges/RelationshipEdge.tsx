@@ -52,7 +52,7 @@ export const RelationshipBezierEdge: FC<{
             labelX={labelX}
             labelY={labelY}
             style={{
-                width: style.thikness,
+                width: style.thickness,
                 // TODO: handle stroke color from theme
                 stroke: selected ? "#B9BABA" : "#8A8B8C"
             }}

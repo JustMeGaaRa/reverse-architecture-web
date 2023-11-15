@@ -24,191 +24,215 @@ import {
     IDeploymentView
 } from "@structurizr/dsl";
 
-function line(line: string) {
-    return  line ? `${line}\n` : ""; 
+function indentLines(lines: string[]): string[] {
+    return lines.map(line => `\t${line}`);
 }
 
-function indent(text: string) {
-    return text
-        .split('\n')
-        .map(line => `\t${line}`)
-        .join('\n');
+function formatBody(lines: string[]): string[] {
+    return lines?.length > 0 ? indentLines(lines) : [];
+}
+
+function formatStatement(header: string, body?: string[]) {
+    return body?.length > 0 ? [`${header} {`, ...formatBody(body), "}"] : [header];
+}
+
+type StructurizrFormattingOptions = {
+    openBracesOnNewLine?: boolean;
+    elementPropertiesInBody?: boolean;
 }
 
 export class StructurizrExportVisitor implements IElementVisitor {
-    visitWorkspace(workspace: IWorkspace): string {
-        const model = indent(this.visitModel(workspace.model));
-        const views = indent(this.visitViews(workspace.views));
-        return `workspace "${workspace.name}" "${workspace.description}" {\n${model}\n${views}\n}`;
+    constructor(
+        private readonly options?: StructurizrFormattingOptions
+    ) {}
+
+    visitWorkspace(workspace: IWorkspace): string[] {
+        const model = this.visitModel(workspace.model);
+        const views = this.visitViews(workspace.views);
+        return formatStatement(
+            `workspace "${workspace.name}" "${workspace.description}"`,
+            [...model, ...views]
+        );
     }
 
-    visitModel(model: IModel): string {
-        const people = indent((model.people ?? [])
-            .map(x => this.visitPerson(x)).join("\n"));
-        const groups = indent((model.groups ?? [])
-            .map(x => this.visitGroup(x)).join("\n"));
-        const softwareSystems = indent((model.softwareSystems ?? [])
-            .map(x => this.visitSoftwareSystem(x)).join("\n"));
-        const environments = indent((model.deploymentEnvironments ?? [])
-            .map(x => this.visitDeploymentEnvironment(x)).join("\n"));
-        const relationships = indent((model.relationships ?? [])
-            .map(x => this.visitRelationship(x)).join("\n"));
-        return `model {\n${people}\n${groups}\n${softwareSystems}\n${environments}\n${relationships}\n}`;
+    visitModel(model: IModel): string[] {
+        const people = (model.people ?? []).flatMap(x => this.visitPerson(x));
+        const groups = (model.groups ?? []).flatMap(x => this.visitGroup(x));
+        const softwareSystems = (model.softwareSystems ?? []).flatMap(x => this.visitSoftwareSystem(x));
+        const environments = (model.deploymentEnvironments ?? []).flatMap(x => this.visitDeploymentEnvironment(x));
+        const relationships = (model.relationships ?? []).flatMap(x => this.visitRelationship(x));
+        return formatStatement(
+            "model",
+            [...people, ...groups, ...softwareSystems, ...environments, ...relationships]
+        );
     }
 
-    visitGroup(group: IGroup, params?: { parentId?: string; }): string {
-        const people = indent((group.people ?? [])
-            .map(x => this.visitPerson(x)).join("\n"));
-        const softwareSystems = indent((group.softwareSystems ?? [])
-            .map(x => this.visitSoftwareSystem(x)).join("\n"));
-        const containers = indent((group.containers ?? [])
-            .map(x => this.visitContainer(x)).join("\n"));
-        const components = indent((group.components ?? [])
-            .map(x => this.visitComponent(x)).join("\n"));
-        return `group "${group.name}" {\n${people}\n${softwareSystems}\n${containers}\n${components}\n}`;
+    visitGroup(group: IGroup, params?: { parentId?: string; }): string[] {
+        const people = (group.people ?? []).flatMap(x => this.visitPerson(x));
+        const softwareSystems = (group.softwareSystems ?? []).flatMap(x => this.visitSoftwareSystem(x));
+        const containers = (group.containers ?? []).flatMap(x => this.visitContainer(x));
+        const components = (group.components ?? []).flatMap(x => this.visitComponent(x));
+        return formatStatement(
+            `group "${group.name}"`,
+            [...people, ...softwareSystems, ...containers, ...components]
+        );
     }
     
-    visitPerson(person: IPerson, params?: { parentId?: string; }): string {
-        const rels = indent((person.relationships ?? [])
-            .map(x => this.visitRelationship(x)).join("\n"));
-        return `${person.identifier} = person "${person.name}" "${person.description ?? ""}" {\n${rels}\n}`;
+    visitPerson(person: IPerson, params?: { parentId?: string; }): string[] {
+        const rels = (person.relationships ?? []).flatMap(x => this.visitRelationship(x));
+        return formatStatement(`${person.identifier} = person "${person.name}" "${person.description ?? ""}"`, rels);
     }
 
-    visitSoftwareSystem(softwareSystem: ISoftwareSystem, params?: { parentId?: string; }): string {
-        const containers = indent((softwareSystem.containers ?? [])
-            .map(x => this.visitContainer(x)).join("\n"));
-        const rels = indent((softwareSystem.relationships ?? [])
-            .map(x => this.visitRelationship(x)).join("\n"));
-        return softwareSystem
-            ? `${softwareSystem.identifier} = softwareSystem "${softwareSystem.name}" "${softwareSystem.description ?? ""}" {\n${containers}\n${rels}\n}`
-            : "";
+    visitSoftwareSystem(softwareSystem: ISoftwareSystem, params?: { parentId?: string; }): string[] {
+        const groups = (softwareSystem.groups ?? []).flatMap(x => this.visitGroup(x));
+        const containers = (softwareSystem.containers ?? []).flatMap(x => this.visitContainer(x));
+        const rels = (softwareSystem.relationships ?? []).flatMap(x => this.visitRelationship(x));
+        return formatStatement(
+            `${softwareSystem.identifier} = softwareSystem "${softwareSystem.name}" "${softwareSystem.description ?? ""}"`,
+            [...groups, ...containers, ...rels]
+        );
     }
 
-    visitContainer(container: IContainer, params?: { parentId?: string; }): string {
-        const components = indent((container.components ?? [])
-            .map(x => this.visitComponent(x)).join("\n"));
-        const rels = indent((container.relationships ?? [])
-            .map(x => this.visitRelationship(x)).join("\n"));
-        return container
-            ? `${container.identifier} = container "${container.name}" "${container.description ?? ""}" {\n${components}\n${rels}\n}`
-            : "";
+    visitContainer(container: IContainer, params?: { parentId?: string; }): string[] {
+        const groups = (container.groups ?? []).flatMap(x => this.visitGroup(x));
+        const components = (container.components ?? []).flatMap(x => this.visitComponent(x));
+        const rels = (container.relationships ?? []).flatMap(x => this.visitRelationship(x));
+        return formatStatement(
+            `${container.identifier} = container "${container.name}" "${container.description ?? ""}"`,
+            [...groups, ...components, ...rels]
+        );
     }
 
-    visitComponent(component: IComponent, params?: { parentId?: string; }): string {
-        return component
-            ? `${component.identifier} = component "${component.name}" "${component.description ?? ""}"`
-            : "";
+    visitComponent(component: IComponent, params?: { parentId?: string; }): string[] {
+        return formatStatement(
+            `${component.identifier} = component "${component.name}" "${component.description ?? ""}"`
+        );
     }
 
-    visitDeploymentEnvironment(environment: IDeploymentEnvironment): string {
-        const deploymentNodes = indent((environment.deploymentNodes ?? [])
-            .map(x => this.visitDeploymentNode(x)).join("\n"));
-        return environment
-            ? `deploymentEnvironment "${environment.name}" {\n${deploymentNodes}\n}`
-            : "";
+    visitDeploymentEnvironment(environment: IDeploymentEnvironment): string[] {
+        const deploymentNodes = (environment.deploymentNodes ?? []).flatMap(x => this.visitDeploymentNode(x));
+        return formatStatement(
+            `deploymentEnvironment "${environment.name}"`,
+            [...deploymentNodes]
+        );
     }
 
-    visitDeploymentNode(deploymentNode: IDeploymentNode, params?: { parentId?: string; }): string {
+    visitDeploymentNode(deploymentNode: IDeploymentNode, params?: { parentId?: string; }): string[] {
         // TODO: visit infrastructure nodes
-        const deploymentNodes = indent((deploymentNode.deploymentNodes ?? [])
-            .map(x => this.visitDeploymentNode(x)).join("\n"));
-        const infrastructureNodes = indent((deploymentNode.infrastructureNodes ?? [])
-            .map(x => this.visitInfrastructureNode(x)).join("\n"));
-        const systems = indent((deploymentNode.softwareSystemInstances ?? [])
-            .map(x => this.visitSoftwareSystemInstance(x)).join("\n"));
-        const containers = indent((deploymentNode.containerInstances ?? [])
-            .map(x => this.visitContainerInstance(x)).join("\n"));
-        return deploymentNode
-            ? `deploymentNode "${deploymentNode.name}" "${deploymentNode.description}" {\n${deploymentNodes}\n${infrastructureNodes}\n${systems}\n${containers}\n}`
-            : "";
+        const deploymentNodes = (deploymentNode.deploymentNodes ?? []).flatMap(x => this.visitDeploymentNode(x));
+        const infrastructureNodes = (deploymentNode.infrastructureNodes ?? []).flatMap(x => this.visitInfrastructureNode(x));
+        const systems = (deploymentNode.softwareSystemInstances ?? []).flatMap(x => this.visitSoftwareSystemInstance(x));
+        const containers = (deploymentNode.containerInstances ?? []).flatMap(x => this.visitContainerInstance(x));
+        return formatStatement(
+            `deploymentNode "${deploymentNode.name}" "${deploymentNode.description}"`,
+            [...deploymentNodes, ...infrastructureNodes, ...systems, ...containers]
+        );
     }
 
-    visitInfrastructureNode(infrastructureNode: IInfrastructureNode, params?: { parentId?: string; }): string {
-        return "";
+    visitInfrastructureNode(infrastructureNode: IInfrastructureNode, params?: { parentId?: string; }): string[] {
+        return [];
     }
     
-    visitSoftwareSystemInstance(instance: ISoftwareSystemInstance, params?: { parentId?: string; }): string {
-        return `${instance.identifier} = softwareSystemInstance "${instance.softwareSystemIdentifier}"`;
+    visitSoftwareSystemInstance(instance: ISoftwareSystemInstance, params?: { parentId?: string; }): string[] {
+        return formatStatement(
+            `${instance.identifier} = softwareSystemInstance "${instance.softwareSystemIdentifier}"`
+        );
     }
 
-    visitContainerInstance(instance: IContainerInstance, params?: { parentId?: string; }): string {
-        return `${instance.identifier} = containerInstance "${instance.containerIdentifier}"`;
+    visitContainerInstance(instance: IContainerInstance, params?: { parentId?: string; }): string[] {
+        return formatStatement(
+            `${instance.identifier} = containerInstance "${instance.containerIdentifier}"`
+        );
     }
 
-    visitRelationship(relationship: IRelationship): string {
-        return `${relationship.sourceIdentifier} -> ${relationship.targetIdentifier} "${relationship.description ?? ""}"`;
+    visitRelationship(relationship: IRelationship): string[] {
+        return formatStatement(
+            `${relationship.sourceIdentifier} -> ${relationship.targetIdentifier} "${relationship.description ?? ""}"`
+        );
     }
 
-    visitViews(views: IViews): string {
-        const systemLandscape = indent((views.systemLandscape ? [views.systemLandscape] : [])
-            .map(x => this.visitSystemLandscapeView(x)).join("\n"));
-        const systemContext = indent((views.systemContexts ?? [])
-            .map(x => this.visitSystemContextView(x)).join("\n"));
-        const containers = indent((views.containers ?? [])
-            .map(x => this.visitContainerView(x)).join("\n"));
-        const components = indent((views.components ?? [])
-            .map(x => this.visitComponentView(x)).join("\n"));
-        const deployments = indent((views.deployments ?? [])
-            .map(x => this.visitDeploymentView(x)).join("\n"));
-        const styles = line(indent(this.visitStyles(views.configuration.styles)));
-        return `views {\n${systemLandscape}\n${systemContext}\n${containers}\n${components}\n${deployments}\n${styles}\n}`;
+    visitViews(views: IViews): string[] {
+        const systemLandscape = (views.systemLandscape ? [views.systemLandscape] : []).flatMap(x => this.visitSystemLandscapeView(x));
+        const systemContext = (views.systemContexts ?? []).flatMap(x => this.visitSystemContextView(x));
+        const containers = (views.containers ?? []).flatMap(x => this.visitContainerView(x));
+        const components = (views.components ?? []).flatMap(x => this.visitComponentView(x));
+        const deployments = (views.deployments ?? []).flatMap(x => this.visitDeploymentView(x));
+        // TODO: format styles if not empty
+        const styles = (this.visitStyles(views.configuration.styles));
+        return formatStatement(
+            "views",
+            [...systemLandscape, ...systemContext, ...containers, ...components, ...deployments]);
     }
 
-    visitSystemLandscapeView(view: ISystemContextView): string {
-        return `systemLandscape "${view.title}" {\n${indent("include *")}\n${indent("autoLayout")}\n}`;
+    visitSystemLandscapeView(view: ISystemContextView): string[] {
+        return formatStatement(
+            `systemLandscape "${view.title}"`,
+            ["include *", "autoLayout"]
+        );
     }
 
-    visitSystemContextView(view: ISystemContextView): string {
-        return `systemContext ${view.identifier} "${view.key}" {\n${indent("include *")}\n${indent("autoLayout")}\n}`;
+    visitSystemContextView(view: ISystemContextView): string[] {
+        return formatStatement(
+            `systemContext ${view.identifier} "${view.key}"`,
+            ["include *", "autoLayout"]
+        );
     }
 
-    visitContainerView(view: IContainerView): string {
-        return `container ${view.identifier} "${view.key}" {\n${indent("include *")}\n${indent("autoLayout")}\n}`;
+    visitContainerView(view: IContainerView): string[] {
+        return formatStatement(
+            `container ${view.identifier} "${view.key}"`,
+            ["include *", "autoLayout"]
+        );
     }
 
-    visitComponentView(view: IContainerView): string {
-        return `component ${view.identifier} "${view.key}" {\n${indent("include *")}\n${indent("autoLayout")}\n}`;
+    visitComponentView(view: IContainerView): string[] {
+        return formatStatement(
+            `component ${view.identifier} "${view.key}"`,
+            ["include *", "autoLayout"]
+        );
     }
 
-    visitDeploymentView(view: IDeploymentView): string {
-        return `deployment ${view.identifier} "${view.environment}" "${view.key}" {\n${indent("include *")}\n${indent("autoLayout")}\n}`;
+    visitDeploymentView(view: IDeploymentView): string[] {
+        return formatStatement(
+            `deployment ${view.identifier} "${view.environment}" "${view.key}"`,
+            ["include *", "autoLayout"]
+        );
     }
 
-    visitStyles(styles: Styles): string {
-        const elements = indent(this.visitElementStyle(styles?.elements));
-        const relationships = indent(this.visitRelationshipStyle(styles?.relationships));
-        return `styles {\n${elements}\n${relationships}\n}`;
+    visitStyles(styles: Styles): string[] {
+        const elements = this.visitElementStyle(styles?.elements);
+        const relationships = this.visitRelationshipStyle(styles?.relationships);
+        return formatStatement(
+            "styles",
+            [...elements, ...relationships]
+        );
     }
 
-    visitElementStyle(elementStyle: ElementStyle): string {
-        return !elementStyle ? "" : elementStyle
-            .map(style => {
+    visitElementStyle(elementStyle: ElementStyle): string[] {
+        return !elementStyle ? [] : elementStyle
+            .flatMap(style => {
                 const properties = Object.keys(style)
                     .filter(property => property !== "tag" && property !== "properties")
-                    .map(property => line(indent(`${property} ${style[property]}`)))
-                    .join("");
-                return `element "${style.tag}" {\n${properties}\n}`;
-            })
-            .join("\n");
+                    .map(property => `${property} ${style[property]}`);
+                return formatStatement(`element "${style.tag}"`, properties);
+            });
     }
 
-    visitRelationshipStyle(relationshipStyle: RelationshipStyle): string {
-        return !relationshipStyle ? "" : relationshipStyle
-            .map(style => {
+    visitRelationshipStyle(relationshipStyle: RelationshipStyle): string[] {
+        return !relationshipStyle ? [] : relationshipStyle
+            .flatMap(style => {
                 const properties = Object.keys(style)
                     .filter(property => property !== "tag" && property !== "properties")
-                    .map(property => line(indent(`${property} ${style[property]}`)))
-                    .join("");
-                return `relationship "${style.tag}" {\n${properties}\n}`;
-            })
-            .join("\n");
+                    .map(property => `${property} ${style[property]}`);
+                return formatStatement(`relationship "${style.tag}"`, properties);
+            });
     }
 
-    visitTechnology(technology: Technology[]): string {
-        return !technology ? "" : technology.map(x => x.name).join(", ");
+    visitTechnology(technology: Technology[]): string[] {
+        return !technology ? [] : [technology.map(x => x.name).join(", ")];
     }
 
-    visitTags(tags: Tag[]): string {
-        return !tags ? "" : tags.map(x => x.name).join(", ");
+    visitTags(tags: Tag[]): string[] {
+        return !tags ? [] : [tags.map(x => x.name).join(", ")];
     }
 }

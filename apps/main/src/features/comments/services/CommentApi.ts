@@ -1,12 +1,12 @@
+import { useCommentStore } from "../store";
 import { CommentInfo, CommentThread } from "../types";
 
 export class CommentApi {
-    private comments: Map<string, Array<CommentThread>>;
-
     constructor(
         private readonly baseUrl: string = ""
     ) {
         const commentThread1: CommentThread = {
+            workspaceId: "big-bank-plc",
             commentThreadId: "comment-thread-1",
             comments: [
                 {
@@ -65,6 +65,7 @@ export class CommentApi {
             }
         }
         const commentThread2: CommentThread = {
+            workspaceId: "big-bank-plc",
             commentThreadId: "comment-thread-2",
             comments: [
                 {
@@ -102,6 +103,7 @@ export class CommentApi {
             }
         }
         const commentThread3: CommentThread = {
+            workspaceId: "big-bank-plc",
             commentThreadId: "comment-thread-3",
             comments: [
                 {
@@ -132,6 +134,7 @@ export class CommentApi {
             },
         }
         const commentThread4: CommentThread = {
+            workspaceId: "big-bank-plc",
             commentThreadId: "comment-thread-4",
             comments: [
                 {
@@ -154,53 +157,31 @@ export class CommentApi {
                 position: { x: 500, y: 300 }
             },
         }
-
-        this.comments = new Map<string, Array<CommentThread>>();
-        this.comments.set("big-bank-plc", [
-            commentThread1,
-            commentThread2,
-            commentThread3,
-            commentThread4,
-        ]);
     }
 
     async getCommentThreadById(workspaceId: string, commentThreadId: string): Promise<CommentThread> {
-        const list = this.comments.get(workspaceId)?.find(x => x.commentThreadId === commentThreadId);
+        const list = useCommentStore.getState().commentThreads.find(x => x.workspaceId === workspaceId && x.commentThreadId === commentThreadId);
         return Promise.resolve(list);
     }
 
     async getCommentThreads(workspaceId: string): Promise<Array<CommentThread>> {
-        const list = this.comments.get(workspaceId) ?? [];
+        const list = useCommentStore.getState().commentThreads.filter(x => x.workspaceId === workspaceId) ?? [];
         return Promise.resolve(list);
     }
 
     async saveCommentThread(workspaceId: string, comment: CommentThread): Promise<CommentThread> {
-        const list = this.comments.get(workspaceId) ?? [];
-        this.comments.set(workspaceId, list.concat(comment));
+        useCommentStore.getState().startCommentThread(workspaceId, comment);
         return Promise.resolve(comment);
     }
 
     async deleteCommentThread(workspaceId: string, commentId: string): Promise<void> {
-        const list = this.comments.get(workspaceId)?.filter(x => x.commentThreadId !== commentId) ?? [];
-        this.comments.set(workspaceId, list);
+        useCommentStore.getState().resolveCommentThread(commentId);
         return Promise.resolve();
     }
 
     async saveCommentThreadReply(workspaceId: string, commentThreadId: string, comment: CommentInfo): Promise<CommentThread> {
-        const list = this.comments.get(workspaceId) ?? [];
-        const commentThread = list.find(x => x.commentThreadId === commentThreadId);
-        if (commentThread) {
-            commentThread.comments.push(comment);
-        }
-        return Promise.resolve(commentThread);
-    }
-
-    async deleteCommentThreadReply(workspaceId: string, commentThreadId: string, commentId: string): Promise<void> {
-        const list = this.comments.get(workspaceId) ?? [];
-        const commentThread = list.find(x => x.commentThreadId === commentThreadId);
-        if (commentThread) {
-            commentThread.comments = commentThread.comments.filter(x => x.commentId !== commentId);
-        }
-        return Promise.resolve();
+        useCommentStore.getState().replyCommentThread(commentThreadId, comment);
+        const thread = useCommentStore.getState().commentThreads.find(x => x.commentThreadId === commentThreadId);
+        return Promise.resolve(thread);
     }
 }

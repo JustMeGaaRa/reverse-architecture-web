@@ -21,7 +21,7 @@ export const WorkspaceEditor: FC<{
             rules: [],
             colors: {
                 "editor.background": "#1D1F20"
-            }
+            },
         })
     }, []);
     
@@ -39,7 +39,8 @@ export const WorkspaceEditor: FC<{
                     padding: { top: 16, bottom: 16 },
                     fontLigatures: true,
                     scrollbar: { verticalScrollbarSize: 4 },
-                    wordWrap: "on",
+                    wordWrap: "off",
+                    theme: "reverse-architecture",
                 }}
                 onMount={handleOnMount}
                 onChange={(value, event) => onChange?.(value)}

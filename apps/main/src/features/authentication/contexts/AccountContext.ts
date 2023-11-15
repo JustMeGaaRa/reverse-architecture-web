@@ -1,8 +1,9 @@
 import { createContext } from "react";
+import { Account } from "../types";
 
 export const AccountContext = createContext<{
-    account?: any;
-    setAccount: (account: any) => void;
+    account?: Account;
+    setAccount: (account: Account) => void;
 }>({
-    setAccount: (account: any) => {}
+    setAccount: (account: Account) => {}
 });

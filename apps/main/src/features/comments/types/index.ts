@@ -1,3 +1,4 @@
 export * from "./CommentInfo";
-export * from "./CommentMetadata";
 export * from "./CommentThread";
+export * from "./CommentThreadMetadata";
+export * from "./User";

@@ -11,7 +11,7 @@ export interface RelationshipStyleProperties {
     properties: Properties;
     routing: RoutingStyle;
     style: LineStyle;
-    thikness: number;
+    thickness: number;
     width: number;
 }
 
@@ -23,6 +23,6 @@ export const StructurizrRelationshipTagDefaultStyle: RelationshipStyleProperties
     properties: new Map(),
     routing: RoutingStyle.Direct,
     style: LineStyle.Dashed,
-    thikness: 2,
+    thickness: 2,
     width: 200,
 }

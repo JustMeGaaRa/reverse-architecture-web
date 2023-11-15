@@ -39,7 +39,7 @@ export const WorkspaceCommentGroup: FC<{
         commentApi.saveCommentThreadReply(workspace.name,  commentThreadId, {
             commentId: v4(),
             commentThreadId: commentThreadId,
-            author: account.name,
+            author: account.username,
             createdDate: new Date().toLocaleString(),
             text: text
         })

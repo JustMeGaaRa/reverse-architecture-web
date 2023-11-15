@@ -2,7 +2,7 @@ import { createToken, Lexer } from "chevrotain";
 import { TokenMap } from "./TokenMap";
 
 // global tokens
-const Identifier = createToken({ name: "Identifier", pattern: /[a-zA-Z]+[a-zA-Z0-9]+/ });
+const Identifier = createToken({ name: "Identifier", pattern: /[a-zA-Z]+[a-zA-Z0-9_]+/ });
 const Equals = createToken({ name: "Equals", pattern: /=/ });
 const StringLiteral = createToken({ name: "StringLiteral", pattern: /"[^"]*"/ });
 const NumericLiteral = createToken({ name: "NumericLiteral", pattern: /[0-9]+/ });
@@ -69,7 +69,7 @@ const FontSize = createToken({ name: "FontSize", pattern: /fontSize/i });
 const Border = createToken({ name: "Border", pattern: /border/ });
 const Opacity = createToken({ name: "Opacity", pattern: /opacity/ });
 const Metadata = createToken({ name: "Metadata", pattern: /metadata/ });
-const Thinkness = createToken({ name: "Thinkness", pattern: /thickness/ });
+const Thickness = createToken({ name: "Thickness", pattern: /thickness/ });
 const Style = createToken({ name: "Style", pattern: /style/ });
 const Routing = createToken({ name: "Routing", pattern: /routing/ });
 const Position = createToken({ name: "Position", pattern: /position/ });
@@ -139,7 +139,7 @@ export const allTokens = [
     Border,
     Opacity,
     Metadata,
-    Thinkness,
+    Thickness,
     Style,
     Routing,
     Position,

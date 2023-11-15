@@ -11,7 +11,9 @@ export type WorkspaceInfo = {
     coverUrl?: string;
     group?: string;
     tags: Array<string>;
-    text: string;
-    metadata?: IWorkspaceMetadata;
-    theme?: IWorkspaceTheme;
+    content?: {
+        text: string;
+        metadata?: IWorkspaceMetadata;
+        theme?: IWorkspaceTheme;
+    }
 }

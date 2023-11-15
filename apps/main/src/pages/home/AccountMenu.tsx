@@ -63,13 +63,11 @@ export const AccountMenu: FC<PropsWithChildren<{
             </MenuButton>
             <MenuList>
                 <MenuGroup>
-                    <MenuItem icon={<ProfileCircle />}>Personal Profile</MenuItem>
+                    <MenuItem icon={<ProfileCircle />}>Profile</MenuItem>
                     <MenuItem icon={<ProfileCircle />}>Theme</MenuItem>
-                    <MenuItem icon={<ProfileCircle />}>Upgrade</MenuItem>
                 </MenuGroup>
                 <MenuDivider />
                 <MenuGroup>
-                    <MenuItem icon={<ProfileCircle />}>Switch Account</MenuItem>
                     <MenuItem icon={<LogOut />}>Sign Out</MenuItem>
                 </MenuGroup>
             </MenuList>

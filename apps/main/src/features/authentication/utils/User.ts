@@ -1,4 +1,6 @@
-const defaultUsers = [
+import { Account } from "../types";
+
+export const defaultUsers: Account[] = [
     {
         username: "jonathan.joestar",
         fullname: "Jonathan Joestar",

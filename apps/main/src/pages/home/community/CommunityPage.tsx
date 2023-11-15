@@ -35,9 +35,9 @@ import {
 } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-    CommunityHubApi,
+    CommunityTemplateList,
     WorkspaceInfo,
-    CommunityTemplateList
+    WorkspaceApi
 } from "../../../features";
 import {
     HomePageLayoutContent,
@@ -48,12 +48,7 @@ export const CommunityPage: FC<PropsWithChildren> = () => {
     const { setShowSidebarButton } = usePageSidebar();
     const { setHeaderContent } = usePageHeader();
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const [ communityApi ] = useState(new CommunityHubApi());
-    const [ workspaces, setWorkspaces ] = useState<Array<WorkspaceInfo>>([]);
-    const [ filters, setFilters ] = useState([]);
-    const [ selectedFilter, setSelectedFilter ] = useState("Explore");
-    const navigate = useNavigate();
-
+    
     const defaultFilters = useMemo(() => {
         return [
             { tag: "Explore", icon: Compass },
@@ -61,10 +56,15 @@ export const CommunityPage: FC<PropsWithChildren> = () => {
             { tag: "Popular", icon: FireFlame }
         ];
     }, []);
+    const { workspaceApi } = useMemo(() => ({ workspaceApi: new WorkspaceApi() }), []);
+    const [ workspaces, setWorkspaces ] = useState<Array<WorkspaceInfo>>([]);
+    const [ filters, setFilters ] = useState([]);
+    const [ selectedFilter, setSelectedFilter ] = useState("Explore");
+    const navigate = useNavigate();
     const filtered = workspaces.filter(x => x.tags.includes(selectedFilter) || selectedFilter === "Explore");
 
     useEffect(() => {
-        communityApi.getWorkspaces()
+        workspaceApi.getWorkspaces()
             .then(workspaces => {
                 setWorkspaces(workspaces);
                 setFilters(Array.from(new Set(workspaces.flatMap(x => x.tags))));
@@ -72,7 +72,7 @@ export const CommunityPage: FC<PropsWithChildren> = () => {
             .catch(error => {
                 console.error(error);
             });
-    }, [communityApi, setShowSidebarButton]);
+    }, [workspaceApi, setShowSidebarButton]);
 
     const handleOnFilterClick = useCallback((filter) => {
         setSelectedFilter(filter);
@@ -86,10 +86,10 @@ export const CommunityPage: FC<PropsWithChildren> = () => {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
-    const handleOnPublish = useCallback((workspace: WorkspaceInfo) => {
-        communityApi.publishWorkspace(workspace);
-        setWorkspaces(workspaces.concat(workspace));
-    }, [communityApi, workspaces, setWorkspaces]);
+    const handleOnWorkspacePublish = useCallback((workspace: WorkspaceInfo) => {
+        // workspaceApi.publishWorkspace(workspace);
+        // setWorkspaces(workspaces.concat(workspace));
+    }, []);
 
     useEffect(() => {
         setHeaderContent({
@@ -115,7 +115,7 @@ export const CommunityPage: FC<PropsWithChildren> = () => {
                     workspaces={workspaces}
                     isOpen={isOpen}
                     onClose={onClose}
-                    onPublish={handleOnPublish}
+                    onPublish={handleOnWorkspacePublish}
                 />
 
                 <ContextSheetHeader>

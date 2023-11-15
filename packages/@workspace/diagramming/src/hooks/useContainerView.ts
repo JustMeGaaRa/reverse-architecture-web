@@ -25,7 +25,7 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
     // The existing person is included in the view, while the new one is also added to the model
     const addPerson = useCallback((position: Position) => {
         const person = new Person({
-            identifier: `person_${v4()}`,
+            identifier: `person_${new String(v4()).substring(0, 8)}`,
             name: "Person",
         })
         
@@ -56,7 +56,7 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
     // The existing system is included in the view, while the new one is also added to the model
     const addSoftwareSystem = useCallback((position: Position) => {
         const softwareSystem = new SoftwareSystem({
-            identifier: `softwareSystem_${v4()}`,
+            identifier: `softwareSystem_${new String(v4()).substring(0, 8)}`,
             name: "Software System",
         })
         
@@ -85,7 +85,7 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
     
     const addContainer = useCallback((position: Position, groupId?: Identifier) => {
         const container = new Container({
-            identifier: `container_${v4()}`,
+            identifier: `container_${new String(v4()).substring(0, 8)}`,
             name: "Container",
         })
 
@@ -116,7 +116,7 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
     
     const addGroup = useCallback((position: Position) => {
         const group = new Group({
-            identifier: `group_${v4()}`,
+            identifier: `group_${new String(v4()).substring(0, 8)}`,
             name: "Group",
         })
 

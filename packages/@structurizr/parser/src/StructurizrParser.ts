@@ -691,7 +691,7 @@ export class StructurizrParser extends CstParser {
     });
 
     relationshipStyle = this.RULE("relationshipStyle", () => {
-        let hasThinkness = false;
+        let hasThinckness = false;
         let hasDashed = false;
         let hasColor = false;
         let hasStyle = false;
@@ -708,10 +708,10 @@ export class StructurizrParser extends CstParser {
         this.MANY(() => {
             this.OR([
                 {
-                    GATE: () => !hasThinkness,
+                    GATE: () => !hasThinckness,
                     ALT: () => {
-                        this.SUBRULE(this.thinkness);
-                        hasThinkness = true;
+                        this.SUBRULE(this.thickness);
+                        hasThinckness = true;
                     }
                 },
                 {
@@ -847,8 +847,8 @@ export class StructurizrParser extends CstParser {
         this.CONSUME(Tokens.BooleanLiteral);
     });
 
-    thinkness = this.RULE("thinkness", () => {
-        this.CONSUME(Tokens.Thinkness);
+    thickness = this.RULE("thickness", () => {
+        this.CONSUME(Tokens.Thickness);
         this.CONSUME(Tokens.NumericLiteral);
     });
 

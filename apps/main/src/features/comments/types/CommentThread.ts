@@ -1,11 +1,8 @@
-import { CommentInfo } from "../types";
+import { CommentInfo, CommentThreadMetadata } from "../types";
 
 export type CommentThread = {
+    workspaceId: string;
     commentThreadId: string;
     comments: Array<CommentInfo>;
-    metadata: {
-        view: { type: string; id: string },
-        position?: { x: number; y: number },
-        elementId?: string;
-    }
+    metadata: CommentThreadMetadata;
 }

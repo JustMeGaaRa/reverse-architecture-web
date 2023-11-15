@@ -28,7 +28,7 @@ export const BoundaryElement: FC<{
     const { setNodes } = useReactFlow();
     const onResize = useCallback((event, params) => {
         setNodes(nodes => {
-            return nodes.filter(node => node.id !== data.identifier
+            return nodes.map(node => node.id !== data.identifier
                 ? node
                 : {
                     ...node,
@@ -36,7 +36,7 @@ export const BoundaryElement: FC<{
                         ...node.data,
                         width: params.width,
                         height: params.height,
-                    }
+                    },
                 })
         });
     }, [data.identifier, setNodes]);

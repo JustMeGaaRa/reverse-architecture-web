@@ -14,13 +14,13 @@ import {
 } from "@structurizr/dsl";
 import { useStructurizrParser } from "@structurizr/react";
 import { useWorkspaceTheme } from "@workspace/core";
-import { FC, useCallback, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
     CommentApi,
     CommentThread,
-    CommunityHubApi,
     TemplateOverview,
+    WorkspaceApi,
     WorkspaceInfo
 } from "../../../features";
 
@@ -29,6 +29,7 @@ export const CommunityTemplatePage: FC = () => {
     const navigate = useNavigate();
 
     // workspace
+    const { workspaceApi } = useMemo(() => ({ workspaceApi: new WorkspaceApi() }), []);
     const [ info, setInfo ] = useState<WorkspaceInfo>();
     const [ workspace, setWorkspace ] = useState(Workspace.Empty.toObject());
     const [ metadata, setMetadata ] = useState(WorkspaceMetadata.Empty.toObject());
@@ -36,19 +37,18 @@ export const CommunityTemplatePage: FC = () => {
     const { theme } = useWorkspaceTheme();
     
     useEffect(() => {
-        const communityApi = new CommunityHubApi();
-        communityApi.getWorkspace(workspaceId)
+        workspaceApi.getWorkspaceById(workspaceId)
             .then(info => {
-                const builder = parseStructurizr(info.text);
-                const workspaceObject = applyMetadata(applyTheme(builder.toObject(), info.theme ?? theme), info.metadata);
+                const builder = parseStructurizr(info.content?.text);
+                const workspaceObject = applyMetadata(applyTheme(builder.toObject(), info.content?.theme ?? theme), info.content?.metadata);
                 setInfo(info);
                 setWorkspace(workspaceObject);
-                setMetadata(info.metadata);
+                setMetadata(info.content?.metadata);
             })
             .catch(error => {
                 console.error(error);
             })
-    }, [workspaceId, theme, parseStructurizr]);
+    }, [workspaceApi, workspaceId, theme, parseStructurizr]);
 
     // comments
     const [ commentThread, setCommentThread ] = useState<CommentThread>();

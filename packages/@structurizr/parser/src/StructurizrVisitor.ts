@@ -521,7 +521,7 @@ export class StructurizrVisitor extends VisitorCtor {
     }): Style<RelationshipStyleProperties> {
         return {
             tag: trimQuotes(ctx.StringLiteral?.at(0)?.image), 
-            thikness: this.visit(ctx.thinkness),
+            thickness: this.visit(ctx.thinkness),
             color: this.visit(ctx.color),
             style: this.visit(ctx.style),
             routing: this.visit(ctx.routing),

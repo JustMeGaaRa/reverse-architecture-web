@@ -92,7 +92,9 @@ export const WorkspacePublishingModal: FC<{
             lastModifiedDate: new Date().toLocaleDateString(),
             lastModifiedBy: "",
             tags: [],
-            text: "",
+            content: {
+                text: ""
+            }
         },
         onSubmit: (values, actions) => {
             onPublish(values);

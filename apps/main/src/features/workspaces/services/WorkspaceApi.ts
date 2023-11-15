@@ -1,11 +1,37 @@
+import { IWorkspaceMetadata, IWorkspaceTheme, Workspace } from "@structurizr/dsl";
+import { StructurizrExportClient } from "@structurizr/export";
+import { useWorkspaceStore } from "../store";
 import { WorkspaceInfo } from "../types";
 
+type CommunityTemplate = {
+    workspaceId: string;
+    name: string;
+    updated: string;
+    author?: string;
+    preview?: string;
+    tags: Array<string>;
+}
+
+type WorkspaceApiOptions = {
+    owner: string;
+    repository: string;
+}
+
 export class WorkspaceApi {
+    private readonly githubUrl: string = "https://raw.githubusercontent.com/";
+    private readonly baseUrl: string = "";
     private readonly workspaces: Map<string, WorkspaceInfo>;
 
     constructor(
-        public readonly baseUrl: string = ""
+        public readonly options: WorkspaceApiOptions = {
+            owner: "JustMeGaaRa",
+            repository: "reverse-architecture-community",
+        }
     ) {
+        this.baseUrl = `${this.githubUrl}/${this.options.owner}/${this.options.repository}/main/workspaces`;
+
+        const structurizrExportClient = new StructurizrExportClient();
+        const emptyWorkspace = structurizrExportClient.export(Workspace.Empty.toObject());
         const workspaceArray: Array<WorkspaceInfo> = [
             {
                 workspaceId: "workspace-1",
@@ -16,8 +42,10 @@ export class WorkspaceApi {
                 lastModifiedBy: "jonathan.joestar",
                 tags: [],
                 group: "Group 1",
-                text: "workspace \"Workspace 1\" { model {} views {} }",
-                coverUrl: "https://images.pexels.com/photos/7135121/pexels-photo-7135121.jpeg?cs=srgb&dl=pexels-codioful-%28formerly-gradienta%29-7135121.jpg&fm=jp"
+                coverUrl: "https://images.pexels.com/photos/7135121/pexels-photo-7135121.jpeg?cs=srgb&dl=pexels-codioful-%28formerly-gradienta%29-7135121.jpg&fm=jp",
+                content: {
+                    text: emptyWorkspace
+                }
             },
             {
                 workspaceId: "workspace-2",
@@ -28,8 +56,10 @@ export class WorkspaceApi {
                 lastModifiedBy: "caesar.zeppeli",
                 tags: [],
                 group: "Group 2",
-                text: "",
-                coverUrl: "https://images.pexels.com/photos/6984989/pexels-photo-6984989.jpeg?cs=srgb&dl=pexels-codioful-%28formerly-gradienta%29-6984989.jpg&fm=jpg"
+                coverUrl: "https://images.pexels.com/photos/6984989/pexels-photo-6984989.jpeg?cs=srgb&dl=pexels-codioful-%28formerly-gradienta%29-6984989.jpg&fm=jpg",
+                content: {
+                    text: emptyWorkspace
+                },
             },
             {
                 workspaceId: "workspace-3",
@@ -40,8 +70,10 @@ export class WorkspaceApi {
                 lastModifiedBy: "jotaro.kujo",
                 tags: [],
                 group: "Group 2",
-                text: "",
-                coverUrl: ""
+                coverUrl: "",
+                content: {
+                    text: emptyWorkspace
+                },
             },
             {
                 workspaceId: "workspace-4",
@@ -52,8 +84,10 @@ export class WorkspaceApi {
                 lastModifiedBy: "jotaro.kujo",
                 tags: [],
                 group: "Group 3",
-                text: "",
-                coverUrl: ""
+                coverUrl: "",
+                content: {
+                    text: emptyWorkspace
+                },
             },
             {
                 workspaceId: "workspace-5",
@@ -64,8 +98,10 @@ export class WorkspaceApi {
                 lastModifiedBy: "jonathan.joestar",
                 tags: [],
                 group: "Group 3",
-                text: "",
-                coverUrl: "https://images.pexels.com/photos/7130498/pexels-photo-7130498.jpeg?cs=srgb&dl=pexels-codioful-%28formerly-gradienta%29-7130498.jpg&fm=jpg"
+                coverUrl: "https://images.pexels.com/photos/7130498/pexels-photo-7130498.jpeg?cs=srgb&dl=pexels-codioful-%28formerly-gradienta%29-7130498.jpg&fm=jpg",
+                content: {
+                    text: emptyWorkspace
+                },
             },
             {
                 workspaceId: "workspace-6",
@@ -76,8 +112,10 @@ export class WorkspaceApi {
                 lastModifiedBy: "caesar.zeppeli",
                 tags: [],
                 group: "Group 3",
-                text: "",
-                coverUrl: "https://images.pexels.com/photos/6985128/pexels-photo-6985128.jpeg?cs=srgb&dl=pexels-codioful-%28formerly-gradienta%29-6985128.jpg&fm=jpg"
+                coverUrl: "https://images.pexels.com/photos/6985128/pexels-photo-6985128.jpeg?cs=srgb&dl=pexels-codioful-%28formerly-gradienta%29-6985128.jpg&fm=jpg",
+                content: {
+                    text: emptyWorkspace
+                },
             },
             {
                 workspaceId: "workspace-7",
@@ -88,8 +126,10 @@ export class WorkspaceApi {
                 lastModifiedBy: "jotaro.kujo",
                 tags: [],
                 group: "Group 4",
-                text: "",
-                coverUrl: ""
+                coverUrl: "",
+                content: {
+                    text: emptyWorkspace
+                },
             },
             {
                 workspaceId: "workspace-8",
@@ -100,8 +140,10 @@ export class WorkspaceApi {
                 lastModifiedBy: "jotaro.kujo",
                 tags: [],
                 group: "Group 4",
-                text: "",
-                coverUrl: ""
+                coverUrl: "",
+                content: {
+                    text: emptyWorkspace
+                },
             },
             {
                 workspaceId: "workspace-9",
@@ -112,8 +154,10 @@ export class WorkspaceApi {
                 lastModifiedBy: "jotaro.kujo",
                 tags: [],
                 group: "Group 4",
-                text: "",
-                coverUrl: ""
+                coverUrl: "",
+                content: {
+                    text: emptyWorkspace
+                },
             },
             {
                 workspaceId: "workspace-10",
@@ -124,8 +168,10 @@ export class WorkspaceApi {
                 lastModifiedBy: "jotaro.kujo",
                 tags: [],
                 group: "Group 4",
-                text: "",
-                coverUrl: ""
+                coverUrl: "",
+                content: {
+                    text: emptyWorkspace
+                },
             },
             {
                 workspaceId: "workspace-11",
@@ -136,8 +182,10 @@ export class WorkspaceApi {
                 lastModifiedBy: "jotaro.kujo",
                 tags: [],
                 group: "Group 5",
-                text: "",
-                coverUrl: ""
+                coverUrl: "",
+                content: {
+                    text: emptyWorkspace
+                },
             },
             {
                 workspaceId: "workspace-12",
@@ -148,8 +196,10 @@ export class WorkspaceApi {
                 lastModifiedBy: "jotaro.kujo",
                 tags: [],
                 group: "Group 5",
-                text: "",
-                coverUrl: ""
+                coverUrl: "",
+                content: {
+                    text: emptyWorkspace
+                },
             },
             {
                 workspaceId: "workspace-13",
@@ -159,8 +209,10 @@ export class WorkspaceApi {
                 lastModifiedDate: new Date().toLocaleDateString(),
                 lastModifiedBy: "jotaro.kujo",
                 tags: [],
-                text: "",
-                coverUrl: ""
+                coverUrl: "",
+                content: {
+                    text: emptyWorkspace
+                },
             },
             {
                 workspaceId: "workspace-14",
@@ -170,8 +222,10 @@ export class WorkspaceApi {
                 lastModifiedDate: new Date().toLocaleDateString(),
                 lastModifiedBy: "jotaro.kujo",
                 tags: [],
-                text: "",
-                coverUrl: ""
+                coverUrl: "",
+                content: {
+                    text: emptyWorkspace
+                },
             },
             {
                 workspaceId: "workspace-15",
@@ -181,8 +235,10 @@ export class WorkspaceApi {
                 lastModifiedDate: new Date().toLocaleDateString(),
                 lastModifiedBy: "jotaro.kujo",
                 tags: [],
-                text: "workspace \"Workspace 1\" { model {} views {} }",
-                coverUrl: ""
+                coverUrl: "",
+                content: {
+                    text: emptyWorkspace
+                },
             },
         ];
 
@@ -192,24 +248,80 @@ export class WorkspaceApi {
     }
 
     async getWorkspaceById(workspaceId: string): Promise<WorkspaceInfo> {
-        const workspace = this.workspaces.get(workspaceId);
+        // const workspace = this.workspaces.get(workspaceId);
+        const workspace = await this.fetchWorkspace(workspaceId)
+            .then(result => result)
+            .catch(error => useWorkspaceStore.getState().getWorkspace(workspaceId));
         return Promise.resolve(workspace);
     }
 
     async getWorkspaces(): Promise<Array<WorkspaceInfo>> {
-        const list = Array.from(this.workspaces.values());
+        // const list = Array.from(this.workspaces.values());
+        const list = await this.featchWorkspaceList()
+            .then(result => result)
+            .catch(error => useWorkspaceStore.getState().workspaces);
         return Promise.resolve(list);
     }
 
     async saveWorkspace(workspaceId: string, workspace: WorkspaceInfo): Promise<Array<WorkspaceInfo>> {
-        this.workspaces.set(workspaceId, workspace);
-        const list = Array.from(this.workspaces.values());
+        // TODO: save workspace when there is an API
+        // this.workspaces.set(workspaceId, workspace);
+        // const list = Array.from(this.workspaces.values());
+        useWorkspaceStore.getState().setWorkspace(workspace);
+        const list = useWorkspaceStore.getState().workspaces;
         return Promise.resolve(list);
     }
 
     async deleteWorkspace(workspaceIds: string[]): Promise<Array<WorkspaceInfo>> {
-        workspaceIds.forEach(workspaceId => this.workspaces.delete(workspaceId));
-        const list = Array.from(this.workspaces.values());
+        // TODO: delete workspace when there is an API
+        // workspaceIds.forEach(workspaceId => this.workspaces.delete(workspaceId));
+        // const list = Array.from(this.workspaces.values());
+        workspaceIds.forEach(workspaceId => useWorkspaceStore.getState().deleteWorkspace(workspaceId));
+        const list = useWorkspaceStore.getState().workspaces;
         return Promise.resolve(list);
+    }
+
+    async featchWorkspaceList(): Promise<Array<WorkspaceInfo>> {
+        const workspaceListResponse = await fetch(`${this.baseUrl}/list.json`);
+        const { values } = workspaceListResponse.ok ? await workspaceListResponse.json() : { values: [] };
+        const workspaces = (values as CommunityTemplate[])
+            .map<WorkspaceInfo>(info => ({
+                workspaceId: info.workspaceId,
+                name: info.name,
+                createdBy: info.author,
+                createdDate: info.updated,
+                lastModifiedBy: info.author,
+                lastModifiedDate: info.updated,
+                coverUrl: info.preview,
+                tags: info.tags,
+            }))
+            .map(workspace => {
+                useWorkspaceStore.getState().setWorkspace(workspace)
+                return workspace;
+            });
+        
+        return workspaces;
+    }
+
+    async fetchWorkspace(workspaceId: string): Promise<WorkspaceInfo> {
+        const workspaceInfo = useWorkspaceStore.getState().getWorkspace(workspaceId);
+
+        const workspaceDslResponse = await fetch(`${this.baseUrl}/${workspaceId}/workspace.dsl`);
+        const text = workspaceDslResponse.ok ? await workspaceDslResponse.text() as string : "";
+
+        const metadataResponse = await fetch(`${this.baseUrl}/${workspaceId}/workspace.metadata.json`);
+        const metadata = metadataResponse.ok ? await metadataResponse.json() as IWorkspaceMetadata : undefined;
+
+        const themeResponse = await fetch(`${this.baseUrl}/${workspaceId}/workspace.theme.json`);
+        const theme = themeResponse.ok ? await themeResponse.json() as IWorkspaceTheme : undefined;
+
+        return {
+            ...workspaceInfo,
+            content: {
+                text,
+                metadata,
+                theme,
+            }
+        };
     }
 }

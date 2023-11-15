@@ -32,11 +32,13 @@ import {
     Workspace,
     WorkspaceMetadata
 } from "@structurizr/dsl";
+import { StructurizrExportClient } from "@structurizr/export";
 import { useStructurizrParser } from "@structurizr/react";
 import {
     FC,
     useCallback,
     useEffect,
+    useMemo,
     useState
 } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
@@ -45,8 +47,8 @@ import {
     CommentThread,
     CommentProvider,
     CommentThreadList,
-    CommunityHubApi,
-    useAccount
+    WorkspaceApi,
+    useAccount,
 } from "../../../features";
 import {
     UserCursorGroup,
@@ -55,12 +57,12 @@ import {
     WorkspaceContentMode,
     WorkspaceContentPanel
 } from "../../workspace";
-import { StructurizrExportClient } from "@structurizr/export";
 
 export const WorkspaceContentPage: FC = () => {
     const { workspaceId } = useParams<{ workspaceId: string }>();
     const [ queryParams, setQueryParam ] = useSearchParams([[ "mode", WorkspaceContentMode.Diagramming ]]);
     const { parseStructurizr } = useStructurizrParser();
+    const { account } = useAccount();
     const [ workspace, setWorkspace ] = useState(Workspace.Empty.toObject());
     const [ metadata, setMetadata ] = useState(WorkspaceMetadata.Empty.toObject());
 
@@ -82,30 +84,32 @@ export const WorkspaceContentPage: FC = () => {
     }, [setQueryParam]);
 
     // code editor
-    const [ text, setText ] = useState("");
+    const [ structurizrDslText, setStructurizrDslText ] = useState("");
 
     const handleOnTextChange = useCallback((value: string) => {
-        setText(value);
+        setStructurizrDslText(value);
         // TODO: use debounce to defer the workspace parsing by 500ms
-        setWorkspace(parseStructurizr(text));
-    }, [parseStructurizr, text]);
+        setWorkspace(parseStructurizr(value));
+    }, [parseStructurizr]);
     
     // workspace viewer
+    // TODO: add selected repository to account provider or define repository provider
+    const { workspaceApi } = useMemo(() => ({
+        workspaceApi: new WorkspaceApi()
+    }), []);
     const [ users, setUsers ] = useState<Array<any>>([]);
-    const { account } = useAccount();
     const { theme } = useWorkspaceTheme();
     const toast = useToast();
 
     useEffect(() => {
-        const communityApi = new CommunityHubApi();
-        communityApi.getWorkspace(workspaceId)
+        workspaceApi.getWorkspaceById(workspaceId)
             .then(info => {
-                const builder = parseStructurizr(info.text);
-                const themedWorkspace = applyTheme(builder.toObject(), info.theme ?? theme);
-                const autolayoutWorkspace = applyMetadata(themedWorkspace, info.metadata);
+                const builder = parseStructurizr(info.content?.text);
+                const themedWorkspace = applyTheme(builder.toObject(), info.content?.theme ?? theme);
+                const autolayoutWorkspace = applyMetadata(themedWorkspace, info.content?.metadata);
                 setWorkspace(autolayoutWorkspace);
-                setMetadata(info.metadata);
-                setText(info.text);
+                setMetadata(info.content?.metadata);
+                setStructurizrDslText(info.content?.text);
             })
             .catch(error => {
                 toast({
@@ -117,7 +121,7 @@ export const WorkspaceContentPage: FC = () => {
                     position: "bottom-right"
                 })
             })
-    }, [workspaceId, theme, toast, parseStructurizr]);
+    }, [workspaceApi, workspaceId, theme, toast, parseStructurizr]);
 
     useEffect(() => {
         const viewType = queryParams.get("type");
@@ -128,7 +132,7 @@ export const WorkspaceContentPage: FC = () => {
     const handleOnWorkspaceChange = useCallback((workspace: Workspace) => {
         const structurizrExporter = new StructurizrExportClient();
         const structurizrText = structurizrExporter.export(workspace);
-        setText(structurizrText);
+        setStructurizrDslText(structurizrText);
     }, []);
 
     const handleOnWorkspaceViewChange = useCallback((view: any) => {
@@ -175,7 +179,7 @@ export const WorkspaceContentPage: FC = () => {
                                 
                                 <ContextSheetBody>
                                     <WorkspaceEditor
-                                        value={text}
+                                        value={structurizrDslText}
                                         onChange={handleOnTextChange}
                                     />
                                 </ContextSheetBody>
@@ -202,7 +206,7 @@ export const WorkspaceContentPage: FC = () => {
                                     roomId={workspaceId}
                                     onChange={(users) => setUsers(users)}
                                 >
-                                    <WorkspaceUser account={account} />
+                                    <WorkspaceUser account={account as any} />
 
                                     {queryParams.get("mode") === WorkspaceContentMode.Diagramming && (
                                         <WorkspaceDiagramming

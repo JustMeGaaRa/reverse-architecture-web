@@ -22,7 +22,7 @@ export const useSystemLandscapeView = () => {
     
     const addSoftwareSystem = useCallback((position: Position, groupId?: Identifier) => {
         const softwareSystem = new SoftwareSystem({
-            identifier: `softwareSystem_${v4()}`,
+            identifier: `softwareSystem_${new String(v4()).substring(0, 8)}`,
             name: "Software System",
         })
         
@@ -48,7 +48,7 @@ export const useSystemLandscapeView = () => {
     
     const addPerson = useCallback((position: Position, groupId?: Identifier) => {
         const person = new Person({
-            identifier: `person_${v4()}`,
+            identifier: `person_${new String(v4()).substring(0, 8)}`,
             name: "Person",
         })
         

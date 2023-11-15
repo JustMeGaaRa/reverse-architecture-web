@@ -60,7 +60,7 @@ export enum TokenName {
     Border = "Border",
     Opacity = "Opacity",
     Metadata = "Metadata",
-    Thinkness = "Thinkness",
+    Thickness = "Thickness",
     Style = "Style",
     Routing = "Routing",
     Position = "Position",
