@@ -10,7 +10,7 @@ const {
 export const Tabs = defineMultiStyleConfig({
     baseStyle: {
         tab: {
-            colorScheme: "yellow",
+            colorScheme: "lime",
             fontWeight: "normal",
         },
         tabpanel: {
@@ -32,11 +32,11 @@ export const Tabs = defineMultiStyleConfig({
                     color: mode("", "basic.white")(props)
                 },
                 _active: {
-                    borderBottomColor: mode("", `${props.colorScheme}.900`)(props),
+                    borderBottomColor: mode("", `${props.colorScheme}.600`)(props),
                     color: mode("", "basic.white")(props)
                 },
                 _selected: {
-                    borderBottomColor: mode("", `${props.colorScheme}.900`)(props),
+                    borderBottomColor: mode("", `${props.colorScheme}.600`)(props),
                     color: mode("", "basic.white")(props)
                 },
                 _disabled: {
@@ -46,7 +46,7 @@ export const Tabs = defineMultiStyleConfig({
         })
     },
     defaultProps: {
-        colorScheme: "yellow",
+        colorScheme: "lime",
         size: "md",
         variant: "line",
     }

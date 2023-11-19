@@ -35,8 +35,8 @@ export const DashboardPage: FC = () => {
                 <ContextSheetBody>
                     <EmptyContent
                         icon={Folder}
-                        title={"No projects created yet"}
-                        description={"To get started, click the \"Create New Project\" button to create a new project."}
+                        title={"No content created yet"}
+                        description={"To get started, create some new projects."}
                     />
                 </ContextSheetBody>
             </ContextSheet>

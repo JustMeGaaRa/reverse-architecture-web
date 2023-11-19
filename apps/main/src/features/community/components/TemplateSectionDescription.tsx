@@ -7,10 +7,8 @@ export const TemplateSectionDescription: FC<{
     description,
 }) => {
     return (
-        <Flex padding={4} width={"100%"}>
-            <Text color={"gray.900"} fontSize={"14px"}>
-                {description}
-            </Text>
-        </Flex>
+        <Text color={"gray.900"} textStyle={"b3"}>
+            {description}
+        </Text>
     );
 }

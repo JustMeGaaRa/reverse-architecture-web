@@ -4,11 +4,9 @@ import { FC, useCallback } from "react";
 import { Toolbar, ToolbarSection } from "../containers";
 
 export const WorkspaceScaleToolbar: FC<{
-    size?: "xs" | "sm" | "md" | "lg";
     onEnlargeClick?: () => void;
     onReduceClick?: () => void;
 }> = ({
-    size = "md",
     onEnlargeClick,
     onReduceClick,
 }) => {
@@ -25,8 +23,8 @@ export const WorkspaceScaleToolbar: FC<{
     }, [onClose, onReduceClick]);
 
     return (
-        <Toolbar size={size}>
-            <ToolbarSection size={size}>
+        <Toolbar>
+            <ToolbarSection>
                 {!isOpen && (
                     <IconButton
                         aria-label={"enlarge"}

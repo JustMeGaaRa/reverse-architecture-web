@@ -32,44 +32,55 @@ export const CommunityTemplateCard: FC<PropsWithChildren<{
     return (
         <Card
             data-group
-            backgroundColor={"transparent"}
+            backgroundColor={"surface.tinted-white-5"}
             borderRadius={16}
             boxShadow={"none"}
-            padding={1}
             _hover={{
                 backgroundColor: "whiteAlpha.100",
                 cursor: "pointer",
             }}
         >
-            <CardHeader padding={1}>
-                <Flex>
+            <CardHeader padding={0}>
+                <Flex padding={2} alignItems={"center"} gap={2}>
                     <Avatar
                         colorScheme={"purple"}
                         name={workspace.createdBy}
-                        size={"md"}
+                        size={"sm"}
                         title={workspace.createdBy}
                     />
-                    <Flex direction={"column"} px={2}>
-                        <Text color={"basic.white"} fontSize={14}>
+                    <Flex direction={"column"} width={"100%"}>
+                        <Text color={"basic.white"} lineHeight={"20px"} textStyle={"b3"}>
                             {workspace.name}
                         </Text>
-                        <Text color={"whiteAlpha.700"} fontSize={12}>
-                            {workspace.createdBy}
-                        </Text>
+                        <Flex direction={"row"} justifyContent={"space-between"} lineHeight={"14px"}>
+                            <Text color={"whiteAlpha.700"} textStyle={"b5"} alignSelf={"flex-start"}>
+                                {workspace.createdBy}
+                            </Text>
+                            <HStack gap={4} height={"14px"}>
+                                {/* // TODO: style the tags properly */}
+                                <Tag variant={"unstyled"} size={"xs"} title={"788 used"}>
+                                    <TagLeftIcon as={UserCircle} height={"12px"} width={"12px"} marginInlineEnd={1} />
+                                    <TagLabel textStyle={"b5"}>788 used</TagLabel>
+                                </Tag>
+                                <Tag variant={"unstyled"} size={"xs"} title={"47 liked"}>
+                                    <TagLeftIcon as={Heart} height={"12px"} width={"12px"} marginInlineEnd={1} />
+                                    <TagLabel textStyle={"b5"}>47 liked</TagLabel>
+                                </Tag>
+                            </HStack>
+                        </Flex>
                     </Flex>
                 </Flex>
             </CardHeader>
-            <CardBody px={0} py={1}>
+            <CardBody padding={0}>
                 <Box
                     backgroundColor={"whiteAlpha.100"}
                     borderRadius={16}
-                    borderWidth={2}
                     height={"100%"}
                     width={"100%"}
-                    _groupHover={{ borderColor: "yellow.900" }}
+                    _groupHover={{ borderColor: "lime.600" }}
                     onClick={onPreviewClick}
                 >
-                    <AspectRatio ratio={2/1}>
+                    <AspectRatio ratio={440/200}>
                         <Box>
                             {workspace && (
                                 <Flex
@@ -106,33 +117,6 @@ export const CommunityTemplateCard: FC<PropsWithChildren<{
                     </AspectRatio>
                 </Box>
             </CardBody>
-            <CardFooter
-                padding={1}
-                alignItems={"center"}
-                justifyContent={"space-between"}
-                width={"100%"}
-            >
-                <HStack color={"whiteAlpha.700"} spacing={1}>
-                    <Tag height={"32px"} size={"lg"} variant={"unstyled"} title={"788 used"}>
-                        <TagLeftIcon as={UserCircle} />
-                        <TagLabel>788 used</TagLabel>
-                    </Tag>
-                    <Tag height={"32px"} size={"lg"} variant={"unstyled"} title={"47 liked"}>
-                        <TagLeftIcon as={Heart} />
-                        <TagLabel>47 liked</TagLabel>
-                    </Tag>
-                </HStack>
-                <Button
-                    colorScheme={"gray"}
-                    leftIcon={<ArrowTrCircle />}
-                    paddingRight={4}
-                    size={"sm"}
-                    variant={"outline"}
-                    onClick={() => onUseTemplateClick?.()}
-                >
-                    Use
-                </Button>
-            </CardFooter>
         </Card>
     )
 }

@@ -8,7 +8,8 @@ import {
     MenuGroup,
     MenuList,
     MenuItem,
-    Text
+    Text,
+    Button
 } from "@chakra-ui/react";
 import { LogOut, NavArrowUp, ProfileCircle } from "iconoir-react";
 import { FC, PropsWithChildren } from "react";
@@ -24,41 +25,38 @@ export const AccountMenu: FC<PropsWithChildren<{
     return (                  
         <Menu placement={"top-end"}>
             <MenuButton
+                as={Button}
                 borderRadius={20}
-                width={"100%"}
+                colorScheme={"gray"}
+                rightIcon={<NavArrowUp />}
+                size={"xl"}
                 title={account.fullname}
-                _hover={{
-                    background: "whiteAlpha.100"
-                }}
+                variant={"ghost"}
+                width={"100%"}
+                _hover={{ background: "whiteAlpha.100" }}
             >
                 <Flex
                     alignItems={"center"}
                     gap={4}
-                    padding={3}
+                    padding={1}
                 >
                     <Avatar
-                        backgroundColor={"purple.200"}
-                        borderColor={"purple.900"}
-                        color={"purple.900"}
+                        colorScheme={"purple"}
                         name={account.fullname}
                         size={"md"}
                         src={account.avatarUrl}
                         title={account.fullname}
                     />
-                    {expanded && (
-                        <>
-                            <Flex
-                                direction={"column"}
-                                alignItems={"start"}
-                                flexGrow={1}
-                                textAlign={"left"}
-                            >
-                                <Text fontSize={16} noOfLines={1}>{account.fullname}</Text>
-                                <Text fontSize={14} noOfLines={1} color={"whiteAlpha.400"}>{account.email}</Text>
-                            </Flex>
-                            <NavArrowUp />
-                        </>
-                    )}
+                    <Flex
+                        direction={"column"}
+                        alignItems={"start"}
+                        flexGrow={1}
+                        textAlign={"left"}
+                        display={expanded ? "flex" : "none"}
+                    >
+                        <Text fontSize={16} noOfLines={1}>{account.fullname}</Text>
+                        <Text fontSize={14} noOfLines={1} color={"whiteAlpha.400"}>{account.email}</Text>
+                    </Flex>
                 </Flex>
             </MenuButton>
             <MenuList>

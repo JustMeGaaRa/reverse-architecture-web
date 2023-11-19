@@ -12,11 +12,7 @@ import { Minus, Plus } from "iconoir-react";
 import { FC, useCallback, useMemo } from "react";
 import { ToolbarSection, Toolbar } from "../containers";
 
-export const WorkspaceZoomControls: FC<{
-    size?: "xs" | "sm" | "md" | "lg";
-}> = ({
-    size = "md"
-}) => {
+export const WorkspaceZoomControls: FC = () => {
     const zoom = useStore((state) => (state.transform[2] * 100));
     const { getNodes, zoomTo, zoomIn, zoomOut, fitView, setCenter } = useReactFlow();
 
@@ -36,11 +32,11 @@ export const WorkspaceZoomControls: FC<{
     ], [fitView, focusCenter, zoomTo]);
 
     return (
-        <Toolbar size={size}>
-            <ToolbarSection size={size}>
+        <Toolbar>
+            <ToolbarSection>
                 <IconButton
                     aria-label={"zoom out"}
-                    icon={<Minus />}
+                    icon={<Minus height={"24px"} width={"24px"} />}
                     title={"zoom out"}
                     onClick={() => zoomOut()}
                 />

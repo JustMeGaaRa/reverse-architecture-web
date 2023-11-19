@@ -13,6 +13,7 @@ import {
     Button,
 } from "@chakra-ui/react";
 import {
+    ButtonSegmentedToggle,
     ContentViewMode,
     ContextSheet,
     ContextSheetBody,
@@ -136,7 +137,7 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
     useEffect(() => {
         setHeaderContent({
             right: (
-                <ButtonGroup key={"workspace-list-actions"} mr={4}>
+                <ButtonGroup key={"workspace-list-actions"} mr={4} variant={"filled"}>
                     <IconButton
                         aria-label={"import workspace"}
                         colorScheme={"gray"}
@@ -145,12 +146,14 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                         title={"Import Workspace"}
                     />
                     <Button
-                        aria-label={"create new project"}
-                        colorScheme={"yellow"}
-                        leftIcon={<AddPageAlt />}
+                        aria-label={"new project"}
+                        colorScheme={"lime"}
+                        leftIcon={<AddPageAlt height={"20px"} width={"20px"} />}
+                        iconSpacing={"0px"}
                         onClick={handleOnWorkspaceCreate}
                     >
-                        Create Workspace
+                        {/* TODO: move this marginX to theme */}
+                        <Box marginX={2}>New Workspace</Box>
                     </Button>
                 </ButtonGroup>
             )
@@ -178,12 +181,12 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                 
                 <ContextSheetBody>
                     <Tabs height={"100%"} index={tabIndex}>
-                        <TabList backgroundColor={"whiteAlpha.50"} height={12} paddingX={6}>
+                        <TabList backgroundColor={"rgba(0, 0, 0, 0.40)"} height={12} paddingX={6}>
                             <Tab
                                 visibility={!!queryParams.get("group") ? "hidden" : "visible"}
                                 onClick={() => setQueryParam({ tab: WorkspaceListTabs.All })}
                             >
-                                Workspaces
+                                My Workspaces
                             </Tab>
                             <Tab
                                 visibility={!!queryParams.get("group") ? "hidden" : "visible"}
@@ -197,35 +200,25 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                             >
                                 Archived
                             </Tab>
-                            <ButtonGroup
-                                alignSelf={"center"}
-                                colorScheme={"gray"}
+                            <Box
                                 position={"absolute"}
                                 right={4}
-                                size={"sm"}
-                                variant={"ghost"}
                             >
-                                <IconButton
-                                    aria-label={"card view"}
-                                    isActive={view === ContentViewMode.Card}
-                                    icon={<ViewGrid />}
-                                    _active={{
-                                        backgroundColor: "whiteAlpha.200",
-                                        color: "yellow.900"
-                                    }}
-                                    onClick={() => setView(ContentViewMode.Card)}
-                                />
-                                <IconButton
-                                    aria-label={"table view"}
-                                    isActive={view === ContentViewMode.Table}
-                                    icon={<List />}
-                                    _active={{
-                                        backgroundColor: "whiteAlpha.200",
-                                        color: "yellow.900"
-                                    }}
-                                    onClick={() => setView(ContentViewMode.Table)}
-                                />
-                            </ButtonGroup>
+                                <ButtonSegmentedToggle size={"sm"}>
+                                    <IconButton
+                                        aria-label={"card view"}
+                                        isActive={view === ContentViewMode.Card}
+                                        icon={<ViewGrid />}
+                                        onClick={() => setView(ContentViewMode.Card)}
+                                    />
+                                    <IconButton
+                                        aria-label={"table view"}
+                                        isActive={view === ContentViewMode.Table}
+                                        icon={<List />}
+                                        onClick={() => setView(ContentViewMode.Table)}
+                                    />
+                                </ButtonSegmentedToggle>
+                            </Box>
                         </TabList>
                         <TabPanels height={"calc(100% - 42px)"} padding={6} overflowY={"scroll"}>
                             <TabPanel>
@@ -235,6 +228,18 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                                     isGrouped={true}
                                     emptyTitle={"No workspaces"}
                                     emptyDescription={"To get started, click the \"Create Workspace\" button to create a new project."}
+                                    emptyAction={(
+                                        <Button
+                                            aria-label={"new project"}
+                                            colorScheme={"lime"}
+                                            leftIcon={<AddPageAlt height={"20px"} width={"20px"} />}
+                                            iconSpacing={"0px"}
+                                            onClick={handleOnWorkspaceCreate}
+                                        >
+                                            {/* TODO: move this marginX to theme */}
+                                            <Box marginX={"8px"}>New Workspace</Box>
+                                        </Button>
+                                    )}
                                     onClick={handleOnWorkspaceClick}
                                     onSelected={setSelected}
                                     onRemove={handleOnWorkspaceRemove}
@@ -247,6 +252,18 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                                     isGrouped={true}
                                     emptyTitle={"No shared workspaces"}
                                     emptyDescription={"To get started, click the \"Create Workspace\" button to create a new project."}
+                                    emptyAction={(
+                                        <Button
+                                            aria-label={"new project"}
+                                            colorScheme={"lime"}
+                                            leftIcon={<AddPageAlt height={"20px"} width={"20px"} />}
+                                            iconSpacing={"0px"}
+                                            onClick={handleOnWorkspaceCreate}
+                                        >
+                                            {/* TODO: move this marginX to theme */}
+                                            <Box marginX={"8px"}>New Workspace</Box>
+                                        </Button>
+                                    )}
                                     onClick={handleOnWorkspaceClick}
                                     onSelected={setSelected}
                                     onRemove={handleOnWorkspaceRemove}

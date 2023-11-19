@@ -16,6 +16,7 @@ export const PageSidebar: FC<PropsWithChildren> = ({ children }) => {
             flexShrink={0}
             flexBasis={`${width}px`}
             minWidth={`${width}px`}
+            width={`${width}px`}
             position={"relative"}
         >
             {children}
@@ -45,7 +46,7 @@ export const PageSidebarSection: FC<PropsWithChildren<{
     return (
         <Box
             position={"absolute"}
-            padding={4}
+            padding={3}
             width={"100%"}
             {...styles[section]}
         >

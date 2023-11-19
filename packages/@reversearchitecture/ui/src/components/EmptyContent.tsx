@@ -5,10 +5,12 @@ export const EmptyContent: FC<{
     icon: any;
     title: string;
     description: string;
+    action?: React.ReactElement;
 }> = ({
     icon,
     title,
-    description
+    description,
+    action
 }) => {
     return (
         <Flex
@@ -37,6 +39,11 @@ export const EmptyContent: FC<{
                 >
                     {description}
                 </Text>
+                <Box
+                    mt={4}
+                >
+                    {action}
+                </Box>
             </Flex>
         </Flex>
     );

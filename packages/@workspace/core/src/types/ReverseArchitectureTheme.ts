@@ -32,7 +32,7 @@ export const ReverseArchitectureRelationshipStyle: RelationshipStyleProperties =
     position: 50,
     routing: RoutingStyle.Direct,
     style: LineStyle.Dashed,
-    thikness: 2,
+    thickness: 2,
     width: 200,
     properties: new Map(),
 }
@@ -46,42 +46,6 @@ export const ReverseArchitectureTheme: IWorkspaceTheme = {
             tag: Tag.Element.name,
             ...ReverseArchitectureElementStyle
         },
-        // {
-        //     tag: Tag.Group.name,
-        //     background: "#E8E8E8",
-        //     color: "#ffffff",
-        //     stroke: "#E8E8E8"
-        // },
-        // {
-        //     tag: Tag.Person.name,
-        //     background: "#FF453A",
-        //     color: "#ffffff",
-        //     stroke: "#FF453A"
-        // },
-        // {
-        //     tag: Tag.SoftwareSystem.name,
-        //     background: "#E3FB51",
-        //     color: "#ffffff",
-        //     stroke: "#E3FB51"
-        // },
-        // {
-        //     tag: Tag.Container.name,
-        //     background: "#0A84FF",
-        //     color: "#ffffff",
-        //     stroke: "#0A84FF"
-        // },
-        // {
-        //     tag: Tag.Component.name,
-        //     background: "#BF5AF2",
-        //     color: "#ffffff",
-        //     stroke: "#BF5AF2"
-        // },
-        // {
-        //     tag: Tag.DeploymentNode.name,
-        //     background: "#30D158",
-        //     color: "#ffffff",
-        //     stroke: "#30D158"
-        // }
     ],
     relationships: [
         {

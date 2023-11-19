@@ -13,7 +13,6 @@ import {
     SignInPage,
     WorkspaceContentPage,
     AuthorizePage,
-    CommunityTemplatePage,
 } from "./pages";
 
 export const routes = createBrowserRouter([
@@ -35,17 +34,13 @@ export const routes = createBrowserRouter([
                 element: <WorkspaceListPage />
             },
             {
-                path: "/workspaces/:workspaceId",
+                path: "workspaces/:workspaceId",
                 element: <WorkspaceContentPage />,
                 errorElement: <ErrorPage />
             },
             {
                 path: "community",
                 element: <CommunityPage />,
-            },
-            {
-                path: "community/:workspaceId",
-                element: <CommunityTemplatePage />
             },
             {
                 path: "settings",

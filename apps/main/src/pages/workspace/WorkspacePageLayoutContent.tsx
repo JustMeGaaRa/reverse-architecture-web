@@ -1,20 +1,22 @@
 import {
+    Box,
     Button,
     ButtonGroup,
     Divider,
+    Editable,
+    EditableInput,
+    EditablePreview,
     HStack,
     IconButton,
 } from "@chakra-ui/react";
 import {
+    ButtonSegmentedToggle,
     PageHomeButton,
     Route,
     RouteList,
     usePageHeader,
     usePageSidebar
 } from "@reversearchitecture/ui";
-import {
-    Workspace,
-} from "@structurizr/dsl";
 import { useWorkspaceStore } from "@workspace/core";
 import {
     AddUser,
@@ -159,45 +161,34 @@ export const WorkspacePageLayoutContent: FC<PropsWithChildren> = ({ children }) 
                         height={"32px"}
                         orientation={"vertical"}
                     />
+                    <Editable defaultValue={workspace.name} ml={4}>
+                        <EditablePreview />
+                        <EditableInput />
+                    </Editable>
                     <WorkspaceMenu title={workspace.name} />
                 </HStack>
             ),
             middle: (
-                <ButtonGroup
-                    key={"workspace-page-mode"}
-                    borderRadius={"16px"}
-                    borderColor={"whiteAlpha.200"}
-                    borderWidth={1}
-                    colorScheme={"gray"}
-                    spacing={0}
-                    padding={1}
-                    variant={"ghost"}
-                >
+                <ButtonSegmentedToggle>
                     <Button
+                        colorScheme={"lime"}
                         isActive={queryParams.get("mode") !== WorkspaceContentMode.Modeling}
                         leftIcon={<AppleShortcuts />}
                         title={"diagramming"}
-                        _active={{
-                            backgroundColor: "whiteAlpha.200",
-                            color: "yellow.900"
-                        }}
                         onClick={handleOnDiagrammingMode}
                     >
                         Diagramming
                     </Button>
                     <Button
+                        colorScheme={"purple"}
                         isActive={queryParams.get("mode") === WorkspaceContentMode.Modeling}
                         leftIcon={<ViewStructureUp />}
                         title={"modeling"}
-                        _active={{
-                            backgroundColor: "whiteAlpha.200",
-                            color: "purple.900"
-                        }}
                         onClick={handleOnModelingMode}
                     >
                         Modeling
                     </Button>
-                </ButtonGroup>
+                </ButtonSegmentedToggle>
             ),
             right: (
                 <HStack key={"workspace-page-options"} gap={2} mr={4}>

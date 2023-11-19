@@ -10,8 +10,8 @@ export const Avatar = defineMultiStyleConfig({
     baseStyle: definePartsStyle((props) => ({
         container: {
             backgroundColor: `${props.colorScheme}.100`,
-            borderColor: `${props.colorScheme}.900`,
-            color: `${props.colorScheme}.900`,
+            borderColor: `${props.colorScheme}.600`,
+            color: `${props.colorScheme}.600`,
             _hover: {
                 backgroundColor: `${props.colorScheme}.200`,
             },
@@ -26,8 +26,8 @@ export const Avatar = defineMultiStyleConfig({
         },
         excessLabel: {
             backgroundColor: "gray.100",
-            borderColor: "gray.900",
-            color: "gray.900",
+            borderColor: "gray.600",
+            color: "gray.600",
             _hover: {
                 backgroundColor: "gray.200",
             },

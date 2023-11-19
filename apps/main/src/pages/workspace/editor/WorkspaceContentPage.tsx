@@ -154,8 +154,8 @@ export const WorkspaceContentPage: FC = () => {
                         {queryParams.get("panel") === WorkspaceContentPanel.Comments && (
                             <Flex direction={"column"} width={"400px"}>
                                 <ContextSheetHeader>
-                                    <ContextSheetTitle title={"All Comments"} />
                                     <ContextSheetCloseButton onClick={handleOnClosePanel} />
+                                    <ContextSheetTitle title={"All Comments"} />
                                 </ContextSheetHeader>
 
                                 <Divider />
@@ -171,8 +171,8 @@ export const WorkspaceContentPage: FC = () => {
                         {queryParams.get("panel") === WorkspaceContentPanel.Editor && (
                             <Flex direction={"column"} width={"1200px"}>
                                 <ContextSheetHeader>
-                                    <ContextSheetTitle title={"Code Editor"} />
                                     <ContextSheetCloseButton onClick={handleOnClosePanel} />
+                                    <ContextSheetTitle title={"Code Editor"} />
                                 </ContextSheetHeader>
             
                                 <Divider />
@@ -189,8 +189,8 @@ export const WorkspaceContentPage: FC = () => {
                         {queryParams.get("panel") === WorkspaceContentPanel.Settings && (
                             <Flex direction={"column"} width={"400px"}>
                                 <ContextSheetHeader>
-                                    <ContextSheetTitle title={"Settings"} />
                                     <ContextSheetCloseButton onClick={handleOnClosePanel} />
+                                    <ContextSheetTitle title={"Settings"} />
                                 </ContextSheetHeader>
             
                                 <Divider />

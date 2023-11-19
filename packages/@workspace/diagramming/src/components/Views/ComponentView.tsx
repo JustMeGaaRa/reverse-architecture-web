@@ -72,7 +72,7 @@ export const ComponentView: FC<PropsWithChildren<{
     useViewRenderingEffect(strategy);
 
     const handleOnNodeDragStop = useCallback((event: React.MouseEvent, node: any, nodes: any[]) => {
-        onWorkspaceChange(setElementPosition(node.data.element.identifier, node.position));
+        onWorkspaceChange?.(setElementPosition(node.data.element.identifier, node.position));
         onNodeDragStop?.(event, node);
     }, [onNodeDragStop, onWorkspaceChange, setElementPosition]);
 
@@ -99,10 +99,10 @@ export const ComponentView: FC<PropsWithChildren<{
 
             switch (addingElementType) {
                 case ElementType.Group:
-                    onWorkspaceChange(addGroup(viewportTargetPoint));
+                    onWorkspaceChange?.(addGroup(viewportTargetPoint));
                     break;
                 case ElementType.Component:
-                    onWorkspaceChange(addComponent(viewportTargetPoint, groupId));
+                    onWorkspaceChange?.(addComponent(viewportTargetPoint, groupId));
                     break;
             }
         }
@@ -128,13 +128,13 @@ export const ComponentView: FC<PropsWithChildren<{
 
             switch (addingElementType) {
                 case ElementType.SoftwareSystem:
-                    onWorkspaceChange(addSoftwareSystem(viewportPoint));
+                    onWorkspaceChange?.(addSoftwareSystem(viewportPoint));
                     break;
                 case ElementType.Person:
-                    onWorkspaceChange(addPerson(viewportPoint));
+                    onWorkspaceChange?.(addPerson(viewportPoint));
                     break;
                 case ElementType.Container:
-                    onWorkspaceChange(addContainer(viewportPoint));
+                    onWorkspaceChange?.(addContainer(viewportPoint));
                     break;
             }
         }
@@ -150,7 +150,7 @@ export const ComponentView: FC<PropsWithChildren<{
     ]);
 
     const handleOnConnect = useCallback((connection: Connection) => {
-        onWorkspaceChange(addRelationship(connection.source, connection.target));
+        onWorkspaceChange?.(addRelationship(connection.source, connection.target));
     }, [addRelationship, onWorkspaceChange]);
 
     return (

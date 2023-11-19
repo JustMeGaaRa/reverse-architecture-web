@@ -17,6 +17,7 @@ export const WorkspaceList: FC<{
     isGrouped?: boolean;
     emptyTitle?: string;
     emptyDescription?: string;
+    emptyAction?: React.ReactElement;
     onClick?: (workspace: WorkspaceInfo | WorkspaceGroupInfo) => void;
     onSelected?: (workspaces: Array<number>) => void;
     onRemove?: (workspaces: Array<WorkspaceInfo | WorkspaceGroupInfo>) => void;
@@ -26,6 +27,7 @@ export const WorkspaceList: FC<{
     isGrouped,
     emptyTitle,
     emptyDescription,
+    emptyAction,
     onClick,
     onSelected,
     onRemove,
@@ -37,6 +39,7 @@ export const WorkspaceList: FC<{
                     icon={Folder}
                     title={emptyTitle}
                     description={emptyDescription}
+                    action={emptyAction}
                 />
             )}
             {workspaces.length > 0 && view === "card" && (

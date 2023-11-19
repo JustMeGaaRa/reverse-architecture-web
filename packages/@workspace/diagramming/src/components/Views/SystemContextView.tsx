@@ -70,7 +70,7 @@ export const SystemContextView: FC<PropsWithChildren<{
     useViewRenderingEffect(strategy);
 
     const handleOnNodeDragStop = useCallback((event: React.MouseEvent, node: any, nodes: any[]) => {
-        onWorkspaceChange(setElementPosition(node.data.element.identifier, node.position));
+        onWorkspaceChange?.(setElementPosition(node.data.element.identifier, node.position));
         onNodeDragStop?.(event, node);
     }, [onNodeDragStop, onWorkspaceChange, setElementPosition]);
 
@@ -96,10 +96,10 @@ export const SystemContextView: FC<PropsWithChildren<{
 
             switch (addingElementType) {
                 case ElementType.SoftwareSystem:
-                    onWorkspaceChange(addSoftwareSystem(viewportTargetPoint, node.id));
+                    onWorkspaceChange?.(addSoftwareSystem(viewportTargetPoint, node.id));
                     break;
                 case ElementType.Person:
-                    onWorkspaceChange(addPerson(viewportTargetPoint, node.id));
+                    onWorkspaceChange?.(addPerson(viewportTargetPoint, node.id));
                     break;
             }
         }
@@ -125,13 +125,13 @@ export const SystemContextView: FC<PropsWithChildren<{
 
             switch (addingElementType) {
                 case ElementType.Group:
-                    onWorkspaceChange(addGroup(viewportPoint));
+                    onWorkspaceChange?.(addGroup(viewportPoint));
                     break;
                 case ElementType.SoftwareSystem:
-                    onWorkspaceChange(addSoftwareSystem(viewportPoint));
+                    onWorkspaceChange?.(addSoftwareSystem(viewportPoint));
                     break;
                 case ElementType.Person:
-                    onWorkspaceChange(addPerson(viewportPoint));
+                    onWorkspaceChange?.(addPerson(viewportPoint));
                     break;
             }
         }
@@ -147,7 +147,7 @@ export const SystemContextView: FC<PropsWithChildren<{
     ]);
 
     const handleOnConnect = useCallback((connection: Connection) => {
-        onWorkspaceChange(addRelationship(connection.source, connection.target));
+        onWorkspaceChange?.(addRelationship(connection.source, connection.target));
     }, [addRelationship, onWorkspaceChange]);
 
     return (

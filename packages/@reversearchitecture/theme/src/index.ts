@@ -1,25 +1,31 @@
 import { extendTheme } from "@chakra-ui/react";
-import { Avatar } from "./components/Avatar";
-import { Breadcrumb } from "./components/Breadcrumb";
-import { Button } from "./components/Button";
-import { Checkbox } from "./components/Checkbox";
-import { Menu } from "./components/Menu";
-import { Modal } from "./components/Modal";
-import { Radio } from "./components/Radio";
-import { Tabs } from "./components/Tabs";
-import { Tag } from "./components/Tag";
-import { colors } from "./foundations/Colors";
-import { textStyles } from "./foundations/TextStyles";
+import {
+    Avatar,
+    Breadcrumb,
+    Button,
+    Checkbox,
+    Divider,
+    Menu,
+    Modal,
+    Radio,
+    Select,
+    Tabs,
+    Tag
+} from "./components";
+import {
+    colors,
+    textStyles
+} from "./foundations";
 
-export const theme =  extendTheme({
+export const RestructTheme =  extendTheme({
     components: {
         Avatar,
         Button,
         Breadcrumb,
         Checkbox,
+        Divider,
         Menu,
         Modal,
-        // Radio,
         Tabs,
         Tag
     },

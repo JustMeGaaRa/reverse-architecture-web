@@ -1,5 +1,5 @@
 import {
-    Button,
+    IconButton,
     Menu,
     MenuButton,
     MenuDivider,
@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { StructurizrExportClient } from "@structurizr/export";
 import { useWorkspaceStore } from "@workspace/core";
-import { NavArrowDown } from "iconoir-react";
+import { MoreHoriz } from "iconoir-react";
 import { FC, useCallback } from "react";
 
 export const WorkspaceMenu: FC<{
@@ -27,10 +27,10 @@ export const WorkspaceMenu: FC<{
     return (
         <Menu>
             <MenuButton
-                as={Button}
+                as={IconButton}
                 colorScheme={"gray"}
                 variant={"ghost"}
-                rightIcon={<NavArrowDown />}
+                icon={<MoreHoriz />}
             >
                 {title}
             </MenuButton>

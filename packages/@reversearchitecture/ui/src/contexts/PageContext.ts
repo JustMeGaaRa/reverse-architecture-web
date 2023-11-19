@@ -13,7 +13,7 @@ export const PageContext = createContext<PageOptions>({
     sidebarOptions: {
         isOpen: false,
         showButton: false,
-        width: [80, 320],
+        width: [64, 320],
         sections: {
             logo: [],
             top: [],

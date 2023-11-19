@@ -60,7 +60,7 @@ export const textStyles = {
         fontSize: "14px",
         fontStyle: "normal",
         fontWeight: "400",
-        lineHeight: "24px",
+        lineHeight: "20px",
     },
     b4: {
         fontFamily: "Inter",

@@ -7,7 +7,7 @@ export const PageProvider: FC<PropsWithChildren> = ({ children }) => {
         sidebarOptions: {
             isOpen: false,
             showButton: true,
-            width: [80, 320],
+            width: [64, 320],
             sections: {
                 logo: [],
                 top: [],
@@ -16,7 +16,7 @@ export const PageProvider: FC<PropsWithChildren> = ({ children }) => {
             }
         },
         headerOptions: {
-            height: 80,
+            height: 64,
             sections: {
                 left: [],
                 middle: [],

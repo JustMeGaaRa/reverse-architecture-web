@@ -3,14 +3,10 @@ import { Redo, Undo } from "iconoir-react";
 import { FC } from "react"
 import { Toolbar, ToolbarSection } from "../containers"
 
-export const WorkspaceUndoRedoControls: FC<{
-    size?: "xs" | "sm" | "md" | "lg";
-}> = ({
-    size = "md"
-}) => {
+export const WorkspaceUndoRedoControls: FC = () => {
     return (
-        <Toolbar size={size}>
-            <ToolbarSection size={size}>
+        <Toolbar>
+            <ToolbarSection>
                 <IconButton
                     aria-label={"undo last change"}
                     icon={<Undo />}

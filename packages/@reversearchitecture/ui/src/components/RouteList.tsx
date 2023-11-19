@@ -5,11 +5,11 @@ export const RouteList: FC<PropsWithChildren<{
     size?: "sm" | "md" | "lg",
 }>> = ({
     children,
-    size = "lg"
+    size = "md"
 }) => {
     return (
         <ButtonGroup
-            colorScheme={"yellow"}
+            colorScheme={"lime"}
             orientation={"vertical"}
             size={size}
             spacing={1}
