@@ -1,91 +1,109 @@
-import { AspectRatio, Box, Flex, Icon, IconButton, Image, Td, Tr } from "@chakra-ui/react";
-import { MediaImage, MoreHoriz } from "iconoir-react";
+import {
+    Flex,
+    Icon,
+    IconButton,
+    Menu,
+    MenuButton,
+    MenuItem,
+    MenuList,
+    Td,
+    Tr
+} from "@chakra-ui/react";
+import {
+    AppleShortcuts,
+    BinMinus,
+    MoreHoriz,
+    Page
+} from "iconoir-react";
 import { FC } from "react";
 import { useSelectionItem } from "../hooks";
-import { TableColumnInfo, WorkspaceInfo } from "../types";
+import { TableColumnInfo } from "../types";
 
 export const WorkspaceTableRow: FC<{
-    workspace: WorkspaceInfo;
+    data: any;
     columns: TableColumnInfo[];
+    isGrouped?: boolean;
     onClick?: () => void;
 }> = ({
-    workspace,
+    data,
     columns,
+    isGrouped,
     onClick
 }) => {
     const { index, isSelected } = useSelectionItem();
 
     return (
-        <Tr
-            data-group
-            backgroundColor={isSelected ? "whiteAlpha.200" : "transparent"}
-            borderRadius={16}
-            cursor={"pointer"}
-            _hover={{ background: "whiteAlpha.100" }}
-            onClick={onClick}
-        >
-            <Td width={12}>
-                <AspectRatio ratio={2/1}>
-                    <Box
-                        backgroundColor={"whiteAlpha.100"}
-                        borderColor={"transparent"}
-                        borderRadius={12}
-                        height={"100%"}
-                        width={"100%"}
-                        overflow={"hidden"}
-                        _groupHover={{
-                            borderColor: "yellow.900",
-                            borderWidth: 2,
-                            padding: 1,
-                        }}
-                    >
-                        
-                        <Flex
-                            backgroundColor={"whiteAlpha.100"}
-                            borderRadius={10}
-                            alignItems={"center"}
-                            justifyContent={"center"}
-                            overflow={"hidden"}
-                            height={"100%"}
-                            width={"100%"}
-                        >
-                            {workspace.coverUrl && (
-                                <Image
-                                    alt={"workspace preview image"}
-                                    src={workspace.coverUrl}
-                                    transitionProperty={"all"}
-                                    transitionDuration={"0.3s"}
-                                    transitionTimingFunction={"ease"}
-                                    _groupHover={{ transform: "scale(2)" }}
-                                />
-                            )}
-                            
-                            {!workspace.coverUrl && (
-                                <Icon
-                                    as={MediaImage}
-                                    color={"whiteAlpha.700"}
-                                    fontSize={24}
-                                    strokeWidth={1}
-                                />
-                            )}
-                        </Flex>
-                    </Box>
-                </AspectRatio>
+        <Tr data-group cursor={"pointer"}>
+            <Td
+                height={16}
+                width={16}
+                padding={1}
+                borderTopLeftRadius={16}
+                borderBottomLeftRadius={16}
+                _groupHover={{
+                    background: "surface.tinted-white-5"
+                }}
+            >
+                <Flex
+                    backgroundColor={"surface.tinted-white-5"}
+                    borderRadius={12}
+                    boxSize={14}
+                    padding={4}
+                    alignItems={"center"}
+                    justifyContent={"center"}
+                    _groupHover={{
+                        borderColor: "lime.600",
+                        borderWidth: 2,
+                        padding: 1,
+                        boxShadow: "0px 0px 0px 3px #161819 inset"
+                    }}
+                >
+                    <Icon
+                        as={isGrouped ? AppleShortcuts : Page}
+                        color={"gray.900"}
+                        boxSize={6}
+                        strokeWidth={1}
+                    />
+                </Flex>
             </Td>
             {columns.map(({ name }) => (
-                <Td key={name}>
-                    {workspace[name]}
+                <Td
+                    key={name}
+                    height={16}
+                    paddingX={4}
+                    _groupHover={{
+                        background: "surface.tinted-white-5"
+                    }}
+                    onClick={onClick}
+                >
+                    {data[name]}
                 </Td>
             ))}
-            <Td width={12}>
-                <IconButton
-                    aria-label={"more options"}
-                    colorScheme={"gray"}
-                    icon={<MoreHoriz />}
-                    size={"sm"}
-                    variant={"ghost"}
-                    title={"more options"}
-                />
+            <Td
+                height={16}
+                width={16}
+                padding={4}
+                borderTopRightRadius={16}
+                borderBottomRightRadius={16}
+                _groupHover={{
+                    background: "surface.tinted-white-5"
+                }}
+            >
+                <Menu>
+                    <MenuButton>
+                        <IconButton
+                            aria-label={"more options"}
+                            colorScheme={"gray"}
+                            icon={<MoreHoriz />}
+                            size={"sm"}
+                            variant={"ghost"}
+                            title={"more options"}
+                        />
+                    </MenuButton>
+                    <MenuList>
+                        <MenuItem icon={<Icon as={BinMinus} boxSize={4} />}>Remove</MenuItem>
+                    </MenuList>
+                </Menu>
             </Td>
         </Tr>
     )

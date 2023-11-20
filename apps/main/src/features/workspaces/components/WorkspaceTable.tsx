@@ -24,11 +24,12 @@ export const WorkspaceTable: FC<PropsWithChildren<{
                     borderCollapse: "separate",
                     borderSpacing: "0 4px"
                 }}
+                layout={"fixed"}
                 variant={"unstyled"}
             >
                 <Thead>
                     <Tr>
-                        <Th width={12}>
+                        <Th width={16}>
                             <Box height={50} width={100} />
                         </Th>
                         {columns.map(({ title, name }) => (
@@ -36,7 +37,7 @@ export const WorkspaceTable: FC<PropsWithChildren<{
                                 {title}
                             </Th>
                         ))}
-                        <Th width={12} />
+                        <Th width={16} />
                     </Tr>
                 </Thead>
                 <Tbody>

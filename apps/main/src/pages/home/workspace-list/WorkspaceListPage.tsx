@@ -2,6 +2,7 @@ import {
     Box,
     ButtonGroup,
     Divider,
+    Flex,
     IconButton,
     Tabs,
     Tab,
@@ -11,12 +12,16 @@ import {
     Text,
     ScaleFade,
     Button,
+    Icon,
+    Slide,
+    SlideFade,
 } from "@chakra-ui/react";
 import {
     ButtonSegmentedToggle,
     ContentViewMode,
     ContextSheet,
     ContextSheetBody,
+    ContextSheetCloseButton,
     ContextSheetHeader,
     ContextSheetTitle,
     Toolbar,
@@ -28,6 +33,7 @@ import { Workspace } from "@structurizr/dsl";
 import { StructurizrExportClient } from "@structurizr/export";
 import {
     AddPageAlt,
+    AppleShortcuts,
     BinMinus,
     Cancel,
     Combine,
@@ -87,7 +93,7 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
             .catch(error => console.error(error));
     }, [workspaceApi, account]);
 
-    const handleOnGroup = useCallback(() => {
+    const handleOnStackWorkspaces = useCallback(() => {
 
     }, []);
     
@@ -148,12 +154,11 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                     <Button
                         aria-label={"new project"}
                         colorScheme={"lime"}
-                        leftIcon={<AddPageAlt height={"20px"} width={"20px"} />}
+                        leftIcon={<Icon as={AddPageAlt} boxSize={5} />}
                         iconSpacing={"0px"}
                         onClick={handleOnWorkspaceCreate}
                     >
-                        {/* TODO: move this marginX to theme */}
-                        <Box marginX={2}>New Workspace</Box>
+                        <Text marginX={2}>New Workspace</Text>
                     </Button>
                 </ButtonGroup>
             )
@@ -163,178 +168,191 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
     return (
         <HomePageLayoutContent>
             <ContextSheet>
-                <ContextSheetHeader>
-                    {!!queryParams.get("group") && (
-                        <IconButton
-                            aria-label={"back to workspaces"}
-                            colorScheme={"gray"}
-                            icon={<NavArrowLeft />}
-                            title={"back to workspaces"}
-                            variant={"ghost"}
-                            onClick={() => setQueryParam({ })}
-                        />
-                    )}
-                    <ContextSheetTitle title={!!queryParams.get("group") ? queryParams.get("group") : "Workspaces"} />
-                </ContextSheetHeader>
+                {!queryParams.get("group") && (
+                    <ContextSheetHeader>
+                        <ContextSheetTitle title={"Workspaces"} />
+                    </ContextSheetHeader>
+                )}
 
-                <Divider />
+                {!queryParams.get("group") && (
+                    <Divider />
+                )}
                 
-                <ContextSheetBody>
-                    <Tabs height={"100%"} index={tabIndex}>
-                        <TabList backgroundColor={"rgba(0, 0, 0, 0.40)"} height={12} paddingX={6}>
-                            <Tab
-                                visibility={!!queryParams.get("group") ? "hidden" : "visible"}
-                                onClick={() => setQueryParam({ tab: WorkspaceListTabs.All })}
-                            >
-                                My Workspaces
-                            </Tab>
-                            <Tab
-                                visibility={!!queryParams.get("group") ? "hidden" : "visible"}
-                                onClick={() => setQueryParam({ tab: WorkspaceListTabs.Shared })}
-                            >
-                                Shared
-                            </Tab>
-                            <Tab
-                                visibility={!!queryParams.get("group") ? "hidden" : "visible"}
-                                onClick={() => setQueryParam({ tab: WorkspaceListTabs.Archived })}
-                            >
-                                Archived
-                            </Tab>
-                            <Box
-                                position={"absolute"}
-                                right={4}
-                            >
-                                <ButtonSegmentedToggle size={"sm"}>
-                                    <IconButton
-                                        aria-label={"card view"}
-                                        isActive={view === ContentViewMode.Card}
-                                        icon={<ViewGrid />}
-                                        onClick={() => setView(ContentViewMode.Card)}
+                {!queryParams.get("group") && (
+                    <ContextSheetBody>
+                        <Tabs height={"100%"} index={tabIndex}>
+                            <TabList backgroundColor={"rgba(0, 0, 0, 0.40)"} height={12} paddingX={2}>
+                                <Tab
+                                    visibility={!!queryParams.get("group") ? "hidden" : "visible"}
+                                    onClick={() => setQueryParam({ tab: WorkspaceListTabs.All })}
+                                >
+                                    My Workspaces
+                                </Tab>
+                                <Tab
+                                    visibility={!!queryParams.get("group") ? "hidden" : "visible"}
+                                    onClick={() => setQueryParam({ tab: WorkspaceListTabs.Shared })}
+                                >
+                                    Shared
+                                </Tab>
+                                <Tab
+                                    visibility={!!queryParams.get("group") ? "hidden" : "visible"}
+                                    onClick={() => setQueryParam({ tab: WorkspaceListTabs.Archived })}
+                                >
+                                    Archived
+                                </Tab>
+                                <Box position={"absolute"} right={4}>
+                                    <ButtonSegmentedToggle size={"sm"}>
+                                        <IconButton
+                                            aria-label={"card view"}
+                                            isActive={view === ContentViewMode.Card}
+                                            icon={<Icon as={ViewGrid} boxSize={4} />}
+                                            onClick={() => setView(ContentViewMode.Card)}
+                                        />
+                                        <IconButton
+                                            aria-label={"table view"}
+                                            isActive={view === ContentViewMode.Table}
+                                            icon={<Icon as={List} boxSize={4} />}
+                                            onClick={() => setView(ContentViewMode.Table)}
+                                        />
+                                    </ButtonSegmentedToggle>
+                                </Box>
+                            </TabList>
+                            <TabPanels height={"calc(100% - 42px)"} padding={6} overflowY={"scroll"}>
+                                <TabPanel>
+                                    <WorkspaceList
+                                        workspaces={workspaces}
+                                        view={view}
+                                        emptyTitle={"No workspaces"}
+                                        emptyDescription={"To get started, click the \"Create Workspace\" button to create a new project."}
+                                        emptyAction={(
+                                            <Button
+                                                aria-label={"new project"}
+                                                colorScheme={"lime"}
+                                                leftIcon={<Icon as={AddPageAlt} boxSize={5} />}
+                                                iconSpacing={"0px"}
+                                                onClick={handleOnWorkspaceCreate}
+                                            >
+                                                <Text marginX={2}>New Workspace</Text>
+                                            </Button>
+                                        )}
+                                        onClick={handleOnWorkspaceClick}
+                                        onSelected={setSelected}
+                                        onRemove={handleOnWorkspaceRemove}
                                     />
-                                    <IconButton
-                                        aria-label={"table view"}
-                                        isActive={view === ContentViewMode.Table}
-                                        icon={<List />}
-                                        onClick={() => setView(ContentViewMode.Table)}
+                                </TabPanel>
+                                <TabPanel>
+                                    <WorkspaceList
+                                        workspaces={[]}
+                                        view={view}
+                                        emptyTitle={"No shared workspaces"}
+                                        emptyDescription={"To get started, click the \"Create Workspace\" button to create a new project."}
+                                        emptyAction={(
+                                            <Button
+                                                aria-label={"new project"}
+                                                colorScheme={"lime"}
+                                                leftIcon={<Icon as={AddPageAlt} boxSize={5} />}
+                                                iconSpacing={"0px"}
+                                                onClick={handleOnWorkspaceCreate}
+                                            >
+                                                <Text marginX={2}>New Workspace</Text>
+                                            </Button>
+                                        )}
+                                        onClick={handleOnWorkspaceClick}
+                                        onSelected={setSelected}
+                                        onRemove={handleOnWorkspaceRemove}
                                     />
-                                </ButtonSegmentedToggle>
+                                </TabPanel>
+                                <TabPanel>
+                                    <WorkspaceList
+                                        workspaces={[]}
+                                        view={view}
+                                        emptyTitle={"No archived workspaces"}
+                                        emptyDescription={"To get started, click the \"Create Workspace\" button to create a new project."}
+                                        onClick={handleOnWorkspaceClick}
+                                        onSelected={setSelected}
+                                        onRemove={handleOnWorkspaceRemove}
+                                    />
+                                </TabPanel>
+                            </TabPanels>
+                        </Tabs>
+                        <ScaleFade in={selected?.length > 0}>
+                            <Box position={"absolute"} bottom={4} left={"50%"} transform={"translateX(-50%)"}>
+                                <Toolbar>
+                                    <ToolbarSection>
+                                        <IconButton
+                                            aria-label={"close"}
+                                            icon={<Cancel />}
+                                            title={"close"}
+                                            variant={"tonal"}
+                                            onClick={handleOnWorkspaceCancelSelected}
+                                        />
+                                        <Text paddingX={2}>
+                                            {`${selected.length} selected`}
+                                        </Text>
+                                    </ToolbarSection>
+                                    <ToolbarSection>
+                                        <IconButton
+                                            aria-label={"stack elements"}
+                                            icon={<AppleShortcuts />}
+                                            title={"stack elements"}
+                                            onClick={handleOnStackWorkspaces}
+                                        />
+                                        <IconButton
+                                            aria-label={"copy"}
+                                            icon={<Copy />}
+                                            title={"copy"}
+                                        />
+                                        <IconButton
+                                            aria-label={"remove"}
+                                            icon={<BinMinus />}
+                                            title={"remove"}
+                                            onClick={handleOnWorkspaceRemove}
+                                        />
+                                    </ToolbarSection>
+                                </Toolbar>
                             </Box>
-                        </TabList>
-                        <TabPanels height={"calc(100% - 42px)"} padding={6} overflowY={"scroll"}>
-                            <TabPanel>
-                                <WorkspaceList
-                                    workspaces={workspaces}
-                                    view={view}
-                                    isGrouped={true}
-                                    emptyTitle={"No workspaces"}
-                                    emptyDescription={"To get started, click the \"Create Workspace\" button to create a new project."}
-                                    emptyAction={(
-                                        <Button
-                                            aria-label={"new project"}
-                                            colorScheme={"lime"}
-                                            leftIcon={<AddPageAlt height={"20px"} width={"20px"} />}
-                                            iconSpacing={"0px"}
-                                            onClick={handleOnWorkspaceCreate}
-                                        >
-                                            {/* TODO: move this marginX to theme */}
-                                            <Box marginX={"8px"}>New Workspace</Box>
-                                        </Button>
-                                    )}
-                                    onClick={handleOnWorkspaceClick}
-                                    onSelected={setSelected}
-                                    onRemove={handleOnWorkspaceRemove}
-                                />
-                            </TabPanel>
-                            <TabPanel>
-                                <WorkspaceList
-                                    workspaces={[]}
-                                    view={view}
-                                    isGrouped={true}
-                                    emptyTitle={"No shared workspaces"}
-                                    emptyDescription={"To get started, click the \"Create Workspace\" button to create a new project."}
-                                    emptyAction={(
-                                        <Button
-                                            aria-label={"new project"}
-                                            colorScheme={"lime"}
-                                            leftIcon={<AddPageAlt height={"20px"} width={"20px"} />}
-                                            iconSpacing={"0px"}
-                                            onClick={handleOnWorkspaceCreate}
-                                        >
-                                            {/* TODO: move this marginX to theme */}
-                                            <Box marginX={"8px"}>New Workspace</Box>
-                                        </Button>
-                                    )}
-                                    onClick={handleOnWorkspaceClick}
-                                    onSelected={setSelected}
-                                    onRemove={handleOnWorkspaceRemove}
-                                />
-                            </TabPanel>
-                            <TabPanel>
-                                <WorkspaceList
-                                    workspaces={[]}
-                                    view={view}
-                                    isGrouped={true}
-                                    emptyTitle={"No archived workspaces"}
-                                    emptyDescription={"To get started, click the \"Create Workspace\" button to create a new project."}
-                                    onClick={handleOnWorkspaceClick}
-                                    onSelected={setSelected}
-                                    onRemove={handleOnWorkspaceRemove}
-                                />
-                            </TabPanel>
-                            <TabPanel>
+                        </ScaleFade>
+                    </ContextSheetBody>
+                )}
+
+                {queryParams.get("group") && (
+                    <Flex direction={"column"} gap={2} padding={2} height={"100%"}>
+                        <ScaleFade in={!!queryParams.get("group")}>
+                            <Flex
+                                background={"surface.tinted-white-10"}
+                                borderRadius={24}
+                                alignItems={"center"}
+                                justifyContent={"space-between"}
+                                gap={2}
+                                padding={4}
+                                paddingRight={2}
+                                height={16}
+                                width={"100%"}
+                            >
+                                <ContextSheetTitle icon={AppleShortcuts} title={queryParams.get("group")} />
+                                <ContextSheetCloseButton size={"lg"} onClick={() => setQueryParam({})} />
+                            </Flex>
+                        </ScaleFade>
+                        <ScaleFade in={!!queryParams.get("group")} transition={{ enter: { delay: 0.3 } }}>
+                            <Box
+                                background={"surface.tinted-white-5"}
+                                borderRadius={24}
+                                height={"100%"}
+                                width={"100%"}
+                            >
                                 <WorkspaceList
                                     workspaces={workspaces?.filter(x => x.group === queryParams.get("group")) || []}
                                     view={view}
-                                    isGrouped={false}
                                     emptyTitle={"No workspaces"}
                                     emptyDescription={"To get started, click the \"Create Workspace\" button to create a new project."}
                                     onClick={handleOnWorkspaceClick}
                                     onSelected={setSelected}
                                     onRemove={handleOnWorkspaceRemove}
                                 />
-                            </TabPanel>
-                        </TabPanels>
-                    </Tabs>
-                    <ScaleFade in={selected.length > 0}>
-                        <Box position={"absolute"} bottom={4} left={"50%"} transform={"translateX(-50%)"}>
-                            <Toolbar>
-                                <ToolbarSection>
-                                    <Text paddingX={2}>
-                                        {`${selected.length} item(s) selected`}
-                                    </Text>
-                                </ToolbarSection>
-                                <ToolbarSection>
-                                    <IconButton
-                                        aria-label={"group elements"}
-                                        icon={<Combine />}
-                                        title={"group elements"}
-                                        onClick={handleOnGroup}
-                                    />
-                                    <IconButton
-                                        aria-label={"copy"}
-                                        icon={<Copy />}
-                                        isDisabled
-                                        title={"copy"}
-                                    />
-                                    <IconButton
-                                        aria-label={"remove"}
-                                        icon={<BinMinus />}
-                                        title={"remove"}
-                                        onClick={handleOnWorkspaceRemove}
-                                    />
-                                </ToolbarSection>
-                                <ToolbarSection>
-                                    <IconButton
-                                        aria-label={"close"}
-                                        icon={<Cancel />}
-                                        title={"close"}
-                                        onClick={handleOnWorkspaceCancelSelected}
-                                    />
-                                </ToolbarSection>
-                            </Toolbar>
-                        </Box>
-                    </ScaleFade>
-                </ContextSheetBody>
+                            </Box>
+                        </ScaleFade>
+                    </Flex>
+                )}
             </ContextSheet>
         </HomePageLayoutContent>
     )

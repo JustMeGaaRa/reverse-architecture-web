@@ -2,19 +2,18 @@ import { Box } from "@chakra-ui/react";
 import {
     Route,
     RouteList,
-    Search,
+    CommandCenter,
     ReverseArchitectureSvg,
     PageHomeButton,
     usePageSidebar,
     usePageHeader
 } from "@reversearchitecture/ui";
 import {
-    AddPageAlt,
     BellNotification,
     HelpCircle,
     HomeSimple,
     Internet,
-    MultiplePagesEmpty,
+    Page,
     Settings,
 } from "iconoir-react";
 import { FC, PropsWithChildren, useEffect } from "react";
@@ -43,7 +42,7 @@ export const HomePageLayoutContent: FC<PropsWithChildren> = ({ children }) => {
                         to={"dashboard"}
                     />
                     <Route
-                        icon={<MultiplePagesEmpty />}
+                        icon={<Page />}
                         title={"Workspaces"}
                         to={"workspaces"}
                     />
@@ -88,7 +87,7 @@ export const HomePageLayoutContent: FC<PropsWithChildren> = ({ children }) => {
                     width={["sm", "md", "lg"]}
                     maxWidth={["xl"]}
                 >
-                    <Search />
+                    <CommandCenter />
                 </Box>
             )
         })

@@ -4,7 +4,6 @@ export * from "./WorkspaceCard";
 export * from "./WorkspaceCardView";
 export * from "./SelectionContainerProvider";
 export * from "./WorkspaceGroupPreview";
-export * from "./WorkspaceGroupTableRow";
 export * from "./WorkspaceList";
 export * from "./WorkspacePreview";
 export * from "./WorkspaceTable";

@@ -22,7 +22,7 @@ export * from "./PageSidebar";
 export * from "./Route";
 export * from "./RouteList";
 export * from "./RouteSection";
-export * from "./Search";
+export * from "./CommandCenter";
 export * from "./Shortcut";
 export * from "./Toolbar";
 export * from "./ToolbarSection";

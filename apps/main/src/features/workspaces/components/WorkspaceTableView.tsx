@@ -2,7 +2,6 @@ import { FC } from "react";
 import {
     SelectionContainerProvider,
     WorkspaceTableRow,
-    WorkspaceGroupTableRow,
     WorkspaceTable,
 } from "../components";
 import { TableColumnInfo, WorkspaceGroupInfo, WorkspaceInfo } from "../types";
@@ -10,13 +9,11 @@ import { groupWorkspaces } from "../utils";
 
 export const WorkspaceTableView: FC<{
     workspaces: WorkspaceInfo[];
-    isGrouped?: boolean;
     onClick?: (workspace: WorkspaceInfo | WorkspaceGroupInfo) => void;
     onSelected?: (workspaces: Array<number>) => void;
     onRemove?: (workspaces: Array<WorkspaceInfo | WorkspaceGroupInfo>) => void;
 }> = ({
     workspaces,
-    isGrouped,
     onClick,
     onSelected,
     onRemove
@@ -34,27 +31,20 @@ export const WorkspaceTableView: FC<{
     return (
         <SelectionContainerProvider>
             <WorkspaceTable columns={columns} onSelected={onSelected}>
-                {isGrouped && groups.filter(group => group.name !== undefined).map(group => (
-                    <WorkspaceGroupTableRow
+                {groups.filter(group => group.name !== undefined).map(group => (
+                    <WorkspaceTableRow
                         key={group.name}
                         columns={columns}
-                        group={group}
+                        data={group}
+                        isGrouped={true}
                         onClick={() => onClick?.(group)}
                     />
                 ))}
-                {isGrouped && groups.filter(group => group.name === undefined).flatMap(group => group.workspaces).map(workspace => (
+                {groups.filter(group => group.name === undefined).flatMap(group => group.workspaces).map(workspace => (
                     <WorkspaceTableRow
                         key={workspace.workspaceId}
                         columns={columns}
-                        workspace={workspace}
-                        onClick={() => onClick?.(workspace)}
-                    />
-                ))}
-                {!isGrouped && workspaces.map(workspace => (
-                    <WorkspaceTableRow
-                        key={workspace.workspaceId}
-                        columns={columns}
-                        workspace={workspace}
+                        data={workspace}
                         onClick={() => onClick?.(workspace)}
                     />
                 ))}
