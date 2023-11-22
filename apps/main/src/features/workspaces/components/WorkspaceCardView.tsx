@@ -3,7 +3,7 @@ import {
     SelectionContainerProvider,
     WorkspaceGroupPreview,
     WorkspacePreview,
-    WorkspaceCards
+    WorkspaceCardList
 } from "../components";
 import { WorkspaceGroupInfo, WorkspaceInfo } from "../types";
 import { groupWorkspaces } from "../utils";
@@ -25,7 +25,7 @@ export const WorkspaceCardView: FC<{
 
     return (
         <SelectionContainerProvider>
-            <WorkspaceCards onSelected={onSelected}>
+            <WorkspaceCardList onSelected={onSelected}>
                 {isGrouped && groups.filter(group => group.name !== undefined).map(group => (
                     <WorkspaceGroupPreview
                         key={group.name}
@@ -47,7 +47,7 @@ export const WorkspaceCardView: FC<{
                         onPreviewClick={() => onClick?.(workspace)}
                     />
                 ))}
-            </WorkspaceCards>
+            </WorkspaceCardList>
         </SelectionContainerProvider>
     )
 }

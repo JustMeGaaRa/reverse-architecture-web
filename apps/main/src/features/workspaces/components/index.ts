@@ -1,5 +1,5 @@
 export * from "./SelectionItemProvider";
-export * from "./WorkspaceCards";
+export * from "./WorkspaceCardList";
 export * from "./WorkspaceCard";
 export * from "./WorkspaceCardView";
 export * from "./SelectionContainerProvider";

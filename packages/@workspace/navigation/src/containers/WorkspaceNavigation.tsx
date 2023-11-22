@@ -53,40 +53,43 @@ export const WorkspaceNavigation: FC = () => {
     }, [zoomIntoView]);
 
     return (
-        <HStack divider={<StackDivider borderColor={"whiteAlpha.200"} />}>
-            <Select
-                backgroundColor={"whiteAlpha.100"}
-                borderWidth={1}
-                backdropFilter={"blur(8px)"}
-                borderRadius={8}
-                color={"whiteAlpha.700"}
-                size={"xs"}
-                variant={"filled"}
-                _hover={{
-                    backgroundColor: "whiteAlpha.200",
-                    borderColor: "whiteAlpha.400",
-                    color: "basic.white"
-                }}
-                onChange={handleOnViewTypeChange}
-            >
-                <option value={ViewType.SystemLandscape}>{ViewType.SystemLandscape}</option>
-                <option value={ViewType.SystemContext}>{ViewType.SystemContext}</option>
-                <option value={ViewType.Deployment}>{ViewType.Deployment}</option>
-            </Select>
-            <Breadcrumb separator={""}>
-                {links.map(link => (
-                    <BreadcrumbItem key={link.title} isCurrentPage={link.isActive}>
-                        <BreadcrumbLink
-                            as={Button}
-                            colorScheme={link.isActive ? link.colorScheme : "whiteAlpha"}
-                            title={link.title}
-                            onClick={() => handleOnViewItemClick(link.data)}
-                        >
-                            {link.title}
-                        </BreadcrumbLink>
-                    </BreadcrumbItem>
-                ))}
-            </Breadcrumb>
-        </HStack>
+        <Breadcrumb
+            backgroundColor={"surface.tinted-black-10"}
+            backdropFilter={"blur(16px)"}
+            borderRadius={12}
+            color={"gray.900"}
+            separator={"/"}
+        >
+            <BreadcrumbItem>
+                <Select
+                    backgroundColor={"whiteAlpha.100"}
+                    borderWidth={1}
+                    backdropFilter={"blur(8px)"}
+                    borderRadius={8}
+                    color={"gray.900"}
+                    size={"xs"}
+                    _hover={{
+                        backgroundColor: "whiteAlpha.200",
+                        borderColor: "whiteAlpha.400",
+                        color: "basic.white"
+                    }}
+                    onChange={handleOnViewTypeChange}
+                >
+                    <option value={ViewType.SystemLandscape}>{ViewType.SystemLandscape}</option>
+                    <option value={ViewType.SystemContext}>{ViewType.SystemContext}</option>
+                    <option value={ViewType.Deployment}>{ViewType.Deployment}</option>
+                </Select>
+            </BreadcrumbItem>
+            {links.map(link => (
+                <BreadcrumbItem key={link.title} isCurrentPage={link.isActive}>
+                    <BreadcrumbLink
+                        title={link.title}
+                        onClick={() => handleOnViewItemClick(link.data)}
+                    >
+                        {link.title}
+                    </BreadcrumbLink>
+                </BreadcrumbItem>
+            ))}
+        </Breadcrumb>
     )
 }

@@ -60,12 +60,6 @@ export const ModelView: FC<PropsWithChildren<{
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
         >
-            <Background
-                gap={50}
-                size={2}
-                style={{ backgroundColor: "#271F2F" }}
-                variant={BackgroundVariant.Dots}
-            />
             {children}
         </WorkspaceViewRenderer>
     )

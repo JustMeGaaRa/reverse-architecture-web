@@ -48,55 +48,45 @@ export const WorkspacePreview: FC<{
             name={workspace.name}
             lastModifiedDate={workspace.lastModifiedDate}
         >
-            <Box
-                backgroundColor={"whiteAlpha.100"}
-                borderColor={isSelected ? "yellow.900" : "transparent"}
-                borderRadius={16}
-                borderWidth={2}
-                padding={isSelected ? 1 : 0}
-                height={"100%"}
-                width={"100%"}
-                _groupHover={{ borderColor: "yellow.900" }}
-                onMouseDown={handleOnMouseDown}
-                onMouseUp={handleOnMouseUp}
-                onClick={handleOnPreviewClick}
-            >
-                <AspectRatio ratio={2/1}>
-                    <Box>
-                        {workspace && (
-                            <Flex
-                                backgroundColor={"whiteAlpha.100"}
-                                borderRadius={13}
-                                height={"100%"}
-                                width={"100%"}
-                                alignItems={"center"}
-                                justifyContent={"center"}
-                                overflow={"hidden"}
-                            >
-                                {workspace.coverUrl && (
-                                    <Image
-                                        alt={"workspace preview image"}
-                                        src={workspace.coverUrl}
-                                        transitionProperty={"all"}
-                                        transitionDuration={"0.3s"}
-                                        transitionTimingFunction={"ease"}
-                                        _groupHover={{ opacity: 0.4, transform: "scale(2)" }}
-                                    />
-                                )}
+            <AspectRatio ratio={2/1}>
+                <Box
+                    position={"relative"}
+                    backgroundColor={"whiteAlpha.100"}
+                    borderRadius={16}
+                    height={"100%"}
+                    width={"100%"}
+                    alignItems={"center"}
+                    justifyContent={"center"}
+                    overflow={"hidden"}
+                    onMouseDown={handleOnMouseDown}
+                    onMouseUp={handleOnMouseUp}
+                    onClick={handleOnPreviewClick}
+                >
+                    {workspace && (
+                        <>
+                            {workspace.coverUrl && (
+                                <Image
+                                    alt={"workspace preview image"}
+                                    src={workspace.coverUrl}
+                                    transitionProperty={"all"}
+                                    transitionDuration={"0.3s"}
+                                    transitionTimingFunction={"ease"}
+                                    _groupHover={{ opacity: 0.4, transform: "scale(2)" }}
+                                />
+                            )}
 
-                                {!workspace.coverUrl && (
-                                    <Icon
-                                        as={MediaImage}
-                                        color={"whiteAlpha.700"}
-                                        fontSize={32}
-                                        strokeWidth={1}
-                                    />
-                                )}
-                            </Flex>
-                        )}
-                    </Box>
-                </AspectRatio>
-            </Box>
+                            {!workspace.coverUrl && (
+                                <Icon
+                                    as={MediaImage}
+                                    color={"gray.900"}
+                                    fontSize={32}
+                                    strokeWidth={1}
+                                />
+                            )}
+                        </>
+                    )}
+                </Box>
+            </AspectRatio>
         </WorkspaceCard>
     )
 }

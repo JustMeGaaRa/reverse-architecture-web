@@ -235,8 +235,8 @@ export const CommunityPage: FC<PropsWithChildren> = () => {
                                         position={"absolute"}
                                         bottom={0}
                                         left={"50%"}
-                                        paddingX={20}
-                                        paddingTop={120}
+                                        paddingX={8}
+                                        paddingTop={20}
                                         height={"100%"}
                                         width={"100%"}
                                         transform={"translateX(-50%)"}

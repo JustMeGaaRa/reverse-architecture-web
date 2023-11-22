@@ -90,18 +90,19 @@ export const WorkspaceTableRow: FC<{
                 }}
             >
                 <Menu>
-                    <MenuButton>
-                        <IconButton
-                            aria-label={"more options"}
-                            colorScheme={"gray"}
-                            icon={<MoreHoriz />}
-                            size={"sm"}
-                            variant={"ghost"}
-                            title={"more options"}
-                        />
-                    </MenuButton>
+                    <MenuButton
+                        as={IconButton}
+                        aria-label={"more options"}
+                        colorScheme={"gray"}
+                        icon={<Icon as={MoreHoriz} boxSize={5} />}
+                        size={"sm"}
+                        variant={"ghost"}
+                        title={"more options"}
+                    />
                     <MenuList>
-                        <MenuItem icon={<Icon as={BinMinus} boxSize={4} />}>Remove</MenuItem>
+                        <MenuItem icon={<Icon as={BinMinus} boxSize={4} />}>
+                            Remove
+                        </MenuItem>
                     </MenuList>
                 </Menu>
             </Td>

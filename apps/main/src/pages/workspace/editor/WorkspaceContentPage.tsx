@@ -200,7 +200,7 @@ export const WorkspaceContentPage: FC = () => {
                             </Flex>
                         )}
             
-                        <ContextSheet>
+                        <ContextSheet outline={queryParams.get("mode") === WorkspaceContentMode.Modeling ? "purple.600" : undefined}>
                             <WorkspaceRoomProvider>
                                 <WorkspaceRoom
                                     roomId={workspaceId}

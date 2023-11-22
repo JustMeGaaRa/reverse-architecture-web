@@ -3,22 +3,30 @@ import { FC, PropsWithChildren } from "react";
 import { ContextLevelProvider } from "../components";
 import { useContextLevel } from "../hooks";
 
-export const ContextSheet: FC<PropsWithChildren> = ({ children }) => {
+export const ContextSheet: FC<PropsWithChildren<{
+    outline?: string;
+    outlineRadius?: [number, number, number, number];
+    outlineWidth?: [number, number, number, number];
+}>> = ({
+    children,
+    outline,
+    outlineRadius,
+    outlineWidth
+}) => {
     const { level, getLevelColor } = useContextLevel();
 
     return (
         <Flex
             backgroundColor={getLevelColor(level)}
-            borderColor={"gray.400"}
-            borderRadius={"32px 32px 0px 0px"}
-            // _first={{
-            //     borderTopLeftRadius: "0px"
-            // }}
-            // _last={{
-            //     borderTopRightRadius: "0px"
-            // }}
-            borderWidth={1}
-            // borderTopWidth={1}
+            borderColor={outline ?? "gray.400"}
+            borderTopLeftRadius={outlineRadius?.at(0) ?? 32}
+            borderTopRightRadius={outlineRadius?.at(1) ?? 0}
+            borderBottomRightRadius={outlineRadius?.at(2) ?? 0}
+            borderBottomLeftRadius={outlineRadius?.at(3) ?? 0}
+            borderLeftWidth={outlineWidth?.at(0) ?? 1}
+            borderTopWidth={outlineWidth?.at(1) ?? 1}
+            borderRightWidth={outlineWidth?.at(2) ?? 0}
+            borderBottomWidth={outlineWidth?.at(3) ?? 0}
             direction={"column"}
             height={"100%"}
             width={"100%"}
@@ -31,11 +39,17 @@ export const ContextSheet: FC<PropsWithChildren> = ({ children }) => {
     )
 }
 
-export const ContextSheetPanel: FC<PropsWithChildren> = ({ children }) => {
+export const ContextSheetPanel: FC<PropsWithChildren<{
+    padding?: number;
+}>> = ({
+    children,
+    padding
+}) => {
     return (
         <Flex
             direction={"row"}
             height={"100%"}
+            padding={padding ?? 0}
         >
             {children}
         </Flex>

@@ -5,6 +5,7 @@ import {
     ButtonGroup,
     Divider,
     Flex,
+    Icon,
     IconButton,
     Portal,
     Stack,
@@ -77,11 +78,11 @@ export const TemplateOverview: FC<{
 
     return (
         <ContextLevelProvider>
-            <ContextSheet>
+            <ContextSheet outlineRadius={[32, 32, 0, 0]} outlineWidth={[1, 1, 1, 1]}>
                 <ContextSheetPanel>
-                    <ContextSheet>
-                        <ContextSheetPanel>
-                            <ContextSheet>
+                    <ContextSheet outlineRadius={[32, 32, 0, 0]} outlineWidth={[0, 0, 1, 0]}>
+                        <ContextSheetPanel padding={2}>
+                            <ContextSheet outlineRadius={[26, 26, 26, 26]} outlineWidth={[0, 0, 0, 0]}>
                                 {/* Section: Workspace Preview */}
                                 <Flex
                                     position={"relative"}
@@ -98,7 +99,7 @@ export const TemplateOverview: FC<{
                                         metadata={metadata}
                                     >
                                         <Panel position={"bottom-left"} spacing={2}>
-                                            <Box backgroundColor={"gray.100"} borderRadius={16} width={"600px"}>
+                                            <Box backgroundColor={"gray.100"} borderRadius={24} width={"600px"}>
                                                 <Flex padding={2} alignItems={"center"} gap={2}>
                                                     <Avatar
                                                         colorScheme={"purple"}
@@ -145,7 +146,7 @@ export const TemplateOverview: FC<{
                             </ContextSheet>
 
                             {/* Section: Content Information */}
-                            <Flex direction={"column"} padding={4} gap={4} height={"100%"} width={"400px"}>
+                            <Flex direction={"column"} padding={4} gap={4} height={"100%"} width={"480px"}>
                                 <ContextSheetTitle title={workspace.name} />
                                 
                                 <Tabs width={"100%"} index={tabIndex}>
@@ -189,38 +190,42 @@ export const TemplateOverview: FC<{
                         <ButtonGroup
                             colorScheme={"lime"}
                             orientation={"vertical"}
-                            size={"md"}
+                            size={"lg"}
+                            width={"48px"}
                             variant={"menuitem"}
                         >
-                            <ContextSheetCloseButton onClick={onClose} />
+                            <ContextSheetCloseButton
+                                size={"lg"}
+                                onClick={onClose}
+                            />
                             <Divider alignSelf={"center"} borderColor={"gray.400"} width={"24px"} />
                             <IconButton
                                 aria-label={"information"}
-                                icon={<InfoEmpty />}
+                                icon={<Icon as={InfoEmpty} boxSize={6} />}
                                 isActive={tabIndex === 0}
                                 onClick={() => setTabIndex(0)}
                             />
                             <IconButton
-                                aria-label={"likes"}
-                                icon={<ThumbsUp />}
-                                isActive={tabIndex === 1}
-                                onClick={() => setTabIndex(1)}
-                            />
-                            <IconButton
-                                aria-label={"bookmark"}
-                                icon={<BookmarkEmpty />}
-                                isActive={tabIndex === 2}
-                                onClick={() => setTabIndex(2)}
-                            />
-                            <IconButton
                                 aria-label={"comments"}
-                                icon={<ChatLines />}
+                                icon={<Icon as={ChatLines} boxSize={6} />}
                                 isActive={tabIndex === 3}
                                 onClick={() => setTabIndex(3)}
                             />
                             <IconButton
+                                aria-label={"bookmark"}
+                                icon={<Icon as={BookmarkEmpty} boxSize={6} />}
+                                isActive={tabIndex === 2}
+                                onClick={() => setTabIndex(2)}
+                            />
+                            <IconButton
+                                aria-label={"likes"}
+                                icon={<Icon as={ThumbsUp} boxSize={6} />}
+                                isActive={tabIndex === 1}
+                                onClick={() => setTabIndex(1)}
+                            />
+                            <IconButton
                                 aria-label={"share"}
-                                icon={<ShareAndroid />}
+                                icon={<Icon as={ShareAndroid} boxSize={6} />}
                                 isActive={tabIndex === 4}
                                 onClick={() => setTabIndex(4)}
                             />

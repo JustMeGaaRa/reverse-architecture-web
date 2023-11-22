@@ -3,31 +3,36 @@ import {
     Avatar,
     Box,
     Button,
+    ButtonGroup,
     Card,
     CardBody,
-    CardFooter,
     CardHeader,
     Flex,
     HStack,
     Icon,
+    IconButton,
     Image,
     Tag,
     TagLabel,
     TagLeftIcon,
     Text,
 } from "@chakra-ui/react";
-import { ArrowTrCircle, Heart, MediaImage, UserCircle } from "iconoir-react";
+import {
+    ArrowTrCircle,
+    BookmarkEmpty,
+    MediaImage,
+    ProfileCircle,
+    ThumbsUp,
+} from "iconoir-react";
 import { FC, PropsWithChildren } from "react";
 import { WorkspaceInfo } from "../../";
 
 export const CommunityTemplateCard: FC<PropsWithChildren<{
     workspace: WorkspaceInfo;
     onPreviewClick?: () => void;
-    onUseTemplateClick?: () => void;
 }>> = ({
     workspace,
     onPreviewClick,
-    onUseTemplateClick
 }) => {
     return (
         <Card
@@ -38,6 +43,9 @@ export const CommunityTemplateCard: FC<PropsWithChildren<{
             _hover={{
                 backgroundColor: "whiteAlpha.100",
                 cursor: "pointer",
+            }}
+            _active={{
+                backgroundColor: "surface.tinted-white-2"
             }}
         >
             <CardHeader padding={0}>
@@ -59,11 +67,11 @@ export const CommunityTemplateCard: FC<PropsWithChildren<{
                             <HStack gap={4} height={"14px"}>
                                 {/* // TODO: style the tags properly */}
                                 <Tag variant={"unstyled"} size={"xs"} title={"788 used"}>
-                                    <TagLeftIcon as={UserCircle} height={"12px"} width={"12px"} marginInlineEnd={1} />
+                                    <TagLeftIcon as={ProfileCircle} height={"12px"} width={"12px"} marginInlineEnd={1} />
                                     <TagLabel textStyle={"b5"}>788 used</TagLabel>
                                 </Tag>
                                 <Tag variant={"unstyled"} size={"xs"} title={"47 liked"}>
-                                    <TagLeftIcon as={Heart} height={"12px"} width={"12px"} marginInlineEnd={1} />
+                                    <TagLeftIcon as={ThumbsUp} height={"12px"} width={"12px"} marginInlineEnd={1} />
                                     <TagLabel textStyle={"b5"}>47 liked</TagLabel>
                                 </Tag>
                             </HStack>
@@ -72,50 +80,81 @@ export const CommunityTemplateCard: FC<PropsWithChildren<{
                 </Flex>
             </CardHeader>
             <CardBody padding={0}>
-                <Box
-                    backgroundColor={"whiteAlpha.100"}
-                    borderRadius={16}
-                    height={"100%"}
-                    width={"100%"}
-                    _groupHover={{ borderColor: "lime.600" }}
-                    onClick={onPreviewClick}
-                >
-                    <AspectRatio ratio={440/200}>
-                        <Box>
-                            {workspace && (
-                                <Flex
-                                    backgroundColor={"whiteAlpha.100"}
-                                    borderRadius={13}
-                                    height={"100%"}
-                                    width={"100%"}
-                                    alignItems={"center"}
-                                    justifyContent={"center"}
-                                    overflow={"hidden"}
-                                >
-                                    {workspace.coverUrl && (
-                                        <Image
-                                            alt={"workspace preview image"}
-                                            src={workspace.coverUrl}
-                                            transitionProperty={"all"}
-                                            transitionDuration={"0.3s"}
-                                            transitionTimingFunction={"ease"}
-                                            _groupHover={{ opacity: 0.4, transform: "scale(2)" }}
-                                        />
-                                    )}
+                <AspectRatio ratio={2/1}>
+                    <Box
+                        position={"relative"}
+                        backgroundColor={"whiteAlpha.100"}
+                        borderRadius={16}
+                        height={"100%"}
+                        width={"100%"}
+                        alignItems={"center"}
+                        justifyContent={"center"}
+                        overflow={"hidden"}
+                        onClick={onPreviewClick}
+                    >
+                        {workspace && (
+                            <>
+                                {workspace.coverUrl && (
+                                    <Image
+                                        alt={"workspace preview image"}
+                                        src={workspace.coverUrl}
+                                        transitionProperty={"all"}
+                                        transitionDuration={"0.3s"}
+                                        transitionTimingFunction={"ease"}
+                                        _groupHover={{ opacity: 0.4, transform: "scale(2)" }}
+                                    />
+                                )}
 
-                                    {!workspace.coverUrl && (
-                                        <Icon
-                                            as={MediaImage}
-                                            color={"whiteAlpha.700"}
-                                            fontSize={32}
-                                            strokeWidth={1}
-                                        />
-                                    )}
-                                </Flex>
-                            )}
-                        </Box>
-                    </AspectRatio>
-                </Box>
+                                {!workspace.coverUrl && (
+                                    <Icon
+                                        as={MediaImage}
+                                        color={"gray.900"}
+                                        fontSize={32}
+                                        strokeWidth={1}
+                                    />
+                                )}
+                            </>
+                        )}
+                        <Flex
+                            position={"absolute"}
+                            padding={1}
+                            bottom={0}
+                            width={"100%"}
+                            display={"none"}
+                            _groupHover={{ display: "flex" }}
+                        >
+                            <Flex
+                                backgroundColor={"surface.tinted-black-2"}
+                                backdropFilter={"blur(32px)"}
+                                borderRadius={16}
+                                justifyContent={"space-between"}
+                                padding={1}
+                                width={"100%"}
+                            >
+                                <ButtonGroup gap={2} spacing={0} size={"sm"} variant={"tonal"}>
+                                    <IconButton
+                                        aria-label={""}
+                                        icon={<Icon as={BookmarkEmpty} />}
+                                        title={""}
+                                    />
+                                    <IconButton
+                                        aria-label={""}
+                                        icon={<Icon as={ThumbsUp} />}
+                                        title={""}
+                                    />
+                                </ButtonGroup>
+                                <ButtonGroup gap={2} spacing={0} size={"sm"} variant={"tonal"}>
+                                    <Button
+                                        leftIcon={<Icon as={ArrowTrCircle} />}
+                                        iconSpacing={0}
+                                    >
+                                        <Text marginX={1}>Try it out</Text>
+                                    </Button>
+                                </ButtonGroup>
+                            </Flex>
+                        </Flex>
+                    </Box>
+                </AspectRatio>
             </CardBody>
         </Card>
     )

@@ -3,10 +3,15 @@ import {
     CardBody,
     CardFooter,
     Flex,
+    Icon,
     IconButton,
+    Menu,
+    MenuButton,
+    MenuItem,
+    MenuList,
     Text,
 } from "@chakra-ui/react";
-import { MoreHoriz } from "iconoir-react";
+import { BinMinus, MoreHoriz } from "iconoir-react";
 import { FC, PropsWithChildren } from "react";
 import { useSelectionItem } from "../hooks";
 
@@ -23,56 +28,54 @@ export const WorkspaceCard: FC<PropsWithChildren<{
     return (
         <Card
             data-group
-            backgroundColor={isSelected ? "whiteAlpha.100" : "transparent"}
+            backgroundColor={"surface.tinted-white-5"}
             borderRadius={16}
             boxShadow={"none"}
-            cursor={"pointer"}
-            padding={1}
-            _hover={{ backgroundColor: isSelected ? "whiteAlpha.200" : "whiteAlpha.100" }}
+            _hover={{
+                backgroundColor: isSelected ? "whiteAlpha.200" : "whiteAlpha.100",
+                cursor: "pointer",
+            }}
+            _active={{
+                backgroundColor: "surface.tinted-white-2"
+            }}
         >
             <CardBody padding={0}>
-                <Flex
-                    alignItems={"center"}
-                    justifyContent={"center"}
-                >
-                    {children}
-                </Flex>
+                {children}
             </CardBody>
-            <CardFooter
-                paddingLeft={3}
-                paddingRight={2}
-                paddingY={1}
-                alignItems={"center"}
-                justifyContent={"space-between"}
-                width={"100%"}
-            >
-                <Flex direction={"column"}>
-                    <Text
-                        color={"whiteAlpha.800"}
-                        fontSize={16}
-                        lineHeight={"20px"}
-                        noOfLines={1}
-                        _groupHover={{ color: isSelected ? "basic.white" : "whiteAlpha.800" }}
-                    >
-                        {name}
-                    </Text>
-                    <Text
-                        color={isSelected ? "whiteAlpha.700" : "gray.700"}
-                        fontSize={14}
-                        lineHeight={"18px"}
-                    >
-                        {lastModifiedDate}
-                    </Text>
+            <CardFooter padding={0}>
+                <Flex padding={2} alignItems={"center"} justifyContent={"space-between"} width={"100%"}>
+                    <Flex direction={"column"}>
+                        <Text
+                            color={"basic.white"}
+                            noOfLines={1}
+                            textStyle={"b3"}
+                        >
+                            {name}
+                        </Text>
+                        <Text
+                            color={"gray.700"}
+                            textStyle={"b5"}
+                        >
+                            {lastModifiedDate}
+                        </Text>
+                    </Flex>
+                    <Menu>
+                        <MenuButton
+                            as={IconButton}
+                            aria-label={"more options"}
+                            colorScheme={"gray"}
+                            icon={<Icon as={MoreHoriz} boxSize={5} />}
+                            size={"sm"}
+                            variant={"ghost"}
+                            title={"more options"}
+                        />
+                        <MenuList>
+                            <MenuItem icon={<Icon as={BinMinus} boxSize={4} />}>
+                                Remove
+                            </MenuItem>
+                        </MenuList>
+                    </Menu>
                 </Flex>
-                <IconButton
-                    aria-label={"more options"}
-                    colorScheme={"gray"}
-                    icon={<MoreHoriz />}
-                    size={"md"}
-                    variant={"ghost"}
-                    visibility={"hidden"}
-                    _groupHover={{ visibility: "visible" }}
-                />
             </CardFooter>
         </Card>
     )

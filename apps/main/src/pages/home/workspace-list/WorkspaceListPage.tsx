@@ -181,7 +181,7 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                 {!queryParams.get("group") && (
                     <ContextSheetBody>
                         <Tabs height={"100%"} index={tabIndex}>
-                            <TabList backgroundColor={"rgba(0, 0, 0, 0.40)"} height={12} paddingX={2}>
+                            <TabList backgroundColor={"surface.tinted-black-40"} height={12} paddingX={2}>
                                 <Tab
                                     visibility={!!queryParams.get("group") ? "hidden" : "visible"}
                                     onClick={() => setQueryParam({ tab: WorkspaceListTabs.All })}
@@ -337,6 +337,7 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                             <Box
                                 background={"surface.tinted-white-5"}
                                 borderRadius={24}
+                                padding={4}
                                 height={"100%"}
                                 width={"100%"}
                             >

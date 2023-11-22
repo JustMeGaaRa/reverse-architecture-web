@@ -3,7 +3,7 @@ import { Children, FC, PropsWithChildren } from "react";
 import { SelectionItemProvider } from ".";
 import { useOnSelectionChanged, useSelectionContainer } from "../hooks";
 
-export const WorkspaceCards: FC<PropsWithChildren<{
+export const WorkspaceCardList: FC<PropsWithChildren<{
     onSelected?: (indicies: Array<number>) => void;
 }>> = ({
     children,
