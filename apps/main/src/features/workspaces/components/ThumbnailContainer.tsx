@@ -16,7 +16,6 @@ export const ThumbnailContainer: FC<PropsWithChildren<{
     return (
         <AspectRatio ratio={2/1}>
             <Box
-                data-group
                 aria-selected={isSelected}
                 borderRadius={16}
                 boxShadow={"0px 2px 4px 0px rgba(0, 0, 0, 0.10)"}
@@ -29,18 +28,6 @@ export const ThumbnailContainer: FC<PropsWithChildren<{
                     borderWidth: 2,
                     borderColor: "lime.600",
                     boxShadow: "0px 2px 4px 0px rgba(0, 0, 0, 0.10), 0px 0px 0px 5px #161819 inset"
-                //     _hover: {
-                //         background: `rgba(0, 0, 0, 0.20), url(${workspace.coverUrl})`
-                //     },
-                //     _groupHover: {
-                //         background: `rgba(0, 0, 0, 0.20), url(${workspace.coverUrl})`
-                //     },
-                //     _active: {
-                //         background: `rgba(0, 0, 0, 0.60), url(${workspace.coverUrl})`
-                //     },
-                //     _groupActive: {
-                //         background: `rgba(0, 0, 0, 0.60), url(${workspace.coverUrl})`
-                //     }
                 }}
                 onMouseDown={onMouseDown}
                 onMouseUp={onMouseUp}

@@ -14,9 +14,11 @@ import { FC } from "react";
 export const WorkspaceCardFooter: FC<{
     name: string;
     lastModifiedDate: string;
+    onRemove?: () => void;
 }> = ({
     name,
-    lastModifiedDate
+    lastModifiedDate,
+    onRemove
 }) => {
     return (
         <Flex
@@ -51,7 +53,10 @@ export const WorkspaceCardFooter: FC<{
                     title={"more options"}
                 />
                 <MenuList>
-                    <MenuItem icon={<Icon as={BinMinus} boxSize={4} />}>
+                    <MenuItem
+                        icon={<Icon as={BinMinus} boxSize={4} />}
+                        onClick={onRemove}
+                    >
                         Remove
                     </MenuItem>
                 </MenuList>

@@ -1,54 +1,31 @@
 import { Card, CardBody, CardFooter } from "@chakra-ui/react";
-import { FC, useCallback } from "react";
+import { FC } from "react";
 import { ThumbnailContainer, ThumbnailImage, WorkspaceCardFooter } from "../components";
-import { useSelectionItem, useOnPressHold, useSelectionContainer } from "../hooks";
 import { WorkspaceInfo } from "../types";
 
 export const WorkspaceCard: FC<{
     workspace: WorkspaceInfo;
+    isSelected?: boolean;
+    onMouseDown?: () => void;
+    onMouseUp?: () => void;
     onPreviewClick?: () => void;
+    onRemove?: () => void;
 }> = ({
     workspace,
-    onPreviewClick
+    isSelected,
+    onMouseDown,
+    onMouseUp,
+    onPreviewClick,
+    onRemove
 }) => {
-    const {
-        isSelectionModeOn,
-        turnOnSelectionMode,
-        turnOffSelectionMode,
-        toggleSelected
-    } = useSelectionContainer();
-    const { index, isSelected } = useSelectionItem();
-
-    const { onStartHold, onCancelHold } = useOnPressHold(() => {
-        turnOnSelectionMode();
-        toggleSelected(index);
-    });
-
-    const handleOnMouseDown = useCallback(() => {
-        onStartHold();
-    }, [onStartHold]);
-
-    const handleOnMouseUp = useCallback(() => {
-        onCancelHold();
-    }, [onCancelHold]);
-
-    const handleOnPreviewClick = useCallback(() => {
-        if (isSelectionModeOn) {
-            toggleSelected(index);
-        }
-        else {
-            onPreviewClick?.();
-        }
-    }, [index, isSelectionModeOn, onPreviewClick, toggleSelected]);
-
     return (
         <Card data-group>
             <CardBody>
                 <ThumbnailContainer
                     isSelected={isSelected}
-                    onMouseDown={handleOnMouseDown}
-                    onMouseUp={handleOnMouseUp}
-                    onClick={handleOnPreviewClick}
+                    onMouseDown={onMouseDown}
+                    onMouseUp={onMouseUp}
+                    onClick={onPreviewClick}
                 >
                     <ThumbnailImage url={workspace.coverUrl} />
                 </ThumbnailContainer>
@@ -57,6 +34,7 @@ export const WorkspaceCard: FC<{
                 <WorkspaceCardFooter
                     name={workspace.name}
                     lastModifiedDate={workspace.lastModifiedDate}
+                    onRemove={onRemove}
                 />
             </CardFooter>
         </Card>

@@ -42,6 +42,7 @@ export const WorkspaceList: FC<{
             {workspaces.length > 0 && view === "card" && (
                 <WorkspaceCardView
                     workspaces={workspaces}
+                    groupped={true}
                     onClick={onClick}
                     onSelected={onSelected}
                     onRemove={onRemove}

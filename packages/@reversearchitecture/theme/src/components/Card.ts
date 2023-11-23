@@ -11,7 +11,8 @@ export const Card = defineMultiStyleConfig({
     baseStyle: (props) => ({
         container: {
             backgroundColor: mode("", "surface.tinted-white-5")(props),
-            backdropFilter: "blur(64px)",
+            // TODO: figure out what is wrong with zIndex when this is enabled
+            // backdropFilter: "blur(64px)",
             borderRadius: "16px",
             boxShadow: mode("", `0px 2px 4px 0px ${getColorVar(props.theme, "surface.tinted-black-10")}`)(props),
 
@@ -19,8 +20,8 @@ export const Card = defineMultiStyleConfig({
                 cursor: "pointer",
             },
             _active: {
-                backgroundCOlor: mode("", "surface.tinted-white-2")(props),
-            }
+                backgroundColor: mode("", "surface.tinted-white-2")(props),
+            },
         },
         body: {
             padding: "0px"

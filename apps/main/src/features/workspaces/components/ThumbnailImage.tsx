@@ -16,7 +16,6 @@ export const ThumbnailImage: FC<PropsWithChildren<{
 }) => {
     return (
         <Flex
-            data-group
             background={`url(${url}), rgba(255, 255, 255, 0.05)`}
             borderRadius={outlineRadius ?? 12}
             borderWidth={outlineWidth}
