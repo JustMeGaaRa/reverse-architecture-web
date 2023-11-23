@@ -6,7 +6,8 @@ import {
     InputGroup, InputLeftElement, InputRightElement
 } from "@chakra-ui/react";
 import {
-    Search as SearchIcon, Terminal
+    Search as SearchIcon,
+    Terminal
 } from "iconoir-react";
 import { FC } from "react";
 
@@ -14,11 +15,11 @@ export const CommandCenter: FC = () => {
     return (
         <InputGroup size={"md"} variant={"filled"}>
             <InputLeftElement>
-                <Icon as={SearchIcon} color={"gray.500"} boxSize={"24px"} />
+                <Icon as={SearchIcon} color={"gray.500"} boxSize={6} />
             </InputLeftElement>
             <Input
-                borderRadius={16}
                 backgroundColor={"surface.tinted-black-40"}
+                borderRadius={16}
                 type={"search"}
                 placeholder={"Type \"/\" to search commands"}
                 _placeholder={{
@@ -28,7 +29,7 @@ export const CommandCenter: FC = () => {
             <InputRightElement>
                 <IconButton
                     aria-label={"command center"}
-                    icon={<Icon as={Terminal} boxSize={"24px"} />}
+                    icon={<Icon as={Terminal} boxSize={6} />}
                     size={"sm"}
                     variant={"tonal"}
                     title={"command center"}

@@ -37,10 +37,7 @@ import { FC, useCallback, useState } from "react";
 import {
     CommentCard,
     CommentThread,
-    Section,
     WorkspaceInfo,
-    TemplateSectionCreator,
-    TemplateHeader,
     TemplateSectionDescription,
     useAccount,
     TemplateSectionCommentInput
@@ -103,9 +100,9 @@ export const TemplateOverview: FC<{
                                                 <Flex padding={2} alignItems={"center"} gap={2}>
                                                     <Avatar
                                                         colorScheme={"purple"}
-                                                        name={"Jonathan Joestar"}//{workspace.createdBy}
+                                                        name={information?.createdBy}
                                                         size={"lg"}
-                                                        title={"Jonathan Joestar"}//{workspace.createdBy}
+                                                        title={information?.createdBy}
                                                     />
                                                     <Flex direction={"column"} flexGrow={1} gap={1}>
                                                         <Text color={"basic.white"} lineHeight={"24px"} textStyle={"h6"}>
@@ -157,9 +154,7 @@ export const TemplateOverview: FC<{
                                             />
                                         </TabPanel>
                                         <TabPanel>
-                                            <Section>
-
-                                            </Section>
+                                            
                                         </TabPanel>
                                         <TabPanel>
 
@@ -175,9 +170,7 @@ export const TemplateOverview: FC<{
                                             </Stack>
                                         </TabPanel>
                                         <TabPanel>
-                                            <Section>
 
-                                            </Section>
                                         </TabPanel>
                                     </TabPanels>
                                 </Tabs>

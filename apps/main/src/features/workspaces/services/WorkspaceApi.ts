@@ -20,7 +20,7 @@ type WorkspaceApiOptions = {
 export class WorkspaceApi {
     private readonly githubUrl: string = "https://raw.githubusercontent.com/";
     private readonly baseUrl: string = "";
-    private readonly workspaces: Map<string, WorkspaceInfo>;
+    private readonly workspaces: Array<WorkspaceInfo>;
 
     constructor(
         public readonly options: WorkspaceApiOptions = {
@@ -32,7 +32,7 @@ export class WorkspaceApi {
 
         const structurizrExportClient = new StructurizrExportClient();
         const emptyWorkspace = structurizrExportClient.export(Workspace.Empty.toObject());
-        const workspaceArray: Array<WorkspaceInfo> = [
+        this.workspaces = [
             {
                 workspaceId: "workspace-1",
                 name: "Workspace 1",
@@ -125,7 +125,7 @@ export class WorkspaceApi {
                 lastModifiedDate: new Date().toLocaleDateString(),
                 lastModifiedBy: "jotaro.kujo",
                 tags: [],
-                group: "Group 4",
+                group: "Group 3",
                 coverUrl: "",
                 content: {
                     text: emptyWorkspace
@@ -181,7 +181,7 @@ export class WorkspaceApi {
                 lastModifiedDate: new Date().toLocaleDateString(),
                 lastModifiedBy: "jotaro.kujo",
                 tags: [],
-                group: "Group 5",
+                group: "Group 4",
                 coverUrl: "",
                 content: {
                     text: emptyWorkspace
@@ -195,7 +195,7 @@ export class WorkspaceApi {
                 lastModifiedDate: new Date().toLocaleDateString(),
                 lastModifiedBy: "jotaro.kujo",
                 tags: [],
-                group: "Group 5",
+                group: "Group 4",
                 coverUrl: "",
                 content: {
                     text: emptyWorkspace
@@ -241,10 +241,6 @@ export class WorkspaceApi {
                 },
             },
         ];
-
-        this.workspaces = new Map<string, WorkspaceInfo>(
-            workspaceArray.map(x => [x.workspaceId, x])
-        );
     }
 
     async getWorkspaceById(workspaceId: string): Promise<WorkspaceInfo> {

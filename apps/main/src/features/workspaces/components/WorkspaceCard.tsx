@@ -1,81 +1,63 @@
-import {
-    Card,
-    CardBody,
-    CardFooter,
-    Flex,
-    Icon,
-    IconButton,
-    Menu,
-    MenuButton,
-    MenuItem,
-    MenuList,
-    Text,
-} from "@chakra-ui/react";
-import { BinMinus, MoreHoriz } from "iconoir-react";
-import { FC, PropsWithChildren } from "react";
-import { useSelectionItem } from "../hooks";
+import { Card, CardBody, CardFooter } from "@chakra-ui/react";
+import { FC, useCallback } from "react";
+import { ThumbnailContainer, ThumbnailImage, WorkspaceCardFooter } from "../components";
+import { useSelectionItem, useOnPressHold, useSelectionContainer } from "../hooks";
+import { WorkspaceInfo } from "../types";
 
-export const WorkspaceCard: FC<PropsWithChildren<{
-    name: string;
-    lastModifiedDate: string;
-}>> = ({
-    children,
-    name,
-    lastModifiedDate
+export const WorkspaceCard: FC<{
+    workspace: WorkspaceInfo;
+    onPreviewClick?: () => void;
+}> = ({
+    workspace,
+    onPreviewClick
 }) => {
-    const { isSelected } = useSelectionItem();
+    const {
+        isSelectionModeOn,
+        turnOnSelectionMode,
+        turnOffSelectionMode,
+        toggleSelected
+    } = useSelectionContainer();
+    const { index, isSelected } = useSelectionItem();
+
+    const { onStartHold, onCancelHold } = useOnPressHold(() => {
+        turnOnSelectionMode();
+        toggleSelected(index);
+    });
+
+    const handleOnMouseDown = useCallback(() => {
+        onStartHold();
+    }, [onStartHold]);
+
+    const handleOnMouseUp = useCallback(() => {
+        onCancelHold();
+    }, [onCancelHold]);
+
+    const handleOnPreviewClick = useCallback(() => {
+        if (isSelectionModeOn) {
+            toggleSelected(index);
+        }
+        else {
+            onPreviewClick?.();
+        }
+    }, [index, isSelectionModeOn, onPreviewClick, toggleSelected]);
 
     return (
-        <Card
-            data-group
-            backgroundColor={"surface.tinted-white-5"}
-            borderRadius={16}
-            boxShadow={"none"}
-            _hover={{
-                backgroundColor: isSelected ? "whiteAlpha.200" : "whiteAlpha.100",
-                cursor: "pointer",
-            }}
-            _active={{
-                backgroundColor: "surface.tinted-white-2"
-            }}
-        >
-            <CardBody padding={0}>
-                {children}
+        <Card data-group>
+            <CardBody>
+                <ThumbnailContainer
+                    isSelected={isSelected}
+                    onMouseDown={handleOnMouseDown}
+                    onMouseUp={handleOnMouseUp}
+                    onClick={handleOnPreviewClick}
+                >
+                    <ThumbnailImage url={workspace.coverUrl} />
+                </ThumbnailContainer>
             </CardBody>
-            <CardFooter padding={0}>
-                <Flex padding={2} alignItems={"center"} justifyContent={"space-between"} width={"100%"}>
-                    <Flex direction={"column"}>
-                        <Text
-                            color={"basic.white"}
-                            noOfLines={1}
-                            textStyle={"b3"}
-                        >
-                            {name}
-                        </Text>
-                        <Text
-                            color={"gray.700"}
-                            textStyle={"b5"}
-                        >
-                            {lastModifiedDate}
-                        </Text>
-                    </Flex>
-                    <Menu>
-                        <MenuButton
-                            as={IconButton}
-                            aria-label={"more options"}
-                            colorScheme={"gray"}
-                            icon={<Icon as={MoreHoriz} boxSize={5} />}
-                            size={"sm"}
-                            variant={"ghost"}
-                            title={"more options"}
-                        />
-                        <MenuList>
-                            <MenuItem icon={<Icon as={BinMinus} boxSize={4} />}>
-                                Remove
-                            </MenuItem>
-                        </MenuList>
-                    </Menu>
-                </Flex>
+            <CardFooter>
+                <WorkspaceCardFooter
+                    name={workspace.name}
+                    lastModifiedDate={workspace.lastModifiedDate}
+                />
             </CardFooter>
         </Card>
     )

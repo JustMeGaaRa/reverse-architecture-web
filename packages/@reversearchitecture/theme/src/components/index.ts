@@ -1,6 +1,7 @@
 export * from "./Avatar";
 export * from "./Breadcrumb";
 export * from "./Button";
+export * from "./Card";
 export * from "./Checkbox";
 export * from "./Divider";
 export * from "./Menu";

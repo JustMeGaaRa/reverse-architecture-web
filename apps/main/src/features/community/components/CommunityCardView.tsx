@@ -1,6 +1,6 @@
 import { Grid, useBreakpointValue } from "@chakra-ui/react";
 import { FC } from "react";
-import { CommunityTemplateCard } from "../components";
+import { WorkspaceTemplateCard } from "../../workspaces";
 import { WorkspaceInfo } from "../../";
 
 export const CommunityCardView: FC<{
@@ -15,7 +15,7 @@ export const CommunityCardView: FC<{
     return (
         <Grid gridTemplateColumns={`repeat(${gridColumns}, 1fr)`} gap={6}>
             {workspaces.map((workspace) => (
-                <CommunityTemplateCard
+                <WorkspaceTemplateCard
                     key={workspace.workspaceId}
                     workspace={workspace}
                     onPreviewClick={() => onClick?.(workspace)}

@@ -59,7 +59,8 @@ import {
     WorkspaceInfo,
     WorkspaceGroupInfo,
     useAccount,
-    isWorkspace
+    isWorkspace,
+    WorkspaceCardView
 } from "../../../features";
 import { HomePageLayoutContent } from "../../home";
 
@@ -341,11 +342,8 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                                 height={"100%"}
                                 width={"100%"}
                             >
-                                <WorkspaceList
+                                <WorkspaceCardView
                                     workspaces={workspaces?.filter(x => x.group === queryParams.get("group")) || []}
-                                    view={view}
-                                    emptyTitle={"No workspaces"}
-                                    emptyDescription={"To get started, click the \"Create Workspace\" button to create a new project."}
                                     onClick={handleOnWorkspaceClick}
                                     onSelected={setSelected}
                                     onRemove={handleOnWorkspaceRemove}

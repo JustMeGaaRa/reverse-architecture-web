@@ -2,6 +2,8 @@ import { useCommentStore } from "../store";
 import { CommentInfo, CommentThread } from "../types";
 
 export class CommentApi {
+    private readonly comments: Array<CommentThread> = [];
+
     constructor(
         private readonly baseUrl: string = ""
     ) {
@@ -157,6 +159,7 @@ export class CommentApi {
                 position: { x: 500, y: 300 }
             },
         }
+        this.comments = [commentThread1, commentThread2, commentThread3, commentThread4];
     }
 
     async getCommentThreadById(workspaceId: string, commentThreadId: string): Promise<CommentThread> {

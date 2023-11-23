@@ -46,7 +46,7 @@ import {
     useMemo,
     useState
 } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
     CommunityTemplateList,
     WorkspaceInfo,
@@ -63,6 +63,7 @@ import {
 export const CommunityPage: FC<PropsWithChildren> = () => {
     const { setShowSidebarButton } = usePageSidebar();
     const { setHeaderContent } = usePageHeader();
+    const [ queryParams, setQueryParam ] = useSearchParams();
     
     const filterCategories = useMemo(() => {
         return [
@@ -94,7 +95,6 @@ export const CommunityPage: FC<PropsWithChildren> = () => {
     }, []);
 
     // workspace
-    const { isOpen, onOpen, onClose } = useDisclosure();
     const [ info, setInfo ] = useState<WorkspaceInfo>();
     const [ workspace, setWorkspace ] = useState(Workspace.Empty.toObject());
     const [ metadata, setMetadata ] = useState(WorkspaceMetadata.Empty.toObject());
@@ -111,7 +111,8 @@ export const CommunityPage: FC<PropsWithChildren> = () => {
                 setInfo(info);
                 setWorkspace(workspaceObject);
                 setMetadata(info.content?.metadata);
-                onOpen();
+
+                setQueryParam({ preview: info.workspaceId })
             })
             .catch(error => {
                 console.error(error);
@@ -228,7 +229,11 @@ export const CommunityPage: FC<PropsWithChildren> = () => {
                                 onClick={handleOnWorkspaceClick}
                             />
                             
-                            <Modal size={"full"} isOpen={isOpen} onClose={onClose}>
+                            <Modal
+                                size={"full"}
+                                isOpen={!!queryParams.get("preview")}
+                                onClose={() => setQueryParam({})}
+                            >
                                 <ModalOverlay />
                                 <ModalContent>
                                     <Flex
@@ -247,7 +252,7 @@ export const CommunityPage: FC<PropsWithChildren> = () => {
                                             metadata={metadata}
                                             comments={commentThread}
                                             onTryItOutClick={() => handleOnWorskapceTryOut(info?.workspaceId)}
-                                            onClose={onClose}
+                                            onClose={() => setQueryParam({})}
                                         />
                                     </Flex>
                                 </ModalContent>
