@@ -77,7 +77,6 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
     const { account } = useAccount();
     const { workspaceApi } = useMemo(() => ({ workspaceApi: new WorkspaceApi() }), []);
     const [ workspaces, setWorkspaces ] = useState([]);
-    const [ selected, setSelected ] = useState<any[]>([]);
     const navigate = useNavigate();
     
     const tabIndex = queryParams.get("group")
@@ -93,10 +92,6 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
             .then(workspaces => setWorkspaces(workspaces))
             .catch(error => console.error(error));
     }, [workspaceApi, account]);
-
-    const handleOnStackWorkspaces = useCallback(() => {
-
-    }, []);
     
     const handleOnWorkspaceCreate = useCallback(() => {
         // TODO: encapsulate the creation of a new empty workspace
@@ -119,15 +114,11 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
             .catch(error => console.error(error));
     }, [account.username, workspaceApi]);
 
-    const handleOnWorkspaceRemove = useCallback(() => {
+    const handleOnWorkspaceRemove = useCallback((selected: any[]) => {
         workspaceApi.deleteWorkspace(selected.map(x => x.workspaceId))
             .then(workspaces => setWorkspaces(workspaces))
             .catch(error => console.error(error));
-    }, [workspaceApi, selected, setWorkspaces]);
-
-    const handleOnWorkspaceCancelSelected = useCallback(() => {
-        setSelected([]);
-    }, [setSelected]);
+    }, [workspaceApi, setWorkspaces]);
 
     const handleOnWorkspaceClick = useCallback((element: WorkspaceInfo | WorkspaceGroupInfo) => {
         if (isWorkspace(element)) {
@@ -183,22 +174,13 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                     <ContextSheetBody>
                         <Tabs height={"100%"} index={tabIndex}>
                             <TabList backgroundColor={"surface.tinted-black-40"} height={12} paddingX={2}>
-                                <Tab
-                                    visibility={!!queryParams.get("group") ? "hidden" : "visible"}
-                                    onClick={() => setQueryParam({ tab: WorkspaceListTabs.All })}
-                                >
+                                <Tab onClick={() => setQueryParam({ tab: WorkspaceListTabs.All })}>
                                     My Workspaces
                                 </Tab>
-                                <Tab
-                                    visibility={!!queryParams.get("group") ? "hidden" : "visible"}
-                                    onClick={() => setQueryParam({ tab: WorkspaceListTabs.Shared })}
-                                >
+                                <Tab onClick={() => setQueryParam({ tab: WorkspaceListTabs.Shared })}>
                                     Shared
                                 </Tab>
-                                <Tab
-                                    visibility={!!queryParams.get("group") ? "hidden" : "visible"}
-                                    onClick={() => setQueryParam({ tab: WorkspaceListTabs.Archived })}
-                                >
+                                <Tab onClick={() => setQueryParam({ tab: WorkspaceListTabs.Archived })}>
                                     Archived
                                 </Tab>
                                 <Box position={"absolute"} right={4}>
@@ -237,7 +219,6 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                                             </Button>
                                         )}
                                         onClick={handleOnWorkspaceClick}
-                                        onSelected={setSelected}
                                         onRemove={handleOnWorkspaceRemove}
                                     />
                                 </TabPanel>
@@ -259,7 +240,6 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                                             </Button>
                                         )}
                                         onClick={handleOnWorkspaceClick}
-                                        onSelected={setSelected}
                                         onRemove={handleOnWorkspaceRemove}
                                     />
                                 </TabPanel>
@@ -270,49 +250,11 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                                         emptyTitle={"No archived workspaces"}
                                         emptyDescription={"To get started, click the \"Create Workspace\" button to create a new project."}
                                         onClick={handleOnWorkspaceClick}
-                                        onSelected={setSelected}
                                         onRemove={handleOnWorkspaceRemove}
                                     />
                                 </TabPanel>
                             </TabPanels>
                         </Tabs>
-                        <ScaleFade in={selected?.length > 0}>
-                            <Box position={"absolute"} bottom={4} left={"50%"} transform={"translateX(-50%)"}>
-                                <Toolbar>
-                                    <ToolbarSection>
-                                        <IconButton
-                                            aria-label={"close"}
-                                            icon={<Cancel />}
-                                            title={"close"}
-                                            variant={"tonal"}
-                                            onClick={handleOnWorkspaceCancelSelected}
-                                        />
-                                        <Text paddingX={2}>
-                                            {`${selected.length} selected`}
-                                        </Text>
-                                    </ToolbarSection>
-                                    <ToolbarSection>
-                                        <IconButton
-                                            aria-label={"stack elements"}
-                                            icon={<AppleShortcuts />}
-                                            title={"stack elements"}
-                                            onClick={handleOnStackWorkspaces}
-                                        />
-                                        <IconButton
-                                            aria-label={"copy"}
-                                            icon={<Copy />}
-                                            title={"copy"}
-                                        />
-                                        <IconButton
-                                            aria-label={"remove"}
-                                            icon={<BinMinus />}
-                                            title={"remove"}
-                                            onClick={handleOnWorkspaceRemove}
-                                        />
-                                    </ToolbarSection>
-                                </Toolbar>
-                            </Box>
-                        </ScaleFade>
                     </ContextSheetBody>
                 )}
 
@@ -345,7 +287,6 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                                 <WorkspaceCardView
                                     workspaces={workspaces?.filter(x => x.group === queryParams.get("group")) || []}
                                     onClick={handleOnWorkspaceClick}
-                                    onSelected={setSelected}
                                     onRemove={handleOnWorkspaceRemove}
                                 />
                             </Box>

@@ -9,23 +9,23 @@ export const useSelectionContainer = () => {
         setSelectedIndicies
     } = useContext(SelectionContainerContext);
 
-    const setSelected = useCallback((index: number) => {
+    const setSelected = useCallback((key: string) => {
         setSelectedIndicies(indicies => {
-            return Array.from(new Set([...indicies, index]))
+            return Array.from(new Set([...indicies, key]))
         });
     }, [setSelectedIndicies]);
 
-    const setUnselected = useCallback((index: number) => {
+    const setUnselected = useCallback((key: string) => {
         setSelectedIndicies(indicies => {
-            return indicies.filter(x => x !== index);
+            return indicies.filter(x => x !== key);
         });
     }, [setSelectedIndicies]);
 
-    const toggleSelected = useCallback((index: number) => {
+    const toggleSelected = useCallback((key: string) => {
         setSelectedIndicies(indicies => {
-            return indicies.includes(index)
-                ? indicies.filter(x => x !== index)
-                : [...indicies, index];
+            return indicies.includes(key)
+                ? indicies.filter(x => x !== key)
+                : [...indicies, key];
         });
     }, [setSelectedIndicies]);
 

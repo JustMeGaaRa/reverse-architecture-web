@@ -17,7 +17,7 @@ export const WorkspaceCardView: FC<{
     workspaces: WorkspaceInfo[];
     groupped?: boolean;
     onClick?: (workspace: WorkspaceInfo | WorkspaceGroupInfo) => void;
-    onSelected?: (workspaces: Array<number>) => void;
+    onSelected?: (workspaces: Array<string>) => void;
     onRemove?: (workspaces: Array<WorkspaceInfo | WorkspaceGroupInfo>) => void;
 }> = ({
     workspaces,
@@ -30,74 +30,72 @@ export const WorkspaceCardView: FC<{
     
     const {
         isSelectionModeOn,
+        selectedIndicies,
         turnOnSelectionMode,
         toggleSelected
     } = useSelectionContainer();
-    const { index, isSelected } = useSelectionItem();
 
-    const { onStartHold, onCancelHold } = useOnPressHold(() => {
-        turnOnSelectionMode();
-        toggleSelected(index);
-    });
+    const { onStartHold, onCancelHold } = useOnPressHold();
 
-    const handleOnMouseDown = useCallback(() => {
-        onStartHold();
-    }, [onStartHold]);
+    const handleOnMouseDown = useCallback((key: string) => {
+        onStartHold(() => {
+            turnOnSelectionMode();
+            toggleSelected(key);
+        });
+    }, [onStartHold, toggleSelected, turnOnSelectionMode]);
 
-    const handleOnMouseUp = useCallback(() => {
+    const handleOnMouseUp = useCallback((key: string) => {
         onCancelHold();
     }, [onCancelHold]);
 
-    const handleOnPreviewClick = useCallback((data: WorkspaceInfo | WorkspaceGroupInfo) => {
+    const handleOnPreviewClick = useCallback((key: string, data: WorkspaceInfo | WorkspaceGroupInfo) => {
         if (isSelectionModeOn) {
-            toggleSelected(index);
+            toggleSelected(key);
         }
         else {
             onClick?.(data);
         }
-    }, [index, isSelectionModeOn, onClick, toggleSelected]);
+    }, [isSelectionModeOn, onClick, toggleSelected]);
 
     const handleOnRemove = useCallback((data: WorkspaceInfo | WorkspaceGroupInfo) => {
         onRemove?.([data]);
     }, [onRemove]);
 
     return (
-        <SelectionContainerProvider>
-            <WorkspaceCardList onSelected={onSelected}>
-                {groupped && groups.filter(group => group.name !== undefined).map(group => (
-                    <WorkspaceStackCard
-                        key={group.name}
-                        group={group}
-                        isSelected={isSelected}
-                        onMouseDown={handleOnMouseDown}
-                        onMouseUp={handleOnMouseUp}
-                        onPreviewClick={() => handleOnPreviewClick?.(group)}
-                        onRemove={() => handleOnRemove?.(group)}
-                    />
-                ))}
-                {groupped && groups.filter(group => group.name === undefined).flatMap(group => group.workspaces).map(workspace => (
-                    <WorkspaceCard
-                        key={workspace.workspaceId}
-                        workspace={workspace}
-                        isSelected={isSelected}
-                        onMouseDown={handleOnMouseDown}
-                        onMouseUp={handleOnMouseUp}
-                        onPreviewClick={() => handleOnPreviewClick?.(workspace)}
-                        onRemove={() => handleOnRemove?.(workspace)}
-                    />
-                ))}
-                {!groupped && workspaces.map(workspace => (
-                    <WorkspaceCard
-                        key={workspace.workspaceId}
-                        workspace={workspace}
-                        isSelected={isSelected}
-                        onMouseDown={handleOnMouseDown}
-                        onMouseUp={handleOnMouseUp}
-                        onPreviewClick={() => handleOnPreviewClick?.(workspace)}
-                        onRemove={() => handleOnRemove?.(workspace)}
-                    />
-                ))}
-            </WorkspaceCardList>
-        </SelectionContainerProvider>
+        <WorkspaceCardList onSelected={onSelected}>
+            {groupped && groups.filter(group => group.name !== undefined).map(group => (
+                <WorkspaceStackCard
+                    key={group.name}
+                    group={group}
+                    isSelected={selectedIndicies.includes(group.name)}
+                    onMouseDown={() => handleOnMouseDown(group.name)}
+                    onMouseUp={() => handleOnMouseUp(group.name)}
+                    onPreviewClick={() => handleOnPreviewClick?.(group.name, group)}
+                    onRemove={() => handleOnRemove?.(group)}
+                />
+            ))}
+            {groupped && groups.filter(group => group.name === undefined).flatMap(group => group.workspaces).map(workspace => (
+                <WorkspaceCard
+                    key={workspace.workspaceId}
+                    workspace={workspace}
+                    isSelected={selectedIndicies.includes(workspace.workspaceId)}
+                    onMouseDown={() => handleOnMouseDown(workspace.workspaceId)}
+                    onMouseUp={() => handleOnMouseUp(workspace.workspaceId)}
+                    onPreviewClick={() => handleOnPreviewClick?.(workspace.workspaceId, workspace)}
+                    onRemove={() => handleOnRemove?.(workspace)}
+                />
+            ))}
+            {!groupped && workspaces.map(workspace => (
+                <WorkspaceCard
+                    key={workspace.workspaceId}
+                    workspace={workspace}
+                    isSelected={selectedIndicies.includes(workspace.workspaceId)}
+                    onMouseDown={() => handleOnMouseDown(workspace.workspaceId)}
+                    onMouseUp={() => handleOnMouseUp(workspace.workspaceId)}
+                    onPreviewClick={() => handleOnPreviewClick?.(workspace.workspaceId, workspace)}
+                    onRemove={() => handleOnRemove?.(workspace)}
+                />
+            ))}
+        </WorkspaceCardList>
     )
 }

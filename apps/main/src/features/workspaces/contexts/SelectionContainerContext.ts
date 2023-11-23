@@ -2,9 +2,9 @@ import { createContext, Dispatch, SetStateAction } from "react";
 
 export const SelectionContainerContext = createContext<{
     isSelectionModeOn: boolean;
-    selectedIndicies: number[];
+    selectedIndicies: string[];
     setIsSelectionModeOn: Dispatch<SetStateAction<boolean>>;
-    setSelectedIndicies: Dispatch<SetStateAction<number[]>>;
+    setSelectedIndicies: Dispatch<SetStateAction<string[]>>;
 }>({
     isSelectionModeOn: false,
     selectedIndicies: [],

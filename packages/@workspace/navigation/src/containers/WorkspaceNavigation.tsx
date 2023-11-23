@@ -53,13 +53,7 @@ export const WorkspaceNavigation: FC = () => {
     }, [zoomIntoView]);
 
     return (
-        <Breadcrumb
-            backgroundColor={"surface.tinted-black-10"}
-            backdropFilter={"blur(16px)"}
-            borderRadius={12}
-            color={"gray.900"}
-            separator={"/"}
-        >
+        <Breadcrumb separator={"/"}>
             <BreadcrumbItem>
                 <Select
                     backgroundColor={"whiteAlpha.100"}
@@ -81,8 +75,14 @@ export const WorkspaceNavigation: FC = () => {
                 </Select>
             </BreadcrumbItem>
             {links.map(link => (
-                <BreadcrumbItem key={link.title} isCurrentPage={link.isActive}>
+                <BreadcrumbItem
+                    key={link.title}
+                    aria-selected={link.isActive}
+                    isCurrentPage={link.isActive}
+                >
                     <BreadcrumbLink
+                        aria-selected={link.isActive}
+                        isCurrentPage={link.isActive}
                         title={link.title}
                         onClick={() => handleOnViewItemClick(link.data)}
                     >

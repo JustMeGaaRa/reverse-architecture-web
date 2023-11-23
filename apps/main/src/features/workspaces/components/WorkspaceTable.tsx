@@ -6,7 +6,7 @@ import { TableColumnInfo } from "../types";
 
 export const WorkspaceTable: FC<PropsWithChildren<{
     columns: TableColumnInfo[];
-    onSelected?: (indicies: Array<number>) => void;
+    onSelected?: (indicies: Array<string>) => void;
 }>> = ({
     children,
     columns,
@@ -45,7 +45,6 @@ export const WorkspaceTable: FC<PropsWithChildren<{
                         <SelectionItemProvider
                             key={index}
                             index={index}
-                            isSelected={selectedIndicies.includes(index)}
                         >
                             {child}
                         </SelectionItemProvider>

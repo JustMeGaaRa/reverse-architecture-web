@@ -9,11 +9,13 @@ import { groupWorkspaces } from "../utils";
 
 export const WorkspaceTableView: FC<{
     workspaces: WorkspaceInfo[];
+    groupped?: boolean;
     onClick?: (workspace: WorkspaceInfo | WorkspaceGroupInfo) => void;
-    onSelected?: (workspaces: Array<number>) => void;
+    onSelected?: (workspaces: Array<string>) => void;
     onRemove?: (workspaces: Array<WorkspaceInfo | WorkspaceGroupInfo>) => void;
 }> = ({
     workspaces,
+    groupped,
     onClick,
     onSelected,
     onRemove
@@ -29,26 +31,32 @@ export const WorkspaceTableView: FC<{
     const groups = groupWorkspaces(workspaces);
 
     return (
-        <SelectionContainerProvider>
-            <WorkspaceTable columns={columns} onSelected={onSelected}>
-                {groups.filter(group => group.name !== undefined).map(group => (
-                    <WorkspaceTableRow
-                        key={group.name}
-                        columns={columns}
-                        data={group}
-                        isGrouped={true}
-                        onClick={() => onClick?.(group)}
-                    />
-                ))}
-                {groups.filter(group => group.name === undefined).flatMap(group => group.workspaces).map(workspace => (
-                    <WorkspaceTableRow
-                        key={workspace.workspaceId}
-                        columns={columns}
-                        data={workspace}
-                        onClick={() => onClick?.(workspace)}
-                    />
-                ))}
-            </WorkspaceTable>
-        </SelectionContainerProvider>
+        <WorkspaceTable columns={columns} onSelected={onSelected}>
+            {groupped && groups.filter(group => group.name !== undefined).map(group => (
+                <WorkspaceTableRow
+                    key={group.name}
+                    columns={columns}
+                    data={group}
+                    isGrouped={true}
+                    onClick={() => onClick?.(group)}
+                />
+            ))}
+            {groupped && groups.filter(group => group.name === undefined).flatMap(group => group.workspaces).map(workspace => (
+                <WorkspaceTableRow
+                    key={workspace.workspaceId}
+                    columns={columns}
+                    data={workspace}
+                    onClick={() => onClick?.(workspace)}
+                />
+            ))}
+            {!groupped && workspaces.map(workspace => (
+                <WorkspaceTableRow
+                    key={workspace.workspaceId}
+                    columns={columns}
+                    data={workspace}
+                    onClick={() => onClick?.(workspace)}
+                />
+            ))}
+        </WorkspaceTable>
     )
 }
