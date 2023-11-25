@@ -13,7 +13,7 @@ export const PageHomeButton: FC<{
             aria-label={"home button"}
             colorScheme={"gray"}
             icon={icon}
-            size={"lg"}
+            size={"md"}
             title={"home button"}
             variant={"ghost"}
             onClick={onClick}

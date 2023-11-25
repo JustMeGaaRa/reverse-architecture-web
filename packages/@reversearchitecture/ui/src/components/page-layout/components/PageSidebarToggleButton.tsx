@@ -3,11 +3,7 @@ import { FastArrowLeft, FastArrowRight } from "iconoir-react";
 import { FC } from "react";
 import { usePageSidebar } from "../hooks";
 
-export const PageSidebarToggleButton: FC<{
-    isVisible?: boolean;
-}> = ({
-    isVisible = true
-}) => {
+export const PageSidebarToggleButton: FC<{ isVisible?: boolean }> = ({ isVisible = true }) => {
     const { sidebarOptions, toggleSidebar } = usePageSidebar();
     
     return isVisible ? (sidebarOptions.isOpen ? (

@@ -6,7 +6,6 @@ import {
     WorkspaceCardList
 } from "../components";
 import {
-    useSelectionItem,
     useOnPressHold,
     useSelectionContainer
 } from "../hooks";
@@ -37,18 +36,17 @@ export const WorkspaceCardView: FC<{
 
     const { onStartHold, onCancelHold } = useOnPressHold();
 
-    const handleOnMouseDown = useCallback((key: string) => {
+    const handleOnMouseDown = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => {
         onStartHold(() => {
             turnOnSelectionMode();
-            toggleSelected(key);
         });
-    }, [onStartHold, toggleSelected, turnOnSelectionMode]);
+    }, [onStartHold, turnOnSelectionMode]);
 
-    const handleOnMouseUp = useCallback((key: string) => {
+    const handleOnMouseUp = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => {
         onCancelHold();
     }, [onCancelHold]);
 
-    const handleOnPreviewClick = useCallback((key: string, data: WorkspaceInfo | WorkspaceGroupInfo) => {
+    const handleOnPreviewClick = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string, data: WorkspaceInfo | WorkspaceGroupInfo) => {
         if (isSelectionModeOn) {
             toggleSelected(key);
         }
@@ -57,7 +55,7 @@ export const WorkspaceCardView: FC<{
         }
     }, [isSelectionModeOn, onClick, toggleSelected]);
 
-    const handleOnRemove = useCallback((data: WorkspaceInfo | WorkspaceGroupInfo) => {
+    const handleOnRemove = useCallback((event: React.MouseEvent<HTMLButtonElement, MouseEvent>, data: WorkspaceInfo | WorkspaceGroupInfo) => {
         onRemove?.([data]);
     }, [onRemove]);
 
@@ -68,10 +66,10 @@ export const WorkspaceCardView: FC<{
                     key={group.name}
                     group={group}
                     isSelected={selectedIndicies.includes(group.name)}
-                    onMouseDown={() => handleOnMouseDown(group.name)}
-                    onMouseUp={() => handleOnMouseUp(group.name)}
-                    onPreviewClick={() => handleOnPreviewClick?.(group.name, group)}
-                    onRemove={() => handleOnRemove?.(group)}
+                    onMouseDown={(event) => handleOnMouseDown(event, group.name)}
+                    onMouseUp={(event) => handleOnMouseUp(event, group.name)}
+                    onPreviewClick={(event) => handleOnPreviewClick?.(event, group.name, group)}
+                    onRemove={(event) => handleOnRemove?.(event, group)}
                 />
             ))}
             {groupped && groups.filter(group => group.name === undefined).flatMap(group => group.workspaces).map(workspace => (
@@ -79,10 +77,10 @@ export const WorkspaceCardView: FC<{
                     key={workspace.workspaceId}
                     workspace={workspace}
                     isSelected={selectedIndicies.includes(workspace.workspaceId)}
-                    onMouseDown={() => handleOnMouseDown(workspace.workspaceId)}
-                    onMouseUp={() => handleOnMouseUp(workspace.workspaceId)}
-                    onPreviewClick={() => handleOnPreviewClick?.(workspace.workspaceId, workspace)}
-                    onRemove={() => handleOnRemove?.(workspace)}
+                    onMouseDown={(event) => handleOnMouseDown(event, workspace.workspaceId)}
+                    onMouseUp={(event) => handleOnMouseUp(event, workspace.workspaceId)}
+                    onPreviewClick={(event) => handleOnPreviewClick?.(event, workspace.workspaceId, workspace)}
+                    onRemove={(event) => handleOnRemove?.(event, workspace)}
                 />
             ))}
             {!groupped && workspaces.map(workspace => (
@@ -90,10 +88,10 @@ export const WorkspaceCardView: FC<{
                     key={workspace.workspaceId}
                     workspace={workspace}
                     isSelected={selectedIndicies.includes(workspace.workspaceId)}
-                    onMouseDown={() => handleOnMouseDown(workspace.workspaceId)}
-                    onMouseUp={() => handleOnMouseUp(workspace.workspaceId)}
-                    onPreviewClick={() => handleOnPreviewClick?.(workspace.workspaceId, workspace)}
-                    onRemove={() => handleOnRemove?.(workspace)}
+                    onMouseDown={(event) => handleOnMouseDown(event, workspace.workspaceId)}
+                    onMouseUp={(event) => handleOnMouseUp(event, workspace.workspaceId)}
+                    onPreviewClick={(event) => handleOnPreviewClick?.(event, workspace.workspaceId, workspace)}
+                    onRemove={(event) => handleOnRemove?.(event, workspace)}
                 />
             ))}
         </WorkspaceCardList>

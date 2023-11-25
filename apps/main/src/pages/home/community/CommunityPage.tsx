@@ -5,6 +5,7 @@ import {
     Divider,
     Flex,
     HStack,
+    Icon,
     Menu,
     MenuButton,
     MenuItem,
@@ -13,6 +14,7 @@ import {
     ModalContent,
     ModalOverlay,
     StackDivider,
+    Text,
     useDisclosure,
 } from "@chakra-ui/react";
 import {
@@ -143,10 +145,10 @@ export const CommunityPage: FC<PropsWithChildren> = () => {
                     <Button
                         aria-label={"publish workspace"}
                         colorScheme={"lime"}
-                        leftIcon={<AddPageAlt height={"20px"} width={"20px"} />}
-                        // onClick={onOpen}
+                        leftIcon={<Icon as={AddPageAlt} boxSize={5} />}
+                        iconSpacing={"0px"}
                     >
-                        <Box marginX={2}>Publish to Community</Box>
+                        <Text marginX={2}>Publish to Community</Text>
                     </Button>
                 </ButtonGroup>
             )

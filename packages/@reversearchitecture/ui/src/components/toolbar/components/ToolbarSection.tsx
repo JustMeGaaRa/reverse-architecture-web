@@ -10,7 +10,7 @@ export const ToolbarSection: FC<PropsWithChildren> = ({ children }) => {
             orientation={"horizontal"}
             spacing={0}
             size={"md"}
-            variant={"ghost"}
+            variant={"toolitem"}
         >
             {children}
         </ButtonGroup>

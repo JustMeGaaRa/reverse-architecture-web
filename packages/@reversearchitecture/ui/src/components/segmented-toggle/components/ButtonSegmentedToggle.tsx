@@ -17,16 +17,16 @@ export const ButtonSegmentedToggle: FC<PropsWithChildren<{
     size?: "xs" | "sm" | "md" | "lg";
 }>> = ({
     children,
-    size = "md"
+    size = "sm"
 }) => {
     return (
         <BorderTop>
             <ButtonGroup
                 key={"workspace-page-mode"}
-                backgroundColor={"rgba(0, 0, 0, 0.60)"}
+                backgroundColor={"surface.tinted-black-60"}
                 backdropFilter={"blur(16px)"}
                 borderRadius={"16px"}
-                borderColor={"whiteAlpha.200"}
+                borderColor={"transparent"}
                 borderWidth={1}
                 boxShadow={"1px 1.5px 4px 0px rgba(0, 0, 0, 0.24) inset, 1px 1.5px 4px 0px rgba(0, 0, 0, 0.16) inset, 0px -0.5px 1px 0px rgba(255, 255, 255, 0.24) inset, 0px -0.2px 1px 0px rgba(255, 255, 255, 0.32) inset"}
                 spacing={"2px"}

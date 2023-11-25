@@ -1,7 +1,7 @@
 import { Button, IconButton } from "@chakra-ui/react";
 import { FC } from "react";
 import { NavLink, To } from "react-router-dom";
-import { usePageSidebar } from "../hooks";
+import { usePageSidebar } from "../../../components";
 
 export const Route: FC<{
     to?: To;
@@ -31,7 +31,6 @@ export const Route: FC<{
             leftIcon={icon}
             justifyContent={"left"}
             cursor={isDisabled ? "none" : "pointer"}
-            paddingLeft={"11px"}
             to={to}
             title={title}
             transitionProperty={"all"}
@@ -46,8 +45,8 @@ export const Route: FC<{
         <IconButton
             as={to !== undefined ? NavLink : undefined}
             aria-label={title}
-            icon={icon}
             isActive={isActive}
+            icon={icon}
             isDisabled={isDisabled}
             cursor={isDisabled ? "none" : "pointer"}
             to={to}

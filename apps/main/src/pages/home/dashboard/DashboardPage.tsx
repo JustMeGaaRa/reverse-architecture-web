@@ -5,7 +5,6 @@ import {
     ContextSheetHeader,
     ContextSheetTitle,
     EmptyContent,
-    HeaderContentSource,
     usePageHeader
 } from "@reversearchitecture/ui";
 import { Folder } from "iconoir-react";
@@ -24,8 +23,6 @@ export const DashboardPage: FC = () => {
     return (
         <HomePageLayoutContent>
             <ContextSheet>
-                <HeaderContentSource section={"right"} />
-
                 <ContextSheetHeader>
                     <ContextSheetTitle title={"Dashboard"} />
                 </ContextSheetHeader>

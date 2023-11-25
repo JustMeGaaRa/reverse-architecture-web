@@ -67,7 +67,6 @@ export const Button: ComponentStyleConfig = {
                 opacity: 1.0,
             },
             _disabled: {
-                // white 10%
                 backgroundColor: mode("", "rgba(255, 255, 255, 0.10)")(props),
                 borderWidth: 0,
                 color: mode("", "gray.400")(props),
@@ -163,43 +162,65 @@ export const Button: ComponentStyleConfig = {
             }
         }),
         menuitem: (props) => ({
-            // TODO: add support for light source
+            backdropFilter: "blur(32px)",
+            borderRadius: 16,
             color: mode("", "gray.900")(props),
+
             _hover: {
-                backgroundColor: mode("", "#FFFFFF1A")(props),
+                backgroundColor: mode("", "surface.tinted-white-10")(props),
+                backdropFilter: "blur(32px)",
                 boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
-                color: mode("", "white")(props),
-            },
-            _pressed: {
-                backgroundColor: mode("", "#FFFFFF0D")(props),
-                color: mode("", `gray.500`)(props),
+                color: mode("", "basic.white")(props),
             },
             _focus: {
 
             },
+            // should be _selected
             _active: {
-                backgroundColor: mode("", "#FFFFFF1A")(props),
+                backgroundColor: mode("", "surface.tinted-white-10")(props),
+                backdropFilter: "blur(32px)",
+                boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
                 color: mode("", `${props.colorScheme}.600`)(props),
 
                 _hover: {
                     // NOTE: not supported by styles
                 },
-                _pressed: {
-                    backgroundColor: mode("", "#FFFFFF0D")(props),
+                // should be _active
+                _selected: {
+                    backgroundColor: mode("", "surface.tinted-white-5")(props),
+                    backdropFilter: "blur(32px)",
+                    boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
                     color: mode("", `${props.colorScheme}.500`)(props),
-                }
+                },
+                _selectedLink: {
+                    backgroundColor: mode("", "surface.tinted-white-5")(props),
+                    backdropFilter: "blur(32px)",
+                    boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
+                    color: mode("", "gray.500")(props),
+                },
             },
             _activeLink: {
-                backgroundColor: mode("", "#FFFFFF1A")(props),
+                backgroundColor: mode("", "surface.tinted-white-10")(props),
+                backdropFilter: "blur(32px)",
+                boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
                 color: mode("", `${props.colorScheme}.600`)(props),
 
                 _hover: {
                     // NOTE: not supported by styles
                 },
-                _pressed: {
-                    backgroundColor: mode("", "#FFFFFF0D")(props),
+                // should be _active
+                _selected: {
+                    backgroundColor: mode("", "surface.tinted-white-5")(props),
+                    backdropFilter: "blur(32px)",
+                    boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
                     color: mode("", `${props.colorScheme}.500`)(props),
-                }
+                },
+                _selectedLink: {
+                    backgroundColor: mode("", "surface.tinted-white-5")(props),
+                    backdropFilter: "blur(32px)",
+                    boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
+                    color: mode("", "gray.500")(props),
+                },
             },
             _disabled: {
                 color: mode("", "gray.400")(props),
@@ -211,6 +232,46 @@ export const Button: ComponentStyleConfig = {
                 }
             }
         }),
+        toolitem: (props) => ({
+            borderRadius: 16,
+            padding: 2,
+            color: mode("", "gray.900")(props),
+
+            _hover: {
+                backgroundColor: mode("", "surface.tinted-white-10")(props),
+                backdropFilter: "blur(32px)",
+                boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
+                color: mode("", "basic.white")(props),
+            },
+            _active: {
+                backgroundColor: mode("", "surface.tinted-white-2")(props),
+                backdropFilter: "blur(32px)",
+                boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
+                color: mode("", "gray.500")(props),
+            },
+            _selected: {
+                backgroundColor: mode("", "surface.tinted-white-10")(props),
+                backdropFilter: "blur(32px)",
+                boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
+                color: mode("", `${props.colorScheme}.600`)(props),
+
+                _active: {
+                    backgroundColor: mode("", "surface.tinted-white-2")(props),
+                    backdropFilter: "blur(32px)",
+                    boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
+                    color: mode("", `${props.colorScheme}.500`)(props),
+                },
+                _hover: {
+                    backgroundColor: mode("", "surface.tinted-white-10")(props),
+                    backdropFilter: "blur(32px)",
+                    boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
+                    color: mode("", `${props.colorScheme}.600`)(props),
+                }
+            },
+            _disabled: {
+                color: mode("", "gray.400")(props),
+            }
+        })
     },
     defaultProps: {
         colorScheme: "lime",

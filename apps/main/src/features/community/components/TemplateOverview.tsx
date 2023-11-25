@@ -144,11 +144,10 @@ export const TemplateOverview: FC<{
 
                             {/* Section: Content Information */}
                             <Flex direction={"column"} padding={4} gap={4} height={"100%"} width={"480px"}>
-                                <ContextSheetTitle title={workspace.name} />
-                                
                                 <Tabs width={"100%"} index={tabIndex}>
                                     <TabPanels>
                                         <TabPanel>
+                                            <ContextSheetTitle title={workspace.name} />
                                             <TemplateSectionDescription
                                                 description={workspace?.description}
                                             />

@@ -1,4 +1,5 @@
-export const surfaces = {
+export const layerStyles = {
+    // surfaces
     tintedWhite5: {
         backgroundColor: "surface.tinted-white-5",
         boxShadow: "0px 2px 4px 0px var(--chakra-colors-surface-tinted-black-10), 12px 12px 16px 0px var(--chakra-colors-surface-tinted-black-10) inset, -12px -12px 16px 0px var(--chakra-colors-surface-tinted-white-2) inset",
@@ -27,10 +28,8 @@ export const surfaces = {
     blurredBlack2: {
         backgroundColor: "",
         backdropFIlter: "blur(32px)",
-    }
-}
-
-export const Recessed = {
+    },
+    // recessed
     recessedBlack: {
         backgroundColor: "surface.tinted-black-40",
         boxShadow: "1px 1.5px 4px 0px rgba(0, 0, 0, 0.24) inset, 1px 1.5px 4px 0px rgba(0, 0, 0, 0.16) inset, 0px -0.5px 1px 0px rgba(255, 255, 255, 0.24) inset, 0px -0.5px 1px 0px rgba(255, 255, 255, 0.32) inset",

@@ -71,14 +71,14 @@ export const WorkspaceToolbar: FC = () => {
                     <ToolbarSection>
                         <IconButton
                             aria-label={"selection mode"}
-                            isActive={isSelectionEnabled}
+                            aria-selected={isSelectionEnabled}
                             icon={<CursorPointer />}
                             title={"selection mode"}
                             onClick={() => enableSelectionMode()}
                         />
                         <IconButton
                             aria-label={"dragging mode"}
-                            isActive={isDraggingEnabled}
+                            aria-selected={isDraggingEnabled}
                             icon={<DragHandGesture />}
                             title={"dragging mode"}
                             onClick={() => enableDraggingMode()}
@@ -90,7 +90,7 @@ export const WorkspaceToolbar: FC = () => {
                             <IconButton
                                 aria-label={"person mode"}
                                 icon={<User />}
-                                isActive={isAddingElementEnabled && addingElementType === ElementType.Person}
+                                aria-selected={isAddingElementEnabled && addingElementType === ElementType.Person}
                                 title={"person mode"}
                                 onClick={() => enableAddingElement(ElementType.Person)}
                             />
@@ -99,7 +99,7 @@ export const WorkspaceToolbar: FC = () => {
                             <IconButton
                                 aria-label={"software system mode"}
                                 icon={<Keyframe />}
-                                isActive={isAddingElementEnabled && addingElementType === ElementType.SoftwareSystem}
+                                aria-selected={isAddingElementEnabled && addingElementType === ElementType.SoftwareSystem}
                                 title={"software system mode"}
                                 onClick={() => enableAddingElement(ElementType.SoftwareSystem)}
                             />
@@ -108,7 +108,7 @@ export const WorkspaceToolbar: FC = () => {
                             <IconButton
                                 aria-label={"container mode"}
                                 icon={<KeyframesCouple />}
-                                isActive={isAddingElementEnabled && addingElementType === ElementType.Container}
+                                aria-selected={isAddingElementEnabled && addingElementType === ElementType.Container}
                                 title={"container mode"}
                                 onClick={() => enableAddingElement(ElementType.Container)}
                             />
@@ -117,7 +117,7 @@ export const WorkspaceToolbar: FC = () => {
                             <IconButton
                                 aria-label={"component moe"}
                                 icon={<Keyframes />}
-                                isActive={isAddingElementEnabled && addingElementType === ElementType.Component}
+                                aria-selected={isAddingElementEnabled && addingElementType === ElementType.Component}
                                 title={"component mode"}
                                 onClick={() => enableAddingElement(ElementType.Component)}
                             />
@@ -126,7 +126,7 @@ export const WorkspaceToolbar: FC = () => {
                             <IconButton
                                 aria-label={"group mode"}
                                 icon={<AddKeyframeAlt />}
-                                isActive={isAddingElementEnabled && addingElementType === ElementType.Group}
+                                aria-selected={isAddingElementEnabled && addingElementType === ElementType.Group}
                                 title={"group mode"}
                                 onClick={() => enableAddingElement(ElementType.Group)}
                             />
@@ -138,14 +138,14 @@ export const WorkspaceToolbar: FC = () => {
                         <IconButton
                             aria-label={"text edit mode"}
                             icon={<Text />}
-                            isActive={isTextEditEnabled}
+                            aria-selected={isTextEditEnabled}
                             title={"text edit mode"}
                             onClick={() => enableTextEditMode()}
                         />
                         <IconButton
                             aria-label={"multiselect"}
                             icon={<FrameAltEmpty />}
-                            isActive={false}
+                            aria-selected={false}
                             title={"multiselect"}
                         />
                     </ToolbarSection>
@@ -154,14 +154,14 @@ export const WorkspaceToolbar: FC = () => {
                         <IconButton
                             aria-label={"add comment"}
                             icon={<ChatAdd />}
-                            isActive={isCommentAddingEnabled}
+                            aria-selected={isCommentAddingEnabled}
                             title={"add comment"}
                             onClick={() => enableCommentingMode()}
                         />
                         <IconButton
                             aria-label={"enable auto layout"}
                             icon={<LayoutRight />}
-                            isActive={isAutoLayoutEnabled}
+                            aria-selected={isAutoLayoutEnabled}
                             title={"enable auto layout"}
                             onClick={() => toggleAutoLayout()}
                         />
@@ -171,7 +171,7 @@ export const WorkspaceToolbar: FC = () => {
                         <IconButton
                             aria-label={"delete selected"}
                             icon={<BinMinus />}
-                            isActive={(selection.nodes?.length > 0 || selection.edges?.length > 0)}
+                            aria-selected={(selection.nodes?.length > 0 || selection.edges?.length > 0)}
                             title={"delete selected"}
                             onClick={() => deleteElements(selection)}
                         />

@@ -9,13 +9,13 @@ export const PageHeader: FC<PropsWithChildren> = ({ children}) => {
     return (
         <Flex
             direction={"row"}
-            justifyContent={"space-between"}
             alignItems={"center"}
             flexGrow={0}
             flexShrink={0}
             flexBasis={`${height}px`}
             minHeight={`${height}px`}
             height={`${height}px`}
+            width={"100%"}
             position={"relative"}
         >
             {children}

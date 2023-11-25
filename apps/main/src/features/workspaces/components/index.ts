@@ -1,5 +1,4 @@
 export * from "./SelectionContainerProvider";
-export * from "./SelectionItemProvider";
 export * from "./ThumbnailContainer";
 export * from "./ThumbnailImage";
 export * from "./ThumbnailMore";

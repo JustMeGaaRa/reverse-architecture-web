@@ -1,11 +1,11 @@
 import { AspectRatio, Box } from "@chakra-ui/react";
-import { FC, PropsWithChildren } from "react";
+import { FC, MouseEventHandler, PropsWithChildren } from "react";
 
 export const ThumbnailContainer: FC<PropsWithChildren<{
     isSelected?: boolean;
-    onMouseDown?: () => void;
-    onMouseUp?: () => void;
-    onClick?: () => void;
+    onMouseDown?: MouseEventHandler<HTMLDivElement>;
+    onMouseUp?: MouseEventHandler<HTMLDivElement>;
+    onClick?: MouseEventHandler<HTMLDivElement>;
 }>> = ({
     children,
     isSelected,

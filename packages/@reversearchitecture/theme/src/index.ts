@@ -15,6 +15,7 @@ import {
 } from "./components";
 import {
     colors,
+    layerStyles,
     textStyles
 } from "./foundations";
 
@@ -37,6 +38,7 @@ export const RestructTheme =  extendTheme({
         heading: "Inter, sans-serif",
         mono: "Inter, sans-serif"
     },
+    layerStyles,
     textStyles,
     config: {
         initialColorMode: "dark",

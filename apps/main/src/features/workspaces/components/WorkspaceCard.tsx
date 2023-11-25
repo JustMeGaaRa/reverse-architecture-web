@@ -1,15 +1,15 @@
 import { Card, CardBody, CardFooter } from "@chakra-ui/react";
-import { FC } from "react";
+import { FC, MouseEventHandler } from "react";
 import { ThumbnailContainer, ThumbnailImage, WorkspaceCardFooter } from "../components";
 import { WorkspaceInfo } from "../types";
 
 export const WorkspaceCard: FC<{
     workspace: WorkspaceInfo;
     isSelected?: boolean;
-    onMouseDown?: () => void;
-    onMouseUp?: () => void;
-    onPreviewClick?: () => void;
-    onRemove?: () => void;
+    onMouseDown?: MouseEventHandler<HTMLDivElement>;
+    onMouseUp?: MouseEventHandler<HTMLDivElement>;
+    onPreviewClick?: MouseEventHandler<HTMLDivElement>;
+    onRemove?: MouseEventHandler<HTMLButtonElement>;
 }> = ({
     workspace,
     isSelected,

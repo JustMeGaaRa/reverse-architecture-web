@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Icon } from "@chakra-ui/react";
 import {
     Route,
     RouteList,
@@ -36,18 +36,18 @@ export const HomePageLayoutContent: FC<PropsWithChildren> = ({ children }) => {
             top: (
                 <RouteList>
                     <Route
-                        icon={<HomeSimple />}
+                        icon={<Icon as={HomeSimple} boxSize={5} />}
                         isDisabled
                         title={"Dashboard"}
                         to={"dashboard"}
                     />
                     <Route
-                        icon={<Page />}
+                        icon={<Icon as={Page} boxSize={5} />}
                         title={"Workspaces"}
                         to={"workspaces"}
                     />
                     <Route
-                        icon={<Internet />}
+                        icon={<Icon as={Internet} boxSize={5} />}
                         title={"Community"}
                         to={"community"}
                     />
@@ -57,18 +57,18 @@ export const HomePageLayoutContent: FC<PropsWithChildren> = ({ children }) => {
             bottom: (
                 <RouteList>
                     <Route
-                        icon={<BellNotification />}
+                        icon={<Icon as={BellNotification} boxSize={5} />}
                         isDisabled
                         title={"Notifications"}
                         to={"notifications"}
                     />
                     <Route
-                        icon={<Settings />}
+                        icon={<Icon as={Settings} boxSize={5} />}
                         title={"Settings"}
                         to={"settings"}
                     />
                     <Route
-                        icon={<HelpCircle />}
+                        icon={<Icon as={HelpCircle} boxSize={5} />}
                         isDisabled
                         title={"Help & Feedback"}
                         to={"help"}
@@ -83,13 +83,14 @@ export const HomePageLayoutContent: FC<PropsWithChildren> = ({ children }) => {
             left: (<></>),
             middle: (
                 <Box
-                    key={"community-page-search"}
+                    aria-label={"community page search"}
                     width={["sm", "md", "lg"]}
                     maxWidth={["xl"]}
                 >
                     <CommandCenter />
                 </Box>
-            )
+            ),
+            right: (<></>)
         })
     }, [setHeaderContent]);
 

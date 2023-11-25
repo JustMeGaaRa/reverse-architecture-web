@@ -1,6 +1,5 @@
 import { Grid, useBreakpointValue } from "@chakra-ui/react";
-import { Children, FC, PropsWithChildren } from "react";
-import { SelectionItemProvider } from ".";
+import { FC, PropsWithChildren } from "react";
 import { useOnSelectionChanged } from "../hooks";
 
 export const WorkspaceCardList: FC<PropsWithChildren<{
@@ -15,14 +14,7 @@ export const WorkspaceCardList: FC<PropsWithChildren<{
 
     return (
         <Grid gridTemplateColumns={`repeat(${gridColumns}, 1fr)`} gap={6}>
-            {Children.map(children, ((child, index) => (
-                <SelectionItemProvider
-                    key={index}
-                    index={index}
-                >
-                    {child}
-                </SelectionItemProvider>
-            )))}
+            {children}
         </Grid>
     )
 }

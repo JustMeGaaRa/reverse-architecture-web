@@ -1,4 +1,5 @@
 import {
+    Icon,
     IconButton,
     Menu,
     MenuButton,
@@ -30,7 +31,7 @@ export const WorkspaceMenu: FC<{
                 as={IconButton}
                 colorScheme={"gray"}
                 variant={"ghost"}
-                icon={<MoreHoriz />}
+                icon={<Icon as={MoreHoriz} boxSize={5} />}
             >
                 {title}
             </MenuButton>

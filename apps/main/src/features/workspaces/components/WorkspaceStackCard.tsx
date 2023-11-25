@@ -1,15 +1,15 @@
 import { Card, CardBody, CardFooter, SimpleGrid } from "@chakra-ui/react";
-import { FC } from "react";
+import { FC, MouseEventHandler } from "react";
 import { ThumbnailContainer, ThumbnailSelector, WorkspaceCardFooter } from "../components";
 import { WorkspaceGroupInfo } from "../types";
 
 export const WorkspaceStackCard: FC<{
     group: WorkspaceGroupInfo;
     isSelected?: boolean;
-    onMouseDown?: () => void;
-    onMouseUp?: () => void;
-    onPreviewClick?: () => void;
-    onRemove?: () => void;
+    onMouseDown?: MouseEventHandler<HTMLDivElement>;
+    onMouseUp?: MouseEventHandler<HTMLDivElement>;
+    onPreviewClick?: MouseEventHandler<HTMLDivElement>;
+    onRemove?: MouseEventHandler<HTMLButtonElement>;
 }> = ({
     group,
     isSelected,

@@ -1,7 +1,6 @@
 import { Box, Table, TableContainer, Tbody, Th, Thead, Tr } from "@chakra-ui/react";
-import { Children, FC, PropsWithChildren } from "react";
-import { SelectionItemProvider } from "../components";
-import { useOnSelectionChanged, useSelectionContainer } from "../hooks";
+import { FC, PropsWithChildren } from "react";
+import { useOnSelectionChanged } from "../hooks";
 import { TableColumnInfo } from "../types";
 
 export const WorkspaceTable: FC<PropsWithChildren<{
@@ -12,8 +11,6 @@ export const WorkspaceTable: FC<PropsWithChildren<{
     columns,
     onSelected
 }) => {
-    const { selectedIndicies } = useSelectionContainer();
-
     useOnSelectionChanged(onSelected);
 
     return (
@@ -41,14 +38,7 @@ export const WorkspaceTable: FC<PropsWithChildren<{
                     </Tr>
                 </Thead>
                 <Tbody>
-                    {Children.map(children, ((child, index) => (
-                        <SelectionItemProvider
-                            key={index}
-                            index={index}
-                        >
-                            {child}
-                        </SelectionItemProvider>
-                    )))}
+                    {children}
                 </Tbody>
             </Table>
         </TableContainer>

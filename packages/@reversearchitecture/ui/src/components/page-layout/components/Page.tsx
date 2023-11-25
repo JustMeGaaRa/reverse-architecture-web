@@ -1,7 +1,6 @@
 import { Flex } from "@chakra-ui/react";
 import { FC, PropsWithChildren } from "react";
-import { useContextLevel } from "../hooks";
-import { ContextLevelProvider } from "./ContextLevelProvider";
+import { ContextLevelProvider, useContextLevel } from "../../../components";
 
 export const Page: FC<PropsWithChildren> = ({ children }) => {
     const { level, getLevelColor } = useContextLevel();

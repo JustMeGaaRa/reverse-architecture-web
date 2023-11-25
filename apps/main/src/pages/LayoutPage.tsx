@@ -28,39 +28,39 @@ export const LayoutPage: FC<PropsWithChildren> = () => {
         <ContextLevelProvider>
             <Page>
                 <PageSidebar>
-                    <Box padding={3}>
+                    <Flex padding={3}>
                         {sidebarOptions.sections.logo}
-                    </Box>
+                    </Flex>
 
-                    <Box height={"100%"} position={"relative"}>
-                        <PageSidebarSection section={"top"}>
+                    <Flex height={"100%"} direction={"column"} padding={3}>
+                        <PageSidebarSection section={"start"}>
                             {sidebarOptions.sections.top}
                         </PageSidebarSection>
-                        <PageSidebarSection section={"middle"}>
+                        <PageSidebarSection section={"center"}>
                             {sidebarOptions.sections.middle}
                         </PageSidebarSection>
-                        <PageSidebarSection section={"bottom"}>
+                        <PageSidebarSection section={"end"}>
                             {sidebarOptions.sections.bottom}
                         </PageSidebarSection>
-                    </Box>
+                    </Flex>
 
-                    <Box display={sidebarOptions.showButton ? "block" : "none"}>
+                    <Flex display={sidebarOptions.showButton ? "block" : "none"}>
                         <Box padding={2}>
                             <AccountMenu expanded={sidebarOptions.isOpen} />
                         </Box>
                         <Divider backgroundColor={"whiteAlpha.200"} />
                         <PageSidebarToggleButton />
-                    </Box>
+                    </Flex>
                 </PageSidebar>
                 <PageBody>
                     <PageHeader>
-                        <PageHeaderSection section={"left"}>
+                        <PageHeaderSection section={"start"}>
                             {headerOptions.sections.left}
                         </PageHeaderSection>
-                        <PageHeaderSection section={"middle"}>
+                        <PageHeaderSection section={"center"}>
                             {headerOptions.sections.middle}
                         </PageHeaderSection>
-                        <PageHeaderSection section={"right"}>
+                        <PageHeaderSection section={"end"}>
                             {headerOptions.sections.right}
                         </PageHeaderSection>
                     </PageHeader>

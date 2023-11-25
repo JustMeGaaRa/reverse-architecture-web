@@ -139,7 +139,7 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                     <IconButton
                         aria-label={"import workspace"}
                         colorScheme={"gray"}
-                        icon={<Upload />}
+                        icon={<Icon as={Upload} boxSize={5} />}
                         isDisabled
                         title={"Import Workspace"}
                     />
@@ -205,8 +205,9 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                                     <WorkspaceList
                                         workspaces={workspaces}
                                         view={view}
+                                        groupped={true}
                                         emptyTitle={"No workspaces"}
-                                        emptyDescription={"To get started, click the \"Create Workspace\" button to create a new project."}
+                                        emptyDescription={"To get started, click the \"New Workspace\" button to create a new project."}
                                         emptyAction={(
                                             <Button
                                                 aria-label={"new project"}
@@ -226,8 +227,9 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                                     <WorkspaceList
                                         workspaces={[]}
                                         view={view}
+                                        groupped={true}
                                         emptyTitle={"No shared workspaces"}
-                                        emptyDescription={"To get started, click the \"Create Workspace\" button to create a new project."}
+                                        emptyDescription={"To get started, click the \"New Workspace\" button to create a new project."}
                                         emptyAction={(
                                             <Button
                                                 aria-label={"new project"}
@@ -247,8 +249,9 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                                     <WorkspaceList
                                         workspaces={[]}
                                         view={view}
+                                        groupped={true}
                                         emptyTitle={"No archived workspaces"}
-                                        emptyDescription={"To get started, click the \"Create Workspace\" button to create a new project."}
+                                        emptyDescription={"To get started, click the \"New Workspace\" button to create a new project."}
                                         onClick={handleOnWorkspaceClick}
                                         onRemove={handleOnWorkspaceRemove}
                                     />
@@ -284,8 +287,11 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                                 height={"100%"}
                                 width={"100%"}
                             >
-                                <WorkspaceCardView
+                                <WorkspaceList
                                     workspaces={workspaces?.filter(x => x.group === queryParams.get("group")) || []}
+                                    view={"card"}
+                                    emptyTitle={"No workspaces in group"}
+                                    emptyDescription={"To get started, click the \"New Workspace\" button to create a new project."}
                                     onClick={handleOnWorkspaceClick}
                                     onRemove={handleOnWorkspaceRemove}
                                 />

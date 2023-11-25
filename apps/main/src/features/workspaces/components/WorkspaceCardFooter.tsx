@@ -9,12 +9,12 @@ import {
     Text,
 } from "@chakra-ui/react";
 import { BinMinus, MoreHoriz } from "iconoir-react";
-import { FC } from "react";
+import { FC, MouseEventHandler } from "react";
 
 export const WorkspaceCardFooter: FC<{
     name: string;
     lastModifiedDate: string;
-    onRemove?: () => void;
+    onRemove?: MouseEventHandler<HTMLButtonElement>;
 }> = ({
     name,
     lastModifiedDate,

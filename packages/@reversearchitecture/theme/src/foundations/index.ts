@@ -1,3 +1,3 @@
 export * from "./Colors";
-export * from "./Surface";
+export * from "./LayerStyles";
 export * from "./TextStyles";

@@ -7,7 +7,9 @@ import {
     EditableInput,
     EditablePreview,
     HStack,
+    Icon,
     IconButton,
+    Text
 } from "@chakra-ui/react";
 import {
     ButtonSegmentedToggle,
@@ -88,7 +90,7 @@ export const WorkspacePageLayoutContent: FC<PropsWithChildren> = ({ children }) 
         setSidebarContent({
             logo: (
                 <PageHomeButton
-                    icon={<HomeSimple />}
+                    icon={<Icon as={HomeSimple} boxSize={5} />}
                     onClick={() => navigate("/")}
                 />
             ),
@@ -96,19 +98,19 @@ export const WorkspacePageLayoutContent: FC<PropsWithChildren> = ({ children }) 
             middle: (
                 <RouteList key={"workspace-route-list"}>
                     <Route
-                        icon={<Code />}
+                        icon={<Icon as={Code} boxSize={5} />}
                         isActive={queryParams.get("panel") === WorkspaceContentPanel.Editor}
                         title={"Code Editor"}
                         onClick={handleOnOpenEditor}
                     />
                     <Route
-                        icon={<ChatLines />}
+                        icon={<Icon as={ChatLines} boxSize={5} />}
                         isActive={queryParams.get("panel") === WorkspaceContentPanel.Comments}
                         title={"Comments"}
                         onClick={handleOnOpenComments}
                     />
                     <Route
-                        icon={<Settings />}
+                        icon={<Icon as={Settings} boxSize={5} />}
                         isActive={queryParams.get("panel") === WorkspaceContentPanel.Settings}
                         title={"Settings"}
                         onClick={handleOnOpenSettings}
@@ -118,7 +120,7 @@ export const WorkspacePageLayoutContent: FC<PropsWithChildren> = ({ children }) 
             bottom: (
                 <RouteList>
                     <Route
-                        icon={<HelpCircle />}
+                        icon={<Icon as={HelpCircle} boxSize={5} />}
                         isDisabled
                         title={"Help & Feedback"}
                         to={"help"}
@@ -173,20 +175,22 @@ export const WorkspacePageLayoutContent: FC<PropsWithChildren> = ({ children }) 
                     <Button
                         colorScheme={"lime"}
                         isActive={queryParams.get("mode") !== WorkspaceContentMode.Modeling}
-                        leftIcon={<AppleShortcuts />}
+                        iconSpacing={0}
+                        leftIcon={<Icon as={AppleShortcuts} boxSize={4} />}
                         title={"diagramming"}
                         onClick={handleOnDiagrammingMode}
                     >
-                        Diagramming
+                        <Text marginX={1}>Diagramming</Text>
                     </Button>
                     <Button
                         colorScheme={"purple"}
                         isActive={queryParams.get("mode") === WorkspaceContentMode.Modeling}
-                        leftIcon={<ViewStructureUp />}
+                        iconSpacing={0}
+                        leftIcon={<Icon as={ViewStructureUp} boxSize={4} />}
                         title={"modeling"}
                         onClick={handleOnModelingMode}
                     >
-                        Modeling
+                        <Text marginX={1}>Modeling</Text>
                     </Button>
                 </ButtonSegmentedToggle>
             ),
@@ -203,7 +207,7 @@ export const WorkspacePageLayoutContent: FC<PropsWithChildren> = ({ children }) 
                     <IconButton
                         aria-label={"share"}
                         colorScheme={"gray"}
-                        icon={<AddUser />}
+                        icon={<Icon as={AddUser} boxSize={5} />}
                         isDisabled
                         size={"md"}
                     />
