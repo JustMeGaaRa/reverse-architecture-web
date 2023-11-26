@@ -164,12 +164,12 @@ export class CommentApi {
 
     async getCommentThreadById(workspaceId: string, commentThreadId: string): Promise<CommentThread> {
         const list = useCommentStore.getState().commentThreads.find(x => x.workspaceId === workspaceId && x.commentThreadId === commentThreadId);
-        return Promise.resolve(list);
+        return Promise.resolve(this.comments.at(0));
     }
 
     async getCommentThreads(workspaceId: string): Promise<Array<CommentThread>> {
         const list = useCommentStore.getState().commentThreads.filter(x => x.workspaceId === workspaceId) ?? [];
-        return Promise.resolve(list);
+        return Promise.resolve(this.comments);
     }
 
     async saveCommentThread(workspaceId: string, comment: CommentThread): Promise<CommentThread> {

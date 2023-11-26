@@ -82,6 +82,23 @@ export const CommunityPage: FC<PropsWithChildren> = () => {
     const filtered = workspaces.filter(x => x.tags.includes(selectedCategory.tag) || selectedCategory.tag === "Explore");
 
     useEffect(() => {
+        setHeaderContent({
+            right: (
+                <ButtonGroup key={"community-page-actions"} gap={2} mr={4}>
+                    <Button
+                        aria-label={"publish workspace"}
+                        colorScheme={"lime"}
+                        leftIcon={<Icon as={AddPageAlt} boxSize={5} />}
+                        iconSpacing={"0px"}
+                    >
+                        <Text marginX={2}>Publish to Community</Text>
+                    </Button>
+                </ButtonGroup>
+            )
+        })
+    }, [setHeaderContent]);
+
+    useEffect(() => {
         workspaceApi.getWorkspaces()
             .then(workspaces => {
                 setWorkspaces(workspaces);
@@ -116,18 +133,27 @@ export const CommunityPage: FC<PropsWithChildren> = () => {
 
                 setQueryParam({ preview: info.workspaceId })
             })
-            .catch(error => {
-                console.error(error);
-            })
-
+            .catch(error => console.error(error));
         
         // TODO: defer this callback to when the modal is opened
+        // TODO: come up with a convention or a way to identify the main thread discussion
         const api = new CommentApi();
-        // api.getCommentThreadById(workspaceId, "comment-thread-1")
-        //     .then(comments => setCommentThread(comments))
-        //     .catch(error => console.error(error));
-        // navigate(`/community/${workspace.workspaceId}`);
+        api.getCommentThreadById(workspace.workspaceId, "workspace-discussion")
+            .then(comments => setCommentThread(comments))
+            .catch(error => console.error(error));
+    }, [parseStructurizr, setQueryParam, theme, workspaceApi]);
+
+    const handleOnWorskapceTryOut = useCallback((workspace: WorkspaceInfo) => {
+        navigate(`/workspaces/${workspace.workspaceId}`);
     }, [navigate]);
+    
+    const handleOnWorkspaceBookmark = useCallback((workspace: WorkspaceInfo) => {
+        
+    }, []);
+
+    const handleOnWorkspaceLike = useCallback((workspace: WorkspaceInfo) => {
+
+    }, []);
 
     const capitalize = (str: string) => {
         return str.charAt(0).toUpperCase() + str.slice(1);
@@ -137,27 +163,6 @@ export const CommunityPage: FC<PropsWithChildren> = () => {
         // workspaceApi.publishWorkspace(workspace);
         // setWorkspaces(workspaces.concat(workspace));
     }, []);
-
-    useEffect(() => {
-        setHeaderContent({
-            right: (
-                <ButtonGroup key={"community-page-actions"} gap={2} mr={4}>
-                    <Button
-                        aria-label={"publish workspace"}
-                        colorScheme={"lime"}
-                        leftIcon={<Icon as={AddPageAlt} boxSize={5} />}
-                        iconSpacing={"0px"}
-                    >
-                        <Text marginX={2}>Publish to Community</Text>
-                    </Button>
-                </ButtonGroup>
-            )
-        })
-    }, [setHeaderContent]);
-
-    const handleOnWorskapceTryOut = useCallback((workspaceId: string) => {
-        navigate(`/workspaces/${workspaceId}`);
-    }, [navigate]);
 
     return (
         <HomePageLayoutContent>
@@ -172,7 +177,6 @@ export const CommunityPage: FC<PropsWithChildren> = () => {
                     <Flex direction={"column"} height={"100%"}>
                         <Box flexBasis={"80px"} flexGrow={0} flexShrink={0} padding={6}>
                             <HStack
-                                overflowX={"hidden"}
                                 divider={
                                     <StackDivider
                                         borderColor={"gray.400"}
@@ -181,6 +185,7 @@ export const CommunityPage: FC<PropsWithChildren> = () => {
                                     />
                                 }
                                 gap={2}
+                                overflowX={"hidden"}
                             >
                                 <Menu closeOnBlur closeOnSelect>
                                     <MenuButton
@@ -206,10 +211,7 @@ export const CommunityPage: FC<PropsWithChildren> = () => {
                                         ))}
                                     </MenuList>
                                 </Menu>
-                                <ButtonGroup
-                                    size={"sm"}
-                                    variant={"tonal"}
-                                >
+                                <ButtonGroup size={"sm"} variant={"tonal"}>
                                     {filters.map((tag) => (
                                         <Button
                                             key={tag}
@@ -229,6 +231,9 @@ export const CommunityPage: FC<PropsWithChildren> = () => {
                                 emptyTitle={"No community workspaces available yet"}
                                 emptyDescription={"To get started, click the \"New Workspace\" button to create a new project."}
                                 onClick={handleOnWorkspaceClick}
+                                onTryItClick={handleOnWorskapceTryOut}
+                                onBookmarkClick={handleOnWorkspaceBookmark}
+                                onLikeClick={handleOnWorkspaceLike}
                             />
                             
                             <Modal
@@ -252,8 +257,8 @@ export const CommunityPage: FC<PropsWithChildren> = () => {
                                             information={info}
                                             workspace={workspace}
                                             metadata={metadata}
-                                            comments={commentThread}
-                                            onTryItOutClick={() => handleOnWorskapceTryOut(info?.workspaceId)}
+                                            discussion={commentThread}
+                                            onTryItClick={() => handleOnWorskapceTryOut(info)}
                                             onClose={() => setQueryParam({})}
                                         />
                                     </Flex>

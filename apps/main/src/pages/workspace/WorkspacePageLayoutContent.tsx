@@ -1,7 +1,5 @@
 import {
-    Box,
     Button,
-    ButtonGroup,
     Divider,
     Editable,
     EditableInput,
@@ -24,6 +22,7 @@ import {
     AddUser,
     AppleShortcuts,
     ChatLines,
+    CloudSync,
     Code,
     HelpCircle,
     HomeSimple,
@@ -57,6 +56,22 @@ export enum WorkspaceContentPanel {
 export const WorkspacePageLayoutContent: FC<PropsWithChildren> = ({ children }) => {
     const { setSidebarContent, setShowSidebarButton, setSidebarOpen } = usePageSidebar();
     const { setHeaderContent } = usePageHeader();
+
+    // reset sidebar and header content
+    useEffect(() => {
+        setSidebarContent({
+            logo: (<></>),
+            top: (<></>),
+            middle: (<></>),
+            bottom: (<></>)
+        });
+        setHeaderContent({
+            left: (<></>),
+            middle: (<></>),
+            right: (<></>)
+        });
+    }, [setHeaderContent, setSidebarContent]);
+
     const [ queryParams, setQueryParam ] = useSearchParams([[ "mode", WorkspaceContentMode.Diagramming ]]);
     const navigate = useNavigate();
     const { workspace } = useWorkspaceStore();
@@ -84,6 +99,7 @@ export const WorkspacePageLayoutContent: FC<PropsWithChildren> = ({ children }) 
         });
     }, [setQueryParam]);
 
+    // sidebar content
     useEffect(() => {
         setShowSidebarButton(false);
         setSidebarOpen(false);
@@ -94,7 +110,6 @@ export const WorkspacePageLayoutContent: FC<PropsWithChildren> = ({ children }) 
                     onClick={() => navigate("/")}
                 />
             ),
-            top: (<></>),
             middle: (
                 <RouteList key={"workspace-route-list"}>
                     <Route
@@ -153,6 +168,7 @@ export const WorkspacePageLayoutContent: FC<PropsWithChildren> = ({ children }) 
         });
     }, [setQueryParam]);
 
+    // header content
     useEffect(() => {
         setHeaderContent({
             left: (
@@ -168,6 +184,13 @@ export const WorkspacePageLayoutContent: FC<PropsWithChildren> = ({ children }) 
                         <EditableInput />
                     </Editable>
                     <WorkspaceMenu title={workspace.name} />
+                    <IconButton
+                        aria-label={"save"}
+                        colorScheme={"gray"}
+                        variant={"ghost"}
+                        icon={<Icon as={CloudSync} boxSize={5} />}
+                        size={"md"}
+                    />
                 </HStack>
             ),
             middle: (

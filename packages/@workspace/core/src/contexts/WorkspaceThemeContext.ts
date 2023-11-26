@@ -14,8 +14,8 @@ export const WorkspaceThemeContext = createContext<{
     setTheme: (theme: IWorkspaceTheme) => void;
 }>({
     accentColors: {
-        [ViewType.SystemLandscape]: "yellow",
-        [ViewType.SystemContext]: "yellow",
+        [ViewType.SystemLandscape]: "lime",
+        [ViewType.SystemContext]: "lime",
         [ViewType.Container]: "blue",
         [ViewType.Component]: "purple",
         [ViewType.Deployment]: "green",

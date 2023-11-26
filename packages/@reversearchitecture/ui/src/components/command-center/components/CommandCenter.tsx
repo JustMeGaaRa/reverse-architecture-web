@@ -1,7 +1,5 @@
 import {
-    AbsoluteCenter,
     Box,
-    Flex,
     Highlight,
     Icon,
     IconButton,
@@ -13,21 +11,25 @@ import {
     useDisclosure,
 } from "@chakra-ui/react";
 import {
+    EmojiSad,
     Search as SearchIcon,
     Terminal,
 } from "iconoir-react";
 import { FC, useRef } from "react";
 import {
     SearchDropdown,
+    SearchEmpty,
     SearchOverlay,
     SearchResultGroup
 } from "../components";
 import { SearchGroupResult } from "../types";
 
 export const CommandCenter: FC<{
+    isLoading?: boolean;
     searchResults?: SearchGroupResult[];
     onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }> = ({
+    isLoading,
     searchResults,
     onChange
 }) => {
@@ -87,7 +89,7 @@ export const CommandCenter: FC<{
                     </SearchResultGroup>
                 ))}
                 {searchResults?.length === 0 && (
-                    <AbsoluteCenter>No search results</AbsoluteCenter>
+                    <SearchEmpty query={searchRef?.current?.value} />
                 )}
             </SearchDropdown>
         </Box>

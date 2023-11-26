@@ -1,12 +1,12 @@
+import { Grid, useBreakpointValue } from "@chakra-ui/react";
 import { FC, useCallback } from "react";
 import {
-    SelectionContainerProvider,
     WorkspaceStackCard,
     WorkspaceCard,
-    WorkspaceCardList
 } from "../components";
 import {
     useOnPressHold,
+    useOnSelectionChanged,
     useSelectionContainer
 } from "../hooks";
 import { WorkspaceGroupInfo, WorkspaceInfo } from "../types";
@@ -25,6 +25,7 @@ export const WorkspaceCardView: FC<{
     onSelected,
     onRemove,
 }) => {
+    const gridColumns = useBreakpointValue({ base: 1, md: 2, lg: 3, xl: 4, "2xl": 5 });
     const groups = groupWorkspaces(workspaces);
     
     const {
@@ -33,6 +34,8 @@ export const WorkspaceCardView: FC<{
         turnOnSelectionMode,
         toggleSelected
     } = useSelectionContainer();
+    
+    useOnSelectionChanged(onSelected);
 
     const { onStartHold, onCancelHold } = useOnPressHold();
 
@@ -60,7 +63,7 @@ export const WorkspaceCardView: FC<{
     }, [onRemove]);
 
     return (
-        <WorkspaceCardList onSelected={onSelected}>
+        <Grid gridTemplateColumns={`repeat(${gridColumns}, 1fr)`} gap={6}>
             {groupped && groups.filter(group => group.name !== undefined).map(group => (
                 <WorkspaceStackCard
                     key={group.name}
@@ -94,6 +97,6 @@ export const WorkspaceCardView: FC<{
                     onRemove={(event) => handleOnRemove?.(event, workspace)}
                 />
             ))}
-        </WorkspaceCardList>
+        </Grid>
     )
 }

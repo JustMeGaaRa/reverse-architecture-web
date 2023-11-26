@@ -1,22 +1,27 @@
 import { SearchGroupResult } from "@reversearchitecture/ui";
 import {
     CommandSearchStrategy,
-    CommunitySearchStrategy, WorkspaceSearchStrategy
+    CommunitySearchStrategy, RecentSearchStrategy, WorkspaceSearchStrategy
 } from "../types";
 
 export class SearchStrategy {
-    search(query: string): SearchGroupResult[] {
+    async search(query: string): Promise<SearchGroupResult[]> {
         const strategies = [
+            new RecentSearchStrategy(),
             new CommunitySearchStrategy(),
             new WorkspaceSearchStrategy(),
             new CommandSearchStrategy()
         ];
 
-        return strategies
-            .map(strategy => ({
-                title: strategy.name,
-                results: strategy.search(query)
-            }))
-            .filter(group => group.results.length > 0);
+        const groups = await Promise.all(strategies
+            .map(async strategy => {
+                const results = await strategy.search(query);
+                return {
+                    title: strategy.name,
+                    results: results
+                }
+            }));
+
+        return Promise.resolve(groups.filter(group => group.results.length > 0));
     }
 }

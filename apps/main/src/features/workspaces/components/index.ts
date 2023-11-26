@@ -7,7 +7,6 @@ export * from "./ThumbnailSelector";
 export * from "./WorkspaceCard";
 export * from "./WorkspaceCardFooter";
 export * from "./WorkspaceCardHeader";
-export * from "./WorkspaceCardList";
 export * from "./WorkspaceCardView";
 export * from "./WorkspaceList";
 export * from "./WorkspaceStackCard";

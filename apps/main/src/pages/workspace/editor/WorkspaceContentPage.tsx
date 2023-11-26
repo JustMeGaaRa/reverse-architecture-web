@@ -46,11 +46,11 @@ import {
     CommentApi,
     CommentThread,
     CommentProvider,
-    CommentThreadList,
     WorkspaceApi,
     useAccount,
 } from "../../../features";
 import {
+    CommentThreadList,
     UserCursorGroup,
     WorkspaceCommentGroup,
     WorkspacePageLayoutContent,

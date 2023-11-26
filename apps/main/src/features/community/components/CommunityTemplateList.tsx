@@ -11,14 +11,20 @@ export const CommunityTemplateList: FC<{
     emptyTitle?: string;
     emptyDescription?: string;
     onClick?: (workspace: WorkspaceInfo) => void;
+    onTryItClick?: (workspace: WorkspaceInfo) => void;
+    onBookmarkClick?: (workspace: WorkspaceInfo) => void;
+    onLikeClick?: (workspace: WorkspaceInfo) => void;
 }> = ({
     workspaces,
     emptyTitle,
     emptyDescription,
-    onClick
+    onClick,
+    onTryItClick,
+    onBookmarkClick,
+    onLikeClick
 }) => {
     return (
-        <Box>
+        <>
             {workspaces.length === 0 && (
                 <EmptyContent
                     icon={Folder}
@@ -30,8 +36,11 @@ export const CommunityTemplateList: FC<{
                 <CommunityCardView
                     workspaces={workspaces}
                     onClick={onClick}
+                    onTryItClick={onTryItClick}
+                    onBookmarkClick={onBookmarkClick}
+                    onLikeClick={onLikeClick}
                 />
             )}
-        </Box>
+        </>
     )
 }

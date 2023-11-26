@@ -100,7 +100,14 @@ export const HomePageLayoutContent: FC<PropsWithChildren> = ({ children }) => {
     const { onSearch } = useSearch();
 
     const handleOnSearchChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-        setResults(onSearch(event.target.value));
+
+        onSearch(event.target.value)
+            .then((results) => {
+                setResults(results);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
     }, [onSearch]);
 
     useEffect(() => {

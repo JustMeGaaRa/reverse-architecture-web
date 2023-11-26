@@ -5,9 +5,9 @@ import { ISearchStrategy } from "../types";
 export class CommandSearchStrategy implements ISearchStrategy {
     public readonly name: string = "Commands";
 
-    search(query: string): SearchItem[] {
-        const chunks = query.split(" ");
-        return [
+    search(query: string): Promise<Array<SearchItem>> {
+        const chunks = query.split(" ").map(chunk => chunk.trim()).filter(chunk => chunk.length > 0);
+        return Promise.resolve([
             {
                 text: "New workspace",
                 icon: TerminalTag,
@@ -20,6 +20,6 @@ export class CommandSearchStrategy implements ISearchStrategy {
                 text: "Publish to community",
                 icon: TerminalTag,
             }
-        ].filter(item => chunks.some(chunk => item.text.toLowerCase().includes(chunk.toLowerCase())));
+        ].filter(item => chunks.some(chunk => item.text.toLowerCase().includes(chunk.toLowerCase())) || query.trim().length === 0));
     }
 }

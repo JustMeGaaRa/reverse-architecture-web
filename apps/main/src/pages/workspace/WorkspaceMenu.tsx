@@ -37,7 +37,9 @@ export const WorkspaceMenu: FC<{
             </MenuButton>
             <MenuList>
                 <MenuGroup>
-                    <MenuItem onClick={handleOnExportClick}>Export</MenuItem>
+                    <MenuItem onClick={handleOnExportClick}>
+                        Export
+                    </MenuItem>
                 </MenuGroup>
                 <MenuDivider />
                 <MenuGroup>

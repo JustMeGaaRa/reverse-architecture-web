@@ -43,11 +43,11 @@ export const WorkspaceCardHeader: FC<{
                     </Text>
                     <HStack gap={4} height={"14px"}>
                         {/* // TODO: style the tags properly */}
-                        <Tag variant={"unstyled"} size={"xs"} title={"788 used"}>
+                        <Tag variant={"unstyled"} size={"xs"}>
                             <TagLeftIcon as={ProfileCircle} height={"12px"} width={"12px"} marginInlineEnd={1} />
                             <TagLabel textStyle={"b5"}>{`${usedCount} used`}</TagLabel>
                         </Tag>
-                        <Tag variant={"unstyled"} size={"xs"} title={"47 liked"}>
+                        <Tag variant={"unstyled"} size={"xs"}>
                             <TagLeftIcon as={ThumbsUp} height={"12px"} width={"12px"} marginInlineEnd={1} />
                             <TagLabel textStyle={"b5"}>${`${likedCount} liked`}</TagLabel>
                         </Tag>

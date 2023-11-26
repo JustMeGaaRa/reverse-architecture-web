@@ -29,7 +29,7 @@ export const SearchDropdown: FC<PropsWithChildren<{
                     paddingY={4}
                     minHeight={"150px"}
                     marginTop={1}
-                    maxHeight={"400px"}
+                    maxHeight={"600px"}
                     width={"100%"}
                 >
                     {children}

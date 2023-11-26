@@ -1,0 +1,76 @@
+import {
+    Box,
+    Icon,
+    IconButton,
+    Input,
+    InputGroup,
+    InputLeftElement,
+    InputRightElement,
+} from "@chakra-ui/react";
+import { ContextSheetTitle } from "@reversearchitecture/ui";
+import { ChatLines, Send } from "iconoir-react";
+import { FC, useCallback, useRef } from "react";
+import { CommentCard, CommentGroup, CommentInfo } from "../../comments";
+
+export const TemplateSectionDiscussion: FC<{
+    comments: Array<CommentInfo>;
+    onComment?: (comment: string) => void;
+}> = ({
+    comments,
+    onComment
+}) => {
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    const handleOnComment = useCallback(() => {
+        onComment?.(inputRef?.current?.value);
+    }, [onComment])
+
+    return (
+        <>
+            <ContextSheetTitle title={"Comments"} />
+            <InputGroup
+                size={"md"}
+                variant={"filled"}
+                marginY={3}
+            >
+                <InputLeftElement>
+                    <Icon as={ChatLines} boxSize={6} color={"gray.500"} />
+                </InputLeftElement>
+                <Input
+                    ref={inputRef}
+                    backgroundColor={"surface.tinted-black-40"}
+                    borderRadius={16}
+                    placeholder={"Share your thoughts"}
+                    _placeholder={{ color: "gray.500" }}
+                    onKeyDown={(event) => event.key === "Enter" && handleOnComment()}
+                />
+                <InputRightElement>
+                    <IconButton
+                        aria-label={"send"}
+                        icon={<Icon as={Send} boxSize={6} />}
+                        size={"sm"}
+                        variant={"tonal"}
+                        onClick={handleOnComment}
+                    />
+                </InputRightElement>
+            </InputGroup>
+            <Box
+                marginTop={6}
+                height={"100%"}
+                width={"100%"}
+                overflowY={"scroll"}
+            >
+                <CommentGroup>
+                    {comments.map((comment, index) => (
+                        <CommentCard
+                            key={index}
+                            comment={comment}
+                            showAvatar={true}
+                            showOptions={true}
+                        />
+                    ))}
+                </CommentGroup>
+            </Box>
+        </>
+    );
+}

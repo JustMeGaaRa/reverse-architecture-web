@@ -9,7 +9,7 @@ const {
 export const Avatar = defineMultiStyleConfig({
     baseStyle: definePartsStyle((props) => ({
         container: {
-            backgroundColor: `${props.colorScheme}.100`,
+            backgroundColor: `${props.colorScheme}.200`,
             borderColor: `${props.colorScheme}.600`,
             color: `${props.colorScheme}.600`,
             _hover: {
@@ -42,16 +42,30 @@ export const Avatar = defineMultiStyleConfig({
         }
     })),
     sizes: {
+        xs: {
+            container: {
+                borderRadius: "8px",
+                borderWidth: "2px",
+                height: "24px",
+                width: "24px",
+            },
+            excessLabel: {
+                borderRadius: "8px",
+                borderWidth: "2px",
+                height: "24px",
+                width: "24px",
+            }
+        },
         sm: {
             container: {
                 borderRadius: "12px",
-                borderWidth: "1px",
+                borderWidth: "2px",
                 height: "32px",
                 width: "32px",
             },
             excessLabel: {
                 borderRadius: "12px",
-                borderWidth: "1px",
+                borderWidth: "2px",
                 height: "32px",
                 width: "32px",
             }
@@ -59,13 +73,13 @@ export const Avatar = defineMultiStyleConfig({
         md: {
             container: {
                 borderRadius: "16px",
-                borderWidth: "1px",
+                borderWidth: "2px",
                 height: "40px",
                 width: "40px",
             },
             excessLabel: {
                 borderRadius: "16px",
-                borderWidth: "1px",
+                borderWidth: "2px",
                 height: "40px",
                 width: "40px",
             }
@@ -73,13 +87,13 @@ export const Avatar = defineMultiStyleConfig({
         lg: {
             container: {
                 borderRadius: "16px",
-                borderWidth: "1px",
+                borderWidth: "2px",
                 height: "48px",
                 width: "48px",
             },
             excessLabel: {
                 borderRadius: "16px",
-                borderWidth: "1px",
+                borderWidth: "2px",
                 height: "48px",
                 width: "48px",
             }
