@@ -1,46 +1,48 @@
 import {
+    AbsoluteCenter,
     Box,
+    Flex,
+    Highlight,
     Icon,
     IconButton,
     Input,
     InputGroup,
     InputLeftElement,
     InputRightElement,
-    Portal,
     Text,
     useDisclosure,
 } from "@chakra-ui/react";
 import {
-    Page,
     Search as SearchIcon,
     Terminal,
-    TerminalTag
 } from "iconoir-react";
-import { FC } from "react";
-import { SearchDropdown, SearchResultGroup } from "../components";
+import { FC, useRef } from "react";
+import {
+    SearchDropdown,
+    SearchOverlay,
+    SearchResultGroup
+} from "../components";
+import { SearchGroupResult } from "../types";
 
-export const CommandCenter: FC = () => {
+export const CommandCenter: FC<{
+    searchResults?: SearchGroupResult[];
+    onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}> = ({
+    searchResults,
+    onChange
+}) => {
+    const searchRef = useRef<HTMLInputElement>(null);
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     return (
         <Box position={"relative"}>
-            <Portal>
-                <Box
-                    backgroundColor={"surface.tinted-black-60"}
-                    height={"100vh"}
-                    width={"100vw"}
-                    position={"absolute"}
-                    left={0}
-                    top={0}
-                    display={isOpen ? "block" : "none"}
-                    zIndex={9}
-                />
-            </Portal>
-            <InputGroup size={"md"} variant={"filled"} zIndex={10}>
+            <SearchOverlay isOpen={isOpen} />
+            <InputGroup size={"md"} variant={"filled"} zIndex={1000}>
                 <InputLeftElement>
                     <Icon as={SearchIcon} color={"gray.500"} boxSize={6} />
                 </InputLeftElement>
                 <Input
+                    ref={searchRef}
                     backgroundColor={"surface.tinted-black-40"}
                     borderRadius={16}
                     type={"search"}
@@ -50,6 +52,7 @@ export const CommandCenter: FC = () => {
                     }}
                     onFocus={onOpen}
                     onBlur={onClose}
+                    onChange={onChange}
                 />
                 <InputRightElement>
                     <IconButton
@@ -62,21 +65,30 @@ export const CommandCenter: FC = () => {
                 </InputRightElement>
             </InputGroup>
             <SearchDropdown isOpen={isOpen}>
-                <SearchResultGroup section={"Community"}>
-                    <><Icon as={Page} /><Text marginX={2}>Account management</Text></>
-                    <><Icon as={Page} /><Text marginX={2}>Internet Banking Application</Text></>
-                    <><Icon as={Page} /><Text marginX={2}>GDPR Compliance</Text></>
-                </SearchResultGroup>
-                <SearchResultGroup section={"Workspaces"}>
-                    <><Icon as={Page} /><Text marginX={2}>Account management</Text></>
-                    <><Icon as={Page} /><Text marginX={2}>Internet Banking Application</Text></>
-                    <><Icon as={Page} /><Text marginX={2}>GDPR Compliance</Text></>
-                </SearchResultGroup>
-                <SearchResultGroup section={"Commands"}>
-                    <><Icon as={TerminalTag} /><Text marginX={2}>Account management</Text></>
-                    <><Icon as={TerminalTag} /><Text marginX={2}>Internet Banking Application</Text></>
-                    <><Icon as={TerminalTag} /><Text marginX={2}>GDPR Compliance</Text></>
-                </SearchResultGroup>
+                {searchResults?.map((searchGroup, index) => (
+                    <SearchResultGroup
+                        key={index}
+                        section={searchGroup.title}
+                        total={searchGroup.results.length}
+                    >
+                        {searchGroup.results.map((searchItem) => (
+                            <>
+                                <Icon as={searchItem.icon} />
+                                <Text marginX={2}>
+                                    <Highlight
+                                        query={searchRef?.current.value.split(" ")}
+                                        styles={{ backgroundColor: "lime.400" }}
+                                    >
+                                        {searchItem.text}
+                                    </Highlight>
+                                </Text>
+                            </>
+                        ))}
+                    </SearchResultGroup>
+                ))}
+                {searchResults?.length === 0 && (
+                    <AbsoluteCenter>No search results</AbsoluteCenter>
+                )}
             </SearchDropdown>
         </Box>
     )

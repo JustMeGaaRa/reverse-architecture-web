@@ -2,10 +2,12 @@ import { Flex, Text, VStack } from "@chakra-ui/react";
 import { Children, FC, PropsWithChildren } from "react";
 
 export const SearchResultGroup: FC<PropsWithChildren<{
-    section: string
+    section: string;
+    total: number;
 }>> = ({
     children,
-    section
+    section,
+    total
 }) => {
     return (
         <VStack
@@ -21,7 +23,7 @@ export const SearchResultGroup: FC<PropsWithChildren<{
                 textStyle={"b4"}
                 width={"100%"}
             >
-                <Text color={"#B9BABA"}>{section}</Text>
+                <Text color={"#B9BABA"}>{`${section} (${total})`}</Text>
                 <Text color={"lime.600"}>See all</Text>
             </Flex>
             {Children.map(children, (child) => (

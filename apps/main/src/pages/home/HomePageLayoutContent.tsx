@@ -6,7 +6,8 @@ import {
     ReverseArchitectureSvg,
     PageHomeButton,
     usePageSidebar,
-    usePageHeader
+    usePageHeader,
+    SearchGroupResult
 } from "@reversearchitecture/ui";
 import {
     BellNotification,
@@ -16,14 +17,31 @@ import {
     Page,
     Settings,
 } from "iconoir-react";
-import { FC, PropsWithChildren, useEffect } from "react";
+import { FC, PropsWithChildren, useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { useSearch } from "../../features";
 
 export const HomePageLayoutContent: FC<PropsWithChildren> = ({ children }) => {
     const { sidebarOptions, setShowSidebarButton, setSidebarContent } = usePageSidebar();
     const { setHeaderContent } = usePageHeader();
     const navigate = useNavigate();
 
+    // reset sidebar and header content
+    useEffect(() => {
+        setSidebarContent({
+            logo: (<></>),
+            top: (<></>),
+            middle: (<></>),
+            bottom: (<></>)
+        });
+        setHeaderContent({
+            left: (<></>),
+            middle: (<></>),
+            right: (<></>)
+        });
+    }, [setHeaderContent, setSidebarContent]);
+
+    // sidebar section
     useEffect(() => {
         setShowSidebarButton(true);
         setSidebarContent({
@@ -53,7 +71,6 @@ export const HomePageLayoutContent: FC<PropsWithChildren> = ({ children }) => {
                     />
                 </RouteList>
             ),
-            middle: (<></>),
             bottom: (
                 <RouteList>
                     <Route
@@ -78,21 +95,26 @@ export const HomePageLayoutContent: FC<PropsWithChildren> = ({ children }) => {
         })
     }, [setSidebarContent, setShowSidebarButton, navigate, sidebarOptions.isOpen]);
 
+    // header section
+    const [ results, setResults ] = useState<SearchGroupResult[]>([]);
+    const { onSearch } = useSearch();
+
+    const handleOnSearchChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        setResults(onSearch(event.target.value));
+    }, [onSearch]);
+
     useEffect(() => {
         setHeaderContent({
-            left: (<></>),
             middle: (
-                <Box
-                    aria-label={"community page search"}
-                    width={["sm", "md", "lg"]}
-                    maxWidth={["xl"]}
-                >
-                    <CommandCenter />
+                <Box aria-label={"community page search"} width={["sm", "md", "lg"]}>
+                    <CommandCenter
+                        searchResults={results}
+                        onChange={handleOnSearchChange}
+                    />
                 </Box>
             ),
-            right: (<></>)
         })
-    }, [setHeaderContent]);
+    }, [setHeaderContent, handleOnSearchChange, results]);
 
     return (
         <>
