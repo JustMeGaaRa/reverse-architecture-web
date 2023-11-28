@@ -38,7 +38,7 @@ export const TemplateHeader: FC<{
                         </Tag>
                         <Tag variant={"unstyled"} height={"14px"} size={"xs"}>
                             <TagLeftIcon as={Heart} height={"12px"} width={"12px"} marginInlineEnd={1} />
-                            <TagLabel textStyle={"b5"}>${`${likedCount} liked`}</TagLabel>
+                            <TagLabel textStyle={"b5"}>{`${likedCount} liked`}</TagLabel>
                         </Tag>
                     </Flex>
                 </Flex>

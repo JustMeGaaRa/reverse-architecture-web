@@ -15,9 +15,8 @@ export const CommentBadge: FC<{
 
     return (
         <Box
-            backgroundColor={"whiteAlpha.400"}
-            borderRadius={"16px"}
-            backdropFilter={"blur(8px)"}
+            backgroundColor={"gray.400"}
+            borderRadius={16}
             padding={1}
             width={"fit-content"}
             onClick={() => onClick?.(commentThread.commentThreadId)}

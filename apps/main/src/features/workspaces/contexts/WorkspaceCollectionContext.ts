@@ -1,6 +1,6 @@
 import { createContext, Dispatch, SetStateAction } from "react";
 
-export const SelectionContainerContext = createContext<{
+export const WorkspaceCollectionContext = createContext<{
     isSelectionModeOn: boolean;
     selectedIndicies: string[];
     setIsSelectionModeOn: Dispatch<SetStateAction<boolean>>;

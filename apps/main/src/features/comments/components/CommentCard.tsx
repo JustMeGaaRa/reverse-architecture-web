@@ -1,7 +1,7 @@
-import { Avatar, ButtonGroup, Flex, Icon, IconButton, Text, VStack } from "@chakra-ui/react";
+import { Avatar, ButtonGroup, Flex, Icon, IconButton, Text } from "@chakra-ui/react";
 import { useWorkspaceTheme } from "@workspace/core";
 import { Check, MoreHoriz } from "iconoir-react";
-import { FC, PropsWithChildren } from "react";
+import { FC } from "react";
 import { CommentInfo } from "../types";
 
 export const CommentCard: FC<{
@@ -9,22 +9,26 @@ export const CommentCard: FC<{
     replyCount?: number;
     origin?: { type: string; id: string; };
     colorScheme?: string;
+    isSelected?: boolean;
     showAvatar?: boolean;
     showOrigin?: boolean;
     showResolve?: boolean;
     showOptions?: boolean;
     showReplies?: boolean;
+    onClick?: () => void;
     onResolve?: () => void;
 }> = ({
     comment,
     replyCount,
     origin,
     colorScheme,
+    isSelected,
     showAvatar,
     showOrigin,
     showResolve,
     showOptions,
     showReplies,
+    onClick,
     onResolve
 }) => {
     // TODO: consider removing this dependency from this component
@@ -33,10 +37,31 @@ export const CommentCard: FC<{
     return (
         <Flex
             data-group
+            aria-selected={isSelected}
             direction={"column"}
             borderRadius={"16px"}
             cursor={"pointer"}
+            paddingTop={1}
+            paddingRight={1}
+            paddingBottom={2}
+            paddingLeft={3}
             width={"100%"}
+            _hover={{
+                backgroundColor: "surface.tinted-white-5",
+                backdropFilter: "blur(32px)",
+                boxShadow: "0px 2px 4px 0px rgba(0, 0, 0, 0.10)",
+            }}
+            _active={{
+                backgroundColor: "surface.tinted-white-2",
+                backdropFilter: "blur(32px)",
+                boxShadow: "0px 2px 4px 0px rgba(0, 0, 0, 0.10)",
+            }}
+            _selected={{
+                backgroundColor: "surface.tinted-white-5",
+                backdropFilter: "blur(32px)",
+                boxShadow: "0px 2px 4px 0px rgba(0, 0, 0, 0.10)",
+            }}
+            onClick={onClick}
         >
             <Flex width={"100%"} alignItems={"center"}>
                 <Flex flex={2} justifyContent={"start"} gap={2}>
@@ -86,7 +111,7 @@ export const CommentCard: FC<{
                 )}
             </Flex>
             <Flex width={"100%"}>
-                <Text color={"gray.900"} textStyle={"b3"} paddingY={2}>
+                <Text color={"gray.900"} textStyle={"b3"} paddingRight={2} paddingY={2}>
                     {comment.text}
                 </Text>
             </Flex>
@@ -98,7 +123,7 @@ export const CommentCard: FC<{
                         </Text>
                     )}
                 </Flex>
-                <Flex flex={1} justifyContent={"end"}>
+                <Flex flex={1} justifyContent={"end"} paddingRight={2}>
                     <Text color={"gray.700"} textStyle={"b5"}>
                         {comment.createdDate}
                     </Text>

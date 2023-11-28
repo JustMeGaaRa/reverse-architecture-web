@@ -21,14 +21,13 @@ import {
     ShareAndroid,
     ThumbsUp,
 } from "iconoir-react";
-import { FC, useState } from "react";
+import { FC, useCallback, useState } from "react";
 import {
     CommentThread,
     WorkspaceInfo,
     TemplateSectionInfo,
-    useAccount,
     TemplateSectionDiscussion
-} from "../..";
+} from "../../";
 import {
     ContextLevelProvider,
     ContextSheet,
@@ -43,6 +42,9 @@ export const TemplateOverview: FC<{
     workspace: IWorkspace;
     metadata: IWorkspaceMetadata;
     discussion: CommentThread;
+    onInformationClick?: () => void;
+    onCommentsClick?: () => void;
+    onCommentSend?: (comment: string) => void;
     onTryItClick?: () => void;
     onFollowClick?: () => void;
     onClose?: () => void;
@@ -51,13 +53,28 @@ export const TemplateOverview: FC<{
     workspace,
     metadata,
     discussion,
+    onInformationClick,
+    onCommentsClick,
+    onCommentSend,
     onTryItClick,
     onFollowClick,
     onClose
 }) => {
     const [ tabIndex, setTabIndex ] = useState(0);
-    // TODO: consider if this should be encapsulated here or passed down as a prop
-    const { account } = useAccount();
+
+    const handleOnInformationClick = useCallback(() => {
+        setTabIndex(0);
+        onInformationClick?.();
+    }, [onInformationClick]);
+
+    const handleOnCommentsClick = useCallback(() => {
+        setTabIndex(1);
+        onCommentsClick?.();
+    }, [onCommentsClick]);
+
+    const handleOnCommentSend = useCallback((comment: string) => {
+        onCommentSend?.(comment);
+    }, [onCommentSend]);
 
     return (
         <ContextLevelProvider>
@@ -110,7 +127,7 @@ export const TemplateOverview: FC<{
                                         <TabPanel>
                                             <TemplateSectionDiscussion
                                                 comments={discussion?.comments ?? []}
-                                                onComment={(text) => {}}
+                                                onComment={handleOnCommentSend}
                                             />
                                         </TabPanel>
                                     </TabPanels>
@@ -137,13 +154,13 @@ export const TemplateOverview: FC<{
                                 aria-label={"information"}
                                 icon={<Icon as={InfoEmpty} boxSize={6} />}
                                 isActive={tabIndex === 0}
-                                onClick={() => setTabIndex(0)}
+                                onClick={handleOnInformationClick}
                             />
                             <IconButton
                                 aria-label={"comments"}
                                 icon={<Icon as={ChatLines} boxSize={6} />}
                                 isActive={tabIndex === 1}
-                                onClick={() => setTabIndex(1)}
+                                onClick={handleOnCommentsClick}
                             />
                             <IconButton
                                 aria-label={"bookmark"}

@@ -1,5 +1,5 @@
-import { Flex, Icon } from "@chakra-ui/react";
-import { ChevronLeftIcon, ChevronUpIcon, ChevronRightIcon, ChevronDownIcon } from "@chakra-ui/icons";
+import { Box, Flex, Icon, IconButton } from "@chakra-ui/react";
+import { Plus, ZoomIn } from "iconoir-react";
 import { IElement, ElementStyleProperties, ShapeType } from "@structurizr/dsl";
 import { Handle, Position, useStore } from "@reactflow/core";
 import { FC, PropsWithChildren } from "react";
@@ -12,26 +12,20 @@ const ElementInteractiveHandle: FC<PropsWithChildren<{
     borderColor?: string;
     borderWidth?: number;
     position: Position;
-    visibility: "hidden" | "visible";
+    isSelected?: boolean;
 }>> = ({
     children,
     backgroundColor,
     borderColor,
     borderWidth,
     position,
-    visibility
+    isSelected
 }) => {
     const handlePosition = {
         [Position.Left]: { top: "calc(50% - 80px)", left: "-100px", right: "auto", bottom: "auto" },
         [Position.Top]: { top: "-100px", left: "calc(50% - 80px)", right: "auto", bottom: "auto" },
         [Position.Right]: { top: "calc(50% - 80px)", left: "auto", right: "-100px", bottom: "auto" },
         [Position.Bottom]: { top: "auto", left: "calc(50% - 80px)", right: "auto", bottom: "-100px" },
-    }
-    const iconPosition = {
-        [Position.Left]: ChevronLeftIcon,
-        [Position.Top]: ChevronUpIcon,
-        [Position.Right]: ChevronRightIcon,
-        [Position.Bottom]: ChevronDownIcon,
     }
 
     return (
@@ -48,39 +42,41 @@ const ElementInteractiveHandle: FC<PropsWithChildren<{
             height={"160px"}
             width={"160px"}
             position={"absolute"}
-            visibility={visibility}
+            visibility={"hidden"}
+            aria-selected={isSelected}
+            _selected={{ visibility: "visible" }}
+            _groupHover={{ visibility: "visible" }}
         >
             <Flex
                 position={"relative"}
-                backgroundColor={borderColor}
-                borderRadius={"full"}
-                borderColor={borderColor}
+                aria-label={"add element"}
+                backgroundColor={"rgba(255, 255, 255, 0.20)" ?? borderColor}
+                borderRadius={2}
+                borderColor={"rgba(255, 255, 255, 0.20)" ?? borderColor}
+                boxShadow={"0px 2px 4px 0px rgba(0, 0, 0, 0.10)"}
+                backdropFilter={"blur(32px)"}
                 alignItems={"center"}
                 justifyContent={"center"}
-                color={borderColor}
-                height={"8px"}
-                width={"8px"}
-                transition={"all 0.1s ease-in-out"}
-                _groupHover={{
-                    backgroundColor: backgroundColor,
-                    borderWidth: borderWidth,
+                height={2}
+                width={2}
+                // _groupHover={{
+                //     backgroundColor: "gray.900",
+                //     height: "24px",
+                //     width: "24px",
+                // }}
+                _hover={{
+                    backgroundColor: "basic.white",
                     height: "24px",
                     width: "24px",
                 }}
-                _hover={{
-                    backgroundColor: "yellow.900",
-                    borderColor: "yellow.900",
-                    color: "yellow.900"
-                }}
             >
-
                 <Icon
-                    as={iconPosition[position]}
-                    height={"100%"}
-                    width={"100%"}
-                    position={"absolute"}
-                >
-                </Icon>
+                    as={Plus}
+                    color={"gray.100"}
+                    boxSize={4}
+                    visibility={"hidden"}
+                    _hover={{ visibility: "visible" }}
+                />
                 <Handle
                     key={`handle-source-${position}`}
                     id={`handle-source-${position}`}
@@ -104,13 +100,13 @@ const ElementInteractiveHandle: FC<PropsWithChildren<{
 
 export function ElementShapeWhapper(ShapeComponent: FC<PropsWithChildren<{
     style: ElementStyleProperties;
-    selected?: boolean;
+    isSelected?: boolean;
 }>>): FC<{
     data: IElement;
     style: ElementStyleProperties;
     selected?: boolean;
 }> {
-    return function WrappedElement({
+    return function ElementNodeComponent({
         data,
         style,
         selected,
@@ -119,17 +115,37 @@ export function ElementShapeWhapper(ShapeComponent: FC<PropsWithChildren<{
         const isTarget = useStore(state => state.connectionNodeId && state.connectionNodeId !== data.identifier);
 
         return (
-            <ShapeComponent data-group style={style} selected={selected}>
+            <ShapeComponent data-group style={style} isSelected={selected}>
                 {positions.map((position) => (
                     <ElementInteractiveHandle
                         key={`handle-arrow-${position}`}
-                        backgroundColor={HexColor.withAlpha(style.background, 0.1)}
-                        borderColor={HexColor.withAlpha(style.stroke, 0.7)}
-                        borderWidth={style.strokeWidth}
                         position={position}
-                        visibility={selected ? "visible" : "hidden"}
+                        isSelected={selected}
                     />
                 ))}
+                    <Flex
+                        aria-selected={selected}
+                        backgroundColor={"gray.900"}
+                        borderRadius={8}
+                        position={"absolute"}
+                        left={-6}
+                        top={2}
+                        visibility={"hidden"}
+                        height={"24px"}
+                        width={"48px"}
+                        zIndex={-1}
+                        _selected={{ visibility: "visible" }}
+                        _groupHover={{ visibility: "visible" }}
+                    >
+                        <IconButton
+                            aria-label={"zoom into element"}
+                            icon={<Icon as={ZoomIn} boxSize={4} />}
+                            color={"gray.100"}
+                            size={"xs"}
+                            variant={"tonal"}
+                            // onClick={onZoomClick}
+                        />
+                    </Flex>
                 {isTarget && (
                     <Handle
                         id={"handle-target"}
@@ -147,7 +163,7 @@ export function ElementShapeWhapper(ShapeComponent: FC<PropsWithChildren<{
                         }}
                     />
                 )}
-                <ElementLabel data={data} style={style} selected={selected} showDescription />
+                <ElementLabel data={data} style={style} isSelected={selected} showDescription />
             </ShapeComponent>
         );
     }

@@ -1,16 +1,15 @@
 import { Flex } from "@chakra-ui/react";
-import { useReactFlow } from "@reactflow/core";
 import { NodeResizer } from "@reactflow/node-resizer";
 import {
-    IElement,
-    ElementStyleProperties,
+    DeploymentNode as DeploymentNodeType,
+    ElementStyleProperties
 } from "@structurizr/dsl";
-import { FC, useCallback } from "react";
+import { FC, useCallback, useState } from "react";
 import { HexColor } from "../../utils";
-import { BoundaryElementLabel } from "./BoundaryElementLabel";
+import { DeploymentNodeLabel } from "./DeploymentNodeLabel";
 
-export const BoundaryElement: FC<{
-    data: IElement;
+export const DeploymentNode: FC<{
+    data: DeploymentNodeType;
     style: ElementStyleProperties;
     width?: number;
     height?: number;
@@ -20,47 +19,35 @@ export const BoundaryElement: FC<{
     style,
     width,
     height,
-    selected,
+    selected
 }) => {
-    // TODO: consider using useResizeObserver
-    // TODO: consider moving logic specific to reactflow outside of this component
-    // TODO: set element size in the workspace view metadata
-    const { setNodes } = useReactFlow();
+    const [size, setSize] = useState({ width, height });
     const onResize = useCallback((event, params) => {
-        setNodes(nodes => {
-            return nodes.map(node => node.id !== data.identifier
-                ? node
-                : {
-                    ...node,
-                    data: {
-                        ...node.data,
-                        width: params.width,
-                        height: params.height,
-                    },
-                })
+        setSize({
+            width: params.width,
+            height: params.height,
         });
-    }, [data.identifier, setNodes]);
+    }, []);
 
     return (
         <Flex
             backgroundColor={HexColor.withAlpha(style.background, 0.1)}
             backdropFilter={"auto"}
             backdropBlur={"16px"}
-            border={"dashed"}
-            borderWidth={2}
-            borderColor={HexColor.withAlpha(style.stroke, 0.4)}
+            borderWidth={style.strokeWidth}
+            borderColor={HexColor.withAlpha(style.stroke, selected ? 0.7 : 0.4)}
             cursor={"pointer"}
             align={"end"}
             justify={"start"}
             padding={2}
-            width={width}
-            height={height}
+            width={size.width}
+            height={size.height}
             textColor={style.color}
             _hover={{
                 borderColor: HexColor.withAlpha(style.stroke, 0.7),
             }}
         >
-            <BoundaryElementLabel
+            <DeploymentNodeLabel
                 data={data}
                 style={style}
             />
@@ -77,7 +64,7 @@ export const BoundaryElement: FC<{
                     height: 7,
                 }}
                 lineStyle={{ borderWidth: 1 }}
-                onResize={onResize}
+                onResizeEnd={onResize}
             />
         </Flex>
     );

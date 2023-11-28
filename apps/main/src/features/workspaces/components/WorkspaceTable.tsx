@@ -1,6 +1,6 @@
 import { Box, Table, TableContainer, Tbody, Th, Thead, Tr } from "@chakra-ui/react";
 import { FC, PropsWithChildren } from "react";
-import { useOnSelectionChanged } from "../hooks";
+import { useOnWorkspaceSelected } from "../hooks";
 import { TableColumnInfo } from "../types";
 
 export const WorkspaceTable: FC<PropsWithChildren<{
@@ -11,7 +11,7 @@ export const WorkspaceTable: FC<PropsWithChildren<{
     columns,
     onSelected
 }) => {
-    useOnSelectionChanged(onSelected);
+    useOnWorkspaceSelected(onSelected);
 
     return (
         <TableContainer>

@@ -1,37 +1,42 @@
-import { Flex } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { ElementStyleProperties } from "@structurizr/dsl";
 import { FC, PropsWithChildren } from "react";
-import { HexColor } from "../../utils";
 
 export type RoundedBoxProps = {
     style: ElementStyleProperties;
-    selected?: boolean,
+    isSelected?: boolean,
 }
 
 export const RoundedBox: FC<PropsWithChildren<RoundedBoxProps>> = ({
     children,
     style,
-    selected
+    isSelected
 }) => {
     return (
-        <Flex
-            backgroundColor={HexColor.withAlpha(style.background, 0.1)}
-            backdropFilter={"auto"}
-            backdropBlur={"16px"}
-            borderColor={HexColor.withAlpha(style.stroke, selected ? 0.7 : 0.4)}
-            borderRadius={"2xl"}
-            borderWidth={style.strokeWidth}
-            cursor={"pointer"}
-            align={"center"}
-            justify={"center"}
-            padding={2}
-            height={style.height}
-            width={style.width}
-            _hover={{
-                borderColor: HexColor.withAlpha(style.stroke, 0.7),
+        <Box
+            aria-selected={isSelected}
+            borderRadius={"17px"}
+            borderWidth={1}
+            position={"relative"}
+            _selected={{
+                borderColor: "lime.600"
             }}
         >
-            {children}
-        </Flex>
+            <Flex
+                data-group
+                backgroundColor={"gray.200"}
+                borderColor={"gray.400"}
+                borderRadius={"2xl"}
+                borderWidth={style.strokeWidth ?? 2}
+                cursor={"pointer"}
+                align={"center"}
+                justify={"center"}
+                padding={2}
+                height={style.height}
+                width={style.width}
+            >
+                {children}
+            </Flex>
+        </Box>
     );
 }

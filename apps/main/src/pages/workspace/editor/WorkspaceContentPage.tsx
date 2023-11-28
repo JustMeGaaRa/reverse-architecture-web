@@ -12,7 +12,7 @@ import {
     ContextSheetTitle,
 } from "@reversearchitecture/ui";
 import { WorkspaceEditor } from "@workspace/code-editor";
-import { Panel, useWorkspaceTheme } from "@workspace/core";
+import { Panel, useWorkspaceTheme, WorkspaceProvider } from "@workspace/core";
 import {
     WorkspaceUndoRedoControls,
     WorkspaceToolbar,
@@ -47,6 +47,7 @@ import {
     CommentThread,
     CommentProvider,
     WorkspaceApi,
+    WorkspaceCacheWrapper,
     useAccount,
 } from "../../../features";
 import {
@@ -68,13 +69,13 @@ export const WorkspaceContentPage: FC = () => {
 
     // comment list
     const [ commentThreads, setCommentThreads ] = useState<Array<CommentThread>>([]);
+    const { commentApi } = useMemo(() => ({ commentApi: new CommentApi() }), []);
 
     useEffect(() => {
-        const api = new CommentApi();
-        api.getCommentThreads(workspaceId)
+        commentApi.getCommentThreads(workspaceId)
             .then(comments => setCommentThreads(comments))
             .catch(error => console.error(error));
-    }, [workspaceId]);
+    }, [workspaceId, commentApi]);
 
     const handleOnClosePanel = useCallback(() => {
         setQueryParam(params => {
@@ -94,9 +95,7 @@ export const WorkspaceContentPage: FC = () => {
     
     // workspace viewer
     // TODO: add selected repository to account provider or define repository provider
-    const { workspaceApi } = useMemo(() => ({
-        workspaceApi: new WorkspaceApi()
-    }), []);
+    const { workspaceApi } = useMemo(() => ({ workspaceApi: new WorkspaceCacheWrapper(new WorkspaceApi()) }), []);
     const [ users, setUsers ] = useState<Array<any>>([]);
     const { theme } = useWorkspaceTheme();
     const toast = useToast();
@@ -138,125 +137,123 @@ export const WorkspaceContentPage: FC = () => {
     const handleOnWorkspaceViewChange = useCallback((view: any) => {
         // TODO: add view type and identifier to the query params
         setQueryParam(params => {
-            params.set("view", view.identifier);
+            params.set("type", view.type);
+            params.set("identifier", view.identifier);
             return new URLSearchParams(params);
         })
     }, [setQueryParam]);
 
     return (
         <WorkspacePageLayoutContent>
-            <ContextSheet>
-                <Flex
-                    direction={"row"}
-                    height={"100%"}
-                >
-                    <CommentProvider>
-                        {queryParams.get("panel") === WorkspaceContentPanel.Comments && (
-                            <Flex direction={"column"} width={"400px"}>
-                                <ContextSheetHeader>
-                                    <ContextSheetCloseButton onClick={handleOnClosePanel} />
-                                    <ContextSheetTitle title={"All Comments"} />
-                                </ContextSheetHeader>
+            <WorkspaceProvider workspace={Workspace.Empty}>
+                <CommentProvider>
+                    <ContextSheet>
+                        <Flex direction={"row"} height={"100%"}>
+                            {queryParams.get("panel") === WorkspaceContentPanel.Comments && (
+                                <Flex direction={"column"} width={"400px"}>
+                                    <ContextSheetHeader>
+                                        <ContextSheetCloseButton onClick={handleOnClosePanel} />
+                                        <ContextSheetTitle title={"All Comments"} />
+                                    </ContextSheetHeader>
 
-                                <Divider />
+                                    <Divider />
 
-                                <ContextSheetBody>
-                                    <Box overflowY={"scroll"} height={"100%"}>
+                                    <ContextSheetBody>
                                         <CommentThreadList commentThreads={commentThreads} />
-                                    </Box>
-                                </ContextSheetBody>
-                            </Flex>
-                        )}
+                                    </ContextSheetBody>
+                                </Flex>
+                            )}
 
-                        {queryParams.get("panel") === WorkspaceContentPanel.Editor && (
-                            <Flex direction={"column"} width={"1200px"}>
-                                <ContextSheetHeader>
-                                    <ContextSheetCloseButton onClick={handleOnClosePanel} />
-                                    <ContextSheetTitle title={"Code Editor"} />
-                                </ContextSheetHeader>
-            
-                                <Divider />
-                                
-                                <ContextSheetBody>
-                                    <WorkspaceEditor
-                                        value={structurizrDslText}
-                                        onChange={handleOnTextChange}
-                                    />
-                                </ContextSheetBody>
-                            </Flex>
-                        )}
+                            {queryParams.get("panel") === WorkspaceContentPanel.Editor && (
+                                <Flex direction={"column"} width={"1200px"}>
+                                    <ContextSheetHeader>
+                                        <ContextSheetCloseButton onClick={handleOnClosePanel} />
+                                        <ContextSheetTitle title={"Code Editor"} />
+                                    </ContextSheetHeader>
+                
+                                    <Divider />
+                                    
+                                    <ContextSheetBody>
+                                        <WorkspaceEditor
+                                            value={structurizrDslText}
+                                            onChange={handleOnTextChange}
+                                        />
+                                    </ContextSheetBody>
+                                </Flex>
+                            )}
 
-                        {queryParams.get("panel") === WorkspaceContentPanel.Settings && (
-                            <Flex direction={"column"} width={"400px"}>
-                                <ContextSheetHeader>
-                                    <ContextSheetCloseButton onClick={handleOnClosePanel} />
-                                    <ContextSheetTitle title={"Settings"} />
-                                </ContextSheetHeader>
-            
-                                <Divider />
-                                
-                                <ContextSheetBody>
-                                </ContextSheetBody>
-                            </Flex>
-                        )}
-            
-                        <ContextSheet outline={queryParams.get("mode") === WorkspaceContentMode.Modeling ? "purple.600" : undefined}>
-                            <WorkspaceRoomProvider>
-                                <WorkspaceRoom
-                                    roomId={workspaceId}
-                                    onChange={(users) => setUsers(users)}
-                                >
-                                    <WorkspaceUser account={account as any} />
+                            {queryParams.get("panel") === WorkspaceContentPanel.Settings && (
+                                <Flex direction={"column"} width={"400px"}>
+                                    <ContextSheetHeader>
+                                        <ContextSheetCloseButton onClick={handleOnClosePanel} />
+                                        <ContextSheetTitle title={"Settings"} />
+                                    </ContextSheetHeader>
+                
+                                    <Divider />
+                                    
+                                    <ContextSheetBody>
+                                    </ContextSheetBody>
+                                </Flex>
+                            )}
+                
+                            <ContextSheet outline={queryParams.get("mode") === WorkspaceContentMode.Modeling ? "purple.600" : undefined}>
+                                <WorkspaceRoomProvider>
+                                    <WorkspaceRoom
+                                        roomId={workspaceId}
+                                        onChange={(users) => setUsers(users)}
+                                    >
+                                        <WorkspaceUser account={account as any} />
 
-                                    {queryParams.get("mode") === WorkspaceContentMode.Diagramming && (
-                                        <WorkspaceDiagramming
-                                            workspace={workspace}
-                                            view={workspace.views.systemLandscape}
-                                            metadata={metadata}
-                                            onWorkspaceChange={handleOnWorkspaceChange}
-                                            onWorkspaceViewChange={handleOnWorkspaceViewChange}
-                                        >
-                                            <WorkspaceCommentGroup commentThreads={commentThreads} />
-                                            <UserCursorGroup users={users} />
-                                            
-                                            <Panel position={"top-left"}>
-                                                <WorkspaceNavigation />
-                                            </Panel>
-                                            <Panel position={"bottom-left"}>
-                                                <WorkspaceUndoRedoControls />
-                                            </Panel>
-                                            <Panel position={"bottom-center"}>
-                                                <WorkspaceToolbar />
-                                            </Panel>
-                                            <Panel position={"bottom-right"}>
-                                                <WorkspaceZoomControls />
-                                            </Panel>
-                                        </WorkspaceDiagramming>
-                                    )}
+                                        {queryParams.get("mode") === WorkspaceContentMode.Diagramming && (
+                                            <WorkspaceDiagramming
+                                                workspace={workspace}
+                                                view={workspace.views.systemLandscape}
+                                                metadata={metadata}
+                                                onWorkspaceChange={handleOnWorkspaceChange}
+                                                onWorkspaceViewChange={handleOnWorkspaceViewChange}
+                                            >
+                                                <WorkspaceCommentGroup commentThreads={commentThreads} />
+                                                <UserCursorGroup users={users} />
+                                                
+                                                <Panel position={"top-left"}>
+                                                    <WorkspaceNavigation />
+                                                </Panel>
+                                                <Panel position={"bottom-left"}>
+                                                    <WorkspaceUndoRedoControls />
+                                                </Panel>
+                                                <Panel position={"bottom-center"}>
+                                                    <WorkspaceToolbar />
+                                                </Panel>
+                                                <Panel position={"bottom-right"}>
+                                                    <WorkspaceZoomControls />
+                                                </Panel>
+                                            </WorkspaceDiagramming>
+                                        )}
 
-                                    {queryParams.get("mode") === WorkspaceContentMode.Modeling && (
-                                        <WorkspaceModeling
-                                            workspace={workspace}
-                                            onWorkspaceChange={handleOnWorkspaceChange}
-                                        >
-                                            <Panel position={"top-left"}>
-                                                <WorkspaceNavigation />
-                                            </Panel>
-                                            <Panel position={"bottom-left"}>
-                                                <WorkspaceUndoRedoControls />
-                                            </Panel>
-                                            <Panel position={"bottom-right"}>
-                                                <WorkspaceZoomControls />
-                                            </Panel>
-                                        </WorkspaceModeling>
-                                    )}
-                                </WorkspaceRoom>
-                            </WorkspaceRoomProvider>
-                        </ContextSheet>
+                                        {queryParams.get("mode") === WorkspaceContentMode.Modeling && (
+                                            <WorkspaceModeling
+                                                workspace={workspace}
+                                                onWorkspaceChange={handleOnWorkspaceChange}
+                                            >
+                                                <Panel position={"top-left"}>
+                                                    <WorkspaceNavigation />
+                                                </Panel>
+                                                <Panel position={"bottom-left"}>
+                                                    <WorkspaceUndoRedoControls />
+                                                </Panel>
+                                                <Panel position={"bottom-right"}>
+                                                    <WorkspaceZoomControls />
+                                                </Panel>
+                                            </WorkspaceModeling>
+                                        )}
 
-                    </CommentProvider>
-                </Flex>
-            </ContextSheet>
+                                    </WorkspaceRoom>
+                                </WorkspaceRoomProvider>
+                            </ContextSheet>
+                        </Flex>
+                    </ContextSheet>
+                </CommentProvider>
+            </WorkspaceProvider>
         </WorkspacePageLayoutContent>
     );
 }

@@ -9,8 +9,10 @@ export const SearchDropdown: FC<PropsWithChildren<{
 }) => {
     return (
         <Box
-            display={isOpen ? "block" : "none"}
             position={"absolute"}
+            transitionProperty={"visibility"}
+            transitionDelay={isOpen ? "unset" : "0.5s"}
+            visibility={isOpen ? "visible" : "hidden"}
             width={"100%"}
             zIndex={100}
         >

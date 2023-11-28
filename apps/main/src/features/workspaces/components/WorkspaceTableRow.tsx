@@ -16,7 +16,6 @@ import {
     Page
 } from "iconoir-react";
 import { FC } from "react";
-import { useSelectionItem } from "../hooks";
 import { TableColumnInfo } from "../types";
 
 export const WorkspaceTableRow: FC<{
@@ -30,8 +29,6 @@ export const WorkspaceTableRow: FC<{
     isGrouped,
     onClick
 }) => {
-    const { index, isSelected } = useSelectionItem();
-
     return (
         <Tr data-group cursor={"pointer"}>
             <Td

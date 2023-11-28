@@ -49,7 +49,7 @@ export const WorkspaceCardHeader: FC<{
                         </Tag>
                         <Tag variant={"unstyled"} size={"xs"}>
                             <TagLeftIcon as={ThumbsUp} height={"12px"} width={"12px"} marginInlineEnd={1} />
-                            <TagLabel textStyle={"b5"}>${`${likedCount} liked`}</TagLabel>
+                            <TagLabel textStyle={"b5"}>{`${likedCount} liked`}</TagLabel>
                         </Tag>
                     </HStack>
                 </Flex>

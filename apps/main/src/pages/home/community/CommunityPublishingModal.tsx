@@ -43,7 +43,7 @@ import { FC, useState } from "react";
 import { v4 } from "uuid";
 import { WorkspaceInfo } from "../../../features";
 
-export const WorkspacePublishingModal: FC<{
+export const CommunityPublishingModal: FC<{
     workspaces: WorkspaceInfo[];
     isOpen: boolean;
     onClose: () => void;

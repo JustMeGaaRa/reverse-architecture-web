@@ -1,12 +1,12 @@
 import { FC, PropsWithChildren, useState } from "react";
-import { SelectionContainerContext } from "../contexts";
+import { WorkspaceCollectionContext } from "../contexts";
 
-export const SelectionContainerProvider: FC<PropsWithChildren> = ({ children }) => {
+export const WorkspaceCollectionProvider: FC<PropsWithChildren> = ({ children }) => {
     const [ selectedIndicies, setSelectedIndicies ] = useState<string[]>([]);
     const [ isSelectionModeOn, setIsSelectionModeOn ] = useState(false);
 
     return (
-        <SelectionContainerContext.Provider
+        <WorkspaceCollectionContext.Provider
             value={{
                 isSelectionModeOn,
                 selectedIndicies,
@@ -15,6 +15,6 @@ export const SelectionContainerProvider: FC<PropsWithChildren> = ({ children }) 
             }}
         >
             {children}
-        </SelectionContainerContext.Provider>
+        </WorkspaceCollectionContext.Provider>
     )
 }

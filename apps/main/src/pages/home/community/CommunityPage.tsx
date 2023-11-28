@@ -10,12 +10,10 @@ import {
     MenuButton,
     MenuItem,
     MenuList,
-    Modal,
-    ModalContent,
-    ModalOverlay,
     StackDivider,
+    Tag,
+    TagLabel,
     Text,
-    useDisclosure,
 } from "@chakra-ui/react";
 import {
     ContextSheet,
@@ -25,14 +23,6 @@ import {
     usePageHeader,
     usePageSidebar,
 } from "@reversearchitecture/ui";
-import {
-    applyMetadata,
-    applyTheme,
-    Workspace,
-    WorkspaceMetadata
-} from "@structurizr/dsl";
-import { useStructurizrParser } from "@structurizr/react";
-import { useWorkspaceTheme } from "@workspace/core";
 import {
     AddPageAlt,
     Compass,
@@ -53,13 +43,11 @@ import {
     CommunityTemplateList,
     WorkspaceInfo,
     WorkspaceApi,
-    TemplateOverview,
-    CommentApi,
-    CommentThread
 } from "../../../features";
 import {
+    CommunityTemplateModal,
+    CommunityPublishingModal,
     HomePageLayoutContent,
-    WorkspacePublishingModal
 } from "../../home";
 
 export const CommunityPage: FC<PropsWithChildren> = () => {
@@ -67,6 +55,8 @@ export const CommunityPage: FC<PropsWithChildren> = () => {
     const { setHeaderContent } = usePageHeader();
     const [ queryParams, setQueryParam ] = useSearchParams();
     
+    const { workspaceApi } = useMemo(() => ({ workspaceApi: new WorkspaceApi() }), []);
+    const [ workspaces, setWorkspaces ] = useState<Array<WorkspaceInfo>>([]);
     const filterCategories = useMemo(() => {
         return [
             { tag: "Explore", icon: <Compass /> },
@@ -74,12 +64,24 @@ export const CommunityPage: FC<PropsWithChildren> = () => {
             { tag: "Popular", icon: <FireFlame /> }
         ];
     }, []);
-    const { workspaceApi } = useMemo(() => ({ workspaceApi: new WorkspaceApi() }), []);
-    const [ workspaces, setWorkspaces ] = useState<Array<WorkspaceInfo>>([]);
-    const [ filters, setFilters ] = useState([]);
-    const [ selectedCategory, setSelectedFilter ] = useState(filterCategories.at(0));
+    const [ selectedCategory, setSelectedCategory ] = useState(filterCategories.at(0));
+    const [ filterTags, setFilterTags ] = useState([]);
+    const [ selectedTag, setSelectedTag ] = useState("");
     const navigate = useNavigate();
-    const filtered = workspaces.filter(x => x.tags.includes(selectedCategory.tag) || selectedCategory.tag === "Explore");
+    const filteredWorkspaces = useMemo(() => {
+        switch (selectedCategory.tag) {
+            case "Explore":
+                return workspaces.filter(x => {
+                    return x.tags?.includes(selectedTag)
+                        || selectedTag === "";
+                });
+            default:
+                return workspaces.filter(x => {
+                    return x.tags?.includes(selectedCategory.tag)
+                        && x.tags?.includes(selectedTag);
+                });
+        }
+    }, [selectedCategory.tag, selectedTag, workspaces]);
 
     useEffect(() => {
         setHeaderContent({
@@ -102,46 +104,24 @@ export const CommunityPage: FC<PropsWithChildren> = () => {
         workspaceApi.getWorkspaces()
             .then(workspaces => {
                 setWorkspaces(workspaces);
-                setFilters(Array.from(new Set(workspaces.flatMap(x => x.tags))));
+                setFilterTags(Array.from(new Set(workspaces.flatMap(x => x.tags))));
             })
             .catch(error => {
                 console.error(error);
             });
     }, [workspaceApi, setShowSidebarButton]);
 
-    const handleOnFilterClick = useCallback((filter) => {
-        setSelectedFilter(filter);
+    const handleOnCategoryClick = useCallback((filter) => {
+        setSelectedCategory(filter);
     }, []);
 
-    // workspace
-    const [ info, setInfo ] = useState<WorkspaceInfo>();
-    const [ workspace, setWorkspace ] = useState(Workspace.Empty.toObject());
-    const [ metadata, setMetadata ] = useState(WorkspaceMetadata.Empty.toObject());
-    const { parseStructurizr } = useStructurizrParser();
-    const { theme } = useWorkspaceTheme();
-    const [ commentThread, setCommentThread ] = useState<CommentThread>();
-
+    const handleOnFilterClick = useCallback((tag) => {
+        setSelectedTag(selected => selected === tag ? "" : tag);
+    }, []);
+    
     const handleOnWorkspaceClick = useCallback((workspace: WorkspaceInfo) => {
-        // TODO: open the modal with skeleton first, then load data
-        workspaceApi.getWorkspaceById(workspace.workspaceId)
-            .then(info => {
-                const builder = parseStructurizr(info.content?.text);
-                const workspaceObject = applyMetadata(applyTheme(builder.toObject(), info.content?.theme ?? theme), info.content?.metadata);
-                setInfo(info);
-                setWorkspace(workspaceObject);
-                setMetadata(info.content?.metadata);
-
-                setQueryParam({ preview: info.workspaceId })
-            })
-            .catch(error => console.error(error));
-        
-        // TODO: defer this callback to when the modal is opened
-        // TODO: come up with a convention or a way to identify the main thread discussion
-        const api = new CommentApi();
-        api.getCommentThreadById(workspace.workspaceId, "workspace-discussion")
-            .then(comments => setCommentThread(comments))
-            .catch(error => console.error(error));
-    }, [parseStructurizr, setQueryParam, theme, workspaceApi]);
+        setQueryParam({ preview: workspace.workspaceId });
+    }, [setQueryParam]);
 
     const handleOnWorskapceTryOut = useCallback((workspace: WorkspaceInfo) => {
         navigate(`/workspaces/${workspace.workspaceId}`);
@@ -156,7 +136,7 @@ export const CommunityPage: FC<PropsWithChildren> = () => {
     }, []);
 
     const capitalize = (str: string) => {
-        return str.charAt(0).toUpperCase() + str.slice(1);
+        return str.charAt(0).toUpperCase() + str.toLowerCase().slice(1);
     }
 
     const handleOnWorkspacePublish = useCallback((workspace: WorkspaceInfo) => {
@@ -200,34 +180,38 @@ export const CommunityPage: FC<PropsWithChildren> = () => {
                                         {selectedCategory.tag}
                                     </MenuButton>
                                     <MenuList>
-                                        {filterCategories.map((filter) => (
+                                        {filterCategories.map((category) => (
                                             <MenuItem
-                                                key={filter.tag}
-                                                icon={filter.icon}
-                                                onClick={() => handleOnFilterClick(filter)}
+                                                key={category.tag}
+                                                icon={category.icon}
+                                                onClick={() => handleOnCategoryClick(category)}
                                             >
-                                                {filter.tag}
+                                                {category.tag}
                                             </MenuItem>
                                         ))}
                                     </MenuList>
                                 </Menu>
-                                <ButtonGroup size={"sm"} variant={"tonal"}>
-                                    {filters.map((tag) => (
-                                        <Button
-                                            key={tag}
-                                            isActive={selectedCategory === tag}
-                                            // TODO: handle as a separate selected filter, not a category
-                                            // onClick={() => handleOnFilterClick(tag)}
-                                        >
-                                            {capitalize(tag)}
-                                        </Button>
-                                    ))}
-                                </ButtonGroup>
+                                {filterTags?.length > 0 && (
+                                    <HStack>
+                                        {filterTags.map((tag) => (
+                                            <Tag
+                                                data-group
+                                                key={tag}
+                                                aria-selected={selectedTag === tag}
+                                                onClick={() => handleOnFilterClick(tag)}
+                                            >
+                                                <TagLabel aria-selected={selectedTag === tag}>
+                                                    {capitalize(tag)}
+                                                </TagLabel>
+                                            </Tag>
+                                        ))}
+                                    </HStack>
+                                )}
                             </HStack>
                         </Box>
                         <Box flexGrow={1} overflowY={"scroll"} padding={6}>
                             <CommunityTemplateList
-                                workspaces={filtered}
+                                workspaces={filteredWorkspaces}
                                 emptyTitle={"No community workspaces available yet"}
                                 emptyDescription={"To get started, click the \"New Workspace\" button to create a new project."}
                                 onClick={handleOnWorkspaceClick}
@@ -236,34 +220,12 @@ export const CommunityPage: FC<PropsWithChildren> = () => {
                                 onLikeClick={handleOnWorkspaceLike}
                             />
                             
-                            <Modal
-                                size={"full"}
+                            <CommunityTemplateModal
+                                workspaceId={queryParams.get("preview")}
                                 isOpen={!!queryParams.get("preview")}
+                                onTryItClick={handleOnWorskapceTryOut}
                                 onClose={() => setQueryParam({})}
-                            >
-                                <ModalOverlay />
-                                <ModalContent>
-                                    <Flex
-                                        position={"absolute"}
-                                        bottom={0}
-                                        left={"50%"}
-                                        paddingX={8}
-                                        paddingTop={20}
-                                        height={"100%"}
-                                        width={"100%"}
-                                        transform={"translateX(-50%)"}
-                                    >
-                                        <TemplateOverview
-                                            information={info}
-                                            workspace={workspace}
-                                            metadata={metadata}
-                                            discussion={commentThread}
-                                            onTryItClick={() => handleOnWorskapceTryOut(info)}
-                                            onClose={() => setQueryParam({})}
-                                        />
-                                    </Flex>
-                                </ModalContent>
-                            </Modal>
+                            />
                         </Box>
                     </Flex>
                 </ContextSheetBody>

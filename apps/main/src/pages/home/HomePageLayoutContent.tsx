@@ -123,9 +123,5 @@ export const HomePageLayoutContent: FC<PropsWithChildren> = ({ children }) => {
         })
     }, [setHeaderContent, handleOnSearchChange, results]);
 
-    return (
-        <>
-            {children}
-        </>
-    )
+    return (<>{children}</>)
 }

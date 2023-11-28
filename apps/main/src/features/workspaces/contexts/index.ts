@@ -1,2 +1,1 @@
-export * from "./SelectionItemContext";
-export * from "./SelectionContainerContext";
+export * from "./WorkspaceCollectionContext";

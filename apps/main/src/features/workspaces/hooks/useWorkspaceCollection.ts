@@ -1,13 +1,13 @@
 import { useCallback, useContext } from "react";
-import { SelectionContainerContext } from "../contexts";
+import { WorkspaceCollectionContext } from "../contexts";
 
-export const useSelectionContainer = () => {
+export const useWorkspaceCollection = () => {
     const {
         isSelectionModeOn,
         selectedIndicies,
         setIsSelectionModeOn,
         setSelectedIndicies
-    } = useContext(SelectionContainerContext);
+    } = useContext(WorkspaceCollectionContext);
 
     const setSelected = useCallback((key: string) => {
         setSelectedIndicies(indicies => {
@@ -29,23 +29,24 @@ export const useSelectionContainer = () => {
         });
     }, [setSelectedIndicies]);
 
-    const clearSelected = useCallback(() => {
-        setSelectedIndicies([]);
-    }, [setSelectedIndicies]);
-
-    const turnOnSelectionMode = useCallback(() => {
+    const selectionModeOn = useCallback(() => {
         setIsSelectionModeOn(true);
     }, [setIsSelectionModeOn]);
 
-    const turnOffSelectionMode = useCallback(() => {
+    const selectionModeOff = useCallback(() => {
         setIsSelectionModeOn(false);
     }, [setIsSelectionModeOn]);
+
+    const clearSelected = useCallback(() => {
+        setSelectedIndicies([]);
+        selectionModeOff();
+    }, [setSelectedIndicies, selectionModeOff]);
 
     return {
         isSelectionModeOn,
         selectedIndicies,
-        turnOnSelectionMode,
-        turnOffSelectionMode,
+        turnOnSelectionMode: selectionModeOn,
+        turnOffSelectionMode: selectionModeOff,
         setSelectedIndicies,
         setSelected,
         setUnselected,

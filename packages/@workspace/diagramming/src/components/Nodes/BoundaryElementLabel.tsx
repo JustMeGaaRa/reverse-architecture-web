@@ -13,7 +13,7 @@ export const formatExpandedTechnology = (data: IElement) => {
     return type.name;
 };
 
-export const BoundaryElementLabel: FC<{
+export const BoundaryLabel: FC<{
     data: IElement;
     style?: Partial<ElementStyleProperties>;
 }> = ({

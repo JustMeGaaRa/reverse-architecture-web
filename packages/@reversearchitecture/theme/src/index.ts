@@ -38,6 +38,9 @@ export const RestructTheme =  extendTheme({
         heading: "Inter, sans-serif",
         mono: "Inter, sans-serif"
     },
+    shadows: {
+        outline: "0px 0px 0px 5px rgba(255, 255, 255, 0.40), 0px 0px 0px 3px #161819"
+    },
     layerStyles,
     textStyles,
     config: {

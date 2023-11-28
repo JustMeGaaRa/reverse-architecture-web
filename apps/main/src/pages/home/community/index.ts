@@ -1,2 +1,3 @@
 export * from "./CommunityPage";
-export * from "./WorkspacePublishingModal";
+export * from "./CommunityTemplaceModal";
+export * from "./CommunityPublishingModal";

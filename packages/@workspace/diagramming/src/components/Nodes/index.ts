@@ -1,16 +1,16 @@
-import { BoundaryElement } from "./BoundaryElement";
-import { DeploymentNodeElement } from "./DeploymentNodeElement";
+import { BoundaryNode } from "./BoundaryNode";
+import { DeploymentNode } from "./DeploymentNode";
 import { ElementNode } from "./ElementNode";
 import { ReactFlowNodeWrapper } from "./ReactFlowNodeWrapper";
 
-export * from "./BoundaryElement";
-export * from "./DeploymentNodeElement";
+export * from "./BoundaryNode";
+export * from "./DeploymentNode";
 export * from "./ElementNode";
 export * from "./ReactFlowNodeWrapper";
 
-export const ReactFlowBoundaryNode = ReactFlowNodeWrapper(BoundaryElement);
+export const ReactFlowBoundaryNode = ReactFlowNodeWrapper(BoundaryNode);
 export const ReactFlowElementNode = ReactFlowNodeWrapper(ElementNode);
-export const ReactFlowDeploymentNode = ReactFlowNodeWrapper(DeploymentNodeElement);
+export const ReactFlowDeploymentNode = ReactFlowNodeWrapper(DeploymentNode);
 
 export const NodeTypes = {
     element: ReactFlowElementNode,

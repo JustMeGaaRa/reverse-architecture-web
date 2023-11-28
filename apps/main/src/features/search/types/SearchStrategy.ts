@@ -15,7 +15,7 @@ export class SearchStrategy {
 
         const groups = await Promise.all(strategies
             .map(async strategy => {
-                const results = await strategy.search(query);
+                const results = await strategy.search(query.trim());
                 return {
                     title: strategy.name,
                     results: results

@@ -1,5 +1,4 @@
-import { Box, VStack } from "@chakra-ui/react";
-// TODO: consider making this component/feature less dependent on the workspace-viewer package
+import { Box } from "@chakra-ui/react";
 import { useViewNavigation } from "@workspace/diagramming";
 import { FC, useCallback, useEffect } from "react";
 import { CommentCard, CommentGroup } from "../../../features/comments/components";
@@ -31,8 +30,8 @@ export const CommentThreadList: FC<{
         <Box
             height={"100%"}
             width={"100%"}
-            paddingX={4}
-            paddingY={6}
+            paddingX={2}
+            paddingY={4}
             overflowY={"scroll"}
         >
             <CommentGroup>
@@ -42,11 +41,12 @@ export const CommentThreadList: FC<{
                         comment={thread.comments.at(0)}
                         replyCount={thread.comments.length}
                         origin={thread.metadata.view}
+                        isSelected={selectedThreadId === thread.commentThreadId}
                         showOrigin={true}
                         showResolve={true}
                         showOptions={true}
                         showReplies={true}
-                        onResolve={() => handleOnClick(thread)}
+                        onClick={() => handleOnClick(thread)}
                     />
                 ))}
             </CommentGroup>

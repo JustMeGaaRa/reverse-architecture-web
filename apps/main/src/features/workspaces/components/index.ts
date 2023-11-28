@@ -1,4 +1,4 @@
-export * from "./SelectionContainerProvider";
+export * from "./WorkspaceCollectionProvider";
 export * from "./ThumbnailContainer";
 export * from "./ThumbnailImage";
 export * from "./ThumbnailMore";
@@ -8,7 +8,8 @@ export * from "./WorkspaceCard";
 export * from "./WorkspaceCardFooter";
 export * from "./WorkspaceCardHeader";
 export * from "./WorkspaceCardView";
-export * from "./WorkspaceList";
+export * from "./WorkspaceCollection";
+export * from "./WorkspaceOptionsToolbar";
 export * from "./WorkspaceStackCard";
 export * from "./WorkspaceTable";
 export * from "./WorkspaceTableRow";

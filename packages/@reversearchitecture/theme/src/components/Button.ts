@@ -47,33 +47,40 @@ export const Button: ComponentStyleConfig = {
             opacity: 1.0,
 
             _hover: {
-                backgroundColor: mode("", "rgba(255, 255, 255, 0.10)")(props),
+                backgroundColor: mode("", "surface.tinted-white-10")(props),
                 color: mode("", "white")(props),
                 opacity: 1.0,
             },
             _focus: {
-
+                backgroundColor: mode("", "surface.tinted-white-10")(props),
+                color: mode("", "white")(props),
+                opacity: 1.0,
+            },
+            _focusVisible: {
+                backgroundColor: mode("", "surface.tinted-white-10")(props),
+                color: mode("", "white")(props),
+                opacity: 1.0,
             },
             _active: {
-                backgroundColor: mode("", `rgba(255, 255, 255, 0.10)`)(props),
+                backgroundColor: mode("", "surface.tinted-white-10")(props),
                 boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
                 color: mode("", "#D0D1D1")(props),
                 opacity: 1.0,
             },
             _activeLink: {
-                backgroundColor: mode("", `rgba(255, 255, 255, 0.10)`)(props),
+                backgroundColor: mode("", "surface.tinted-white-10")(props),
                 boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
                 color: mode("", "#D0D1D1")(props),
                 opacity: 1.0,
             },
             _disabled: {
-                backgroundColor: mode("", "rgba(255, 255, 255, 0.10)")(props),
+                backgroundColor: mode("", "surface.tinted-white-10")(props),
                 borderWidth: 0,
                 color: mode("", "gray.400")(props),
                 opacity: 1.0,
 
                 _hover: {
-                    backgroundColor: mode("", "rgba(255, 255, 255, 0.10)")(props),
+                    backgroundColor: mode("", "surface.tinted-white-10")(props),
                     borderWidth: 0,
                     color: mode("", "gray.400")(props),
                     opacity: 1.0,
@@ -93,7 +100,20 @@ export const Button: ComponentStyleConfig = {
                 borderColor: mode("", `${props.colorScheme}Alpha.200`)(props),
             },
             _focus: {
-
+                backgroundColor: mode("", `${props.colorScheme}Alpha.50`)(props),
+                borderWidth: 2,
+                borderColor: mode("", `${props.colorScheme}Alpha.200`)(props), // `linear-gradient(${getColorVar(props.theme, `${props.colorScheme}Alpha.200`)}, transparent)`
+                boxShadow: mode("", `0 -8px 12px 0 ${getColorVar(props.theme, `${props.colorScheme}Alpha.100`)} inset, 0 2px 4px 0 rgba(0, 0, 0, 0.10)`)(props),
+                backdropFilter: "blur(64px)",
+                color: mode("", `${props.colorScheme}.600`)(props),
+            },
+            _focusVisible: {
+                backgroundColor: mode("", `${props.colorScheme}Alpha.50`)(props),
+                borderWidth: 2,
+                borderColor: mode("", `${props.colorScheme}Alpha.200`)(props), // `linear-gradient(${getColorVar(props.theme, `${props.colorScheme}Alpha.200`)}, transparent)`
+                boxShadow: mode("", `0 -8px 12px 0 ${getColorVar(props.theme, `${props.colorScheme}Alpha.100`)} inset, 0 2px 4px 0 rgba(0, 0, 0, 0.10)`)(props),
+                backdropFilter: "blur(64px)",
+                color: mode("", `${props.colorScheme}.600`)(props),
             },
             _active: {
                 backgroundColor: mode("", `${props.colorScheme}Alpha.10`)(props),
@@ -120,41 +140,48 @@ export const Button: ComponentStyleConfig = {
             }
         }),
         tonal: (props) => ({
-            backgroundColor: mode("", "rgba(255, 255, 255, 0.10)")(props),
+            backgroundColor: mode("", "surface.tinted-white-10")(props),
             boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
             color: mode("", "gray.900")(props),
             opacity: 1.0,
 
             _hover: {
-                backgroundColor: mode("", "rgba(255, 255, 255, 0.10)")(props),
+                backgroundColor: mode("", "surface.tinted-white-10")(props),
                 color: mode("", "white")(props),
                 opacity: 1.0,
             },
             _focus: {
-                backgroundColor: mode("", "")(props),
-                color: mode("", "")(props),
+                backgroundColor: mode("", "surface.tinted-white-10")(props),
+                boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
+                color: mode("", "gray.900")(props),
+                opacity: 1.0,
+            },
+            _focusVisible: {
+                backgroundColor: mode("", "surface.tinted-white-10")(props),
+                boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
+                color: mode("", "gray.900")(props),
                 opacity: 1.0,
             },
             _active: {
-                backgroundColor: mode("", "rgba(255, 255, 255, 0.05)")(props),
+                backgroundColor: mode("", "surface.tinted-white-5")(props),
                 boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
                 color: mode("", "gary.800")(props),
                 opacity: 1.0,
             },
             _activeLink: {
-                backgroundColor: mode("", "rgba(255, 255, 255, 0.05)")(props),
+                backgroundColor: mode("", "surface.tinted-white-5")(props),
                 boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
                 color: mode("", "gary.800")(props),
                 opacity: 1.0,
             },
             _disabled: {
-                backgroundColor: mode("", "rgba(255, 255, 255, 0.10)")(props),
+                backgroundColor: mode("", "surface.tinted-white-10")(props),
                 borderWidth: 0,
                 color: mode("", "gray.400")(props),
                 opacity: 1.0,
 
                 _hover: {
-                    backgroundColor: mode("", "rgba(255, 255, 255, 0.10)")(props),
+                    backgroundColor: mode("", "surface.tinted-white-10")(props),
                     borderWidth: 0,
                     color: mode("", "gray.400")(props),
                     opacity: 1.0,
@@ -173,7 +200,16 @@ export const Button: ComponentStyleConfig = {
                 color: mode("", "basic.white")(props),
             },
             _focus: {
-
+                backgroundColor: mode("", "surface.tinted-white-10")(props),
+                backdropFilter: "blur(32px)",
+                boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
+                color: mode("", "basic.white")(props),
+            },
+            _focusVisible: {
+                backgroundColor: mode("", "surface.tinted-white-10")(props),
+                backdropFilter: "blur(32px)",
+                boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
+                color: mode("", "basic.white")(props),
             },
             // should be _selected
             _active: {
@@ -238,6 +274,18 @@ export const Button: ComponentStyleConfig = {
             color: mode("", "gray.900")(props),
 
             _hover: {
+                backgroundColor: mode("", "surface.tinted-white-10")(props),
+                backdropFilter: "blur(32px)",
+                boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
+                color: mode("", "basic.white")(props),
+            },
+            _focus: {
+                backgroundColor: mode("", "surface.tinted-white-10")(props),
+                backdropFilter: "blur(32px)",
+                boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
+                color: mode("", "basic.white")(props),
+            },
+            _focusVisible: {
                 backgroundColor: mode("", "surface.tinted-white-10")(props),
                 backdropFilter: "blur(32px)",
                 boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),

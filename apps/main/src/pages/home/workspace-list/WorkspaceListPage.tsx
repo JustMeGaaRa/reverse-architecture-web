@@ -2,7 +2,6 @@ import {
     Box,
     ButtonGroup,
     Divider,
-    Flex,
     IconButton,
     Tabs,
     Tab,
@@ -10,22 +9,16 @@ import {
     TabPanel,
     TabPanels,
     Text,
-    ScaleFade,
     Button,
     Icon,
-    Slide,
-    SlideFade,
 } from "@chakra-ui/react";
 import {
     ButtonSegmentedToggle,
     ContentViewMode,
     ContextSheet,
     ContextSheetBody,
-    ContextSheetCloseButton,
     ContextSheetHeader,
     ContextSheetTitle,
-    Toolbar,
-    ToolbarSection,
     useContentViewMode,
     usePageHeader
 } from "@reversearchitecture/ui";
@@ -33,13 +26,7 @@ import { Workspace } from "@structurizr/dsl";
 import { StructurizrExportClient } from "@structurizr/export";
 import {
     AddPageAlt,
-    AppleShortcuts,
-    BinMinus,
-    Cancel,
-    Combine,
-    Copy,
     List,
-    NavArrowLeft,
     Upload,
     ViewGrid
 } from "iconoir-react";
@@ -55,14 +42,16 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { v4 } from "uuid";
 import {
     WorkspaceApi,
-    WorkspaceList,
+    WorkspaceCollection,
     WorkspaceInfo,
     WorkspaceGroupInfo,
     useAccount,
     isWorkspace,
-    WorkspaceCardView
+    isWorkspaceGroup,
+    WorkspaceCacheWrapper
 } from "../../../features";
 import { HomePageLayoutContent } from "../../home";
+import { WorkspaceStack } from "./WorkspaceStack";
 
 export enum WorkspaceListTabs {
     All = "all",
@@ -75,7 +64,7 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
     const [ queryParams, setQueryParam ] = useSearchParams([[ "tab", WorkspaceListTabs.All ]]);
     const { view, setView } = useContentViewMode(ContentViewMode.Card);
     const { account } = useAccount();
-    const { workspaceApi } = useMemo(() => ({ workspaceApi: new WorkspaceApi() }), []);
+    const { workspaceApi } = useMemo(() => ({ workspaceApi: new WorkspaceCacheWrapper(new WorkspaceApi()) }), []);
     const [ workspaces, setWorkspaces ] = useState([]);
     const navigate = useNavigate();
     
@@ -124,13 +113,28 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
         if (isWorkspace(element)) {
             navigate(`/workspaces/${element.workspaceId}`);
         }
-        else {
+        if (isWorkspaceGroup(element)) {
             setQueryParam(params => {
                 params.set("group", element.name);
                 return new URLSearchParams(params);
             });
         }
     }, [navigate, setQueryParam]);
+
+    const handleOnWorkspaceStack = useCallback((elements: Array<WorkspaceInfo | WorkspaceGroupInfo>) => {
+        elements
+            .filter(element => isWorkspace(element))
+            .map<WorkspaceInfo>(element => ({
+                ...element as WorkspaceInfo,
+                group: "Group"
+            }))
+            .forEach(element => {
+                console.log(element);
+                // workspaceApi.saveWorkspace(element.workspaceId, element)
+                //     .then(workspaces => setWorkspaces(workspaces))
+                //     .catch(error => console.error(error));
+            });
+    }, [workspaceApi]);
 
     useEffect(() => {
         setHeaderContent({
@@ -202,7 +206,7 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                             </TabList>
                             <TabPanels height={"calc(100% - 42px)"} padding={6} overflowY={"scroll"}>
                                 <TabPanel>
-                                    <WorkspaceList
+                                    <WorkspaceCollection
                                         workspaces={workspaces}
                                         view={view}
                                         groupped={true}
@@ -220,11 +224,12 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                                             </Button>
                                         )}
                                         onClick={handleOnWorkspaceClick}
+                                        onStack={handleOnWorkspaceStack}
                                         onRemove={handleOnWorkspaceRemove}
                                     />
                                 </TabPanel>
                                 <TabPanel>
-                                    <WorkspaceList
+                                    <WorkspaceCollection
                                         workspaces={[]}
                                         view={view}
                                         groupped={true}
@@ -242,17 +247,19 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                                             </Button>
                                         )}
                                         onClick={handleOnWorkspaceClick}
+                                        onStack={handleOnWorkspaceStack}
                                         onRemove={handleOnWorkspaceRemove}
                                     />
                                 </TabPanel>
                                 <TabPanel>
-                                    <WorkspaceList
+                                    <WorkspaceCollection
                                         workspaces={[]}
                                         view={view}
                                         groupped={true}
                                         emptyTitle={"No archived workspaces"}
                                         emptyDescription={"To get started, click the \"New Workspace\" button to create a new project."}
                                         onClick={handleOnWorkspaceClick}
+                                        onStack={handleOnWorkspaceStack}
                                         onRemove={handleOnWorkspaceRemove}
                                     />
                                 </TabPanel>
@@ -262,42 +269,14 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                 )}
 
                 {queryParams.get("group") && (
-                    <Flex direction={"column"} gap={2} padding={2} height={"100%"}>
-                        <ScaleFade in={!!queryParams.get("group")}>
-                            <Flex
-                                background={"surface.tinted-white-10"}
-                                borderRadius={24}
-                                alignItems={"center"}
-                                justifyContent={"space-between"}
-                                gap={2}
-                                padding={4}
-                                paddingRight={2}
-                                height={16}
-                                width={"100%"}
-                            >
-                                <ContextSheetTitle icon={AppleShortcuts} title={queryParams.get("group")} />
-                                <ContextSheetCloseButton size={"lg"} onClick={() => setQueryParam({})} />
-                            </Flex>
-                        </ScaleFade>
-                        <ScaleFade in={!!queryParams.get("group")} transition={{ enter: { delay: 0.3 } }}>
-                            <Box
-                                background={"surface.tinted-white-5"}
-                                borderRadius={24}
-                                padding={4}
-                                height={"100%"}
-                                width={"100%"}
-                            >
-                                <WorkspaceList
-                                    workspaces={workspaces?.filter(x => x.group === queryParams.get("group")) || []}
-                                    view={"card"}
-                                    emptyTitle={"No workspaces in group"}
-                                    emptyDescription={"To get started, click the \"New Workspace\" button to create a new project."}
-                                    onClick={handleOnWorkspaceClick}
-                                    onRemove={handleOnWorkspaceRemove}
-                                />
-                            </Box>
-                        </ScaleFade>
-                    </Flex>
+                    <WorkspaceStack
+                        name={queryParams.get("group")}
+                        workspaces={workspaces?.filter(x => x.group === queryParams.get("group")) || []}
+                        isOpen={!!queryParams.get("group")}
+                        onClose={() => setQueryParam({})}
+                        onClick={handleOnWorkspaceClick}
+                        onRemove={handleOnWorkspaceRemove}
+                    />
                 )}
             </ContextSheet>
         </HomePageLayoutContent>

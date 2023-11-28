@@ -8,7 +8,7 @@ import {
 import { ReverseArchitectureElementStyle } from "@workspace/core";
 import { FC, useMemo } from "react";
 
-export function ReactFlowNodeWrapper(NodeElement: FC<{
+export function ReactFlowNodeWrapper(ElementNodeComponent: FC<{
     data: IElement;
     style: ElementStyleProperties;
     width?: number;
@@ -20,10 +20,7 @@ export function ReactFlowNodeWrapper(NodeElement: FC<{
     width?: number;
     height?: number;
 }>> {
-    return function WrappedNode({
-        data,
-        selected,
-    }) {
+    return function ReactFlowNodeComponent({ data, selected }) {
         const elementStyle = useMemo(() => foldStyles(
                 ReverseArchitectureElementStyle,
                 data.style,
@@ -31,7 +28,7 @@ export function ReactFlowNodeWrapper(NodeElement: FC<{
         ), [data.style, data.element.tags]);
 
         return (
-            <NodeElement
+            <ElementNodeComponent
                 data={data.element}
                 style={elementStyle}
                 width={data.width}

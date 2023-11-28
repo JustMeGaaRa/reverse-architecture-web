@@ -246,9 +246,5 @@ export const WorkspacePageLayoutContent: FC<PropsWithChildren> = ({ children }) 
         users,
     ]);
 
-    return (
-        <>
-            {children}
-        </>
-    )
+    return (<>{children}</>)
 }

@@ -6,8 +6,8 @@ import {
 } from "../components";
 import {
     useOnPressHold,
-    useOnSelectionChanged,
-    useSelectionContainer
+    useOnWorkspaceSelected,
+    useWorkspaceCollection
 } from "../hooks";
 import { WorkspaceGroupInfo, WorkspaceInfo } from "../types";
 import { groupWorkspaces } from "../utils";
@@ -33,9 +33,9 @@ export const WorkspaceCardView: FC<{
         selectedIndicies,
         turnOnSelectionMode,
         toggleSelected
-    } = useSelectionContainer();
+    } = useWorkspaceCollection();
     
-    useOnSelectionChanged(onSelected);
+    useOnWorkspaceSelected(onSelected);
 
     const { onStartHold, onCancelHold } = useOnPressHold();
 

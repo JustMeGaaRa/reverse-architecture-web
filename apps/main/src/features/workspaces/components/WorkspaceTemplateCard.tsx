@@ -64,7 +64,7 @@ export const WorkspaceTemplateCard: FC<PropsWithChildren<{
                             _groupHover={{ display: "flex" }}
                         >
                             <Flex
-                                backgroundColor={"surface.tinted-black-60"}
+                                backgroundColor={"surface.tinted-black-40"}
                                 backdropFilter={"blur(32px)"}
                                 borderRadius={16}
                                 justifyContent={"space-between"}
