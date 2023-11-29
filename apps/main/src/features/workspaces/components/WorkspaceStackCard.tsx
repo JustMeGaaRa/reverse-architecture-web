@@ -8,15 +8,21 @@ export const WorkspaceStackCard: FC<{
     isSelected?: boolean;
     onMouseDown?: MouseEventHandler<HTMLDivElement>;
     onMouseUp?: MouseEventHandler<HTMLDivElement>;
-    onPreviewClick?: MouseEventHandler<HTMLDivElement>;
-    onRemove?: MouseEventHandler<HTMLButtonElement>;
+    onOpen?: MouseEventHandler<HTMLDivElement>;
+    onRename?: () => void;
+    onSelect?: () => void;
+    onClone?: () => void;
+    onDelete?: MouseEventHandler<HTMLButtonElement>;
 }> = ({
     group,
     isSelected,
     onMouseDown,
     onMouseUp,
-    onPreviewClick,
-    onRemove
+    onOpen,
+    onSelect,
+    onRename,
+    onClone,
+    onDelete
 }) => {
     const [first, second, third, ...rest] = group.workspaces;
 
@@ -27,9 +33,10 @@ export const WorkspaceStackCard: FC<{
                     isSelected={isSelected}
                     onMouseDown={onMouseDown}
                     onMouseUp={onMouseUp}
-                    onClick={onPreviewClick}
+                    onDoubleClick={onOpen}
+                    onClick={onSelect}
                 >
-                    <SimpleGrid autoRows={"1fr"} columns={2} padding={1} spacing={1} height={"100%"} width={"100%"}>
+                    <SimpleGrid autoRows={"1fr"} columns={2} p={1} spacing={1} h={"100%"} w={"100%"}>
                         <ThumbnailSelector data={first} />
                         <ThumbnailSelector data={second} />
                         <ThumbnailSelector data={third} />
@@ -41,7 +48,9 @@ export const WorkspaceStackCard: FC<{
                 <WorkspaceCardFooter
                     name={group.name}
                     lastModifiedDate={group.lastModifiedDate}
-                    onRemove={onRemove}
+                    onRename={onRename}
+                    onClone={onClone}
+                    onDelete={onDelete}
                 />
             </CardFooter>
         </Card>

@@ -5,13 +5,15 @@ export const ThumbnailContainer: FC<PropsWithChildren<{
     isSelected?: boolean;
     onMouseDown?: MouseEventHandler<HTMLDivElement>;
     onMouseUp?: MouseEventHandler<HTMLDivElement>;
+    onDoubleClick?: MouseEventHandler<HTMLDivElement>;
     onClick?: MouseEventHandler<HTMLDivElement>;
 }>> = ({
     children,
     isSelected,
     onMouseDown,
     onMouseUp,
-    onClick
+    onDoubleClick,
+    onClick,
 }) => {
     return (
         <AspectRatio ratio={2/1}>
@@ -19,6 +21,7 @@ export const ThumbnailContainer: FC<PropsWithChildren<{
                 aria-selected={isSelected}
                 borderRadius={16}
                 boxShadow={"0px 2px 4px 0px rgba(0, 0, 0, 0.10)"}
+                cursor={"pointer"}
                 height={"100%"}
                 width={"100%"}
                 alignItems={"center"}
@@ -31,6 +34,7 @@ export const ThumbnailContainer: FC<PropsWithChildren<{
                 }}
                 onMouseDown={onMouseDown}
                 onMouseUp={onMouseUp}
+                onDoubleClick={onDoubleClick}
                 onClick={onClick}
             >
                 {children}

@@ -1,7 +1,8 @@
 import { useEffect } from "react";
+import { WorkspaceGroupInfo, WorkspaceInfo } from "../types";
 import { useWorkspaceCollection } from "./useWorkspaceCollection";
 
-export const useOnWorkspaceSelected = (callback: (indicies: string[]) => void) => {
-    const { selectedIndicies } = useWorkspaceCollection();
-    useEffect(() => callback?.(selectedIndicies), [selectedIndicies, callback]);
+export const useOnWorkspaceSelected = (callback: (workspaces: Array<WorkspaceInfo | WorkspaceGroupInfo>) => void) => {
+    const { selected } = useWorkspaceCollection();
+    useEffect(() => callback?.(selected), [selected, callback]);
 }

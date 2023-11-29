@@ -1,13 +1,13 @@
-import { Box, ScaleFade } from "@chakra-ui/react";
 import { EmptyContent } from "@reversearchitecture/ui";
 import { Folder } from "iconoir-react";
-import { FC, useState } from "react";
+import { FC } from "react";
 import {
     WorkspaceCollectionProvider,
     WorkspaceCardView,
     WorkspaceOptionsToolbar,
-    WorkspaceTableView
-} from ".";
+    WorkspaceTableView,
+    WorkspaceOptionsAutoHideWrapper
+} from "../components";
 import {
     WorkspaceGroupInfo,
     WorkspaceInfo
@@ -22,7 +22,7 @@ export const WorkspaceCollection: FC<{
     emptyAction?: React.ReactElement;
     onClick?: (workspace: WorkspaceInfo | WorkspaceGroupInfo) => void;
     onStack?: (workspaces: Array<WorkspaceInfo | WorkspaceGroupInfo>) => void;
-    onRemove?: (workspaces: Array<WorkspaceInfo | WorkspaceGroupInfo>) => void;
+    onDelete?: (workspaces: Array<WorkspaceInfo | WorkspaceGroupInfo>) => void;
 }> = ({
     workspaces,
     view,
@@ -32,10 +32,10 @@ export const WorkspaceCollection: FC<{
     emptyAction,
     onClick,
     onStack,
-    onRemove,
+    onDelete,
 }) => {
-    const [ selected, setSelected ] = useState<any[]>([]);
-    
+    // TODO: actions with workspace collection: add, remove, select, click, stack, unstack, clone, export, import
+    // TODO: actions with single workspace: update (rename, thumbnail), click, clone, export
     return (
         <WorkspaceCollectionProvider>
             {workspaces.length === 0 && (
@@ -50,9 +50,8 @@ export const WorkspaceCollection: FC<{
                 <WorkspaceCardView
                     workspaces={workspaces}
                     groupped={groupped}
-                    onClick={onClick}
-                    onSelected={setSelected}
-                    onRemove={onRemove}
+                    onOpen={onClick}
+                    onDelete={onDelete}
                 />
             )}
             {workspaces.length > 0 && view === "table" && (
@@ -60,26 +59,15 @@ export const WorkspaceCollection: FC<{
                     workspaces={workspaces}
                     groupped={groupped}
                     onClick={onClick}
-                    onSelected={setSelected}
-                    onRemove={onRemove}
+                    onRemove={onDelete}
                 />
             )}
-            <Box
-                position={"absolute"}
-                bottom={4}
-                left={"50%"}
-                transform={"translateX(-50%)"}
-                visibility={selected?.length > 0 ? "visible" : "hidden"}
-                transitionProperty={"visibility"}
-                transitionDelay={selected?.length > 0 ? "unset" : "0.5s"}
-            >
-                <ScaleFade in={selected?.length > 0}>
-                    <WorkspaceOptionsToolbar
-                        onStack={onStack}
-                        onRemove={onRemove}
-                    />
-                </ScaleFade>
-            </Box>
+            <WorkspaceOptionsAutoHideWrapper>
+                <WorkspaceOptionsToolbar
+                    onStack={onStack}
+                    onRemove={onDelete}
+                />
+            </WorkspaceOptionsAutoHideWrapper>
         </WorkspaceCollectionProvider>
     )
 }

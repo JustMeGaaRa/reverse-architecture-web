@@ -29,7 +29,6 @@ export const SearchDropdown: FC<PropsWithChildren<{
                     overflow={"scroll"}
                     paddingX={1}
                     paddingY={4}
-                    minHeight={"150px"}
                     marginTop={1}
                     maxHeight={"600px"}
                     width={"100%"}

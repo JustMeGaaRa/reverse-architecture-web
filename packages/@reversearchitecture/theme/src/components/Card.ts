@@ -15,10 +15,7 @@ export const Card = defineMultiStyleConfig({
             // backdropFilter: "blur(64px)",
             borderRadius: "16px",
             boxShadow: mode("", `0px 2px 4px 0px ${getColorVar(props.theme, "surface.tinted-black-10")}`)(props),
-
-            _hover: {
-                cursor: "pointer",
-            },
+            
             _active: {
                 backgroundColor: mode("", "surface.tinted-white-2")(props),
             },

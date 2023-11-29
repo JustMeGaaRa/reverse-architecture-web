@@ -211,7 +211,7 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                                         view={view}
                                         groupped={true}
                                         emptyTitle={"No workspaces"}
-                                        emptyDescription={"To get started, click the \"New Workspace\" button to create a new project."}
+                                        emptyDescription={"To get started, click the \"New Workspace\" button."}
                                         emptyAction={(
                                             <Button
                                                 aria-label={"new project"}
@@ -225,7 +225,7 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                                         )}
                                         onClick={handleOnWorkspaceClick}
                                         onStack={handleOnWorkspaceStack}
-                                        onRemove={handleOnWorkspaceRemove}
+                                        onDelete={handleOnWorkspaceRemove}
                                     />
                                 </TabPanel>
                                 <TabPanel>
@@ -234,21 +234,10 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                                         view={view}
                                         groupped={true}
                                         emptyTitle={"No shared workspaces"}
-                                        emptyDescription={"To get started, click the \"New Workspace\" button to create a new project."}
-                                        emptyAction={(
-                                            <Button
-                                                aria-label={"new project"}
-                                                colorScheme={"lime"}
-                                                leftIcon={<Icon as={AddPageAlt} boxSize={5} />}
-                                                iconSpacing={"0px"}
-                                                onClick={handleOnWorkspaceCreate}
-                                            >
-                                                <Text marginX={2}>New Workspace</Text>
-                                            </Button>
-                                        )}
+                                        emptyDescription={"To get started, share some workspaces from the \"My Workspaces\" tab."}
                                         onClick={handleOnWorkspaceClick}
                                         onStack={handleOnWorkspaceStack}
-                                        onRemove={handleOnWorkspaceRemove}
+                                        onDelete={handleOnWorkspaceRemove}
                                     />
                                 </TabPanel>
                                 <TabPanel>
@@ -257,10 +246,10 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                                         view={view}
                                         groupped={true}
                                         emptyTitle={"No archived workspaces"}
-                                        emptyDescription={"To get started, click the \"New Workspace\" button to create a new project."}
+                                        emptyDescription={"To get started, archive some workspaces from the \"Me Workspaces\" tab."}
                                         onClick={handleOnWorkspaceClick}
                                         onStack={handleOnWorkspaceStack}
-                                        onRemove={handleOnWorkspaceRemove}
+                                        onDelete={handleOnWorkspaceRemove}
                                     />
                                 </TabPanel>
                             </TabPanels>
@@ -271,12 +260,18 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                 {queryParams.get("group") && (
                     <WorkspaceStack
                         name={queryParams.get("group")}
-                        workspaces={workspaces?.filter(x => x.group === queryParams.get("group")) || []}
                         isOpen={!!queryParams.get("group")}
                         onClose={() => setQueryParam({})}
-                        onClick={handleOnWorkspaceClick}
-                        onRemove={handleOnWorkspaceRemove}
-                    />
+                    >
+                        <WorkspaceCollection
+                            workspaces={workspaces?.filter(x => x.group === queryParams.get("group")) || []}
+                            view={"card"}
+                            emptyTitle={"No workspaces in group"}
+                            emptyDescription={"To get started, click the \"New Workspace\" button to create a new workspace."}
+                            onClick={handleOnWorkspaceClick}
+                            onDelete={handleOnWorkspaceRemove}
+                        />
+                    </WorkspaceStack>
                 )}
             </ContextSheet>
         </HomePageLayoutContent>

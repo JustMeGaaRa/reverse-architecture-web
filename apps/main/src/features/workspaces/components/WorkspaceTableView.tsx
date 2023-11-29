@@ -1,6 +1,5 @@
 import { FC } from "react";
 import {
-    WorkspaceCollectionProvider,
     WorkspaceTableRow,
     WorkspaceTable,
 } from "../components";
@@ -11,13 +10,11 @@ export const WorkspaceTableView: FC<{
     workspaces: WorkspaceInfo[];
     groupped?: boolean;
     onClick?: (workspace: WorkspaceInfo | WorkspaceGroupInfo) => void;
-    onSelected?: (workspaces: Array<string>) => void;
     onRemove?: (workspaces: Array<WorkspaceInfo | WorkspaceGroupInfo>) => void;
 }> = ({
     workspaces,
     groupped,
     onClick,
-    onSelected,
     onRemove
 }) => {
     const nameof = function<T>(name: keyof T) { return name; };
@@ -31,7 +28,7 @@ export const WorkspaceTableView: FC<{
     const groups = groupWorkspaces(workspaces);
 
     return (
-        <WorkspaceTable columns={columns} onSelected={onSelected}>
+        <WorkspaceTable columns={columns}>
             {groupped && groups.filter(group => group.name !== undefined).map(group => (
                 <WorkspaceTableRow
                     key={group.name}

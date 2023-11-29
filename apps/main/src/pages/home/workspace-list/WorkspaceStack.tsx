@@ -1,26 +1,25 @@
 import { Box, Flex, ScaleFade } from "@chakra-ui/react";
 import { ContextSheetCloseButton, ContextSheetTitle } from "@reversearchitecture/ui";
 import { AppleShortcuts } from "iconoir-react";
-import { FC } from "react";
-import { WorkspaceInfo, WorkspaceCollection } from "../../../features";
+import { FC, PropsWithChildren } from "react";
 
-export const WorkspaceStack: FC<{
+export const WorkspaceStack: FC<PropsWithChildren<{
     name: string;
-    workspaces: Array<WorkspaceInfo>;
     isOpen: boolean;
     onClose: () => void;
-    onClick?: (workspace: WorkspaceInfo) => void;
-    onRemove?: (workspaces: Array<WorkspaceInfo>) => void;
-}> = ({
+}>> = ({
+    children,
     name,
-    workspaces,
     isOpen,
     onClose,
-    onClick,
-    onRemove,
 }) => {
     return (
-        <Flex direction={"column"} gap={2} padding={2} height={"100%"}>
+        <Flex
+            direction={"column"}
+            gap={2}
+            padding={2}
+            height={"100%"}
+        >
             <ScaleFade in={isOpen}>
                 <Flex
                     background={"surface.tinted-white-10"}
@@ -45,14 +44,7 @@ export const WorkspaceStack: FC<{
                     height={"100%"}
                     width={"100%"}
                 >
-                    <WorkspaceCollection
-                        workspaces={workspaces}
-                        view={"card"}
-                        emptyTitle={"No workspaces in group"}
-                        emptyDescription={"To get started, click the \"New Workspace\" button to create a new project."}
-                        onClick={onClick}
-                        onRemove={onRemove}
-                    />
+                    {children}
                 </Box>
             </ScaleFade>
         </Flex>

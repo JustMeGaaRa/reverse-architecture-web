@@ -24,7 +24,7 @@ export const CommunityCardView: FC<{
                 <WorkspaceTemplateCard
                     key={workspace.workspaceId}
                     workspace={workspace}
-                    onPreviewClick={() => onClick?.(workspace)}
+                    onClick={() => onClick?.(workspace)}
                     onTryItClick={() => onTryItClick?.(workspace)}
                     onBookmarkClick={() => onBookmarkClick?.(workspace)}
                     onLikeClick={() => onLikeClick?.(workspace)}

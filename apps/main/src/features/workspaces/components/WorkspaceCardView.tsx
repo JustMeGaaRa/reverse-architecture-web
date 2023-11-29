@@ -10,57 +10,43 @@ import {
     useWorkspaceCollection
 } from "../hooks";
 import { WorkspaceGroupInfo, WorkspaceInfo } from "../types";
-import { groupWorkspaces } from "../utils";
+import { groupWorkspaces, isWorkspace } from "../utils";
 
 export const WorkspaceCardView: FC<{
     workspaces: WorkspaceInfo[];
     groupped?: boolean;
-    onClick?: (workspace: WorkspaceInfo | WorkspaceGroupInfo) => void;
-    onSelected?: (workspaces: Array<string>) => void;
-    onRemove?: (workspaces: Array<WorkspaceInfo | WorkspaceGroupInfo>) => void;
+    onOpen?: (workspace: WorkspaceInfo | WorkspaceGroupInfo) => void;
+    onDelete?: (workspaces: Array<WorkspaceInfo | WorkspaceGroupInfo>) => void;
 }> = ({
     workspaces,
     groupped,
-    onClick,
-    onSelected,
-    onRemove,
+    onOpen,
+    onDelete,
 }) => {
+    const { selected, toggleSelected } = useWorkspaceCollection();
+
     const gridColumns = useBreakpointValue({ base: 1, md: 2, lg: 3, xl: 4, "2xl": 5 });
     const groups = groupWorkspaces(workspaces);
-    
-    const {
-        isSelectionModeOn,
-        selectedIndicies,
-        turnOnSelectionMode,
-        toggleSelected
-    } = useWorkspaceCollection();
-    
-    useOnWorkspaceSelected(onSelected);
 
-    const { onStartHold, onCancelHold } = useOnPressHold();
+    const handleOnWorkspaceOpen = useCallback((data: WorkspaceInfo | WorkspaceGroupInfo) => {
+        onOpen?.(data);
+    }, [onOpen]);
 
-    const handleOnMouseDown = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => {
-        onStartHold(() => {
-            turnOnSelectionMode();
-        });
-    }, [onStartHold, turnOnSelectionMode]);
+    const handleOnWorkspaceSelect = useCallback((data: WorkspaceInfo | WorkspaceGroupInfo) => {
+        toggleSelected(data);
+    }, [toggleSelected]);
 
-    const handleOnMouseUp = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => {
-        onCancelHold();
-    }, [onCancelHold]);
+    const handleOnWorkspaceRename = useCallback((data: WorkspaceInfo | WorkspaceGroupInfo) => {
 
-    const handleOnPreviewClick = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string, data: WorkspaceInfo | WorkspaceGroupInfo) => {
-        if (isSelectionModeOn) {
-            toggleSelected(key);
-        }
-        else {
-            onClick?.(data);
-        }
-    }, [isSelectionModeOn, onClick, toggleSelected]);
+    }, []);
 
-    const handleOnRemove = useCallback((event: React.MouseEvent<HTMLButtonElement, MouseEvent>, data: WorkspaceInfo | WorkspaceGroupInfo) => {
-        onRemove?.([data]);
-    }, [onRemove]);
+    const handleOnWorkspaceClone = useCallback((data: WorkspaceInfo | WorkspaceGroupInfo) => {
+
+    }, []);
+
+    const handleOnWorkspaceDelete = useCallback((data: WorkspaceInfo | WorkspaceGroupInfo) => {
+        onDelete?.([data]);
+    }, [onDelete]);
 
     return (
         <Grid gridTemplateColumns={`repeat(${gridColumns}, 1fr)`} gap={6}>
@@ -68,33 +54,36 @@ export const WorkspaceCardView: FC<{
                 <WorkspaceStackCard
                     key={group.name}
                     group={group}
-                    isSelected={selectedIndicies.includes(group.name)}
-                    onMouseDown={(event) => handleOnMouseDown(event, group.name)}
-                    onMouseUp={(event) => handleOnMouseUp(event, group.name)}
-                    onPreviewClick={(event) => handleOnPreviewClick?.(event, group.name, group)}
-                    onRemove={(event) => handleOnRemove?.(event, group)}
+                    isSelected={selected.some(x => x.name === group.name)}
+                    onOpen={() => handleOnWorkspaceOpen?.(group)}
+                    onSelect={() => handleOnWorkspaceSelect?.(group)}
+                    onRename={() => handleOnWorkspaceRename?.(group)}
+                    onClone={() => handleOnWorkspaceClone?.(group)}
+                    onDelete={() => handleOnWorkspaceDelete?.(group)}
                 />
             ))}
             {groupped && groups.filter(group => group.name === undefined).flatMap(group => group.workspaces).map(workspace => (
                 <WorkspaceCard
                     key={workspace.workspaceId}
                     workspace={workspace}
-                    isSelected={selectedIndicies.includes(workspace.workspaceId)}
-                    onMouseDown={(event) => handleOnMouseDown(event, workspace.workspaceId)}
-                    onMouseUp={(event) => handleOnMouseUp(event, workspace.workspaceId)}
-                    onPreviewClick={(event) => handleOnPreviewClick?.(event, workspace.workspaceId, workspace)}
-                    onRemove={(event) => handleOnRemove?.(event, workspace)}
+                    isSelected={selected.some(x => isWorkspace(x) && x.workspaceId === workspace.workspaceId)}
+                    onOpen={() => handleOnWorkspaceOpen?.(workspace)}
+                    onSelect={() => handleOnWorkspaceSelect?.(workspace)}
+                    onRename={() => handleOnWorkspaceRename?.(workspace)}
+                    onClone={() => handleOnWorkspaceClone?.(workspace)}
+                    onDelete={() => handleOnWorkspaceDelete?.(workspace)}
                 />
             ))}
             {!groupped && workspaces.map(workspace => (
                 <WorkspaceCard
                     key={workspace.workspaceId}
                     workspace={workspace}
-                    isSelected={selectedIndicies.includes(workspace.workspaceId)}
-                    onMouseDown={(event) => handleOnMouseDown(event, workspace.workspaceId)}
-                    onMouseUp={(event) => handleOnMouseUp(event, workspace.workspaceId)}
-                    onPreviewClick={(event) => handleOnPreviewClick?.(event, workspace.workspaceId, workspace)}
-                    onRemove={(event) => handleOnRemove?.(event, workspace)}
+                    isSelected={selected.some(x => isWorkspace(x) && x.workspaceId === workspace.workspaceId)}
+                    onOpen={() => handleOnWorkspaceOpen?.(workspace)}
+                    onSelect={() => handleOnWorkspaceSelect?.(workspace)}
+                    onRename={() => handleOnWorkspaceRename?.(workspace)}
+                    onClone={() => handleOnWorkspaceClone?.(workspace)}
+                    onDelete={() => handleOnWorkspaceDelete?.(workspace)}
                 />
             ))}
         </Grid>

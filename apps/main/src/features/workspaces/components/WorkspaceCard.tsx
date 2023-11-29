@@ -8,15 +8,21 @@ export const WorkspaceCard: FC<{
     isSelected?: boolean;
     onMouseDown?: MouseEventHandler<HTMLDivElement>;
     onMouseUp?: MouseEventHandler<HTMLDivElement>;
-    onPreviewClick?: MouseEventHandler<HTMLDivElement>;
-    onRemove?: MouseEventHandler<HTMLButtonElement>;
+    onOpen?: MouseEventHandler<HTMLDivElement>;
+    onSelect?: () => void;
+    onRename?: () => void;
+    onClone?: () => void;
+    onDelete?: MouseEventHandler<HTMLButtonElement>;
 }> = ({
     workspace,
     isSelected,
     onMouseDown,
     onMouseUp,
-    onPreviewClick,
-    onRemove
+    onOpen,
+    onSelect,
+    onRename,
+    onClone,
+    onDelete
 }) => {
     return (
         <Card data-group>
@@ -25,7 +31,8 @@ export const WorkspaceCard: FC<{
                     isSelected={isSelected}
                     onMouseDown={onMouseDown}
                     onMouseUp={onMouseUp}
-                    onClick={onPreviewClick}
+                    onDoubleClick={onOpen}
+                    onClick={onSelect}
                 >
                     <ThumbnailImage url={workspace.coverUrl} />
                 </ThumbnailContainer>
@@ -34,7 +41,9 @@ export const WorkspaceCard: FC<{
                 <WorkspaceCardFooter
                     name={workspace.name}
                     lastModifiedDate={workspace.lastModifiedDate}
-                    onRemove={onRemove}
+                    onRename={onRename}
+                    onClone={onClone}
+                    onDelete={onDelete}
                 />
             </CardFooter>
         </Card>

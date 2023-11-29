@@ -1,8 +1,8 @@
-import { Icon, IconButton, Text } from "@chakra-ui/react";
+import { Box, Icon, IconButton, ScaleFade, Text } from "@chakra-ui/react";
 import { Toolbar, ToolbarSection } from "@reversearchitecture/ui";
 import { AppleShortcuts, BinMinus, Cancel, Copy } from "iconoir-react";
-import { FC, useCallback, useState } from "react";
-import { useWorkspaceCollection } from "../hooks";
+import { FC, PropsWithChildren, useCallback } from "react";
+import { useWorkspaceCollection, useWorkspaceCollectionOptions } from "../hooks";
 import { WorkspaceGroupInfo, WorkspaceInfo } from "../types";
 
 export const WorkspaceOptionsToolbar: FC<{
@@ -12,14 +12,13 @@ export const WorkspaceOptionsToolbar: FC<{
     onStack,
     onRemove
 }) => {
-    const [ selected, setSelected ] = useState<any[]>([]);
-    const { selectedIndicies, clearSelected, turnOffSelectionMode } = useWorkspaceCollection();
+    const { selected, clearSelected, setSelectionModeOn } = useWorkspaceCollection();
+    const { stack, unstack, clone } = useWorkspaceCollectionOptions();
 
     const handleOnCancelSelection = useCallback(() => {
-        setSelected([]);
         clearSelected();
-        turnOffSelectionMode();
-    }, [clearSelected, turnOffSelectionMode]);
+        setSelectionModeOn(false);
+    }, [clearSelected, setSelectionModeOn]);
 
     const handleOnWorkspacesStack = useCallback(() => {
         onStack?.(selected);
@@ -40,29 +39,50 @@ export const WorkspaceOptionsToolbar: FC<{
                     onClick={handleOnCancelSelection}
                 />
                 <Text paddingX={2} color={"gray.900"} textStyle={"b3"}>
-                    {`${selectedIndicies.length} selected`}
+                    {`${selected.length} selected`}
                 </Text>
             </ToolbarSection>
             <ToolbarSection>
                 <IconButton
                     aria-label={"stack workspaces together"}
+                    isDisabled={!stack.isAllowed}
                     icon={<Icon as={AppleShortcuts} boxSize={5} />}
                     title={"stack workspaces together"}
-                    variant={"toolitem"}
                     onClick={handleOnWorkspacesStack}
                 />
                 <IconButton
                     aria-label={"clone workspace"}
                     icon={<Icon as={Copy} boxSize={5} />}
-                    title={"workspaces together"}
+                    isDisabled={!clone.isAllowed}
+                    title={"clone workspace"}
                 />
                 <IconButton
-                    aria-label={"remove workspaces"}
+                    aria-label={"delete workspaces"}
                     icon={<Icon as={BinMinus} boxSize={5} />}
-                    title={"remove workspaces"}
+                    title={"delete workspaces"}
                     onClick={handleOnWorkspaceRemove}
                 />
             </ToolbarSection>
         </Toolbar>
+    )
+}
+
+export const WorkspaceOptionsAutoHideWrapper: FC<PropsWithChildren> = ({ children }) => {
+    const { selected } = useWorkspaceCollection();
+
+    return (
+        <Box
+            position={"absolute"}
+            bottom={4}
+            left={"50%"}
+            transform={"translateX(-50%)"}
+            visibility={selected?.length > 0 ? "visible" : "hidden"}
+            transitionProperty={"visibility"}
+            transitionDelay={selected?.length > 0 ? "unset" : "0.5s"}
+        >
+            <ScaleFade in={selected?.length > 0}>
+                {children}
+            </ScaleFade>
+        </Box>
     )
 }

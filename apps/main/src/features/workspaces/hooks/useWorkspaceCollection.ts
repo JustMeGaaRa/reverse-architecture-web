@@ -1,55 +1,112 @@
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import { WorkspaceCollectionContext } from "../contexts";
+import { WorkspaceGroupInfo, WorkspaceInfo } from "../types";
+import { isWorkspace, isWorkspaceGroup } from "../utils";
 
 export const useWorkspaceCollection = () => {
     const {
-        isSelectionModeOn,
-        selectedIndicies,
-        setIsSelectionModeOn,
-        setSelectedIndicies
+        selectionModeOn,
+        selected,
+        setSelectionModeOn,
+        setSelected,
+        setSelectedOptions
     } = useContext(WorkspaceCollectionContext);
 
-    const setSelected = useCallback((key: string) => {
-        setSelectedIndicies(indicies => {
-            return Array.from(new Set([...indicies, key]))
+    useEffect(() => {
+        const selectedBoth = (selected.some(x => isWorkspace(x)) && selected.some(x => isWorkspaceGroup(x)));
+        setSelectedOptions(options => {
+            return {
+                ...options,
+                stack: {
+                    ...options.stack,
+                    isAllowed: !selectedBoth,
+                },
+                unstack: {
+                    ...options.unstack,
+                    isAllowed: !selectedBoth,
+                },
+                delete: {
+                    ...options.delete,
+                    isAllowed: selected.length > 0,
+                },
+                clone: {
+                    ...options.clone,
+                    isAllowed: !selectedBoth,
+                },
+            }
         });
-    }, [setSelectedIndicies]);
+    }, [selected, setSelectedOptions]);
 
-    const setUnselected = useCallback((key: string) => {
-        setSelectedIndicies(indicies => {
-            return indicies.filter(x => x !== key);
+    const addSelected = useCallback((workspace: WorkspaceInfo | WorkspaceGroupInfo) => {
+        setSelected(workspaces => {
+            if (isWorkspace(workspace)) {
+                return [
+                    ...workspaces.filter(x => {
+                        return isWorkspace(x)
+                            ? x.workspaceId !== workspace.workspaceId
+                            : true;
+                    }),
+                    workspace
+                ];
+            }
+            if (isWorkspaceGroup(workspace)) {
+                return [
+                    ...workspaces.filter(x => {
+                        return isWorkspaceGroup(x)
+                            ? x.name !== workspace.name
+                            : true;
+                    }),
+                    workspace
+                ];
+            }
         });
-    }, [setSelectedIndicies]);
+    }, [setSelected]);
 
-    const toggleSelected = useCallback((key: string) => {
-        setSelectedIndicies(indicies => {
-            return indicies.includes(key)
-                ? indicies.filter(x => x !== key)
-                : [...indicies, key];
+    const removeSelected = useCallback((workspace: WorkspaceInfo | WorkspaceGroupInfo) => {
+        setSelected(workspaces => {
+            if (isWorkspace(workspace)) {
+                return workspaces.filter(x => {
+                    return isWorkspace(x)
+                        ? x.workspaceId !== workspace.workspaceId
+                        : true;
+                })
+            }
+            if (isWorkspaceGroup(workspace)) {
+                return workspaces.filter(x => {
+                    return isWorkspaceGroup(x)
+                        ? x.name !== workspace.name
+                        : true;
+                })
+            }
         });
-    }, [setSelectedIndicies]);
+    }, [setSelected]);
 
-    const selectionModeOn = useCallback(() => {
-        setIsSelectionModeOn(true);
-    }, [setIsSelectionModeOn]);
-
-    const selectionModeOff = useCallback(() => {
-        setIsSelectionModeOn(false);
-    }, [setIsSelectionModeOn]);
+    const toggleSelected = useCallback((workspace: WorkspaceInfo | WorkspaceGroupInfo) => {
+        if (isWorkspace(workspace)) {
+            console.log("toggleSelected: workspace", workspace)
+            selected.some(x => isWorkspace(x) && x.workspaceId === workspace.workspaceId)
+                ? removeSelected(workspace)
+                : addSelected(workspace);
+        }
+        if (isWorkspaceGroup(workspace)) {
+            console.log("toggleSelected: group", workspace)
+            selected.some(x => isWorkspaceGroup(x) && x.name === workspace.name)
+                ? removeSelected(workspace)
+                : addSelected(workspace);
+        }
+    }, [selected, removeSelected, addSelected]);
 
     const clearSelected = useCallback(() => {
-        setSelectedIndicies([]);
-        selectionModeOff();
-    }, [setSelectedIndicies, selectionModeOff]);
+        setSelected([]);
+        setSelectionModeOn(false);
+    }, [setSelected, setSelectionModeOn]);
 
     return {
-        isSelectionModeOn,
-        selectedIndicies,
-        turnOnSelectionMode: selectionModeOn,
-        turnOffSelectionMode: selectionModeOff,
-        setSelectedIndicies,
-        setSelected,
-        setUnselected,
+        selectionModeOn: selectionModeOn,
+        selected: selected,
+        setSelectionModeOn,
+        addSelected,
+        removeSelected,
         toggleSelected,
         clearSelected,
     }
