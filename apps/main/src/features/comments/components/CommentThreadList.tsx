@@ -6,9 +6,9 @@ import { useCommentsStore } from "../../../features/comments/hooks";
 import { CommentThread } from "../../../features/comments/types";
 
 export const CommentThreadList: FC<{
-    commentThreads: CommentThread[];
+    discussions: CommentThread[];
 }> = ({
-    commentThreads: threads
+    discussions
 }) => {
     const {
         commentThreads,
@@ -18,7 +18,7 @@ export const CommentThreadList: FC<{
     } = useCommentsStore();
     const { zoomIntoView } = useViewNavigation();
 
-    useEffect(() => setCommentThreads(threads), [threads, setCommentThreads]);
+    useEffect(() => setCommentThreads(discussions), [discussions, setCommentThreads]);
 
     const handleOnClick = useCallback((comment: CommentThread) => {
         const isCurrent = selectedThreadId === comment.commentThreadId;
@@ -35,18 +35,18 @@ export const CommentThreadList: FC<{
             overflowY={"scroll"}
         >
             <CommentGroup>
-                {commentThreads.map(thread => (
+                {commentThreads.filter(discussion => discussion.metadata).map(discussion => (
                     <CommentCard
-                        key={thread.commentThreadId}
-                        comment={thread.comments.at(0)}
-                        replyCount={thread.comments.length}
-                        origin={thread.metadata.view}
-                        isSelected={selectedThreadId === thread.commentThreadId}
+                        key={discussion.commentThreadId}
+                        comment={discussion.comments.at(0)}
+                        replyCount={discussion.comments.length}
+                        origin={discussion.metadata.view}
+                        isSelected={selectedThreadId === discussion.commentThreadId}
                         showOrigin={true}
                         showResolve={true}
                         showOptions={true}
                         showReplies={true}
-                        onClick={() => handleOnClick(thread)}
+                        onClick={() => handleOnClick(discussion)}
                     />
                 ))}
             </CommentGroup>

@@ -31,9 +31,6 @@ export const CommentCard: FC<{
     onClick,
     onResolve
 }) => {
-    // TODO: consider removing this dependency from this component
-    const { getViewAccentColor } = useWorkspaceTheme();
-    
     return (
         <Flex
             data-group
@@ -62,6 +59,54 @@ export const CommentCard: FC<{
                 boxShadow: "0px 2px 4px 0px rgba(0, 0, 0, 0.10)",
             }}
             onClick={onClick}
+        >
+            <CommentNonInteractiveCard
+                comment={comment}
+                replyCount={replyCount}
+                origin={origin}
+                colorScheme={colorScheme}
+                showAvatar={showAvatar}
+                showOrigin={showOrigin}
+                showResolve={showResolve}
+                showOptions={showOptions}
+                showReplies={showReplies}
+
+            />
+        </Flex>
+    )
+}
+
+export const CommentNonInteractiveCard: FC<{
+    comment: CommentInfo;
+    replyCount?: number;
+    origin?: { type: string; id: string; };
+    colorScheme?: string;
+    showAvatar?: boolean;
+    showOrigin?: boolean;
+    showResolve?: boolean;
+    showOptions?: boolean;
+    showReplies?: boolean;
+    onResolve?: () => void;
+}> = ({
+    comment,
+    replyCount,
+    origin,
+    colorScheme,
+    showAvatar,
+    showOrigin,
+    showResolve,
+    showOptions,
+    showReplies,
+    onResolve
+}) => {
+    // TODO: consider removing this dependency from this component
+    const { getViewAccentColor } = useWorkspaceTheme();
+
+    return (
+        <Flex
+            direction={"column"}
+            borderRadius={"16px"}
+            width={"100%"}
         >
             <Flex width={"100%"} alignItems={"center"}>
                 <Flex flex={2} justifyContent={"start"} gap={2}>

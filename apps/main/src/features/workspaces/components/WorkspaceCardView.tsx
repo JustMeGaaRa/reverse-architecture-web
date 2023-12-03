@@ -24,9 +24,18 @@ export const WorkspaceCardView: FC<{
     onDelete,
 }) => {
     const { selected, toggleSelected } = useWorkspaceCollection();
+    const { onStartHold, onCancelHold } = useOnPressHold();
 
     const gridColumns = useBreakpointValue({ base: 1, md: 2, lg: 3, xl: 4, "2xl": 5 });
     const groups = groupWorkspaces(workspaces);
+
+    const handleOnWorkspaceTouchStart = useCallback((data: WorkspaceInfo | WorkspaceGroupInfo) => {
+
+    }, []);
+
+    const handleOnWorkspaceTouchEnd = useCallback((data: WorkspaceInfo | WorkspaceGroupInfo) => {
+
+    }, []);
 
     const handleOnWorkspaceOpen = useCallback((data: WorkspaceInfo | WorkspaceGroupInfo) => {
         onOpen?.(data);
@@ -55,6 +64,8 @@ export const WorkspaceCardView: FC<{
                     key={group.name}
                     group={group}
                     isSelected={selected.some(x => x.name === group.name)}
+                    onTouchStart={() => handleOnWorkspaceTouchStart(group)}
+                    onTouchEnd={() => handleOnWorkspaceTouchEnd(group)}
                     onOpen={() => handleOnWorkspaceOpen?.(group)}
                     onSelect={() => handleOnWorkspaceSelect?.(group)}
                     onRename={() => handleOnWorkspaceRename?.(group)}
@@ -67,6 +78,8 @@ export const WorkspaceCardView: FC<{
                     key={workspace.workspaceId}
                     workspace={workspace}
                     isSelected={selected.some(x => isWorkspace(x) && x.workspaceId === workspace.workspaceId)}
+                    onTouchStart={() => handleOnWorkspaceTouchStart(workspace)}
+                    onTouchEnd={() => handleOnWorkspaceTouchEnd(workspace)}
                     onOpen={() => handleOnWorkspaceOpen?.(workspace)}
                     onSelect={() => handleOnWorkspaceSelect?.(workspace)}
                     onRename={() => handleOnWorkspaceRename?.(workspace)}
@@ -79,6 +92,8 @@ export const WorkspaceCardView: FC<{
                     key={workspace.workspaceId}
                     workspace={workspace}
                     isSelected={selected.some(x => isWorkspace(x) && x.workspaceId === workspace.workspaceId)}
+                    onTouchStart={() => handleOnWorkspaceTouchStart(workspace)}
+                    onTouchEnd={() => handleOnWorkspaceTouchEnd(workspace)}
                     onOpen={() => handleOnWorkspaceOpen?.(workspace)}
                     onSelect={() => handleOnWorkspaceSelect?.(workspace)}
                     onRename={() => handleOnWorkspaceRename?.(workspace)}

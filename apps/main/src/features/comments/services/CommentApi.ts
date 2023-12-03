@@ -1,5 +1,5 @@
 import { useCommentStore } from "../store";
-import { CommentInfo, CommentThread } from "../types";
+import { CommentInfo, CommentThread, CommentThreadMetadata } from "../types";
 
 export class CommentApi {
     private readonly comments: Array<CommentThread> = [];
@@ -162,29 +162,28 @@ export class CommentApi {
         this.comments = [commentThread1, commentThread2, commentThread3, commentThread4];
     }
 
-    async getCommentThreadById(workspaceId: string, commentThreadId: string): Promise<CommentThread> {
-        const list = useCommentStore.getState().commentThreads.find(x => x.workspaceId === workspaceId && x.commentThreadId === commentThreadId);
-        return Promise.resolve(this.comments.at(0));
+    async getBiscussionById(workspaceId: string, commentThreadId: string): Promise<CommentThread> {
+        const discussion = useCommentStore.getState().discussions.find(x => x.workspaceId === workspaceId && x.commentThreadId === commentThreadId);
+        return Promise.resolve(discussion);
     }
 
-    async getCommentThreads(workspaceId: string): Promise<Array<CommentThread>> {
-        const list = useCommentStore.getState().commentThreads.filter(x => x.workspaceId === workspaceId) ?? [];
-        return Promise.resolve(this.comments);
+    async getDiscussions(workspaceId: string): Promise<Array<CommentThread>> {
+        const discussions = useCommentStore.getState().discussions.filter(x => x.workspaceId === workspaceId) ?? [];
+        return Promise.resolve(discussions);
     }
 
-    async saveCommentThread(workspaceId: string, comment: CommentThread): Promise<CommentThread> {
-        useCommentStore.getState().startCommentThread(workspaceId, comment);
-        return Promise.resolve(comment);
+    async saveDiscussions(workspaceId: string, comment: CommentInfo, metadata: CommentThreadMetadata): Promise<CommentThread> {
+        const discussion = useCommentStore.getState().startDiscussion(workspaceId, comment, metadata);
+        return Promise.resolve(discussion);
     }
 
-    async deleteCommentThread(workspaceId: string, commentId: string): Promise<void> {
-        useCommentStore.getState().resolveCommentThread(commentId);
-        return Promise.resolve();
+    async deleteDiscussions(workspaceId: string, commentId: string): Promise<CommentThread> {
+        const discussion = useCommentStore.getState().resolveDiscussion(workspaceId, commentId);
+        return Promise.resolve(discussion);
     }
 
-    async saveCommentThreadReply(workspaceId: string, commentThreadId: string, comment: CommentInfo): Promise<CommentThread> {
-        useCommentStore.getState().replyCommentThread(commentThreadId, comment);
-        const thread = useCommentStore.getState().commentThreads.find(x => x.commentThreadId === commentThreadId);
-        return Promise.resolve(thread);
+    async saveDiscussionReply(workspaceId: string, commentThreadId: string, comment: CommentInfo): Promise<CommentThread> {
+        const discussion = useCommentStore.getState().replyInDiscussion(workspaceId, commentThreadId, comment);
+        return Promise.resolve(discussion);
     }
 }

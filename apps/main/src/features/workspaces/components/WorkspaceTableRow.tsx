@@ -11,23 +11,39 @@ import {
 } from "@chakra-ui/react";
 import {
     AppleShortcuts,
-    BinMinus,
+    BinMinusIn,
+    Copy,
+    InputField,
     MoreHoriz,
     Page
 } from "iconoir-react";
-import { FC } from "react";
+import { FC, MouseEventHandler, TouchEventHandler } from "react";
 import { TableColumnInfo } from "../types";
 
 export const WorkspaceTableRow: FC<{
     data: any;
     columns: TableColumnInfo[];
+    isSelected?: boolean;
     isGrouped?: boolean;
-    onClick?: () => void;
+    onTouchStart?: TouchEventHandler<HTMLDivElement>;
+    onTouchEnd?: TouchEventHandler<HTMLDivElement>;
+    onOpen?: MouseEventHandler<HTMLDivElement>;
+    onSelect?: () => void;
+    onRename?: () => void;
+    onClone?: () => void;
+    onDelete?: MouseEventHandler<HTMLButtonElement>;
 }> = ({
     data,
     columns,
+    isSelected,
     isGrouped,
-    onClick
+    onTouchStart,
+    onTouchEnd,
+    onOpen,
+    onSelect,
+    onRename,
+    onClone,
+    onDelete
 }) => {
     return (
         <Tr data-group cursor={"pointer"}>
@@ -40,15 +56,19 @@ export const WorkspaceTableRow: FC<{
                 _groupHover={{
                     background: "surface.tinted-white-5"
                 }}
+                _groupActive={{
+                    background: "surface.tinted-white-2"
+                }}
             >
                 <Flex
+                    aria-selected={isSelected}
                     backgroundColor={"surface.tinted-white-5"}
                     borderRadius={12}
                     boxSize={14}
                     padding={4}
                     alignItems={"center"}
                     justifyContent={"center"}
-                    _groupHover={{
+                    _selected={{
                         borderColor: "lime.600",
                         borderWidth: 2,
                         padding: 1,
@@ -71,7 +91,13 @@ export const WorkspaceTableRow: FC<{
                     _groupHover={{
                         background: "surface.tinted-white-5"
                     }}
-                    onClick={onClick}
+                    _groupActive={{
+                        background: "surface.tinted-white-2"
+                    }}
+                    onTouchStart={onTouchStart}
+                    onTouchEnd={onTouchEnd}
+                    onDoubleClick={onOpen}
+                    onClick={onSelect}
                 >
                     {data[name]}
                 </Td>
@@ -85,6 +111,9 @@ export const WorkspaceTableRow: FC<{
                 _groupHover={{
                     background: "surface.tinted-white-5"
                 }}
+                _groupActive={{
+                    background: "surface.tinted-white-2"
+                }}
             >
                 <Menu>
                     <MenuButton
@@ -97,8 +126,14 @@ export const WorkspaceTableRow: FC<{
                         title={"more options"}
                     />
                     <MenuList>
-                        <MenuItem icon={<Icon as={BinMinus} boxSize={4} />}>
-                            Remove
+                        <MenuItem icon={<Icon as={InputField} boxSize={4} />} onClick={onRename}>
+                            Rename
+                        </MenuItem>
+                        <MenuItem icon={<Icon as={Copy} boxSize={4} />} onClick={onClone}>
+                            Clone
+                        </MenuItem>
+                        <MenuItem icon={<Icon as={BinMinusIn} boxSize={4} />} onClick={onDelete}>
+                            Delete
                         </MenuItem>
                     </MenuList>
                 </Menu>

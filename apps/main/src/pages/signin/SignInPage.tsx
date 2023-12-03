@@ -11,7 +11,7 @@ import {
     VStack,
 } from "@chakra-ui/react";
 import { ReverseArchitectureSvg } from "@reversearchitecture/ui";
-import { GitHub } from "iconoir-react";
+import { Github } from "iconoir-react";
 import { FC, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { defaultUsers, useAccount } from "../../features";
@@ -74,7 +74,7 @@ export const SignInPage: FC = () => {
                             </Flex>
                             <Button
                                 colorScheme={"gray"}
-                                leftIcon={<GitHub />}
+                                leftIcon={<Github />}
                                 size={"lg"}
                                 textDecoration={"none"}
                                 width={"100%"}

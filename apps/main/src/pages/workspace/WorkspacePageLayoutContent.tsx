@@ -19,7 +19,7 @@ import {
 } from "@reversearchitecture/ui";
 import { useWorkspaceStore } from "@workspace/core";
 import {
-    AddUser,
+    UserPlus,
     AppleShortcuts,
     ChatLines,
     CloudSync,
@@ -230,7 +230,7 @@ export const WorkspacePageLayoutContent: FC<PropsWithChildren> = ({ children }) 
                     <IconButton
                         aria-label={"share"}
                         colorScheme={"gray"}
-                        icon={<Icon as={AddUser} boxSize={5} />}
+                        icon={<Icon as={UserPlus} boxSize={5} />}
                         isDisabled
                         size={"md"}
                     />

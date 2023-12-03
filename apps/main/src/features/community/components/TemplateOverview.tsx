@@ -15,9 +15,9 @@ import {
 import { Panel } from "@workspace/core";
 import { WorkspaceDiagramming } from "@workspace/diagramming";
 import {
-    BookmarkEmpty,
+    Bookmark,
     ChatLines,
-    InfoEmpty,
+    InfoCircle,
     ShareAndroid,
     ThumbsUp,
 } from "iconoir-react";
@@ -152,7 +152,7 @@ export const TemplateOverview: FC<{
                             <Divider alignSelf={"center"} borderColor={"gray.400"} width={"24px"} />
                             <IconButton
                                 aria-label={"information"}
-                                icon={<Icon as={InfoEmpty} boxSize={6} />}
+                                icon={<Icon as={InfoCircle} boxSize={6} />}
                                 isActive={tabIndex === 0}
                                 onClick={handleOnInformationClick}
                             />
@@ -164,7 +164,7 @@ export const TemplateOverview: FC<{
                             />
                             <IconButton
                                 aria-label={"bookmark"}
-                                icon={<Icon as={BookmarkEmpty} boxSize={6} />}
+                                icon={<Icon as={Bookmark} boxSize={6} />}
                                 isActive={tabIndex === 2}
                             />
                             <IconButton

@@ -9,7 +9,7 @@ import {
     IconButton,
     Text,
 } from "@chakra-ui/react";
-import { ArrowTrCircle, BookmarkEmpty, ThumbsUp } from "iconoir-react";
+import { ArrowUpRightCircle, Bookmark, ThumbsUp } from "iconoir-react";
 import { FC, useCallback } from "react";
 import { ThumbnailContainer, ThumbnailSelector, WorkspaceCardHeader } from "../components";
 import { WorkspaceInfo } from "../types";
@@ -75,7 +75,7 @@ export const WorkspaceTemplateCard: FC<{
                         <ButtonGroup gap={2} spacing={0} size={"sm"} variant={"tonal"}>
                             <IconButton
                                 aria-label={"boomark template"}
-                                icon={<Icon as={BookmarkEmpty} />}
+                                icon={<Icon as={Bookmark} />}
                                 title={"bookmark template"}
                                 onClick={handleOnBookmarkClick}
                             />
@@ -88,7 +88,7 @@ export const WorkspaceTemplateCard: FC<{
                         </ButtonGroup>
                         <ButtonGroup gap={2} spacing={0} size={"sm"} variant={"tonal"}>
                             <Button
-                                leftIcon={<Icon as={ArrowTrCircle} />}
+                                leftIcon={<Icon as={ArrowUpRightCircle} />}
                                 iconSpacing={0}
                                 onClick={handleOnTryItClick}
                             >

@@ -25,7 +25,7 @@ import {
 import { Workspace } from "@structurizr/dsl";
 import { StructurizrExportClient } from "@structurizr/export";
 import {
-    AddPageAlt,
+    PagePlus,
     List,
     Upload,
     ViewGrid
@@ -150,7 +150,7 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                     <Button
                         aria-label={"new project"}
                         colorScheme={"lime"}
-                        leftIcon={<Icon as={AddPageAlt} boxSize={5} />}
+                        leftIcon={<Icon as={PagePlus} boxSize={5} />}
                         iconSpacing={"0px"}
                         onClick={handleOnWorkspaceCreate}
                     >
@@ -216,7 +216,7 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                                             <Button
                                                 aria-label={"new project"}
                                                 colorScheme={"lime"}
-                                                leftIcon={<Icon as={AddPageAlt} boxSize={5} />}
+                                                leftIcon={<Icon as={PagePlus} boxSize={5} />}
                                                 iconSpacing={"0px"}
                                                 onClick={handleOnWorkspaceCreate}
                                             >

@@ -3,21 +3,22 @@ import {
     ForeignElement,
     useWorkspaceStore
 } from "@workspace/core";
-import { FC, useCallback, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { v4 } from "uuid";
 import {
     CommentApi,
     CommentBadge,
+    CommentCacheWrapper,
     CommentThread,
     CommentThreadCard,
     useAccount,
     useCommentsStore
 } from "../../../features";
 
-export const WorkspaceCommentGroup: FC<{
-    commentThreads: CommentThread[];
+export const WorkspaceDiscussionGroup: FC<{
+    discussions: CommentThread[];
 }> = ({
-    commentThreads: threads
+    discussions
 }) => {
     const { workspace, selectedView } = useWorkspaceStore();
     const { account } = useAccount();
@@ -27,16 +28,16 @@ export const WorkspaceCommentGroup: FC<{
         setSelectedThreadId,
         setCommentThreads
     } = useCommentsStore();
-    const [ commentApi ] = useState(new CommentApi());
+    const { commentApi } = useMemo(() => ({ commentApi: new CommentCacheWrapper(new CommentApi()) }), []);
 
-    useEffect(() => setCommentThreads(threads), [threads, setCommentThreads]);
+    useEffect(() => setCommentThreads(discussions), [discussions, setCommentThreads]);
 
     const handleOnBadgeClick = useCallback((commentThreadId?: string) => {
         setSelectedThreadId(commentThreadId);
     }, [setSelectedThreadId])
 
     const handleOnReply = useCallback((commentThreadId: string, text: string) => {
-        commentApi.saveCommentThreadReply(workspace.name,  commentThreadId, {
+        commentApi.saveDiscussionReply(workspace.name,  commentThreadId, {
             commentId: v4(),
             commentThreadId: commentThreadId,
             author: account.username,
@@ -58,19 +59,22 @@ export const WorkspaceCommentGroup: FC<{
     }, []);
 
     const handleOnDelete = useCallback((commentThreadId: string) => {
-        commentApi.deleteCommentThread(workspace.name, commentThreadId);
+        commentApi.deleteDiscussions(workspace.name, commentThreadId);
     }, [commentApi, workspace.name]);
 
     const handleOnClose = useCallback(() => {
         setSelectedThreadId(undefined);
     }, [setSelectedThreadId]);
 
+    const filteredDiscussion = commentThreads.filter(x => {
+        return x.metadata
+            && x.metadata.view.type === selectedView.type
+            && x.metadata.view.id === selectedView.identifier
+    })
+
     return (
         <>
-            {commentThreads.filter(x => 
-                x.metadata.view.type === selectedView.type
-                && x.metadata.view.id === selectedView.identifier)
-            .map(thread => (
+            {filteredDiscussion.map(thread => (
                 <ForeignElement
                     key={thread.commentThreadId}
                     position={thread.metadata.position}

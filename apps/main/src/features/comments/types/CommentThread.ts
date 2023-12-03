@@ -4,5 +4,6 @@ export type CommentThread = {
     workspaceId: string;
     commentThreadId: string;
     comments: Array<CommentInfo>;
-    metadata: CommentThreadMetadata;
+    isResolved?: boolean;
+    metadata?: CommentThreadMetadata;
 }

@@ -4,12 +4,11 @@ import {
     IconButton,
     Menu,
     MenuButton,
-    MenuDivider,
     MenuItem,
     MenuList,
     Text,
 } from "@chakra-ui/react";
-import { AppleShortcuts, BinMinus, Copy, InputField, MoreHoriz } from "iconoir-react";
+import { BinMinusIn, Copy, InputField, MoreHoriz } from "iconoir-react";
 import { FC, MouseEventHandler } from "react";
 
 export const WorkspaceCardFooter: FC<{
@@ -59,7 +58,7 @@ export const WorkspaceCardFooter: FC<{
                     <MenuItem icon={<Icon as={Copy} boxSize={4} />} onClick={onClone}>
                         Clone
                     </MenuItem>
-                    <MenuItem icon={<Icon as={BinMinus} boxSize={4} />} onClick={onDelete}>
+                    <MenuItem icon={<Icon as={BinMinusIn} boxSize={4} />} onClick={onDelete}>
                         Delete
                     </MenuItem>
                 </MenuList>

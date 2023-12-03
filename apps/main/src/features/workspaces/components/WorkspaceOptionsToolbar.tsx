@@ -1,6 +1,6 @@
 import { Box, Icon, IconButton, ScaleFade, Text } from "@chakra-ui/react";
 import { Toolbar, ToolbarSection } from "@reversearchitecture/ui";
-import { AppleShortcuts, BinMinus, Cancel, Copy } from "iconoir-react";
+import { AppleShortcuts, BinMinusIn, Xmark, Copy } from "iconoir-react";
 import { FC, PropsWithChildren, useCallback } from "react";
 import { useWorkspaceCollection, useWorkspaceCollectionOptions } from "../hooks";
 import { WorkspaceGroupInfo, WorkspaceInfo } from "../types";
@@ -33,7 +33,7 @@ export const WorkspaceOptionsToolbar: FC<{
             <ToolbarSection>
                 <IconButton
                     aria-label={"close"}
-                    icon={<Icon as={Cancel} boxSize={5} />}
+                    icon={<Icon as={Xmark} boxSize={5} />}
                     title={"close"}
                     variant={"tonal"}
                     onClick={handleOnCancelSelection}
@@ -58,7 +58,7 @@ export const WorkspaceOptionsToolbar: FC<{
                 />
                 <IconButton
                     aria-label={"delete workspaces"}
-                    icon={<Icon as={BinMinus} boxSize={5} />}
+                    icon={<Icon as={BinMinusIn} boxSize={5} />}
                     title={"delete workspaces"}
                     onClick={handleOnWorkspaceRemove}
                 />

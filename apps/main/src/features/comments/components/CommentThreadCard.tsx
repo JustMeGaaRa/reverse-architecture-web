@@ -17,7 +17,7 @@ import {
 } from "@chakra-ui/react";
 import {
     Bin,
-    Cancel,
+    Xmark,
     Check,
     NavArrowLeft,
     NavArrowRight,
@@ -105,7 +105,7 @@ export const CommentThreadCard: FC<{
                     />
                     <IconButton
                         aria-label={"close"}
-                        icon={<Icon as={Cancel} boxSize={4} />}
+                        icon={<Icon as={Xmark} boxSize={4} />}
                         title={"close"}
                         onClick={() => onClose?.()}
                     />

@@ -32,20 +32,22 @@ export const CommunityTemplateModal: FC<{
     const [ info, setInfo ] = useState<WorkspaceInfo>();
     const [ workspace, setWorkspace ] = useState(Workspace.Empty.toObject());
     const [ metadata, setMetadata ] = useState(WorkspaceMetadata.Empty.toObject());
-    const [ commentThread, setCommentThread ] = useState<CommentThread>();
+    const [ discussion, setDiscussion ] = useState<CommentThread>();
     const { workspaceApi } = useMemo(() => ({ workspaceApi: new WorkspaceApi() }), []);
     const { commentApi } = useMemo(() => ({ commentApi: new CommentApi() }), []);
 
     useEffect(() => {
-        workspaceApi.getWorkspaceById(workspaceId)
-            .then(info => {
-                const builder = parseStructurizr(info.content?.text);
-                const workspaceObject = applyMetadata(applyTheme(builder.toObject(), info.content?.theme ?? theme), info.content?.metadata);
-                setInfo(info);
-                setWorkspace(workspaceObject);
-                setMetadata(info.content?.metadata);
-            })
-            .catch(error => console.error(error));
+        if (workspaceId) {
+            workspaceApi.getWorkspaceById(workspaceId)
+                .then(info => {
+                    const builder = parseStructurizr(info.content?.text);
+                    const workspaceObject = applyMetadata(applyTheme(builder.toObject(), info.content?.theme ?? theme), info.content?.metadata);
+                    setInfo(info);
+                    setWorkspace(workspaceObject);
+                    setMetadata(info.content?.metadata);
+                })
+                .catch(error => console.error(error));
+        }
     }, [workspaceId, parseStructurizr, theme, workspaceApi, commentApi]);
 
     const handleOnInformationClick = useCallback(() => {
@@ -53,20 +55,26 @@ export const CommunityTemplateModal: FC<{
     }, []);
 
     const handleOnCommentsClick = useCallback(() => {
-        commentApi.getCommentThreadById(workspaceId, discussionThreadId)
-            .then(comments => setCommentThread(comments))
-            .catch(error => console.error(error));
+        if (workspaceId) {
+            commentApi.getBiscussionById(workspaceId, discussionThreadId)
+                .then(comments => setDiscussion(comments))
+                .catch(error => console.error(error));
+        }
     }, [workspaceId, commentApi]);
 
     const handleOnCommentSend = useCallback((comment: string) => {
-        const commentInfo = {
-            commentId: v4(),
-            commentThreadId: discussionThreadId,
-            author: account.fullname,
-            text: comment,
-            createdDate: new Date().toDateString(),
+        if (workspaceId) {
+            const commentInfo = {
+                commentId: v4(),
+                commentThreadId: discussionThreadId,
+                author: account.fullname,
+                text: comment,
+                createdDate: new Date().toDateString(),
+            }
+            commentApi.saveDiscussionReply(workspaceId, discussionThreadId, commentInfo)
+                .then(comments => setDiscussion(comments))
+                .catch(error => console.error(error));
         }
-        commentApi.saveCommentThreadReply(workspaceId, discussionThreadId, commentInfo);
     }, [workspaceId, account, commentApi]);
 
     const handleOnTryItClick = useCallback(() => {
@@ -90,11 +98,11 @@ export const CommunityTemplateModal: FC<{
                             information={info}
                             workspace={workspace}
                             metadata={metadata}
-                            discussion={commentThread}
-                            onInformationClick={handleOnInformationClick}
-                            onCommentsClick={handleOnCommentsClick}
+                            discussion={discussion}
                             onCommentSend={handleOnCommentSend}
                             onTryItClick={handleOnTryItClick}
+                            onInformationClick={handleOnInformationClick}
+                            onCommentsClick={handleOnCommentsClick}
                             onClose={onClose}
                         />
                     </Flex>

@@ -1,50 +1,85 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { CommentInfo, CommentThread } from "../types";
+import { v4 } from "uuid";
+import { CommentInfo, CommentThread, CommentThreadMetadata } from "../types";
 
 export const useCommentStore = create(persist<{
-    commentThreads: Array<CommentThread>;
-    getCommentThreads: (workspaceId: string) => Array<CommentThread>;
-    startCommentThread: (workspaceId: string, thread: CommentThread) => void;
-    resolveCommentThread: (treadId: string) => void;
-    replyCommentThread: (treadId: string, comment: CommentInfo) => void;
+    discussions: Array<CommentThread>;
+    getDiscussions: (workspaceId: string) => Array<CommentThread>;
+    startDiscussion: (workspaceId: string, comment: CommentInfo, metadata: CommentThreadMetadata) => CommentThread;
+    resolveDiscussion: (workspaceId: string, discussionId: string) => CommentThread;
+    replyInDiscussion: (workspaceId: string, discussionId: string, comment: CommentInfo) => CommentThread;
 }>(
     (set, get) => ({
-        commentThreads: [] as Array<CommentThread>,
-        getCommentThreads: (workspaceId: string) => {
-            return get().commentThreads
+        discussions: [] as Array<CommentThread>,
+        getDiscussions: (workspaceId: string) => {
+            return get().discussions
                 .filter(x => x.workspaceId === workspaceId)
                 .sort((left, right) => left.comments.at(0).createdDate.localeCompare(right.comments.at(0).createdDate));
         },
-        startCommentThread: (workspaceId: string, thread: CommentThread) => set(state => ({
-            ...state,
-            commentThreads: [
-                ...state.commentThreads.filter(x => x.commentThreadId !== thread.commentThreadId),
-                thread
-            ]
-        })),
-        resolveCommentThread: (treadId: string) => set(state => ({
-            ...state,
-            commentThreads: state.commentThreads.filter(x => x.commentThreadId !== treadId)
-        })),
-        replyCommentThread: (treadId: string, comment: CommentInfo) => set(state => ({
-            ...state,
-            commentThreads: state.commentThreads.map(commentThread => {
-                if (commentThread.commentThreadId === treadId) {
-                    return {
-                        ...commentThread,
-                        comments: [
-                            ...commentThread.comments.filter(x => x.commentId !== comment.commentId),
-                            comment
-                        ]
-                    }
-                }
-                return commentThread;
-            })
-        })),
+        startDiscussion: (workspaceId: string, comment: CommentInfo, metadata: CommentThreadMetadata) => {
+            const discussion: CommentThread = {
+                commentThreadId: v4(),
+                workspaceId: workspaceId,
+                comments: [comment],
+                metadata: metadata
+            }
+            set(state => ({
+                ...state,
+                discussions: [
+                    ...state.discussions.filter(discussion => {
+                        return discussion.workspaceId !== workspaceId
+                            && discussion.commentThreadId !== discussion.commentThreadId
+                    }),
+                    discussion
+                ]
+            }))
+            return discussion;
+        },
+        resolveDiscussion: (workspaceId: string, discussionId: string) => {
+            const existingDiscussion = get().discussions.find(x => x.workspaceId === workspaceId && x.commentThreadId === discussionId);
+            const updatedDicussion = {
+                commentThreadId: discussionId,
+                workspaceId: workspaceId,
+                comments: existingDiscussion?.comments ?? [],
+                isResolved: true,
+            };
+            set(state => ({
+                ...state,
+                discussions: [
+                    ...state.discussions.filter(discussion => {
+                        return discussion.workspaceId !== workspaceId
+                            && discussion.commentThreadId !== discussionId
+                    }),
+                    updatedDicussion
+                ]
+            }))
+            return updatedDicussion;
+        },
+        replyInDiscussion: (workspaceId: string, discussionId: string, comment: CommentInfo) => {
+            const existingDiscussion = get().discussions.find(x => x.workspaceId === workspaceId && x.commentThreadId === discussionId);
+            const updatedDicussion = {
+                commentThreadId: discussionId,
+                workspaceId: workspaceId,
+                comments: [ ...existingDiscussion?.comments ?? [], comment],
+                metadata: existingDiscussion?.metadata
+            };
+            console.log(updatedDicussion)
+            set(state => ({
+                ...state,
+                discussions: [
+                    ...state.discussions.filter(discussion => {
+                        return discussion.workspaceId !== workspaceId
+                            && discussion.commentThreadId !== discussionId
+                    }),
+                    updatedDicussion
+                ]
+            }))
+            return updatedDicussion;
+        },
     }),
     {
         name: "comments-storage",
-        storage: createJSONStorage(() => sessionStorage),
+        storage: createJSONStorage(() => localStorage),
     }
 ))

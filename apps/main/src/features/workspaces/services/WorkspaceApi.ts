@@ -36,7 +36,7 @@ export class WorkspaceApi {
     }
 
     async getWorkspaces(): Promise<Array<WorkspaceInfo>> {
-        return this.featchWorkspaceList();
+        return this.fetchWorkspaceList();
     }
 
     async saveWorkspace(workspaceId: string, workspace: WorkspaceInfo): Promise<Array<WorkspaceInfo>> {
@@ -49,7 +49,7 @@ export class WorkspaceApi {
         throw new Error("Method not implemented.");
     }
 
-    async featchWorkspaceList(): Promise<Array<WorkspaceInfo>> {
+    async fetchWorkspaceList(): Promise<Array<WorkspaceInfo>> {
         const workspaceListResponse = await fetch(`${this.baseUrl}/list.json`);
         const { values } = workspaceListResponse.ok ? await workspaceListResponse.json() : { values: [] };
         const workspaces = (values as CommunityTemplate[])
@@ -62,20 +62,22 @@ export class WorkspaceApi {
                 lastModifiedDate: info.updated,
                 coverUrl: info.preview,
                 tags: info.tags,
-            }))
-            .map(workspace => {
-                useWorkspaceStore.getState().setWorkspace(workspace)
-                return workspace;
-            });
+            }));
         
         return workspaces;
     }
 
     async fetchWorkspace(workspaceId: string): Promise<WorkspaceInfo> {
-        const workspaceInfo = useWorkspaceStore.getState().getWorkspace(workspaceId);
+        const list = await this.fetchWorkspaceList();
+        const workspaceInfo = list.find(w => w.workspaceId === workspaceId);
 
-        const workspaceDslResponse = await fetch(`${this.baseUrl}/${workspaceId}/workspace.dsl`);
-        const text = workspaceDslResponse.ok ? await workspaceDslResponse.text() as string : "";
+        const workspaceResponse = await fetch(`${this.baseUrl}/${workspaceId}/workspace.dsl`);
+
+        if (!workspaceResponse.ok) {
+            throw new Error(`Workspace ${workspaceId} not found`);
+        }
+        
+        const text = workspaceResponse.ok ? await workspaceResponse.text() as string : "";
 
         const metadataResponse = await fetch(`${this.baseUrl}/${workspaceId}/workspace.metadata.json`);
         const metadata = metadataResponse.ok ? await metadataResponse.json() as IWorkspaceMetadata : undefined;

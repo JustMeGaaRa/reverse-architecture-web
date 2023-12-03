@@ -58,8 +58,8 @@ export const WorkspaceCollection: FC<{
                 <WorkspaceTableView
                     workspaces={workspaces}
                     groupped={groupped}
-                    onClick={onClick}
-                    onRemove={onDelete}
+                    onOpen={onClick}
+                    onDelete={onDelete}
                 />
             )}
             <WorkspaceOptionsAutoHideWrapper>

@@ -1,9 +1,4 @@
-import {
-    Box,
-    Divider,
-    Flex,
-    useToast
-} from "@chakra-ui/react";
+import { Divider, Flex } from "@chakra-ui/react";
 import {
     ContextSheet,
     ContextSheetBody,
@@ -46,14 +41,15 @@ import {
     CommentApi,
     CommentThread,
     CommentProvider,
+    CommentThreadList,
     WorkspaceApi,
     WorkspaceCacheWrapper,
     useAccount,
+    useSnackbar,
 } from "../../../features";
 import {
-    CommentThreadList,
     UserCursorGroup,
-    WorkspaceCommentGroup,
+    WorkspaceDiscussionGroup,
     WorkspacePageLayoutContent,
     WorkspaceContentMode,
     WorkspaceContentPanel
@@ -72,7 +68,7 @@ export const WorkspaceContentPage: FC = () => {
     const { commentApi } = useMemo(() => ({ commentApi: new CommentApi() }), []);
 
     useEffect(() => {
-        commentApi.getCommentThreads(workspaceId)
+        commentApi.getDiscussions(workspaceId)
             .then(comments => setCommentThreads(comments))
             .catch(error => console.error(error));
     }, [workspaceId, commentApi]);
@@ -98,7 +94,7 @@ export const WorkspaceContentPage: FC = () => {
     const { workspaceApi } = useMemo(() => ({ workspaceApi: new WorkspaceCacheWrapper(new WorkspaceApi()) }), []);
     const [ users, setUsers ] = useState<Array<any>>([]);
     const { theme } = useWorkspaceTheme();
-    const toast = useToast();
+    const { snackbar } = useSnackbar();
 
     useEffect(() => {
         workspaceApi.getWorkspaceById(workspaceId)
@@ -111,16 +107,14 @@ export const WorkspaceContentPage: FC = () => {
                 setStructurizrDslText(info.content?.text);
             })
             .catch(error => {
-                toast({
-                    title: "Error",
+                snackbar({
+                    title: error.message,
                     description: error.message,
                     status: "error",
                     duration: 9000,
-                    isClosable: true,
-                    position: "bottom-right"
                 })
             })
-    }, [workspaceApi, workspaceId, theme, toast, parseStructurizr]);
+    }, [workspaceApi, workspaceId, theme, snackbar, parseStructurizr]);
 
     useEffect(() => {
         const viewType = queryParams.get("type");
@@ -159,7 +153,7 @@ export const WorkspaceContentPage: FC = () => {
                                     <Divider />
 
                                     <ContextSheetBody>
-                                        <CommentThreadList commentThreads={commentThreads} />
+                                        <CommentThreadList discussions={commentThreads} />
                                     </ContextSheetBody>
                                 </Flex>
                             )}
@@ -212,7 +206,7 @@ export const WorkspaceContentPage: FC = () => {
                                                 onWorkspaceChange={handleOnWorkspaceChange}
                                                 onWorkspaceViewChange={handleOnWorkspaceViewChange}
                                             >
-                                                <WorkspaceCommentGroup commentThreads={commentThreads} />
+                                                <WorkspaceDiscussionGroup discussions={commentThreads} />
                                                 <UserCursorGroup users={users} />
                                                 
                                                 <Panel position={"top-left"}>

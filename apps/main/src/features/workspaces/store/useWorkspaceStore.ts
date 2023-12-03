@@ -27,6 +27,6 @@ export const useWorkspaceStore = create(persist<{
     }),
     {
         name: "workspaces-storage",
-        storage: createJSONStorage(() => sessionStorage),
+        storage: createJSONStorage(() => localStorage),
     }
 ))

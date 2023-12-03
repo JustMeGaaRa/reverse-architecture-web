@@ -223,13 +223,13 @@ export class WorkspaceCacheWrapper {
     }
 
     async getWorkspaceById(workspaceId: string): Promise<WorkspaceInfo> {
-        // await this.api.getWorkspaceById(workspaceId)
-        //     .then(result => {
-        //         useWorkspaceStore.getState().setWorkspace(result);
-        //     })
-        //     .catch(error => {
-        //         console.error(error);
-        //     });
+        await this.api.getWorkspaceById(workspaceId)
+            .then(result => {
+                useWorkspaceStore.getState().setWorkspace(result);
+            })
+            .catch(error => {
+                console.error(error);
+            });
         const workspace = useWorkspaceStore.getState().getWorkspace(workspaceId);
         return Promise.resolve(workspace);
     }

@@ -1,5 +1,5 @@
 import { Avatar, Box, Button, Flex, Tag, TagLabel, TagLeftIcon, Text } from "@chakra-ui/react";
-import { ArrowTrCircle, Heart, UserCircle } from "iconoir-react";
+import { ArrowUpRightCircle, Heart, UserCircle } from "iconoir-react";
 import { FC } from "react";
 
 export const TemplateHeader: FC<{
@@ -44,7 +44,7 @@ export const TemplateHeader: FC<{
                 </Flex>
                 <Button
                     colorScheme={"lime"}
-                    leftIcon={<ArrowTrCircle />}
+                    leftIcon={<ArrowUpRightCircle />}
                     iconSpacing={0}
                     size={"lg"}
                     title={"try it out"}

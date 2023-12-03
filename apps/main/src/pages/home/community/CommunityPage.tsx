@@ -24,7 +24,7 @@ import {
     usePageSidebar,
 } from "@reversearchitecture/ui";
 import {
-    AddPageAlt,
+    PagePlus,
     Compass,
     FireFlame,
     NavArrowDown,
@@ -90,7 +90,7 @@ export const CommunityPage: FC<PropsWithChildren> = () => {
                     <Button
                         aria-label={"publish workspace"}
                         colorScheme={"lime"}
-                        leftIcon={<Icon as={AddPageAlt} boxSize={5} />}
+                        leftIcon={<Icon as={PagePlus} boxSize={5} />}
                         iconSpacing={"0px"}
                     >
                         <Text marginX={2}>Publish to Community</Text>

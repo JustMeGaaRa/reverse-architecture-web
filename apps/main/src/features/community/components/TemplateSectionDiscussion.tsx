@@ -10,7 +10,11 @@ import {
 import { ContextSheetTitle } from "@reversearchitecture/ui";
 import { ChatLines, Send } from "iconoir-react";
 import { FC, useCallback, useRef } from "react";
-import { CommentCard, CommentGroup, CommentInfo } from "../../comments";
+import {
+    CommentGroup,
+    CommentInfo,
+    CommentNonInteractiveCard
+} from "../../comments";
 
 export const TemplateSectionDiscussion: FC<{
     comments: Array<CommentInfo>;
@@ -21,9 +25,19 @@ export const TemplateSectionDiscussion: FC<{
 }) => {
     const inputRef = useRef<HTMLInputElement>(null);
 
-    const handleOnComment = useCallback(() => {
-        onComment?.(inputRef?.current?.value);
-    }, [onComment])
+    const handleOnCommentKeyDown = useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === "Enter" && inputRef?.current?.value) {
+            onComment?.(inputRef.current.value);
+            inputRef.current.value = "";
+        }
+    }, [onComment]);
+
+    const handleOnCommentSendClick = useCallback(() => {
+        if (inputRef?.current?.value) {
+            onComment?.(inputRef.current.value);
+            inputRef.current.value = "";
+        }
+    }, [onComment]);
 
     return (
         <>
@@ -42,7 +56,7 @@ export const TemplateSectionDiscussion: FC<{
                     borderRadius={16}
                     placeholder={"Share your thoughts"}
                     _placeholder={{ color: "gray.500" }}
-                    onKeyDown={(event) => event.key === "Enter" && handleOnComment()}
+                    onKeyDown={handleOnCommentKeyDown}
                 />
                 <InputRightElement>
                     <IconButton
@@ -50,7 +64,7 @@ export const TemplateSectionDiscussion: FC<{
                         icon={<Icon as={Send} boxSize={6} />}
                         size={"sm"}
                         variant={"tonal"}
-                        onClick={handleOnComment}
+                        onClick={handleOnCommentSendClick}
                     />
                 </InputRightElement>
             </InputGroup>
@@ -62,7 +76,7 @@ export const TemplateSectionDiscussion: FC<{
             >
                 <CommentGroup>
                     {comments.map((comment, index) => (
-                        <CommentCard
+                        <CommentNonInteractiveCard
                             key={index}
                             comment={comment}
                             showAvatar={true}

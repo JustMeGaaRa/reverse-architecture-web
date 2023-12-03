@@ -1,13 +1,13 @@
 import { Card, CardBody, CardFooter, SimpleGrid } from "@chakra-ui/react";
-import { FC, MouseEventHandler } from "react";
+import { FC, MouseEventHandler, TouchEventHandler } from "react";
 import { ThumbnailContainer, ThumbnailSelector, WorkspaceCardFooter } from "../components";
 import { WorkspaceGroupInfo } from "../types";
 
 export const WorkspaceStackCard: FC<{
     group: WorkspaceGroupInfo;
     isSelected?: boolean;
-    onMouseDown?: MouseEventHandler<HTMLDivElement>;
-    onMouseUp?: MouseEventHandler<HTMLDivElement>;
+    onTouchStart?: TouchEventHandler<HTMLDivElement>;
+    onTouchEnd?: TouchEventHandler<HTMLDivElement>;
     onOpen?: MouseEventHandler<HTMLDivElement>;
     onRename?: () => void;
     onSelect?: () => void;
@@ -16,8 +16,8 @@ export const WorkspaceStackCard: FC<{
 }> = ({
     group,
     isSelected,
-    onMouseDown,
-    onMouseUp,
+    onTouchStart,
+    onTouchEnd,
     onOpen,
     onSelect,
     onRename,
@@ -31,8 +31,8 @@ export const WorkspaceStackCard: FC<{
             <CardBody>
                 <ThumbnailContainer
                     isSelected={isSelected}
-                    onMouseDown={onMouseDown}
-                    onMouseUp={onMouseUp}
+                    onTouchStart={onTouchStart}
+                    onTouchEnd={onTouchEnd}
                     onDoubleClick={onOpen}
                     onClick={onSelect}
                 >
