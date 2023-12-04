@@ -13,10 +13,10 @@ export const SearchEmpty: FC<{ query?: string }> = ({ query = "" }) => {
             textAlign={"center"}
             padding={16}
         >
-            <Icon as={EmojiSad} boxSize={"72px"} color={"basic.white"} />
-            <Text textStyle={"h6"} color={"basic.white"} mt={8}>No matches found</Text>
+            <Icon as={EmojiSad} boxSize={"72px"} color={"white"} />
+            <Text textStyle={"h6"} color={"white"} mt={8}>No matches found</Text>
             <Text textStyle={"b2"} color={"gray.900"} mt={2}>
-                <Highlight query={query} styles={{ color: "basic.white" }}>
+                <Highlight query={query} styles={{ color: "white" }}>
                     {`We were not able to find anything for '${query}'.`}
                 </Highlight>
             </Text>

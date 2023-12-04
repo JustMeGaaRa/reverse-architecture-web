@@ -2,10 +2,10 @@ export const colors = {
     basic: {
         black: "#000000",
         white: "#ffffff",
-        "eerie-black": "#161819",
         "black-moon": "#161819"
     },
     surface: {
+        "tinted-white-20": "rgba(255, 255, 255, 0.20)",
         "tinted-white-10": "rgba(255, 255, 255, 0.10)",
         "tinted-white-5": "rgba(255, 255, 255, 0.05)",
         "tinted-white-2": "rgba(255, 255, 255, 0.02)",

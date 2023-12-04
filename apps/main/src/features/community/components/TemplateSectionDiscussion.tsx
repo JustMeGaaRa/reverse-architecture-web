@@ -42,20 +42,13 @@ export const TemplateSectionDiscussion: FC<{
     return (
         <>
             <ContextSheetTitle title={"Comments"} />
-            <InputGroup
-                size={"md"}
-                variant={"filled"}
-                marginY={3}
-            >
+            <InputGroup marginY={3} >
                 <InputLeftElement>
-                    <Icon as={ChatLines} boxSize={6} color={"gray.500"} />
+                    <Icon as={ChatLines} boxSize={6} />
                 </InputLeftElement>
                 <Input
                     ref={inputRef}
-                    backgroundColor={"surface.tinted-black-40"}
-                    borderRadius={16}
                     placeholder={"Share your thoughts"}
-                    _placeholder={{ color: "gray.500" }}
                     onKeyDown={handleOnCommentKeyDown}
                 />
                 <InputRightElement>

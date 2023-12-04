@@ -26,9 +26,6 @@ export const DefaultBox: FC<PropsWithChildren<DefaultBoxProps>> = ({
             padding={2}
             height={style.height}
             width={style.width}
-            _hover={{
-                borderColor: HexColor.withAlpha(style.stroke, 0.7),
-            }}
         >
             {children}
         </Flex>

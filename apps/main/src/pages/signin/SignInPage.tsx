@@ -57,7 +57,7 @@ export const SignInPage: FC = () => {
                     <CardBody>
                         <VStack spacing={8}>
                             <Flex direction={"column"} width={"100%"}>
-                                <Text color={"basic.white"} fontSize={32}>
+                                <Text color={"white"} fontSize={32}>
                                     Welcome to Restruct
                                 </Text>
                                 <Text color={"whiteAlpha.700"} fontSize={16}>

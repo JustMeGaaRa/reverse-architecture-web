@@ -27,12 +27,12 @@ export const Tabs = defineMultiStyleConfig({
 
                 _hover: {
                     background: "radial-gradient(77.22% 96% at 50.52% 96%, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.00) 62.5%)",
-                    color: mode("", "basic.white")(props)
+                    color: mode("", "white")(props)
                 },
                 _active: {
                     background: "radial-gradient(77.22% 96% at 50.52% 96%, rgba(227, 251, 81, 0.10) 0%, rgba(227, 251, 81, 0.00) 62.5%)",
                     borderBottomColor: "transparent",
-                    color: mode("", "basic.white")(props),
+                    color: mode("", "white")(props),
 
                     _after: {
                         position: "absolute",
@@ -49,7 +49,7 @@ export const Tabs = defineMultiStyleConfig({
                 _selected: {
                     background: "radial-gradient(77.22% 96% at 50.52% 96%, rgba(227, 251, 81, 0.10) 0%, rgba(227, 251, 81, 0.00) 62.5%)",
                     borderBottomColor: "transparent",
-                    color: mode("", "basic.white")(props),
+                    color: mode("", "white")(props),
 
                     _after: {
                         position: "absolute",

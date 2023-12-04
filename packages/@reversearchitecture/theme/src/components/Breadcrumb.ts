@@ -35,7 +35,7 @@ export const Breadcrumb = defineMultiStyleConfig({
             _hover: {
                 backgroundColor: mode("", "surface.tinted-white-10")(props),
                 backdropFilter: "blur(32px)",
-                color: mode("", "basic.white")(props)
+                color: mode("", "white")(props)
             },
             _active: {
                 color: mode("", "gray.500")(props)

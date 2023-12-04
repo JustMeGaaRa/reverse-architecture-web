@@ -65,7 +65,7 @@ export const WorkspaceNavigation: FC = () => {
                     _hover={{
                         backgroundColor: "whiteAlpha.200",
                         borderColor: "whiteAlpha.400",
-                        color: "basic.white"
+                        color: "white"
                     }}
                     onChange={handleOnViewTypeChange}
                 >

@@ -1,13 +1,10 @@
 import { Flex } from "@chakra-ui/react";
 import { useReactFlow } from "@reactflow/core";
 import { NodeResizer } from "@reactflow/node-resizer";
-import {
-    IElement,
-    ElementStyleProperties,
-} from "@structurizr/dsl";
+import { IElement, ElementStyleProperties } from "@structurizr/dsl";
 import { FC, useCallback } from "react";
 import { HexColor } from "../../utils";
-import { BoundaryLabel } from "./BoundaryElementLabel";
+import { BoundaryLabel } from "./BoundaryLabel";
 
 export const BoundaryNode: FC<{
     data: IElement;

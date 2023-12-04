@@ -68,7 +68,7 @@ export const Tag = defineMultiStyleConfig({
 
                 _hover: {
                     backgroundColor: mode("", "surface.tinted-white-10")(props),
-                    color: mode("", "basic.white")(props)
+                    color: mode("", "white")(props)
                 },
                 _focus:{
                     backdropFilter: "blur(16px)",
@@ -95,10 +95,10 @@ export const Tag = defineMultiStyleConfig({
                 color: mode("", "gray.900")(props),
 
                 _hover: {
-                    color: mode("", "basic.white")(props)
+                    color: mode("", "white")(props)
                 },
                 _groupHover: {
-                    color: mode("", "basic.white")(props)
+                    color: mode("", "white")(props)
                 },
                 _focus: {
                     color: mode("", "gray.900")(props),

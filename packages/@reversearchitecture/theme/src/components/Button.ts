@@ -1,7 +1,7 @@
-import { ComponentStyleConfig } from "@chakra-ui/react";
+import { defineStyleConfig } from "@chakra-ui/react";
 import { mode, getColorVar } from "@chakra-ui/theme-tools";
 
-export const Button: ComponentStyleConfig = {
+export const Button = defineStyleConfig({
     baseStyle: {
         fontWeight: "normal",
         display: "inline-flex",
@@ -197,19 +197,19 @@ export const Button: ComponentStyleConfig = {
                 backgroundColor: mode("", "surface.tinted-white-10")(props),
                 backdropFilter: "blur(32px)",
                 boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
-                color: mode("", "basic.white")(props),
+                color: mode("", "white")(props),
             },
             _focus: {
                 backgroundColor: mode("", "surface.tinted-white-10")(props),
                 backdropFilter: "blur(32px)",
                 boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
-                color: mode("", "basic.white")(props),
+                color: mode("", "white")(props),
             },
             _focusVisible: {
                 backgroundColor: mode("", "surface.tinted-white-10")(props),
                 backdropFilter: "blur(32px)",
                 boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
-                color: mode("", "basic.white")(props),
+                color: mode("", "white")(props),
             },
             // should be _selected
             _active: {
@@ -277,19 +277,19 @@ export const Button: ComponentStyleConfig = {
                 backgroundColor: mode("", "surface.tinted-white-10")(props),
                 backdropFilter: "blur(32px)",
                 boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
-                color: mode("", "basic.white")(props),
+                color: mode("", "white")(props),
             },
             _focus: {
                 backgroundColor: mode("", "surface.tinted-white-10")(props),
                 backdropFilter: "blur(32px)",
                 boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
-                color: mode("", "basic.white")(props),
+                color: mode("", "white")(props),
             },
             _focusVisible: {
                 backgroundColor: mode("", "surface.tinted-white-10")(props),
                 backdropFilter: "blur(32px)",
                 boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
-                color: mode("", "basic.white")(props),
+                color: mode("", "white")(props),
             },
             _active: {
                 backgroundColor: mode("", "surface.tinted-white-2")(props),
@@ -326,4 +326,4 @@ export const Button: ComponentStyleConfig = {
         size: "md",
         variant: "filled",
     }
-};
+});

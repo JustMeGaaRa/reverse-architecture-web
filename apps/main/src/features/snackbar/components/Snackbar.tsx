@@ -38,7 +38,7 @@ export const Snackbar: FC<ToastProps> = ({ status, title }) => {
                     paddingLeft={2}
                     paddingRight={4}
                     textStyle={"b3"}
-                    _groupHover={{ color: "basic.white" }}
+                    _groupHover={{ color: "white" }}
                 >
                     {title}
                 </Text>

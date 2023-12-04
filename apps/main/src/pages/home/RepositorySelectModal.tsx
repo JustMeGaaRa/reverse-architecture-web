@@ -60,7 +60,7 @@ export const RepositorySelectModal: FC<{
             />
             <ModalContent
                 borderRadius={24}
-                backgroundColor={"basic.eerie-black"}
+                backgroundColor={"basic.black-moon"}
                 boxShadow={"none"}
                 height={"700px"}
             >
@@ -78,7 +78,7 @@ export const RepositorySelectModal: FC<{
                             width={"100%"}
                         >
                             <Text
-                                color={"basic.white"}
+                                color={"white"}
                                 fontSize={"24px"}
                             >
                                 <Highlight

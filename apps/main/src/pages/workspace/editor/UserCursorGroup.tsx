@@ -42,7 +42,7 @@ const UserCursor: FC<{
             <Text
                 backgroundColor={`${colorScheme}.900`}
                 borderRadius={"full"}
-                color={"basic.white"}
+                color={"white"}
                 display={"none"}
                 fontSize={14}
                 position={"absolute"}

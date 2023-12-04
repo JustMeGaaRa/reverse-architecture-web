@@ -118,7 +118,7 @@ export const CommunityPublishingModal: FC<{
             <form onSubmit={handleSubmit}>
                 <ModalContent
                     borderRadius={24}
-                    backgroundColor={"basic.eerie-black"}
+                    backgroundColor={"basic.black-moon"}
                     boxShadow={"none"}
                     height={"700px"}
                 >

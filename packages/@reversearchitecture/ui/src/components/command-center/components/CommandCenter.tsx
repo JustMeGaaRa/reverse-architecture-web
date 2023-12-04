@@ -39,19 +39,14 @@ export const CommandCenter: FC<{
     return (
         <Box position={"relative"}>
             <SearchOverlay isOpen={isOpen} />
-            <InputGroup size={"md"} variant={"filled"} zIndex={1000}>
+            <InputGroup zIndex={1000}>
                 <InputLeftElement>
-                    <Icon as={SearchIcon} color={"gray.500"} boxSize={6} />
+                    <Icon as={SearchIcon} boxSize={6} />
                 </InputLeftElement>
                 <Input
                     ref={searchRef}
-                    backgroundColor={"surface.tinted-black-40"}
-                    borderRadius={16}
                     type={"search"}
                     placeholder={"Type \"/\" to search commands"}
-                    _placeholder={{
-                        color: "gray.500"
-                    }}
                     onFocus={onOpen}
                     onBlur={onClose}
                     onChange={onChange}

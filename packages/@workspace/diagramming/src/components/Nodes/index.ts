@@ -1,19 +1,12 @@
-import { BoundaryNode } from "./BoundaryNode";
-import { DeploymentNode } from "./DeploymentNode";
-import { ElementNode } from "./ElementNode";
-import { ReactFlowNodeWrapper } from "./ReactFlowNodeWrapper";
-
 export * from "./BoundaryNode";
+export * from "./BoundaryLabel";
 export * from "./DeploymentNode";
+export * from "./DeploymentNodeLabel";
+export * from "./ElementHandle";
+export * from "./ElementLabel";
 export * from "./ElementNode";
+export * from "./ElementShapeWhapper";
+export * from "./ElementZoomControl";
+export * from "./ReactFlowNodeHandle";
+export * from "./ReactFlowNodeTypes";
 export * from "./ReactFlowNodeWrapper";
-
-export const ReactFlowBoundaryNode = ReactFlowNodeWrapper(BoundaryNode);
-export const ReactFlowElementNode = ReactFlowNodeWrapper(ElementNode);
-export const ReactFlowDeploymentNode = ReactFlowNodeWrapper(DeploymentNode);
-
-export const NodeTypes = {
-    element: ReactFlowElementNode,
-    boundary: ReactFlowBoundaryNode,
-    deploymentNode: ReactFlowDeploymentNode,
-}

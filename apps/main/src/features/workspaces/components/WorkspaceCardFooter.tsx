@@ -34,7 +34,7 @@ export const WorkspaceCardFooter: FC<{
             width={"100%"}
         >
             <Flex direction={"column"}>
-                <Text color={"basic.white"} noOfLines={1} textStyle={"b3"}>
+                <Text color={"white"} noOfLines={1} textStyle={"b3"}>
                     {name}
                 </Text>
                 <Text color={"gray.700"} textStyle={"b5"}>

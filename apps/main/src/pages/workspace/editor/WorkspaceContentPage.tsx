@@ -137,6 +137,9 @@ export const WorkspaceContentPage: FC = () => {
         })
     }, [setQueryParam]);
 
+    const isModelingMode = queryParams.get("mode") === WorkspaceContentMode.Modeling;
+    const isDiagrammingMode = queryParams.get("mode") === WorkspaceContentMode.Diagramming;
+
     return (
         <WorkspacePageLayoutContent>
             <WorkspaceProvider workspace={Workspace.Empty}>
@@ -190,7 +193,7 @@ export const WorkspaceContentPage: FC = () => {
                                 </Flex>
                             )}
                 
-                            <ContextSheet outline={queryParams.get("mode") === WorkspaceContentMode.Modeling ? "purple.600" : undefined}>
+                            <ContextSheet outline={isModelingMode ? "purple.600" : undefined}>
                                 <WorkspaceRoomProvider>
                                     <WorkspaceRoom
                                         roomId={workspaceId}
@@ -198,7 +201,7 @@ export const WorkspaceContentPage: FC = () => {
                                     >
                                         <WorkspaceUser account={account as any} />
 
-                                        {queryParams.get("mode") === WorkspaceContentMode.Diagramming && (
+                                        {isDiagrammingMode && (
                                             <WorkspaceDiagramming
                                                 workspace={workspace}
                                                 view={workspace.views.systemLandscape}
@@ -224,7 +227,7 @@ export const WorkspaceContentPage: FC = () => {
                                             </WorkspaceDiagramming>
                                         )}
 
-                                        {queryParams.get("mode") === WorkspaceContentMode.Modeling && (
+                                        {isModelingMode && (
                                             <WorkspaceModeling
                                                 workspace={workspace}
                                                 onWorkspaceChange={handleOnWorkspaceChange}

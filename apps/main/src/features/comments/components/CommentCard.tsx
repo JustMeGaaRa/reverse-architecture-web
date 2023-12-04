@@ -120,7 +120,7 @@ export const CommentNonInteractiveCard: FC<{
                             title={comment.author}
                         />
                     )}
-                    <Text color={"basic.white"} textStyle={"b3"}>
+                    <Text color={"white"} textStyle={"b3"}>
                         {comment.author}
                     </Text>
                 </Flex>

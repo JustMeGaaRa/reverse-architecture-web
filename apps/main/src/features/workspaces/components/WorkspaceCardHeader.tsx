@@ -30,7 +30,7 @@ export const WorkspaceCardHeader: FC<{
                 title={createdBy}
             />
             <Flex direction={"column"} width={"100%"}>
-                <Text color={"basic.white"} lineHeight={"20px"} textStyle={"b3"}>
+                <Text color={"white"} lineHeight={"20px"} textStyle={"b3"}>
                     {name}
                 </Text>
                 <Flex

@@ -18,7 +18,7 @@ export const ElementLabel: FC<{
         <VStack
             align={"center"}
             alignContent={"center"}
-            color={"basic.white"}
+            color={"white"}
             height={"100%"}
             justify={"center"}
             spacing={2}

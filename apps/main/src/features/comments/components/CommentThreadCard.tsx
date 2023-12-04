@@ -130,7 +130,7 @@ export const CommentThreadCard: FC<{
                             />
                             <Flex direction={"column"} gap={1}>
                                 <Flex alignItems={"center"}>
-                                    <Text color={"basic.white"} flex={2} textAlign={"start"} textStyle={"b3"}>
+                                    <Text color={"white"} flex={2} textAlign={"start"} textStyle={"b3"}>
                                         {comment.author}
                                     </Text>
                                     <Text color={"gray.700"} flex={1} textAlign={"end"} marginRight={2} textStyle={"b5"}>

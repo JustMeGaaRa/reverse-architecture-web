@@ -26,7 +26,7 @@ import {
     useMemo,
     useRef,
 } from "react";
-import { EdgeTypes, NodeTypes } from "../../components";
+import { EdgeTypes, ReactFlowNodeTypes } from "../../components";
 import {
     useViewRenderingEffect,
     useViewNavigation,
@@ -154,7 +154,7 @@ export const SystemContextView: FC<PropsWithChildren<{
         <WorkspaceViewRenderer
             ref={reactFlowRef}
             nodes={nodes}
-            nodeTypes={NodeTypes}
+            nodeTypes={ReactFlowNodeTypes}
             edges={edges}
             edgeTypes={EdgeTypes}
             onNodesChange={onNodesChange}

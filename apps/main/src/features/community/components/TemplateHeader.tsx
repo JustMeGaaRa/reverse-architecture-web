@@ -25,7 +25,7 @@ export const TemplateHeader: FC<{
                     title={createdBy}
                 />
                 <Flex direction={"column"} flexGrow={1} gap={1}>
-                    <Text color={"basic.white"} lineHeight={"24px"} textStyle={"h6"}>
+                    <Text color={"white"} lineHeight={"24px"} textStyle={"h6"}>
                         {name}
                     </Text>
                     <Flex direction={"row"} gap={4} lineHeight={"14px"}>
