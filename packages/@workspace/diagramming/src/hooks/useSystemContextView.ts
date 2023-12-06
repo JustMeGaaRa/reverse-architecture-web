@@ -97,6 +97,10 @@ export const useSystemContextView = (systemSoftwareIdentifier: Identifier) => {
         const node = getNodeFromElement({
             element: group,
             position,
+            size: {
+                height: 300,
+                width: 300,
+            },
             styles: workspace.views.configuration.styles
         });
         setNodes(nodes => [...nodes, node]);

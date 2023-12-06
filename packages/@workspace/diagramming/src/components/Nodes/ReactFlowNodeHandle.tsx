@@ -1,10 +1,11 @@
 import { Handle, HandleType, Position } from "@reactflow/core";
-import { FC } from "react";
+import { FC, PropsWithChildren } from "react";
 
-export const ReactFlowNodeHandle: FC<{
+export const ReactFlowNodeHandle: FC<PropsWithChildren<{
     position?: Position;
     type?: HandleType;
-}> = ({
+}>> = ({
+    children,
     position,
     type
 }) => {
@@ -21,6 +22,8 @@ export const ReactFlowNodeHandle: FC<{
                 height: "100%",
                 width: "100%",
             }}
-        />
+        >
+            {children}
+        </Handle>
     )
 }

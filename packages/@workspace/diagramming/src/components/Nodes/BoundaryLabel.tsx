@@ -17,18 +17,16 @@ export const BoundaryLabel: FC<{
             spacing={0}
         >
             <Text
-                fontSize={"medium"}
+                color={"gray.1000"}
                 noOfLines={1}
-                textAlign={"center"}
-                opacity={0.9}
+                textStyle={"b3"}
             >
                 {data.name}
             </Text>
             <Text
-                fontSize={"small"}
+                color={"gray.700"}
                 noOfLines={1}
-                textAlign={"center"}
-                opacity={0.4}
+                textStyle={"b5"}
             >
                 {formatElementTag(data)}
             </Text>

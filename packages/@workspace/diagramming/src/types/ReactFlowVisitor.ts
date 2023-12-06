@@ -41,7 +41,7 @@ export class ReactFlowVisitor implements IElementVisitor {
         const node = getNodeFromElement({
             elementId: group.identifier,
             element: group,
-            isBoundary: true,
+            isBoundary: false,
             parentId: params?.parentId,
             position: box,
             size: box,

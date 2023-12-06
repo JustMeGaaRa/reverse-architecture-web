@@ -76,9 +76,7 @@ export const WorkspaceOptionsAutoHideWrapper: FC<PropsWithChildren> = ({ childre
             bottom={4}
             left={"50%"}
             transform={"translateX(-50%)"}
-            visibility={selected?.length > 0 ? "visible" : "hidden"}
-            transitionProperty={"visibility"}
-            transitionDelay={selected?.length > 0 ? "unset" : "0.5s"}
+            pointerEvents={selected?.length > 0 ? "auto" : "none"}
         >
             <ScaleFade in={selected?.length > 0}>
                 {children}

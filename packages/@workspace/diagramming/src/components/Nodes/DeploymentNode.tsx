@@ -13,13 +13,13 @@ export const DeploymentNode: FC<{
     style: ElementStyleProperties;
     width?: number;
     height?: number;
-    selected?: boolean,
+    isSelected?: boolean,
 }> = ({
     data,
     style,
     width,
     height,
-    selected
+    isSelected
 }) => {
     const [size, setSize] = useState({ width, height });
     const onResize = useCallback((event, params) => {
@@ -35,7 +35,7 @@ export const DeploymentNode: FC<{
             backdropFilter={"auto"}
             backdropBlur={"16px"}
             borderWidth={style.strokeWidth}
-            borderColor={HexColor.withAlpha(style.stroke, selected ? 0.7 : 0.4)}
+            borderColor={HexColor.withAlpha(style.stroke, isSelected ? 0.7 : 0.4)}
             cursor={"pointer"}
             align={"end"}
             justify={"start"}
@@ -52,7 +52,7 @@ export const DeploymentNode: FC<{
                 style={style}
             />
             <NodeResizer
-                isVisible={selected}
+                isVisible={isSelected}
                 color={style.stroke}
                 minWidth={380}
                 minHeight={320}

@@ -137,6 +137,10 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
         const node = getNodeFromElement({
             element: group,
             position,
+            size: {
+                height: 300,
+                width: 300,
+            },
             parentId: systemSoftwareIdentifier,
             styles: workspace.views.configuration.styles
         });

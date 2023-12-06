@@ -5,17 +5,15 @@ import { formatElementTag, formatElementTechnology } from "../../utils";
 
 export const ElementLabel: FC<{
     data: IElement;
-    showDescription?: boolean;
-    isSelected?: boolean;
     style?: Partial<ElementStyleProperties>;
-    onMouseOver?: () => void;
+    showDescription?: boolean;
+    onMouseEnter?: () => void;
     onMouseLeave?: () => void;
 }> = ({
     data,
-    showDescription,
-    isSelected,
     style,
-    onMouseOver,
+    showDescription,
+    onMouseEnter,
     onMouseLeave
 }) => {
     return (
@@ -29,7 +27,7 @@ export const ElementLabel: FC<{
             height={"100%"}
             justify={"center"}
             width={"100%"}
-            onMouseOver={onMouseOver}
+            onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
         >
             <Box

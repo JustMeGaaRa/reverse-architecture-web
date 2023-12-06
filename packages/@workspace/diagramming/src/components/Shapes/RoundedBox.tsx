@@ -29,6 +29,7 @@ export const RoundedBox: FC<PropsWithChildren<{
                 cursor={"pointer"}
                 align={"center"}
                 justify={"center"}
+                opacity={style.opacity ?? 1}
                 padding={1}
                 height={style.height}
                 width={style.width}

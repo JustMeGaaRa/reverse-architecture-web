@@ -170,6 +170,10 @@ export const useComponentView = (containerIdentifier: Identifier) => {
         const node = getNodeFromElement({
             element: group,
             position,
+            size: {
+                height: 300,
+                width: 300,
+            },
             parentId: containerIdentifier,
             styles: workspace.views.configuration.styles
         });

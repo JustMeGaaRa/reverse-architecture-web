@@ -1,20 +1,18 @@
-import { Flex, Icon, IconButton } from "@chakra-ui/react";
+import { Button, Flex, Icon } from "@chakra-ui/react";
 import { ZoomIn } from "iconoir-react";
 import { FC } from "react";
 
 export const ElementZoomControl: FC<{
-    isSelected?: boolean;
     isVisible?: boolean;
     onZoomClick?: () => void;
 }> = ({
-    isSelected,
     isVisible,
     onZoomClick
 }) => {
     return (
         <Flex
             aria-label={"element zoom control"}
-            aria-selected={isSelected || isVisible}
+            aria-selected={isVisible}
             backgroundColor={"gray.900"}
             borderRadius={8}
             position={"absolute"}
@@ -22,19 +20,25 @@ export const ElementZoomControl: FC<{
             top={2}
             visibility={"hidden"}
             height={"24px"}
-            width={"48px"}
             zIndex={-1}
+            transitionProperty={"visibility"}
+            transitionDelay={isVisible ? "unset" : "0.5s"}
             _selected={{ visibility: "visible" }}
+            _hover={{
+                backgroundColor: "white",
+                visibility: "visible"
+            }}
             _groupHover={{ visibility: "visible" }}
         >
-            <IconButton
+            <Button
                 aria-label={"zoom into element"}
-                icon={<Icon as={ZoomIn} boxSize={4} />}
-                color={"gray.100"}
+                leftIcon={<Icon as={ZoomIn} color={"gray.100"} boxSize={4} />}
                 size={"xs"}
                 variant={"tonal"}
                 onClick={onZoomClick}
-            />
+            >
+                Zoom In
+            </Button>
         </Flex>
     )
 }

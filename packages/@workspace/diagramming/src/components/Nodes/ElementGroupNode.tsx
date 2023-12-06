@@ -5,13 +5,14 @@ import { IElement, ElementStyleProperties } from "@structurizr/dsl";
 import { FC, PropsWithChildren, useCallback } from "react";
 import { BoundaryLabel } from "./BoundaryLabel";
 
-export const BoundaryNode: FC<PropsWithChildren<{
+export const ElementGroupNode: FC<PropsWithChildren<{
     data: IElement;
     style: ElementStyleProperties;
     width?: number;
     height?: number;
     isSelected?: boolean,
 }>> = ({
+    children,
     data,
     style,
     width,
@@ -48,8 +49,6 @@ export const BoundaryNode: FC<PropsWithChildren<{
             _selected={{ borderColor: "lime.600" }}
         >
             <Flex
-                backgroundColor={"gray.100"}
-                borderStyle={"dashed"}
                 borderColor={"gray.400"}
                 borderWidth={2}
                 borderRadius={32}
@@ -81,5 +80,5 @@ export const BoundaryNode: FC<PropsWithChildren<{
                 />
             </Flex>
         </Box>
-    );
+    )
 }

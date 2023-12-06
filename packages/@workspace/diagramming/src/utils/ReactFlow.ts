@@ -7,6 +7,7 @@ import {
     Styles,
     Tag,
 } from "@structurizr/dsl";
+import { ReactFlowNodeTypeKeys } from "../components";
 
 export type ElementParams<TElement extends IElement = any> = {
     element: TElement;
@@ -19,25 +20,19 @@ export type ElementParams<TElement extends IElement = any> = {
 }
 
 export const getNodeFromElement = (params: ElementParams): Node => {
-    const getNoteTypeIfBoundary = (isBoundary: boolean) => {
+    const getNodeType = (element: IElement, isBoundary): ReactFlowNodeTypeKeys => {
         return isBoundary
             ? "boundary"
-            : undefined;
-    };
-
-    const getNodeTypeByTag = (element: IElement) => {
-        return element.tags.some(x => x.name === Tag.DeploymentNode.name)
-            ? "deploymentNode"
-            : element.tags.some(x => x.name === Tag.Group.name)
-                ? "boundary"
-                : undefined;
+                : element.tags.some(x => x.name === Tag.Group.name)
+                ? "elementGroup"
+                    : element.tags.some(x => x.name === Tag.DeploymentNode.name)
+                        ? "deploymentNode"
+                        : "element";
     }
 
     return {
         id: params.elementId ?? params.element.identifier,
-        type: getNoteTypeIfBoundary(params.isBoundary)
-            ?? getNodeTypeByTag(params.element)
-            ?? "element",
+        type: getNodeType(params.element, params.isBoundary),
         data: {
             element: params.element,
             style: params.styles.elements,
