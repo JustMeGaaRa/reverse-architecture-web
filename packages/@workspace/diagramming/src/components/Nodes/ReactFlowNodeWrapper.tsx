@@ -9,7 +9,7 @@ import {
 import { ReverseArchitectureElementStyle } from "@workspace/core";
 import { FC, PropsWithChildren, useCallback, useMemo, useState } from "react";
 import { ElementFlowHandle, ElementFlowShortcut } from "./ElementHandle";
-import { ElementShapeSelector } from "./ElementNode";
+import { ElementShapeSelector } from "./ElementShapeSelector";
 import { ElementZoomControl } from "./ElementZoomControl";
 import { ReactFlowNodeHandle } from "./ReactFlowNodeHandle";
 
@@ -34,27 +34,33 @@ export function ReactFlowNodeWrapper(ElementNodeComponent: FC<PropsWithChildren<
                 data.style,
                 data.element.tags
         ), [data.style, data.element.tags]);
-        const [ isElementHovered, setIsElementVisible ] = useState(false);
+        const [ isElementHovered, setIsElementHovered ] = useState(false);
         
         const isTarget = useStore(state => state.connectionNodeId && state.connectionNodeId !== data.element.identifier);
+        const showZoomPanel = selected || isElementHovered;
         const showZoomIn = data.element.tags.some(tag => tag.name === Tag.SoftwareSystem.name || tag.name === Tag.Container.name);
-        const showZoomOut = data.element.tags.some(tag => tag.name === Tag.Container.name || tag.name === Tag.Component.name);
+        const showZoomOut = false;
 
         const handleOnMouseEnterElement = useCallback(() => {
-            setIsElementVisible(true);
+            setIsElementHovered(true);
         }, []);
 
         const handleOnMouseLeaveElement = useCallback(() => {
-            setIsElementVisible(false);
+            setIsElementHovered(false);
         }, []);
 
         const handleOnClickHandle = useCallback(() => {
 
         }, []);
 
-        const handleOnZoomClick = useCallback(() => {
+        const handleOnZoomInClick = useCallback(() => {
             // TODO: call zoom function from the workspace hook
-            console.log("zoom")
+            console.log("zoom in")
+        }, []);
+
+        const handleOnZoomOutClick = useCallback(() => {
+            // TODO: call zoom function from the workspace hook
+            console.log("zoom out")
         }, []);
 
         return (
@@ -74,10 +80,7 @@ export function ReactFlowNodeWrapper(ElementNodeComponent: FC<PropsWithChildren<
                     isSelected={selected}
                     onClick={handleOnClickHandle}
                 >
-                    <ElementShapeSelector
-                        isSelected={selected}
-                        style={{ ...elementStyle, opacity: 0.4 }}
-                    >
+                    <ElementShapeSelector style={{ ...elementStyle, opacity: 0.4 }}>
                         <ElementFlowShortcut shortcutKeys={"Ctrl + ←"} />
                     </ElementShapeSelector>
                 </ElementFlowHandle>
@@ -88,10 +91,7 @@ export function ReactFlowNodeWrapper(ElementNodeComponent: FC<PropsWithChildren<
                     isSelected={selected}
                     onClick={handleOnClickHandle}
                 >
-                    <ElementShapeSelector
-                        isSelected={selected}
-                        style={{ ...elementStyle, opacity: 0.4 }}
-                    >
+                    <ElementShapeSelector style={{ ...elementStyle, opacity: 0.4 }}>
                         <ElementFlowShortcut shortcutKeys={"Ctrl + →"} />
                     </ElementShapeSelector>
                 </ElementFlowHandle>
@@ -102,10 +102,7 @@ export function ReactFlowNodeWrapper(ElementNodeComponent: FC<PropsWithChildren<
                     isSelected={selected}
                     onClick={handleOnClickHandle}
                 >
-                    <ElementShapeSelector
-                        isSelected={selected}
-                        style={{ ...elementStyle, opacity: 0.4 }}
-                    >
+                    <ElementShapeSelector style={{ ...elementStyle, opacity: 0.4 }}>
                         <ElementFlowShortcut shortcutKeys={"Ctrl + ↑"} />
                     </ElementShapeSelector>
                 </ElementFlowHandle>
@@ -116,10 +113,7 @@ export function ReactFlowNodeWrapper(ElementNodeComponent: FC<PropsWithChildren<
                     isSelected={selected}
                     onClick={handleOnClickHandle}
                 >
-                    <ElementShapeSelector
-                        isSelected={selected}
-                        style={{ ...elementStyle, opacity: 0.4 }}
-                    >
+                    <ElementShapeSelector style={{ ...elementStyle, opacity: 0.4 }}>
                         <ElementFlowShortcut shortcutKeys={"Ctrl + ↓"} />
                     </ElementShapeSelector>
                 </ElementFlowHandle>
@@ -132,8 +126,11 @@ export function ReactFlowNodeWrapper(ElementNodeComponent: FC<PropsWithChildren<
                     />
                 )}
                 <ElementZoomControl
-                    isVisible={selected || isElementHovered}
-                    onZoomClick={handleOnZoomClick}
+                    isPanelVisible={showZoomPanel}
+                    isZoomInVisible={showZoomIn}
+                    isZoomOutVisible={showZoomOut}
+                    onZoomInClick={handleOnZoomInClick}
+                    onZoomOutClick={handleOnZoomOutClick}
                 />
             </ElementNodeComponent>
         )

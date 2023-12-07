@@ -1,9 +1,8 @@
 import { IElement, ElementStyleProperties } from "@structurizr/dsl";
 import { FC, PropsWithChildren } from "react";
-import { ElementLabel } from "./ElementLabel";
 import { ElementShapeSelector } from "./ElementShapeSelector";
 
-export const ElementNode: FC<PropsWithChildren<{
+export const ElementPlaceholderNode: FC<PropsWithChildren<{
     data: IElement;
     style: ElementStyleProperties;
     height?: number;
@@ -23,13 +22,6 @@ export const ElementNode: FC<PropsWithChildren<{
 }) => {
     return (
         <ElementShapeSelector isSelected={isSelected} style={style}>
-            <ElementLabel
-                data={data}
-                style={style}
-                showDescription
-                onMouseEnter={onMouseEnter}
-                onMouseLeave={onMouseLeave}
-            />
             {children}
         </ElementShapeSelector>
     )

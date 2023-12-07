@@ -1,7 +1,7 @@
 import { IElement, Tag } from "@structurizr/dsl";
 
 export const formatElementTag = (data: IElement) => {
-    if (data?.technology === undefined || data?.tags?.length === 0)
+    if (data?.tags === undefined || data?.tags?.length === 0)
         return Tag.Element.name;
 
     if (data.tags.some(x => x.name === Tag.SoftwareSystem.name))

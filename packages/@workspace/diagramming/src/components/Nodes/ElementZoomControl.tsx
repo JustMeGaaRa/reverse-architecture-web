@@ -1,28 +1,33 @@
-import { Button, Flex, Icon } from "@chakra-ui/react";
-import { ZoomIn } from "iconoir-react";
+import { Button, ButtonGroup, Flex, Icon } from "@chakra-ui/react";
+import { ZoomIn, ZoomOut } from "iconoir-react";
 import { FC } from "react";
 
 export const ElementZoomControl: FC<{
-    isVisible?: boolean;
-    onZoomClick?: () => void;
+    isPanelVisible?: boolean;
+    isZoomInVisible?: boolean;
+    isZoomOutVisible?: boolean;
+    onZoomInClick?: () => void;
+    onZoomOutClick?: () => void;
 }> = ({
-    isVisible,
-    onZoomClick
+    isPanelVisible,
+    isZoomInVisible,
+    isZoomOutVisible,
+    onZoomInClick,
+    onZoomOutClick
 }) => {
     return (
         <Flex
             aria-label={"element zoom control"}
-            aria-selected={isVisible}
+            aria-selected={isPanelVisible}
             backgroundColor={"gray.900"}
             borderRadius={8}
             position={"absolute"}
             left={-6}
             top={2}
             visibility={"hidden"}
-            height={"24px"}
             zIndex={-1}
             transitionProperty={"visibility"}
-            transitionDelay={isVisible ? "unset" : "0.5s"}
+            transitionDelay={isPanelVisible ? "unset" : "0.5s"}
             _selected={{ visibility: "visible" }}
             _hover={{
                 backgroundColor: "white",
@@ -30,15 +35,32 @@ export const ElementZoomControl: FC<{
             }}
             _groupHover={{ visibility: "visible" }}
         >
-            <Button
-                aria-label={"zoom into element"}
-                leftIcon={<Icon as={ZoomIn} color={"gray.100"} boxSize={4} />}
+            <ButtonGroup
+                alignItems={"start"}
+                isAttached
+                orientation={"vertical"}
                 size={"xs"}
                 variant={"tonal"}
-                onClick={onZoomClick}
             >
-                Zoom In
-            </Button>
+                {isZoomInVisible && (
+                    <Button
+                        aria-label={"zoom into element"}
+                        leftIcon={<Icon as={ZoomIn} color={"gray.100"} boxSize={4} />}
+                        onClick={onZoomInClick}
+                    >
+                        Zoom In
+                    </Button>
+                )}
+                {isZoomOutVisible && (
+                    <Button
+                        aria-label={"zoom out from element"}
+                        leftIcon={<Icon as={ZoomOut} color={"gray.100"} boxSize={4} />}
+                        onClick={onZoomOutClick}
+                    >
+                        Zoom Out
+                    </Button>
+                )}
+            </ButtonGroup>
         </Flex>
     )
 }
