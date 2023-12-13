@@ -9,9 +9,11 @@ export const ToolbarSection: FC<PropsWithChildren<{
 }) => {
     return (
         <ButtonGroup
+            className={"workspace-toolbar__section"}
             colorScheme={"lime"}
-            gap={2}
+            gap={1}
             orientation={"horizontal"}
+            position={"relative"}
             spacing={0}
             size={size}
             variant={"toolitem"}

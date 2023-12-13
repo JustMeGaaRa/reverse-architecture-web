@@ -1,24 +1,7 @@
 import { Box,Text } from "@chakra-ui/react";
-import { ForeignElement } from "@workspace/core";
+import { WorkspaceElementPortal, WorkspaceViewportRelativerWrapper } from "@workspace/core";
+import { User } from "@workspace/live";
 import { FC } from "react";
-
-export const UserCursorGroup: FC<{ users: Array<any> }> = ({ users }) => {
-    return (
-        <>
-            {users.filter(x => x.point).map(user => (
-                <ForeignElement
-                    key={user.username}
-                    position={user.point}
-                >
-                    <UserCursor
-                        colorScheme={user.color}
-                        name={user.fullname}
-                    />
-                </ForeignElement>
-            ))}
-        </>
-    )
-}
 
 const UserCursor: FC<{
     colorScheme: string,
@@ -28,10 +11,7 @@ const UserCursor: FC<{
     name
 }) => {
     return (
-        <Box
-            data-group
-            cursor={"pointer"}
-        >
+        <Box data-group cursor={"pointer"}>
             <Box
                 backgroundColor={`${colorScheme}.900`}
                 borderRadius={"full"}
@@ -55,5 +35,32 @@ const UserCursor: FC<{
                 {name}
             </Text>
         </Box>
+    )
+}
+
+export const UserCursorGroup: FC<{ users: Array<User> }> = ({ users }) => {
+    return (
+        <WorkspaceElementPortal>
+            <Box
+                className={"workspace__user-group"}
+                position={"absolute"}
+                top={0}
+                left={0}
+                height={"100%"}
+                width={"100%"}
+            >
+                {users.filter(x => x?.position).map(user => (
+                    <WorkspaceViewportRelativerWrapper
+                        key={user.username}
+                        position={user.position}
+                    >
+                        <UserCursor
+                            colorScheme={user.color}
+                            name={user.fullname}
+                        />
+                    </WorkspaceViewportRelativerWrapper>
+                ))}
+            </Box>
+        </WorkspaceElementPortal>
     )
 }

@@ -1,28 +1,37 @@
-import { IconButton } from "@chakra-ui/react";
+import { Icon, IconButton } from "@chakra-ui/react";
 import { useOnSelectionChange, useReactFlow } from "@reactflow/core";
 import { ElementType } from "@structurizr/dsl";
-import { useWorkspaceToolbarStore } from "@workspace/core";
 import {
-    AddKeyframeAlt,
-    BinMinus,
-    Cancel,
-    ChatAdd,
+    PanelPosition,
+    useWorkspaceToolbarStore,
+    WorkspacePanel
+} from "@workspace/core";
+import {
+    Toolbar,
+    ToolbarSubmenuTrigger,
+    ToolbarProvider,
+    ToolbarSection,
+    ToolbarSubmenu,
+    ToolbarSubmenuContent,
+} from "@workspace/toolbar";
+import {
+    BinMinusIn,
+    ChatPlusIn,
     CursorPointer,
     DragHandGesture,
     FrameAltEmpty,
     Keyframe,
+    KeyframePlusIn,
     KeyframesCouple,
     Keyframes,
     LayoutRight,
     Play,
+    Square,
     Text,
     User,
+    Xmark,
 } from "iconoir-react";
 import { FC, useState } from "react";
-import {
-    ToolbarSection,
-    Toolbar
-} from "../containers";
 import {
     usePresentationMode,
     useSelectionMode,
@@ -33,7 +42,11 @@ import {
     useCommentingMode
 } from "../hooks";
 
-export const WorkspaceToolbar: FC = () => {
+export const WorkspaceToolbar: FC<{
+    position?: PanelPosition;
+}> = ({
+    position
+}) => {
     const {
         isAutoLayoutEnabled,
         isSelectionEnabled,
@@ -65,157 +78,169 @@ export const WorkspaceToolbar: FC = () => {
     useOnSelectionChange({ onChange: (selection) => { setSelection(selection) }});
 
     return (
-        <>
-            {!isPresentationEnabled && (
-                <Toolbar>
-                    <ToolbarSection>
-                        <IconButton
-                            aria-label={"selection mode"}
-                            aria-selected={isSelectionEnabled}
-                            icon={<CursorPointer />}
-                            title={"selection mode"}
-                            onClick={() => enableSelectionMode()}
-                        />
-                        <IconButton
-                            aria-label={"dragging mode"}
-                            aria-selected={isDraggingEnabled}
-                            icon={<DragHandGesture />}
-                            title={"dragging mode"}
-                            onClick={() => enableDraggingMode()}
-                        />
-                    </ToolbarSection>
-
-                    <ToolbarSection>
-                        {allowPerson && (
+        <WorkspacePanel position={position ?? "bottom-center"}>
+            <ToolbarProvider>
+                {!isPresentationEnabled && (
+                    <Toolbar>
+                        <ToolbarSection>
                             <IconButton
-                                aria-label={"person mode"}
-                                icon={<User />}
-                                aria-selected={isAddingElementEnabled && addingElementType === ElementType.Person}
-                                title={"person mode"}
-                                onClick={() => enableAddingElement(ElementType.Person)}
+                                aria-label={"selection mode"}
+                                aria-selected={isSelectionEnabled}
+                                icon={<CursorPointer />}
+                                title={"selection mode"}
+                                onClick={() => enableSelectionMode()}
                             />
-                        )}
-                        {allowSoftwareSystem && (
                             <IconButton
-                                aria-label={"software system mode"}
-                                icon={<Keyframe />}
-                                aria-selected={isAddingElementEnabled && addingElementType === ElementType.SoftwareSystem}
-                                title={"software system mode"}
-                                onClick={() => enableAddingElement(ElementType.SoftwareSystem)}
+                                aria-label={"dragging mode"}
+                                aria-selected={isDraggingEnabled}
+                                icon={<DragHandGesture />}
+                                title={"dragging mode"}
+                                onClick={() => enableDraggingMode()}
                             />
-                        )}
-                        {allowContainer && (
+                        </ToolbarSection>
+
+                        <ToolbarSection>
+                            <ToolbarSubmenu>
+                                <ToolbarSubmenuTrigger
+                                    aria-label={"shapes submenu"}
+                                    icon={<Icon as={Square} boxSize={6} />}
+                                />
+                                <ToolbarSubmenuContent>
+                                    <ToolbarSection>
+                                        {allowPerson && (
+                                            <IconButton
+                                                aria-label={"person mode"}
+                                                icon={<User />}
+                                                aria-selected={isAddingElementEnabled && addingElementType === ElementType.Person}
+                                                title={"person mode"}
+                                                onClick={() => enableAddingElement(ElementType.Person)}
+                                            />
+                                        )}
+                                        {allowSoftwareSystem && (
+                                            <IconButton
+                                                aria-label={"software system mode"}
+                                                icon={<Keyframe />}
+                                                aria-selected={isAddingElementEnabled && addingElementType === ElementType.SoftwareSystem}
+                                                title={"software system mode"}
+                                                onClick={() => enableAddingElement(ElementType.SoftwareSystem)}
+                                            />
+                                        )}
+                                        {allowContainer && (
+                                            <IconButton
+                                                aria-label={"container mode"}
+                                                icon={<KeyframesCouple />}
+                                                aria-selected={isAddingElementEnabled && addingElementType === ElementType.Container}
+                                                title={"container mode"}
+                                                onClick={() => enableAddingElement(ElementType.Container)}
+                                            />
+                                        )}
+                                        {allowComponent && (
+                                            <IconButton
+                                                aria-label={"component moe"}
+                                                icon={<Keyframes />}
+                                                aria-selected={isAddingElementEnabled && addingElementType === ElementType.Component}
+                                                title={"component mode"}
+                                                onClick={() => enableAddingElement(ElementType.Component)}
+                                            />
+                                        )}
+                                        {allowGroup && (
+                                            <IconButton
+                                                aria-label={"group mode"}
+                                                icon={<KeyframePlusIn />}
+                                                aria-selected={isAddingElementEnabled && addingElementType === ElementType.Group}
+                                                title={"group mode"}
+                                                onClick={() => enableAddingElement(ElementType.Group)}
+                                            />
+                                        )}
+                                    </ToolbarSection>
+                                </ToolbarSubmenuContent>
+                            </ToolbarSubmenu>
+                        </ToolbarSection>
+
+                        <ToolbarSection>
                             <IconButton
-                                aria-label={"container mode"}
-                                icon={<KeyframesCouple />}
-                                aria-selected={isAddingElementEnabled && addingElementType === ElementType.Container}
-                                title={"container mode"}
-                                onClick={() => enableAddingElement(ElementType.Container)}
+                                aria-label={"text edit mode"}
+                                icon={<Text />}
+                                aria-selected={isTextEditEnabled}
+                                title={"text edit mode"}
+                                onClick={() => enableTextEditMode()}
                             />
-                        )}
-                        {allowComponent && (
                             <IconButton
-                                aria-label={"component moe"}
-                                icon={<Keyframes />}
-                                aria-selected={isAddingElementEnabled && addingElementType === ElementType.Component}
-                                title={"component mode"}
-                                onClick={() => enableAddingElement(ElementType.Component)}
+                                aria-label={"multiselect"}
+                                icon={<FrameAltEmpty />}
+                                aria-selected={false}
+                                title={"multiselect"}
                             />
-                        )}
-                        {allowGroup && (
+                        </ToolbarSection>
+
+                        <ToolbarSection>
                             <IconButton
-                                aria-label={"group mode"}
-                                icon={<AddKeyframeAlt />}
-                                aria-selected={isAddingElementEnabled && addingElementType === ElementType.Group}
-                                title={"group mode"}
-                                onClick={() => enableAddingElement(ElementType.Group)}
+                                aria-label={"add comment"}
+                                icon={<ChatPlusIn />}
+                                aria-selected={isCommentAddingEnabled}
+                                title={"add comment"}
+                                onClick={() => enableCommentingMode()}
                             />
-                        )}
-                        {/* TODO: add icon butons for deployment and infrastructure nodes */}
-                    </ToolbarSection>
+                            <IconButton
+                                aria-label={"enable auto layout"}
+                                icon={<LayoutRight />}
+                                aria-selected={isAutoLayoutEnabled}
+                                title={"enable auto layout"}
+                                onClick={() => toggleAutoLayout()}
+                            />
+                        </ToolbarSection>
 
-                    <ToolbarSection>
-                        <IconButton
-                            aria-label={"text edit mode"}
-                            icon={<Text />}
-                            aria-selected={isTextEditEnabled}
-                            title={"text edit mode"}
-                            onClick={() => enableTextEditMode()}
-                        />
-                        <IconButton
-                            aria-label={"multiselect"}
-                            icon={<FrameAltEmpty />}
-                            aria-selected={false}
-                            title={"multiselect"}
-                        />
-                    </ToolbarSection>
+                        <ToolbarSection>
+                            <IconButton
+                                aria-label={"delete selected"}
+                                icon={<BinMinusIn />}
+                                aria-selected={(selection.nodes?.length > 0 || selection.edges?.length > 0)}
+                                title={"delete selected"}
+                                onClick={() => deleteElements(selection)}
+                            />
+                        </ToolbarSection>
 
-                    <ToolbarSection>
-                        <IconButton
-                            aria-label={"add comment"}
-                            icon={<ChatAdd />}
-                            aria-selected={isCommentAddingEnabled}
-                            title={"add comment"}
-                            onClick={() => enableCommentingMode()}
-                        />
-                        <IconButton
-                            aria-label={"enable auto layout"}
-                            icon={<LayoutRight />}
-                            aria-selected={isAutoLayoutEnabled}
-                            title={"enable auto layout"}
-                            onClick={() => toggleAutoLayout()}
-                        />
-                    </ToolbarSection>
+                        <ToolbarSection>
+                            <IconButton
+                                aria-label={"enable presentation mode"}
+                                icon={<Play />}
+                                title={"enable presentation mode"}
+                                onClick={() => togglePresentationMode()}
+                            />
+                        </ToolbarSection>
+                    </Toolbar>
+                )}
 
-                    <ToolbarSection>
-                        <IconButton
-                            aria-label={"delete selected"}
-                            icon={<BinMinus />}
-                            aria-selected={(selection.nodes?.length > 0 || selection.edges?.length > 0)}
-                            title={"delete selected"}
-                            onClick={() => deleteElements(selection)}
-                        />
-                    </ToolbarSection>
+                {isPresentationEnabled && (
+                    <Toolbar>
+                        <ToolbarSection>
+                            <IconButton
+                                aria-label={"follow presenter"}
+                                icon={<CursorPointer />}
+                                title={"follow presenter"}
+                            />
+                        </ToolbarSection>
 
-                    <ToolbarSection>
-                        <IconButton
-                            aria-label={"enable presentation mode"}
-                            icon={<Play />}
-                            title={"enable presentation mode"}
-                            onClick={() => togglePresentationMode()}
-                        />
-                    </ToolbarSection>
-                </Toolbar>
-            )}
+                        <ToolbarSection>
+                            <IconButton
+                                aria-label={"add comment"}
+                                icon={<ChatPlusIn />}
+                                title={"add comment"}
+                            />
+                        </ToolbarSection>
 
-            {isPresentationEnabled && (
-                <Toolbar>
-                    <ToolbarSection>
-                        <IconButton
-                            aria-label={"follow presenter"}
-                            icon={<CursorPointer />}
-                            title={"follow presenter"}
-                        />
-                    </ToolbarSection>
-
-                    <ToolbarSection>
-                        <IconButton
-                            aria-label={"add comment"}
-                            icon={<ChatAdd />}
-                            title={"add comment"}
-                        />
-                    </ToolbarSection>
-
-                    <ToolbarSection>
-                        <IconButton
-                            aria-label={"exit presentation mode"}
-                            icon={<Cancel />}
-                            title={"exit presentation mode"}
-                            onClick={() => togglePresentationMode()}
-                        />
-                    </ToolbarSection>
-                </Toolbar>
-            )}
-        </>
+                        <ToolbarSection>
+                            <IconButton
+                                aria-label={"exit presentation mode"}
+                                icon={<Xmark />}
+                                title={"exit presentation mode"}
+                                onClick={() => togglePresentationMode()}
+                            />
+                        </ToolbarSection>
+                    </Toolbar>
+                )}
+                
+            </ToolbarProvider>
+        </WorkspacePanel>
     )
 }

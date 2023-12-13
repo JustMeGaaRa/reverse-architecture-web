@@ -4,7 +4,8 @@ import {
 } from "@reactflow/background";
 import {
     useEdgesState,
-    useNodesState
+    useNodesState,
+    useReactFlow
 } from "@reactflow/core";
 import {
     IModel,
@@ -14,7 +15,7 @@ import {
 import {
     WorkspaceViewRenderer,
     useAutoLayoutEffect,
-    useViewportUtils
+    getAbsolutePoint
 } from "@workspace/core";
 import {
     FC,
@@ -45,7 +46,7 @@ export const ModelView: FC<PropsWithChildren<{
         addDeploymentNode,
         addInfrastructureNode
     } = useModelView();
-    const { getViewportPoint } = useViewportUtils();
+    const { getViewport } = useReactFlow();
 
     useAutoLayoutEffect();
     useModelRenderingEffect(strategy);

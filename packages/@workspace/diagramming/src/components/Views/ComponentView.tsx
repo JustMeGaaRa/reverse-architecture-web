@@ -4,6 +4,7 @@ import {
     NodeMouseHandler,
     useEdgesState,
     useNodesState,
+    useReactFlow,
 } from "@reactflow/core";
 import {
     ElementType,
@@ -16,8 +17,8 @@ import {
 import {
     WorkspaceViewRenderer,
     useAutoLayoutEffect,
-    useViewportUtils,
-    useWorkspaceToolbarStore
+    useWorkspaceToolbarStore,
+    getAbsolutePoint
 } from "@workspace/core";
 import {
     FC,
@@ -66,7 +67,7 @@ export const ComponentView: FC<PropsWithChildren<{
         setElementPosition
     } = useComponentView(view.identifier);
     const { zoomIntoElement } = useViewNavigation();
-    const { getViewportPoint } = useViewportUtils();
+    const { getViewport } = useReactFlow();
 
     useAutoLayoutEffect();
     useViewRenderingEffect(strategy);
@@ -86,23 +87,23 @@ export const ComponentView: FC<PropsWithChildren<{
         if (reactFlowRef.current && isAddingElementEnabled) {
             const parentOffset = reactFlowRef.current.getBoundingClientRect();
             const mousePoint = { x: event.clientX, y: event.clientY};
-            const targetPoint = {
+            const pointRelativeToViewport = {
                 x: mousePoint.x - parentOffset.left,
                 y: mousePoint.y - parentOffset.top
             };
-            const viewportPoint = getViewportPoint(targetPoint);
-            const viewportTargetPoint = {
-                x: viewportPoint.x - node.positionAbsolute.x,
-                y: viewportPoint.y - node.positionAbsolute.y
+            const pointTranslatedFromViewport = getAbsolutePoint(getViewport(), pointRelativeToViewport);
+            const pointRelativeToNode = {
+                x: pointTranslatedFromViewport.x - node.positionAbsolute.x,
+                y: pointTranslatedFromViewport.y - node.positionAbsolute.y
             };
             const groupId = node.data.element.type === ElementType.Group ? node.id : undefined;
 
             switch (addingElementType) {
                 case ElementType.Group:
-                    onWorkspaceChange?.(addGroup(viewportTargetPoint));
+                    onWorkspaceChange?.(addGroup(pointRelativeToNode));
                     break;
                 case ElementType.Component:
-                    onWorkspaceChange?.(addComponent(viewportTargetPoint, groupId));
+                    onWorkspaceChange?.(addComponent(pointRelativeToNode, groupId));
                     break;
             }
         }
@@ -111,7 +112,7 @@ export const ComponentView: FC<PropsWithChildren<{
         isAddingElementEnabled,
         addingElementType,
         onWorkspaceChange,
-        getViewportPoint,
+        getViewport,
         addGroup,
         addComponent
     ]);
@@ -119,22 +120,22 @@ export const ComponentView: FC<PropsWithChildren<{
     const handleOnPaneClick = useCallback((event: React.MouseEvent) => {
         if (reactFlowRef.current && isAddingElementEnabled) {
             const parentOffset = reactFlowRef.current.getBoundingClientRect();
-            const mousePoint = { x: event.clientX, y: event.clientY};
-            const targetPoint = {
+            const mousePoint = { x: event.clientX, y: event.clientY };
+            const pointRelativeToViewport = {
                 x: mousePoint.x - parentOffset.left,
                 y: mousePoint.y - parentOffset.top
             };
-            const viewportPoint = getViewportPoint(targetPoint);
+            const pointTranslatedFromViewport = getAbsolutePoint(getViewport(), pointRelativeToViewport);
 
             switch (addingElementType) {
                 case ElementType.SoftwareSystem:
-                    onWorkspaceChange?.(addSoftwareSystem(viewportPoint));
+                    onWorkspaceChange?.(addSoftwareSystem(pointTranslatedFromViewport));
                     break;
                 case ElementType.Person:
-                    onWorkspaceChange?.(addPerson(viewportPoint));
+                    onWorkspaceChange?.(addPerson(pointTranslatedFromViewport));
                     break;
                 case ElementType.Container:
-                    onWorkspaceChange?.(addContainer(viewportPoint));
+                    onWorkspaceChange?.(addContainer(pointTranslatedFromViewport));
                     break;
             }
         }
@@ -143,7 +144,7 @@ export const ComponentView: FC<PropsWithChildren<{
         isAddingElementEnabled,
         addingElementType,
         onWorkspaceChange,
-        getViewportPoint,
+        getViewport,
         addSoftwareSystem,
         addPerson,
         addContainer

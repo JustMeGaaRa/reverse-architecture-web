@@ -4,6 +4,7 @@ import {
     NodeMouseHandler,
     useEdgesState,
     useNodesState,
+    useReactFlow,
 } from "@reactflow/core";
 import {
     ElementType,
@@ -16,8 +17,8 @@ import {
 import {
     WorkspaceViewRenderer,
     useAutoLayoutEffect,
-    useViewportUtils,
-    useWorkspaceToolbarStore
+    useWorkspaceToolbarStore,
+    getAbsolutePoint
 } from "@workspace/core";
 import {
     FC,
@@ -64,7 +65,7 @@ export const SystemContextView: FC<PropsWithChildren<{
         setElementPosition
     } = useSystemContextView(view.identifier);
     const { zoomIntoElement } = useViewNavigation();
-    const { getViewportPoint } = useViewportUtils();
+    const { getViewport } = useReactFlow();
 
     useAutoLayoutEffect();
     useViewRenderingEffect(strategy);
@@ -84,22 +85,22 @@ export const SystemContextView: FC<PropsWithChildren<{
         if (reactFlowRef.current && isAddingElementEnabled) {
             const parentOffset = reactFlowRef.current.getBoundingClientRect();
             const mousePoint = { x: event.clientX, y: event.clientY };
-            const targetPoint = {
+            const pointRelativeToViewport = {
                 x: mousePoint.x - parentOffset.left,
                 y: mousePoint.y - parentOffset.top
             };
-            const viewportPoint = getViewportPoint(targetPoint);
-            const viewportTargetPoint = {
-                x: viewportPoint.x - node.positionAbsolute.x,
-                y: viewportPoint.y - node.positionAbsolute.y
+            const pointTranslatedFromViewport = getAbsolutePoint(getViewport(), pointRelativeToViewport);
+            const pointRelativeToNode = {
+                x: pointTranslatedFromViewport.x - node.positionAbsolute.x,
+                y: pointTranslatedFromViewport.y - node.positionAbsolute.y
             };
 
             switch (addingElementType) {
                 case ElementType.SoftwareSystem:
-                    onWorkspaceChange?.(addSoftwareSystem(viewportTargetPoint, node.id));
+                    onWorkspaceChange?.(addSoftwareSystem(pointRelativeToNode, node.id));
                     break;
                 case ElementType.Person:
-                    onWorkspaceChange?.(addPerson(viewportTargetPoint, node.id));
+                    onWorkspaceChange?.(addPerson(pointRelativeToNode, node.id));
                     break;
             }
         }
@@ -108,7 +109,7 @@ export const SystemContextView: FC<PropsWithChildren<{
         addingElementType,
         isAddingElementEnabled,
         onWorkspaceChange,
-        getViewportPoint,
+        getViewport,
         addSoftwareSystem,
         addPerson
     ]);
@@ -117,21 +118,21 @@ export const SystemContextView: FC<PropsWithChildren<{
         if (reactFlowRef.current && isAddingElementEnabled) {
             const parentOffset = reactFlowRef.current.getBoundingClientRect();
             const mousePoint = { x: event.clientX, y: event.clientY };
-            const targetPoint = {
+            const pointRelativeToViewport = {
                 x: mousePoint.x - parentOffset.left,
                 y: mousePoint.y - parentOffset.top
             };
-            const viewportPoint = getViewportPoint(targetPoint);
+            const pointTranslatedFromViewport = getAbsolutePoint(getViewport(), pointRelativeToViewport);
 
             switch (addingElementType) {
                 case ElementType.Group:
-                    onWorkspaceChange?.(addGroup(viewportPoint));
+                    onWorkspaceChange?.(addGroup(pointTranslatedFromViewport));
                     break;
                 case ElementType.SoftwareSystem:
-                    onWorkspaceChange?.(addSoftwareSystem(viewportPoint));
+                    onWorkspaceChange?.(addSoftwareSystem(pointTranslatedFromViewport));
                     break;
                 case ElementType.Person:
-                    onWorkspaceChange?.(addPerson(viewportPoint));
+                    onWorkspaceChange?.(addPerson(pointTranslatedFromViewport));
                     break;
             }
         }
@@ -140,7 +141,7 @@ export const SystemContextView: FC<PropsWithChildren<{
         addingElementType,
         isAddingElementEnabled,
         onWorkspaceChange,
-        getViewportPoint,
+        getViewport,
         addGroup,
         addSoftwareSystem,
         addPerson

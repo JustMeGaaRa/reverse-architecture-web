@@ -7,7 +7,7 @@ import {
     ContextSheetTitle,
 } from "@reversearchitecture/ui";
 import { WorkspaceEditor } from "@workspace/code-editor";
-import { Panel, useWorkspaceTheme, WorkspaceProvider } from "@workspace/core";
+import { useWorkspaceTheme, WorkspaceProvider } from "@workspace/core";
 import {
     WorkspaceUndoRedoControls,
     WorkspaceToolbar,
@@ -49,7 +49,7 @@ import {
 } from "../../../features";
 import {
     UserCursorGroup,
-    WorkspaceDiscussionGroup,
+    DiscussionGroup,
     WorkspacePageLayoutContent,
     WorkspaceContentMode,
     WorkspaceContentPanel
@@ -63,7 +63,7 @@ export const WorkspaceContentPage: FC = () => {
     const [ workspace, setWorkspace ] = useState(Workspace.Empty.toObject());
     const [ metadata, setMetadata ] = useState(WorkspaceMetadata.Empty.toObject());
 
-    // comment list
+    // discussions
     const [ commentThreads, setCommentThreads ] = useState<Array<CommentThread>>([]);
     const { commentApi } = useMemo(() => ({ commentApi: new CommentApi() }), []);
 
@@ -89,7 +89,7 @@ export const WorkspaceContentPage: FC = () => {
         setWorkspace(parseStructurizr(value));
     }, [parseStructurizr]);
     
-    // workspace viewer
+    // workspace
     // TODO: add selected repository to account provider or define repository provider
     const { workspaceApi } = useMemo(() => ({ workspaceApi: new WorkspaceCacheWrapper(new WorkspaceApi()) }), []);
     const [ users, setUsers ] = useState<Array<any>>([]);
@@ -137,8 +137,11 @@ export const WorkspaceContentPage: FC = () => {
         })
     }, [setQueryParam]);
 
+    const currentUser = { ...account, color: "green" };
     const isModelingMode = queryParams.get("mode") === WorkspaceContentMode.Modeling;
     const isDiagrammingMode = queryParams.get("mode") === WorkspaceContentMode.Diagramming;
+    const diagrammingDiscussions = commentThreads.filter(x => x.metadata?.view?.type !== "Model");
+    const modelingDiscussions = commentThreads.filter(x => x.metadata?.view?.type === "Model");
 
     return (
         <WorkspacePageLayoutContent>
@@ -162,7 +165,7 @@ export const WorkspaceContentPage: FC = () => {
                             )}
 
                             {queryParams.get("panel") === WorkspaceContentPanel.Editor && (
-                                <Flex direction={"column"} width={"1200px"}>
+                                <Flex direction={"column"} width={"100%"}>
                                     <ContextSheetHeader>
                                         <ContextSheetCloseButton onClick={handleOnClosePanel} />
                                         <ContextSheetTitle title={"Code Editor"} />
@@ -199,7 +202,7 @@ export const WorkspaceContentPage: FC = () => {
                                         roomId={workspaceId}
                                         onChange={(users) => setUsers(users)}
                                     >
-                                        <WorkspaceUser account={account as any} />
+                                        <WorkspaceUser user={currentUser} />
 
                                         {isDiagrammingMode && (
                                             <WorkspaceDiagramming
@@ -209,21 +212,12 @@ export const WorkspaceContentPage: FC = () => {
                                                 onWorkspaceChange={handleOnWorkspaceChange}
                                                 onWorkspaceViewChange={handleOnWorkspaceViewChange}
                                             >
-                                                <WorkspaceDiscussionGroup discussions={commentThreads} />
+                                                <DiscussionGroup discussions={diagrammingDiscussions} />
                                                 <UserCursorGroup users={users} />
-                                                
-                                                <Panel position={"top-left"}>
-                                                    <WorkspaceNavigation />
-                                                </Panel>
-                                                <Panel position={"bottom-left"}>
-                                                    <WorkspaceUndoRedoControls />
-                                                </Panel>
-                                                <Panel position={"bottom-center"}>
-                                                    <WorkspaceToolbar />
-                                                </Panel>
-                                                <Panel position={"bottom-right"}>
-                                                    <WorkspaceZoomControls />
-                                                </Panel>
+                                                <WorkspaceNavigation />
+                                                <WorkspaceUndoRedoControls />
+                                                <WorkspaceToolbar />
+                                                <WorkspaceZoomControls />
                                             </WorkspaceDiagramming>
                                         )}
 
@@ -232,15 +226,11 @@ export const WorkspaceContentPage: FC = () => {
                                                 workspace={workspace}
                                                 onWorkspaceChange={handleOnWorkspaceChange}
                                             >
-                                                <Panel position={"top-left"}>
-                                                    <WorkspaceNavigation />
-                                                </Panel>
-                                                <Panel position={"bottom-left"}>
-                                                    <WorkspaceUndoRedoControls />
-                                                </Panel>
-                                                <Panel position={"bottom-right"}>
-                                                    <WorkspaceZoomControls />
-                                                </Panel>
+                                                <DiscussionGroup discussions={modelingDiscussions} />
+                                                <UserCursorGroup users={users} />
+                                                <WorkspaceUndoRedoControls />
+                                                <WorkspaceToolbar />
+                                                <WorkspaceZoomControls />
                                             </WorkspaceModeling>
                                         )}
 

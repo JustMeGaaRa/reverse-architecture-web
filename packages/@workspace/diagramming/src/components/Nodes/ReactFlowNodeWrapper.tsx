@@ -9,6 +9,7 @@ import {
 import { ReverseArchitectureElementStyle } from "@workspace/core";
 import { FC, PropsWithChildren, useCallback, useMemo, useState } from "react";
 import { ElementFlowHandle, ElementFlowShortcut } from "./ElementHandle";
+import { ElementOptionsToolbar } from "./ElementOptionsToolbar";
 import { ElementShapeSelector } from "./ElementShapeSelector";
 import { ElementZoomControl } from "./ElementZoomControl";
 import { ReactFlowNodeHandle } from "./ReactFlowNodeHandle";
@@ -28,7 +29,7 @@ export function ReactFlowNodeWrapper(ElementNodeComponent: FC<PropsWithChildren<
     width?: number;
     height?: number;
 }>> {
-    return function ReactFlowNodeComponent({ data, selected }) {
+    return function ReactFlowNodeComponent({ id, data, selected }) {
         const elementStyle = useMemo(() => foldStyles(
                 ReverseArchitectureElementStyle,
                 data.style,
@@ -118,13 +119,15 @@ export function ReactFlowNodeWrapper(ElementNodeComponent: FC<PropsWithChildren<
                     </ElementShapeSelector>
                 </ElementFlowHandle>
 
+                <ElementOptionsToolbar />
+
                 {isTarget && (
-                    // TODO: move to react flow node wrapper
                     <ReactFlowNodeHandle
                         position={Position.Left}
                         type={"target"}
                     />
                 )}
+
                 <ElementZoomControl
                     isPanelVisible={showZoomPanel}
                     isZoomInVisible={showZoomIn}

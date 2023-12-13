@@ -30,9 +30,9 @@ export const WorkspaceModeling: FC<PropsWithChildren<{
             <ModelView
                 model={store.workspace.model}
                 onWorkspaceChange={onWorkspaceChange}
-            />
-
-            {children}
+            >
+                {children}
+            </ModelView>
         </ReactFlowProvider>
     )
 }

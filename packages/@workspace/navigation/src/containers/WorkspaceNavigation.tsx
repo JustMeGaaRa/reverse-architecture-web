@@ -17,13 +17,19 @@ import {
     ViewType
 } from "@structurizr/dsl";
 import {
+    PanelPosition,
     useWorkspaceStore,
-    useWorkspaceTheme
+    useWorkspaceTheme,
+    WorkspacePanel
 } from "@workspace/core";
 import { useViewNavigation } from "@workspace/diagramming";
 import { ChangeEvent, FC, useCallback } from "react";
 
-export const WorkspaceNavigation: FC = () => {
+export const WorkspaceNavigation: FC<{
+    position?: PanelPosition;
+}> = ({
+    position
+}) => {
     const { workspace, selectedView } = useWorkspaceStore();
     const { getViewAccentColor } = useWorkspaceTheme();
     const { zoomIntoView } = useViewNavigation();
@@ -53,43 +59,45 @@ export const WorkspaceNavigation: FC = () => {
     }, [zoomIntoView]);
 
     return (
-        <Breadcrumb separator={"/"}>
-            <BreadcrumbItem>
-                <Select
-                    backgroundColor={"whiteAlpha.100"}
-                    borderWidth={1}
-                    backdropFilter={"blur(8px)"}
-                    borderRadius={8}
-                    color={"gray.900"}
-                    size={"xs"}
-                    _hover={{
-                        backgroundColor: "whiteAlpha.200",
-                        borderColor: "whiteAlpha.400",
-                        color: "white"
-                    }}
-                    onChange={handleOnViewTypeChange}
-                >
-                    <option value={ViewType.SystemLandscape}>{ViewType.SystemLandscape}</option>
-                    <option value={ViewType.SystemContext}>{ViewType.SystemContext}</option>
-                    <option value={ViewType.Deployment}>{ViewType.Deployment}</option>
-                </Select>
-            </BreadcrumbItem>
-            {links.map(link => (
-                <BreadcrumbItem
-                    key={link.title}
-                    aria-selected={link.isActive}
-                    isCurrentPage={link.isActive}
-                >
-                    <BreadcrumbLink
+        <WorkspacePanel position={position ?? "top-left"}>
+            <Breadcrumb separator={"/"}>
+                <BreadcrumbItem>
+                    <Select
+                        backgroundColor={"whiteAlpha.100"}
+                        borderWidth={1}
+                        backdropFilter={"blur(8px)"}
+                        borderRadius={8}
+                        color={"gray.900"}
+                        size={"xs"}
+                        _hover={{
+                            backgroundColor: "whiteAlpha.200",
+                            borderColor: "whiteAlpha.400",
+                            color: "white"
+                        }}
+                        onChange={handleOnViewTypeChange}
+                    >
+                        <option value={ViewType.SystemLandscape}>{ViewType.SystemLandscape}</option>
+                        <option value={ViewType.SystemContext}>{ViewType.SystemContext}</option>
+                        <option value={ViewType.Deployment}>{ViewType.Deployment}</option>
+                    </Select>
+                </BreadcrumbItem>
+                {links.map(link => (
+                    <BreadcrumbItem
+                        key={link.title}
                         aria-selected={link.isActive}
                         isCurrentPage={link.isActive}
-                        title={link.title}
-                        onClick={() => handleOnViewItemClick(link.data)}
                     >
-                        {link.title}
-                    </BreadcrumbLink>
-                </BreadcrumbItem>
-            ))}
-        </Breadcrumb>
+                        <BreadcrumbLink
+                            aria-selected={link.isActive}
+                            isCurrentPage={link.isActive}
+                            title={link.title}
+                            onClick={() => handleOnViewItemClick(link.data)}
+                        >
+                            {link.title}
+                        </BreadcrumbLink>
+                    </BreadcrumbItem>
+                ))}
+            </Breadcrumb>
+        </WorkspacePanel>
     )
 }

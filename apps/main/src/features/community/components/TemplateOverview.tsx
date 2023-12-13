@@ -12,7 +12,7 @@ import {
     IWorkspace,
     IWorkspaceMetadata,
 } from "@structurizr/dsl";
-import { Panel } from "@workspace/core";
+import { WorkspacePanel } from "@workspace/core";
 import { WorkspaceDiagramming } from "@workspace/diagramming";
 import {
     Bookmark,
@@ -98,7 +98,7 @@ export const TemplateOverview: FC<{
                                         view={workspace.views.systemLandscape}
                                         metadata={metadata}
                                     >
-                                        <Panel position={"bottom-left"} spacing={2}>
+                                        <WorkspacePanel position={"bottom-left"} spacing={2}>
                                             <TemplateHeader
                                                 name={information?.name}
                                                 createdBy={information?.createdBy}
@@ -106,10 +106,10 @@ export const TemplateOverview: FC<{
                                                 likedCount={47}
                                                 onTryItClick={onTryItClick}
                                             />
-                                        </Panel>
-                                        <Panel position={"top-left"} spacing={2}>
+                                        </WorkspacePanel>
+                                        <WorkspacePanel position={"top-left"} spacing={2}>
                                             <WorkspaceNavigation />
-                                        </Panel>
+                                        </WorkspacePanel>
                                     </WorkspaceDiagramming>
                                 </Flex>
                             </ContextSheet>

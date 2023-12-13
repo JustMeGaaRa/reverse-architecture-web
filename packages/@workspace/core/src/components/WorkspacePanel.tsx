@@ -1,8 +1,10 @@
-import { Box, HStack } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { FC, PropsWithChildren } from "react";
 
-export const Panel: FC<PropsWithChildren<{
-    position: "top-left" | "top-center" | "top-right" | "bottom-left" | "bottom-center" | "bottom-right";
+export type PanelPosition = "top-left" | "top-center" | "top-right" | "bottom-left" | "bottom-center" | "bottom-right";
+
+export const WorkspacePanel: FC<PropsWithChildren<{
+    position: PanelPosition;
     spacing?: number;
 }>> = ({
     children,
@@ -39,10 +41,13 @@ export const Panel: FC<PropsWithChildren<{
     }
 
     return (
-        <Box position={"absolute"} {...styles[position]}>
-            <HStack spacing={spacing} padding={0}>
-                {children}
-            </HStack>
+        <Box
+            className={`workspace__panel-${position}`}
+            position={"absolute"}
+            {...styles[position]}
+            zIndex={1000}
+        >
+            {children}
         </Box>
     )
 }

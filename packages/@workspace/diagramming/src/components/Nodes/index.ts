@@ -6,6 +6,7 @@ export * from "./ElementGroupNode";
 export * from "./ElementHandle";
 export * from "./ElementLabel";
 export * from "./ElementNode";
+export * from "./ElementOptionsToolbar";
 export * from "./ElementPlaceholderNode";
 export * from "./ElementShapeSelector";
 export * from "./ElementZoomControl";

@@ -1,6 +1,6 @@
 import { Flex } from "@chakra-ui/react";
 import { Handle, Position, useReactFlow } from "@reactflow/core";
-import { AddSquare } from "iconoir-react";
+import { Square } from "iconoir-react";
 import { FC, useCallback } from "react";
 import { v4 } from "uuid"
 
@@ -75,7 +75,7 @@ export const ElementPlaceholderNode: FC<{ id: string }> = ({ id }) => {
             }}
             onClick={handleOnClick}
         >
-            <AddSquare stroke={"whiteAlpha.400"} />
+            <Square stroke={"whiteAlpha.400"} />
             <Handle id={"handle-1"} type={"target"} position={Position.Top} />
             <Handle id={"handle-2"} type={"source"} position={Position.Bottom} />
         </Flex>

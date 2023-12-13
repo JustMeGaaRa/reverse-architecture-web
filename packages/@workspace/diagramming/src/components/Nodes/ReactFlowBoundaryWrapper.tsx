@@ -9,6 +9,7 @@ import {
 } from "@structurizr/dsl";
 import { ReverseArchitectureElementStyle } from "@workspace/core";
 import { FC, PropsWithChildren, useCallback, useMemo, useState } from "react";
+import { ElementOptionsToolbar } from "./ElementOptionsToolbar";
 import { ElementZoomControl } from "./ElementZoomControl";
 
 export function ReactFlowBoundaryWrapper(ElementBoundaryComponent: FC<PropsWithChildren<{
@@ -39,7 +40,6 @@ export function ReactFlowBoundaryWrapper(ElementBoundaryComponent: FC<PropsWithC
         const showZoomOut = data.element.tags.some(tag => tag.name === Tag.SoftwareSystem.name || tag.name === Tag.Container.name);
         
         // TODO: consider using useResizeObserver
-        // TODO: consider moving logic specific to reactflow outside of this component
         // TODO: set element size in the workspace view metadata
         const { setNodes } = useReactFlow();
         const onResize = useCallback((event, params) => {
@@ -108,6 +108,8 @@ export function ReactFlowBoundaryWrapper(ElementBoundaryComponent: FC<PropsWithC
                     onZoomInClick={handleOnZoomInClick}
                     onZoomOutClick={handleOnZoomOutClick}
                 />
+
+                <ElementOptionsToolbar />
             </ElementBoundaryComponent>
         )
     }

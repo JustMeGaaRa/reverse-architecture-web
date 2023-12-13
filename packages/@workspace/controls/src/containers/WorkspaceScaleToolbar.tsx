@@ -1,7 +1,7 @@
 import { IconButton, useDisclosure } from "@chakra-ui/react";
+import { Toolbar, ToolbarSection } from "@workspace/toolbar";
 import { Enlarge, Reduce } from "iconoir-react";
 import { FC, useCallback } from "react";
-import { Toolbar, ToolbarSection } from "../containers";
 
 export const WorkspaceScaleToolbar: FC<{
     onEnlargeClick?: () => void;

@@ -1,14 +1,16 @@
 {
-    "display": "@justmegaara/y-reactflow",
+    "display": "@workspace/toolbar",
     "extends": "tsconfig/react-library.json",
     "include": [
         "./src/**/*"
     ],
     "exclude": [
-        "node_modules",
-        "dist"
+        "dist",
+        "build",
+        "node_modules"
     ],
     "compilerOptions": {
+        "strict": false,
         "outDir": "./dist",
         "rootDir": "./src",
     }

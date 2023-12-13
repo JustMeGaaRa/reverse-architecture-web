@@ -53,7 +53,9 @@ export const WorkspaceDiagramming: FC<PropsWithChildren<{
                     configuration={store.workspace.views.configuration}
                     view={store.selectedView}
                     onWorkspaceChange={onWorkspaceChange}
-                />
+                >
+                    {children}
+                </SystemLandscapeView>
             )}
 
             {store.selectedView?.type === ViewType.SystemContext && (
@@ -62,7 +64,9 @@ export const WorkspaceDiagramming: FC<PropsWithChildren<{
                     configuration={store.workspace.views.configuration}
                     view={store.selectedView}
                     onWorkspaceChange={onWorkspaceChange}
-                />
+                >
+                    {children}
+                </SystemContextView>
             )}
 
             {store.selectedView?.type === ViewType.Container && (
@@ -71,7 +75,9 @@ export const WorkspaceDiagramming: FC<PropsWithChildren<{
                     configuration={store.workspace.views.configuration}
                     view={store.selectedView}
                     onWorkspaceChange={onWorkspaceChange}
-                />
+                >
+                    {children}
+                </ContainerView>
             )}
 
             {store.selectedView?.type === ViewType.Component && (
@@ -80,7 +86,9 @@ export const WorkspaceDiagramming: FC<PropsWithChildren<{
                     configuration={store.workspace.views.configuration}
                     view={store.selectedView}
                     onWorkspaceChange={onWorkspaceChange}
-                />
+                >
+                    {children}
+                </ComponentView>
             )}
 
             {store.selectedView?.type === ViewType.Deployment && (
@@ -89,10 +97,10 @@ export const WorkspaceDiagramming: FC<PropsWithChildren<{
                     configuration={workspace.views.configuration}
                     view={store.selectedView as any}
                     onWorkspaceChange={onWorkspaceChange}
-                />
+                >
+                    {children}
+                </DeploymentView>
             )}
-
-            {children}
         </ReactFlowProvider>
     )
 }

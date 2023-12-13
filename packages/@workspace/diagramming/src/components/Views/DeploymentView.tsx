@@ -4,6 +4,7 @@ import {
     NodeMouseHandler,
     useEdgesState,
     useNodesState,
+    useReactFlow,
 } from "@reactflow/core";
 import {
     ElementType,
@@ -16,8 +17,8 @@ import {
 import {
     WorkspaceViewRenderer,
     useAutoLayoutEffect,
-    useViewportUtils,
-    useWorkspaceToolbarStore
+    useWorkspaceToolbarStore,
+    getAbsolutePoint
 } from "@workspace/core";
 import {
     FC,
@@ -66,7 +67,7 @@ export const DeploymentView: FC<PropsWithChildren<{
         addRelationship,
         setElementPosition
     } = useDeploymentView(view.identifier, view.environment);
-    const { getViewportPoint } = useViewportUtils();
+    const { getViewport } = useReactFlow();
 
     useAutoLayoutEffect();
     useViewRenderingEffect(strategy);
@@ -81,14 +82,14 @@ export const DeploymentView: FC<PropsWithChildren<{
         if (reactFlowRef.current && isAddingElementEnabled) {
             const parentOffset = reactFlowRef.current.getBoundingClientRect();
             const mousePoint = { x: event.clientX, y: event.clientY};
-            const targetPoint = {
+            const pointRelativeToViewport = {
                 x: mousePoint.x - parentOffset.left,
                 y: mousePoint.y - parentOffset.top
             };
-            const viewportPoint = getViewportPoint(targetPoint);
-            const viewportTargetPoint = {
-                x: viewportPoint.x - node.positionAbsolute.x,
-                y: viewportPoint.y - node.positionAbsolute.y
+            const pointTranslatedFromViewport = getAbsolutePoint(getViewport(), pointRelativeToViewport);
+            const pointRelativeToNode = {
+                x: pointTranslatedFromViewport.x - node.positionAbsolute.x,
+                y: pointTranslatedFromViewport.y - node.positionAbsolute.y
             };
 
             switch (addingElementType) {
@@ -99,18 +100,18 @@ export const DeploymentView: FC<PropsWithChildren<{
         reactFlowRef,
         isAddingElementEnabled,
         addingElementType,
-        getViewportPoint,
+        getViewport,
     ]);
 
     const handleOnPaneClick = useCallback((event: React.MouseEvent) => {
         if (reactFlowRef.current && isAddingElementEnabled) {
             const parentOffset = reactFlowRef.current.getBoundingClientRect();
             const mousePoint = { x: event.clientX, y: event.clientY};
-            const targetPoint = {
+            const pointRelativeToViewport = {
                 x: mousePoint.x - parentOffset.left,
                 y: mousePoint.y - parentOffset.top
             };
-            const viewportPoint = getViewportPoint(targetPoint);
+            const pointTranslatedFromViewport = getAbsolutePoint(getViewport(), pointRelativeToViewport);
 
             switch (addingElementType) {
                 // TODO: add element based on type
@@ -120,7 +121,7 @@ export const DeploymentView: FC<PropsWithChildren<{
         reactFlowRef,
         isAddingElementEnabled,
         addingElementType,
-        getViewportPoint,
+        getViewport,
     ]);
 
     const handleOnConnect = useCallback((connection: Connection) => {

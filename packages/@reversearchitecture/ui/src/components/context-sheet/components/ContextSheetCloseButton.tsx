@@ -1,5 +1,5 @@
-import { IconButton } from "@chakra-ui/react";
-import { Cancel } from "iconoir-react";
+import { Icon, IconButton } from "@chakra-ui/react";
+import { Xmark } from "iconoir-react";
 import { FC } from "react";
 
 export const ContextSheetCloseButton: FC<{
@@ -13,7 +13,7 @@ export const ContextSheetCloseButton: FC<{
         <IconButton
             aria-label={"close context sheet"}
             colorScheme={"gray"}
-            icon={<Cancel />}
+            icon={<Icon as={Xmark} boxSize={6} />}
             size={size}
             title={"close context sheet"}
             variant={"tonal"}

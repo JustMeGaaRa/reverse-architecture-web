@@ -8,11 +8,16 @@ import {
     MenuList
 } from "@chakra-ui/react";
 import { useReactFlow, useStore, getRectOfNodes } from "@reactflow/core";
+import { PanelPosition, WorkspacePanel } from "@workspace/core";
+import { Toolbar, ToolbarSection } from "@workspace/toolbar";
 import { Minus, Plus } from "iconoir-react";
 import { FC, useCallback, useMemo } from "react";
-import { ToolbarSection, Toolbar } from "../containers";
 
-export const WorkspaceZoomControls: FC = () => {
+export const WorkspaceZoomControls: FC<{
+    position?: PanelPosition;
+}> = ({
+    position
+}) => {
     const zoom = useStore((state) => (state.transform[2] * 100));
     const { getNodes, zoomTo, zoomIn, zoomOut, fitView, setCenter } = useReactFlow();
 
@@ -32,37 +37,39 @@ export const WorkspaceZoomControls: FC = () => {
     ], [fitView, focusCenter, zoomTo]);
 
     return (
-        <Toolbar>
-            <ToolbarSection>
-                <IconButton
-                    aria-label={"zoom out"}
-                    icon={<Minus height={"24px"} width={"24px"} />}
-                    title={"zoom out"}
-                    onClick={() => zoomOut()}
-                />
-                <Menu>
-                    <MenuButton as={Button}>
-                        {`${zoom.toFixed(0)}%`}
-                    </MenuButton>
-                    <MenuList>
-                        {items.map(item => (
-                            <MenuItem
-                                key={item.title}
-                                command={item.command}
-                                onClick={item.onClick}
-                            >
-                                {item.title}
-                            </MenuItem>
-                        ))}
-                    </MenuList>
-                </Menu>
-                <IconButton
-                    aria-label={"zoom in"}
-                    title={"zoom in"}
-                    icon={<Plus />}
-                    onClick={() => zoomIn()}
-                />
-            </ToolbarSection>
-        </Toolbar>
+        <WorkspacePanel position={position ?? "bottom-right"}>
+            <Toolbar>
+                <ToolbarSection>
+                    <IconButton
+                        aria-label={"zoom out"}
+                        icon={<Minus height={"24px"} width={"24px"} />}
+                        title={"zoom out"}
+                        onClick={() => zoomOut()}
+                    />
+                    <Menu>
+                        <MenuButton as={Button}>
+                            {`${zoom.toFixed(0)}%`}
+                        </MenuButton>
+                        <MenuList>
+                            {items.map(item => (
+                                <MenuItem
+                                    key={item.title}
+                                    command={item.command}
+                                    onClick={item.onClick}
+                                >
+                                    {item.title}
+                                </MenuItem>
+                            ))}
+                        </MenuList>
+                    </Menu>
+                    <IconButton
+                        aria-label={"zoom in"}
+                        title={"zoom in"}
+                        icon={<Plus />}
+                        onClick={() => zoomIn()}
+                    />
+                </ToolbarSection>
+            </Toolbar>
+        </WorkspacePanel>
     )
 }

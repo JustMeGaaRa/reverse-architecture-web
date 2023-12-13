@@ -14,11 +14,11 @@ import {
     useWorkspaceRoom,
     useAwarenessEffect
 } from "../hooks";
-import { Account } from "../types";
+import { User } from "../types";
 
 export const WorkspaceRoom: FC<PropsWithChildren<{
     roomId: string;
-    onChange?: (users: Array<Account>) => void;
+    onChange?: (users: Array<User>) => void;
 }>> = ({
     children,
     roomId,
@@ -29,7 +29,7 @@ export const WorkspaceRoom: FC<PropsWithChildren<{
     const onAwarenessChange = useCallback((awareness: Awareness) => {
         const users = Array
             .from(awareness.states.entries() ?? [])
-            .map(([, value]) => value.account as Account);
+            .map(([, value]) => value.account as User);
 
         setUsers(users);
         onChange?.(users);
@@ -68,7 +68,7 @@ export const WorkspaceRoom: FC<PropsWithChildren<{
 export const WorkspaceRoomProvider: FC<PropsWithChildren> = ({ children }) => {
     const [ ydoc, setYDoc ] = useState<Y.Doc>();
     const [ provider, setProvider ] = useState<WebrtcProvider>();
-    const [ users, setUsers ] = useState<Array<Account>>([]);
+    const [ users, setUsers ] = useState<Array<User>>([]);
 
     return (
         <WorkspaceRoomContext.Provider
@@ -86,20 +86,20 @@ export const WorkspaceRoomProvider: FC<PropsWithChildren> = ({ children }) => {
     )
 }
 
-export const WorkspaceUser: FC<{ account: Account }> = ({ account }) => {
+export const WorkspaceUser: FC<{ user: User }> = ({ user }) => {
     const { joinRoom, leaveRoom } = useWorkspaceRoom();
 
     useEffect(() => {
-        if (account) {
-            joinRoom(account);
+        if (user) {
+            joinRoom(user);
         }
 
         return () => {
-            if (account) {
+            if (user) {
                 leaveRoom();
             }
         }
-    }, [account, joinRoom, leaveRoom]);
+    }, [user, joinRoom, leaveRoom]);
 
     return null;
 }

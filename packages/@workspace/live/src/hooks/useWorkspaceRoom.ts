@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useWorkspaceRoomStore } from "../hooks";
-import { Account } from "../types";
+import { User } from "../types";
 
 export const useWorkspaceRoom = () => {
     // users: Account[];   // the list of users in the current room
@@ -10,7 +10,7 @@ export const useWorkspaceRoom = () => {
 
     const { provider } = useWorkspaceRoomStore();
     
-    const joinRoom = useCallback((account: Account) => {
+    const joinRoom = useCallback((account: User) => {
         provider?.awareness.setLocalState({ account });
     }, [provider]);
     
@@ -18,8 +18,8 @@ export const useWorkspaceRoom = () => {
         provider?.awareness.setLocalState({ account: undefined });
     }, [provider]);
 
-    const setMousePosition = useCallback((point: { x: number, y: number }) => {
-        provider?.awareness.setLocalStateField("mouse", point);
+    const setMousePosition = useCallback((position: { x: number, y: number }) => {
+        provider?.awareness.setLocalStateField("position", position);
     }, [provider]);
 
     return {
