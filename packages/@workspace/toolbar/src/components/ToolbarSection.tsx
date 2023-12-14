@@ -13,6 +13,8 @@ export const ToolbarSection: FC<PropsWithChildren<{
             colorScheme={"lime"}
             gap={1}
             orientation={"horizontal"}
+            justifyContent={"center"}
+            alignItems={"center"}
             position={"relative"}
             spacing={0}
             size={size}

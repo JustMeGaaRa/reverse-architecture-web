@@ -18,6 +18,8 @@ export const WorkspaceUndoRedoControls: FC<{
                         icon={<Undo />}
                         title={"undo last change"}
                     />
+                </ToolbarSection>
+                <ToolbarSection>
                     <IconButton
                         aria-label={"redo last change"}
                         icon={<Redo />}

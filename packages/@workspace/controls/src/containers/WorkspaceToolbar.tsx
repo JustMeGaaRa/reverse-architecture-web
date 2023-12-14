@@ -14,18 +14,17 @@ import {
     ToolbarSubmenuContent,
 } from "@workspace/toolbar";
 import {
-    BinMinusIn,
+    Component,
     ChatPlusIn,
     CursorPointer,
     DragHandGesture,
-    FrameAltEmpty,
+    Linear,
     Keyframe,
     KeyframePlusIn,
     KeyframesCouple,
     Keyframes,
-    LayoutRight,
+    MagicWand,
     Play,
-    Square,
     Text,
     User,
     Xmark,
@@ -101,7 +100,7 @@ export const WorkspaceToolbar: FC<{
                         <ToolbarSubmenu>
                             <ToolbarSubmenuTrigger
                                 aria-label={"shapes submenu"}
-                                icon={<Icon as={Square} boxSize={6} />}
+                                icon={<Icon as={Component} boxSize={6} />}
                             />
                             <ToolbarSubmenuContent>
                                 <ToolbarSection>
@@ -153,47 +152,35 @@ export const WorkspaceToolbar: FC<{
                                 </ToolbarSection>
                             </ToolbarSubmenuContent>
                         </ToolbarSubmenu>
-                    </ToolbarSection>
 
-                    <ToolbarSection>
                         <IconButton
                             aria-label={"text edit mode"}
-                            icon={<Text />}
                             aria-selected={isTextEditEnabled}
+                            icon={<Text />}
                             title={"text edit mode"}
                             onClick={() => enableTextEditMode()}
                         />
                         <IconButton
-                            aria-label={"multiselect"}
-                            icon={<FrameAltEmpty />}
+                            aria-label={"arrow mode"}
+                            icon={<Linear />}
                             aria-selected={false}
                             title={"multiselect"}
                         />
-                    </ToolbarSection>
-
-                    <ToolbarSection>
                         <IconButton
                             aria-label={"add comment"}
-                            icon={<ChatPlusIn />}
                             aria-selected={isCommentAddingEnabled}
+                            icon={<ChatPlusIn />}
                             title={"add comment"}
                             onClick={() => enableCommentingMode()}
                         />
-                        <IconButton
-                            aria-label={"enable auto layout"}
-                            icon={<LayoutRight />}
-                            aria-selected={isAutoLayoutEnabled}
-                            title={"enable auto layout"}
-                            onClick={() => toggleAutoLayout()}
-                        />
                     </ToolbarSection>
 
                     <ToolbarSection>
                         <IconButton
-                            aria-label={"delete selected"}
-                            icon={<BinMinusIn />}
+                            aria-label={"assistant"}
                             aria-selected={(selection.nodes?.length > 0 || selection.edges?.length > 0)}
-                            title={"delete selected"}
+                            icon={<MagicWand />}
+                            title={"assistant"}
                             onClick={() => deleteElements(selection)}
                         />
                     </ToolbarSection>

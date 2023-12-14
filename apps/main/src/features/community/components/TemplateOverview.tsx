@@ -107,9 +107,7 @@ export const TemplateOverview: FC<{
                                                 onTryItClick={onTryItClick}
                                             />
                                         </WorkspacePanel>
-                                        <WorkspacePanel position={"top-left"} spacing={2}>
-                                            <WorkspaceNavigation />
-                                        </WorkspacePanel>
+                                        <WorkspaceNavigation />
                                     </WorkspaceDiagramming>
                                 </Flex>
                             </ContextSheet>
