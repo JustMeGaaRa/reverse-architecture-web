@@ -1,9 +1,9 @@
-import { createContext, Dispatch, SetStateAction } from "react";
+import { createContext } from "react";
 
 export const ToolbarContext = createContext<{
-    toolbarNode?: HTMLDivElement;
-    setToolbarNode: Dispatch<SetStateAction<HTMLDivElement>>;
+    toolbarDomNode?: HTMLDivElement;
+    selectedIndex?: number;
+    setSelectedIndex?: (index: number) => void;
 }>({
-    toolbarNode: null,
-    setToolbarNode: () => { }
+    toolbarDomNode: null
 });

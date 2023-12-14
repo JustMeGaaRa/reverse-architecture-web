@@ -8,7 +8,6 @@ export const ElementGroupNode: FC<PropsWithChildren<{
     style: ElementStyleProperties;
     width?: number;
     height?: number;
-    isSelected?: boolean,
     onMouseEnter?: () => void;
     onMouseLeave?: () => void;
 }>> = ({
@@ -17,19 +16,16 @@ export const ElementGroupNode: FC<PropsWithChildren<{
     style,
     width,
     height,
-    isSelected,
     onMouseEnter,
     onMouseLeave
 }) => {
     return (
         <Box
             aria-label={"boundary outline"}
-            aria-selected={isSelected}
             borderColor={"transparent"}
             borderRadius={"33px"}
             borderWidth={1}
             position={"relative"}
-            _selected={{ borderColor: "lime.600" }}
         >
             <Flex
                 borderColor={"gray.400"}

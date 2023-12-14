@@ -32,7 +32,7 @@ export const WorkspaceNavigation: FC<{
 }) => {
     const { workspace, selectedView } = useWorkspaceStore();
     const { getViewAccentColor } = useWorkspaceTheme();
-    const { zoomIntoView } = useViewNavigation();
+    const { openView } = useViewNavigation();
 
     const pathBuilders: Map<ViewType, ISupportPath> = new Map<ViewType, ISupportPath>([
         [ ViewType.SystemLandscape, new SystemLandscapePathProvider() ],
@@ -50,13 +50,13 @@ export const WorkspaceNavigation: FC<{
     }));
 
     const handleOnViewItemClick = useCallback((viewKeys) => {
-        zoomIntoView(viewKeys);
-    }, [zoomIntoView]);
+        openView(viewKeys);
+    }, [openView]);
 
     const handleOnViewTypeChange = useCallback((event: ChangeEvent<HTMLSelectElement>) => {
         const selectedViewType = event.target.value as ViewType;
-        zoomIntoView({ type: selectedViewType, identifier: undefined });
-    }, [zoomIntoView]);
+        openView({ type: selectedViewType, identifier: undefined });
+    }, [openView]);
 
     return (
         <WorkspacePanel position={position ?? "top-left"}>

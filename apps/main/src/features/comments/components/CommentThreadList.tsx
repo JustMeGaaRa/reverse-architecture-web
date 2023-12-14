@@ -16,15 +16,15 @@ export const CommentThreadList: FC<{
         setCommentThreads,
         setSelectedThreadId
     } = useCommentsStore();
-    const { zoomIntoView } = useViewNavigation();
+    const { openView } = useViewNavigation();
 
     useEffect(() => setCommentThreads(discussions), [discussions, setCommentThreads]);
 
     const handleOnClick = useCallback((comment: CommentThread) => {
         const isCurrent = selectedThreadId === comment.commentThreadId;
         setSelectedThreadId(isCurrent ? undefined : comment.commentThreadId);
-        zoomIntoView({ type: comment.metadata.view.type as any, identifier: comment.metadata.view.id });
-    }, [selectedThreadId, setSelectedThreadId, zoomIntoView]);
+        openView({ type: comment.metadata.view.type as any, identifier: comment.metadata.view.id });
+    }, [selectedThreadId, setSelectedThreadId, openView]);
 
     return (
         <Box

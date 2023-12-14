@@ -8,8 +8,8 @@ import {
 } from "@structurizr/dsl";
 import { ReverseArchitectureElementStyle } from "@workspace/core";
 import { FC, PropsWithChildren, useCallback, useMemo, useState } from "react";
+import { useViewNavigation } from "../../hooks";
 import { ElementFlowHandle, ElementFlowShortcut } from "./ElementHandle";
-import { ElementOptionsToolbar } from "./ElementOptionsToolbar";
 import { ElementShapeSelector } from "./ElementShapeSelector";
 import { ElementZoomControl } from "./ElementZoomControl";
 import { ReactFlowNodeHandle } from "./ReactFlowNodeHandle";
@@ -36,6 +36,7 @@ export function ReactFlowNodeWrapper(ElementNodeComponent: FC<PropsWithChildren<
                 data.element.tags
         ), [data.style, data.element.tags]);
         const [ isElementHovered, setIsElementHovered ] = useState(false);
+        const { zoomIntoElement, zoomOutOfElement } = useViewNavigation();
         
         const isTarget = useStore(state => state.connectionNodeId && state.connectionNodeId !== data.element.identifier);
         const showZoomPanel = selected || isElementHovered;
@@ -55,14 +56,12 @@ export function ReactFlowNodeWrapper(ElementNodeComponent: FC<PropsWithChildren<
         }, []);
 
         const handleOnZoomInClick = useCallback(() => {
-            // TODO: call zoom function from the workspace hook
-            console.log("zoom in")
-        }, []);
+            zoomIntoElement(data.element);
+        }, [data.element, zoomIntoElement]);
 
         const handleOnZoomOutClick = useCallback(() => {
-            // TODO: call zoom function from the workspace hook
-            console.log("zoom out")
-        }, []);
+            zoomOutOfElement(data.element);
+        }, [data.element, zoomOutOfElement]);
 
         return (
             <ElementNodeComponent
@@ -118,8 +117,6 @@ export function ReactFlowNodeWrapper(ElementNodeComponent: FC<PropsWithChildren<
                         <ElementFlowShortcut shortcutKeys={"Ctrl + ↓"} />
                     </ElementShapeSelector>
                 </ElementFlowHandle>
-
-                <ElementOptionsToolbar />
 
                 {isTarget && (
                     <ReactFlowNodeHandle

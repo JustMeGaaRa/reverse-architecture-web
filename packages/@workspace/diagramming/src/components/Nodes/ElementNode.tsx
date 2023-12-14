@@ -8,21 +8,17 @@ export const ElementNode: FC<PropsWithChildren<{
     style: ElementStyleProperties;
     height?: number;
     width?: number;
-    isHovered?: boolean;
-    isSelected?: boolean;
     onMouseEnter?: () => void;
     onMouseLeave?: () => void;
 }>> = ({
     children,
     data,
     style,
-    isHovered,
-    isSelected,
     onMouseEnter,
     onMouseLeave
 }) => {
     return (
-        <ElementShapeSelector isSelected={isSelected} style={style}>
+        <ElementShapeSelector style={style}>
             <ElementLabel
                 data={data}
                 style={style}

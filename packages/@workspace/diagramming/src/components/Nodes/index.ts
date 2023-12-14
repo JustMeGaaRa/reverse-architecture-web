@@ -8,6 +8,7 @@ export * from "./ElementLabel";
 export * from "./ElementNode";
 export * from "./ElementOptionsToolbar";
 export * from "./ElementPlaceholderNode";
+export * from "./ElementSelectionBorder";
 export * from "./ElementShapeSelector";
 export * from "./ElementZoomControl";
 export * from "./ReactFlowBoundaryWrapper";

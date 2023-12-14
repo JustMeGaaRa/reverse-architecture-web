@@ -1,4 +1,4 @@
-import { Edge, Node } from "@reactflow/core";
+import { Edge, getNodesBounds, Node, ReactFlowState } from "@reactflow/core";
 import {
     IElement,
     IRelationship,
@@ -8,6 +8,16 @@ import {
     Tag,
 } from "@structurizr/dsl";
 import { ReactFlowNodeTypeKeys } from "../components";
+
+export const nodeSelector = (state: ReactFlowState) => {
+    const selectedNodes = Array.from(state.nodeInternals.values()).filter(node => node.selected);
+
+    return ({
+        selectionBounds: getNodesBounds(selectedNodes, state.nodeOrigin),
+        selectedNodeIds: selectedNodes.map(node => node.id),
+        canLock: selectedNodes.some(node => node.draggable),
+    })
+}
 
 export type ElementParams<TElement extends IElement = any> = {
     element: TElement;

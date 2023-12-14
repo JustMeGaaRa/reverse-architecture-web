@@ -1,6 +1,6 @@
 import { Box, ScaleFade } from "@chakra-ui/react";
 import {
-    WorkspaceElementRelativeWrapper,
+    WorkspaceNodeRelativeWrapper,
     useWorkspaceStore,
     WorkspaceViewportRelativerWrapper,
     WorkspaceElementPortal
@@ -88,7 +88,7 @@ export const DiscussionGroup: FC<{
                 width={"100%"}
             >
                 {elementRelativeDiscussions.map(thread => (
-                    <WorkspaceElementRelativeWrapper
+                    <WorkspaceNodeRelativeWrapper
                         key={thread.commentThreadId}
                         nodeId={thread.metadata.elementId}
                     >
@@ -96,7 +96,7 @@ export const DiscussionGroup: FC<{
                             commentThread={thread}
                             onClick={handleOnBadgeClick}
                         />
-                    </WorkspaceElementRelativeWrapper>
+                    </WorkspaceNodeRelativeWrapper>
                 ))}
                 
                 {viewportRelativeDiscussions.map(thread => (
@@ -112,7 +112,7 @@ export const DiscussionGroup: FC<{
                 ))}
                 
                 {selectedDiscussion && (
-                    <WorkspaceElementRelativeWrapper
+                    <WorkspaceNodeRelativeWrapper
                         key={selectedDiscussion.commentThreadId}
                         nodeId={selectedDiscussion.metadata.elementId}
                     >
@@ -127,7 +127,7 @@ export const DiscussionGroup: FC<{
                                 onClose={handleOnClose}
                             />
                         </ScaleFade>
-                    </WorkspaceElementRelativeWrapper>
+                    </WorkspaceNodeRelativeWrapper>
                 )}
             </Box>
         </WorkspaceElementPortal>

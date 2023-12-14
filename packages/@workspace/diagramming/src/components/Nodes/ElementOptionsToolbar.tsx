@@ -1,119 +1,166 @@
 import { Icon, IconButton } from "@chakra-ui/react";
-import { Position, ReactFlowState, useReactFlow, useStore } from "@reactflow/core";
+import { Position, useReactFlow, useStore } from "@reactflow/core";
 import { NodeToolbar } from "@reactflow/node-toolbar";
-import { Toolbar, ToolbarProvider, ToolbarSection, ToolbarSubmenu, ToolbarSubmenuContent, ToolbarSubmenuTrigger } from "@workspace/toolbar";
-import { BinMinusIn, CoinsSwap, Copy, Keyframe, KeyframePlusIn, Keyframes, KeyframesCouple, Lock, LockSlash, Square, User } from "iconoir-react";
+import {
+    Toolbar,
+    ToolbarSection,
+    ToolbarSubmenu,
+    ToolbarSubmenuContent,
+    ToolbarSubmenuTrigger
+} from "@workspace/toolbar";
+import {
+    BinMinusIn,
+    Circle,
+    CoinsSwap,
+    Copy,
+    Cylinder,
+    Hexagon,
+    Keyframe,
+    KeyframePlusIn,
+    Keyframes,
+    KeyframesCouple,
+    Lock,
+    LockSlash,
+    Square,
+    User
+} from "iconoir-react";
 import { FC, useCallback } from "react";
+import { nodeSelector } from "../../utils";
 
-const nodeSelector = (state: ReactFlowState, nodeId?: string) => ({
-    // TODO: fix this by using currently selected nodes instead of passing node id
-    // isLocked: state.nodeInternals.get(nodeId)?.draggable,
-    isLocked: false,
-})
-
-export const ElementOptionsToolbar: FC<{
-    nodeId?: string;
-}> = ({
-    nodeId
-}) => {
-    const { isLocked } = useStore(state => nodeSelector(state, nodeId));
+export const ElementOptionsToolbar: FC = () => {
+    const { selectedNodeIds, canLock } = useStore(nodeSelector);
     const { setNodes } = useReactFlow();
 
     const handleOnClickLockNode = useCallback(() => {
         setNodes(nodes => {
-            return nodes.map(node => node.id !== nodeId
+            return nodes.map(node => selectedNodeIds.some(id => id === node.id)
                 ? node
                 : { ...node, draggable: false })
         });
-    }, [nodeId, setNodes]);
+    }, [selectedNodeIds, setNodes]);
 
     const handleOnClickUnlockNode = useCallback(() => {
         setNodes(nodes => {
-            return nodes.map(node => node.id !== nodeId
+            return nodes.map(node => selectedNodeIds.some(id => id === node.id)
                 ? node
                 : { ...node, draggable: true })
         });
-    }, [nodeId, setNodes]);
+    }, [selectedNodeIds, setNodes]);
 
     return (
-        <NodeToolbar position={Position.Top} align={"center"} offset={40}>
-            <ToolbarProvider>
-                <Toolbar>
-                    <ToolbarSection>
-                        <IconButton
+        <NodeToolbar
+            align={"center"}
+            isVisible={selectedNodeIds.length > 0}
+            nodeId={selectedNodeIds}
+            offset={40}
+            position={Position.Top}
+        >
+            <Toolbar>
+                <ToolbarSection>
+                    <ToolbarSubmenu>
+                        <ToolbarSubmenuTrigger
                             aria-label={"change shape"}
                             icon={<Icon as={CoinsSwap} boxSize={6} />}
                             title={"change Shape"}
                         />
+                        <ToolbarSubmenuContent>
+                            <ToolbarSection>
+                                <IconButton
+                                    aria-label={"person"}
+                                    icon={<User />}
+                                    title={"person"}
+                                />
+                                <IconButton
+                                    aria-label={"software system"}
+                                    icon={<Keyframe />}
+                                    title={"software system"}
+                                />
+                                <IconButton
+                                    aria-label={"container"}
+                                    icon={<KeyframesCouple />}
+                                    title={"container"}
+                                />
+                                <IconButton
+                                    aria-label={"component"}
+                                    icon={<Keyframes />}
+                                    title={"component"}
+                                />
+                                <IconButton
+                                    aria-label={"group"}
+                                    icon={<KeyframePlusIn />}
+                                    title={"group"}
+                                />
+                            </ToolbarSection>
+                        </ToolbarSubmenuContent>
+                    </ToolbarSubmenu>
 
-                        <ToolbarSubmenu>
-                            <ToolbarSubmenuTrigger
-                                aria-label={"change shape"}
-                                icon={<Icon as={Square} boxSize={6} />}
-                                title={"change Shape"}
-                            />
-                            <ToolbarSubmenuContent>
-                                <ToolbarSection>
-                                    <IconButton
-                                        aria-label={"person mode"}
-                                        icon={<User />}
-                                        title={"person mode"}
-                                    />
-                                    <IconButton
-                                        aria-label={"software system mode"}
-                                        icon={<Keyframe />}
-                                        title={"software system mode"}
-                                    />
-                                    <IconButton
-                                        aria-label={"container mode"}
-                                        icon={<KeyframesCouple />}
-                                        title={"container mode"}
-                                    />
-                                    <IconButton
-                                        aria-label={"component moe"}
-                                        icon={<Keyframes />}
-                                        title={"component mode"}
-                                    />
-                                    <IconButton
-                                        aria-label={"group mode"}
-                                        icon={<KeyframePlusIn />}
-                                        title={"group mode"}
-                                    />
-                                </ToolbarSection>
-                            </ToolbarSubmenuContent>
-                        </ToolbarSubmenu>
-                    </ToolbarSection>
+                    <ToolbarSubmenu>
+                        <ToolbarSubmenuTrigger
+                            aria-label={"change shape"}
+                            icon={<Icon as={Square} boxSize={6} />}
+                            title={"change Shape"}
+                        />
+                        <ToolbarSubmenuContent>
+                            <ToolbarSection>
+                                <IconButton
+                                    aria-label={"person"}
+                                    icon={<User />}
+                                    title={"person"}
+                                />
+                                <IconButton
+                                    aria-label={"square"}
+                                    icon={<Square />}
+                                    title={"square"}
+                                />
+                                <IconButton
+                                    aria-label={"circle"}
+                                    icon={<Circle />}
+                                    title={"circle"}
+                                />
+                                <IconButton
+                                    aria-label={"hexagon"}
+                                    icon={<Hexagon />}
+                                    title={"hexagon"}
+                                />
+                                <IconButton
+                                    aria-label={"cylinder"}
+                                    icon={<Cylinder />}
+                                    title={"cylinder"}
+                                />
+                            </ToolbarSection>
+                        </ToolbarSubmenuContent>
+                    </ToolbarSubmenu>
+                </ToolbarSection>
 
-                    <ToolbarSection>
+                <ToolbarSection>
+                    <IconButton
+                        aria-label={"copy element"}
+                        icon={<Icon as={Copy} boxSize={6} />}
+                        title={"copy element"}
+                    />
+                    {canLock && (
                         <IconButton
-                            aria-label={"copy element"}
-                            icon={<Icon as={Copy} boxSize={6} />}
-                            title={"copy element"}
+                            aria-label={"lock element"}
+                            icon={<Icon as={Lock} boxSize={6} />}
+                            title={"lock element"}
+                            onClick={handleOnClickLockNode}
                         />
-                        {!isLocked && (
-                            <IconButton
-                                aria-label={"lock element"}
-                                icon={<Icon as={Lock} boxSize={6} />}
-                                title={"lock element"}
-                                onClick={handleOnClickLockNode}
-                            />
-                        )}
-                        {isLocked && (
-                            <IconButton
-                                aria-label={"unlock element"}
-                                icon={<Icon as={LockSlash} boxSize={6} />}
-                                title={"unlock element"}
-                                onClick={handleOnClickUnlockNode}
-                            />
-                        )}
+                    )}
+                    {!canLock && (
                         <IconButton
-                            aria-label={"remove shape"}
-                            icon={<Icon as={BinMinusIn} boxSize={6} color={"red.600"} />}
-                            title={"remove Shape"}
+                            aria-label={"unlock element"}
+                            icon={<Icon as={LockSlash} boxSize={6} />}
+                            title={"unlock element"}
+                            onClick={handleOnClickUnlockNode}
                         />
-                    </ToolbarSection>
-                </Toolbar>
-            </ToolbarProvider>
+                    )}
+                    <IconButton
+                        aria-label={"remove shape"}
+                        icon={<Icon as={BinMinusIn} boxSize={6} color={"red.600"} />}
+                        title={"remove Shape"}
+                    />
+                </ToolbarSection>
+            </Toolbar>
         </NodeToolbar>
     )
 }

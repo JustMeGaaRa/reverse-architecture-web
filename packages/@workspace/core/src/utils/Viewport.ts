@@ -7,6 +7,12 @@ export const nodeSelector = (nodeId: string) => {
     })
 }
 
+export const edgeSelector = (edgeId: string) => {
+    return (state: ReactFlowState) => ({
+        edge: state.edges.find(edge => edge.id === edgeId)
+    })
+}
+
 export const viewportSelector = (state: ReactFlowState) => ({
     viewport: {
         x: state.transform[0],

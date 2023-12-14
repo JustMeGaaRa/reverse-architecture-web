@@ -27,7 +27,7 @@ import {
     useMemo,
     useRef,
 } from "react";
-import { EdgeTypes, ReactFlowNodeTypes } from "../../components";
+import { EdgeTypes, ElementOptionsToolbar, ElementSelectionBorder, ReactFlowNodeTypes } from "../../components";
 import {
     useViewRenderingEffect,
     useViewNavigation,
@@ -76,11 +76,6 @@ export const ComponentView: FC<PropsWithChildren<{
         onWorkspaceChange?.(setElementPosition(node.data.element.identifier, node.position));
         onNodeDragStop?.(event, node);
     }, [onNodeDragStop, onWorkspaceChange, setElementPosition]);
-
-    const handleOnDoubleClick = useCallback((event: React.MouseEvent, node: Node) => {
-        zoomIntoElement(node.data.element);
-        onNodesDoubleClick?.(event, node);
-    }, [onNodesDoubleClick, zoomIntoElement]);
 
     // NOTE: following handlers are used to add elements when respective mode is enabled
     const handleOnNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
@@ -164,12 +159,14 @@ export const ComponentView: FC<PropsWithChildren<{
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onNodeDragStop={handleOnNodeDragStop}
-            onNodesDoubleClick={handleOnDoubleClick}
+            onNodesDoubleClick={onNodesDoubleClick}
             onNodeClick={handleOnNodeClick}
             // onMouseMove={handleOnMouseMove}
             onPaneClick={handleOnPaneClick}
             onConnect={handleOnConnect}
         >
+            <ElementOptionsToolbar />
+            <ElementSelectionBorder />
             {children}
         </WorkspaceViewRenderer>
     )

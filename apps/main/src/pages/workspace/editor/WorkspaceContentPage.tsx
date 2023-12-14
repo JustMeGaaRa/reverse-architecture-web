@@ -137,11 +137,11 @@ export const WorkspaceContentPage: FC = () => {
         })
     }, [setQueryParam]);
 
-    const currentUser = { ...account, color: "green" };
-    const isModelingMode = queryParams.get("mode") === WorkspaceContentMode.Modeling;
-    const isDiagrammingMode = queryParams.get("mode") === WorkspaceContentMode.Diagramming;
-    const diagrammingDiscussions = commentThreads.filter(x => x.metadata?.view?.type !== "Model");
-    const modelingDiscussions = commentThreads.filter(x => x.metadata?.view?.type === "Model");
+    const currentUser = useMemo(() => ({ ...account, color: "green" }), [account]);
+    const isModelingMode = useMemo(() => queryParams.get("mode") === WorkspaceContentMode.Modeling, [queryParams]);;
+    const isDiagrammingMode = useMemo(() => queryParams.get("mode") === WorkspaceContentMode.Diagramming, [queryParams]);
+    const diagrammingDiscussions = useMemo(() => commentThreads.filter(x => x.metadata?.view?.type !== "Model"), [commentThreads]);
+    const modelingDiscussions = useMemo(() => commentThreads.filter(x => x.metadata?.view?.type === "Model"), [commentThreads]);
 
     return (
         <WorkspacePageLayoutContent>

@@ -9,7 +9,7 @@ import {
 } from "@structurizr/dsl";
 import { ReverseArchitectureElementStyle } from "@workspace/core";
 import { FC, PropsWithChildren, useCallback, useMemo, useState } from "react";
-import { ElementOptionsToolbar } from "./ElementOptionsToolbar";
+import { useViewNavigation } from "../../hooks";
 import { ElementZoomControl } from "./ElementZoomControl";
 
 export function ReactFlowBoundaryWrapper(ElementBoundaryComponent: FC<PropsWithChildren<{
@@ -34,6 +34,8 @@ export function ReactFlowBoundaryWrapper(ElementBoundaryComponent: FC<PropsWithC
                 data.element.tags
         ), [data.style, data.element.tags]);
         const [ isElementHovered, setIsElementHovered ] = useState(false);
+        const { zoomIntoElement, zoomOutOfElement } = useViewNavigation();
+        const { setNodes } = useReactFlow();
     
         const showZoomPanel = selected || isElementHovered;
         const showZoomIn = false;
@@ -41,7 +43,6 @@ export function ReactFlowBoundaryWrapper(ElementBoundaryComponent: FC<PropsWithC
         
         // TODO: consider using useResizeObserver
         // TODO: set element size in the workspace view metadata
-        const { setNodes } = useReactFlow();
         const onResize = useCallback((event, params) => {
             setNodes(nodes => {
                 return nodes.map(node => node.id !== data.element.identifier
@@ -66,14 +67,12 @@ export function ReactFlowBoundaryWrapper(ElementBoundaryComponent: FC<PropsWithC
         }, []);
 
         const handleOnZoomInClick = useCallback(() => {
-            // TODO: call zoom function from the workspace hook
-            console.log("zoom in")
-        }, []);
+            zoomIntoElement(data.element);
+        }, [data.element, zoomIntoElement]);
 
         const handleOnZoomOutClick = useCallback(() => {
-            // TODO: call zoom function from the workspace hook
-            console.log("zoom out")
-        }, []);
+            zoomOutOfElement(data.element);
+        }, [data.element, zoomOutOfElement]);
 
         return (
             <ElementBoundaryComponent
@@ -108,8 +107,6 @@ export function ReactFlowBoundaryWrapper(ElementBoundaryComponent: FC<PropsWithC
                     onZoomInClick={handleOnZoomInClick}
                     onZoomOutClick={handleOnZoomOutClick}
                 />
-
-                <ElementOptionsToolbar />
             </ElementBoundaryComponent>
         )
     }
