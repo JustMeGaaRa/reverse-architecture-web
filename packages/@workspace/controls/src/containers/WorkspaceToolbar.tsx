@@ -133,7 +133,7 @@ export const WorkspaceToolbar: FC<{
                                     )}
                                     {allowComponent && (
                                         <IconButton
-                                            aria-label={"component moe"}
+                                            aria-label={"component mode"}
                                             icon={<Keyframes />}
                                             aria-selected={isAddingElementEnabled && addingElementType === ElementType.Component}
                                             title={"component mode"}
@@ -178,10 +178,8 @@ export const WorkspaceToolbar: FC<{
                     <ToolbarSection>
                         <IconButton
                             aria-label={"assistant"}
-                            aria-selected={(selection.nodes?.length > 0 || selection.edges?.length > 0)}
                             icon={<MagicWand />}
                             title={"assistant"}
-                            onClick={() => deleteElements(selection)}
                         />
                     </ToolbarSection>
 

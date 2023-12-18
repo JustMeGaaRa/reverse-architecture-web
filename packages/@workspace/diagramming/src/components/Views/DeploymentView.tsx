@@ -28,7 +28,11 @@ import {
     useMemo,
     useRef,
 } from "react";
-import { EdgeTypes, ElementOptionsToolbar, ElementSelectionBorder, ReactFlowNodeTypes } from "../../components";
+import {
+    EdgeTypes,
+    ElementOptionsToolbar,
+    ReactFlowNodeTypes
+} from "../../components";
 import {
     useViewRenderingEffect,
     useViewNavigation,
@@ -145,7 +149,6 @@ export const DeploymentView: FC<PropsWithChildren<{
             onConnect={handleOnConnect}
         >
             <ElementOptionsToolbar />
-            <ElementSelectionBorder />
             {children}
         </WorkspaceViewRenderer>
     )

@@ -1,18 +1,12 @@
-import { NodeProps, Position, useStore } from "@reactflow/core";
+import { Handle, NodeProps, Position, useStore } from "@reactflow/core";
 import {
     IElement,
     ElementStyle,
     ElementStyleProperties,
     foldStyles,
-    Tag
 } from "@structurizr/dsl";
 import { ReverseArchitectureElementStyle } from "@workspace/core";
-import { FC, PropsWithChildren, useCallback, useMemo, useState } from "react";
-import { useViewNavigation } from "../../hooks";
-import { ElementFlowHandle, ElementFlowShortcut } from "./ElementHandle";
-import { ElementShapeSelector } from "./ElementShapeSelector";
-import { ElementZoomControl } from "./ElementZoomControl";
-import { ReactFlowNodeHandle } from "./ReactFlowNodeHandle";
+import { FC, PropsWithChildren, useMemo } from "react";
 
 export function ReactFlowNodeWrapper(ElementNodeComponent: FC<PropsWithChildren<{
     data: IElement;
@@ -35,33 +29,8 @@ export function ReactFlowNodeWrapper(ElementNodeComponent: FC<PropsWithChildren<
                 data.style,
                 data.element.tags
         ), [data.style, data.element.tags]);
-        const [ isElementHovered, setIsElementHovered ] = useState(false);
-        const { zoomIntoElement, zoomOutOfElement } = useViewNavigation();
         
         const isTarget = useStore(state => state.connectionNodeId && state.connectionNodeId !== data.element.identifier);
-        const showZoomPanel = selected || isElementHovered;
-        const showZoomIn = data.element.tags.some(tag => tag.name === Tag.SoftwareSystem.name || tag.name === Tag.Container.name);
-        const showZoomOut = false;
-
-        const handleOnMouseEnterElement = useCallback(() => {
-            setIsElementHovered(true);
-        }, []);
-
-        const handleOnMouseLeaveElement = useCallback(() => {
-            setIsElementHovered(false);
-        }, []);
-
-        const handleOnClickHandle = useCallback(() => {
-
-        }, []);
-
-        const handleOnZoomInClick = useCallback(() => {
-            zoomIntoElement(data.element);
-        }, [data.element, zoomIntoElement]);
-
-        const handleOnZoomOutClick = useCallback(() => {
-            zoomOutOfElement(data.element);
-        }, [data.element, zoomOutOfElement]);
 
         return (
             <ElementNodeComponent
@@ -69,68 +38,45 @@ export function ReactFlowNodeWrapper(ElementNodeComponent: FC<PropsWithChildren<
                 style={elementStyle}
                 height={data.height}
                 width={data.width}
-                isHovered={isElementHovered}
                 isSelected={selected}
-                onMouseEnter={handleOnMouseEnterElement}
-                onMouseLeave={handleOnMouseLeaveElement}
             >
-                <ElementFlowHandle
-                    position={Position.Left}
-                    isHovered={isElementHovered}
-                    isSelected={selected}
-                    onClick={handleOnClickHandle}
-                >
-                    <ElementShapeSelector style={{ ...elementStyle, opacity: 0.4 }}>
-                        <ElementFlowShortcut shortcutKeys={"Ctrl + ←"} />
-                    </ElementShapeSelector>
-                </ElementFlowHandle>
-                
-                <ElementFlowHandle
-                    position={Position.Right}
-                    isHovered={isElementHovered}
-                    isSelected={selected}
-                    onClick={handleOnClickHandle}
-                >
-                    <ElementShapeSelector style={{ ...elementStyle, opacity: 0.4 }}>
-                        <ElementFlowShortcut shortcutKeys={"Ctrl + →"} />
-                    </ElementShapeSelector>
-                </ElementFlowHandle>
-                
-                <ElementFlowHandle
-                    position={Position.Top}
-                    isHovered={isElementHovered}
-                    isSelected={selected}
-                    onClick={handleOnClickHandle}
-                >
-                    <ElementShapeSelector style={{ ...elementStyle, opacity: 0.4 }}>
-                        <ElementFlowShortcut shortcutKeys={"Ctrl + ↑"} />
-                    </ElementShapeSelector>
-                </ElementFlowHandle>
-                
-                <ElementFlowHandle
+                <Handle
+                    id={"handle-source-bottom"}
                     position={Position.Bottom}
-                    isHovered={isElementHovered}
-                    isSelected={selected}
-                    onClick={handleOnClickHandle}
-                >
-                    <ElementShapeSelector style={{ ...elementStyle, opacity: 0.4 }}>
-                        <ElementFlowShortcut shortcutKeys={"Ctrl + ↓"} />
-                    </ElementShapeSelector>
-                </ElementFlowHandle>
-
-                {isTarget && (
-                    <ReactFlowNodeHandle
-                        position={Position.Left}
-                        type={"target"}
-                    />
-                )}
-
-                <ElementZoomControl
-                    isPanelVisible={showZoomPanel}
-                    isZoomInVisible={showZoomIn}
-                    isZoomOutVisible={showZoomOut}
-                    onZoomInClick={handleOnZoomInClick}
-                    onZoomOutClick={handleOnZoomOutClick}
+                    type={"source"}
+                    style={{ background: "none", border: "none" }}
+                />
+                <Handle
+                    id={"handle-source-left"}
+                    position={Position.Left}
+                    type={"source"}
+                    style={{ background: "none", border: "none" }}
+                />
+                <Handle
+                    id={"handle-source-right"}
+                    position={Position.Right}
+                    type={"source"}
+                    style={{ background: "none", border: "none" }}
+                />
+                <Handle
+                    id={"handle-source-top"}
+                    position={Position.Top}
+                    type={"source"}
+                    style={{ background: "none", border: "none" }}
+                />
+                <Handle
+                    id={"handle-target"}
+                    type={"target"}
+                    position={Position.Left}
+                    style={{
+                        background: "none",
+                        border: "none",
+                        inset: "auto",
+                        transform: "none",
+                        height: "100%",
+                        width: "100%",
+                        display: isTarget ? "block" : "none",
+                    }}
                 />
             </ElementNodeComponent>
         )

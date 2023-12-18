@@ -10,14 +10,24 @@ export const WorkspaceEdgeRelativeWrapper: FC<PropsWithChildren<{
 }) => {
     const { viewport } = useStore(viewportSelector);
     const { edge } = useStore(edgeSelector(edgeId));
+
+    if (!edge) return null;
+
     const edgePosition = {
-        x: edge.sourceNode.position.x + edge.targetNode.position.x / 2,
-        y: edge.sourceNode.position.y + edge.targetNode.position.y / 2
+        x: edge.sourceNode.positionAbsolute.x + edge.targetNode.positionAbsolute.x / 2,
+        y: edge.sourceNode.positionAbsolute.y + edge.targetNode.positionAbsolute.y / 2
     };
     const { transform } = getViewportTransform(viewport, edgePosition);
 
     return (
-        <div style={{ position: "absolute", transform: transform }}>
+        <div
+            className={"workspace_edge-relative-wrapper"}
+            style={{
+                pointerEvents: "none",
+                position: "absolute",
+                transform: transform
+            }}
+        >
             {children}
         </div>
     )

@@ -29,8 +29,9 @@ import {
 } from "react";
 import {
     EdgeTypes,
+    ElementFlowControls,
     ElementOptionsToolbar,
-    ElementSelectionBorder,
+    ElementZoomControlsBackground,
     ReactFlowNodeTypes
 } from "../../components";
 import {
@@ -164,7 +165,7 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
             y: mousePoint.y - parentOffset.top
         };
         const pointTranslatedFromViewport = getAbsolutePoint(getViewport(), pointRelativeToViewport);
-        setMousePosition(pointTranslatedFromViewport);
+        setMousePosition(mousePoint);
     }, [reactFlowRef, getViewport, setMousePosition]);
 
     const handleOnConnect = useCallback((connection: Connection) => {
@@ -188,7 +189,8 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
             onConnect={handleOnConnect}
         >
             <ElementOptionsToolbar />
-            <ElementSelectionBorder />
+            <ElementFlowControls />
+            <ElementZoomControlsBackground />
             {children}
         </WorkspaceViewRenderer>
     )

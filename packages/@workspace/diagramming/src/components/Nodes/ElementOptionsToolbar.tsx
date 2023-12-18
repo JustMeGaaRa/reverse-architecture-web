@@ -1,6 +1,7 @@
 import { Icon, IconButton } from "@chakra-ui/react";
 import { Position, useReactFlow, useStore } from "@reactflow/core";
 import { NodeToolbar } from "@reactflow/node-toolbar";
+import { useWorkspace } from "@workspace/core";
 import {
     Toolbar,
     ToolbarSection,
@@ -28,8 +29,9 @@ import { FC, useCallback } from "react";
 import { nodeSelector } from "../../utils";
 
 export const ElementOptionsToolbar: FC = () => {
-    const { selectedNodeIds, canLock } = useStore(nodeSelector);
+    const { selectedNodeIds, selectedNodes, canLock } = useStore(nodeSelector);
     const { setNodes } = useReactFlow();
+    const { deleteElements } = useWorkspace();
 
     const handleOnClickLockNode = useCallback(() => {
         setNodes(nodes => {
@@ -46,6 +48,10 @@ export const ElementOptionsToolbar: FC = () => {
                 : { ...node, draggable: true })
         });
     }, [selectedNodeIds, setNodes]);
+
+    const handleOnRemoveElement = useCallback(() => {
+        deleteElements(selectedNodes.map(x => x.data.element))
+    }, [deleteElements, selectedNodes]);
 
     return (
         <NodeToolbar
@@ -155,9 +161,10 @@ export const ElementOptionsToolbar: FC = () => {
                         />
                     )}
                     <IconButton
-                        aria-label={"remove shape"}
+                        aria-label={"remove element"}
                         icon={<Icon as={BinMinusIn} boxSize={6} color={"red.600"} />}
-                        title={"remove Shape"}
+                        title={"remove element"}
+                        onClick={handleOnRemoveElement}
                     />
                 </ToolbarSection>
             </Toolbar>

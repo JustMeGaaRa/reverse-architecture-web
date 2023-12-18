@@ -10,14 +10,24 @@ export const WorkspaceNodeRelativeWrapper: FC<PropsWithChildren<{
 }) => {
     const { viewport } = useStore(viewportSelector);
     const { node } = useStore(nodeSelector(nodeId));
+    
+    if (!node) return null;
+
     const nodePosition = {
-        x: node.position.x + node.width / 2,
-        y: node.position.y + node.height / 2
+        x: node.positionAbsolute.x + node.width / 2,
+        y: node.positionAbsolute.y + node.height / 2
     };
-    const { transform } = getViewportTransform(viewport, node.position);
+    const { transform } = getViewportTransform(viewport, node.positionAbsolute);
 
     return (
-        <div style={{ position: "absolute", transform: transform }}>
+        <div
+            className={"workspace_node-relative-wrapper"}
+            style={{
+                pointerEvents: "none",
+                position: "absolute",
+                transform: transform
+            }}
+        >
             {children}
         </div>
     )

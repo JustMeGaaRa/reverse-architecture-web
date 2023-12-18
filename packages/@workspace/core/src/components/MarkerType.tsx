@@ -61,7 +61,7 @@ export const CircleOutlineMarker: FC<{
             id={MarkerType.CircleOutline}
             markerHeight={"9"}
             markerWidth={"9"}
-            refX={"4.5"}
+            refX={"9"}
             refY={"4.5"}
             viewBox={"0 0 9 9"}
             fill={"none"}

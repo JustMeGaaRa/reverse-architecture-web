@@ -14,6 +14,7 @@ export const nodeSelector = (state: ReactFlowState) => {
 
     return ({
         selectionBounds: getNodesBounds(selectedNodes, state.nodeOrigin),
+        selectedNodes: selectedNodes,
         selectedNodeIds: selectedNodes.map(node => node.id),
         canLock: selectedNodes.some(node => node.draggable),
     })
@@ -30,7 +31,7 @@ export type ElementParams<TElement extends IElement = any> = {
 }
 
 export const getNodeFromElement = (params: ElementParams): Node => {
-    const getNodeType = (element: IElement, isBoundary): ReactFlowNodeTypeKeys => {
+    const getNodeType = (element: IElement, isBoundary: boolean): ReactFlowNodeTypeKeys => {
         return isBoundary
             ? "boundary"
                 : element.tags.some(x => x.name === Tag.Group.name)
@@ -52,7 +53,7 @@ export const getNodeFromElement = (params: ElementParams): Node => {
         position: params.position,
         parentNode: params.parentId,
         extent: params.parentId ? "parent" : undefined,
-        style: params.parentId ? undefined : { zIndex: -1 }
+        style: { zIndex: -1 } // NOTE: important to keep edges above nodes and group nodes
     }
 }
 

@@ -1,16 +1,14 @@
-import { NodeProps, useReactFlow } from "@reactflow/core";
+import { NodeProps, useReactFlow, useStore } from "@reactflow/core";
 import { NodeResizer } from "@reactflow/node-resizer";
 import {
     IElement,
     ElementStyle,
     ElementStyleProperties,
     foldStyles,
-    Tag
 } from "@structurizr/dsl";
 import { ReverseArchitectureElementStyle } from "@workspace/core";
-import { FC, PropsWithChildren, useCallback, useMemo, useState } from "react";
-import { useViewNavigation } from "../../hooks";
-import { ElementZoomControl } from "./ElementZoomControl";
+import { FC, PropsWithChildren, useCallback, useMemo } from "react";
+import { nodeSelector } from "../../utils";
 
 export function ReactFlowBoundaryWrapper(ElementBoundaryComponent: FC<PropsWithChildren<{
     data: IElement;
@@ -33,13 +31,8 @@ export function ReactFlowBoundaryWrapper(ElementBoundaryComponent: FC<PropsWithC
                 data.style,
                 data.element.tags
         ), [data.style, data.element.tags]);
-        const [ isElementHovered, setIsElementHovered ] = useState(false);
-        const { zoomIntoElement, zoomOutOfElement } = useViewNavigation();
+        const { selectedNodes } = useStore(nodeSelector);
         const { setNodes } = useReactFlow();
-    
-        const showZoomPanel = selected || isElementHovered;
-        const showZoomIn = false;
-        const showZoomOut = data.element.tags.some(tag => tag.name === Tag.SoftwareSystem.name || tag.name === Tag.Container.name);
         
         // TODO: consider using useResizeObserver
         // TODO: set element size in the workspace view metadata
@@ -58,35 +51,16 @@ export function ReactFlowBoundaryWrapper(ElementBoundaryComponent: FC<PropsWithC
             });
         }, [data.element.identifier, setNodes]);
 
-        const handleOnMouseEnterElement = useCallback(() => {
-            setIsElementHovered(true);
-        }, []);
-
-        const handleOnMouseLeaveElement = useCallback(() => {
-            setIsElementHovered(false);
-        }, []);
-
-        const handleOnZoomInClick = useCallback(() => {
-            zoomIntoElement(data.element);
-        }, [data.element, zoomIntoElement]);
-
-        const handleOnZoomOutClick = useCallback(() => {
-            zoomOutOfElement(data.element);
-        }, [data.element, zoomOutOfElement]);
-
         return (
             <ElementBoundaryComponent
                 data={data.element}
                 style={elementStyle}
                 height={data.height}
                 width={data.width}
-                isHovered={isElementHovered}
                 isSelected={selected}
-                onMouseEnter={handleOnMouseEnterElement}
-                onMouseLeave={handleOnMouseLeaveElement}
             >
                 <NodeResizer
-                    isVisible={selected}
+                    isVisible={selected && selectedNodes.length === 1}
                     color={elementStyle.stroke}
                     minWidth={300}
                     minHeight={300}
@@ -99,13 +73,6 @@ export function ReactFlowBoundaryWrapper(ElementBoundaryComponent: FC<PropsWithC
                     }}
                     lineStyle={{ borderWidth: 0 }}
                     onResize={onResize}
-                />
-                <ElementZoomControl
-                    isPanelVisible={showZoomPanel}
-                    isZoomInVisible={showZoomIn}
-                    isZoomOutVisible={showZoomOut}
-                    onZoomInClick={handleOnZoomInClick}
-                    onZoomOutClick={handleOnZoomOutClick}
                 />
             </ElementBoundaryComponent>
         )
