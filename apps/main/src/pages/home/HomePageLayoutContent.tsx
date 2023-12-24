@@ -1,5 +1,13 @@
 import { Box, Icon } from "@chakra-ui/react";
 import {
+    Home,
+    Document3Lines,
+    Share,
+    NotificationBell,
+    Settings,
+    QuestionMarkCircle
+} from "@reversearchitecture/icons";
+import {
     Route,
     RouteList,
     CommandCenter,
@@ -9,14 +17,6 @@ import {
     usePageHeader,
     SearchGroupResult
 } from "@reversearchitecture/ui";
-import {
-    BellNotification,
-    HelpCircle,
-    HomeSimple,
-    Internet,
-    Page,
-    Settings,
-} from "iconoir-react";
 import { FC, PropsWithChildren, useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useSearch } from "../../features";
@@ -54,18 +54,18 @@ export const HomePageLayoutContent: FC<PropsWithChildren> = ({ children }) => {
             top: (
                 <RouteList>
                     <Route
-                        icon={<Icon as={HomeSimple} boxSize={5} />}
+                        icon={<Icon as={Home} boxSize={5} />}
                         isDisabled
                         title={"Dashboard"}
                         to={"dashboard"}
                     />
                     <Route
-                        icon={<Icon as={Page} boxSize={5} />}
+                        icon={<Icon as={Document3Lines} boxSize={5} />}
                         title={"Workspaces"}
                         to={"workspaces"}
                     />
                     <Route
-                        icon={<Icon as={Internet} boxSize={5} />}
+                        icon={<Icon as={Share} boxSize={5} />}
                         title={"Community"}
                         to={"community"}
                     />
@@ -74,7 +74,7 @@ export const HomePageLayoutContent: FC<PropsWithChildren> = ({ children }) => {
             bottom: (
                 <RouteList>
                     <Route
-                        icon={<Icon as={BellNotification} boxSize={5} />}
+                        icon={<Icon as={NotificationBell} boxSize={5} />}
                         isDisabled
                         title={"Notifications"}
                         to={"notifications"}
@@ -85,7 +85,7 @@ export const HomePageLayoutContent: FC<PropsWithChildren> = ({ children }) => {
                         to={"settings"}
                     />
                     <Route
-                        icon={<Icon as={HelpCircle} boxSize={5} />}
+                        icon={<Icon as={QuestionMarkCircle} boxSize={5} />}
                         isDisabled
                         title={"Help & Feedback"}
                         to={"help"}

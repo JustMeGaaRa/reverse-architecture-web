@@ -1,5 +1,5 @@
 import { Button, IconButton } from "@chakra-ui/react";
-import { FastArrowLeft, FastArrowRight } from "iconoir-react";
+import { DoubleArrowLeft, DoubleArrowRight } from "@reversearchitecture/icons";
 import { FC } from "react";
 import { usePageSidebar } from "../hooks";
 
@@ -13,7 +13,7 @@ export const PageSidebarToggleButton: FC<{ isVisible?: boolean }> = ({ isVisible
             colorScheme={"gray"}
             justifyContent={"right"}
             paddingRight={2}
-            rightIcon={<FastArrowLeft />}
+            rightIcon={<DoubleArrowLeft />}
             size={"sm"}
             variant={"ghost"}
             width={"100%"}
@@ -24,7 +24,7 @@ export const PageSidebarToggleButton: FC<{ isVisible?: boolean }> = ({ isVisible
             aria-label={"page sidebar toggle"}
             borderRadius={0}
             colorScheme={"gray"}
-            icon={<FastArrowRight />}
+            icon={<DoubleArrowRight />}
             size={"sm"}
             variant={"ghost"}
             width={"100%"}

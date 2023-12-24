@@ -1,15 +1,11 @@
 {
-  "name": "@reversearchitecture/ui",
+  "name": "@reversearchitecture/icons",
   "version": "0.1.0",
-  "description": "A package with shared reusable UI components for Reverse Architecture app.",
+  "description": "A package with shared reusable icons.",
   "main": "dist/index.js",
   "keywords": [
     "reverse architecture",
-    "diagram",
-    "architecture",
-    "c4",
-    "c4 model",
-    "utilities"
+    "icons"
   ],
   "author": "JustMeGaaRa",
   "license": "MIT",
@@ -19,12 +15,6 @@
     "lint": "eslint \"**/*.ts*\""
   },
   "dependencies": {
-    "@chakra-ui/react": "^2.8.2",
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
-    "@reversearchitecture/icons": "*",
-    "framer-motion": "^10.16.4",
-    "iconoir-react": "^7.1.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
   },
