@@ -13,12 +13,14 @@ import {
     ISystemLandscapeView,
     IWorkspace,
     SystemLandscapeViewStrategy,
+    Workspace,
 } from "@structurizr/dsl";
 import {
     WorkspaceViewRenderer,
-    useAutoLayoutEffect,
     useWorkspaceToolbarStore,
-    getAbsolutePoint
+    getAbsolutePoint,
+    CurrentView,
+    useWorkspace
 } from "@workspace/core";
 import {
     FC,
@@ -27,6 +29,7 @@ import {
     useMemo,
     useRef,
 } from "react";
+import { throttle } from "lodash";
 import {
     EdgeTypes,
     ElementFlowControls,
@@ -36,20 +39,19 @@ import {
 } from "../../components";
 import {
     useViewRenderingEffect,
-    useViewNavigation,
-    useSystemLandscapeView
+    useSystemLandscapeView,
+    useAutoLayoutEffect
 } from "../../hooks";
 
 export const SystemLandscapeView: FC<PropsWithChildren<{
-    model: IModel;
-    configuration: IConfiguration;
+    workspace: Workspace;
     view: ISystemLandscapeView;
-    onWorkspaceChange?: (workspace: IWorkspace) => void;
+    onWorkspaceChange?: (workspace: Workspace) => void;
     onNodeDragStop?: NodeMouseHandler;
     onNodesDoubleClick?: NodeMouseHandler;
 }>> = ({
     children,
-    model,
+    workspace,
     view,
     onWorkspaceChange,
     onNodeDragStop,
@@ -58,7 +60,7 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
     const [ nodes, , onNodesChange ] = useNodesState([]);
     const [ edges, , onEdgesChange ] = useEdgesState([]);
     const reactFlowRef = useRef(null);
-    const strategy = useMemo(() => new SystemLandscapeViewStrategy(model, view), [model, view]);
+    const strategy = useMemo(() => new SystemLandscapeViewStrategy(workspace.model, view), [workspace, view]);
     const {
         isCommentAddingEnabled,
         isAddingElementEnabled,
@@ -71,11 +73,10 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
         addRelationship,
         setElementPosition
     } = useSystemLandscapeView();
-    const { zoomIntoElement, setMousePosition } = useViewNavigation();
+    const store = useWorkspace();
     const { getViewport } = useReactFlow();
 
-    useAutoLayoutEffect();
-    useViewRenderingEffect(strategy);
+    useViewRenderingEffect(workspace, strategy);
 
     const handleOnNodeDragStop = useCallback((event: React.MouseEvent, node: any, nodes: any[]) => {
         onWorkspaceChange?.(setElementPosition(node.data.element.identifier, node.position));
@@ -156,8 +157,8 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
         addPerson
     ]);
 
-    // NOTE: used to track the user cursor position
-    const handleOnMouseMove = useCallback((event: any) => {
+    // TODO: move this callback handler outside of component and use hooks from useWorkspaceRoom to report user cursor position
+    const handleOnMouseMove = useCallback(throttle((event: any) => {
         const parentOffset = reactFlowRef.current.getBoundingClientRect();
         const mousePoint = { x: event.clientX, y: event.clientY };
         const pointRelativeToViewport = {
@@ -165,8 +166,8 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
             y: mousePoint.y - parentOffset.top
         };
         const pointTranslatedFromViewport = getAbsolutePoint(getViewport(), pointRelativeToViewport);
-        setMousePosition(mousePoint);
-    }, [reactFlowRef, getViewport, setMousePosition]);
+        // setMousePosition(mousePoint);
+    }, 100), [reactFlowRef, getViewport]);
 
     const handleOnConnect = useCallback((connection: Connection) => {
         onWorkspaceChange?.(addRelationship(connection.source, connection.target));
@@ -179,6 +180,7 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
             nodeTypes={ReactFlowNodeTypes}
             edges={edges}
             edgeTypes={EdgeTypes}
+            isReadonly={store.workspace === null || store.workspace === undefined}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onNodeDragStop={handleOnNodeDragStop}
@@ -189,7 +191,7 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
             onConnect={handleOnConnect}
         >
             <ElementOptionsToolbar />
-            <ElementFlowControls />
+            <ElementFlowControls workspace={workspace} />
             <ElementZoomControlsBackground />
             {children}
         </WorkspaceViewRenderer>

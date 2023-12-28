@@ -14,7 +14,6 @@ import {
 } from "@structurizr/dsl";
 import {
     WorkspaceViewRenderer,
-    useAutoLayoutEffect,
     getAbsolutePoint
 } from "@workspace/core";
 import {
@@ -48,8 +47,9 @@ export const ModelView: FC<PropsWithChildren<{
     } = useModelView();
     const { getViewport } = useReactFlow();
 
-    useAutoLayoutEffect();
     useModelRenderingEffect(strategy);
+    // TODO: always use autolayout in model view
+    // useAutoLayoutEffect();
 
     return (
         <WorkspaceViewRenderer

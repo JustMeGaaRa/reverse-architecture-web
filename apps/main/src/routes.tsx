@@ -11,8 +11,8 @@ import {
     ProfileSettingsContent,
     SettingsPage,
     SignInPage,
-    WorkspaceContentPage,
     AuthorizePage,
+    WorkspacePage,
 } from "./pages";
 
 export const routes = createBrowserRouter([
@@ -35,7 +35,7 @@ export const routes = createBrowserRouter([
             },
             {
                 path: "workspaces/:workspaceId",
-                element: <WorkspaceContentPage />,
+                element: <WorkspacePage />,
                 errorElement: <ErrorPage />
             },
             {

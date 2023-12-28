@@ -1,39 +1,41 @@
 import { useStoreApi } from "@reactflow/core";
 import { Workspace } from "@structurizr/dsl";
 import { useCallback } from "react";
-import { useWorkspaceStore, useWorkspaceToolbarStore } from "@workspace/core";
-import { getView } from "@workspace/diagramming";
+import { useWorkspace, useWorkspaceToolbarStore } from "@workspace/core";
+import { useWorkspaceNavigation } from "@workspace/diagramming";
 
 export const useAutoLayoutMode = () => {
     const { setState } = useStoreApi();
-    const { workspace, selectedView } = useWorkspaceStore();
+    const { workspace } = useWorkspace();
+    const { currentView } = useWorkspaceNavigation();
 
     const toggleAutoLayout = useCallback(() => {
-        const isAutoLayoutEnabled = selectedView.autoLayout !== undefined;
+        const isAutoLayoutEnabled = false;//currentView.autoLayout !== undefined;
         const builder = new Workspace(workspace);
 
-        builder.views.systemLandscape?.type === selectedView.type
-            && builder.views.systemLandscape?.identifier === selectedView.identifier
+        builder.views.systemLandscape?.type === currentView.type
+            && builder.views.systemLandscape?.identifier === currentView.identifier
             && builder.views.systemLandscape?.setAutoLayout(!isAutoLayoutEnabled);
         builder.views.systemContexts
-            .filter(view => view.type === selectedView.type && view.identifier === selectedView.identifier)
+            .filter(view => view.type === currentView.type && view.identifier === currentView.identifier)
             .forEach(x => x.setAutoLayout(!isAutoLayoutEnabled));
         builder.views.containers
-            .filter(view => view.type === selectedView.type && view.identifier === selectedView.identifier)
+            .filter(view => view.type === currentView.type && view.identifier === currentView.identifier)
             .forEach(x => x.setAutoLayout(!isAutoLayoutEnabled));
         builder.views.components
-            .filter(view => view.type === selectedView.type && view.identifier === selectedView.identifier)
+            .filter(view => view.type === currentView.type && view.identifier === currentView.identifier)
             .forEach(x => x.setAutoLayout(!isAutoLayoutEnabled));
         builder.views.deployments
-            .filter(view => view.type === selectedView.type && view.identifier === selectedView.identifier && view.environment === selectedView?.["environment"])
+            .filter(view => view.type === currentView.type && view.identifier === currentView.identifier && view.environment === currentView?.["environment"])
             .forEach(x => x.setAutoLayout(!isAutoLayoutEnabled));
 
-        const workspaceUpdated = builder.toObject();
-        useWorkspaceStore.setState(state => ({
-            ...state,
-            workspace: workspaceUpdated,
-            selectedView: getView(workspaceUpdated, selectedView)
-        }));
+        // TODO: update the code when all callbacks are implemented
+        // const workspaceUpdated = builder.toObject();
+        // useWorkspaceStore.setState(state => ({
+        //     ...state,
+        //     workspace: workspaceUpdated,
+        //     currentView: getView(workspaceUpdated, currentView)
+        // }));
         
         useWorkspaceToolbarStore.setState(state => ({
             ...state,
@@ -44,7 +46,7 @@ export const useAutoLayoutMode = () => {
             // NOTE: nodes should be draggable if we turn off auto layout
             nodesDraggable: isAutoLayoutEnabled,
         });
-    }, [workspace, selectedView, setState]);
+    }, [workspace, currentView, setState]);
 
     return { toggleAutoLayout }
 }

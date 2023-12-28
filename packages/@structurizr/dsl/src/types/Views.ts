@@ -13,7 +13,8 @@ import {
     IViewDefinition,
     Properties,
     SystemContextViewDefinition,
-    SystemLandscapeViewDefinition
+    SystemLandscapeViewDefinition,
+    ViewType
 } from "..";
 
 export interface IViews {
@@ -31,11 +32,21 @@ export interface IViews {
 
 export class Views implements ISupportImmutable<IViews> {
     constructor(params: IViews) {
-        this.systemLandscape = params.systemLandscape ? new SystemLandscapeViewDefinition(params.systemLandscape) : undefined;
-        this.systemContexts = params.systemContexts ? params.systemContexts.map(s => new SystemContextViewDefinition(s)) : [];
-        this.containers = params.containers ? params.containers.map(c => new ContainerViewDefinition(c)) : [];
-        this.components = params.components ? params.components.map(c => new ComponentViewDefinition(c)) : [];
-        this.deployments = params.deployments ? params.deployments.map(d => new DeploymentViewDefinition(d)) : [];
+        this.systemLandscape = params.systemLandscape
+            ? new SystemLandscapeViewDefinition(params.systemLandscape)
+            : new SystemLandscapeViewDefinition({ identifier: "" });
+        this.systemContexts = params.systemContexts
+            ? params.systemContexts.map(s => new SystemContextViewDefinition(s))
+            : [];
+        this.containers = params.containers
+            ? params.containers.map(c => new ContainerViewDefinition(c))
+            : [];
+        this.components = params.components
+            ? params.components.map(c => new ComponentViewDefinition(c))
+            : [];
+        this.deployments = params.deployments
+            ? params.deployments.map(d => new DeploymentViewDefinition(d))
+            : [];
         this.filtered = params.filtered ?? [];
         this.dynamics = params.dynamics ?? [];
         this.custom = params.custom ?? [];

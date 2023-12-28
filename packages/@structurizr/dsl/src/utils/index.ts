@@ -16,48 +16,6 @@ import {
     IDeploymentView
 } from "../";
 
-export const applyMetadata = (workspace: IWorkspace, metadata: IWorkspaceMetadata): IWorkspace => {
-    return {
-        ...workspace,
-        views: {
-            ...workspace.views,
-            systemLandscape: workspace.views.systemLandscape && {
-                ...workspace.views.systemLandscape,
-                elements: metadata.views.systemLandscape?.elements ?? [],
-                relationships: metadata.views.systemLandscape?.relationships ?? []
-            },
-            systemContexts: workspace.views.systemContexts.map((view: ISystemContextView) => ({
-                ...view,
-                elements: metadata.views.systemContexts
-                    .find(x => x.identifier === view.identifier)?.elements ?? [],
-                relationships: metadata.views.systemContexts
-                    .find(x => x.identifier === view.identifier)?.relationships ?? []
-            })),
-            containers: workspace.views.containers.map((view: IContainerView) => ({
-                ...view,
-                elements: metadata.views.containers
-                    .find(x => x.identifier === view.identifier)?.elements ?? [],
-                relationships: metadata.views.containers
-                    .find(x => x.identifier === view.identifier)?.relationships ?? []
-            })),
-            components: workspace.views.components.map((view: IComponentView) => ({
-                ...view,
-                elements: metadata.views.components
-                    .find(x => x.identifier === view.identifier)?.elements ?? [],
-                relationships: metadata.views.components
-                    .find(x => x.identifier === view.identifier)?.relationships ?? []
-            })),
-            deployments: workspace.views.deployments.map((view: IDeploymentView) => ({
-                ...view,
-                elements: metadata.views.deployments
-                    .find(x => x.identifier === view.identifier)?.elements ?? [],
-                relationships: metadata.views.deployments
-                    .find(x => x.identifier === view.identifier)?.relationships ?? []
-            }))
-        }
-    };
-}
-
 export const applyTheme = (workspace: IWorkspace, theme: IWorkspaceTheme): IWorkspace => {
     return {
         ...workspace,
@@ -111,8 +69,8 @@ export const relationshipExistsOverall = (
 }
 
 export const relationshipExistsBetweenElements = (view: IViewDefinition, relationship: IRelationship) => {
-    return view.elements.find(x => x.id === relationship.sourceIdentifier)
-        && view.elements.find(x => x.id === relationship.targetIdentifier)
+    return view?.elements?.find(x => x.id === relationship.sourceIdentifier)
+        && view?.elements?.find(x => x.id === relationship.targetIdentifier)
 }
 
 export const elementIncludedInView = (view: IViewDefinition, elementIdentifier: Identifier) => {

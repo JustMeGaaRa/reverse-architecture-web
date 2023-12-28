@@ -13,18 +13,18 @@ import {
     DeploymentViewStrategy,
     IDeploymentView,
     IWorkspace,
+    Workspace,
 } from "@structurizr/dsl";
 import {
     WorkspaceViewRenderer,
-    useAutoLayoutEffect,
     useWorkspaceToolbarStore,
-    getAbsolutePoint
+    getAbsolutePoint,
+    CurrentView
 } from "@workspace/core";
 import {
     FC,
     PropsWithChildren,
     useCallback,
-    useEffect,
     useMemo,
     useRef,
 } from "react";
@@ -35,21 +35,19 @@ import {
 } from "../../components";
 import {
     useViewRenderingEffect,
-    useViewNavigation,
-    useDeploymentView
+    useDeploymentView,
+    useAutoLayoutEffect
 } from "../../hooks";
 
 export const DeploymentView: FC<PropsWithChildren<{
-    model: IModel;
-    configuration: IConfiguration;
-    view: IDeploymentView;
+    workspace: Workspace;
+    view: CurrentView;
     onWorkspaceChange?: (workspace: IWorkspace) => void;
     onNodeDragStop?: NodeMouseHandler;
     onNodesDoubleClick?: NodeMouseHandler;
 }>> = ({
     children,
-    model,
-    configuration,
+    workspace,
     view,
     onWorkspaceChange,
     onNodeDragStop,
@@ -58,7 +56,7 @@ export const DeploymentView: FC<PropsWithChildren<{
     const [ nodes, setNodes, onNodesChange ] = useNodesState([]);
     const [ edges, setEdges, onEdgesChange ] = useEdgesState([]);
     const reactFlowRef = useRef(null);
-    const strategy = useMemo(() => new DeploymentViewStrategy(model, view, view.environment), [model, view]);
+    const strategy = useMemo(() => new DeploymentViewStrategy(workspace.model, view, view["environment"]), [workspace, view]);
     const {
         isAddingElementEnabled,
         addingElementType
@@ -70,11 +68,10 @@ export const DeploymentView: FC<PropsWithChildren<{
         addContainerInstance,
         addRelationship,
         setElementPosition
-    } = useDeploymentView(view.identifier, view.environment);
+    } = useDeploymentView(view.identifier, view["environment"]);
     const { getViewport } = useReactFlow();
 
-    useAutoLayoutEffect();
-    useViewRenderingEffect(strategy);
+    useViewRenderingEffect(workspace, strategy);
 
     const handleOnNodeDragStop = useCallback((event: React.MouseEvent, node: any, nodes: any[]) => {
         setElementPosition(node.data.element.identifier, node.position);

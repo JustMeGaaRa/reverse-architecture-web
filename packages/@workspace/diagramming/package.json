@@ -30,15 +30,17 @@
     "@structurizr/dsl": "*",
     "@workspace/core": "*",
     "@workspace/toolbar": "*",
-    "iconoir-react": "^7.1.0",
     "elkjs": "0.8.2",
     "framer-motion": "^10.16.4",
+    "iconoir-react": "^7.1.0",
+    "lodash": "^4.17.21",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "web-worker": "^1.2.0",
     "zustand": "^4.3.2"
   },
   "devDependencies": {
+    "@types/lodash": "4.14.202",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "eslint": "^8.51.0",

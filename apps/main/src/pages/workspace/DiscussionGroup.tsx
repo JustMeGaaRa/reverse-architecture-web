@@ -1,10 +1,11 @@
 import { Box, ScaleFade } from "@chakra-ui/react";
 import {
     WorkspaceNodeRelativeWrapper,
-    useWorkspaceStore,
     WorkspaceViewportRelativerWrapper,
-    WorkspaceElementPortal
+    WorkspaceElementPortal,
+    useWorkspace,
 } from "@workspace/core";
+import { useWorkspaceNavigation } from "@workspace/diagramming";
 import { FC, useCallback, useEffect, useMemo } from "react";
 import { v4 } from "uuid";
 import {
@@ -15,14 +16,15 @@ import {
     CommentThreadCard,
     useAccount,
     useCommentsStore
-} from "../../../features";
+} from "../../features";
 
 export const DiscussionGroup: FC<{
     discussions: CommentThread[];
 }> = ({
     discussions
 }) => {
-    const { workspace, selectedView } = useWorkspaceStore();
+    const { workspace } = useWorkspace();
+    const { currentView } = useWorkspaceNavigation();
     const { account } = useAccount();
     const {
         commentThreads,
@@ -70,8 +72,8 @@ export const DiscussionGroup: FC<{
 
     const viewDiscussions = commentThreads.filter(x => {
         return x.metadata
-            && x.metadata.view.type === selectedView.type
-            && x.metadata.view.id === selectedView.identifier
+            && x.metadata.view.type === currentView.type
+            && x.metadata.view.id === currentView.identifier
     });
     const elementRelativeDiscussions = viewDiscussions.filter(x => x.metadata?.elementId === undefined);
     const viewportRelativeDiscussions = viewDiscussions.filter(x => x.metadata?.elementId !== undefined);

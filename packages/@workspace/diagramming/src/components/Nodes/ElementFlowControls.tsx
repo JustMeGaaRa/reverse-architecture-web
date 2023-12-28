@@ -1,30 +1,35 @@
 import { Box } from "@chakra-ui/react";
 import { Position, useStore } from "@reactflow/core";
-import { Tag } from "@structurizr/dsl";
+import { Tag, Workspace } from "@structurizr/dsl";
 import {
+    useWorkspace,
     viewportSelector,
     WorkspaceElementPortal,
     WorkspaceViewportRelativerWrapper
 } from "@workspace/core";
 import { FC, useCallback } from "react";
-import { useViewNavigation } from "../../hooks";
+import { useWorkspaceNavigation } from "../../hooks";
 import { BoundingBox } from "../../types";
 import { nodeSelector } from "../../utils";
-import { ElementFlowHandle } from "./ElementHandle";
+import { ElementFlowHandle } from "./ElementFlowHandle";
 import { ElementZoomControl } from "./ElementZoomControl";
 
-export const ElementFlowControls: FC = () => {
+export const ElementFlowControls: FC<{
+    workspace: Workspace;
+}> = ({
+    workspace
+}) => {
     const { selectedNodes, selectionBounds } = useStore(nodeSelector);
     const { viewport } = useStore(viewportSelector);
-    const { zoomIntoElement, zoomOutOfElement } = useViewNavigation();
+    const state = useWorkspace();
+    const { zoomIntoElement, zoomOutOfElement } = useWorkspaceNavigation();
 
-    const showZoomPanel = selectedNodes.length === 1;
-    const showZoomIn = showZoomPanel
-        && selectedNodes[0]?.type === "element"
+    const showEditableControls = state.workspace !== null && state.workspace !== undefined && selectedNodes.length === 1;
+    const showSelectionBorder = selectedNodes.length > 0;
+    const showZoomPanel = selectedNodes.length === 1
         && selectedNodes[0]?.data.element.tags.some(tag => tag.name === Tag.SoftwareSystem.name || tag.name === Tag.Container.name);
-    const showZoomOut = showZoomPanel
-        && selectedNodes[0]?.type === "boundary"
-        && selectedNodes[0]?.data.element.tags.some(tag => tag.name === Tag.SoftwareSystem.name || tag.name === Tag.Container.name);
+    const showZoomIn = showZoomPanel && selectedNodes[0]?.type === "element";
+    const showZoomOut = showZoomPanel && selectedNodes[0]?.type === "boundary";
     const borderRadius = selectedNodes.every(node => node?.type === "boundary" || node?.type === "elementGroup")
         ? 33 * viewport.zoom
         : selectedNodes.every(node => node?.type !== "boundary" && node?.type !== "elementGroup")
@@ -36,17 +41,17 @@ export const ElementFlowControls: FC = () => {
         .extend(2);
 
     const handleOnZoomInClick = useCallback(() => {
-        zoomIntoElement(selectedNodes[0].data.element);
-    }, [selectedNodes, zoomIntoElement]);
+        zoomIntoElement(workspace, selectedNodes[0].data.element);
+    }, [workspace, selectedNodes, zoomIntoElement]);
 
     const handleOnZoomOutClick = useCallback(() => {
-        zoomOutOfElement(selectedNodes[0].data.element);
-    }, [selectedNodes, zoomOutOfElement]);
+        zoomOutOfElement(workspace, selectedNodes[0].data.element);
+    }, [workspace, selectedNodes, zoomOutOfElement]);
 
     return (
         <WorkspaceElementPortal>
             <WorkspaceViewportRelativerWrapper position={boundingBox} zIndex={1}>
-                {selectedNodes.length > 0 && (
+                {showSelectionBorder && (
                     <Box
                         className={"workspace__element-selected"}
                         borderColor={"lime.600"}
@@ -69,25 +74,25 @@ export const ElementFlowControls: FC = () => {
                     position={Position.Left}
                     referenceBox={boundingBox}
                     area={50 * viewport.zoom}
-                    isVisible={showZoomPanel}
+                    isVisible={showEditableControls}
                 />
                 <ElementFlowHandle
                     position={Position.Right}
                     referenceBox={boundingBox}
                     area={50 * viewport.zoom}
-                    isVisible={showZoomPanel}
+                    isVisible={showEditableControls}
                 />
                 <ElementFlowHandle
                     position={Position.Top}
                     referenceBox={boundingBox}
                     area={50 * viewport.zoom}
-                    isVisible={showZoomPanel}
+                    isVisible={showEditableControls}
                 />
                 <ElementFlowHandle
                     position={Position.Bottom}
                     referenceBox={boundingBox}
                     area={50 * viewport.zoom}
-                    isVisible={showZoomPanel}
+                    isVisible={showEditableControls}
                 />
             </WorkspaceViewportRelativerWrapper>
         </WorkspaceElementPortal>

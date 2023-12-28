@@ -1,11 +1,11 @@
 import { useReactFlow } from "@reactflow/core";
 import { Identifier, Person } from "@structurizr/dsl";
-import { useWorkspaceStore } from "@workspace/core";
+import { useWorkspace } from "@workspace/core";
 import { useCallback } from "react";
 import { v4 } from "uuid";
 
 export const useModelView = () => {
-    const { workspace } = useWorkspaceStore();
+    const { workspace } = useWorkspace();
     const { setNodes, setEdges } = useReactFlow();
 
     const addPerson = useCallback(() => {

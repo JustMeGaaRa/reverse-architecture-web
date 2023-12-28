@@ -2,13 +2,9 @@ import { ReactFlowProvider } from "@reactflow/core";
 import {
     IViewDefinition,
     IWorkspace,
-    IWorkspaceMetadata,
     ViewType,
+    Workspace,
 } from "@structurizr/dsl";
-import {
-    WorkspaceStoreUpdater,
-    useWorkspaceStore
-} from "@workspace/core";
 import { FC, PropsWithChildren } from "react";
 import {
     SystemLandscapeView,
@@ -16,91 +12,101 @@ import {
     ContainerView,
     ComponentView,
     DeploymentView,
-    WorkspaceViewStoreUpdater
+    WorkspaceNavigationProvider
 } from "../components";
+import { useWorkspaceNavigation } from "../hooks";
 
-export const WorkspaceDiagramming: FC<PropsWithChildren<{
-    workspace: IWorkspace;
-    view: IViewDefinition;
-    metadata: IWorkspaceMetadata;
-    onWorkspaceChange?: (workspace: IWorkspace) => void;
+export const WorkspaceViewSelector: FC<PropsWithChildren<{
+    workspace: Workspace;
+    onWorkspaceChange?: (workspace: Workspace) => void;
     onWorkspaceViewChange?: (view: IViewDefinition) => void;
 }>> = ({
     children,
     workspace,
-    view,
-    metadata,
     onWorkspaceChange,
     onWorkspaceViewChange
 }) => {
-    const store = useWorkspaceStore();
-
-    return (
-        <ReactFlowProvider>
-            <WorkspaceStoreUpdater
-                workspace={workspace}
-                metadata={metadata}
-            />
-
-            <WorkspaceViewStoreUpdater
-                workspace={workspace}
-                view={view}
-            />
-
-            {store.selectedView?.type === ViewType.SystemLandscape && (
+    const { currentView } = useWorkspaceNavigation();
+    
+    switch (currentView?.type) {
+        case ViewType.SystemLandscape:
+            return (
                 <SystemLandscapeView
-                    model={store.workspace.model}
-                    configuration={store.workspace.views.configuration}
-                    view={store.selectedView}
+                    workspace={workspace}
+                    view={currentView as any}
                     onWorkspaceChange={onWorkspaceChange}
                 >
                     {children}
                 </SystemLandscapeView>
-            )}
-
-            {store.selectedView?.type === ViewType.SystemContext && (
+            );
+        case ViewType.SystemContext:
+            return (
                 <SystemContextView
-                    model={store.workspace.model}
-                    configuration={store.workspace.views.configuration}
-                    view={store.selectedView}
+                    workspace={workspace}
+                    view={currentView as any}
                     onWorkspaceChange={onWorkspaceChange}
                 >
                     {children}
                 </SystemContextView>
-            )}
-
-            {store.selectedView?.type === ViewType.Container && (
+            );
+        case ViewType.Container:
+            return (
                 <ContainerView
-                    model={store.workspace.model}
-                    configuration={store.workspace.views.configuration}
-                    view={store.selectedView}
+                    workspace={workspace}
+                    view={currentView as any}
                     onWorkspaceChange={onWorkspaceChange}
                 >
                     {children}
                 </ContainerView>
-            )}
-
-            {store.selectedView?.type === ViewType.Component && (
+            );
+        case ViewType.Component:
+            return (
                 <ComponentView
-                    model={store.workspace.model}
-                    configuration={store.workspace.views.configuration}
-                    view={store.selectedView}
+                    workspace={workspace}
+                    view={currentView as any}
                     onWorkspaceChange={onWorkspaceChange}
                 >
                     {children}
                 </ComponentView>
-            )}
-
-            {store.selectedView?.type === ViewType.Deployment && (
+            );
+        case ViewType.Deployment:
+            return (
                 <DeploymentView
-                    model={workspace.model}
-                    configuration={workspace.views.configuration}
-                    view={store.selectedView as any}
+                    workspace={workspace}
+                    view={currentView as any}
                     onWorkspaceChange={onWorkspaceChange}
                 >
                     {children}
                 </DeploymentView>
-            )}
-        </ReactFlowProvider>
+            );
+        default:
+            return null;
+    }
+}
+
+export const WorkspaceDiagramming: FC<PropsWithChildren<{
+    workspace: Workspace;
+    initialView: IViewDefinition;
+    onWorkspaceChange?: (workspace: Workspace) => void;
+    onWorkspaceViewChange?: (view: IViewDefinition) => void;
+}>> = ({
+    children,
+    workspace,
+    initialView,
+    onWorkspaceChange,
+    onWorkspaceViewChange
+}) => {
+    return (
+        <WorkspaceNavigationProvider initialView={initialView}>
+            <ReactFlowProvider>
+                <WorkspaceViewSelector
+                    workspace={workspace}
+                    onWorkspaceChange={onWorkspaceChange}
+                    onWorkspaceViewChange={onWorkspaceViewChange}
+                >
+                    {children}
+                </WorkspaceViewSelector>
+            </ReactFlowProvider>
+        </WorkspaceNavigationProvider>
     )
 }

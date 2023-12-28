@@ -14,6 +14,7 @@ import {
     All,
     IAutoLayout,
     AutoLayoutDirection,
+    IViewDefinitionMetadata,
 } from "../..";
 
 export interface ISystemLandscapeView extends IViewDefinition {
@@ -78,6 +79,11 @@ export class SystemLandscapeViewDefinition implements IViewDefinition, ISupportI
             elements: this.elements,
             relationships: this.relationships,
         }
+    }
+
+    public applyMetadata(metadata: IViewDefinitionMetadata) {
+        metadata.elements?.forEach(element => this.elements.push(element));
+        metadata.relationships?.forEach(relationship => this.relationships.push(relationship));
     }
 
     public setElementPosition(elementId: string, position: Position) {

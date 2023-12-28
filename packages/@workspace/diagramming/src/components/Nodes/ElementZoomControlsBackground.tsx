@@ -15,10 +15,10 @@ export const ElementZoomControlsBackground: FC = () => {
     const { selectedNodes, selectionBounds } = useStore(nodeSelector);
     const { viewport } = useStore(viewportSelector);
     
-    const showZoomPanel = selectedNodes.length === 1;
-    const showZoomIn = showZoomPanel
-        && selectedNodes[0]?.type === "element"
+    const showZoomPanel = selectedNodes.length === 1
         && selectedNodes[0]?.data.element.tags.some(tag => tag.name === Tag.SoftwareSystem.name || tag.name === Tag.Container.name);
+    const showZoomIn = showZoomPanel
+        && selectedNodes[0]?.type === "element";
     const boundingBox = new BoundingBox(selectionBounds)
         .multiply(viewport.zoom)
         .shift(-1)
@@ -27,10 +27,9 @@ export const ElementZoomControlsBackground: FC = () => {
     return (
         <WorkspaceElementPortal>
             <WorkspaceViewportRelativerWrapper position={boundingBox} pointerEvents={"none"}>
-                {selectedNodes.length === 1 && (
+                {showZoomPanel && (
                     <Box
                         className={"workspace__element-zoom-background"}
-                        aria-selected={selectedNodes.length === 1}
                         backgroundColor={"gray.900"}
                         borderRadius={8}
                         pointerEvents={"none"}

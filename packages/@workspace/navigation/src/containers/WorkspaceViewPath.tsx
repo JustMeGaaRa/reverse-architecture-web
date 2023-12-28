@@ -2,61 +2,42 @@ import {
     Breadcrumb,
     BreadcrumbItem,
     BreadcrumbLink,
-    Button,
-    HStack,
     Select,
-    StackDivider
 } from "@chakra-ui/react";
-import {
-    ComponentPathProvider,
-    ContainerPathProvider,
-    DeploymentPathProvider,
-    ISupportPath,
-    SystemContextPathProvider,
-    SystemLandscapePathProvider,
-    ViewType
-} from "@structurizr/dsl";
+import { ViewKeys, ViewType, Workspace } from "@structurizr/dsl";
 import {
     PanelPosition,
-    useWorkspaceStore,
-    useWorkspaceTheme,
     WorkspacePanel
 } from "@workspace/core";
-import { useViewNavigation } from "@workspace/diagramming";
+import { useWorkspaceNavigation } from "@workspace/diagramming";
 import { ChangeEvent, FC, useCallback } from "react";
 
-export const WorkspaceNavigation: FC<{
+export const WorkspaceViewPath: FC<{
     position?: PanelPosition;
+    workspace: Workspace;
+    path?: ViewKeys[];
 }> = ({
-    position
+    position,
+    workspace,
+    path
 }) => {
-    const { workspace, selectedView } = useWorkspaceStore();
-    const { getViewAccentColor } = useWorkspaceTheme();
-    const { openView } = useViewNavigation();
+    // TODO: consider if using path as a prop should be an option
+    const { currentViewPath, openView } = useWorkspaceNavigation();
 
-    const pathBuilders: Map<ViewType, ISupportPath> = new Map<ViewType, ISupportPath>([
-        [ ViewType.SystemLandscape, new SystemLandscapePathProvider() ],
-        [ ViewType.SystemContext, new SystemContextPathProvider() ],
-        [ ViewType.Container, new ContainerPathProvider() ],
-        [ ViewType.Component, new ComponentPathProvider() ],
-        [ ViewType.Deployment, new DeploymentPathProvider() ],
-    ]);
-    const path = pathBuilders.get(selectedView.type)?.getPath(workspace, selectedView) ?? [];
-    const links = path.map((view, index) => ({
+    const links = (path ?? currentViewPath).map((view, index) => ({
         title: view.title,
-        colorScheme: getViewAccentColor(view.type),
-        isActive: index === path.length - 1,
+        isActive: index === currentViewPath.length - 1,
         data: view
     }));
 
-    const handleOnViewItemClick = useCallback((viewKeys) => {
-        openView(viewKeys);
-    }, [openView]);
+    const handleOnViewItemClick = useCallback((viewKeys: ViewKeys) => {
+        openView(workspace, viewKeys);
+    }, [openView, workspace]);
 
     const handleOnViewTypeChange = useCallback((event: ChangeEvent<HTMLSelectElement>) => {
         const selectedViewType = event.target.value as ViewType;
-        openView({ type: selectedViewType, identifier: undefined });
-    }, [openView]);
+        openView(workspace, { type: selectedViewType, identifier: undefined });
+    }, [openView, workspace]);
 
     return (
         <WorkspacePanel position={position ?? "top-left"}>

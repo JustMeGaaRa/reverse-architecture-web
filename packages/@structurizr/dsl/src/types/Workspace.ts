@@ -4,7 +4,8 @@ import {
     IViews,
     Views,
     Properties,
-    ISupportImmutable
+    ISupportImmutable,
+    IWorkspaceMetadata,
 } from "../";
 
 export interface IWorkspace {
@@ -60,6 +61,25 @@ export class Workspace implements ISupportImmutable<IWorkspace> {
             },
         }
     });
+
+    public applyMetadata(metadata: IWorkspaceMetadata): Workspace {
+        if (metadata.views.systemLandscape) {
+            this.views.systemLandscape?.applyMetadata(metadata.views.systemLandscape);
+        }
+        metadata.views.systemContexts.forEach(view => {
+            this.views.systemContexts.find(x => x.identifier === view.identifier)?.applyMetadata(view);
+        })
+        metadata.views.containers.forEach(view => {
+            this.views.containers.find(x => x.identifier === view.identifier)?.applyMetadata(view);
+        })
+        metadata.views.components.forEach(view => {
+            this.views.components.find(x => x.identifier === view.identifier)?.applyMetadata(view);
+        })
+        metadata.views.deployments.forEach(view => {
+            this.views.deployments.find(x => x.identifier === view.identifier)?.applyMetadata(view);
+        })
+        return this;
+    }
 
     public toObject(): IWorkspace {
         return {

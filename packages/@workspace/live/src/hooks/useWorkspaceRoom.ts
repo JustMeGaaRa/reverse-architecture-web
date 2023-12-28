@@ -1,30 +1,43 @@
-import { useCallback } from "react";
-import { useWorkspaceRoomStore } from "../hooks";
-import { User } from "../types";
+import { UserInfo, UserLocation, WorkspaceUser } from "@workspace/core";
+import { useCallback, useContext } from "react";
+import { WorkspaceRoomContext } from "../contexts";
 
 export const useWorkspaceRoom = () => {
-    // users: Account[];   // the list of users in the current room
-    // view?: any;         // the current workspace nodes, edges and viewport
-    // settings?: any;     // the settings of the current workspace, like shouldFollowPresenter option
-    // makePresenter?: () => void;
-
-    const { provider } = useWorkspaceRoomStore();
+    const {
+        workspaceDocument,
+        connectionProvider,
+        currentUser,
+        collaboratingUsers,
+        sharingOptions,
+        setCurrentUser,
+        setSharingOptions
+    } = useContext(WorkspaceRoomContext);
     
-    const joinRoom = useCallback((account: User) => {
-        provider?.awareness.setLocalState({ account });
-    }, [provider]);
+    const joinRoom = useCallback((userInfo: UserInfo) => {
+        const currentUser: WorkspaceUser = { info: userInfo }
+        connectionProvider?.awareness.setLocalState({ info: userInfo });
+        setCurrentUser(currentUser);
+    }, [connectionProvider?.awareness, setCurrentUser]);
     
     const leaveRoom = useCallback(() => {
-        provider?.awareness.setLocalState({ account: undefined });
-    }, [provider]);
+        connectionProvider?.awareness.setLocalState({ info: undefined });
+        setCurrentUser(undefined);
+    }, [connectionProvider?.awareness, setCurrentUser]);
 
-    const setMousePosition = useCallback((position: { x: number, y: number }) => {
-        provider?.awareness.setLocalStateField("position", position);
-    }, [provider]);
+    const setUserLocation = useCallback((location: UserLocation) => {
+        connectionProvider?.awareness.setLocalStateField("location", location);
+        setCurrentUser(user => ({ ...user, location }));
+    }, [connectionProvider?.awareness, setCurrentUser]);
 
     return {
+        workspaceDocument,
+        connectionProvider,
+        currentUser,
+        collaboratingUsers,
+        sharingOptions,
         joinRoom,
         leaveRoom,
-        setMousePosition,
+        setUserLocation,
+        setSharingOptions
     }
 }

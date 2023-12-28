@@ -5,3 +5,5 @@ export * from "./useDraggingMode";
 export * from "./usePresentationMode";
 export * from "./useSelectionMode";
 export * from "./useTextEditMode";
+export * from "./useUndoRedo";
+export * from "./useZoom";

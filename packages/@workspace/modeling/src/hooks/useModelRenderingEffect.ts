@@ -1,10 +1,10 @@
 import { useReactFlow } from "@reactflow/core";
 import { IModel, ISupportVisitor } from "@structurizr/dsl";
-import { useWorkspaceStore } from "@workspace/core";
+import { useWorkspace } from "@workspace/core";
 import { useEffect } from "react";
 
 export const useModelRenderingEffect = (strategy: ISupportVisitor) => {
-    const { workspace } = useWorkspaceStore();
+    const { workspace } = useWorkspace();
     const { setNodes, setEdges } = useReactFlow();
     
     // TODO: move this algorithm to the strategy class

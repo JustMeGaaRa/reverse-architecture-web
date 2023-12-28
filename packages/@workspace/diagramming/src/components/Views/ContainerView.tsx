@@ -13,12 +13,13 @@ import {
     IContainerView,
     ContainerViewStrategy,
     IWorkspace,
+    Workspace,
 } from "@structurizr/dsl";
 import {
     WorkspaceViewRenderer,
-    useAutoLayoutEffect,
     useWorkspaceToolbarStore,
     getAbsolutePoint,
+    CurrentView,
 } from "@workspace/core";
 import {
     FC,
@@ -36,20 +37,19 @@ import {
 } from "../../components";
 import {
     useViewRenderingEffect,
-    useViewNavigation,
-    useContainerView
+    useContainerView,
+    useAutoLayoutEffect
 } from "../../hooks";
 
 export const ContainerView: FC<PropsWithChildren<{
-    model: IModel;
-    configuration: IConfiguration;
-    view: IContainerView;
+    workspace: Workspace;
+    view: CurrentView;
     onWorkspaceChange?: (workspace: IWorkspace) => void;
     onNodeDragStop?: NodeMouseHandler;
     onNodesDoubleClick?: NodeMouseHandler;
 }>> = ({
     children,
-    model,
+    workspace,
     view,
     onWorkspaceChange,
     onNodeDragStop,
@@ -58,7 +58,7 @@ export const ContainerView: FC<PropsWithChildren<{
     const [ nodes, , onNodesChange ] = useNodesState([]);
     const [ edges, , onEdgesChange ] = useEdgesState([]);
     const reactFlowRef = useRef(null);
-    const strategy = useMemo(() => new ContainerViewStrategy(model, view), [model, view]);
+    const strategy = useMemo(() => new ContainerViewStrategy(workspace.model, view), [workspace, view]);
     const {
         isAddingElementEnabled,
         addingElementType
@@ -71,11 +71,9 @@ export const ContainerView: FC<PropsWithChildren<{
         addRelationship,
         setElementPosition
     } = useContainerView(view.identifier);
-    const { zoomIntoElement } = useViewNavigation();
     const { getViewport } = useReactFlow();
 
-    useAutoLayoutEffect();
-    useViewRenderingEffect(strategy);
+    useViewRenderingEffect(workspace, strategy);
 
     const handleOnNodeDragStop = useCallback((event: React.MouseEvent, node: any, nodes: any[]) => {
         onWorkspaceChange?.(setElementPosition(node.data.element.identifier, node.position));
@@ -167,7 +165,7 @@ export const ContainerView: FC<PropsWithChildren<{
             onConnect={handleOnConnect}
         >
             <ElementOptionsToolbar />
-            <ElementFlowControls />
+            <ElementFlowControls workspace={workspace} />
             <ElementZoomControlsBackground />
             {children}
         </WorkspaceViewRenderer>

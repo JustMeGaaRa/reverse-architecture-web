@@ -3,6 +3,7 @@ import { useCallback } from "react";
 import { useWorkspaceToolbarStore } from "@workspace/core";
 
 export const useSelectionMode = () => {
+    const { isSelectionEnabled } = useWorkspaceToolbarStore();
     const { setState } = useStoreApi();
 
     const enableSelectionMode = useCallback(() => {
@@ -22,5 +23,5 @@ export const useSelectionMode = () => {
         })
     }, [setState]);
 
-    return { enableSelectionMode }
+    return { isSelectionEnabled, enableSelectionMode }
 }

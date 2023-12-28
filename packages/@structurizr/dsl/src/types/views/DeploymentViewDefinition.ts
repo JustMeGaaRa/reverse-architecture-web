@@ -10,6 +10,7 @@ import {
     IRelationshipPosition,
     ISupportImmutable,
     IViewDefinition,
+    IViewDefinitionMetadata,
     Position,
     Properties,
     SoftwareSystem,
@@ -82,6 +83,11 @@ export class DeploymentViewDefinition implements IViewDefinition, ISupportImmuta
             elements: this.elements,
             relationships: this.relationships,
         }
+    }
+
+    public applyMetadata(metadata: IViewDefinitionMetadata) {
+        metadata.elements?.forEach(element => this.elements.push(element));
+        metadata.relationships?.forEach(relationship => this.relationships.push(relationship));
     }
 
     public setElementPosition(elementId: string, position: Position) {

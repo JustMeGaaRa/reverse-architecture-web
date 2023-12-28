@@ -11,10 +11,10 @@ import { ReactFlowJsonObject } from "@reactflow/core";
 import { ReactFlowBuilder } from "@workspace/core";
 import { ReactFlowVisitor } from "../types";
 
-export const getView = (workspace: IWorkspace, viewDefinition?: ViewKeys) => {
+export const getViewDefinition = (workspace: IWorkspace, viewDefinition?: ViewKeys) => {
     const defaultView: IViewDefinition = {
-        type: viewDefinition?.type ?? ViewType.SystemContext,
-        title: viewDefinition?.title ?? viewDefinition?.type ?? ViewType.SystemContext,
+        type: viewDefinition?.type ?? ViewType.SystemLandscape,
+        title: viewDefinition?.title ?? viewDefinition?.type ?? ViewType.SystemLandscape,
         identifier: viewDefinition?.identifier ?? "default",
         elements: [],
         relationships: []

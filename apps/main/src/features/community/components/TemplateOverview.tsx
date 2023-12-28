@@ -9,10 +9,14 @@ import {
     Tabs,
 } from "@chakra-ui/react";
 import {
+    IViewDefinition,
     IWorkspace,
     IWorkspaceMetadata,
+    ViewKeys,
+    ViewType,
+    Workspace,
 } from "@structurizr/dsl";
-import { WorkspacePanel } from "@workspace/core";
+import { CurrentView, WorkspacePanel } from "@workspace/core";
 import { WorkspaceDiagramming } from "@workspace/diagramming";
 import {
     Bookmark,
@@ -34,13 +38,12 @@ import {
     ContextSheetCloseButton,
     ContextSheetPanel
 } from "@reversearchitecture/ui";
-import { WorkspaceNavigation } from "@workspace/navigation";
+import { WorkspaceViewPath } from "@workspace/navigation";
 import { TemplateHeader } from "./TemplateHeader";
 
 export const TemplateOverview: FC<{
     information: WorkspaceInfo;
-    workspace: IWorkspace;
-    metadata: IWorkspaceMetadata;
+    workspace: Workspace;
     discussion: CommentThread;
     onInformationClick?: () => void;
     onCommentsClick?: () => void;
@@ -51,7 +54,6 @@ export const TemplateOverview: FC<{
 }> = ({
     information,
     workspace,
-    metadata,
     discussion,
     onInformationClick,
     onCommentsClick,
@@ -95,8 +97,7 @@ export const TemplateOverview: FC<{
                                 >
                                     <WorkspaceDiagramming
                                         workspace={workspace}
-                                        view={workspace.views.systemLandscape}
-                                        metadata={metadata}
+                                        initialView={workspace.views.systemLandscape}
                                     >
                                         <WorkspacePanel position={"bottom-left"} spacing={2}>
                                             <TemplateHeader
@@ -107,7 +108,7 @@ export const TemplateOverview: FC<{
                                                 onTryItClick={onTryItClick}
                                             />
                                         </WorkspacePanel>
-                                        <WorkspaceNavigation />
+                                        <WorkspaceViewPath workspace={workspace} />
                                     </WorkspaceDiagramming>
                                 </Flex>
                             </ContextSheet>

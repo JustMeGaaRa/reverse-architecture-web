@@ -13,12 +13,13 @@ import {
     IComponentView,
     ComponentViewStrategy,
     IWorkspace,
+    Workspace,
 } from "@structurizr/dsl";
 import {
     WorkspaceViewRenderer,
-    useAutoLayoutEffect,
     useWorkspaceToolbarStore,
-    getAbsolutePoint
+    getAbsolutePoint,
+    CurrentView
 } from "@workspace/core";
 import {
     FC,
@@ -36,20 +37,19 @@ import {
 } from "../../components";
 import {
     useViewRenderingEffect,
-    useViewNavigation,
-    useComponentView
+    useComponentView,
+    useAutoLayoutEffect
 } from "../../hooks";
 
 export const ComponentView: FC<PropsWithChildren<{
-    model: IModel;
-    configuration: IConfiguration;
-    view: IComponentView;
+    workspace: Workspace;
+    view: CurrentView;
     onWorkspaceChange?: (workspace: IWorkspace) => void;
     onNodeDragStop?: NodeMouseHandler;
     onNodesDoubleClick?: NodeMouseHandler;
 }>> = ({
     children,
-    model,
+    workspace,
     view,
     onWorkspaceChange,
     onNodeDragStop,
@@ -58,7 +58,7 @@ export const ComponentView: FC<PropsWithChildren<{
     const [ nodes, , onNodesChange ] = useNodesState([]);
     const [ edges, , onEdgesChange ] = useEdgesState([]);
     const reactFlowRef = useRef(null);
-    const strategy = useMemo(() => new ComponentViewStrategy(model, view), [model, view]);
+    const strategy = useMemo(() => new ComponentViewStrategy(workspace.model, view), [workspace, view]);
     const {
         isAddingElementEnabled,
         addingElementType
@@ -72,11 +72,9 @@ export const ComponentView: FC<PropsWithChildren<{
         addRelationship,
         setElementPosition
     } = useComponentView(view.identifier);
-    const { zoomIntoElement } = useViewNavigation();
     const { getViewport } = useReactFlow();
 
-    useAutoLayoutEffect();
-    useViewRenderingEffect(strategy);
+    useViewRenderingEffect(workspace, strategy);
 
     const handleOnNodeDragStop = useCallback((event: React.MouseEvent, node: any, nodes: any[]) => {
         onWorkspaceChange?.(setElementPosition(node.data.element.identifier, node.position));
@@ -172,7 +170,7 @@ export const ComponentView: FC<PropsWithChildren<{
             onConnect={handleOnConnect}
         >
             <ElementOptionsToolbar />
-            <ElementFlowControls />
+            <ElementFlowControls workspace={workspace} />
             <ElementZoomControlsBackground />
             {children}
         </WorkspaceViewRenderer>

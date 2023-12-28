@@ -1,7 +1,6 @@
-import { IconButton } from "@chakra-ui/react";
+import { ActionRedoButton, ActionUndoButton } from "@workspace/controls";
 import { PanelPosition, WorkspacePanel } from "@workspace/core";
 import { Toolbar, ToolbarSection } from "@workspace/toolbar";
-import { Redo, Undo } from "iconoir-react";
 import { FC } from "react";
 
 export const WorkspaceUndoRedoControls: FC<{
@@ -13,18 +12,10 @@ export const WorkspaceUndoRedoControls: FC<{
         <WorkspacePanel position={position ?? "bottom-left"}>
             <Toolbar>
                 <ToolbarSection>
-                    <IconButton
-                        aria-label={"undo last change"}
-                        icon={<Undo />}
-                        title={"undo last change"}
-                    />
+                    <ActionUndoButton />
                 </ToolbarSection>
                 <ToolbarSection>
-                    <IconButton
-                        aria-label={"redo last change"}
-                        icon={<Redo />}
-                        title={"redo last change"}
-                    />
+                    <ActionRedoButton />
                 </ToolbarSection>
             </Toolbar>
         </WorkspacePanel>

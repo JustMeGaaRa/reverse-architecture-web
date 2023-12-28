@@ -31,7 +31,7 @@ import { nodeSelector } from "../../utils";
 export const ElementOptionsToolbar: FC = () => {
     const { selectedNodeIds, selectedNodes, canLock } = useStore(nodeSelector);
     const { setNodes } = useReactFlow();
-    const { deleteElements } = useWorkspace();
+    const { workspace, deleteElements } = useWorkspace();
 
     const handleOnClickLockNode = useCallback(() => {
         setNodes(nodes => {
@@ -56,7 +56,7 @@ export const ElementOptionsToolbar: FC = () => {
     return (
         <NodeToolbar
             align={"center"}
-            isVisible={selectedNodeIds.length > 0}
+            isVisible={workspace !== null && workspace !== undefined && selectedNodeIds.length > 0}
             nodeId={selectedNodeIds}
             offset={40}
             position={Position.Top}

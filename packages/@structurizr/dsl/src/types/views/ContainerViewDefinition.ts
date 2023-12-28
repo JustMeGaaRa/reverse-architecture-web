@@ -9,6 +9,7 @@ import {
     IRelationshipPosition,
     ISupportImmutable,
     IViewDefinition,
+    IViewDefinitionMetadata,
     Person,
     Position,
     Properties,
@@ -78,6 +79,11 @@ export class ContainerViewDefinition implements IViewDefinition, ISupportImmutab
             elements: this.elements,
             relationships: this.relationships,
         }
+    }
+
+    public applyMetadata(metadata: IViewDefinitionMetadata) {
+        metadata.elements?.forEach(element => this.elements.push(element));
+        metadata.relationships?.forEach(relationship => this.relationships.push(relationship));
     }
 
     public setElementPosition(elementId: string, position: Position) {

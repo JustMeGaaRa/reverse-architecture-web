@@ -5,6 +5,5 @@ export * from "./WorkspaceViewportRelativerWrapper";
 export * from "./WorkspaceElementPortal";
 export * from "./WorkspacePanel";
 export * from "./WorkspaceProvider";
-export * from "./WorkspaceStoreUpdater";
 export * from "./WorkspaceThemeProvider";
 export * from "./WorkspaceViewRenderer";

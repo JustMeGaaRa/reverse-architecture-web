@@ -1,10 +1,10 @@
 import { ReactFlowJsonObject, useReactFlow } from "@reactflow/core";
+import { AutoLayout } from "@workspace/core";
 import { useEffect } from "react";
-import { useWorkspaceStore } from "../hooks";
-import { AutoLayout } from "../types";
+import { useWorkspaceNavigation } from "./useWorkspaceNavigation";
 
 export const useAutoLayoutEffect = () => {
-    const { selectedView } = useWorkspaceStore();
+    const { currentView } = useWorkspaceNavigation();
     const { toObject, setNodes, setEdges } = useReactFlow();
 
     // NOTE: this effect will triggern whenever the selectedView changes
@@ -15,7 +15,7 @@ export const useAutoLayoutEffect = () => {
             return reactFlowAuto;
         }
 
-        const shouldAutoLayout = selectedView.autoLayout || selectedView.elements.length === 0;
+        const shouldAutoLayout = currentView?.autoLayout || currentView?.elements?.length === 0;
         
         if (shouldAutoLayout) {
             const reactFlowObject = toObject();
@@ -26,5 +26,5 @@ export const useAutoLayoutEffect = () => {
                     setEdges(reactFlowAuto.edges);
                 });
         }
-    }, [selectedView, setEdges, setNodes, toObject])
+    }, [currentView, setEdges, setNodes, toObject])
 }

@@ -83,13 +83,11 @@ export const useWorkspaceCollection = () => {
 
     const toggleSelected = useCallback((workspace: WorkspaceInfo | WorkspaceGroupInfo) => {
         if (isWorkspace(workspace)) {
-            console.log("toggleSelected: workspace", workspace)
             selected.some(x => isWorkspace(x) && x.workspaceId === workspace.workspaceId)
                 ? removeSelected(workspace)
                 : addSelected(workspace);
         }
         if (isWorkspaceGroup(workspace)) {
-            console.log("toggleSelected: group", workspace)
             selected.some(x => isWorkspaceGroup(x) && x.name === workspace.name)
                 ? removeSelected(workspace)
                 : addSelected(workspace);

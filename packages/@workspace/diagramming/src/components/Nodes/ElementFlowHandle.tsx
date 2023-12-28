@@ -1,6 +1,6 @@
 import { Box, Flex, Icon, IconButton } from "@chakra-ui/react";
 import { Position } from "@reactflow/core";
-import { useWorkspaceStore } from "@workspace/core";
+import { useWorkspace } from "@workspace/core";
 import { BoundingBox } from "../../types";
 import { Plus } from "iconoir-react";
 import { FC, useRef } from "react";
@@ -25,7 +25,8 @@ export const ElementFlowHandle: FC<{
         [Position.Bottom]: { top: `${referenceBox.height + 20}px`, left: `${referenceBox.width / 2}px` },
     }
     const handleRef = useRef<HTMLDivElement>(null);
-    const { mousePosition } = useWorkspaceStore();
+    // TODO: get mouse position by subscribing to mousemove event in DOM directly
+    const { mousePosition } = { mousePosition: { x: 0, y: 0 } }//useWorkspace();
 
     const handleRect = handleRef.current?.getBoundingClientRect();
         

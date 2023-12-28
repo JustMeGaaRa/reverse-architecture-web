@@ -17,8 +17,8 @@ export interface IRelationshipPosition {
 export interface IViewDefinitionMetadata {
     identifier: Identifier;
     key?: string;
-    elements: Array<IElementPosition>;
-    relationships: Array<IRelationshipPosition>;
+    elements?: Array<IElementPosition>;
+    relationships?: Array<IRelationshipPosition>;
 }
 
 export class ViewDefinitionMetadata implements ISupportImmutable<IViewDefinitionMetadata> {

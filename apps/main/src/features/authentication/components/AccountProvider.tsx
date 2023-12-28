@@ -1,11 +1,10 @@
 import { FC, PropsWithChildren, useState } from "react";
 import { AccountContext } from "../contexts";
 import { Account } from "../types";
-import { createDefaultUser } from "../utils";
+import { createRandomUser } from "../utils";
 
-// TODO: define the type of the account
 export const AccountProvider: FC<PropsWithChildren> = ({ children }) => {
-    const [ account, setAccount ] = useState<Account>(createDefaultUser());
+    const [ account, setAccount ] = useState<Account>(createRandomUser());
 
     return (
         <AccountContext.Provider value={{ account, setAccount }}>

@@ -1,5 +1,5 @@
 import { ButtonGroup } from "@chakra-ui/react";
-import { FC, PropsWithChildren } from "react";
+import { Children, FC, PropsWithChildren } from "react";
 
 export const ToolbarSection: FC<PropsWithChildren<{
     size?: "xs" | "sm" | "md" | "lg";
@@ -7,7 +7,7 @@ export const ToolbarSection: FC<PropsWithChildren<{
     children,
     size = "md"
 }) => {
-    return (
+    return Children.count(children) > 0 && (
         <ButtonGroup
             className={"workspace-toolbar__section"}
             colorScheme={"lime"}

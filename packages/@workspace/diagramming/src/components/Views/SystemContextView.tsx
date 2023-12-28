@@ -13,12 +13,13 @@ import {
     ISystemContextView,
     IWorkspace,
     SystemContextViewStrategy,
+    Workspace,
 } from "@structurizr/dsl";
 import {
     WorkspaceViewRenderer,
-    useAutoLayoutEffect,
     useWorkspaceToolbarStore,
-    getAbsolutePoint
+    getAbsolutePoint,
+    CurrentView
 } from "@workspace/core";
 import {
     FC,
@@ -36,20 +37,19 @@ import {
 } from "../../components";
 import {
     useViewRenderingEffect,
-    useViewNavigation,
-    useSystemContextView
+    useSystemContextView,
+    useAutoLayoutEffect
 } from "../../hooks";
 
 export const SystemContextView: FC<PropsWithChildren<{
-    model: IModel;
-    configuration: IConfiguration;
-    view: ISystemContextView;
+    workspace: Workspace;
+    view: CurrentView;
     onWorkspaceChange?: (workspace: IWorkspace) => void;
     onNodeDragStop?: NodeMouseHandler;
     onNodesDoubleClick?: NodeMouseHandler;
 }>> = ({
     children,
-    model,
+    workspace,
     view,
     onWorkspaceChange,
     onNodeDragStop,
@@ -58,7 +58,7 @@ export const SystemContextView: FC<PropsWithChildren<{
     const [ nodes, , onNodesChange ] = useNodesState([]);
     const [ edges, , onEdgesChange ] = useEdgesState([]);
     const reactFlowRef = useRef(null);
-    const strategy = useMemo(() => new SystemContextViewStrategy(model, view), [model, view]);
+    const strategy = useMemo(() => new SystemContextViewStrategy(workspace.model, view), [workspace, view]);
     const {
         isAddingElementEnabled,
         addingElementType
@@ -70,11 +70,9 @@ export const SystemContextView: FC<PropsWithChildren<{
         addRelationship,
         setElementPosition
     } = useSystemContextView(view.identifier);
-    const { zoomIntoElement } = useViewNavigation();
     const { getViewport } = useReactFlow();
 
-    useAutoLayoutEffect();
-    useViewRenderingEffect(strategy);
+    useViewRenderingEffect(workspace, strategy);
 
     const handleOnNodeDragStop = useCallback((event: React.MouseEvent, node: any, nodes: any[]) => {
         onWorkspaceChange?.(setElementPosition(node.data.element.identifier, node.position));
@@ -169,7 +167,7 @@ export const SystemContextView: FC<PropsWithChildren<{
             onConnect={handleOnConnect}
         >
             <ElementOptionsToolbar />
-            <ElementFlowControls />
+            <ElementFlowControls workspace={workspace} />
             <ElementZoomControlsBackground />
             {children}
         </WorkspaceViewRenderer>

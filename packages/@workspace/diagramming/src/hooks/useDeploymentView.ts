@@ -5,10 +5,9 @@ import {
     Person,
     Position,
     Relationship,
-    SoftwareSystem,
-    Workspace
+    SoftwareSystem
 } from "@structurizr/dsl";
-import { useWorkspaceStore } from "@workspace/core";
+import { useWorkspace } from "@workspace/core";
 import { useCallback } from "react";
 import {
     getNodeFromElement,
@@ -16,7 +15,7 @@ import {
 } from "../utils";
 
 export const useDeploymentView = (viewIdentifier: Identifier, environment: string) => {
-    const { workspace } = useWorkspaceStore();
+    const { workspace } = useWorkspace();
     
     const addDeploymentNode = useCallback((position: Position, parentNodeIdentifier?: Identifier) => {
 
@@ -39,15 +38,11 @@ export const useDeploymentView = (viewIdentifier: Identifier, environment: strin
     }, []);
 
     const setElementPosition = useCallback((elementId: string, position: Position) => {
-        const builder = new Workspace(workspace);
-        builder.views.deployments
+        workspace.views.deployments
             .filter(x => x.identifier === viewIdentifier && x?.["environment"] === environment)
             .forEach(x => x.setElementPosition(elementId, position));
-
-        useWorkspaceStore.setState(state => ({
-            ...state,
-            workspace: builder.toObject()
-        }));
+        
+        return workspace.toObject();
     }, [viewIdentifier, environment, workspace]);
 
     return {

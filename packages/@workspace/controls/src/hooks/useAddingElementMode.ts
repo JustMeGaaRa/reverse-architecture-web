@@ -1,25 +1,27 @@
 import { ElementType, ViewType } from "@structurizr/dsl";
-import { WorkspaceStore, useWorkspaceStore, useWorkspaceToolbarStore } from "@workspace/core";
+import { useWorkspaceToolbarStore } from "@workspace/core";
+import { WorkspaceNavigationStore, useWorkspaceNavigation } from "@workspace/diagramming";
 import { useCallback } from "react";
 
-const SelectedViewSelector = (state: WorkspaceStore) => {
+const SelectedViewSelector = (state: WorkspaceNavigationStore) => {
     return {
-        isSystemLandscapView: state.selectedView?.type === ViewType.SystemLandscape,
-        isSystemContextView: state.selectedView?.type === ViewType.SystemContext,
-        isContainerView: state.selectedView?.type === ViewType.Container,
-        isComponentView: state.selectedView?.type === ViewType.Component,
-        isDeploymentView: state.selectedView?.type === ViewType.Deployment
+        isSystemLandscapView: state.currentView?.type === ViewType.SystemLandscape,
+        isSystemContextView: state.currentView?.type === ViewType.SystemContext,
+        isContainerView: state.currentView?.type === ViewType.Container,
+        isComponentView: state.currentView?.type === ViewType.Component,
+        isDeploymentView: state.currentView?.type === ViewType.Deployment
     }
 }
 
 export const useAddingElementMode = () => {
+    const store = useWorkspaceNavigation();
     const {
         isSystemLandscapView,
         isSystemContextView,
         isContainerView,
         isComponentView,
         isDeploymentView
-    } = useWorkspaceStore(SelectedViewSelector);
+    } = SelectedViewSelector(store);
 
     const enableAddingElement = useCallback((type: ElementType) => {
         useWorkspaceToolbarStore.setState({

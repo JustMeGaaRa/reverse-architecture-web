@@ -13,6 +13,7 @@ import {
     Identifier,
     All,
     IAutoLayout,
+    IViewDefinitionMetadata,
 } from "../..";
 
 export interface ISystemContextView extends IViewDefinition {
@@ -77,6 +78,11 @@ export class SystemContextViewDefinition implements IViewDefinition, ISupportImm
             elements: this.elements,
             relationships: this.relationships,
         }
+    }
+
+    public applyMetadata(metadata: IViewDefinitionMetadata) {
+        metadata.elements?.forEach(element => this.elements.push(element));
+        metadata.relationships?.forEach(relationship => this.relationships.push(relationship));
     }
 
     public setElementPosition(elementId: string, position: Position) {

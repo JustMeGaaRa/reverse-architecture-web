@@ -64,7 +64,6 @@ export const useCommentStore = create(persist<{
                 comments: [ ...existingDiscussion?.comments ?? [], comment],
                 metadata: existingDiscussion?.metadata
             };
-            console.log(updatedDicussion)
             set(state => ({
                 ...state,
                 discussions: [

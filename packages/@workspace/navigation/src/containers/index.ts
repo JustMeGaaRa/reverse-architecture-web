@@ -1,1 +1,1 @@
-export * from "./WorkspaceNavigation";
+export * from "./WorkspaceViewPath";

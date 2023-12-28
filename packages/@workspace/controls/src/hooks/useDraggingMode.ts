@@ -3,6 +3,7 @@ import { useCallback } from "react";
 import { useWorkspaceToolbarStore } from "@workspace/core";
 
 export const useDraggingMode = () => {
+    const { isDraggingEnabled } = useWorkspaceToolbarStore();
     const { setState } = useStoreApi();
 
     const enableDraggingMode = useCallback(() => {
@@ -22,5 +23,5 @@ export const useDraggingMode = () => {
         })
     }, [setState]);
 
-    return { enableDraggingMode };
+    return { isDraggingEnabled, enableDraggingMode };
 }

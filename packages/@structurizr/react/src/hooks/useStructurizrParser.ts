@@ -12,14 +12,14 @@ export const useStructurizrParser = () => {
             try {
                 const parser = new StructurizrParser();
                 const result = StructurizrLexer.tokenize(workspaceText);
-                console.log("lexing", result);
+                // console.log("lexing", result);
                 parser.input = result.tokens;
                 const cstNode = parser.workspace();
-                console.log("cstNode", cstNode)
+                // console.log("cstNode", cstNode)
                 return cstNode;
             }
             catch (error) {
-                console.log(error)
+                // console.log(error)
                 throw error;
             }
         }
@@ -28,11 +28,11 @@ export const useStructurizrParser = () => {
             try {
                 const visitor = new StructurizrVisitor();
                 const workspace = visitor.visit(workspaceCst);
-                console.log("workspace", workspace)
+                // console.log("workspace", workspace)
                 return workspace;
             }
             catch (error) {
-                console.log(error)
+                // console.log(error)
                 throw error;
             }
         }

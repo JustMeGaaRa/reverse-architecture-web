@@ -129,7 +129,6 @@ export const WorkspaceListPage: FC<PropsWithChildren> = () => {
                 group: "Group"
             }))
             .forEach(element => {
-                console.log(element);
                 // workspaceApi.saveWorkspace(element.workspaceId, element)
                 //     .then(workspaces => setWorkspaces(workspaces))
                 //     .catch(error => console.error(error));

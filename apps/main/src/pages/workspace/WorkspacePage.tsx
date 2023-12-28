@@ -17,9 +17,11 @@ import {
     usePageHeader,
     usePageSidebar
 } from "@reversearchitecture/ui";
-import { useWorkspaceStore } from "@workspace/core";
+import { Workspace } from "@structurizr/dsl";
+import { useStructurizrParser } from "@structurizr/react";
+import { useWorkspaceTheme, WorkspaceProvider } from "@workspace/core";
+import { WorkspaceRoom, CurrentUser } from "@workspace/live";
 import {
-    UserPlus,
     AppleShortcuts,
     ChatLines,
     CloudSync,
@@ -31,16 +33,20 @@ import {
 } from "iconoir-react";
 import {
     FC,
-    PropsWithChildren,
     useCallback,
     useEffect,
-    useState
+    useMemo,
+    useState,
 } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import {
-    UserAvatarGroup,
-    WorkspaceMenu,
-} from "../workspace";
+    CommentProvider,
+    WorkspaceApi,
+    WorkspaceCacheWrapper,
+    useAccount,
+    useSnackbar,
+} from "../../features";
+import { WorkspaceContentEditor, WorkspaceMenu } from "./";
 
 export enum WorkspaceContentMode {
     Diagramming = "diagramming",
@@ -53,9 +59,11 @@ export enum WorkspaceContentPanel {
     Settings = "settings"
 }
 
-export const WorkspacePageLayoutContent: FC<PropsWithChildren> = ({ children }) => {
+export const WorkspacePage: FC = () => {
     const { setSidebarContent, setShowSidebarButton, setSidebarOpen } = usePageSidebar();
     const { setHeaderContent } = usePageHeader();
+    const { theme } = useWorkspaceTheme();
+    const [ workspace, setWorkspace ] = useState(Workspace.Empty);
 
     // reset sidebar and header content
     useEffect(() => {
@@ -74,9 +82,6 @@ export const WorkspacePageLayoutContent: FC<PropsWithChildren> = ({ children }) 
 
     const [ queryParams, setQueryParam ] = useSearchParams([[ "mode", WorkspaceContentMode.Diagramming ]]);
     const navigate = useNavigate();
-    const { workspace } = useWorkspaceStore();
-    // TODO: get users from workspace room
-    const [ users ] = useState<Array<any>>([]);
 
     const handleOnOpenEditor = useCallback(() => {
         setQueryParam(params => {
@@ -216,25 +221,6 @@ export const WorkspacePageLayoutContent: FC<PropsWithChildren> = ({ children }) 
                         <Text marginX={1}>Modeling</Text>
                     </Button>
                 </ButtonSegmentedToggle>
-            ),
-            right: (
-                <HStack key={"workspace-page-options"} gap={2} mr={4}>
-                    <UserAvatarGroup users={users} />
-                    <Divider
-                        borderWidth={1}
-                        color={"whiteAlpha.200"}
-                        height={"32px"}
-                        marginX={2}
-                        orientation={"vertical"}
-                    />
-                    <IconButton
-                        aria-label={"share"}
-                        colorScheme={"gray"}
-                        icon={<Icon as={UserPlus} boxSize={5} />}
-                        isDisabled
-                        size={"md"}
-                    />
-                </HStack>
             )
         })
     }, [
@@ -242,9 +228,59 @@ export const WorkspacePageLayoutContent: FC<PropsWithChildren> = ({ children }) 
         handleOnDiagrammingMode,
         handleOnModelingMode,
         queryParams,
-        workspace.name,
-        users,
+        workspace.name
     ]);
+    
+    // TODO: consider cleaning up and moving user creation somewhere else
+    const { account } = useAccount();
+    const currentUserInfo = useMemo(() => {
+        const colorSchemes = [ "gray", "blue", "green", "red", "orange", "yellow", "purple"];
+        return {
+            ...account,
+            color: colorSchemes.at(Math.floor(Math.random() * colorSchemes.length))
+        }
+    }, [account]);
 
-    return (<>{children}</>)
+    // workspace content
+    // TODO: add selected repository to account provider or define repository provider
+    const { workspaceId } = useParams<{ workspaceId: string }>();
+    const { workspaceApi } = useMemo(() => ({ workspaceApi: new WorkspaceCacheWrapper(new WorkspaceApi()) }), []);
+    const { parseStructurizr } = useStructurizrParser();
+    const { snackbar } = useSnackbar();
+
+    useEffect(() => {
+        workspaceApi.getWorkspaceById(workspaceId)
+            .then(info => {
+                const parsedWorkspace = parseStructurizr(info.content?.text);
+                const autolayoutWorkspace = parsedWorkspace.applyMetadata(info.content?.metadata);
+                // TODO: do not apply theme to the workspace object, but rather use it internally from the provider
+                // const themedWorkspace = applyTheme(parsedWorkspace.toObject(), info.content?.theme ?? theme);
+                setWorkspace(autolayoutWorkspace);
+                // TODO: set code text as well
+                // setStructurizrDslText(info.content?.text);
+            })
+            .catch(error => {
+                snackbar({
+                    title: error.message,
+                    description: error.message,
+                    status: "error",
+                    duration: 9000,
+                })
+            })
+
+        return () => {
+            setWorkspace(Workspace.Empty);
+        }
+    }, [workspaceApi, workspaceId, theme, snackbar, parseStructurizr]);
+
+    return (
+        <WorkspaceProvider workspace={workspace}>
+            <CommentProvider>
+                <WorkspaceRoom roomId={workspaceId}>
+                    <CurrentUser info={currentUserInfo} />
+                    <WorkspaceContentEditor />
+                </WorkspaceRoom>
+            </CommentProvider>
+        </WorkspaceProvider>
+    )
 }

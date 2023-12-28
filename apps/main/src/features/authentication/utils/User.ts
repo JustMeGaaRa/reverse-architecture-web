@@ -213,26 +213,10 @@ export const defaultUsers: Account[] = [
     }
 ]
 
-const colorSchemes = [
-    "gray",
-    "blue",
-    "green",
-    "red",
-    "orange",
-    "yellow",
-    "purple"
-]
-
-export const createRandomUser = () => {
-    return {
-        ...defaultUsers.at(Math.floor(Math.random() * defaultUsers.length)),
-        color: colorSchemes.at(Math.floor(Math.random() * colorSchemes.length))
-    };
+export const createRandomUser = (): Account => {
+    return defaultUsers.at(Math.floor(Math.random() * defaultUsers.length))
 }
 
-export const createDefaultUser = () => {
-    return {
-        ...defaultUsers.at(0),
-        color: colorSchemes.at(0)
-    }
+export const createDefaultUser = (): Account => {
+    return defaultUsers.at(0);
 }

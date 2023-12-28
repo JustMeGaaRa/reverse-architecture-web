@@ -1,7 +1,8 @@
 import { Avatar, AvatarGroup } from "@chakra-ui/react";
+import { UserInfo } from "@workspace/core";
 import { FC } from "react";
 
-export const UserAvatarGroup: FC<{ users: any[] }> = ({ users }) => {
+export const UserAvatarGroup: FC<{ users: UserInfo[] }> = ({ users }) => {
     return (
         <AvatarGroup max={5} cursor={"pointer"}>
             {users.map(user => (
@@ -9,7 +10,6 @@ export const UserAvatarGroup: FC<{ users: any[] }> = ({ users }) => {
                     key={user.username}
                     colorScheme={user.color}
                     name={user.fullname}
-                    // src={user.avatarUrl}
                     title={user.fullname}
                 />
             ))}

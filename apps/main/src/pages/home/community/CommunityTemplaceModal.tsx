@@ -1,5 +1,5 @@
 import { Flex, Modal, ModalContent, ModalOverlay } from "@chakra-ui/react";
-import { applyMetadata, applyTheme, Workspace, WorkspaceMetadata } from "@structurizr/dsl";
+import { IViewDefinition, ViewType, Workspace } from "@structurizr/dsl";
 import { useStructurizrParser } from "@structurizr/react";
 import { useWorkspaceTheme, WorkspaceProvider } from "@workspace/core";
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
@@ -27,11 +27,10 @@ export const CommunityTemplateModal: FC<{
     // TODO: come up with a convention or a way to identify the main thread discussion
     const discussionThreadId = "workspace-discussion";
     const { parseStructurizr } = useStructurizrParser();
-    const { theme } = useWorkspaceTheme();
     const { account } = useAccount();
     const [ info, setInfo ] = useState<WorkspaceInfo>();
-    const [ workspace, setWorkspace ] = useState(Workspace.Empty.toObject());
-    const [ metadata, setMetadata ] = useState(WorkspaceMetadata.Empty.toObject());
+    const { theme } = useWorkspaceTheme();
+    const [ workspace, setWorkspace ] = useState(Workspace.Empty);
     const [ discussion, setDiscussion ] = useState<CommentThread>();
     const { workspaceApi } = useMemo(() => ({ workspaceApi: new WorkspaceApi() }), []);
     const { commentApi } = useMemo(() => ({ commentApi: new CommentApi() }), []);
@@ -40,13 +39,17 @@ export const CommunityTemplateModal: FC<{
         if (workspaceId) {
             workspaceApi.getWorkspaceById(workspaceId)
                 .then(info => {
-                    const builder = parseStructurizr(info.content?.text);
-                    const workspaceObject = applyMetadata(applyTheme(builder.toObject(), info.content?.theme ?? theme), info.content?.metadata);
+                    const parsedWorkspace = parseStructurizr(info.content?.text);
+                    const autolayoutWorkspace = parsedWorkspace.applyMetadata(info.content?.metadata);
                     setInfo(info);
-                    setWorkspace(workspaceObject);
-                    setMetadata(info.content?.metadata);
+                    setWorkspace(autolayoutWorkspace);
                 })
                 .catch(error => console.error(error));
+        }
+
+        return () => {
+            setInfo(undefined);
+            setWorkspace(Workspace.Empty);
         }
     }, [workspaceId, parseStructurizr, theme, workspaceApi, commentApi]);
 
@@ -82,32 +85,29 @@ export const CommunityTemplateModal: FC<{
     }, [info, onTryItClick]);
 
     return (
-        <WorkspaceProvider workspace={Workspace.Empty}>
-            <Modal size={"full"} isOpen={isOpen} onClose={onClose}>
-                <ModalOverlay />
-                <ModalContent>
-                    <Flex
-                        bottom={0}
-                        paddingX={8}
-                        paddingTop={20}
-                        height={"100%"}
-                        width={"100%"}
-                        position={"absolute"}
-                    >
-                        <TemplateOverview
-                            information={info}
-                            workspace={workspace}
-                            metadata={metadata}
-                            discussion={discussion}
-                            onCommentSend={handleOnCommentSend}
-                            onTryItClick={handleOnTryItClick}
-                            onInformationClick={handleOnInformationClick}
-                            onCommentsClick={handleOnCommentsClick}
-                            onClose={onClose}
-                        />
-                    </Flex>
-                </ModalContent>
-            </Modal>
-        </WorkspaceProvider>
+        <Modal size={"full"} isOpen={isOpen} onClose={onClose}>
+            <ModalOverlay />
+            <ModalContent>
+                <Flex
+                    bottom={0}
+                    paddingX={8}
+                    paddingTop={20}
+                    height={"100%"}
+                    width={"100%"}
+                    position={"absolute"}
+                >
+                    <TemplateOverview
+                        information={info}
+                        workspace={workspace}
+                        discussion={discussion}
+                        onCommentSend={handleOnCommentSend}
+                        onTryItClick={handleOnTryItClick}
+                        onInformationClick={handleOnInformationClick}
+                        onCommentsClick={handleOnCommentsClick}
+                        onClose={onClose}
+                    />
+                </Flex>
+            </ModalContent>
+        </Modal>
     )
 }

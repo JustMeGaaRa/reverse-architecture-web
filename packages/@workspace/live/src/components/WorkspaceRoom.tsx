@@ -1,105 +1,67 @@
-import {
-    FC,
-    PropsWithChildren,
-    useCallback,
-    useEffect,
-    useState
-} from "react";
+import { FC, PropsWithChildren, useEffect, useState } from "react";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
-import { Awareness } from "y-protocols/awareness";
 import { WorkspaceRoomContext } from "../contexts";
-import {
-    useWorkspaceRoomStore,
-    useWorkspaceRoom,
-    useAwarenessEffect
-} from "../hooks";
-import { User } from "../types";
+import { SharingOptions } from "../types";
+import { WorkspaceUser } from "@workspace/core";
+
+export const workspaceDocument = new Y.Doc();
 
 export const WorkspaceRoom: FC<PropsWithChildren<{
     roomId: string;
-    onChange?: (users: Array<User>) => void;
 }>> = ({
     children,
     roomId,
-    onChange
 }) => {
-    const { ydoc, provider, setYDoc, setProvider, setUsers } = useWorkspaceRoomStore();
-
-    const onAwarenessChange = useCallback((awareness: Awareness) => {
-        const users = Array
-            .from(awareness.states.entries() ?? [])
-            .map(([, value]) => value.account as User);
-
-        setUsers(users);
-        onChange?.(users);
-    }, [setUsers, onChange]);
-
-    useAwarenessEffect(
-        provider?.awareness,
-        {
-            onChange: onAwarenessChange,
-            onUpdate: onAwarenessChange
+    const [ connectionProvider, setConnectionProvider ] = useState<WebrtcProvider>();
+    const [ currentUser, setCurrentUser ] = useState<WorkspaceUser>({
+        info: {
+            username: "jonathan.joestar",
+            fullname: "Jonathan Joestar",
+            color: "green",
         }
-    );
+    });
+    const [ collaboratingUsers, setCollaboratingUsers ] = useState<Array<WorkspaceUser>>([]);
+    const [ sharingOptions, setSharingOptions ] = useState<SharingOptions>({ followPresenter: false });
 
     useEffect(() => {
-        if (roomId && !ydoc && !provider) {
-            const ydocNew = new Y.Doc();
-            const providerNew = new WebrtcProvider(roomId, ydocNew);
-            setYDoc(ydocNew);
-            setProvider(providerNew);
+        let webRtcProvider: WebrtcProvider = new WebrtcProvider(roomId, workspaceDocument);
+
+        const onAwarenessChange = () => {
+            const collaboratingUsers = Array
+                .from(webRtcProvider.awareness.getStates() ?? [])
+                .map(([, value]) => value as WorkspaceUser)
+                .filter(user => user !== null && user !== undefined);
+            
+            setCollaboratingUsers(collaboratingUsers);
         }
+
+        webRtcProvider.awareness?.on("change", onAwarenessChange);
+        webRtcProvider.awareness?.on("update", onAwarenessChange);
+        
+        setConnectionProvider(webRtcProvider);
 
         return () => {
-            ydoc?.destroy();
-            provider?.disconnect();
-            provider?.destroy();
+            webRtcProvider.awareness?.off("change", onAwarenessChange);
+            webRtcProvider.awareness?.off("update", onAwarenessChange);
+            webRtcProvider?.disconnect();
+            webRtcProvider?.destroy();
         }
-    }, [roomId, ydoc, provider, setYDoc, setProvider]);
-
-    return (
-        <>
-            {children}
-        </>
-    )
-}
-
-export const WorkspaceRoomProvider: FC<PropsWithChildren> = ({ children }) => {
-    const [ ydoc, setYDoc ] = useState<Y.Doc>();
-    const [ provider, setProvider ] = useState<WebrtcProvider>();
-    const [ users, setUsers ] = useState<Array<User>>([]);
+    }, [roomId]);
 
     return (
         <WorkspaceRoomContext.Provider
             value={{
-                ydoc,
-                provider,
-                users,
-                setYDoc,
-                setProvider,
-                setUsers,
+                workspaceDocument,
+                connectionProvider,
+                currentUser,
+                collaboratingUsers,
+                sharingOptions,
+                setCurrentUser,
+                setSharingOptions
             }}
         >
             {children}
         </WorkspaceRoomContext.Provider>
     )
-}
-
-export const WorkspaceUser: FC<{ user: User }> = ({ user }) => {
-    const { joinRoom, leaveRoom } = useWorkspaceRoom();
-
-    useEffect(() => {
-        if (user) {
-            joinRoom(user);
-        }
-
-        return () => {
-            if (user) {
-                leaveRoom();
-            }
-        }
-    }, [user, joinRoom, leaveRoom]);
-
-    return null;
 }

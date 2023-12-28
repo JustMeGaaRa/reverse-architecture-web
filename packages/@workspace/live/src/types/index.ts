@@ -1,1 +1,3 @@
-export * from "./User";
+export type SharingOptions = {
+    followPresenter: boolean;
+}

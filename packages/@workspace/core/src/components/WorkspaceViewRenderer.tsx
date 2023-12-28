@@ -36,6 +36,7 @@ export const WorkspaceViewRenderer = forwardRef<HTMLDivElement, PropsWithChildre
     nodeTypes: NodeTypes;
     edges: any[];
     edgeTypes: EdgeTypes;
+    isReadonly?: boolean;
     onInitialize?: OnInit<any, any>;
     onNodesChange?: OnNodesChange;
     onEdgesChange?: OnEdgesChange;
@@ -53,6 +54,7 @@ export const WorkspaceViewRenderer = forwardRef<HTMLDivElement, PropsWithChildre
     nodeTypes,
     edges,
     edgeTypes,
+    isReadonly,
     onInitialize,
     onNodesChange,
     onEdgesChange,
@@ -80,6 +82,10 @@ export const WorkspaceViewRenderer = forwardRef<HTMLDivElement, PropsWithChildre
             fitView
             nodeTypes={nodeTypes}
             nodes={nodes}
+            nodesDraggable={!isReadonly}
+            nodesConnectable={!isReadonly}
+            nodeDragThreshold={5}
+            edgesUpdatable={!isReadonly}
             edgeTypes={edgeTypes}
             edges={edges}
             proOptions={{ hideAttribution: true }}
