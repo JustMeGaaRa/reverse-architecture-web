@@ -1,4 +1,4 @@
-export * from "./DiscussionGroup";
+export * from "./DiscussionsPane";
 export * from "./UserAvatarGroup";
 export * from "./WorkspaceContentEditor";
 export * from "./WorkspaceDiagrammingToolbar";

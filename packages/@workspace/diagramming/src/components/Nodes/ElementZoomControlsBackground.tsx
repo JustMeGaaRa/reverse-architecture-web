@@ -4,7 +4,7 @@ import { Tag } from "@structurizr/dsl";
 import {
     viewportSelector,
     WorkspaceElementPortal,
-    WorkspaceViewportRelativerWrapper
+    ViewportStaticElement
 } from "@workspace/core";
 import { FC } from "react";
 import { BoundingBox } from "../../types";
@@ -26,7 +26,7 @@ export const ElementZoomControlsBackground: FC = () => {
 
     return (
         <WorkspaceElementPortal>
-            <WorkspaceViewportRelativerWrapper position={boundingBox} pointerEvents={"none"}>
+            <ViewportStaticElement position={boundingBox} pointerEvents={"none"}>
                 {showZoomPanel && (
                     <Box
                         className={"workspace__element-zoom-background"}
@@ -40,7 +40,7 @@ export const ElementZoomControlsBackground: FC = () => {
                         width={"48px"}
                     />
                 )}
-            </WorkspaceViewportRelativerWrapper>
+            </ViewportStaticElement>
         </WorkspaceElementPortal>
     )
 }

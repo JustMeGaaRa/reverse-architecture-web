@@ -2,7 +2,7 @@ import { useStore } from "@reactflow/core";
 import { FC, PropsWithChildren } from "react";
 import { edgeSelector, getViewportTransform, viewportSelector } from "../utils";
 
-export const WorkspaceEdgeRelativeWrapper: FC<PropsWithChildren<{
+export const EdgeRelativeElement: FC<PropsWithChildren<{
     edgeId: string;
 }>> = ({
     children,
@@ -21,7 +21,7 @@ export const WorkspaceEdgeRelativeWrapper: FC<PropsWithChildren<{
 
     return (
         <div
-            className={"workspace_edge-relative-wrapper"}
+            className={"workspace__edge-relative"}
             style={{
                 pointerEvents: "none",
                 position: "absolute",

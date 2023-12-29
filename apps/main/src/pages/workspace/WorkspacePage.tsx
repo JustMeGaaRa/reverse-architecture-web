@@ -20,7 +20,7 @@ import {
 import { Workspace } from "@structurizr/dsl";
 import { useStructurizrParser } from "@structurizr/react";
 import { useWorkspaceTheme, WorkspaceProvider } from "@workspace/core";
-import { WorkspaceRoom, CurrentUser } from "@workspace/live";
+import { WorkspaceRoom } from "@workspace/live";
 import {
     AppleShortcuts,
     ChatLines,
@@ -43,7 +43,6 @@ import {
     CommentProvider,
     WorkspaceApi,
     WorkspaceCacheWrapper,
-    useAccount,
     useSnackbar,
 } from "../../features";
 import { WorkspaceContentEditor, WorkspaceMenu } from "./";
@@ -230,16 +229,6 @@ export const WorkspacePage: FC = () => {
         queryParams,
         workspace.name
     ]);
-    
-    // TODO: consider cleaning up and moving user creation somewhere else
-    const { account } = useAccount();
-    const currentUserInfo = useMemo(() => {
-        const colorSchemes = [ "gray", "blue", "green", "red", "orange", "yellow", "purple"];
-        return {
-            ...account,
-            color: colorSchemes.at(Math.floor(Math.random() * colorSchemes.length))
-        }
-    }, [account]);
 
     // workspace content
     // TODO: add selected repository to account provider or define repository provider
@@ -277,7 +266,6 @@ export const WorkspacePage: FC = () => {
         <WorkspaceProvider workspace={workspace}>
             <CommentProvider>
                 <WorkspaceRoom roomId={workspaceId}>
-                    <CurrentUser info={currentUserInfo} />
                     <WorkspaceContentEditor />
                 </WorkspaceRoom>
             </CommentProvider>

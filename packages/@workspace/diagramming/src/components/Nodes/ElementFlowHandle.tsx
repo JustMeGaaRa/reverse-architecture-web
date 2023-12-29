@@ -1,9 +1,10 @@
 import { Box, Flex, Icon, IconButton } from "@chakra-ui/react";
 import { Position } from "@reactflow/core";
-import { useWorkspace } from "@workspace/core";
+import { useMouseMove } from "@workspace/core";
 import { BoundingBox } from "../../types";
 import { Plus } from "iconoir-react";
-import { FC, useRef } from "react";
+import { FC, useCallback, useRef, useState } from "react";
+import { throttle } from "lodash";
 
 export const ElementFlowHandle: FC<{
     position: Position;
@@ -25,15 +26,19 @@ export const ElementFlowHandle: FC<{
         [Position.Bottom]: { top: `${referenceBox.height + 20}px`, left: `${referenceBox.width / 2}px` },
     }
     const handleRef = useRef<HTMLDivElement>(null);
-    // TODO: get mouse position by subscribing to mousemove event in DOM directly
-    const { mousePosition } = { mousePosition: { x: 0, y: 0 } }//useWorkspace();
+    const [ isExapanded, setIsExapanded ] = useState(false);
 
-    const handleRect = handleRef.current?.getBoundingClientRect();
-        
-    const isExapanded = mousePosition?.x >= handleRect?.left - area
-        && mousePosition?.x <= handleRect?.right + area
-        && mousePosition?.y >= handleRect?.top - area
-        && mousePosition?.y <= handleRect?.bottom + area;
+    const handleMouseMove = useCallback(throttle((event: MouseEvent) => {
+        const handleRect = handleRef.current?.getBoundingClientRect();
+        const mousePosition = { x: event.clientX, y: event.clientY };
+        const isExapanded = mousePosition?.x >= handleRect?.left - area
+            && mousePosition?.x <= handleRect?.right + area
+            && mousePosition?.y >= handleRect?.top - area
+            && mousePosition?.y <= handleRect?.bottom + area;
+        setIsExapanded(isExapanded);
+    }, 100), []);
+
+    useMouseMove(document.querySelector(".react-flow__pane"), handleMouseMove);
 
     return isVisible && (
         <Box

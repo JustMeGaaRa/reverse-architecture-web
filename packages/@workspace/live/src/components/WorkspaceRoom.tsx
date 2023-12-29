@@ -28,9 +28,11 @@ export const WorkspaceRoom: FC<PropsWithChildren<{
         let webRtcProvider: WebrtcProvider = new WebrtcProvider(roomId, workspaceDocument);
 
         const onAwarenessChange = () => {
+            const currentUser = webRtcProvider.awareness.getLocalState() as WorkspaceUser;
             const collaboratingUsers = Array
                 .from(webRtcProvider.awareness.getStates() ?? [])
                 .map(([, value]) => value as WorkspaceUser)
+                .filter(user => user.info.username !== currentUser.info.username)
                 .filter(user => user !== null && user !== undefined);
             
             setCollaboratingUsers(collaboratingUsers);

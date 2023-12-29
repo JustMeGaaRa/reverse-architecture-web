@@ -5,7 +5,7 @@ import {
     useWorkspace,
     viewportSelector,
     WorkspaceElementPortal,
-    WorkspaceViewportRelativerWrapper
+    ViewportStaticElement
 } from "@workspace/core";
 import { FC, useCallback } from "react";
 import { useWorkspaceNavigation } from "../../hooks";
@@ -50,7 +50,7 @@ export const ElementFlowControls: FC<{
 
     return (
         <WorkspaceElementPortal>
-            <WorkspaceViewportRelativerWrapper position={boundingBox} zIndex={1}>
+            <ViewportStaticElement position={boundingBox} zIndex={1}>
                 {showSelectionBorder && (
                     <Box
                         className={"workspace__element-selected"}
@@ -94,7 +94,7 @@ export const ElementFlowControls: FC<{
                     area={50 * viewport.zoom}
                     isVisible={showEditableControls}
                 />
-            </WorkspaceViewportRelativerWrapper>
+            </ViewportStaticElement>
         </WorkspaceElementPortal>
     )
 }

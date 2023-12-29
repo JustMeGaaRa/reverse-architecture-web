@@ -10,11 +10,10 @@ import {
 import { WorkspaceEditor } from "@workspace/code-editor";
 import { useWorkspace } from "@workspace/core";
 import { WorkspaceDiagramming } from "@workspace/diagramming";
-import { UserCursorPane, useWorkspaceRoom } from "@workspace/live";
+import { CurrentUser, CollaboratingUserPane, useWorkspaceRoom } from "@workspace/live";
 import { WorkspaceModeling } from "@workspace/modeling";
 import { WorkspaceViewPath } from "@workspace/navigation";
-import { ViewType, Workspace } from "@structurizr/dsl";
-import { StructurizrExportClient } from "@structurizr/export";
+import { Workspace } from "@structurizr/dsl";
 import { useStructurizrParser } from "@structurizr/react";
 import {
     FC,
@@ -28,9 +27,10 @@ import {
     CommentApi,
     CommentThread,
     CommentThreadList,
+    useAccount,
 } from "../../features";
 import {
-    DiscussionGroup,
+    DiscussionsPane,
     WorkspaceContentMode,
     WorkspaceContentPanel,
     UserAvatarGroup,
@@ -48,14 +48,14 @@ export const WorkspaceContentEditor: FC = () => {
     const [ structurizrDslText, setStructurizrDslText ] = useState("");
     const { parseStructurizr } = useStructurizrParser();
     const { workspace, setWorkspace } = useWorkspace();
-    const { collaboratingUsers } = useWorkspaceRoom();
+    const { currentUser, collaboratingUsers } = useWorkspaceRoom();
     
     // set header content
     useEffect(() => {
         setHeaderContent({
             right: (
                 <HStack key={"workspace-page-options"} gap={2} mr={4}>
-                    <UserAvatarGroup users={collaboratingUsers.map(user => user.info)} />
+                    <UserAvatarGroup users={collaboratingUsers.concat(currentUser).map(user => user.info)} />
                     <Divider
                         borderWidth={1}
                         color={"whiteAlpha.200"}
@@ -73,7 +73,7 @@ export const WorkspaceContentEditor: FC = () => {
                 </HStack>
             )
         })
-    }, [setHeaderContent, collaboratingUsers])
+    }, [setHeaderContent, currentUser, collaboratingUsers])
 
     // discussions
     const [ commentThreads, setCommentThreads ] = useState<Array<CommentThread>>([]);
@@ -123,9 +123,19 @@ export const WorkspaceContentEditor: FC = () => {
             return new URLSearchParams(params);
         })
     }, [setQueryParam]);
+    
+    // TODO: consider cleaning up and moving user creation somewhere else
+    const { account } = useAccount();
+    const currentUserInfo = useMemo(() => {
+        const colorSchemes = [ "gray", "blue", "green", "red", "orange", "yellow", "purple"];
+        return {
+            ...account,
+            color: colorSchemes.at(Math.floor(Math.random() * colorSchemes.length))
+        }
+    }, [account]);
 
-    const isModelingMode = useMemo(() => queryParams.get("mode") === WorkspaceContentMode.Modeling, [queryParams]);;
     const isDiagrammingMode = useMemo(() => queryParams.get("mode") === WorkspaceContentMode.Diagramming, [queryParams]);
+    const isModelingMode = useMemo(() => queryParams.get("mode") === WorkspaceContentMode.Modeling, [queryParams]);;
     const diagrammingDiscussions = useMemo(() => commentThreads.filter(x => x.metadata?.view?.type !== "Model"), [commentThreads]);
     const modelingDiscussions = useMemo(() => commentThreads.filter(x => x.metadata?.view?.type === "Model"), [commentThreads]);
 
@@ -187,8 +197,9 @@ export const WorkspaceContentEditor: FC = () => {
                             onWorkspaceChange={handleOnWorkspaceChange}
                             onWorkspaceViewChange={handleOnWorkspaceViewChange}
                         >
-                            <DiscussionGroup discussions={diagrammingDiscussions} />
-                            <UserCursorPane users={collaboratingUsers} />
+                            <CurrentUser info={currentUserInfo} />
+                            <CollaboratingUserPane users={collaboratingUsers} />
+                            <DiscussionsPane discussions={diagrammingDiscussions} />
                             <WorkspaceViewPath workspace={workspace} />
                             <WorkspaceUndoRedoControls />
                             <WorkspaceDiagrammingToolbar />
@@ -201,8 +212,9 @@ export const WorkspaceContentEditor: FC = () => {
                             workspace={workspace}
                             onWorkspaceChange={handleOnWorkspaceChange}
                         >
-                            <DiscussionGroup discussions={modelingDiscussions} />
-                            <UserCursorPane users={collaboratingUsers} />
+                            <CurrentUser info={currentUserInfo} />
+                            <CollaboratingUserPane users={collaboratingUsers} />
+                            <DiscussionsPane discussions={modelingDiscussions} />
                             <WorkspaceUndoRedoControls />
                             <WorkspaceModelingToolbar />
                             <WorkspaceZoomControls />

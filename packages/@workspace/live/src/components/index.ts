@@ -1,4 +1,4 @@
 export * from "./CollaboratingUser";
 export * from "./CurrentUser";
-export * from "./UserCursorPane";
+export * from "./CollaboratingUserPane";
 export * from "./WorkspaceRoom";

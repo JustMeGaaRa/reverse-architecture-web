@@ -1,25 +1,28 @@
 import { useStore } from "@reactflow/core";
-import { FC, PropsWithChildren } from "react";
+import { FC, PropsWithChildren, useRef } from "react";
 import { getViewportTransform, viewportSelector } from "../utils";
 
-export const WorkspaceViewportRelativerWrapper: FC<PropsWithChildren<{
+export const ViewportAnimatedElement: FC<PropsWithChildren<{
     position: { x: number; y: number; };
-    pointerEvents?: "none" | "auto";
     zIndex?: number;
 }>> = ({
     children,
     position,
-    pointerEvents = "auto",
     zIndex = 0
 }) => {
+    const containerRef = useRef<HTMLDivElement>(null);
     const { viewport } = useStore(viewportSelector);
     const { transform } = getViewportTransform(viewport, position);
 
+    const keyframes: Keyframe[] = [{ transform }];
+    const options: KeyframeAnimationOptions = { duration: 250, fill: "forwards" };
+    containerRef.current?.animate(keyframes, options);
+
     return (
         <div
-            className={"workspace_viewport-relative-wrapper"}
+            ref={containerRef}
+            className={"workspace__viewport-animated"}
             style={{
-                pointerEvents: pointerEvents,
                 position: "absolute",
                 transform: transform,
                 zIndex: zIndex

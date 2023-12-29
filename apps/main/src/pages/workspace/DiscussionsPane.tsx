@@ -1,7 +1,7 @@
 import { Box, ScaleFade } from "@chakra-ui/react";
 import {
-    WorkspaceNodeRelativeWrapper,
-    WorkspaceViewportRelativerWrapper,
+    NodeRelativeElement,
+    ViewportStaticElement,
     WorkspaceElementPortal,
     useWorkspace,
 } from "@workspace/core";
@@ -18,7 +18,7 @@ import {
     useCommentsStore
 } from "../../features";
 
-export const DiscussionGroup: FC<{
+export const DiscussionsPane: FC<{
     discussions: CommentThread[];
 }> = ({
     discussions
@@ -82,7 +82,7 @@ export const DiscussionGroup: FC<{
     return (
         <WorkspaceElementPortal>
             <Box
-                className={"workspace__discussion-group"}
+                className={"workspace__discussions-pane"}
                 position={"absolute"}
                 top={0}
                 left={0}
@@ -90,7 +90,7 @@ export const DiscussionGroup: FC<{
                 width={"100%"}
             >
                 {elementRelativeDiscussions.map(thread => (
-                    <WorkspaceNodeRelativeWrapper
+                    <NodeRelativeElement
                         key={thread.commentThreadId}
                         nodeId={thread.metadata.elementId}
                     >
@@ -98,11 +98,11 @@ export const DiscussionGroup: FC<{
                             commentThread={thread}
                             onClick={handleOnBadgeClick}
                         />
-                    </WorkspaceNodeRelativeWrapper>
+                    </NodeRelativeElement>
                 ))}
                 
                 {viewportRelativeDiscussions.map(thread => (
-                    <WorkspaceViewportRelativerWrapper
+                    <ViewportStaticElement
                         key={thread.commentThreadId}
                         position={thread.metadata.position}
                     >
@@ -110,11 +110,11 @@ export const DiscussionGroup: FC<{
                             commentThread={thread}
                             onClick={handleOnBadgeClick}
                         />
-                    </WorkspaceViewportRelativerWrapper>
+                    </ViewportStaticElement>
                 ))}
                 
                 {selectedDiscussion && (
-                    <WorkspaceNodeRelativeWrapper
+                    <NodeRelativeElement
                         key={selectedDiscussion.commentThreadId}
                         nodeId={selectedDiscussion.metadata.elementId}
                     >
@@ -129,7 +129,7 @@ export const DiscussionGroup: FC<{
                                 onClose={handleOnClose}
                             />
                         </ScaleFade>
-                    </WorkspaceNodeRelativeWrapper>
+                    </NodeRelativeElement>
                 )}
             </Box>
         </WorkspaceElementPortal>

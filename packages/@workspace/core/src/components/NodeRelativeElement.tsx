@@ -2,7 +2,7 @@ import { useStore } from "@reactflow/core";
 import { FC, PropsWithChildren } from "react";
 import { getViewportTransform, nodeSelector, viewportSelector } from "../utils";
 
-export const WorkspaceNodeRelativeWrapper: FC<PropsWithChildren<{
+export const NodeRelativeElement: FC<PropsWithChildren<{
     nodeId: string;
 }>> = ({
     children,
@@ -21,7 +21,7 @@ export const WorkspaceNodeRelativeWrapper: FC<PropsWithChildren<{
 
     return (
         <div
-            className={"workspace_node-relative-wrapper"}
+            className={"workspace__node-relative"}
             style={{
                 pointerEvents: "none",
                 position: "absolute",
