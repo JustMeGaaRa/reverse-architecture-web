@@ -1,4 +1,4 @@
-export const EdgeTypes = {
+export const ReactFlowEdgeTypes = {
     // relationship: ReactFlowBezierEdge,
     // straight: ReactFlowBezierEdge,
     // step: ReactFlowBezierEdge,

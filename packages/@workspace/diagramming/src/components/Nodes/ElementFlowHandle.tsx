@@ -1,7 +1,6 @@
 import { Box, Flex, Icon, IconButton } from "@chakra-ui/react";
 import { Position } from "@reactflow/core";
-import { useMouseMove } from "@workspace/core";
-import { BoundingBox } from "../../types";
+import { BoundingBox, useMouseMove } from "@workspace/core";
 import { Plus } from "iconoir-react";
 import { FC, useCallback, useRef, useState } from "react";
 import { throttle } from "lodash";

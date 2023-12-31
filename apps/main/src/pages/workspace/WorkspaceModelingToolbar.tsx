@@ -1,3 +1,4 @@
+import { AssistantModeButton, CommentingModeButton, DraggingModeButton, FollowPresenterModeButton, PresentationModeButton, SelectionModeButton, TextEditModeButton } from "@workspace/controls";
 import { PanelPosition, WorkspacePanel } from "@workspace/core";
 import { Toolbar, ToolbarSection } from "@workspace/toolbar";
 import { FC } from "react";
@@ -9,10 +10,26 @@ export const WorkspaceModelingToolbar: FC<{
 }) => {
     return (
         <WorkspacePanel position={position ?? "bottom-center"}>
-                <Toolbar>
-                    <ToolbarSection>
-                    </ToolbarSection>
-                </Toolbar>
+            <Toolbar>
+                <ToolbarSection>
+                    <SelectionModeButton />
+                    <DraggingModeButton />
+                    <FollowPresenterModeButton />
+                </ToolbarSection>
+
+                <ToolbarSection>
+                    <TextEditModeButton />
+                    <CommentingModeButton />
+                </ToolbarSection>
+
+                <ToolbarSection>
+                    <AssistantModeButton />
+                </ToolbarSection>
+
+                <ToolbarSection>
+                    <PresentationModeButton />
+                </ToolbarSection>
+            </Toolbar>
         </WorkspacePanel>
     )
 }

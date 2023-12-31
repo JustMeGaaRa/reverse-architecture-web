@@ -4,10 +4,10 @@ import { FC } from "react";
 import { BoundaryLabel } from "./BoundaryLabel";
 
 export const DeploymentNodeLabel: FC<{
-    data: DeploymentNode;
+    element: DeploymentNode;
     style?: Partial<ElementStyleProperties>;
 }> = ({
-    data,
+    element,
     style
 }) => {
     return (
@@ -18,15 +18,15 @@ export const DeploymentNodeLabel: FC<{
             width={"100%"}
         >
             <BoundaryLabel
-                data={data}
+                element={element}
                 style={style}
             />
-            {data.instances && (
+            {element.instances && (
                 <Text
                     fontSize={"xx-large"}
                     lineHeight={1}
                 >
-                    {`x${data.instances}`}
+                    {`x${element.instances}`}
                 </Text>
             )}
         </Flex>

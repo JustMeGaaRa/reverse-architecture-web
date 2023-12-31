@@ -50,8 +50,6 @@ export class AutoLayout {
                 "elk.layered.spacing.edgeNode": "100",
                 "elk.layered.spacing.nodeNode": "100",
                 "elk.layered.spacing.edgeEdge": "100",
-                "spacing.componentComponent": "100",
-                "spacing": "100"
             },
             children: mapChildren(undefined),
             edges: mapEdges()

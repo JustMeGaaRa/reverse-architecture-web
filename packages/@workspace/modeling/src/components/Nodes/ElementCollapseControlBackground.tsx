@@ -1,6 +1,5 @@
 import { Box } from "@chakra-ui/react";
 import { useStore } from "@reactflow/core";
-import { Tag } from "@structurizr/dsl";
 import {
     viewportSelector,
     WorkspaceElementPortal,
@@ -10,15 +9,13 @@ import {
 import { FC } from "react";
 import { nodeSelector } from "../../utils";
 
-export const ElementZoomControlsBackground: FC = () => {
+export const ElementCollapseControlsBackground: FC = () => {
     // NOTE: this is a workaround to show background underneath the zoom controls
     const { selectedNodes, selectionBounds } = useStore(nodeSelector);
     const { viewport } = useStore(viewportSelector);
     
-    const showZoomPanel = selectedNodes.length === 1
-        && selectedNodes[0]?.data.element.tags.some(tag => tag.name === Tag.SoftwareSystem.name || tag.name === Tag.Container.name);
-    const showZoomIn = showZoomPanel
-        && selectedNodes[0]?.type === "element";
+    const showPanel = selectedNodes.length === 1
+        && selectedNodes[0]?.data.elementChildrenCount > 0;
     const boundingBox = new BoundingBox(selectionBounds)
         .multiply(viewport.zoom)
         .shift(-1)
@@ -27,15 +24,15 @@ export const ElementZoomControlsBackground: FC = () => {
     return (
         <WorkspaceElementPortal>
             <ViewportStaticElement position={boundingBox} pointerEvents={"none"}>
-                {showZoomPanel && (
+                {showPanel && (
                     <Box
-                        className={"workspace__element-zoom-background"}
+                        className={"workspace__element-collapse-background"}
                         backgroundColor={"gray.900"}
                         borderRadius={8}
                         pointerEvents={"none"}
                         position={"absolute"}
                         left={-6}
-                        top={showZoomIn ? 2 : 6}
+                        top={3}
                         height={"24px"}
                         width={"48px"}
                     />

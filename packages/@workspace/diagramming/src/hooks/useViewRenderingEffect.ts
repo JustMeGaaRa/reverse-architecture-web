@@ -1,9 +1,8 @@
-import { ReactFlowJsonObject, useReactFlow } from "@reactflow/core";
+import { useReactFlow } from "@reactflow/core";
 import { ISupportVisitor, Workspace } from "@structurizr/dsl";
-import { AutoLayout } from "@workspace/core";
 import { useEffect } from "react";
 import { useWorkspaceNavigation } from "../hooks";
-import { getReactFlowObject, getViewDefinition } from "../utils";
+import { getReactFlowAuto, getReactFlowObject, getViewDefinition } from "../utils";
 
 export const useViewRenderingEffect = (workspace: Workspace, strategy: ISupportVisitor) => {
     const { currentView } = useWorkspaceNavigation();
@@ -18,12 +17,6 @@ export const useViewRenderingEffect = (workspace: Workspace, strategy: ISupportV
             workspace.views.configuration,
             viewDefinition
         );
-        
-        const getReactFlowAuto = async (reactFlowObject: ReactFlowJsonObject) => {
-            const autoLayout = new AutoLayout();
-            const reactFlowAuto = await autoLayout.execute(reactFlowObject);
-            return reactFlowAuto;
-        }
 
         const shouldAutoLayout = currentView?.autoLayout || currentView?.elements?.length === 0;
         

@@ -1,18 +1,19 @@
 import { Flex } from "@chakra-ui/react";
 import { Handle, Position, useReactFlow } from "@reactflow/core";
+import { IElement } from "@structurizr/dsl";
 import { Square } from "iconoir-react";
 import { FC, useCallback } from "react";
 import { v4 } from "uuid"
 
-export const ElementPlaceholderNode: FC<{ id: string }> = ({ id }) => {
+export const ElementPlaceholderNode: FC<{ element: IElement; }> = ({ element }) => {
     const { setNodes, setEdges, getNodes, getEdges } = useReactFlow();
 
     const handleOnClick = useCallback(() => {
         const newNodeId = v4();
         const newEdgeId = v4();
-        const currentNode = getNodes().find(node => node.id === id);
-        const currentEdge = getEdges().find(edge => edge.target === id);
-        const currentNodeId = id;
+        const currentNode = getNodes().find(node => node.id === element.identifier);
+        const currentEdge = getEdges().find(edge => edge.target === element.identifier);
+        const currentNodeId = element.identifier;
         const currentEdgeId = currentEdge?.id;
 
         setNodes(nodes => {
@@ -36,7 +37,7 @@ export const ElementPlaceholderNode: FC<{ id: string }> = ({ id }) => {
                 draggable: false,
             }
 
-            return [...nodes.filter(x => x.id !== id), elementNode, placholderNode];
+            return [...nodes.filter(x => x.id !== element.identifier), elementNode, placholderNode];
         });
         setEdges(edges => {
             const elementEdge = {
@@ -56,7 +57,7 @@ export const ElementPlaceholderNode: FC<{ id: string }> = ({ id }) => {
                 ? [...edges.filter(x => x.id !== currentEdge.id), elementEdge, placeholderEdge]
                 : [...edges.filter(x => x.id !== currentEdge.id), elementEdge];
         });
-    }, [id, getNodes, getEdges, setNodes, setEdges]);
+    }, [element.identifier, getNodes, getEdges, setNodes, setEdges]);
 
     return (
         <Flex

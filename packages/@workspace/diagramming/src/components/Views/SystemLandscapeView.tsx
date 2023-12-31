@@ -42,6 +42,7 @@ import {
     useSystemLandscapeView,
     useAutoLayoutEffect
 } from "../../hooks";
+import { Background, BackgroundVariant } from "@reactflow/background";
 
 export const SystemLandscapeView: FC<PropsWithChildren<{
     workspace: Workspace;
@@ -59,8 +60,6 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
 }) => {
     const [ nodes, , onNodesChange ] = useNodesState([]);
     const [ edges, , onEdgesChange ] = useEdgesState([]);
-    const reactFlowRef = useRef(null);
-    const strategy = useMemo(() => new SystemLandscapeViewStrategy(workspace.model, view), [workspace, view]);
     const {
         isCommentAddingEnabled,
         isAddingElementEnabled,
@@ -73,8 +72,10 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
         addRelationship,
         setElementPosition
     } = useSystemLandscapeView();
-    const store = useWorkspace();
     const { getViewport } = useReactFlow();
+    const reactFlowRef = useRef(null);
+    const store = useWorkspace();
+    const strategy = useMemo(() => new SystemLandscapeViewStrategy(workspace.model, view), [workspace, view]);
 
     useViewRenderingEffect(workspace, strategy);
 
@@ -157,18 +158,6 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
         addPerson
     ]);
 
-    // TODO: move this callback handler outside of component and use hooks from useWorkspaceRoom to report user cursor position
-    const handleOnMouseMove = useCallback(throttle((event: any) => {
-        const parentOffset = reactFlowRef.current.getBoundingClientRect();
-        const mousePoint = { x: event.clientX, y: event.clientY };
-        const pointRelativeToViewport = {
-            x: mousePoint.x - parentOffset.left,
-            y: mousePoint.y - parentOffset.top
-        };
-        const pointTranslatedFromViewport = getAbsolutePoint(getViewport(), pointRelativeToViewport);
-        // setMousePosition(mousePoint);
-    }, 100), [reactFlowRef, getViewport]);
-
     const handleOnConnect = useCallback((connection: Connection) => {
         onWorkspaceChange?.(addRelationship(connection.source, connection.target));
     }, [addRelationship, onWorkspaceChange]);
@@ -186,10 +175,14 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
             onNodeDragStop={handleOnNodeDragStop}
             onNodesDoubleClick={onNodesDoubleClick}
             onNodeClick={handleOnNodeClick}
-            onMouseMove={handleOnMouseMove}
             onPaneClick={handleOnPaneClick}
             onConnect={handleOnConnect}
         >
+            <Background
+                gap={50}
+                size={2}
+                variant={BackgroundVariant.Dots}
+            />
             <ElementOptionsToolbar />
             <ElementFlowControls workspace={workspace} />
             <ElementZoomControlsBackground />

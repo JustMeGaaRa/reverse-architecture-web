@@ -1,10 +1,5 @@
 import { ReactFlowProvider } from "@reactflow/core";
-import {
-    IViewDefinition,
-    IWorkspace,
-    ViewType,
-    Workspace,
-} from "@structurizr/dsl";
+import { IViewDefinition, ViewType, Workspace } from "@structurizr/dsl";
 import { FC, PropsWithChildren } from "react";
 import {
     SystemLandscapeView,

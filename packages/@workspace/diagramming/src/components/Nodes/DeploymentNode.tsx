@@ -9,13 +9,13 @@ import { HexColor } from "../../utils";
 import { DeploymentNodeLabel } from "./DeploymentNodeLabel";
 
 export const DeploymentNode: FC<{
-    data: DeploymentNodeType;
+    element: DeploymentNodeType;
     style: ElementStyleProperties;
     width?: number;
     height?: number;
     isSelected?: boolean,
 }> = ({
-    data,
+    element,
     style,
     width,
     height,
@@ -48,7 +48,7 @@ export const DeploymentNode: FC<{
             }}
         >
             <DeploymentNodeLabel
-                data={data}
+                element={element}
                 style={style}
             />
             <NodeResizer

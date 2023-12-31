@@ -210,7 +210,7 @@ export const WorkspacePage: FC = () => {
                         <Text marginX={1}>Diagramming</Text>
                     </Button>
                     <Button
-                        colorScheme={"purple"}
+                        colorScheme={"lime"}
                         isActive={queryParams.get("mode") === WorkspaceContentMode.Modeling}
                         iconSpacing={0}
                         leftIcon={<Icon as={ViewStructureUp} boxSize={4} />}

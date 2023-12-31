@@ -9,7 +9,7 @@ import { ReverseArchitectureElementStyle } from "@workspace/core";
 import { FC, PropsWithChildren, useMemo } from "react";
 
 export function ReactFlowNodeWrapper(ElementNodeComponent: FC<PropsWithChildren<{
-    data: IElement;
+    element: IElement;
     style: ElementStyleProperties;
     width?: number;
     height?: number;
@@ -34,7 +34,7 @@ export function ReactFlowNodeWrapper(ElementNodeComponent: FC<PropsWithChildren<
 
         return (
             <ElementNodeComponent
-                data={data.element}
+                element={data.element}
                 style={elementStyle}
                 height={data.height}
                 width={data.width}

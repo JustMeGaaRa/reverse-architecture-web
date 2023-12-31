@@ -4,7 +4,7 @@ import { FC, PropsWithChildren } from "react";
 import { BoundaryLabel } from "./BoundaryLabel";
 
 export const ElementGroupNode: FC<PropsWithChildren<{
-    data: IElement;
+    element: IElement;
     style: ElementStyleProperties;
     width?: number;
     height?: number;
@@ -12,7 +12,7 @@ export const ElementGroupNode: FC<PropsWithChildren<{
     onMouseLeave?: () => void;
 }>> = ({
     children,
-    data,
+    element,
     style,
     width,
     height,
@@ -40,7 +40,7 @@ export const ElementGroupNode: FC<PropsWithChildren<{
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
             >
-                <BoundaryLabel data={data} style={style} />
+                <BoundaryLabel element={element} style={style} />
                 {children}
             </Flex>
         </Box>

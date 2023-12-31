@@ -2,10 +2,6 @@ import "@reactflow/core/dist/style.css";
 import '@reactflow/node-resizer/dist/style.css';
 
 import {
-    Background,
-    BackgroundVariant
-} from "@reactflow/background";
-import {
     ReactFlow,
     ConnectionMode,
     NodeMouseHandler,
@@ -102,11 +98,6 @@ export const WorkspaceViewRenderer = forwardRef<HTMLDivElement, PropsWithChildre
             onConnectStart={onConnectStart}
             onConnectEnd={onConnectEnd}
         >
-            <Background
-                gap={50}
-                size={2}
-                variant={BackgroundVariant.Dots}
-            />
             <MarkerRefs>
                 <CircleOutlineMarker />
                 <ArrowClosedMarker />

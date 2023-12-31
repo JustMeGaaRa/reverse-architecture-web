@@ -11,7 +11,7 @@ import { FC, PropsWithChildren, useCallback, useMemo } from "react";
 import { nodeSelector } from "../../utils";
 
 export function ReactFlowBoundaryWrapper(ElementBoundaryComponent: FC<PropsWithChildren<{
-    data: IElement;
+    element: IElement;
     style: ElementStyleProperties;
     width?: number;
     height?: number;
@@ -53,7 +53,7 @@ export function ReactFlowBoundaryWrapper(ElementBoundaryComponent: FC<PropsWithC
 
         return (
             <ElementBoundaryComponent
-                data={data.element}
+                element={data.element}
                 style={elementStyle}
                 height={data.height}
                 width={data.width}

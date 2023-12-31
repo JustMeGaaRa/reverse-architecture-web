@@ -4,10 +4,10 @@ import { FC } from "react";
 import { formatElementTag } from "../../utils";
 
 export const BoundaryLabel: FC<{
-    data: IElement;
+    element: IElement;
     style?: Partial<ElementStyleProperties>;
 }> = ({
-    data,
+    element,
     style
 }) => {
     return (
@@ -21,14 +21,14 @@ export const BoundaryLabel: FC<{
                 noOfLines={1}
                 textStyle={"b3"}
             >
-                {data.name}
+                {element.name}
             </Text>
             <Text
                 color={"gray.700"}
                 noOfLines={1}
                 textStyle={"b5"}
             >
-                {formatElementTag(data)}
+                {formatElementTag(element)}
             </Text>
         </VStack>
     );

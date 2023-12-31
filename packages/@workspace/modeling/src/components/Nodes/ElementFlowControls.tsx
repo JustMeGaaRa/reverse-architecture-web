@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/react";
-import { Position, useStore } from "@reactflow/core";
-import { Tag, Workspace } from "@structurizr/dsl";
+import { useStore } from "@reactflow/core";
+import { Workspace } from "@structurizr/dsl";
 import {
     useWorkspace,
     viewportSelector,
@@ -9,10 +9,8 @@ import {
     BoundingBox
 } from "@workspace/core";
 import { FC, useCallback } from "react";
-import { useWorkspaceNavigation } from "../../hooks";
 import { nodeSelector } from "../../utils";
-import { ElementFlowHandle } from "./ElementFlowHandle";
-import { ElementZoomControl } from "./ElementZoomControl";
+import { ElementCollapseControl } from "./ElementCollapseControl";
 
 export const ElementFlowControls: FC<{
     workspace: Workspace;
@@ -22,31 +20,25 @@ export const ElementFlowControls: FC<{
     const { selectedNodes, selectionBounds } = useStore(nodeSelector);
     const { viewport } = useStore(viewportSelector);
     const state = useWorkspace();
-    const { zoomIntoElement, zoomOutOfElement } = useWorkspaceNavigation();
 
     const showEditableControls = state.workspace !== null && state.workspace !== undefined && selectedNodes.length === 1;
     const showSelectionBorder = selectedNodes.length > 0;
-    const showZoomPanel = selectedNodes.length === 1
-        && selectedNodes[0]?.data.element.tags.some(tag => tag.name === Tag.SoftwareSystem.name || tag.name === Tag.Container.name);
-    const showZoomIn = showZoomPanel && selectedNodes[0]?.type === "element";
-    const showZoomOut = showZoomPanel && selectedNodes[0]?.type === "boundary";
-    const borderRadius = selectedNodes.every(node => node?.type === "boundary" || node?.type === "elementGroup")
-        ? 33 * viewport.zoom
-        : selectedNodes.every(node => node?.type !== "boundary" && node?.type !== "elementGroup")
-            ? 17 * viewport.zoom
-            : 0;
+    const showPanel = selectedNodes.length === 1
+        && selectedNodes[0]?.type !== "starting"
+        && selectedNodes[0]?.data.elementChildrenCount > 0;
+    const showCollapsed = showPanel && selectedNodes[0]?.type === "element";
     const boundingBox = new BoundingBox(selectionBounds)
         .multiply(viewport.zoom)
         .shift(-1)
         .extend(2);
 
-    const handleOnZoomInClick = useCallback(() => {
-        zoomIntoElement(workspace, selectedNodes[0].data.element);
-    }, [workspace, selectedNodes, zoomIntoElement]);
+    const handleOnCollapseClick = useCallback(() => {
+        // zoomIntoElement(workspace, selectedNodes[0].data.element);
+    }, []);
 
-    const handleOnZoomOutClick = useCallback(() => {
-        zoomOutOfElement(workspace, selectedNodes[0].data.element);
-    }, [workspace, selectedNodes, zoomOutOfElement]);
+    const handleOnExpandClick = useCallback(() => {
+        // zoomOutOfElement(workspace, selectedNodes[0].data.element);
+    }, []);
 
     return (
         <WorkspaceElementPortal>
@@ -55,7 +47,7 @@ export const ElementFlowControls: FC<{
                     <Box
                         className={"workspace__element-selected"}
                         borderColor={"lime.600"}
-                        borderRadius={borderRadius}
+                        borderRadius={17 * viewport.zoom}
                         borderWidth={1}
                         pointerEvents={"none"}
                         position={"relative"}
@@ -63,14 +55,13 @@ export const ElementFlowControls: FC<{
                         width={boundingBox.width}
                     />
                 )}
-                <ElementZoomControl
-                    isPanelVisible={showZoomPanel}
-                    isZoomInVisible={showZoomIn}
-                    isZoomOutVisible={showZoomOut}
-                    onZoomInClick={handleOnZoomInClick}
-                    onZoomOutClick={handleOnZoomOutClick}
+                <ElementCollapseControl
+                    isPanelVisible={showPanel}
+                    isCollapsed={showCollapsed}
+                    onCollapseClick={handleOnCollapseClick}
+                    onExpandClick={handleOnExpandClick}
                 />
-                <ElementFlowHandle
+                {/* <ElementFlowHandle
                     position={Position.Left}
                     referenceBox={boundingBox}
                     area={50 * viewport.zoom}
@@ -93,7 +84,7 @@ export const ElementFlowControls: FC<{
                     referenceBox={boundingBox}
                     area={50 * viewport.zoom}
                     isVisible={showEditableControls}
-                />
+                /> */}
             </ViewportStaticElement>
         </WorkspaceElementPortal>
     )

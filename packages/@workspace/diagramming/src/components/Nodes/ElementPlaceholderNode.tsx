@@ -4,7 +4,7 @@ import { FC, PropsWithChildren } from "react";
 import { ElementShapeSelector } from "./ElementShapeSelector";
 
 export const ElementPlaceholderNode: FC<PropsWithChildren<{
-    data: IElement;
+    element: IElement;
     style: ElementStyleProperties;
     height?: number;
     width?: number;
@@ -12,7 +12,7 @@ export const ElementPlaceholderNode: FC<PropsWithChildren<{
     onMouseLeave?: () => void;
 }>> = ({
     children,
-    data,
+    element,
     style,
     onMouseEnter,
     onMouseLeave

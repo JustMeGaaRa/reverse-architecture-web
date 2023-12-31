@@ -13,6 +13,5 @@ export * from "./ElementZoomControlsBackground";
 export * from "./ElementShapeSelector";
 export * from "./ElementZoomControl";
 export * from "./ReactFlowBoundaryWrapper";
-export * from "./ReactFlowNodeHandle";
 export * from "./ReactFlowNodeTypes";
 export * from "./ReactFlowNodeWrapper";

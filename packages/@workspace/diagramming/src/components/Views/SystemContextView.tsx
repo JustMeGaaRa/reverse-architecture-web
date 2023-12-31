@@ -1,3 +1,4 @@
+import { Background, BackgroundVariant } from "@reactflow/background";
 import {
     Connection,
     Node,
@@ -162,10 +163,14 @@ export const SystemContextView: FC<PropsWithChildren<{
             onNodeDragStop={handleOnNodeDragStop}
             onNodesDoubleClick={onNodesDoubleClick}
             onNodeClick={handleOnNodeClick}
-            // onMouseMove={handleOnMouseMove}
             onPaneClick={handleOnPaneClick}
             onConnect={handleOnConnect}
         >
+            <Background
+                gap={50}
+                size={2}
+                variant={BackgroundVariant.Dots}
+            />
             <ElementOptionsToolbar />
             <ElementFlowControls workspace={workspace} />
             <ElementZoomControlsBackground />

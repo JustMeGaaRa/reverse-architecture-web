@@ -4,7 +4,7 @@ import { ElementLabel } from "./ElementLabel";
 import { ElementShapeSelector } from "./ElementShapeSelector";
 
 export const ElementNode: FC<PropsWithChildren<{
-    data: IElement;
+    element: IElement;
     style: ElementStyleProperties;
     height?: number;
     width?: number;
@@ -12,7 +12,7 @@ export const ElementNode: FC<PropsWithChildren<{
     onMouseLeave?: () => void;
 }>> = ({
     children,
-    data,
+    element,
     style,
     onMouseEnter,
     onMouseLeave
@@ -20,7 +20,7 @@ export const ElementNode: FC<PropsWithChildren<{
     return (
         <ElementShapeSelector style={style}>
             <ElementLabel
-                data={data}
+                element={element}
                 style={style}
                 showDescription
                 onMouseEnter={onMouseEnter}

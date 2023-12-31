@@ -1,42 +1,34 @@
 import {
-    Background,
-    BackgroundVariant
-} from "@reactflow/background";
-import {
     useEdgesState,
     useNodesState,
     useReactFlow
 } from "@reactflow/core";
-import {
-    IModel,
-    IWorkspace,
-    ModelViewStrategy
-} from "@structurizr/dsl";
-import {
-    WorkspaceViewRenderer,
-    getAbsolutePoint
-} from "@workspace/core";
+import { ModelViewStrategy, Workspace } from "@structurizr/dsl";
+import { WorkspaceViewRenderer, useWorkspace } from "@workspace/core";
 import {
     FC,
     PropsWithChildren,
     useMemo,
     useRef
 } from "react";
-import { EdgeTypes, NodeTypes } from "../../components";
+import {
+    ReactFlowEdgeTypes,
+    ElementCollapseControlsBackground,
+    ReactFlowNodeTypes,
+    ElementFlowControls
+} from "../../components";
 import { useModelRenderingEffect, useModelView } from "../../hooks";
 
 export const ModelView: FC<PropsWithChildren<{
-    model: IModel;
-    onWorkspaceChange?: (workspace: IWorkspace) => void;
+    workspace: Workspace;
+    onWorkspaceChange?: (workspace: Workspace) => void;
 }>> = ({
     children,
-    model,
+    workspace,
     onWorkspaceChange
 }) => {
     const [ nodes, , onNodesChange ] = useNodesState([]);
     const [ edges, , onEdgesChange ] = useEdgesState([]);
-    const reactFlowRef = useRef(null);
-    const strategy = useMemo(() => new ModelViewStrategy(model), [model]);
     const {
         addPerson,
         addSoftwareSystem,
@@ -46,21 +38,27 @@ export const ModelView: FC<PropsWithChildren<{
         addInfrastructureNode
     } = useModelView();
     const { getViewport } = useReactFlow();
+    const reactFlowRef = useRef(null);
+    const store = useWorkspace();
+    const strategy = useMemo(() => new ModelViewStrategy(workspace.model), [workspace]);
 
-    useModelRenderingEffect(strategy);
+    useModelRenderingEffect(workspace, strategy);
     // TODO: always use autolayout in model view
     // useAutoLayoutEffect();
 
     return (
         <WorkspaceViewRenderer
             ref={reactFlowRef}
-            nodeTypes={NodeTypes}
             nodes={nodes}
-            edgeTypes={EdgeTypes}
+            nodeTypes={ReactFlowNodeTypes}
             edges={edges}
+            edgeTypes={ReactFlowEdgeTypes}
+            isReadonly={store.workspace === null || store.workspace === undefined}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
         >
+            <ElementFlowControls workspace={workspace} />
+            <ElementCollapseControlsBackground />
             {children}
         </WorkspaceViewRenderer>
     )

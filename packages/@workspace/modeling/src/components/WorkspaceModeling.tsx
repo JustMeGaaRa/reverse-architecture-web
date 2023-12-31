@@ -1,23 +1,20 @@
 import { ReactFlowProvider } from "@reactflow/core";
-import { IWorkspace } from "@structurizr/dsl";
-import { useWorkspace } from "@workspace/core";
+import { Workspace } from "@structurizr/dsl";
 import { FC, PropsWithChildren } from "react";
 import { ModelView } from "../components";
 
 export const WorkspaceModeling: FC<PropsWithChildren<{
-    workspace: IWorkspace;
-    onWorkspaceChange?: (workspace: IWorkspace) => void;
+    workspace: Workspace;
+    onWorkspaceChange?: (workspace: Workspace) => void;
 }>> = ({
     children,
     workspace,
     onWorkspaceChange
 }) => {
-    const store = useWorkspace();
-    
     return (
         <ReactFlowProvider>
             <ModelView
-                model={store.workspace.model}
+                workspace={workspace}
                 onWorkspaceChange={onWorkspaceChange}
             >
                 {children}

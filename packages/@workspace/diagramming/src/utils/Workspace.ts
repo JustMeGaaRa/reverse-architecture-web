@@ -1,3 +1,4 @@
+import { ReactFlowJsonObject } from "@reactflow/core";
 import {
     ISupportVisitor,
     ViewKeys,
@@ -7,8 +8,7 @@ import {
     IConfiguration,
     ViewType
 } from "@structurizr/dsl";
-import { ReactFlowJsonObject } from "@reactflow/core";
-import { ReactFlowBuilder } from "@workspace/core";
+import { AutoLayout, ReactFlowBuilder } from "@workspace/core";
 import { ReactFlowVisitor } from "../types";
 
 export const getViewDefinition = (workspace: IWorkspace, viewDefinition?: ViewKeys) => {
@@ -50,4 +50,10 @@ export const getReactFlowObject = (
     );
     strategy?.accept(reactFlowVisitor);
     return reactFlowBuilder.build();
+}
+        
+export const getReactFlowAuto = async (reactFlowObject: ReactFlowJsonObject) => {
+    const autoLayout = new AutoLayout();
+    const reactFlowAuto = await autoLayout.execute(reactFlowObject);
+    return reactFlowAuto;
 }

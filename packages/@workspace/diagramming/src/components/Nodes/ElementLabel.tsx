@@ -4,13 +4,13 @@ import { FC } from "react";
 import { formatElementTag, formatElementTechnology } from "../../utils";
 
 export const ElementLabel: FC<{
-    data: IElement;
+    element: IElement;
     style?: Partial<ElementStyleProperties>;
     showDescription?: boolean;
     onMouseEnter?: () => void;
     onMouseLeave?: () => void;
 }> = ({
-    data,
+    element,
     style,
     showDescription,
     onMouseEnter,
@@ -41,9 +41,9 @@ export const ElementLabel: FC<{
                     color={"gray.1000"}
                     noOfLines={1}
                     textStyle={"b3"}
-                    title={data.name}
+                    title={element.name}
                 >
-                    {data.name}
+                    {element.name}
                 </Text>
             </Box>
             <Box
@@ -58,7 +58,7 @@ export const ElementLabel: FC<{
                     noOfLines={1}
                     textStyle={"b5"}
                 >
-                    {formatElementTag(data)}
+                    {formatElementTag(element)}
                 </Text>
             </Box>
             <Box
@@ -69,14 +69,14 @@ export const ElementLabel: FC<{
                 textAlign={"center"}
                 width={"100%"}
             >
-                {showDescription && data.description && (
+                {showDescription && element.description && (
                     <Text
                         color={"gray.1000"}
                         textStyle={"b4"}
                         noOfLines={5}
-                        title={data.description}
+                        title={element.description}
                     >
-                        {data.description}
+                        {element.description}
                     </Text>
                 )}
             </Box>
@@ -93,7 +93,7 @@ export const ElementLabel: FC<{
                     textStyle={"b4"}
                     noOfLines={1}
                 >
-                    {formatElementTechnology(data)}
+                    {formatElementTechnology(element)}
                 </Text>
             </HStack>
         </VStack>

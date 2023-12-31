@@ -49,13 +49,21 @@ export const WorkspaceContentEditor: FC = () => {
     const { parseStructurizr } = useStructurizrParser();
     const { workspace, setWorkspace } = useWorkspace();
     const { currentUser, collaboratingUsers } = useWorkspaceRoom();
+    const { users } = useMemo(() => {
+        return {
+            users: currentUser !== null && currentUser !== undefined
+                ? collaboratingUsers.concat(currentUser).map(user => user.info)
+                : collaboratingUsers.map(user => user.info)
+        }
+    },
+    [currentUser, collaboratingUsers]);
     
     // set header content
     useEffect(() => {
         setHeaderContent({
             right: (
                 <HStack key={"workspace-page-options"} gap={2} mr={4}>
-                    <UserAvatarGroup users={collaboratingUsers.concat(currentUser).map(user => user.info)} />
+                    <UserAvatarGroup users={users} />
                     <Divider
                         borderWidth={1}
                         color={"whiteAlpha.200"}
@@ -73,7 +81,7 @@ export const WorkspaceContentEditor: FC = () => {
                 </HStack>
             )
         })
-    }, [setHeaderContent, currentUser, collaboratingUsers])
+    }, [setHeaderContent, users])
 
     // discussions
     const [ commentThreads, setCommentThreads ] = useState<Array<CommentThread>>([]);
