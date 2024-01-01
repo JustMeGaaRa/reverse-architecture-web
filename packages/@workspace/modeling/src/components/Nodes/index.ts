@@ -4,7 +4,6 @@ export * from "./ElementFlowControls";
 export * from "./ElementLabel";
 export * from "./ElementNode";
 export * from "./ElementPlaceholderNode";
-export * from "./StartingNode";
 export * from "./WorkspaceNode";
 export * from "./ReactFlowNodeTypes";
 export * from "./ReactFlowNodeWrapper";

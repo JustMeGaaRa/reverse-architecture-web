@@ -30,7 +30,7 @@ import {
     useRef,
 } from "react";
 import {
-    EdgeTypes,
+    ReactFlowEdgeTypes,
     ElementFlowControls,
     ElementOptionsToolbar,
     ElementZoomControlsBackground,
@@ -157,7 +157,7 @@ export const SystemContextView: FC<PropsWithChildren<{
             nodes={nodes}
             nodeTypes={ReactFlowNodeTypes}
             edges={edges}
-            edgeTypes={EdgeTypes}
+            edgeTypes={ReactFlowEdgeTypes}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onNodeDragStop={handleOnNodeDragStop}

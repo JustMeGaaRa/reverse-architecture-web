@@ -77,7 +77,8 @@ export function ReactFlowNodeWrapper(ElementNodeComponent: FC<PropsWithChildren<
                     style={{
                         background: "none",
                         border: "none",
-                        cursor: "default"
+                        pointerEvents: "none",
+                        bottom: "0px",
                     }}
                 />
                 <Handle
@@ -87,7 +88,8 @@ export function ReactFlowNodeWrapper(ElementNodeComponent: FC<PropsWithChildren<
                     style={{
                         background: "none",
                         border: "none",
-                        cursor: "default"
+                        pointerEvents: "none",
+                        top: "0px",
                     }}
                 />
             </ElementNodeComponent>

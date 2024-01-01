@@ -135,7 +135,7 @@ export const WorkspaceContentEditor: FC = () => {
     // TODO: consider cleaning up and moving user creation somewhere else
     const { account } = useAccount();
     const currentUserInfo = useMemo(() => {
-        const colorSchemes = [ "gray", "blue", "green", "red", "orange", "yellow", "purple"];
+        const colorSchemes = [ "gray", "red", "orange", "yellow", "lime", "green", "cyan", "blue", "purple", "pink"];
         return {
             ...account,
             color: colorSchemes.at(Math.floor(Math.random() * colorSchemes.length))

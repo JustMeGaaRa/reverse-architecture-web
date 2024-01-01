@@ -1,39 +1,45 @@
 import { Box, Flex, Icon, IconButton } from "@chakra-ui/react";
 import { Position } from "@reactflow/core";
-import { BoundingBox, useMouseMove } from "@workspace/core";
 import { Plus } from "iconoir-react";
-import { FC, useCallback, useRef, useState } from "react";
+import { FC, useCallback, useMemo, useRef, useState } from "react";
 import { throttle } from "lodash";
+import { BoundingBox } from "../types";
+import { useMouseMove } from "../hooks";
 
 export const ElementFlowHandle: FC<{
     position: Position;
     referenceBox: BoundingBox;
-    area?: number;
+    interactiveArea?: number;
     isVisible?: boolean;
+    onMouseEnter?: () => void;
+    onMouseLeave?: () => void;
     onClick?: () => void;
 }> = ({
     position,
     referenceBox,
-    area,
+    interactiveArea,
     isVisible,
+    onMouseEnter,
+    onMouseLeave,
     onClick,
 }) => {
-    const handlePosition = {
-        [Position.Left]: { top: `${referenceBox.height / 2}px`, left: "-20px" },
-        [Position.Right]: { top: `${referenceBox.height / 2}px`, left: `${referenceBox.width + 20}px` },
-        [Position.Top]: { top: "-20px", left: `${referenceBox.width / 2}px` },
-        [Position.Bottom]: { top: `${referenceBox.height + 20}px`, left: `${referenceBox.width / 2}px` },
-    }
+    const offset = 20;
+    const handlePosition = useMemo(() => ({
+        [Position.Left]: { top: `${referenceBox.height / 2}px`, left: `-${offset}px` },
+        [Position.Right]: { top: `${referenceBox.height / 2}px`, left: `${referenceBox.width + offset}px` },
+        [Position.Top]: { top: `-${offset}px`, left: `${referenceBox.width / 2}px` },
+        [Position.Bottom]: { top: `${referenceBox.height + offset}px`, left: `${referenceBox.width / 2}px` },
+    }), [referenceBox]);
     const handleRef = useRef<HTMLDivElement>(null);
     const [ isExapanded, setIsExapanded ] = useState(false);
 
     const handleMouseMove = useCallback(throttle((event: MouseEvent) => {
         const handleRect = handleRef.current?.getBoundingClientRect();
         const mousePosition = { x: event.clientX, y: event.clientY };
-        const isExapanded = mousePosition?.x >= handleRect?.left - area
-            && mousePosition?.x <= handleRect?.right + area
-            && mousePosition?.y >= handleRect?.top - area
-            && mousePosition?.y <= handleRect?.bottom + area;
+        const isExapanded = mousePosition?.x >= handleRect?.left - interactiveArea
+            && mousePosition?.x <= handleRect?.right + interactiveArea
+            && mousePosition?.y >= handleRect?.top - interactiveArea
+            && mousePosition?.y <= handleRect?.bottom + interactiveArea;
         setIsExapanded(isExapanded);
     }, 100), []);
 
@@ -68,6 +74,8 @@ export const ElementFlowHandle: FC<{
                     height: "24px",
                     width: "24px",
                 }}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 onClick={onClick}
             >
                 <IconButton

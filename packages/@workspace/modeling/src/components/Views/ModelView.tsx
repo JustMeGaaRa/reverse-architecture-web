@@ -43,8 +43,6 @@ export const ModelView: FC<PropsWithChildren<{
     const strategy = useMemo(() => new ModelViewStrategy(workspace.model), [workspace]);
 
     useModelRenderingEffect(workspace, strategy);
-    // TODO: always use autolayout in model view
-    // useAutoLayoutEffect();
 
     return (
         <WorkspaceViewRenderer
@@ -53,7 +51,7 @@ export const ModelView: FC<PropsWithChildren<{
             nodeTypes={ReactFlowNodeTypes}
             edges={edges}
             edgeTypes={ReactFlowEdgeTypes}
-            isReadonly={store.workspace === null || store.workspace === undefined}
+            isReadonly={true}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
         >

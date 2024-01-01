@@ -1,3 +1,5 @@
+export * from "./ElementFlowHandle";
+export * from "./ElementSelectionBorder";
 export * from "./MarkerType";
 export * from "./ViewportAnimatedElement";
 export * from "./ViewportStaticElement";

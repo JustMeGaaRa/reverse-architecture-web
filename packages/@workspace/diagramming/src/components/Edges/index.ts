@@ -7,7 +7,7 @@ export * from "./ReactFlowEdgeWrapper";
 
 export const ReactFlowBezierEdge = ReactFlowEdgeWrapper(RelationshipBezierEdge);
 
-export const EdgeTypes = {
+export const ReactFlowEdgeTypes = {
     relationship: ReactFlowBezierEdge,
     straight: ReactFlowBezierEdge,
     step: ReactFlowBezierEdge,

@@ -4,7 +4,6 @@ export * from "./DeploymentNode";
 export * from "./DeploymentNodeLabel";
 export * from "./ElementFlowControls";
 export * from "./ElementGroupNode";
-export * from "./ElementFlowHandle";
 export * from "./ElementLabel";
 export * from "./ElementNode";
 export * from "./ElementOptionsToolbar";

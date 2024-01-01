@@ -1,7 +1,8 @@
 import { ReactFlowJsonObject } from "@reactflow/core";
-import { IModel, ISupportVisitor, IWorkspace } from "@structurizr/dsl";
+import { ISupportVisitor, IWorkspace } from "@structurizr/dsl";
 import { AutoLayout, ReactFlowBuilder } from "@workspace/core";
 import { ReactFlowVisitor } from "../types";
+import { getNodeFromElement } from "./ReactFlow";
 
 export const getReactFlowObject = (
     strategy: ISupportVisitor,
@@ -12,20 +13,23 @@ export const getReactFlowObject = (
     const nodeHeight = 70;
     const nodeHeightSpacing = 64;
     
-    const positionY = -(nodeHeight + nodeHeightSpacing);
-    const positionX = 0;
-    const workspaceNode = ({
-        id: "workspace",
-        type: "workspace",
-        data: {
-            element: {
-                name: workspace.name,
-                description: "Model",
-                tags: [{ name: "Element" }, { name: "Workspace" }]
-            }
-        },
-        position: { x: positionX, y: positionY },
-    });
+    const x = 0;
+    const y = -(nodeHeight + nodeHeightSpacing);
+    const workspaceElement = {
+        identifier: "workspace",
+        name: workspace.name,
+        description: "Model",
+        tags: [
+            { name: "Element" },
+            { name: "Workspace" }
+        ]
+    }
+    const workspaceNode = getNodeFromElement(
+        workspaceElement as any,
+        undefined,
+        "workspace",
+        { x, y }
+    );
     reactFlowBuilder.addNode(workspaceNode);
 
     const reactFlowVisitor = new ReactFlowVisitor(workspace.model, reactFlowBuilder);

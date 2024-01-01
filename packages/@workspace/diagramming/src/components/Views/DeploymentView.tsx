@@ -30,7 +30,7 @@ import {
     useRef,
 } from "react";
 import {
-    EdgeTypes,
+    ReactFlowEdgeTypes,
     ElementOptionsToolbar,
     ReactFlowNodeTypes
 } from "../../components";
@@ -136,7 +136,7 @@ export const DeploymentView: FC<PropsWithChildren<{
             nodes={nodes}
             nodeTypes={ReactFlowNodeTypes}
             edges={edges}
-            edgeTypes={EdgeTypes}
+            edgeTypes={ReactFlowEdgeTypes}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onNodeDragStop={handleOnNodeDragStop}

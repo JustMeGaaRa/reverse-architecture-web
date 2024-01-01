@@ -31,7 +31,7 @@ import {
 } from "react";
 import { throttle } from "lodash";
 import {
-    EdgeTypes,
+    ReactFlowEdgeTypes,
     ElementFlowControls,
     ElementOptionsToolbar,
     ElementZoomControlsBackground,
@@ -168,7 +168,7 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
             nodes={nodes}
             nodeTypes={ReactFlowNodeTypes}
             edges={edges}
-            edgeTypes={EdgeTypes}
+            edgeTypes={ReactFlowEdgeTypes}
             isReadonly={store.workspace === null || store.workspace === undefined}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
