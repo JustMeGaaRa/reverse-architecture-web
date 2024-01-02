@@ -26,8 +26,8 @@ export const ElementFlowControls: FC<{
 
     const isWorkspaceEditable = state.workspace !== null && state.workspace !== undefined;
     const canSelectedNodeHaveChildren = selectedNodes.length === 1
-        && selectedNodes[0].data.element.tags.some(x => x.name === Tag.SoftwareSystem.name)
-        && selectedNodes[0].data.element.tags.some(x => x.name === Tag.Container.name);
+        && selectedNodes[0].data.element.tags.every(x => x.name !== Tag.Person.name)
+        && selectedNodes[0].data.element.tags.every(x => x.name !== Tag.Component.name);
     const areAnyNodesSelected = selectedNodes.length > 0;
     
     const showEditableControls = isWorkspaceEditable && canSelectedNodeHaveChildren;

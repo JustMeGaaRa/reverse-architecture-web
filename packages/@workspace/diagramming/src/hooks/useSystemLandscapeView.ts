@@ -1,5 +1,7 @@
 import { useReactFlow } from "@reactflow/core";
 import {
+    ElementType,
+    getDefaultElement,
     Group,
     Identifier,
     Person,
@@ -9,7 +11,6 @@ import {
 } from "@structurizr/dsl";
 import { useWorkspace } from "@workspace/core";
 import { useCallback } from "react";
-import { v4 } from "uuid";
 import {
     getNodeFromElement,
     getEdgeFromRelationship
@@ -20,10 +21,7 @@ export const useSystemLandscapeView = () => {
     const { setNodes, setEdges } = useReactFlow();
     
     const addSoftwareSystem = useCallback((position: Position, groupId?: Identifier) => {
-        const softwareSystem = new SoftwareSystem({
-            identifier: `softwareSystem_${new String(v4()).substring(0, 8)}`,
-            name: "Software System",
-        })
+        const softwareSystem = getDefaultElement(ElementType.SoftwareSystem) as SoftwareSystem;
         
         workspace?.views.systemLandscape?.addSoftwareSystem(softwareSystem, position);
         workspace?.model.addSoftwareSystem(softwareSystem, groupId);
@@ -40,13 +38,10 @@ export const useSystemLandscapeView = () => {
     }, [workspace, setNodes]);
     
     const addPerson = useCallback((position: Position, groupId?: Identifier) => {
-        const person = new Person({
-            identifier: `person_${new String(v4()).substring(0, 8)}`,
-            name: "Person",
-        })
+        const person = getDefaultElement(ElementType.Person) as Person;
         
-        workspace?.views.systemLandscape?.addPerson(person, position);
         workspace?.model.addPerson(person);
+        workspace?.views.systemLandscape?.addPerson(person, position);
 
         const node = getNodeFromElement({
             element: person,
@@ -60,13 +55,10 @@ export const useSystemLandscapeView = () => {
     }, [workspace, setNodes]);
 
     const addGroup = useCallback((position: Position) => {
-        const group = new Group({
-            identifier: `group_${v4()}`,
-            name: "Group",
-        })
+        const group = getDefaultElement(ElementType.Group) as Group;
         
-        workspace?.views.systemLandscape?.addGroup(group, position);
         workspace?.model.addGroup(group);
+        workspace?.views.systemLandscape?.addGroup(group, position);
 
         const node = getNodeFromElement({
             element: group,

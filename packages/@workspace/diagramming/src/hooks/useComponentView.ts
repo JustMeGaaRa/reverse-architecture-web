@@ -2,6 +2,8 @@ import { useReactFlow } from "@reactflow/core";
 import {
     Component,
     Container,
+    ElementType,
+    getDefaultElement,
     Group,
     Identifier,
     Person,
@@ -24,13 +26,9 @@ export const useComponentView = (containerIdentifier: Identifier) => {
     // NOTE: the person added can either be an existing one or a new one
     // The existing person is included in the view, while the new one is also added to the model
     const addPerson = useCallback((position: Position) => {
-        const person = new Person({
-            identifier: `person_${new String(v4()).substring(0, 8)}`,
-            name: "Person",
-        })
+        const person = getDefaultElement(ElementType.Person) as Person;
         
-        workspace.model
-            .addPerson(person);
+        workspace.model.addPerson(person);
         workspace.views.components
             .find(x => x.identifier === containerIdentifier)
             ?.addPerson(person, position);
@@ -49,13 +47,9 @@ export const useComponentView = (containerIdentifier: Identifier) => {
     // NOTE: the software system added can either be an existing one or a new one
     // The existing system is included in the view, while the new one is also added to the model
     const addSoftwareSystem = useCallback((position: Position) => {
-        const softwareSystem = new SoftwareSystem({
-            identifier: `softwareSystem_${new String(v4()).substring(0, 8)}`,
-            name: "Software System",
-        })
+        const softwareSystem = getDefaultElement(ElementType.SoftwareSystem) as SoftwareSystem;
         
-        workspace.model
-            .addSoftwareSystem(softwareSystem);
+        workspace.model.addSoftwareSystem(softwareSystem);
         workspace.views.components
             .find(x => x.identifier === containerIdentifier)
             ?.addSoftwareSystem(softwareSystem, position);
@@ -74,10 +68,7 @@ export const useComponentView = (containerIdentifier: Identifier) => {
     // NOTE: the container added can either be an existing one or a new one
     // The existing container is included in the view, while the new one is also added to the model
     const addContainer = useCallback((position: Position) => {
-        const container = new Container({
-            identifier: `container_${new String(v4()).substring(0, 8)}`,
-            name: "Container",
-        })
+        const container = getDefaultElement(ElementType.Container) as Container;
         
         workspace.model
             .findContainerParent(containerIdentifier)
@@ -98,17 +89,14 @@ export const useComponentView = (containerIdentifier: Identifier) => {
     }, [containerIdentifier, setNodes, workspace]);
     
     const addComponent = useCallback((position: Position, groupId?: Identifier) => {
-        const component = new Component({
-            identifier: `component_${new String(v4()).substring(0, 8)}`,
-            name: "Component",
-        })
+        const component = getDefaultElement(ElementType.Component) as Component;
         
-        workspace.views.components
-            .find(x => x.identifier === containerIdentifier)
-            ?.addComponent(component, position);
         workspace.model
             .findContainer(containerIdentifier)
             .addComponent(component, groupId);
+        workspace.views.components
+            .find(x => x.identifier === containerIdentifier)
+            ?.addComponent(component, position);
         
         // NOTE: in this context the component can only be added as a child of the container or a group
         const node = getNodeFromElement({
@@ -123,17 +111,14 @@ export const useComponentView = (containerIdentifier: Identifier) => {
     }, [containerIdentifier, workspace, setNodes]);
     
     const addGroup = useCallback((position: Position) => {
-        const group = new Group({
-            identifier: `group_${new String(v4()).substring(0, 8)}`,
-            name: "Group",
-        })
+        const group = getDefaultElement(ElementType.Group) as Group;
         
-        workspace.views.components
-            .find(x => x.identifier === containerIdentifier)
-            ?.addGroup(group, position);
         workspace.model
             .findContainer(containerIdentifier)
             .addGroup(group);
+        workspace.views.components
+            .find(x => x.identifier === containerIdentifier)
+            ?.addGroup(group, position);
 
         // NOTE: in this context the group can only be added as a child of the container
         const node = getNodeFromElement({

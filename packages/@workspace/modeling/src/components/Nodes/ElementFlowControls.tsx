@@ -1,5 +1,6 @@
-import { Position, useReactFlow, useStore } from "@reactflow/core";
-import { Tag, Workspace } from "@structurizr/dsl";
+import { useDisclosure } from "@chakra-ui/react";
+import { Position, useStore } from "@reactflow/core";
+import { getDefaultChildForElement, Tag, Workspace } from "@structurizr/dsl";
 import {
     ElementSelectionBorder,
     useWorkspace,
@@ -9,7 +10,8 @@ import {
     BoundingBox,
     ElementFlowHandle,
 } from "@workspace/core";
-import { FC, useCallback } from "react";
+import { FC, useCallback, useMemo } from "react";
+import { useCollapsable, useModelFlowBuilder } from "../../hooks";
 import { nodeSelector } from "../../utils";
 import { ElementCollapseControl } from "./ElementCollapseControl";
 
@@ -20,8 +22,9 @@ export const ElementFlowControls: FC<{
 }) => {
     const { selectedNodes, selectionBounds } = useStore(nodeSelector);
     const { viewport } = useStore(viewportSelector);
-    const { setNodes, setEdges } = useReactFlow();
+    const { addDefaultElement, addElementPreview, clearElementPreview } = useModelFlowBuilder();
     const state = useWorkspace();
+    const { onCollapseNode, onExpandNode } = useCollapsable();
 
     const isWorkspaceEditable = state.workspace !== null && state.workspace !== undefined;
     const canSelectedNodeHaveChildren = selectedNodes.length === 1
@@ -30,8 +33,8 @@ export const ElementFlowControls: FC<{
     const doesSelectedNodeHaveChildren = selectedNodes.length === 1
         && selectedNodes[0].data.elementChildrenCount > 0;
     const areAnyNodesSelected = selectedNodes.length > 0;
-    const isSelectedNodeCollapsed = false;
-    
+    const isSelectedNodeCollapsed = selectedNodes[0]?.data.isCollapsed ?? false;
+
     const showEditableControls = isWorkspaceEditable && canSelectedNodeHaveChildren;
     const showSelectionBorder = areAnyNodesSelected;
     const showCollapsePanel = doesSelectedNodeHaveChildren;
@@ -42,53 +45,31 @@ export const ElementFlowControls: FC<{
         .extend(2);
 
     const handleOnCollapseClick = useCallback(() => {
-        // TODO: collapse element
-        // zoomIntoElement(workspace, selectedNodes[0].data.element);
-    }, []);
+        onCollapseNode(selectedNodes[0]?.id);
+    }, [onCollapseNode, selectedNodes]);
 
     const handleOnExpandClick = useCallback(() => {
-        // TODO: expand element
-        // zoomOutOfElement(workspace, selectedNodes[0].data.element);
-    }, []);
+        onExpandNode(selectedNodes[0]?.id);
+    }, [onExpandNode, selectedNodes]);
 
     const handleOnMouseEnter = useCallback(() => {
         if (canSelectedNodeHaveChildren) {
-            const placeholderNode = {
-                id: "placeholder-node",
-                type: "placeholder",
-                data: {
-                    element: selectedNodes[0].data.element
-                },
-                position: {
-                    x: selectedNodes[0].position.x,
-                    y: selectedNodes[0].position.y + selectedNodes[0].height + 64
-                },
-            }
-
-            const placeholderEdge = {
-                id: "placeholder-edge",
-                type: "smoothstep",
-                source: selectedNodes[0].id,
-                target: placeholderNode.id,
-                style: {
-                    stroke: "#535354",
-                    strokeWidth: 2
-                }
-            }
-
-            setNodes(nodes => [...nodes, placeholderNode]);
-            setEdges(edges => [...edges, placeholderEdge]);
+            const position = {
+                x: selectedNodes[0].position.x + selectedNodes[0].width / 2 - 150,
+                y: selectedNodes[0].position.y + selectedNodes[0].height + 64
+            };
+            const element = getDefaultChildForElement(selectedNodes[0].data.element.type);
+            addElementPreview(element, position);
         }
-    }, [canSelectedNodeHaveChildren, selectedNodes, setEdges, setNodes]);
+    }, [addElementPreview, canSelectedNodeHaveChildren, selectedNodes]);
 
     const handleOnMouseLeave = useCallback(() => {
-        setNodes(nodes => nodes.filter(node => node.id !== "placeholder-node"));
-        setEdges(edges => edges.filter(edge => edge.id !== "placeholder-edge"));
-    }, [setEdges, setNodes]);
+        clearElementPreview();
+    }, [clearElementPreview]);
 
     const handleOnClick = useCallback(() => {
-
-    }, []);
+        addDefaultElement(selectedNodes[0].data.element.type, selectedNodes[0].data.element.identifier);
+    }, [addDefaultElement, selectedNodes]);
 
     return (
         <WorkspaceElementPortal>

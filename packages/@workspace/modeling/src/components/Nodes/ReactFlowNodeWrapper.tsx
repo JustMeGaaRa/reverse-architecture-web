@@ -31,16 +31,12 @@ export function ReactFlowNodeWrapper(ElementNodeComponent: FC<PropsWithChildren<
                         tags: [{ name: "Software System" }]
                     },
                     position: { x: currentNode.position.x, y: currentNode.position.y + 400 },
-                    connectable: false,
-                    draggable: false,
                 }
                 const placholderNode = {
                     id: newPlaceholderId,
                     type: "placeholder",
                     data: { },
                     position: { x: currentNode.position.x, y: currentNode.position.y + 400 },
-                    connectable: false,
-                    draggable: false,
                 }
     
                 return [...nodes, elementNode, placholderNode];

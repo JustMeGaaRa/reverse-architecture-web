@@ -16,8 +16,8 @@ export const ElementZoomControlsBackground: FC = () => {
     const { viewport } = useStore(viewportSelector);
     
     const canSelectedNodeHaveChildren = selectedNodes.length === 1
-        && selectedNodes[0].data.element.tags.some(x => x.name === Tag.SoftwareSystem.name)
-        && selectedNodes[0].data.element.tags.some(x => x.name === Tag.Container.name);
+        && selectedNodes[0].data.element.tags.every(x => x.name !== Tag.Person.name)
+        && selectedNodes[0].data.element.tags.every(x => x.name !== Tag.Component.name);
     
     const showZoomPanel = canSelectedNodeHaveChildren;
     const showZoomIn = showZoomPanel

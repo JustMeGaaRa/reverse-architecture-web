@@ -1,6 +1,8 @@
 import { useReactFlow } from "@reactflow/core";
 import {
     Container,
+    ElementType,
+    getDefaultElement,
     Group,
     Identifier,
     Person,
@@ -23,13 +25,9 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
     // NOTE: the person added can either be an existing one or a new one
     // The existing person is included in the view, while the new one is also added to the model
     const addPerson = useCallback((position: Position) => {
-        const person = new Person({
-            identifier: `person_${new String(v4()).substring(0, 8)}`,
-            name: "Person",
-        })
+        const person = getDefaultElement(ElementType.Person) as Person;
         
-        workspace.model
-            .addPerson(person);
+        workspace.model.addPerson(person);
         workspace.views.containers
             .find(x => x.identifier === systemSoftwareIdentifier)
             ?.addPerson(person, position);
@@ -48,13 +46,9 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
     // NOTE: the software system added can either be an existing one or a new one
     // The existing system is included in the view, while the new one is also added to the model
     const addSoftwareSystem = useCallback((position: Position) => {
-        const softwareSystem = new SoftwareSystem({
-            identifier: `softwareSystem_${new String(v4()).substring(0, 8)}`,
-            name: "Software System",
-        })
+        const softwareSystem = getDefaultElement(ElementType.SoftwareSystem) as SoftwareSystem;
 
-        workspace.model
-            .addSoftwareSystem(softwareSystem);
+        workspace.model.addSoftwareSystem(softwareSystem);
         workspace.views.containers
             .find(x => x.identifier === systemSoftwareIdentifier)
             ?.addSoftwareSystem(softwareSystem, position);
@@ -71,17 +65,14 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
     }, [systemSoftwareIdentifier, setNodes, workspace]);
     
     const addContainer = useCallback((position: Position, groupId?: Identifier) => {
-        const container = new Container({
-            identifier: `container_${new String(v4()).substring(0, 8)}`,
-            name: "Container",
-        })
+        const container = getDefaultElement(ElementType.Container) as Container;
         
-        workspace.views.containers
-            .find(x => x.identifier === systemSoftwareIdentifier)
-            ?.addContainer(container, position);
         workspace.model
             .findSoftwareSystem(systemSoftwareIdentifier)
             .addContainer(container, groupId);
+        workspace.views.containers
+            .find(x => x.identifier === systemSoftwareIdentifier)
+            ?.addContainer(container, position);
         
         // NOTE: in this context the container can only be added as a child of the software system or a group
         const node = getNodeFromElement({
@@ -96,10 +87,7 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
     }, [systemSoftwareIdentifier, workspace, setNodes]);
     
     const addGroup = useCallback((position: Position) => {
-        const group = new Group({
-            identifier: `group_${new String(v4()).substring(0, 8)}`,
-            name: "Group",
-        })
+        const group = getDefaultElement(ElementType.Group) as Group;
         
         workspace.views.containers
             .find(x => x.identifier === systemSoftwareIdentifier)

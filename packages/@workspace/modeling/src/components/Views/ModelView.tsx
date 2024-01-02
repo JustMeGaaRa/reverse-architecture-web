@@ -17,7 +17,7 @@ import {
     ReactFlowNodeTypes,
     ElementFlowControls
 } from "../../components";
-import { useModelRenderingEffect, useModelView } from "../../hooks";
+import { useAutoLayoutEffect, useModelRenderingEffect, useModelView } from "../../hooks";
 
 export const ModelView: FC<PropsWithChildren<{
     workspace: Workspace;
@@ -43,6 +43,7 @@ export const ModelView: FC<PropsWithChildren<{
     const strategy = useMemo(() => new ModelViewStrategy(workspace.model), [workspace]);
 
     useModelRenderingEffect(workspace, strategy);
+    // useAutoLayoutEffect();
 
     return (
         <WorkspaceViewRenderer

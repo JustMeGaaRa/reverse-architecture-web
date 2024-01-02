@@ -13,8 +13,18 @@ import {
     IComponentView,
     IContainerView,
     ISystemContextView,
-    IDeploymentView
+    IDeploymentView,
+    ElementType,
+    IElement,
+    SoftwareSystem,
+    Container,
+    Component,
+    Person,
+    DeploymentNode,
+    InfrastructureNode,
+    Group
 } from "../";
+import { v4 } from "uuid";
 
 export const applyTheme = (workspace: IWorkspace, theme: IWorkspaceTheme): IWorkspace => {
     return {
@@ -167,4 +177,70 @@ export const getRelationships = (model: IModel, implied: boolean) => {
             }
         }
     }
+}
+
+export const getDefaultElement = (type: ElementType): IElement | undefined => {
+    const uniqueId = new String(v4()).substring(0, 8);
+
+    switch (type) {
+        case ElementType.Group:
+            return new Group({
+                identifier: `group_${uniqueId}`,
+                name: "Group",
+            })
+        case ElementType.SoftwareSystem:
+            return new SoftwareSystem({
+                identifier: `softwareSystem_${uniqueId}`,
+                name: "Software System",
+            })
+        case ElementType.Container:
+            return new Container({
+                identifier: `container_${uniqueId}`,
+                name: "Container",
+            })
+        case ElementType.Component:
+            return new Component({
+                identifier: `component_${uniqueId}`,
+                name: "Component",
+            })
+        case ElementType.Person:
+            return new Person({
+                identifier: `person_${uniqueId}`,
+                name: "Person",
+            })
+        case ElementType.DeploymentNode:
+            return new DeploymentNode({
+                identifier: `deployment_node_${uniqueId}`,
+                name: "Deployment Node",
+        });
+        case ElementType.InfrastructureNode:
+            return new InfrastructureNode({
+                identifier: `infrastructure_node_${uniqueId}`,
+                name: "Infrastructure Node",
+            });
+    }
+
+    return undefined;
+}
+
+export const getDefaultChildForElement = (parentType?: ElementType): IElement => {
+    const uniqueId = new String(v4()).substring(0, 8);
+
+    switch (parentType) {
+        case ElementType.SoftwareSystem:
+            return new Container({
+                identifier: `container_${uniqueId}`,
+                name: "Container",
+            })
+        case ElementType.Container:
+            return new Component({
+                identifier: `component_${uniqueId}`,
+                name: "Component",
+            })
+    }
+
+    return new SoftwareSystem({
+        identifier: `softwareSystem_${uniqueId}`,
+        name: "Software System",
+    })
 }

@@ -1,5 +1,7 @@
 import { useReactFlow } from "@reactflow/core";
 import {
+    ElementType,
+    getDefaultElement,
     Group,
     Identifier,
     Person,
@@ -20,16 +22,12 @@ export const useSystemContextView = (systemSoftwareIdentifier: Identifier) => {
     const { setNodes, setEdges } = useReactFlow();
     
     const addSoftwareSystem = useCallback((position: Position, groupId?: Identifier) => {
-        const softwareSystem = new SoftwareSystem({
-            identifier: `softwareSystem_${new String(v4()).substring(0, 8)}`,
-            name: "Software System",
-        })
+        const softwareSystem = getDefaultElement(ElementType.SoftwareSystem) as SoftwareSystem;
         
+        workspace.model.addSoftwareSystem(softwareSystem, groupId);
         workspace.views.systemContexts
             .find(x => x.identifier === systemSoftwareIdentifier)
             ?.addSoftwareSystem(softwareSystem, position);
-        workspace.model
-            .addSoftwareSystem(softwareSystem, groupId);
         
         const node = getNodeFromElement({
             element: softwareSystem,
@@ -43,15 +41,12 @@ export const useSystemContextView = (systemSoftwareIdentifier: Identifier) => {
     }, [systemSoftwareIdentifier, workspace, setNodes]);
     
     const addPerson = useCallback((position: Position, groupId?: Identifier) => {
-        const person = new Person({
-            identifier: `person_${new String(v4()).substring(0, 8)}`,
-            name: "Person",
-        })
+        const person = getDefaultElement(ElementType.Person) as Person;
         
+        workspace.model.addPerson(person, groupId);
         workspace.views.systemContexts
             .find(x => x.identifier === systemSoftwareIdentifier)
             ?.addPerson(person, position);
-        workspace.model.addPerson(person, groupId);
 
         const node = getNodeFromElement({
             element: person,
@@ -65,15 +60,12 @@ export const useSystemContextView = (systemSoftwareIdentifier: Identifier) => {
     }, [systemSoftwareIdentifier, workspace, setNodes]);
 
     const addGroup = useCallback((position: Position) => {
-        const group = new Group({
-            identifier: `group_${new String(v4()).substring(0, 8)}`,
-            name: "Group",
-        })
+        const group = getDefaultElement(ElementType.Group) as Group;
         
+        workspace.model.addGroup(group);
         workspace.views.systemContexts
             .find(x => x.identifier === systemSoftwareIdentifier)
             ?.addGroup(group, position);
-        workspace.model.addGroup(group);
 
         const node = getNodeFromElement({
             element: group,

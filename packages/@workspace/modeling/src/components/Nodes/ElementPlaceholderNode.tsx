@@ -12,14 +12,14 @@ export const ElementPlaceholderNode: FC<PropsWithChildren<{
 }) => {
     return (
         <Box
-            backgroundColor={"gray.200"}
+            backgroundColor={"grayAlpha.200"}
+            backdropFilter={"blur(32px)"}
             borderColor={"gray.400"}
             borderRadius={16}
             borderWidth={2}
             height={"70px"}
             width={"300px"}
             padding={1}
-            opacity={0.4}
         >
             <Box padding={"10px"}>
                 <Text color={"gray.1000"} textStyle={"b3"}>

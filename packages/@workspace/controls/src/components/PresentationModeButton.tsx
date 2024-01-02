@@ -8,7 +8,7 @@ export const PresentationModeButton: FC = () => {
     const { isPresentationEnabled } = useWorkspaceToolbarStore();
     const { togglePresentationMode } = usePresentationMode();
 
-    return isPresentationEnabled ? (
+    return !isPresentationEnabled ? (
         <IconButton
             aria-label={"enable presentation mode"}
             icon={<Play />}
