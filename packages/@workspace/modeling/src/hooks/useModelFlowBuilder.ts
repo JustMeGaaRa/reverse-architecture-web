@@ -1,6 +1,7 @@
-import { useReactFlow } from "@reactflow/core";
+import { Edge, Node, useReactFlow } from "@reactflow/core";
 import {
     ElementType,
+    getDefaultChildForElement,
     IElement,
     Position,
 } from "@structurizr/dsl";
@@ -33,21 +34,21 @@ export const useModelFlowBuilder = () => {
         // TODO: remove element from workspace model
     }, []);
 
-    const addElementPreview = useCallback((element: IElement, position: Position) => {
-        const placeholderNode = {
+    const addElementPreview = useCallback((source: IElement, position: Position) => {
+        const placeholderNode: Node = {
             id: "placeholder-node",
             type: "placeholder",
             data: {
-                element: element,
+                element: getDefaultChildForElement(source.type),
                 elementChildrenCount: undefined
             },
             position: position,
         }
 
-        const placeholderEdge = {
+        const placeholderEdge: Edge = {
             id: "placeholder-edge",
             type: "smoothstep",
-            source: element.identifier,
+            source: source.identifier,
             target: placeholderNode.id,
             style: {
                 stroke: "#535354",

@@ -5,6 +5,7 @@ export * from "./DeploymentNodeLabel";
 export * from "./ElementFlowControls";
 export * from "./ElementGroupNode";
 export * from "./ElementLabel";
+export * from "./ElementLockedIcon";
 export * from "./ElementNode";
 export * from "./ElementOptionsToolbar";
 export * from "./ElementPlaceholderNode";

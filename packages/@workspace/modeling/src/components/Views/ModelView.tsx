@@ -1,10 +1,6 @@
-import {
-    useEdgesState,
-    useNodesState,
-    useReactFlow
-} from "@reactflow/core";
+import { useEdgesState, useNodesState } from "@reactflow/core";
 import { ModelViewStrategy, Workspace } from "@structurizr/dsl";
-import { WorkspaceViewRenderer, useWorkspace } from "@workspace/core";
+import { WorkspaceViewRenderer } from "@workspace/core";
 import {
     FC,
     PropsWithChildren,
@@ -17,7 +13,7 @@ import {
     ReactFlowNodeTypes,
     ElementFlowControls
 } from "../../components";
-import { useAutoLayoutEffect, useModelRenderingEffect, useModelView } from "../../hooks";
+import { useModelRenderingEffect, useModelView } from "../../hooks";
 
 export const ModelView: FC<PropsWithChildren<{
     workspace: Workspace;
@@ -37,13 +33,10 @@ export const ModelView: FC<PropsWithChildren<{
         addDeploymentNode,
         addInfrastructureNode
     } = useModelView();
-    const { getViewport } = useReactFlow();
     const reactFlowRef = useRef(null);
-    const store = useWorkspace();
     const strategy = useMemo(() => new ModelViewStrategy(workspace.model), [workspace]);
 
     useModelRenderingEffect(workspace, strategy);
-    // useAutoLayoutEffect();
 
     return (
         <WorkspaceViewRenderer

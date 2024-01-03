@@ -27,6 +27,7 @@ export const ElementZoomControl: FC<{
             left={-6}
             top={isZoomInVisible ? 2 : 6}
             position={"absolute"}
+            pointerEvents={"all"}
             size={"xs"}
             variant={"tonal"}
             visibility={"hidden"}

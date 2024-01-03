@@ -1,3 +1,4 @@
+import { Background, BackgroundVariant } from "@reactflow/background";
 import {
     Connection,
     Node,
@@ -8,10 +9,8 @@ import {
 } from "@reactflow/core";
 import {
     ElementType,
-    IConfiguration,
-    IModel,
     ISystemLandscapeView,
-    IWorkspace,
+    Position,
     SystemLandscapeViewStrategy,
     Workspace,
 } from "@structurizr/dsl";
@@ -19,7 +18,6 @@ import {
     WorkspaceViewRenderer,
     useWorkspaceToolbarStore,
     getAbsolutePoint,
-    CurrentView,
     useWorkspace
 } from "@workspace/core";
 import {
@@ -29,7 +27,6 @@ import {
     useMemo,
     useRef,
 } from "react";
-import { throttle } from "lodash";
 import {
     ReactFlowEdgeTypes,
     ElementFlowControls,
@@ -40,23 +37,19 @@ import {
 import {
     useViewRenderingEffect,
     useSystemLandscapeView,
-    useAutoLayoutEffect
 } from "../../hooks";
-import { Background, BackgroundVariant } from "@reactflow/background";
 
 export const SystemLandscapeView: FC<PropsWithChildren<{
     workspace: Workspace;
     view: ISystemLandscapeView;
     onWorkspaceChange?: (workspace: Workspace) => void;
-    onNodeDragStop?: NodeMouseHandler;
-    onNodesDoubleClick?: NodeMouseHandler;
+    onWorkspaceViewClick?: (event: React.MouseEvent) => void;
 }>> = ({
     children,
     workspace,
     view,
     onWorkspaceChange,
-    onNodeDragStop,
-    onNodesDoubleClick
+    onWorkspaceViewClick
 }) => {
     const [ nodes, , onNodesChange ] = useNodesState([]);
     const [ edges, , onEdgesChange ] = useEdgesState([]);
@@ -81,8 +74,7 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
 
     const handleOnNodeDragStop = useCallback((event: React.MouseEvent, node: any, nodes: any[]) => {
         onWorkspaceChange?.(setElementPosition(node.data.element.identifier, node.position));
-        onNodeDragStop?.(event, node);
-    }, [onNodeDragStop, onWorkspaceChange, setElementPosition]);
+    }, [onWorkspaceChange, setElementPosition]);
 
     // NOTE: following handlers are used to add elements when respective mode is enabled
     const handleOnNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
@@ -129,7 +121,6 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
         const pointTranslatedFromViewport = getAbsolutePoint(getViewport(), pointRelativeToViewport);
 
         if (reactFlowRef.current && isAddingElementEnabled) {
-
             switch (addingElementType) {
                 case ElementType.Group:
                     onWorkspaceChange?.(addGroup(pointTranslatedFromViewport));
@@ -143,15 +134,13 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
             }
         }
 
-        if (isCommentAddingEnabled) {
-            // TODO: move the logic of adding comments outside of component
-        }
+        onWorkspaceViewClick?.(event);
     }, [
         reactFlowRef,
         addingElementType,
         isAddingElementEnabled,
-        isCommentAddingEnabled,
         onWorkspaceChange,
+        onWorkspaceViewClick,
         getViewport,
         addGroup,
         addSoftwareSystem,
@@ -161,6 +150,18 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
     const handleOnConnect = useCallback((connection: Connection) => {
         onWorkspaceChange?.(addRelationship(connection.source, connection.target));
     }, [addRelationship, onWorkspaceChange]);
+
+    const handleOnFlowClick = useCallback((sourceNode: Node, position: Position) => {
+        switch (sourceNode.data?.element?.type) {
+            case ElementType.SoftwareSystem:
+                onWorkspaceChange?.(addSoftwareSystem(position, sourceNode.parentNode));
+                onWorkspaceChange?.(addRelationship(sourceNode.id, ""))
+                break;
+            case ElementType.Person:
+                onWorkspaceChange?.(addPerson(position, sourceNode.parentNode));
+                onWorkspaceChange?.(addRelationship(sourceNode.id, ""))
+        }
+    }, [onWorkspaceChange, addPerson, addSoftwareSystem, addRelationship]);
 
     return (
         <WorkspaceViewRenderer
@@ -173,7 +174,6 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onNodeDragStop={handleOnNodeDragStop}
-            onNodesDoubleClick={onNodesDoubleClick}
             onNodeClick={handleOnNodeClick}
             onPaneClick={handleOnPaneClick}
             onConnect={handleOnConnect}
@@ -184,7 +184,10 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
                 variant={BackgroundVariant.Dots}
             />
             <ElementOptionsToolbar />
-            <ElementFlowControls workspace={workspace} />
+            <ElementFlowControls
+                workspace={workspace}
+                onHandleClick={handleOnFlowClick}
+            />
             <ElementZoomControlsBackground />
             {children}
         </WorkspaceViewRenderer>

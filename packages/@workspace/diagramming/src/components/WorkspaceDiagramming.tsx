@@ -1,6 +1,6 @@
 import { ReactFlowProvider } from "@reactflow/core";
 import { IViewDefinition, ViewType, Workspace } from "@structurizr/dsl";
-import { FC, PropsWithChildren } from "react";
+import { FC, PropsWithChildren, useEffect } from "react";
 import {
     SystemLandscapeView,
     SystemContextView,
@@ -15,13 +15,19 @@ export const WorkspaceViewSelector: FC<PropsWithChildren<{
     workspace: Workspace;
     onWorkspaceChange?: (workspace: Workspace) => void;
     onWorkspaceViewChange?: (view: IViewDefinition) => void;
+    onWorkspaceViewClick?: (event: React.MouseEvent) => void;
 }>> = ({
     children,
     workspace,
     onWorkspaceChange,
-    onWorkspaceViewChange
+    onWorkspaceViewChange,
+    onWorkspaceViewClick
 }) => {
     const { currentView } = useWorkspaceNavigation();
+
+    useEffect(() => {
+        onWorkspaceViewChange?.(currentView);
+    }, [currentView, onWorkspaceViewChange]);
     
     switch (currentView?.type) {
         case ViewType.SystemLandscape:
@@ -30,6 +36,7 @@ export const WorkspaceViewSelector: FC<PropsWithChildren<{
                     workspace={workspace}
                     view={currentView as any}
                     onWorkspaceChange={onWorkspaceChange}
+                    onWorkspaceViewClick={onWorkspaceViewClick}
                 >
                     {children}
                 </SystemLandscapeView>
@@ -84,12 +91,14 @@ export const WorkspaceDiagramming: FC<PropsWithChildren<{
     initialView: IViewDefinition;
     onWorkspaceChange?: (workspace: Workspace) => void;
     onWorkspaceViewChange?: (view: IViewDefinition) => void;
+    onWorkspaceViewClick?: (event: React.MouseEvent) => void;
 }>> = ({
     children,
     workspace,
     initialView,
     onWorkspaceChange,
-    onWorkspaceViewChange
+    onWorkspaceViewChange,
+    onWorkspaceViewClick
 }) => {
     return (
         <WorkspaceNavigationProvider initialView={initialView}>
@@ -98,6 +107,7 @@ export const WorkspaceDiagramming: FC<PropsWithChildren<{
                     workspace={workspace}
                     onWorkspaceChange={onWorkspaceChange}
                     onWorkspaceViewChange={onWorkspaceViewChange}
+                    onWorkspaceViewClick={onWorkspaceViewClick}
                 >
                     {children}
                 </WorkspaceViewSelector>

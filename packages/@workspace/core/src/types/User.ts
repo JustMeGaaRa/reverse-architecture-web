@@ -15,7 +15,7 @@ export type UserInfo = {
 }
 
 export type UserLocation = {
-    type: ViewType;
+    type: ViewType | "Model";
     identifier: string;
     mouse?: Position;
     cursor?: Position;

@@ -23,8 +23,8 @@ export const ElementFlowControls: FC<{
     const { selectedNodes, selectionBounds } = useStore(nodeSelector);
     const { viewport } = useStore(viewportSelector);
     const { addDefaultElement, addElementPreview, clearElementPreview } = useModelFlowBuilder();
-    const state = useWorkspace();
     const { onCollapseNode, onExpandNode } = useCollapsable();
+    const state = useWorkspace();
 
     const isWorkspaceEditable = state.workspace !== null && state.workspace !== undefined;
     const canSelectedNodeHaveChildren = selectedNodes.length === 1
@@ -58,8 +58,7 @@ export const ElementFlowControls: FC<{
                 x: selectedNodes[0].position.x + selectedNodes[0].width / 2 - 150,
                 y: selectedNodes[0].position.y + selectedNodes[0].height + 64
             };
-            const element = getDefaultChildForElement(selectedNodes[0].data.element.type);
-            addElementPreview(element, position);
+            addElementPreview(selectedNodes[0].data.element, position);
         }
     }, [addElementPreview, canSelectedNodeHaveChildren, selectedNodes]);
 

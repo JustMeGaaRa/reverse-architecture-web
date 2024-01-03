@@ -29,25 +29,17 @@ import { FC, useCallback } from "react";
 import { nodeSelector } from "../../utils";
 
 export const ElementOptionsToolbar: FC = () => {
-    const { selectedNodeIds, selectedNodes, canLock } = useStore(nodeSelector);
+    const { selectedNodeIds, selectedNodes } = useStore(nodeSelector);
     const { setNodes } = useReactFlow();
     const { workspace, deleteElements } = useWorkspace();
 
     const handleOnClickLockNode = useCallback(() => {
-        setNodes(nodes => {
-            return nodes.map(node => selectedNodeIds.some(id => id === node.id)
-                ? node
-                : { ...node, draggable: false })
-        });
-    }, [selectedNodeIds, setNodes]);
+        setNodes(nodes => nodes.map(node => node.selected ? { ...node, draggable: false } : node));
+    }, [setNodes]);
 
     const handleOnClickUnlockNode = useCallback(() => {
-        setNodes(nodes => {
-            return nodes.map(node => selectedNodeIds.some(id => id === node.id)
-                ? node
-                : { ...node, draggable: true })
-        });
-    }, [selectedNodeIds, setNodes]);
+        setNodes(nodes => nodes.map(node => node.selected ? { ...node, draggable: true } : node));
+    }, [setNodes]);
 
     const handleOnRemoveElement = useCallback(() => {
         deleteElements(selectedNodes.map(x => x.data.element))
@@ -144,7 +136,7 @@ export const ElementOptionsToolbar: FC = () => {
                         icon={<Icon as={Copy} boxSize={6} />}
                         title={"copy element"}
                     />
-                    {canLock && (
+                    {selectedNodes.some(x => x.draggable === true || x.draggable === undefined) && (
                         <IconButton
                             aria-label={"lock element"}
                             icon={<Icon as={Lock} boxSize={6} />}
@@ -152,7 +144,7 @@ export const ElementOptionsToolbar: FC = () => {
                             onClick={handleOnClickLockNode}
                         />
                     )}
-                    {!canLock && (
+                    {selectedNodes.every(x => x.draggable === false) && (
                         <IconButton
                             aria-label={"unlock element"}
                             icon={<Icon as={LockSlash} boxSize={6} />}

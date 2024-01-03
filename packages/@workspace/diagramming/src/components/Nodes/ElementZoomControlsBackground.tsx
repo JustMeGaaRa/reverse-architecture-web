@@ -15,11 +15,12 @@ export const ElementZoomControlsBackground: FC = () => {
     const { selectedNodes, selectionBounds } = useStore(nodeSelector);
     const { viewport } = useStore(viewportSelector);
     
-    const canSelectedNodeHaveChildren = selectedNodes.length === 1
+    const isSelectedNodeNavigatable = selectedNodes.length === 1
         && selectedNodes[0].data.element.tags.every(x => x.name !== Tag.Person.name)
-        && selectedNodes[0].data.element.tags.every(x => x.name !== Tag.Component.name);
+        && selectedNodes[0].data.element.tags.every(x => x.name !== Tag.Component.name)
+        && selectedNodes[0].type !== "elementGroup";
     
-    const showZoomPanel = canSelectedNodeHaveChildren;
+    const showZoomPanel = isSelectedNodeNavigatable;
     const showZoomIn = showZoomPanel
         && selectedNodes[0]?.type === "element";
     const elementSelectionBorderRadius = new BoundingBox(selectionBounds)

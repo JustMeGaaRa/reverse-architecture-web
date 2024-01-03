@@ -1,6 +1,7 @@
 import { Box } from "@chakra-ui/react";
 import { IElement, ElementStyleProperties } from "@structurizr/dsl";
 import { FC, PropsWithChildren } from "react";
+import { ElementLabel } from "./ElementLabel";
 import { ElementShapeSelector } from "./ElementShapeSelector";
 
 export const ElementPlaceholderNode: FC<PropsWithChildren<{
@@ -19,7 +20,15 @@ export const ElementPlaceholderNode: FC<PropsWithChildren<{
 }) => {
     return (
         <ElementShapeSelector style={style}>
-            <ElementFlowShortcut shortcutKeys={""} />
+            {/* <ElementFlowShortcut shortcutKeys={"Ctrl + ↑"} /> */}
+            <ElementLabel
+                element={element}
+                style={style}
+                showDescription
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
+            />
+            {children}
         </ElementShapeSelector>
     )
 }

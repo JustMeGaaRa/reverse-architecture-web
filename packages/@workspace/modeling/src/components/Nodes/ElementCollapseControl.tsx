@@ -25,6 +25,7 @@ export const ElementCollapseControl: FC<{
             left={-6}
             top={3}
             position={"absolute"}
+            pointerEvents={"all"}
             size={"xs"}
             variant={"tonal"}
             visibility={"hidden"}

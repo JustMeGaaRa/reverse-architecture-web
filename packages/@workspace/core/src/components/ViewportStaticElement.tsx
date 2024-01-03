@@ -9,7 +9,7 @@ export const ViewportStaticElement: FC<PropsWithChildren<{
 }>> = ({
     children,
     position,
-    pointerEvents = "auto",
+    pointerEvents = "none",
     zIndex = 0
 }) => {
     const { viewport } = useStore(viewportSelector);

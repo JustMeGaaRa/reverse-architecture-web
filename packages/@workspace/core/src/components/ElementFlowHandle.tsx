@@ -53,6 +53,7 @@ export const ElementFlowHandle: FC<{
             left={handlePosition[position].left}
             top={handlePosition[position].top}
             position={"absolute"}
+            pointerEvents={"all"}
             transform={"translate(-50%, -50%)"}
         >
             <Flex

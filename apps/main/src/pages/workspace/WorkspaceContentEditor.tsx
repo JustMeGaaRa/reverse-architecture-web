@@ -8,12 +8,12 @@ import {
     usePageHeader,
 } from "@reversearchitecture/ui";
 import { WorkspaceEditor } from "@workspace/code-editor";
-import { useWorkspace } from "@workspace/core";
+import { useWorkspace, useWorkspaceToolbarStore } from "@workspace/core";
 import { WorkspaceDiagramming } from "@workspace/diagramming";
 import { CurrentUser, CollaboratingUserPane, useWorkspaceRoom } from "@workspace/live";
 import { WorkspaceModeling } from "@workspace/modeling";
 import { WorkspaceViewPath } from "@workspace/navigation";
-import { Workspace } from "@structurizr/dsl";
+import { IViewDefinition, Workspace } from "@structurizr/dsl";
 import { useStructurizrParser } from "@structurizr/react";
 import {
     FC,
@@ -28,6 +28,7 @@ import {
     CommentThread,
     CommentThreadList,
     useAccount,
+    useCommentsStore,
 } from "../../features";
 import {
     DiscussionsPane,
@@ -52,7 +53,7 @@ export const WorkspaceContentEditor: FC = () => {
     const { users } = useMemo(() => {
         return {
             users: currentUser !== null && currentUser !== undefined
-                ? collaboratingUsers.concat(currentUser).map(user => user.info)
+                ? [currentUser, ...collaboratingUsers].map(user => user.info)
                 : collaboratingUsers.map(user => user.info)
         }
     },
@@ -123,27 +124,35 @@ export const WorkspaceContentEditor: FC = () => {
         setWorkspace(workspace);
     }, [setWorkspace]);
 
-    const handleOnWorkspaceViewChange = useCallback((view: any) => {
+    const [ currentView, setCurrentView ] = useState<IViewDefinition | undefined>(undefined);
+
+    const handleOnWorkspaceViewChange = useCallback((view: IViewDefinition) => {
         // TODO: add view type and identifier to the query params
-        setQueryParam(params => {
-            params.set("type", view.type);
-            params.set("identifier", view.identifier);
-            return new URLSearchParams(params);
-        })
-    }, [setQueryParam]);
-    
-    // TODO: consider cleaning up and moving user creation somewhere else
-    const { account } = useAccount();
-    const currentUserInfo = useMemo(() => {
-        const colorSchemes = [ "gray", "red", "orange", "yellow", "lime", "green", "cyan", "blue", "purple", "pink"];
-        return {
-            ...account,
-            color: colorSchemes.at(Math.floor(Math.random() * colorSchemes.length))
+        if (view !== undefined) {
+            setCurrentView(view);
+            setQueryParam(params => {
+                params.set("type", view.type);
+                params.set("identifier", view.identifier);
+                return new URLSearchParams(params);
+            })
         }
-    }, [account]);
+    }, [setQueryParam]);
+
+    const { isCommentAddingEnabled } = useWorkspaceToolbarStore();
+    const {  } = useCommentsStore();
+
+    const handleOnWorkspaceViewClick = useCallback((event: React.MouseEvent) => {
+        if (isCommentAddingEnabled) {
+            // TODO: get viewport, translate position and save comment
+        }
+    }, [isCommentAddingEnabled]);
+    
+    const { account } = useAccount();
 
     const isDiagrammingMode = useMemo(() => queryParams.get("mode") === WorkspaceContentMode.Diagramming, [queryParams]);
-    const isModelingMode = useMemo(() => queryParams.get("mode") === WorkspaceContentMode.Modeling, [queryParams]);;
+    const isModelingMode = useMemo(() => queryParams.get("mode") === WorkspaceContentMode.Modeling, [queryParams]);
+    const diagrammingUsers = useMemo(() => collaboratingUsers.filter(x => x.location?.type === currentView?.type && x.location?.identifier === currentView?.identifier), [collaboratingUsers]);
+    const modelingUsers = useMemo(() => collaboratingUsers.filter(x => x.location?.type === "Model"), [collaboratingUsers]);
     const diagrammingDiscussions = useMemo(() => commentThreads.filter(x => x.metadata?.view?.type !== "Model"), [commentThreads]);
     const modelingDiscussions = useMemo(() => commentThreads.filter(x => x.metadata?.view?.type === "Model"), [commentThreads]);
 
@@ -204,9 +213,10 @@ export const WorkspaceContentEditor: FC = () => {
                             initialView={workspace.views.systemLandscape}
                             onWorkspaceChange={handleOnWorkspaceChange}
                             onWorkspaceViewChange={handleOnWorkspaceViewChange}
+                            onWorkspaceViewClick={handleOnWorkspaceViewClick}
                         >
-                            <CurrentUser info={currentUserInfo} />
-                            <CollaboratingUserPane users={collaboratingUsers} />
+                            <CurrentUser info={account} location={currentView} />
+                            <CollaboratingUserPane users={diagrammingUsers} />
                             <DiscussionsPane discussions={diagrammingDiscussions} />
                             <WorkspaceViewPath workspace={workspace} />
                             <WorkspaceUndoRedoControls />
@@ -220,8 +230,8 @@ export const WorkspaceContentEditor: FC = () => {
                             workspace={workspace}
                             onWorkspaceChange={handleOnWorkspaceChange}
                         >
-                            <CurrentUser info={currentUserInfo} />
-                            <CollaboratingUserPane users={collaboratingUsers} />
+                            <CurrentUser info={account} location={{ type: "Model", identifier: "" }} />
+                            <CollaboratingUserPane users={modelingUsers} />
                             <DiscussionsPane discussions={modelingDiscussions} />
                             <WorkspaceUndoRedoControls />
                             <WorkspaceModelingToolbar />

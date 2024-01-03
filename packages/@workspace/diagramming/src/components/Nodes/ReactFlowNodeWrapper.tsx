@@ -1,3 +1,4 @@
+import { Icon } from "@chakra-ui/react";
 import { Handle, NodeProps, Position, useStore } from "@reactflow/core";
 import {
     IElement,
@@ -6,7 +7,9 @@ import {
     foldStyles,
 } from "@structurizr/dsl";
 import { ReverseArchitectureElementStyle } from "@workspace/core";
+import { Lock } from "iconoir-react";
 import { FC, PropsWithChildren, useMemo } from "react";
+import { ElementLockedIcon } from "./ElementLockedIcon";
 
 export function ReactFlowNodeWrapper(ElementNodeComponent: FC<PropsWithChildren<{
     element: IElement;
@@ -40,6 +43,7 @@ export function ReactFlowNodeWrapper(ElementNodeComponent: FC<PropsWithChildren<
                 width={data.width}
                 isSelected={selected}
             >
+                <ElementLockedIcon nodeId={id} />
                 <Handle
                     id={"handle-source-bottom"}
                     position={Position.Bottom}

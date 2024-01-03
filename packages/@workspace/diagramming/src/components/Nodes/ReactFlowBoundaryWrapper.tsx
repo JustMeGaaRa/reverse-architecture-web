@@ -9,6 +9,7 @@ import {
 import { ReverseArchitectureElementStyle } from "@workspace/core";
 import { FC, PropsWithChildren, useCallback, useMemo } from "react";
 import { nodeSelector } from "../../utils";
+import { ElementLockedIcon } from "./ElementLockedIcon";
 
 export function ReactFlowBoundaryWrapper(ElementBoundaryComponent: FC<PropsWithChildren<{
     element: IElement;
@@ -25,7 +26,7 @@ export function ReactFlowBoundaryWrapper(ElementBoundaryComponent: FC<PropsWithC
     width?: number;
     height?: number;
 }>> {
-    return function ReactFlowBoundaryComponent({ data, selected }) {
+    return function ReactFlowBoundaryComponent({ id, data, selected }) {
         const elementStyle = useMemo(() => foldStyles(
                 ReverseArchitectureElementStyle,
                 data.style,
@@ -59,6 +60,7 @@ export function ReactFlowBoundaryWrapper(ElementBoundaryComponent: FC<PropsWithC
                 width={data.width}
                 isSelected={selected}
             >
+                <ElementLockedIcon nodeId={id} />
                 <NodeResizer
                     isVisible={selected && selectedNodes.length === 1}
                     color={elementStyle.stroke}
