@@ -8,12 +8,17 @@ import {
     usePageHeader,
 } from "@reversearchitecture/ui";
 import { WorkspaceEditor } from "@workspace/code-editor";
-import { useWorkspace, useWorkspaceToolbarStore } from "@workspace/core";
+import { CurrentUser, useWorkspace, useWorkspaceToolbarStore } from "@workspace/core";
 import { WorkspaceDiagramming } from "@workspace/diagramming";
-import { CurrentUser, CollaboratingUserPane, useWorkspaceRoom } from "@workspace/live";
+import {
+    CollaboratingUserPane,
+    useWorkspaceRoom,
+    useCurrentUserEffect,
+    usePresentationMode
+} from "@workspace/live";
 import { WorkspaceModeling } from "@workspace/modeling";
 import { WorkspaceViewPath } from "@workspace/navigation";
-import { IViewDefinition, Workspace } from "@structurizr/dsl";
+import { IViewDefinition, Position, Workspace } from "@structurizr/dsl";
 import { useStructurizrParser } from "@structurizr/react";
 import {
     FC,
@@ -49,15 +54,18 @@ export const WorkspaceContentEditor: FC = () => {
     const [ structurizrDslText, setStructurizrDslText ] = useState("");
     const { parseStructurizr } = useStructurizrParser();
     const { workspace, setWorkspace } = useWorkspace();
-    const { currentUser, collaboratingUsers } = useWorkspaceRoom();
+    const { presentationModeOn, presentingUser } = usePresentationMode();
+    const { currentUser, collaboratingUsers, setUserLocation } = useWorkspaceRoom();
     const { users } = useMemo(() => {
         return {
             users: currentUser !== null && currentUser !== undefined
                 ? [currentUser, ...collaboratingUsers].map(user => user.info)
                 : collaboratingUsers.map(user => user.info)
         }
-    },
-    [currentUser, collaboratingUsers]);
+    }, [currentUser, collaboratingUsers]);
+    const { account } = useAccount();
+
+    useCurrentUserEffect(account);
     
     // set header content
     useEffect(() => {
@@ -107,13 +115,6 @@ export const WorkspaceContentEditor: FC = () => {
         // TODO: use debounce to defer the workspace parsing by 500ms
         setWorkspace(parseStructurizr(value));
     }, [parseStructurizr, setWorkspace]);
-    
-    // workspace
-    useEffect(() => {
-        // TODO: navigate to view if type and identifier are present in the query params
-        const viewType = queryParams.get("type");
-        const viewIdentifier = queryParams.get("identifier");
-    }, [queryParams]);
 
     const handleOnWorkspaceChange = useCallback((workspace: Workspace) => {
         // TODO: set structurizr dsl code to a respective provider
@@ -127,7 +128,7 @@ export const WorkspaceContentEditor: FC = () => {
     const [ currentView, setCurrentView ] = useState<IViewDefinition | undefined>(undefined);
 
     const handleOnWorkspaceViewChange = useCallback((view: IViewDefinition) => {
-        // TODO: add view type and identifier to the query params
+        // TODO: navigate to view using query params
         if (view !== undefined) {
             setCurrentView(view);
             setQueryParam(params => {
@@ -138,7 +139,7 @@ export const WorkspaceContentEditor: FC = () => {
         }
     }, [setQueryParam]);
 
-    const { isCommentAddingEnabled } = useWorkspaceToolbarStore();
+    const { isCommentAddingEnabled, isPresentationEnabled } = useWorkspaceToolbarStore();
     const {  } = useCommentsStore();
 
     const handleOnWorkspaceViewClick = useCallback((event: React.MouseEvent) => {
@@ -146,8 +147,14 @@ export const WorkspaceContentEditor: FC = () => {
             // TODO: get viewport, translate position and save comment
         }
     }, [isCommentAddingEnabled]);
-    
-    const { account } = useAccount();
+
+    const handleOnMouseUpdated = useCallback((point: Position) => {
+        setUserLocation({
+            type: currentView?.type,
+            identifier: currentView?.identifier,
+            mouse: point,
+        });
+    }, [currentView?.identifier, currentView?.type, setUserLocation]);
 
     const isDiagrammingMode = useMemo(() => queryParams.get("mode") === WorkspaceContentMode.Diagramming, [queryParams]);
     const isModelingMode = useMemo(() => queryParams.get("mode") === WorkspaceContentMode.Modeling, [queryParams]);
@@ -206,7 +213,7 @@ export const WorkspaceContentEditor: FC = () => {
                     </Flex>
                 )}
     
-                <ContextSheet>
+                <ContextSheet outline={presentationModeOn ? `${presentingUser?.color}.600` : undefined}>
                     {isDiagrammingMode && (
                         <WorkspaceDiagramming
                             workspace={workspace}
@@ -215,7 +222,7 @@ export const WorkspaceContentEditor: FC = () => {
                             onWorkspaceViewChange={handleOnWorkspaceViewChange}
                             onWorkspaceViewClick={handleOnWorkspaceViewClick}
                         >
-                            <CurrentUser info={account} location={currentView} />
+                            <CurrentUser onMouseUpdated={handleOnMouseUpdated} />
                             <CollaboratingUserPane users={diagrammingUsers} />
                             <DiscussionsPane discussions={diagrammingDiscussions} />
                             <WorkspaceViewPath workspace={workspace} />
@@ -230,7 +237,7 @@ export const WorkspaceContentEditor: FC = () => {
                             workspace={workspace}
                             onWorkspaceChange={handleOnWorkspaceChange}
                         >
-                            <CurrentUser info={account} location={{ type: "Model", identifier: "" }} />
+                            <CurrentUser onMouseUpdated={handleOnMouseUpdated} />
                             <CollaboratingUserPane users={modelingUsers} />
                             <DiscussionsPane discussions={modelingDiscussions} />
                             <WorkspaceUndoRedoControls />

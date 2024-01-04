@@ -61,10 +61,7 @@ export const ElementFlowControls: FC<{
         : selectedNodes.every(node => node?.type !== "boundary" && node?.type !== "elementGroup")
             ? 17 * viewport.zoom
             : 0;
-    const elementSelectionBorderBox = new BoundingBox(selectionBounds)
-        .multiply(viewport.zoom)
-        .shift(-1)
-        .extend(2);
+    const elementSelectionBorderBox = new BoundingBox(selectionBounds).multiply(viewport.zoom);
 
     const onElementPreview = useCallback((position: PositionSide) => {
         if (isSelectedNodeEditable) {

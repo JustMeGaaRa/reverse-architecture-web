@@ -1,5 +1,12 @@
-import { AssistantModeButton, CommentingModeButton, DraggingModeButton, FollowPresenterModeButton, PresentationModeButton, SelectionModeButton, TextEditModeButton } from "@workspace/controls";
+import {
+    AssistantModeButton,
+    CommentingModeButton,
+    DraggingModeButton,
+    SelectionModeButton,
+    TextEditModeButton
+} from "@workspace/controls";
 import { PanelPosition, WorkspacePanel } from "@workspace/core";
+import { PresentationModeButton } from "@workspace/live";
 import { Toolbar, ToolbarSection } from "@workspace/toolbar";
 import { FC } from "react";
 
@@ -14,16 +21,11 @@ export const WorkspaceModelingToolbar: FC<{
                 <ToolbarSection>
                     <SelectionModeButton />
                     <DraggingModeButton />
-                    <FollowPresenterModeButton />
                 </ToolbarSection>
 
                 <ToolbarSection>
                     <TextEditModeButton />
                     <CommentingModeButton />
-                </ToolbarSection>
-
-                <ToolbarSection>
-                    <AssistantModeButton />
                 </ToolbarSection>
 
                 <ToolbarSection>

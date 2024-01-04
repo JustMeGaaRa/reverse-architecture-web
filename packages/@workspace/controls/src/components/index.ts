@@ -11,8 +11,6 @@ export * from "./ElementGroupModeButton";
 export * from "./ElementInfrastructureNodeModeButton";
 export * from "./ElementPersonModeButton";
 export * from "./ElementSoftwareSystemModeButton";
-export * from "./FollowPresenterModeButton";
-export * from "./PresentationModeButton";
 export * from "./SelectionModeButton";
 export * from "./TextEditModeButton";
 export * from "./ZoomInButton";

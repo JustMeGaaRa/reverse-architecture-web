@@ -23,10 +23,7 @@ export const ElementZoomControlsBackground: FC = () => {
     const showZoomPanel = isSelectedNodeNavigatable;
     const showZoomIn = showZoomPanel
         && selectedNodes[0]?.type === "element";
-    const elementSelectionBorderRadius = new BoundingBox(selectionBounds)
-        .multiply(viewport.zoom)
-        .shift(-1)
-        .extend(2);
+    const elementSelectionBorderRadius = new BoundingBox(selectionBounds).multiply(viewport.zoom);
 
     return (
         <WorkspaceElementPortal>

@@ -10,12 +10,11 @@ import {
     ElementInfrastructureNodeModeButton,
     ElementPersonModeButton,
     ElementSoftwareSystemModeButton,
-    FollowPresenterModeButton,
-    PresentationModeButton,
     SelectionModeButton,
     TextEditModeButton
 } from "@workspace/controls";
 import { PanelPosition, WorkspacePanel } from "@workspace/core";
+import { PresentationModeButton } from "@workspace/live";
 import {
     Toolbar,
     ToolbarSubmenuTrigger,
@@ -37,7 +36,6 @@ export const WorkspaceDiagrammingToolbar: FC<{
                 <ToolbarSection>
                     <SelectionModeButton />
                     <DraggingModeButton />
-                    <FollowPresenterModeButton />
                 </ToolbarSection>
 
                 <ToolbarSection>
@@ -61,10 +59,6 @@ export const WorkspaceDiagrammingToolbar: FC<{
                     <TextEditModeButton />
                     <ConnectionModeButton />
                     <CommentingModeButton />
-                </ToolbarSection>
-
-                <ToolbarSection>
-                    <AssistantModeButton />
                 </ToolbarSection>
 
                 <ToolbarSection>

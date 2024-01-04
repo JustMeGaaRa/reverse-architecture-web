@@ -39,10 +39,7 @@ export const ElementFlowControls: FC<{
     const showSelectionBorder = areAnyNodesSelected;
     const showCollapsePanel = doesSelectedNodeHaveChildren;
     const elementSelectionBorderRadius = 17 * viewport.zoom;
-    const elementSelectionBorderBox = new BoundingBox(selectionBounds)
-        .multiply(viewport.zoom)
-        .shift(-1)
-        .extend(2);
+    const elementSelectionBorderBox = new BoundingBox(selectionBounds).multiply(viewport.zoom);
 
     const handleOnCollapseClick = useCallback(() => {
         onCollapseNode(selectedNodes[0]?.id);

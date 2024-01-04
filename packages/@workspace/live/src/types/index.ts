@@ -1,3 +1,10 @@
+import { UserInfo } from "@workspace/core";
+
 export type SharingOptions = {
-    followPresenter: boolean;
+    presentationModeOn: boolean;
+    presentingUser?: UserInfo;
 }
+
+export type UserInfoRequired =
+    Required<Pick<UserInfo, "username" | "fullname">>
+    & Partial<Pick<UserInfo, "color">>;

@@ -28,10 +28,9 @@ export const WorkspaceRoomContext = createContext<WorkspaceRoomState>({
             mouse: { x: 0, y: 0 },
             cursor: { x: 0, y: 0 }
         },
-        isPresenter: false,
     },
     collaboratingUsers: [],
     sharingOptions: {
-        followPresenter: false,
+        presentationModeOn: false,
     },
 });

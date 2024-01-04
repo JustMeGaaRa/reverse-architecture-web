@@ -22,7 +22,7 @@ export const WorkspaceRoom: FC<PropsWithChildren<{
         }
     });
     const [ collaboratingUsers, setCollaboratingUsers ] = useState<Array<WorkspaceUser>>([]);
-    const [ sharingOptions, setSharingOptions ] = useState<SharingOptions>({ followPresenter: false });
+    const [ sharingOptions, setSharingOptions ] = useState<SharingOptions>({ presentationModeOn: false });
 
     useEffect(() => {
         let webRtcProvider: WebrtcProvider = new WebrtcProvider(roomId, workspaceDocument);

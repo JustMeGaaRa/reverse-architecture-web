@@ -24,5 +24,4 @@ export type UserLocation = {
 export type WorkspaceUser = {
     info: UserInfo;
     location?: UserLocation,
-    isPresenter?: boolean;
 }

@@ -18,10 +18,7 @@ export const ElementCollapseControlsBackground: FC = () => {
         && selectedNodes[0].data.elementChildrenCount > 0;
     
     const showCollapsePanel = doesSelectedNodeHaveChildren;
-    const elementSelectionBorderBox = new BoundingBox(selectionBounds)
-        .multiply(viewport.zoom)
-        .shift(-1)
-        .extend(2);
+    const elementSelectionBorderBox = new BoundingBox(selectionBounds).multiply(viewport.zoom);
 
     return (
         <WorkspaceElementPortal>
