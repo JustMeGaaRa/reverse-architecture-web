@@ -2,7 +2,7 @@ import { FC, PropsWithChildren, useEffect, useState } from "react";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
 import { WorkspaceRoomContext } from "../contexts";
-import { SharingOptions } from "../types";
+import { PresentationOptions } from "../types";
 import { WorkspaceUser } from "@workspace/core";
 
 export const workspaceDocument = new Y.Doc();
@@ -22,7 +22,7 @@ export const WorkspaceRoom: FC<PropsWithChildren<{
         }
     });
     const [ collaboratingUsers, setCollaboratingUsers ] = useState<Array<WorkspaceUser>>([]);
-    const [ sharingOptions, setSharingOptions ] = useState<SharingOptions>({ presentationModeOn: false });
+    const [ presentation, setPresentationOptions ] = useState<PresentationOptions>({ presentationEnabled: false });
 
     useEffect(() => {
         let webRtcProvider: WebrtcProvider = new WebrtcProvider(roomId, workspaceDocument);
@@ -57,9 +57,9 @@ export const WorkspaceRoom: FC<PropsWithChildren<{
                 connectionProvider,
                 currentUser,
                 collaboratingUsers,
-                sharingOptions,
+                presentation,
                 setCurrentUser,
-                setSharingOptions
+                setPresentationOptions
             }}
         >
             {children}

@@ -15,9 +15,9 @@ export const edgeSelector = (edgeId: string) => {
 
 export const viewportSelector = (state: ReactFlowState) => ({
     viewport: {
-        x: state.transform[0],
-        y: state.transform[1],
-        zoom: state.transform[2]
+        x: state.transform?.at(0) ?? 0,
+        y: state.transform?.at(1) ?? 0,
+        zoom: state.transform?.at(2) ?? 1
     }
 })
 

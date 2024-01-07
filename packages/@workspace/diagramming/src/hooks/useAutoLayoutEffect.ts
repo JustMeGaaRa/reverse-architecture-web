@@ -1,7 +1,6 @@
 import { ReactFlowJsonObject, useReactFlow } from "@reactflow/core";
-import { AutoLayout } from "@workspace/core";
+import { AutoLayout, useWorkspaceNavigation } from "@workspace/core";
 import { useEffect } from "react";
-import { useWorkspaceNavigation } from "./useWorkspaceNavigation";
 
 export const useAutoLayoutEffect = () => {
     const { currentView } = useWorkspaceNavigation();

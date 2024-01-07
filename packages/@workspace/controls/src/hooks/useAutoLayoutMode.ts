@@ -1,8 +1,7 @@
 import { useStoreApi } from "@reactflow/core";
 import { Workspace } from "@structurizr/dsl";
 import { useCallback } from "react";
-import { useWorkspace, useWorkspaceToolbarStore } from "@workspace/core";
-import { useWorkspaceNavigation } from "@workspace/diagramming";
+import { useWorkspace, useWorkspaceNavigation, useWorkspaceToolbarStore } from "@workspace/core";
 
 export const useAutoLayoutMode = () => {
     const { setState } = useStoreApi();

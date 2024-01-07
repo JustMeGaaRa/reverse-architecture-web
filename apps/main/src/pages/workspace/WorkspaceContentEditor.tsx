@@ -8,17 +8,25 @@ import {
     usePageHeader,
 } from "@reversearchitecture/ui";
 import { WorkspaceEditor } from "@workspace/code-editor";
-import { CurrentUser, useWorkspace, useWorkspaceToolbarStore } from "@workspace/core";
+import {
+    useOnCurrentUserViewportChange,
+    useOnUserAwarenessChange,
+    useWorkspace,
+    useWorkspaceNavigation,
+    useWorkspaceToolbarStore,
+    Viewport,
+} from "@workspace/core";
 import { WorkspaceDiagramming } from "@workspace/diagramming";
 import {
     CollaboratingUserPane,
     useWorkspaceRoom,
-    useCurrentUserEffect,
-    usePresentationMode
+    usePresentationMode,
+    useUserAwareness,
+    useOnFollowingUserViewportChange
 } from "@workspace/live";
 import { WorkspaceModeling } from "@workspace/modeling";
 import { WorkspaceViewPath } from "@workspace/navigation";
-import { IViewDefinition, Position, Workspace } from "@structurizr/dsl";
+import { Position, Workspace } from "@structurizr/dsl";
 import { useStructurizrParser } from "@structurizr/react";
 import {
     FC,
@@ -32,7 +40,6 @@ import {
     CommentApi,
     CommentThread,
     CommentThreadList,
-    useAccount,
     useCommentsStore,
 } from "../../features";
 import {
@@ -51,21 +58,33 @@ export const WorkspaceContentEditor: FC = () => {
     const { workspaceId } = useParams<{ workspaceId: string }>();
     const [ queryParams, setQueryParam ] = useSearchParams([[ "mode", WorkspaceContentMode.Diagramming ]]);
     const { setHeaderContent } = usePageHeader();
+
     const [ structurizrDslText, setStructurizrDslText ] = useState("");
     const { parseStructurizr } = useStructurizrParser();
     const { workspace, setWorkspace } = useWorkspace();
-    const { presentationModeOn, presentingUser } = usePresentationMode();
-    const { currentUser, collaboratingUsers, setUserLocation } = useWorkspaceRoom();
-    const { users } = useMemo(() => {
-        return {
-            users: currentUser !== null && currentUser !== undefined
-                ? [currentUser, ...collaboratingUsers].map(user => user.info)
-                : collaboratingUsers.map(user => user.info)
-        }
-    }, [currentUser, collaboratingUsers]);
-    const { account } = useAccount();
+    const { currentView, setViewport } = useWorkspaceNavigation();
+    const { reportViewport, reportMousePosition } = useUserAwareness();
+    const { currentUser, collaboratingUsers } = useWorkspaceRoom();
+    const { presentationEnabled, presenterInfo } = usePresentationMode();
+    const { users } = useMemo(() => ({
+        users: [currentUser, ...collaboratingUsers].map(user => user.info)
+    }), [currentUser, collaboratingUsers]);
 
-    useCurrentUserEffect(account);
+    const onCurrentUserMouseChange = useCallback((position: Position) => {
+        reportMousePosition(position);
+    }, [reportMousePosition]);
+
+    const onCurrentUserViewportChange = useCallback((viewport: Viewport) => {
+        reportViewport(viewport);
+    }, [reportViewport]);
+
+    const onFollowingUserViewportChange = useCallback((viewport: Viewport) => {
+        setViewport(viewport, { duration: 200 });
+    }, [setViewport]);
+
+    useOnUserAwarenessChange({ onChange: onCurrentUserMouseChange });
+    useOnFollowingUserViewportChange({ onChange: onFollowingUserViewportChange });
+    useOnCurrentUserViewportChange({ onEnd: onCurrentUserViewportChange });
     
     // set header content
     useEffect(() => {
@@ -95,6 +114,8 @@ export const WorkspaceContentEditor: FC = () => {
     // discussions
     const [ commentThreads, setCommentThreads ] = useState<Array<CommentThread>>([]);
     const { commentApi } = useMemo(() => ({ commentApi: new CommentApi() }), []);
+    const { isCommentAddingEnabled } = useWorkspaceToolbarStore();
+    const {  } = useCommentsStore();
 
     useEffect(() => {
         commentApi.getDiscussions(workspaceId)
@@ -125,42 +146,17 @@ export const WorkspaceContentEditor: FC = () => {
         setWorkspace(workspace);
     }, [setWorkspace]);
 
-    const [ currentView, setCurrentView ] = useState<IViewDefinition | undefined>(undefined);
-
-    const handleOnWorkspaceViewChange = useCallback((view: IViewDefinition) => {
-        // TODO: navigate to view using query params
-        if (view !== undefined) {
-            setCurrentView(view);
-            setQueryParam(params => {
-                params.set("type", view.type);
-                params.set("identifier", view.identifier);
-                return new URLSearchParams(params);
-            })
-        }
-    }, [setQueryParam]);
-
-    const { isCommentAddingEnabled, isPresentationEnabled } = useWorkspaceToolbarStore();
-    const {  } = useCommentsStore();
-
     const handleOnWorkspaceViewClick = useCallback((event: React.MouseEvent) => {
         if (isCommentAddingEnabled) {
             // TODO: get viewport, translate position and save comment
         }
     }, [isCommentAddingEnabled]);
 
-    const handleOnMouseUpdated = useCallback((point: Position) => {
-        setUserLocation({
-            type: currentView?.type,
-            identifier: currentView?.identifier,
-            mouse: point,
-        });
-    }, [currentView?.identifier, currentView?.type, setUserLocation]);
-
     const isDiagrammingMode = useMemo(() => queryParams.get("mode") === WorkspaceContentMode.Diagramming, [queryParams]);
     const isModelingMode = useMemo(() => queryParams.get("mode") === WorkspaceContentMode.Modeling, [queryParams]);
-    const diagrammingUsers = useMemo(() => collaboratingUsers.filter(x => x.location?.type === currentView?.type && x.location?.identifier === currentView?.identifier), [collaboratingUsers]);
-    const modelingUsers = useMemo(() => collaboratingUsers.filter(x => x.location?.type === "Model"), [collaboratingUsers]);
+    const diagrammingUsers = useMemo(() => collaboratingUsers.filter(x => x.view?.type === currentView?.type && x.view?.identifier === currentView?.identifier), [collaboratingUsers, currentView?.identifier, currentView?.type]);
     const diagrammingDiscussions = useMemo(() => commentThreads.filter(x => x.metadata?.view?.type !== "Model"), [commentThreads]);
+    const modelingUsers = useMemo(() => collaboratingUsers.filter(x => x.view?.type === "Model"), [collaboratingUsers]);
     const modelingDiscussions = useMemo(() => commentThreads.filter(x => x.metadata?.view?.type === "Model"), [commentThreads]);
 
     return (
@@ -213,17 +209,15 @@ export const WorkspaceContentEditor: FC = () => {
                     </Flex>
                 )}
     
-                <ContextSheet outline={presentationModeOn ? `${presentingUser?.color}.600` : undefined}>
+                <ContextSheet outline={presentationEnabled ? `${presenterInfo?.color}.600` : undefined}>
                     {isDiagrammingMode && (
                         <WorkspaceDiagramming
                             workspace={workspace}
                             initialView={workspace.views.systemLandscape}
                             onWorkspaceChange={handleOnWorkspaceChange}
-                            onWorkspaceViewChange={handleOnWorkspaceViewChange}
                             onWorkspaceViewClick={handleOnWorkspaceViewClick}
                         >
-                            <CurrentUser onMouseUpdated={handleOnMouseUpdated} />
-                            <CollaboratingUserPane users={diagrammingUsers} />
+                            <CollaboratingUserPane users={collaboratingUsers} />
                             <DiscussionsPane discussions={diagrammingDiscussions} />
                             <WorkspaceViewPath workspace={workspace} />
                             <WorkspaceUndoRedoControls />
@@ -237,7 +231,6 @@ export const WorkspaceContentEditor: FC = () => {
                             workspace={workspace}
                             onWorkspaceChange={handleOnWorkspaceChange}
                         >
-                            <CurrentUser onMouseUpdated={handleOnMouseUpdated} />
                             <CollaboratingUserPane users={modelingUsers} />
                             <DiscussionsPane discussions={modelingDiscussions} />
                             <WorkspaceUndoRedoControls />

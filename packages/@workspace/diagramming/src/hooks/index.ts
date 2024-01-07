@@ -6,4 +6,3 @@ export * from "./useSystemContextView";
 export * from "./useSystemLandscapeView";
 export * from "./useViewFlowBuilder";
 export * from "./useViewRenderingEffect";
-export * from "./useWorkspaceNavigation";

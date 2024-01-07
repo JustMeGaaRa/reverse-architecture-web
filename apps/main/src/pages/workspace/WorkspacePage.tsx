@@ -17,10 +17,10 @@ import {
     usePageHeader,
     usePageSidebar
 } from "@reversearchitecture/ui";
-import { Workspace } from "@structurizr/dsl";
+import { IViewDefinition, Workspace } from "@structurizr/dsl";
 import { useStructurizrParser } from "@structurizr/react";
-import { useWorkspaceTheme, WorkspaceProvider } from "@workspace/core";
-import { WorkspaceRoom } from "@workspace/live";
+import { useWorkspaceTheme, WorkspaceNavigationProvider, WorkspaceProvider } from "@workspace/core";
+import { CurrentUser, WorkspaceRoom } from "@workspace/live";
 import {
     AppleShortcuts,
     ChatLines,
@@ -44,6 +44,7 @@ import {
     WorkspaceApi,
     WorkspaceCacheWrapper,
     useSnackbar,
+    useAccount,
 } from "../../features";
 import { WorkspaceContentEditor, WorkspaceMenu } from "./";
 
@@ -261,14 +262,33 @@ export const WorkspacePage: FC = () => {
             setWorkspace(Workspace.Empty);
         }
     }, [workspaceApi, workspaceId, theme, snackbar, parseStructurizr]);
+    
+    const { account } = useAccount();
+
+    const handleOnWorkspaceViewChange = useCallback((view: IViewDefinition) => {
+        // TODO: navigate to view using query params
+        if (view !== undefined) {
+            setQueryParam(params => {
+                params.set("type", view.type);
+                params.set("identifier", view.identifier);
+                return new URLSearchParams(params);
+            })
+        }
+    }, [setQueryParam]);
 
     return (
         <WorkspaceProvider workspace={workspace}>
-            <CommentProvider>
-                <WorkspaceRoom roomId={workspaceId}>
-                    <WorkspaceContentEditor />
-                </WorkspaceRoom>
-            </CommentProvider>
+            <WorkspaceNavigationProvider
+                initialView={workspace.views.systemLandscape}
+                onViewChange={handleOnWorkspaceViewChange}
+            >
+                <CommentProvider>
+                    <WorkspaceRoom roomId={workspaceId}>
+                        <CurrentUser info={account} />
+                        <WorkspaceContentEditor />
+                    </WorkspaceRoom>
+                </CommentProvider>
+            </WorkspaceNavigationProvider>
         </WorkspaceProvider>
     )
 }

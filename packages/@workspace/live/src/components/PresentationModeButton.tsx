@@ -5,9 +5,9 @@ import { usePresentationMode, useWorkspaceRoom } from "../hooks";
 
 export const PresentationModeButton: FC = () => {
     const { currentUser } = useWorkspaceRoom();
-    const { presentationModeOn, presentingUser, startPresenting, stopPresenting } = usePresentationMode();
+    const { presentationEnabled, presenterInfo, startPresenting, stopPresenting } = usePresentationMode();
 
-    return presentationModeOn && currentUser.info.username === presentingUser.username ? (
+    return presentationEnabled && currentUser.info.username === presenterInfo.username ? (
         <IconButton
             aria-label={"stop presenting"}
             icon={<Xmark />}

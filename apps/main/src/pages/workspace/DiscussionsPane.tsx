@@ -4,8 +4,8 @@ import {
     ViewportStaticElement,
     WorkspaceElementPortal,
     useWorkspace,
+    useWorkspaceNavigation,
 } from "@workspace/core";
-import { useWorkspaceNavigation } from "@workspace/diagramming";
 import { FC, useCallback, useEffect, useMemo } from "react";
 import { v4 } from "uuid";
 import {

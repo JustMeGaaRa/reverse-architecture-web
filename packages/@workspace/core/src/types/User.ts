@@ -14,14 +14,13 @@ export type UserInfo = {
     color: string;
 }
 
-export type UserLocation = {
-    type: ViewType | "Model";
-    identifier: string;
+export type UserAwareness = {
+    view: { type: ViewType, identifier: string };
     mouse?: Position;
     cursor?: Position;
 }
 
-export type WorkspaceUser = {
+export type WorkspaceUser = Partial<UserAwareness> & {
     info: UserInfo;
-    location?: UserLocation,
-}
+    following?: UserInfo;
+};

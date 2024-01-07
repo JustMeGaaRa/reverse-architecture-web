@@ -7,9 +7,9 @@ import {
 import { ViewKeys, ViewType, Workspace } from "@structurizr/dsl";
 import {
     PanelPosition,
+    useWorkspaceNavigation,
     WorkspacePanel
 } from "@workspace/core";
-import { useWorkspaceNavigation } from "@workspace/diagramming";
 import { ChangeEvent, FC, useCallback } from "react";
 
 export const WorkspaceViewPath: FC<{

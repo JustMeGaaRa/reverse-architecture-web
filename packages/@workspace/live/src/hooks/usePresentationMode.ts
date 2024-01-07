@@ -1,51 +1,48 @@
 import { UserInfo } from "@workspace/core";
 import { useCallback, useContext, useEffect } from "react";
 import { WorkspaceRoomContext } from "../contexts";
-
-const SharingOptionsMapName = "sharingOptions";
-const SharingOptionsPresentationModeOnParam = "presentationModeOn";
-const SharingOptionsPresentingUserParam = "presentingUser";
+import { PresentationEnabledParam, PresentationMapName, PresenterInfoParam } from "../types";
 
 export const usePresentationMode = () => {
     const {
         workspaceDocument,
         currentUser,
-        sharingOptions,
-        setSharingOptions
+        presentation,
+        setPresentationOptions
     } = useContext(WorkspaceRoomContext);
 
     useEffect(() => {
-        const map = workspaceDocument.getMap(SharingOptionsMapName);
+        const map = workspaceDocument.getMap(PresentationMapName);
 
-        const updateSharingOptions = () => {
-            setSharingOptions({
-                presentationModeOn: map.get(SharingOptionsPresentationModeOnParam) as boolean,
-                presentingUser: map.get(SharingOptionsPresentingUserParam) as UserInfo,
-            });
+        const updatePresentationOptions = () => {
+            setPresentationOptions(state => ({
+                ...state,
+                presentationEnabled: map.get(PresentationEnabledParam) as boolean,
+                presenterInfo: map.get(PresenterInfoParam) as UserInfo,
+            }));
         }
 
-        map.observe(updateSharingOptions);
+        map.observe(updatePresentationOptions);
 
         return () => {
-            map.unobserve(updateSharingOptions);
+            map.unobserve(updatePresentationOptions);
         }
-    }, [workspaceDocument, setSharingOptions]);
+    }, [workspaceDocument, setPresentationOptions]);
 
     const startPresenting = useCallback(() => {
-        const map = workspaceDocument.getMap(SharingOptionsMapName);
-        map.set(SharingOptionsPresentationModeOnParam, true);
-        map.set(SharingOptionsPresentingUserParam, currentUser.info);
+        const map = workspaceDocument.getMap(PresentationMapName);
+        map.set(PresentationEnabledParam, true);
+        map.set(PresenterInfoParam, currentUser.info);
     }, [workspaceDocument, currentUser.info]);
 
     const stopPresenting = useCallback(() => {
-        const map = workspaceDocument.getMap(SharingOptionsMapName);
-        map.set(SharingOptionsPresentationModeOnParam, false);
-        map.set(SharingOptionsPresentingUserParam, undefined);
+        const map = workspaceDocument.getMap(PresentationMapName);
+        map.set(PresentationEnabledParam, false);
+        map.set(PresenterInfoParam, undefined);
     }, [workspaceDocument]);
 
     return {
-        presentationModeOn: sharingOptions.presentationModeOn,
-        presentingUser: sharingOptions.presentingUser,
+        ...presentation,
         startPresenting,
         stopPresenting,
     }

@@ -1,8 +1,8 @@
 import { useReactFlow } from "@reactflow/core";
 import { ISupportVisitor, Workspace } from "@structurizr/dsl";
+import { getViewDefinition, useWorkspaceNavigation } from "@workspace/core";
 import { useEffect } from "react";
-import { useWorkspaceNavigation } from "../hooks";
-import { getReactFlowAuto, getReactFlowObject, getViewDefinition } from "../utils";
+import { getReactFlowAuto, getReactFlowObject } from "../utils";
 
 export const useViewRenderingEffect = (workspace: Workspace, strategy: ISupportVisitor) => {
     const { currentView } = useWorkspaceNavigation();

@@ -74,6 +74,7 @@ export const WorkspaceViewRenderer = forwardRef<HTMLDivElement, PropsWithChildre
         <ReactFlow
             ref={ref}
             connectionMode={ConnectionMode.Loose}
+            className={"workspace__renderer"}
             fitViewOptions={FitViewOptions}
             fitView
             nodeTypes={nodeTypes}

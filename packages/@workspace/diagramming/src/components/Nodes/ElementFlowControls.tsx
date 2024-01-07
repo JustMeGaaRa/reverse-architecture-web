@@ -8,9 +8,10 @@ import {
     WorkspaceElementPortal,
     ViewportStaticElement,
     BoundingBox,
+    useWorkspaceNavigation,
 } from "@workspace/core";
 import { FC, useCallback } from "react";
-import { useViewFlowBuilder, useWorkspaceNavigation } from "../../hooks";
+import { useViewFlowBuilder } from "../../hooks";
 import { nodeSelector } from "../../utils";
 import { ElementZoomControl } from "./ElementZoomControl";
 

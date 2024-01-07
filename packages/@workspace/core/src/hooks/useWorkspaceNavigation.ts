@@ -1,3 +1,4 @@
+import { useReactFlow } from "@reactflow/core";
 import {
     ComponentPathProvider,
     ContainerPathProvider,
@@ -11,8 +12,8 @@ import {
     Workspace
 } from "@structurizr/dsl";
 import { useCallback, useContext } from "react";
-import { getViewDefinition } from "../utils";
 import { WorkspaceNavigationContext } from "../contexts";
+import { getViewDefinition } from "../utils";
 
 export const useWorkspaceNavigation = () => {
     const {
@@ -21,6 +22,7 @@ export const useWorkspaceNavigation = () => {
         setCurrentView,
         setCurrentViewPath
     } = useContext(WorkspaceNavigationContext);
+    const { setViewport, getViewport } = useReactFlow();
 
     const openView = useCallback((workspace: Workspace, view: ViewKeys) => {
         const viewDefinition = getViewDefinition(workspace, view);
@@ -74,6 +76,8 @@ export const useWorkspaceNavigation = () => {
         currentViewPath,
         openView,
         zoomIntoElement,
-        zoomOutOfElement
+        zoomOutOfElement,
+        getViewport,
+        setViewport
     }
 }

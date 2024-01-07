@@ -4016,6 +4016,7 @@
   version "0.1.0"
   resolved "file:packages/@workspace/live"
   dependencies:
+    "@workspace/core" "*"
     react "^18.0.0"
     react-dom "^18.0.0"
     react-scripts "5.0.1"

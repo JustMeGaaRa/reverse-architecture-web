@@ -1,4 +1,4 @@
-import { UserLocation, WorkspaceUser } from "@workspace/core";
+import { WorkspaceUser } from "@workspace/core";
 import { useCallback, useContext } from "react";
 import { WorkspaceRoomContext } from "../contexts";
 import { UserInfoRequired } from "../types";
@@ -9,9 +9,8 @@ export const useWorkspaceRoom = () => {
         connectionProvider,
         currentUser,
         collaboratingUsers,
-        sharingOptions,
+        presentation,
         setCurrentUser,
-        setSharingOptions
     } = useContext(WorkspaceRoomContext);
     
     const joinRoom = useCallback((userInfo: UserInfoRequired) => {
@@ -35,20 +34,13 @@ export const useWorkspaceRoom = () => {
         setCurrentUser(undefined);
     }, [connectionProvider?.awareness, setCurrentUser]);
 
-    const setUserLocation = useCallback((location: UserLocation) => {
-        connectionProvider?.awareness.setLocalStateField("location", location);
-        setCurrentUser(user => ({ ...user, location }));
-    }, [connectionProvider?.awareness, setCurrentUser]);
-
     return {
         workspaceDocument,
         connectionProvider,
         currentUser,
         collaboratingUsers,
-        sharingOptions,
+        presentation,
         joinRoom,
-        leaveRoom,
-        setUserLocation,
-        setSharingOptions
+        leaveRoom
     }
 }

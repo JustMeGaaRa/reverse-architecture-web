@@ -1,6 +1,5 @@
 import { Box } from "@chakra-ui/react";
-import { useWorkspace } from "@workspace/core";
-import { useWorkspaceNavigation } from "@workspace/diagramming";
+import { useWorkspace, useWorkspaceNavigation } from "@workspace/core";
 import { FC, useCallback, useEffect } from "react";
 import { CommentCard, CommentGroup } from "../../../features/comments/components";
 import { useCommentsStore } from "../../../features/comments/hooks";

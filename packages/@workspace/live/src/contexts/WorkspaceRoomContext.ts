@@ -2,7 +2,7 @@ import { createContext, Dispatch, SetStateAction } from "react";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
 import { ViewType } from "@structurizr/dsl";
-import { SharingOptions } from "../types";
+import { PresentationOptions } from "../types";
 import { WorkspaceUser } from "@workspace/core";
 
 export type WorkspaceRoomState = {
@@ -10,9 +10,9 @@ export type WorkspaceRoomState = {
     connectionProvider?: WebrtcProvider;
     currentUser: WorkspaceUser,
     collaboratingUsers: Array<WorkspaceUser>,
-    sharingOptions?: SharingOptions;
+    presentation?: PresentationOptions;
     setCurrentUser?: Dispatch<SetStateAction<WorkspaceUser>>;
-    setSharingOptions?: Dispatch<SetStateAction<SharingOptions>>;
+    setPresentationOptions?: Dispatch<SetStateAction<PresentationOptions>>;
 }
 
 export const WorkspaceRoomContext = createContext<WorkspaceRoomState>({
@@ -22,15 +22,16 @@ export const WorkspaceRoomContext = createContext<WorkspaceRoomState>({
             fullname: "Jonathan Joestar",
             color: "green",
         },
-        location: {
+        view: {
             type: ViewType.SystemLandscape,
-            identifier: "",
-            mouse: { x: 0, y: 0 },
-            cursor: { x: 0, y: 0 }
+            identifier: ""
         },
+        mouse: { x: 0, y: 0 },
+        cursor: { x: 0, y: 0 }
     },
     collaboratingUsers: [],
-    sharingOptions: {
-        presentationModeOn: false,
+    presentation: {
+        presentationEnabled: false,
+        presenterInfo: undefined,
     },
 });

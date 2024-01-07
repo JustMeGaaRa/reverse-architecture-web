@@ -1,6 +1,5 @@
 import { ElementType, ViewType } from "@structurizr/dsl";
-import { useWorkspaceToolbarStore } from "@workspace/core";
-import { WorkspaceNavigationStore, useWorkspaceNavigation } from "@workspace/diagramming";
+import { useWorkspaceNavigation, useWorkspaceToolbarStore, WorkspaceNavigationStore } from "@workspace/core";
 import { useCallback } from "react";
 
 const SelectedViewSelector = (state: WorkspaceNavigationStore) => {

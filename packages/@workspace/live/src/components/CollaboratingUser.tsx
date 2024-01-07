@@ -72,7 +72,7 @@ export const UserMouseCursor: FC<{
 export const CollaboratingUser: FC<{ user: WorkspaceUser }> = ({ user }) => {
     return (
         <ViewportAnimatedElement
-            position={user.location.mouse}
+            position={user.mouse}
             zIndex={1000}
         >
             <UserMouseCursor

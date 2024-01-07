@@ -6,7 +6,7 @@ import {
 import { FC } from "react";
 import { CollaboratingUser } from ".";
 
-export const CollaboratingUserPane: FC<{ users: Array<WorkspaceUser> }> = ({ users }) => {    
+export const CollaboratingUserPane: FC<{ users: Array<WorkspaceUser> }> = ({ users }) => {
     return (
         <WorkspaceElementPortal>
             <Box
@@ -18,7 +18,7 @@ export const CollaboratingUserPane: FC<{ users: Array<WorkspaceUser> }> = ({ use
                 height={"100%"}
                 width={"100%"}
             >
-                {users.filter(user => user?.location?.mouse).map(user => (
+                {users.filter(user => user?.mouse).map(user => (
                     <CollaboratingUser key={user.info.username} user={user} />
                 ))}
             </Box>

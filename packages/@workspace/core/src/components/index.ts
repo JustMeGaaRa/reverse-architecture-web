@@ -1,4 +1,3 @@
-export * from "./CurrentUser";
 export * from "./EdgeRelativeElement";
 export * from "./ElementFlowHandle";
 export * from "./ElementSelectionBorder";
@@ -7,6 +6,7 @@ export * from "./NodeRelativeElement";
 export * from "./ViewportAnimatedElement";
 export * from "./ViewportStaticElement";
 export * from "./WorkspaceElementPortal";
+export * from "./WorkspaceNavigationProvider";
 export * from "./WorkspacePanel";
 export * from "./WorkspaceProvider";
 export * from "./WorkspaceThemeProvider";
