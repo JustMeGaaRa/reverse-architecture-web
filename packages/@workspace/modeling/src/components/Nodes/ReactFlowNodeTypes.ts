@@ -1,16 +1,16 @@
-import { ElementNode } from "./ElementNode";
-import { ElementPlaceholderNode } from "./ElementPlaceholderNode";
-import { ReactFlowNodeWrapper } from "./ReactFlowNodeWrapper";
+import { ElementModelNode } from "./ElementNode";
+import { ElementModelPlaceholderNode } from "./ElementPlaceholderNode";
+import { ReactFlowModelNodeWrapper } from "./ReactFlowNodeWrapper";
 import { WorkspaceNode } from "./WorkspaceNode";
 
-export const ReactFlowWorkspaceNode = ReactFlowNodeWrapper(WorkspaceNode);
-export const ReactFlowElementNode = ReactFlowNodeWrapper(ElementNode);
-export const ReactFlowPlaceholderNode = ReactFlowNodeWrapper(ElementPlaceholderNode);
+export const ReactFlowModelWorkspaceNode = ReactFlowModelNodeWrapper(WorkspaceNode);
+export const ReactFlowModelElementNode = ReactFlowModelNodeWrapper(ElementModelNode);
+export const ReactFlowModelPlaceholderNode = ReactFlowModelNodeWrapper(ElementModelPlaceholderNode);
 
-export const ReactFlowNodeTypes = {
-    workspace: ReactFlowWorkspaceNode,
-    element: ReactFlowElementNode,
-    placeholder: ReactFlowPlaceholderNode,
+export const ReactFlowModelNodeTypes = {
+    workspace: ReactFlowModelWorkspaceNode,
+    element: ReactFlowModelElementNode,
+    placeholder: ReactFlowModelPlaceholderNode,
 }
 
-export type ReactFlowNodeTypeKeys = keyof typeof ReactFlowNodeTypes;
+export type ReactFlowModelNodeTypeKeys = keyof typeof ReactFlowModelNodeTypes;

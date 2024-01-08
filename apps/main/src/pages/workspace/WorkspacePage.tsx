@@ -17,9 +17,13 @@ import {
     usePageHeader,
     usePageSidebar
 } from "@reversearchitecture/ui";
-import { IViewDefinition, Workspace } from "@structurizr/dsl";
+import { IViewDefinition, ViewType, Workspace } from "@structurizr/dsl";
 import { useStructurizrParser } from "@structurizr/react";
-import { useWorkspaceTheme, WorkspaceNavigationProvider, WorkspaceProvider } from "@workspace/core";
+import {
+    useWorkspaceTheme,
+    WorkspaceNavigationProvider,
+    WorkspaceProvider
+} from "@workspace/core";
 import { CurrentUser, WorkspaceRoom } from "@workspace/live";
 import {
     AppleShortcuts,
@@ -48,21 +52,25 @@ import {
 } from "../../features";
 import { WorkspaceContentEditor, WorkspaceMenu } from "./";
 
-export enum WorkspaceContentMode {
-    Diagramming = "diagramming",
-    Modeling = "modeling"
-}
-
 export enum WorkspaceContentPanel {
     Editor = "editor",
     Comments = "comments",
     Settings = "settings"
 }
 
+const ViewTypeParam = "type";
+const ViewIdParam = "identifier";
+const ViewPanelParam = "panel";
+
 export const WorkspacePage: FC = () => {
+    const [ queryParams, setQueryParam ] = useSearchParams([[ ViewTypeParam, ViewType.SystemLandscape ]]);
+    const navigate = useNavigate();
     const { setSidebarContent, setShowSidebarButton, setSidebarOpen } = usePageSidebar();
     const { setHeaderContent } = usePageHeader();
+
     const { theme } = useWorkspaceTheme();
+    const { account } = useAccount();
+
     const [ workspace, setWorkspace ] = useState(Workspace.Empty);
 
     // reset sidebar and header content
@@ -80,26 +88,23 @@ export const WorkspacePage: FC = () => {
         });
     }, [setHeaderContent, setSidebarContent]);
 
-    const [ queryParams, setQueryParam ] = useSearchParams([[ "mode", WorkspaceContentMode.Diagramming ]]);
-    const navigate = useNavigate();
-
     const handleOnOpenEditor = useCallback(() => {
         setQueryParam(params => {
-            params.set("panel", WorkspaceContentPanel.Editor);
+            params.set(ViewPanelParam, WorkspaceContentPanel.Editor);
             return new URLSearchParams(params);
         });
     }, [setQueryParam]);
 
     const handleOnOpenComments = useCallback(() => {
         setQueryParam(params => {
-            params.set("panel", WorkspaceContentPanel.Comments);
+            params.set(ViewIdParam, WorkspaceContentPanel.Comments);
             return new URLSearchParams(params);
         });
     }, [setQueryParam]);
 
     const handleOnOpenSettings = useCallback(() => {
         setQueryParam(params => {
-            params.set("panel", WorkspaceContentPanel.Settings);
+            params.set(ViewIdParam, WorkspaceContentPanel.Settings);
             return new URLSearchParams(params);
         });
     }, [setQueryParam]);
@@ -119,19 +124,19 @@ export const WorkspacePage: FC = () => {
                 <RouteList key={"workspace-route-list"}>
                     <Route
                         icon={<Icon as={Code} boxSize={5} />}
-                        isActive={queryParams.get("panel") === WorkspaceContentPanel.Editor}
+                        isActive={queryParams.get(ViewIdParam) === WorkspaceContentPanel.Editor}
                         title={"Code Editor"}
                         onClick={handleOnOpenEditor}
                     />
                     <Route
                         icon={<Icon as={ChatLines} boxSize={5} />}
-                        isActive={queryParams.get("panel") === WorkspaceContentPanel.Comments}
+                        isActive={queryParams.get(ViewIdParam) === WorkspaceContentPanel.Comments}
                         title={"Comments"}
                         onClick={handleOnOpenComments}
                     />
                     <Route
                         icon={<Icon as={Settings} boxSize={5} />}
-                        isActive={queryParams.get("panel") === WorkspaceContentPanel.Settings}
+                        isActive={queryParams.get(ViewIdParam) === WorkspaceContentPanel.Settings}
                         title={"Settings"}
                         onClick={handleOnOpenSettings}
                     />
@@ -161,14 +166,22 @@ export const WorkspacePage: FC = () => {
 
     const handleOnDiagrammingMode = useCallback(() => {
         setQueryParam(params => {
-            params.set("mode", WorkspaceContentMode.Diagramming)
+            params.set(ViewTypeParam, ViewType.SystemLandscape)
+            params.set(ViewIdParam, undefined);
             return params;
         });
     }, [setQueryParam]);
 
     const handleOnModelingMode = useCallback(() => {
         setQueryParam(params => {
-            params.set("mode", WorkspaceContentMode.Modeling)
+            params.set(ViewTypeParam, ViewType.Model)
+            return params;
+        });
+    }, [setQueryParam]);
+
+    const handleOnDeploymentMode = useCallback(() => {
+        setQueryParam(params => {
+            params.set(ViewTypeParam, ViewType.Deployment)
             return params;
         });
     }, [setQueryParam]);
@@ -202,9 +215,10 @@ export const WorkspacePage: FC = () => {
                 <ButtonSegmentedToggle>
                     <Button
                         colorScheme={"lime"}
-                        isActive={queryParams.get("mode") !== WorkspaceContentMode.Modeling}
+                        isActive={queryParams.get(ViewTypeParam) !== ViewType.Model && queryParams.get(ViewTypeParam) !== ViewType.Deployment}
                         iconSpacing={0}
                         leftIcon={<Icon as={AppleShortcuts} boxSize={4} />}
+                        paddingInline={6}
                         title={"diagramming"}
                         onClick={handleOnDiagrammingMode}
                     >
@@ -212,13 +226,25 @@ export const WorkspacePage: FC = () => {
                     </Button>
                     <Button
                         colorScheme={"lime"}
-                        isActive={queryParams.get("mode") === WorkspaceContentMode.Modeling}
+                        isActive={queryParams.get(ViewTypeParam) === ViewType.Model}
                         iconSpacing={0}
                         leftIcon={<Icon as={ViewStructureUp} boxSize={4} />}
+                        paddingInline={6}
                         title={"modeling"}
                         onClick={handleOnModelingMode}
                     >
                         <Text marginX={1}>Modeling</Text>
+                    </Button>
+                    <Button
+                        colorScheme={"lime"}
+                        isActive={queryParams.get(ViewTypeParam) === ViewType.Deployment}
+                        iconSpacing={0}
+                        leftIcon={<Icon as={ViewStructureUp} boxSize={4} />}
+                        paddingInline={6}
+                        title={"deployment"}
+                        onClick={handleOnDeploymentMode}
+                    >
+                        <Text marginX={1}>Deployment</Text>
                     </Button>
                 </ButtonSegmentedToggle>
             )
@@ -227,6 +253,7 @@ export const WorkspacePage: FC = () => {
         setHeaderContent,
         handleOnDiagrammingMode,
         handleOnModelingMode,
+        handleOnDeploymentMode,
         queryParams,
         workspace.name
     ]);
@@ -262,24 +289,18 @@ export const WorkspacePage: FC = () => {
             setWorkspace(Workspace.Empty);
         }
     }, [workspaceApi, workspaceId, theme, snackbar, parseStructurizr]);
-    
-    const { account } = useAccount();
 
     const handleOnWorkspaceViewChange = useCallback((view: IViewDefinition) => {
-        // TODO: navigate to view using query params
-        if (view !== undefined) {
-            setQueryParam(params => {
-                params.set("type", view.type);
-                params.set("identifier", view.identifier);
-                return new URLSearchParams(params);
-            })
-        }
+        setQueryParam(params => {
+            params.set(ViewTypeParam, view?.type ?? ViewType.SystemLandscape);
+            params.set(ViewIdParam, view?.identifier ?? "");
+            return new URLSearchParams(params);
+        });
     }, [setQueryParam]);
 
     return (
         <WorkspaceProvider workspace={workspace}>
             <WorkspaceNavigationProvider
-                initialView={workspace.views.systemLandscape}
                 onViewChange={handleOnWorkspaceViewChange}
             >
                 <CommentProvider>

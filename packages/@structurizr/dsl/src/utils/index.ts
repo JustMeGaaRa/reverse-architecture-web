@@ -84,7 +84,7 @@ export const relationshipExistsBetweenElements = (view: IViewDefinition, relatio
 }
 
 export const elementIncludedInView = (view: IViewDefinition, elementIdentifier: Identifier) => {
-    return view.include.some(identifier => identifier === elementIdentifier);
+    return view.include?.some(identifier => identifier === elementIdentifier);
 }
 
 export const getRelationships = (model: IModel, implied: boolean) => {

@@ -3984,6 +3984,7 @@
     "@structurizr/dsl" "*"
     elkjs "0.8.2"
     framer-motion "^10.16.4"
+    lodash "^4.17.21"
     react "^18.0.0"
     react-dom "^18.0.0"
     web-worker "^1.2.0"
@@ -4017,6 +4018,7 @@
   resolved "file:packages/@workspace/live"
   dependencies:
     "@workspace/core" "*"
+    lodash "^4.17.21"
     react "^18.0.0"
     react-dom "^18.0.0"
     react-scripts "5.0.1"
@@ -11927,6 +11929,21 @@ workbox-window@6.6.0:
   dependencies:
     "@types/trusted-types" "^2.0.2"
     workbox-core "6.6.0"
+
+workspace@*, "workspace@file:C:\\Users\\pavlo\\Documents\\GitHub\\justmegaara.reverse-architecture-web\\packages\\workspace":
+  version "0.1.0"
+  resolved "file:packages/workspace"
+  dependencies:
+    "@structurizr/dsl" "*"
+    "@workspace/controls" "*"
+    "@workspace/core" "*"
+    "@workspace/diagramming" "*"
+    "@workspace/live" "*"
+    "@workspace/modeling" "*"
+    "@workspace/navigation" "*"
+    "@workspace/toolbar" "*"
+    react "^18.0.0"
+    react-dom "^18.0.0"
 
 wrap-ansi@^7.0.0:
   version "7.0.0"

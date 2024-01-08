@@ -2,12 +2,12 @@ import { Text, VStack } from "@chakra-ui/react";
 import { IElement, Tag } from "@structurizr/dsl";
 import { FC } from "react";
 
-export const formatElementTag = (data: IElement) => {
+export const formatModelElementTag = (data: IElement) => {
     const type = data.tags?.filter(x => x.name !== Tag.Element.name).at(0);
     return type?.name;
 };
 
-export const ElementLabel: FC<{
+export const ElementModelLabel: FC<{
     data: IElement;
     selected?: boolean;
 }> = ({
@@ -40,7 +40,7 @@ export const ElementLabel: FC<{
                 opacity={0.4}
                 textAlign={"center"}
             >
-                {formatElementTag(data)}
+                {formatModelElementTag(data)}
             </Text>
         </VStack>
     );

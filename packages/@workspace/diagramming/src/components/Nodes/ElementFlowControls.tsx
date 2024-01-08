@@ -1,5 +1,5 @@
 import { Node, Position as PositionSide, useStore } from "@reactflow/core";
-import { ElementType, getDefaultElement, IElement, Position, Tag, Workspace } from "@structurizr/dsl";
+import { Position, Tag, Workspace } from "@structurizr/dsl";
 import {
     ElementFlowHandle,
     ElementSelectionBorder,
@@ -12,7 +12,7 @@ import {
 } from "@workspace/core";
 import { FC, useCallback } from "react";
 import { useViewFlowBuilder } from "../../hooks";
-import { nodeSelector } from "../../utils";
+import { diagramNodeSelector } from "../../utils";
 import { ElementZoomControl } from "./ElementZoomControl";
 
 const getOffset = (position: PositionSide) => {
@@ -28,14 +28,14 @@ const getOffset = (position: PositionSide) => {
     }
 }
 
-export const ElementFlowControls: FC<{
+export const ElementDiagramFlowControls: FC<{
     workspace: Workspace;
     onHandleClick?: (sourceNode: Node, position: Position) => void;
 }> = ({
     workspace,
     onHandleClick
 }) => {
-    const { selectedNodes, selectionBounds } = useStore(nodeSelector);
+    const { selectedNodes, selectionBounds } = useStore(diagramNodeSelector);
     const { viewport } = useStore(viewportSelector);
     const { zoomIntoElement, zoomOutOfElement } = useWorkspaceNavigation();
     const { addElementPreview, clearElementPreview } = useViewFlowBuilder();

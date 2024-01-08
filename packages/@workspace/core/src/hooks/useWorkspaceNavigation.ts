@@ -2,7 +2,6 @@ import { useReactFlow } from "@reactflow/core";
 import {
     ComponentPathProvider,
     ContainerPathProvider,
-    DeploymentPathProvider,
     IElement,
     SystemContextPathProvider,
     SystemLandscapePathProvider,
@@ -26,18 +25,17 @@ export const useWorkspaceNavigation = () => {
 
     const openView = useCallback((workspace: Workspace, view: ViewKeys) => {
         const viewDefinition = getViewDefinition(workspace, view);
-        const pathBuilders = [
-            [ ViewType.SystemLandscape, new SystemLandscapePathProvider() ],
-            [ ViewType.SystemContext, new SystemContextPathProvider() ],
-            [ ViewType.Container, new ContainerPathProvider() ],
-            [ ViewType.Component, new ComponentPathProvider() ],
-            [ ViewType.Deployment, new DeploymentPathProvider() ],
-        ];
-        const viewPath = pathBuilders[currentView.type]?.getPath(workspace, currentView) ?? [];
+        const pathBuilders = {
+            [ViewType.SystemLandscape]: new SystemLandscapePathProvider(),
+            [ViewType.SystemContext]: new SystemContextPathProvider(),
+            [ViewType.Container]: new ContainerPathProvider(),
+            [ViewType.Component]: new ComponentPathProvider()
+        };
+        const viewPath = pathBuilders[viewDefinition.type]?.getPath(workspace, viewDefinition) ?? [];
 
         setCurrentView(viewDefinition);
         setCurrentViewPath(viewPath);
-    }, [currentView, setCurrentView, setCurrentViewPath]);
+    }, [setCurrentView, setCurrentViewPath]);
 
     const zoomIntoElement = useCallback((workspace: Workspace, element: IElement) => {
         if (element.tags.some(tag => tag.name === Tag.SoftwareSystem.name)) {

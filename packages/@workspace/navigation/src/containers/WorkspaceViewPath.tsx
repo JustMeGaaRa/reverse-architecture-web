@@ -2,28 +2,31 @@ import {
     Breadcrumb,
     BreadcrumbItem,
     BreadcrumbLink,
-    Select,
+    Button,
+    Icon,
 } from "@chakra-ui/react";
-import { ViewKeys, ViewType, Workspace } from "@structurizr/dsl";
+import { ViewKeys, Workspace } from "@structurizr/dsl";
 import {
     PanelPosition,
     useWorkspaceNavigation,
     WorkspacePanel
 } from "@workspace/core";
-import { ChangeEvent, FC, useCallback } from "react";
+import { AppleShortcuts } from "iconoir-react";
+import { FC, useCallback } from "react";
 
 export const WorkspaceViewPath: FC<{
     position?: PanelPosition;
     workspace: Workspace;
     path?: ViewKeys[];
+    isVisible?: boolean;
 }> = ({
     position,
     workspace,
-    path
+    path,
+    isVisible = true
 }) => {
-    // TODO: consider if using path as a prop should be an option
     const { currentViewPath, openView } = useWorkspaceNavigation();
-
+    
     const links = (path ?? currentViewPath).map((view, index) => ({
         title: view.title,
         isActive: index === currentViewPath.length - 1,
@@ -34,34 +37,9 @@ export const WorkspaceViewPath: FC<{
         openView(workspace, viewKeys);
     }, [openView, workspace]);
 
-    const handleOnViewTypeChange = useCallback((event: ChangeEvent<HTMLSelectElement>) => {
-        const selectedViewType = event.target.value as ViewType;
-        openView(workspace, { type: selectedViewType, identifier: undefined });
-    }, [openView, workspace]);
-
-    return (
+    return isVisible && (
         <WorkspacePanel position={position ?? "top-left"}>
             <Breadcrumb separator={"/"}>
-                <BreadcrumbItem>
-                    <Select
-                        backgroundColor={"whiteAlpha.100"}
-                        borderWidth={1}
-                        backdropFilter={"blur(8px)"}
-                        borderRadius={8}
-                        color={"gray.900"}
-                        size={"xs"}
-                        _hover={{
-                            backgroundColor: "whiteAlpha.200",
-                            borderColor: "whiteAlpha.400",
-                            color: "white"
-                        }}
-                        onChange={handleOnViewTypeChange}
-                    >
-                        <option value={ViewType.SystemLandscape}>{ViewType.SystemLandscape}</option>
-                        <option value={ViewType.SystemContext}>{ViewType.SystemContext}</option>
-                        <option value={ViewType.Deployment}>{ViewType.Deployment}</option>
-                    </Select>
-                </BreadcrumbItem>
                 {links.map(link => (
                     <BreadcrumbItem
                         key={link.title}
@@ -69,9 +47,14 @@ export const WorkspaceViewPath: FC<{
                         isCurrentPage={link.isActive}
                     >
                         <BreadcrumbLink
+                            as={Button}
                             aria-selected={link.isActive}
                             isCurrentPage={link.isActive}
+                            leftIcon={<Icon as={AppleShortcuts} boxSize={4} />}
+                            marginX={1}
+                            size={"xs"}
                             title={link.title}
+                            variant={"toolitem"}
                             onClick={() => handleOnViewItemClick(link.data)}
                         >
                             {link.title}

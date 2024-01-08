@@ -1,27 +1,34 @@
-import { useEdgesState, useNodesState } from "@reactflow/core";
-import { ModelViewStrategy, Workspace } from "@structurizr/dsl";
+import { Node, useEdgesState, useNodesState } from "@reactflow/core";
+import { ModelViewStrategy, Position, Workspace } from "@structurizr/dsl";
 import { WorkspaceViewRenderer } from "@workspace/core";
 import {
     FC,
     PropsWithChildren,
+    useCallback,
     useMemo,
     useRef
 } from "react";
 import {
-    ReactFlowEdgeTypes,
+    ReactFlowModelEdgeTypes,
     ElementCollapseControlsBackground,
-    ReactFlowNodeTypes,
-    ElementFlowControls
+    ReactFlowModelNodeTypes,
+    ElementModelFlowControls
 } from "../../components";
-import { useModelRenderingEffect, useModelView } from "../../hooks";
+import {
+    useModelFlowBuilder,
+    useModelRenderingEffect,
+    useModelView
+} from "../../hooks";
 
 export const ModelView: FC<PropsWithChildren<{
     workspace: Workspace;
     onWorkspaceChange?: (workspace: Workspace) => void;
+    onWorkspaceViewClick?: (event: React.MouseEvent) => void;
 }>> = ({
     children,
     workspace,
-    onWorkspaceChange
+    onWorkspaceChange,
+    onWorkspaceViewClick
 }) => {
     const [ nodes, , onNodesChange ] = useNodesState([]);
     const [ edges, , onEdgesChange ] = useEdgesState([]);
@@ -33,23 +40,39 @@ export const ModelView: FC<PropsWithChildren<{
         addDeploymentNode,
         addInfrastructureNode
     } = useModelView();
+    const {
+        addDefaultElement
+    } = useModelFlowBuilder();
     const reactFlowRef = useRef(null);
     const strategy = useMemo(() => new ModelViewStrategy(workspace.model), [workspace]);
 
     useModelRenderingEffect(workspace, strategy);
 
+    // TODO: add element in position on react flow pane, but not in workspace view
+    const handleOnFlowClick = useCallback((sourceNode: Node, position: Position) => {
+        onWorkspaceChange?.(addDefaultElement(
+            sourceNode.data.element.type,
+            position,
+            sourceNode.data.element.identifier
+        ));
+    }, [onWorkspaceChange, addDefaultElement]);
+
     return (
         <WorkspaceViewRenderer
             ref={reactFlowRef}
             nodes={nodes}
-            nodeTypes={ReactFlowNodeTypes}
+            nodeTypes={ReactFlowModelNodeTypes}
             edges={edges}
-            edgeTypes={ReactFlowEdgeTypes}
+            edgeTypes={ReactFlowModelEdgeTypes}
             isReadonly={true}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
+            onPaneClick={onWorkspaceViewClick}
         >
-            <ElementFlowControls workspace={workspace} />
+            <ElementModelFlowControls
+                workspace={workspace}
+                onHandleClick={handleOnFlowClick}
+            />
             <ElementCollapseControlsBackground />
             {children}
         </WorkspaceViewRenderer>

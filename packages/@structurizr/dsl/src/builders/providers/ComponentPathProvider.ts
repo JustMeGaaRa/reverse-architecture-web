@@ -15,6 +15,13 @@ export class ComponentPathProvider implements ISupportPath {
             if (container) {
                 return [
                     {
+                        type: ViewType.SystemLandscape,
+                        identifier: workspace.name,
+                        title: ViewType.SystemLandscape,
+                        elements: [],
+                        relationships: []
+                    },
+                    {
                         type: ViewType.SystemContext,
                         identifier: softwareSystem.identifier,
                         title: softwareSystem.name,

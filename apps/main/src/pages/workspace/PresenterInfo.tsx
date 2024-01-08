@@ -1,0 +1,29 @@
+import { Avatar, Box, Text } from "@chakra-ui/react";
+import { FC } from "react";
+import { Toolbar, ToolbarSection, UserInfo, WorkspacePanel } from "workspace";
+
+export const PresenterInfo: FC<{
+    presenter: UserInfo
+}> = ({
+    presenter
+}) => {
+    return presenter != null && presenter !== undefined && (
+        <WorkspacePanel position={"bottom-left"}>
+            <Toolbar>
+                <ToolbarSection>
+                    <Avatar
+                        colorScheme={presenter.color}
+                        name={presenter.fullname}
+                        size={"md"}
+                        title={presenter.fullname}
+                    />
+                    <Box paddingLeft={2} paddingRight={4}>
+                        <Text color={`${presenter.color}.600`}>
+                            {`${presenter.fullname} is presenting`}
+                        </Text>
+                    </Box>
+                </ToolbarSection>
+            </Toolbar>
+        </WorkspacePanel>
+    )
+}

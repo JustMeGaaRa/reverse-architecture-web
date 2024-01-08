@@ -15,9 +15,9 @@ import {
     IViewDefinition
 } from "@structurizr/dsl";
 import { ReactFlowBuilder } from "@workspace/core";
-import { getEdgeFromRelationship, getNodeFromElement } from "../utils";
+import { getModelEdgeFromRelationship, getModelNodeFromElement } from "../utils";
 
-export class ReactFlowVisitor implements IElementVisitor {
+export class ReactFlowModelVisitor implements IElementVisitor {
     private readonly nodeHeight = 70;
     private readonly nodeWidth = 300;
     private readonly nodeHeightSpacing = 64;
@@ -25,6 +25,7 @@ export class ReactFlowVisitor implements IElementVisitor {
 
     constructor(
         private model: IModel,
+        private configuration: IConfiguration,
         private builder: ReactFlowBuilder
     ) { }
     
@@ -34,35 +35,49 @@ export class ReactFlowVisitor implements IElementVisitor {
     visitPerson(person: IPerson, params?: { parentId?: string; }): void {
         const x = (-1) * (this.nodeWidth + this.nodeWidthSpacing);
         const y = 0;
-        const personNode = getNodeFromElement(person, undefined, "element", { x, y });
+        const personNode = getModelNodeFromElement({
+            element: person,
+            elementChildrenCount: undefined,
+            type: "element",
+            styles: this.configuration.styles,
+            position: { x, y }
+        });
         this.builder.addNode(personNode);
     }
     visitSoftwareSystem(softwareSystem: ISoftwareSystem, params?: { parentId?: string; }): void {
         const x = (this.nodeWidth + this.nodeWidthSpacing);
         const y = 0;
-        const softwareSystemNode = getNodeFromElement(
-            softwareSystem,
-            softwareSystem.containers.length,
-            "element",
-        { x, y }
-        );
+        const softwareSystemNode = getModelNodeFromElement({
+            element: softwareSystem,
+            elementChildrenCount: softwareSystem.containers.length,
+            type: "element",
+            styles: this.configuration.styles,
+            position: { x, y }
+        });
         this.builder.addNode(softwareSystemNode);
     }
     visitContainer(container: IContainer, params?: { parentId?: string; }): void {
         const x = (this.nodeWidth + this.nodeWidthSpacing);
         const y = this.nodeHeight + this.nodeHeightSpacing;
-        const containerNode = getNodeFromElement(
-            container,
-            container.components.length,
-            "element",
-            { x, y }
-        );
+        const containerNode = getModelNodeFromElement({
+            element: container,
+            elementChildrenCount: container.components.length,
+            type: "element",
+            styles: this.configuration.styles,
+            position: { x, y }
+        });
         this.builder.addNode(containerNode);
     }
     visitComponent(component: IComponent, params?: { parentId?: string; }): void {
         const x = (this.nodeWidth + this.nodeWidthSpacing);
         const y = 2 * (this.nodeHeight + this.nodeHeightSpacing);
-        const componentNode = getNodeFromElement(component, undefined, "element", { x, y });
+        const componentNode = getModelNodeFromElement({
+            element: component,
+            elementChildrenCount: undefined,
+            type: "element",
+            styles: this.configuration.styles,
+            position: { x, y }
+        });
         this.builder.addNode(componentNode);
     }
     visitDeploymentNode(deploymentNode: IDeploymentNode, params?: { parentId?: string; }): void {
@@ -78,7 +93,10 @@ export class ReactFlowVisitor implements IElementVisitor {
         throw new Error("Method not supported.");
     }
     visitRelationship(relationship: IRelationship): void {
-        const edge = getEdgeFromRelationship(relationship);
+        const edge = getModelEdgeFromRelationship({
+            relationship: relationship,
+            styles: this.configuration.styles,
+        });
         this.builder.addEdge(edge);
     }
 }

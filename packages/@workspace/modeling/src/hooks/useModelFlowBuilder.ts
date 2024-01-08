@@ -19,15 +19,15 @@ export const useModelFlowBuilder = () => {
         addSoftwareSystem
     } = useModelView();
 
-    const addDefaultElement = useCallback((type: ElementType, parentId?: string) => {
+    const addDefaultElement = useCallback((type: ElementType, position: Position, parentId?: string) => {
         switch (type) {
             case ElementType.SoftwareSystem:
-                return addContainer(parentId);
+                return addContainer(parentId, position);
             case ElementType.Container:
-                return addComponent(parentId);
+                return addComponent(parentId, position);
         }
         
-        return addSoftwareSystem();
+        return addSoftwareSystem(position);
     }, [addComponent, addContainer, addSoftwareSystem]);
 
     const removeElement = useCallback((element: IElement) => {
@@ -48,6 +48,12 @@ export const useModelFlowBuilder = () => {
         const placeholderEdge: Edge = {
             id: "placeholder-edge",
             type: "smoothstep",
+            data: {
+                relationship: {
+                    sourceIdentifier: source.identifier,
+                    destinationIdentifier: placeholderNode.id
+                }
+            },
             source: source.identifier,
             target: placeholderNode.id,
             style: {

@@ -29,7 +29,7 @@ import {
 } from "react";
 import {
     ReactFlowEdgeTypes,
-    ElementFlowControls,
+    ElementDiagramFlowControls,
     ElementOptionsToolbar,
     ElementZoomControlsBackground,
     ReactFlowNodeTypes
@@ -54,7 +54,6 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
     const [ nodes, , onNodesChange ] = useNodesState([]);
     const [ edges, , onEdgesChange ] = useEdgesState([]);
     const {
-        isCommentAddingEnabled,
         isAddingElementEnabled,
         addingElementType
     } = useWorkspaceToolbarStore();
@@ -66,8 +65,8 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
         setElementPosition
     } = useSystemLandscapeView();
     const { getViewport } = useReactFlow();
-    const reactFlowRef = useRef(null);
     const store = useWorkspace();
+    const reactFlowRef = useRef(null);
     const strategy = useMemo(() => new SystemLandscapeViewStrategy(workspace.model, view), [workspace, view]);
 
     useViewRenderingEffect(workspace, strategy);
@@ -184,7 +183,7 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
                 variant={BackgroundVariant.Dots}
             />
             <ElementOptionsToolbar />
-            <ElementFlowControls
+            <ElementDiagramFlowControls
                 workspace={workspace}
                 onHandleClick={handleOnFlowClick}
             />

@@ -1,10 +1,10 @@
 import { ReactFlowJsonObject } from "@reactflow/core";
 import { ISupportVisitor, IWorkspace, Tag } from "@structurizr/dsl";
 import { ReactFlowBuilder } from "@workspace/core";
-import { ReactFlowVisitor } from "../types";
-import { getNodeFromElement } from "./ReactFlow";
+import { ReactFlowModelVisitor } from "../types";
+import { getModelNodeFromElement } from "../utils";
 
-export const getReactFlowObject = (
+export const getReactFlowModelObject = (
     strategy: ISupportVisitor,
     workspace: IWorkspace,
 ): ReactFlowJsonObject => {
@@ -24,20 +24,25 @@ export const getReactFlowObject = (
             { name: "Workspace" }
         ]
     }
-    const workspaceNode = getNodeFromElement(
-        workspaceElement as any,
-        (workspace.model.people.length + workspace.model.softwareSystems.length),
-        "workspace",
-        { x, y }
-    );
+    const workspaceNode = getModelNodeFromElement({
+        element: workspaceElement as any,
+        elementChildrenCount: (workspace.model.people.length + workspace.model.softwareSystems.length),
+        type: "workspace",
+        styles: workspace.views.configuration.styles,
+        position: { x, y }
+    });
     reactFlowBuilder.addNode(workspaceNode);
 
-    const reactFlowVisitor = new ReactFlowVisitor(workspace.model, reactFlowBuilder);
+    const reactFlowVisitor = new ReactFlowModelVisitor(
+        workspace.model,
+        workspace.views.configuration,
+        reactFlowBuilder
+    );
     strategy.accept(reactFlowVisitor);
     return reactFlowBuilder.build();
 }
 
-export const getReactFlowAuto = async (reactFlowObject: Omit<ReactFlowJsonObject, "viewport">) => {
+export const getReactFlowModelAuto = async (reactFlowObject: Omit<ReactFlowJsonObject, "viewport">) => {
     const nodeHeight = 70;
     const nodeWidth = 300;
     const nodeHeightSpacing = 64;

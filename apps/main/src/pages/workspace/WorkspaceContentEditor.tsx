@@ -9,24 +9,25 @@ import {
 } from "@reversearchitecture/ui";
 import { WorkspaceEditor } from "@workspace/code-editor";
 import {
-    useOnCurrentUserViewportChange,
+    useOnUserViewportChange,
+    useOnUserViewChange,
     useOnUserAwarenessChange,
+    UserInfo,
     useWorkspace,
     useWorkspaceNavigation,
     useWorkspaceToolbarStore,
     Viewport,
 } from "@workspace/core";
-import { WorkspaceDiagramming } from "@workspace/diagramming";
 import {
     CollaboratingUserPane,
     useWorkspaceRoom,
     usePresentationMode,
     useUserAwareness,
-    useOnFollowingUserViewportChange
+    useOnFollowingUserViewportChange,
+    useFollowUserMode
 } from "@workspace/live";
-import { WorkspaceModeling } from "@workspace/modeling";
 import { WorkspaceViewPath } from "@workspace/navigation";
-import { Position, Workspace } from "@structurizr/dsl";
+import { IViewDefinition, ViewType, Workspace } from "@structurizr/dsl";
 import { useStructurizrParser } from "@structurizr/react";
 import {
     FC,
@@ -44,54 +45,61 @@ import {
 } from "../../features";
 import {
     DiscussionsPane,
-    WorkspaceContentMode,
     WorkspaceContentPanel,
     UserAvatarGroup,
     WorkspaceDiagrammingToolbar,
     WorkspaceModelingToolbar,
     WorkspaceUndoRedoControls,
-    WorkspaceZoomControls
+    WorkspaceZoomControls,
+    PresenterInfo
 } from "./";
 import { UserPlus } from "iconoir-react";
+import { WorkspaceViewer } from "workspace";
+import { PresentationToolbar } from "./PresentationToolbar";
+
+const ViewTypeParam = "type";
+const ViewIdParam = "identifier";
+const ViewPanelParam = "panel";
 
 export const WorkspaceContentEditor: FC = () => {
     const { workspaceId } = useParams<{ workspaceId: string }>();
-    const [ queryParams, setQueryParam ] = useSearchParams([[ "mode", WorkspaceContentMode.Diagramming ]]);
+    const [ queryParams, setQueryParam ] = useSearchParams([[ ViewTypeParam, ViewType.SystemLandscape ]]);
     const { setHeaderContent } = usePageHeader();
 
     const [ structurizrDslText, setStructurizrDslText ] = useState("");
     const { parseStructurizr } = useStructurizrParser();
     const { workspace, setWorkspace } = useWorkspace();
     const { currentView, setViewport } = useWorkspaceNavigation();
-    const { reportViewport, reportMousePosition } = useUserAwareness();
+    const { reportViewport, reportMousePosition, reportView } = useUserAwareness();
     const { currentUser, collaboratingUsers } = useWorkspaceRoom();
     const { presentationEnabled, presenterInfo } = usePresentationMode();
+    const { followUser } = useFollowUserMode();
     const { users } = useMemo(() => ({
         users: [currentUser, ...collaboratingUsers].map(user => user.info)
     }), [currentUser, collaboratingUsers]);
-
-    const onCurrentUserMouseChange = useCallback((position: Position) => {
-        reportMousePosition(position);
-    }, [reportMousePosition]);
-
-    const onCurrentUserViewportChange = useCallback((viewport: Viewport) => {
-        reportViewport(viewport);
-    }, [reportViewport]);
 
     const onFollowingUserViewportChange = useCallback((viewport: Viewport) => {
         setViewport(viewport, { duration: 200 });
     }, [setViewport]);
 
-    useOnUserAwarenessChange({ onChange: onCurrentUserMouseChange });
+    const onCurrentUserViewChange = useCallback((view: IViewDefinition) => {
+        reportView(view ? { type: view.type, identifier: view.identifier } : undefined);
+    }, [reportView]);
+
+    useOnUserAwarenessChange({ onChange: reportMousePosition });
+    useOnUserViewportChange({ onEnd: reportViewport });
+    useOnUserViewChange({ onChange: onCurrentUserViewChange });
     useOnFollowingUserViewportChange({ onChange: onFollowingUserViewportChange });
-    useOnCurrentUserViewportChange({ onEnd: onCurrentUserViewportChange });
     
     // set header content
     useEffect(() => {
         setHeaderContent({
             right: (
                 <HStack key={"workspace-page-options"} gap={2} mr={4}>
-                    <UserAvatarGroup users={users} />
+                    <UserAvatarGroup
+                        users={users}
+                        onAvatarClick={followUser}
+                    />
                     <Divider
                         borderWidth={1}
                         color={"whiteAlpha.200"}
@@ -109,7 +117,7 @@ export const WorkspaceContentEditor: FC = () => {
                 </HStack>
             )
         })
-    }, [setHeaderContent, users])
+    }, [setHeaderContent, followUser, users])
 
     // discussions
     const [ commentThreads, setCommentThreads ] = useState<Array<CommentThread>>([]);
@@ -152,17 +160,41 @@ export const WorkspaceContentEditor: FC = () => {
         }
     }, [isCommentAddingEnabled]);
 
-    const isDiagrammingMode = useMemo(() => queryParams.get("mode") === WorkspaceContentMode.Diagramming, [queryParams]);
-    const isModelingMode = useMemo(() => queryParams.get("mode") === WorkspaceContentMode.Modeling, [queryParams]);
-    const diagrammingUsers = useMemo(() => collaboratingUsers.filter(x => x.view?.type === currentView?.type && x.view?.identifier === currentView?.identifier), [collaboratingUsers, currentView?.identifier, currentView?.type]);
-    const diagrammingDiscussions = useMemo(() => commentThreads.filter(x => x.metadata?.view?.type !== "Model"), [commentThreads]);
-    const modelingUsers = useMemo(() => collaboratingUsers.filter(x => x.view?.type === "Model"), [collaboratingUsers]);
-    const modelingDiscussions = useMemo(() => commentThreads.filter(x => x.metadata?.view?.type === "Model"), [commentThreads]);
+    const queryParamersView = useMemo(() => ({
+        type: queryParams.get(ViewTypeParam) as ViewType
+            ?? ViewType.SystemLandscape,
+        identifier: queryParams.get(ViewIdParam)
+    }), [queryParams]);
+
+    const isDiagrammingMode = useMemo(() => {
+        return queryParams.get(ViewTypeParam) !== ViewType.Model
+            && queryParams.get(ViewTypeParam) !== ViewType.Deployment;
+    }, [queryParams]);
+    const isModelingMode = useMemo(() => {
+        return queryParams.get(ViewTypeParam) === ViewType.Model;
+    }, [queryParams]);
+    const isDeploymentMode = useMemo(() => {
+        return queryParams.get(ViewTypeParam) === ViewType.Deployment;
+    }, [queryParams]);
+
+    const currentViewUsers = useMemo(() => {
+        return collaboratingUsers.filter(x => {
+            return x.view?.type === currentView?.type
+                && x.view?.identifier === currentView?.identifier;
+        });
+    }, [collaboratingUsers, currentView?.identifier, currentView?.type]);
+    
+    const currentViewDiscussions = useMemo(() => {
+        return commentThreads.filter(x => {
+            return x.metadata?.view?.type === currentView?.type
+                && x.metadata?.view?.id === currentView?.identifier;
+        });
+    }, [commentThreads, currentView?.identifier, currentView?.type]);
 
     return (
         <ContextSheet>
             <Flex direction={"row"} height={"100%"}>
-                {queryParams.get("panel") === WorkspaceContentPanel.Comments && (
+                {queryParams.get(ViewPanelParam) === WorkspaceContentPanel.Comments && (
                     <Flex direction={"column"} width={"400px"}>
                         <ContextSheetHeader>
                             <ContextSheetCloseButton onClick={handleOnClosePanel} />
@@ -177,7 +209,7 @@ export const WorkspaceContentEditor: FC = () => {
                     </Flex>
                 )}
 
-                {queryParams.get("panel") === WorkspaceContentPanel.Editor && (
+                {queryParams.get(ViewPanelParam) === WorkspaceContentPanel.Editor && (
                     <Flex direction={"column"} width={"100%"}>
                         <ContextSheetHeader>
                             <ContextSheetCloseButton onClick={handleOnClosePanel} />
@@ -195,7 +227,7 @@ export const WorkspaceContentEditor: FC = () => {
                     </Flex>
                 )}
 
-                {queryParams.get("panel") === WorkspaceContentPanel.Settings && (
+                {queryParams.get(ViewPanelParam) === WorkspaceContentPanel.Settings && (
                     <Flex direction={"column"} width={"400px"}>
                         <ContextSheetHeader>
                             <ContextSheetCloseButton onClick={handleOnClosePanel} />
@@ -210,34 +242,22 @@ export const WorkspaceContentEditor: FC = () => {
                 )}
     
                 <ContextSheet outline={presentationEnabled ? `${presenterInfo?.color}.600` : undefined}>
-                    {isDiagrammingMode && (
-                        <WorkspaceDiagramming
-                            workspace={workspace}
-                            initialView={workspace.views.systemLandscape}
-                            onWorkspaceChange={handleOnWorkspaceChange}
-                            onWorkspaceViewClick={handleOnWorkspaceViewClick}
-                        >
-                            <CollaboratingUserPane users={collaboratingUsers} />
-                            <DiscussionsPane discussions={diagrammingDiscussions} />
-                            <WorkspaceViewPath workspace={workspace} />
-                            <WorkspaceUndoRedoControls />
-                            <WorkspaceDiagrammingToolbar />
-                            <WorkspaceZoomControls />
-                        </WorkspaceDiagramming>
-                    )}
-
-                    {isModelingMode && (
-                        <WorkspaceModeling
-                            workspace={workspace}
-                            onWorkspaceChange={handleOnWorkspaceChange}
-                        >
-                            <CollaboratingUserPane users={modelingUsers} />
-                            <DiscussionsPane discussions={modelingDiscussions} />
-                            <WorkspaceUndoRedoControls />
-                            <WorkspaceModelingToolbar />
-                            <WorkspaceZoomControls />
-                        </WorkspaceModeling>
-                    )}
+                    <WorkspaceViewer
+                        workspace={workspace}
+                        initialView={queryParamersView}
+                        onChange={handleOnWorkspaceChange}
+                        onViewClick={handleOnWorkspaceViewClick}
+                    >
+                        <PresenterInfo presenter={presenterInfo} />
+                        <PresentationToolbar isVisible={presentationEnabled} />
+                        <CollaboratingUserPane users={currentViewUsers} />
+                        <DiscussionsPane discussions={currentViewDiscussions} />
+                        <WorkspaceViewPath workspace={workspace} isVisible={isDiagrammingMode} />
+                        <WorkspaceUndoRedoControls isVisible={!presentationEnabled} />
+                        <WorkspaceDiagrammingToolbar isVisible={!presentationEnabled && isDiagrammingMode} />
+                        <WorkspaceModelingToolbar isVisible={!presentationEnabled && isModelingMode} />
+                        <WorkspaceZoomControls />
+                    </WorkspaceViewer>
                 </ContextSheet>
             </Flex>
         </ContextSheet>

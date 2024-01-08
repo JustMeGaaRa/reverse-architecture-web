@@ -11,3 +11,4 @@ export * from "./WorkspacePanel";
 export * from "./WorkspaceProvider";
 export * from "./WorkspaceThemeProvider";
 export * from "./WorkspaceViewRenderer";
+export * from "./WorkspaceViewUpdater";

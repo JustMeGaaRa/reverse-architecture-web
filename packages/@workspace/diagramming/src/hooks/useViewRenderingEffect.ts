@@ -18,7 +18,10 @@ export const useViewRenderingEffect = (workspace: Workspace, strategy: ISupportV
             viewDefinition
         );
 
-        const shouldAutoLayout = currentView?.autoLayout || currentView?.elements?.length === 0;
+        const shouldAutoLayout =
+            currentView?.autoLayout !== null
+            && currentView?.autoLayout !== undefined
+            && currentView?.elements?.length !== 0;
         
         if (shouldAutoLayout) {
             getReactFlowAuto(reactFlowObject)
@@ -32,5 +35,5 @@ export const useViewRenderingEffect = (workspace: Workspace, strategy: ISupportV
             setEdges(reactFlowObject.edges);
         }
         
-    }, [currentView]);
+    }, [currentView, workspace]);
 }

@@ -1,6 +1,6 @@
 import { Edge, Node, useReactFlow } from "@reactflow/core";
 import { useCallback } from "react";
-import { getReactFlowAuto } from "../utils";
+import { getReactFlowModelAuto } from "../utils";
 
 const getNextLevelNodeIds = (edges: Edge[], nodeIds: string[], depth?: number) => {
     if (depth === 0) return [];
@@ -86,7 +86,7 @@ export const useCollapsable = () => {
                 : edge
         })
         
-        getReactFlowAuto({ nodes, edges })
+        getReactFlowModelAuto({ nodes, edges })
             .then(reactFlowObject => {
                 setNodes(reactFlowObject.nodes);
                 setEdges(reactFlowObject.edges);

@@ -2,7 +2,7 @@ import { Box, Flex, Text } from "@chakra-ui/react";
 import { IElement } from "@structurizr/dsl";
 import { FC, PropsWithChildren } from "react";
 
-export const ElementNode: FC<PropsWithChildren<{
+export const ElementModelNode: FC<PropsWithChildren<{
     element: IElement;
     elementChildrenCount?: number;
 }>> = ({

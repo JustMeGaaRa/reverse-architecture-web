@@ -1,4 +1,5 @@
 export * from "./DiscussionsPane";
+export * from "./PresenterInfo";
 export * from "./UserAvatarGroup";
 export * from "./WorkspaceContentEditor";
 export * from "./WorkspaceDiagrammingToolbar";

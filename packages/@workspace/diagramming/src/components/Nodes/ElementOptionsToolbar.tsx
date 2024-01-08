@@ -26,10 +26,10 @@ import {
     User
 } from "iconoir-react";
 import { FC, useCallback } from "react";
-import { nodeSelector } from "../../utils";
+import { diagramNodeSelector } from "../../utils";
 
 export const ElementOptionsToolbar: FC = () => {
-    const { selectedNodeIds, selectedNodes } = useStore(nodeSelector);
+    const { selectedNodeIds, selectedNodes } = useStore(diagramNodeSelector);
     const { setNodes } = useReactFlow();
     const { workspace, deleteElements } = useWorkspace();
 

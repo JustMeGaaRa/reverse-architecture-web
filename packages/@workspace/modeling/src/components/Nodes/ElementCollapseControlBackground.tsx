@@ -7,11 +7,11 @@ import {
     BoundingBox
 } from "@workspace/core";
 import { FC } from "react";
-import { nodeSelector } from "../../utils";
+import { modelNodeSelector } from "../../utils";
 
 export const ElementCollapseControlsBackground: FC = () => {
     // NOTE: this is a workaround to show background underneath the zoom controls
-    const { selectedNodes, selectionBounds } = useStore(nodeSelector);
+    const { selectedNodes, selectionBounds } = useStore(modelNodeSelector);
     const { viewport } = useStore(viewportSelector);
     
     const doesSelectedNodeHaveChildren = selectedNodes.length === 1

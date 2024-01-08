@@ -2,7 +2,13 @@ import { Avatar, AvatarGroup } from "@chakra-ui/react";
 import { UserInfo } from "@workspace/core";
 import { FC } from "react";
 
-export const UserAvatarGroup: FC<{ users: UserInfo[] }> = ({ users }) => {
+export const UserAvatarGroup: FC<{
+    users: UserInfo[];
+    onAvatarClick?: (user: UserInfo) => void;
+}> = ({
+    users,
+    onAvatarClick
+}) => {
     return (
         <AvatarGroup max={5} cursor={"pointer"}>
             {users.map(user => (
@@ -11,6 +17,7 @@ export const UserAvatarGroup: FC<{ users: UserInfo[] }> = ({ users }) => {
                     colorScheme={user.color}
                     name={user.fullname}
                     title={user.fullname}
+                    onClick={() => onAvatarClick?.(user)}
                 />
             ))}
         </AvatarGroup>

@@ -2,7 +2,7 @@ import { Box, Flex, Text } from "@chakra-ui/react";
 import { IElement } from "@structurizr/dsl";
 import { FC, PropsWithChildren } from "react";
 
-export const ElementPlaceholderNode: FC<PropsWithChildren<{
+export const ElementModelPlaceholderNode: FC<PropsWithChildren<{
     element: IElement;
     elementChildrenCount?: number;
 }>> = ({

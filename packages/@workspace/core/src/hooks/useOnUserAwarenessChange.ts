@@ -1,7 +1,7 @@
 import { useOnViewportChange } from "@reactflow/core";
-import { Position } from "@structurizr/dsl";
+import { IViewDefinition, Position } from "@structurizr/dsl";
 import { throttle } from "lodash";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useMouseLeave, useMouseMove, useWorkspaceNavigation } from "../hooks";
 import { Viewport } from "../types";
 import { getAbsolutePoint } from "../utils";
@@ -45,10 +45,21 @@ type ViewportCallbacks = {
     onEnd?: (viewport: Viewport) => void;
 }
 
-export const useOnCurrentUserViewportChange = (callbacks: ViewportCallbacks) => {
+export const useOnUserViewportChange = (callbacks: ViewportCallbacks) => {
     useOnViewportChange({
         onStart: callbacks.onStart,
         onChange: callbacks.onChange,
         onEnd: callbacks.onEnd
     })
+}
+
+type CurrentViewCallbacks = {
+    onChange?: (view: IViewDefinition) => void;
+}
+
+export const useOnUserViewChange = (callbacks: CurrentViewCallbacks) => {
+    const { currentView } = useWorkspaceNavigation();
+    const { onChange } = callbacks;
+
+    useEffect(() => onChange?.(currentView), [currentView, onChange]);
 }

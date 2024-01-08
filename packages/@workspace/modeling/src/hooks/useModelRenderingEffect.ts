@@ -1,19 +1,20 @@
 import { useReactFlow } from "@reactflow/core";
 import { ISupportVisitor, IWorkspace } from "@structurizr/dsl";
 import { useEffect } from "react";
-import { getReactFlowAuto, getReactFlowObject } from "../utils";
+import { getReactFlowModelAuto, getReactFlowModelObject } from "../utils";
 
 export const useModelRenderingEffect = (workspace: IWorkspace, strategy: ISupportVisitor) => {
     const { setNodes, setEdges } = useReactFlow();
     
     // NOTE: we need to re-render the view ONLY when the model changes
     useEffect(() => {
-        const reactFlowObject = getReactFlowObject(strategy, workspace);
+        const reactFlowObject = getReactFlowModelObject(strategy, workspace);
 
-        getReactFlowAuto(reactFlowObject)
+        getReactFlowModelAuto(reactFlowObject)
             .then(reactFlowAuto => {
+                console.log(reactFlowAuto);
                 setNodes(reactFlowAuto.nodes);
                 setEdges(reactFlowAuto.edges);
             });
-    }, [workspace.model]);
+    }, [workspace]);
 }

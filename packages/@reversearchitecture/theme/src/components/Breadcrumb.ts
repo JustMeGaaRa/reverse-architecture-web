@@ -12,20 +12,23 @@ export const Breadcrumb = defineMultiStyleConfig({
         container: {
             backgroundColor: mode("", "surface.tinted-black-10")(props),
             backdropFilter: "blur(16px)",
-            borderRadius: 12,
+            borderRadius: 8,
         },
         separator: {
             color: mode("", "gray.900")(props),
+            margin: "0px",
             paddingY: "2px",
+            paddingX: "4px",
             textStyle: "b3"
         },
         item: {
             borderRadius: 8,
             height: "24px",
+            textStyle: "b3"
         },
         link: {
             borderRadius: 8,
-            paddingX: "8px",
+            paddingX: "4px",
             paddingY: "2px",
             color: mode("", "gray.900")(props),
             cursor: "pointer",

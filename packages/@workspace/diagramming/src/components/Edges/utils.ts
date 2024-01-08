@@ -21,6 +21,8 @@ export function getHandleCoordsByPosition(node: Node, handlePosition: Position) 
         (handle) => handle.position === handlePosition
     );
 
+    if (!handle) return [0, 0];
+
     let offsetX = handle.width / 2;
     let offsetY = handle.height / 2;
 

@@ -12,10 +12,12 @@ import { FC } from "react";
 
 export const WorkspaceModelingToolbar: FC<{
     position?: PanelPosition;
+    isVisible?: boolean;
 }> = ({
-    position
+    position,
+    isVisible = true
 }) => {
-    return (
+    return isVisible && (
         <WorkspacePanel position={position ?? "bottom-center"}>
             <Toolbar>
                 <ToolbarSection>

@@ -1,0 +1,51 @@
+{
+  "name": "workspace",
+  "version": "0.1.0",
+  "description": "A general workspace editor component with all components for building and navigating the C4 model.",
+  "main": "dist/index.js",
+  "keywords": [
+    "reverse-architecture",
+    "architecture",
+    "c4",
+    "c4-model",
+    "structurizr",
+    "diagramming",
+    "modeling",
+    "deployment",
+    "workspace"
+  ],
+  "author": "JustMeGaaRa",
+  "license": "MIT",
+  "scripts": {
+    "build": "npx tsc",
+    "dev": "npx tsc -w",
+    "lint": "eslint \"**/*.ts*\""
+  },
+  "dependencies": {
+    "@structurizr/dsl": "*",
+    "@workspace/controls": "*",
+    "@workspace/core": "*",
+    "@workspace/diagramming": "*",
+    "@workspace/modeling": "*",
+    "@workspace/live": "*",
+    "@workspace/navigation": "*",
+    "@workspace/toolbar": "*",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "eslint": "^8.51.0",
+    "eslint-config-custom": "*",
+    "tsconfig": "*",
+    "typescript": "^5.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JustMeGaaRa/reverse-architecture-web.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JustMeGaaRa/reverse-architecture-web/issues"
+  }
+}

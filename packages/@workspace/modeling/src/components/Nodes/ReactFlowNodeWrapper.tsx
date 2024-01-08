@@ -2,7 +2,7 @@ import { Handle, NodeProps, Position } from "@reactflow/core";
 import { IElement } from "@structurizr/dsl";
 import { FC, PropsWithChildren } from "react";
 
-export function ReactFlowNodeWrapper(ElementNodeComponent: FC<PropsWithChildren<{
+export function ReactFlowModelNodeWrapper(ElementNodeComponent: FC<PropsWithChildren<{
     element: IElement;
     elementChildrenCount?: number;
     isSelected?: boolean;

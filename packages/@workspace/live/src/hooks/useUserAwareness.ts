@@ -1,11 +1,12 @@
-import { Position } from "@structurizr/dsl";
+import { Position, ViewType } from "@structurizr/dsl";
 import { Viewport } from "@workspace/core";
 import { useCallback, useContext } from "react";
 import { WorkspaceRoomContext } from "../contexts";
 import {
     UserAwarenessCursorParam,
     UserAwarenessMouseParam,
-    UserAwarenessViewportParam
+    UserAwarenessViewportParam,
+    UserAwarenessViewParam
 } from "../types";
 
 export const useUserAwareness = () => {
@@ -32,9 +33,15 @@ export const useUserAwareness = () => {
         setCurrentUser(state => ({ ...state, viewport }));
     }, [workspaceDocument, currentUser.info.username, setCurrentUser]);
 
+    const reportView = useCallback((view: { type: ViewType, identifier: string }) => {
+        connectionProvider?.awareness.setLocalStateField(UserAwarenessViewParam, view);
+        setCurrentUser(state => ({ ...state, view }));
+    }, [connectionProvider?.awareness, setCurrentUser]);
+
     return {
         reportMousePosition,
         reportCursorPosition,
-        reportViewport
+        reportViewport,
+        reportView
     }
 }

@@ -31,7 +31,7 @@ import {
 } from "react";
 import {
     ReactFlowEdgeTypes,
-    ElementFlowControls,
+    ElementDiagramFlowControls,
     ElementOptionsToolbar,
     ElementZoomControlsBackground,
     ReactFlowNodeTypes
@@ -172,7 +172,7 @@ export const SystemContextView: FC<PropsWithChildren<{
                 variant={BackgroundVariant.Dots}
             />
             <ElementOptionsToolbar />
-            <ElementFlowControls workspace={workspace} />
+            <ElementDiagramFlowControls workspace={workspace} />
             <ElementZoomControlsBackground />
             {children}
         </WorkspaceViewRenderer>

@@ -8,16 +8,8 @@ import {
     TabPanels,
     Tabs,
 } from "@chakra-ui/react";
-import {
-    IViewDefinition,
-    IWorkspace,
-    IWorkspaceMetadata,
-    ViewKeys,
-    ViewType,
-    Workspace,
-} from "@structurizr/dsl";
-import { CurrentView, WorkspacePanel } from "@workspace/core";
-import { WorkspaceDiagramming } from "@workspace/diagramming";
+import { Workspace } from "@structurizr/dsl";
+import { WorkspacePanel } from "@workspace/core";
 import {
     Bookmark,
     ChatLines,
@@ -40,6 +32,7 @@ import {
 } from "@reversearchitecture/ui";
 import { WorkspaceViewPath } from "@workspace/navigation";
 import { TemplateHeader } from "./TemplateHeader";
+import { WorkspaceViewer } from "workspace";
 
 export const TemplateOverview: FC<{
     information: WorkspaceInfo;
@@ -95,7 +88,7 @@ export const TemplateOverview: FC<{
                                     transitionDuration={"0.3s"}
                                     transitionTimingFunction={"ease"}
                                 >
-                                    <WorkspaceDiagramming
+                                    <WorkspaceViewer
                                         workspace={workspace}
                                         initialView={workspace.views.systemLandscape}
                                     >
@@ -109,7 +102,7 @@ export const TemplateOverview: FC<{
                                             />
                                         </WorkspacePanel>
                                         <WorkspaceViewPath workspace={workspace} />
-                                    </WorkspaceDiagramming>
+                                    </WorkspaceViewer>
                                 </Flex>
                             </ContextSheet>
 

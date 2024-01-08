@@ -5,7 +5,7 @@ export class SystemLandscapePathProvider implements ISupportPath {
         return [{
             type: ViewType.SystemLandscape,
             identifier: workspace.name,
-            title: workspace.name,
+            title: ViewType.SystemLandscape,
             elements: [],
             relationships: []
         }];

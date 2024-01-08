@@ -1,9 +1,9 @@
 import { useReactFlow } from "@reactflow/core";
 import { useWorkspace } from "@workspace/core";
 import { useEffect } from "react";
-import { getReactFlowAuto } from "../utils";
+import { getReactFlowModelAuto } from "../utils";
 
-export const useAutoLayoutEffect = () => {
+export const useModelAutoLayoutEffect = () => {
     const { workspace } = useWorkspace();
     const { toObject, setNodes, setEdges } = useReactFlow();
 
@@ -11,7 +11,7 @@ export const useAutoLayoutEffect = () => {
     useEffect(() => {
         const reactFlowObject = toObject();
         
-        getReactFlowAuto(reactFlowObject)
+        getReactFlowModelAuto(reactFlowObject)
             .then(reactFlowAuto => {
                 setNodes(reactFlowAuto.nodes);
                 setEdges(reactFlowAuto.edges);

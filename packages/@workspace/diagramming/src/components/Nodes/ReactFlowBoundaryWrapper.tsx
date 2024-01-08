@@ -8,7 +8,7 @@ import {
 } from "@structurizr/dsl";
 import { ReverseArchitectureElementStyle } from "@workspace/core";
 import { FC, PropsWithChildren, useCallback, useMemo } from "react";
-import { nodeSelector } from "../../utils";
+import { diagramNodeSelector } from "../../utils";
 import { ElementLockedIcon } from "./ElementLockedIcon";
 
 export function ReactFlowBoundaryWrapper(ElementBoundaryComponent: FC<PropsWithChildren<{
@@ -32,7 +32,7 @@ export function ReactFlowBoundaryWrapper(ElementBoundaryComponent: FC<PropsWithC
                 data.style,
                 data.element.tags
         ), [data.style, data.element.tags]);
-        const { selectedNodes } = useStore(nodeSelector);
+        const { selectedNodes } = useStore(diagramNodeSelector);
         const { setNodes } = useReactFlow();
         
         // TODO: consider using useResizeObserver

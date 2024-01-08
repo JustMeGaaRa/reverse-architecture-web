@@ -1,8 +1,8 @@
 import { Edge, getNodesBounds, Node, ReactFlowState } from "@reactflow/core";
-import { IElement, IRelationship, Position } from "@structurizr/dsl";
-import { ReactFlowNodeTypeKeys } from "../components";
+import { IElement, IRelationship, Position, Styles } from "@structurizr/dsl";
+import { ReactFlowModelNodeTypeKeys } from "../components";
 
-export const nodeSelector = (state: ReactFlowState) => {
+export const modelNodeSelector = (state: ReactFlowState) => {
     const selectedNodes = Array.from(state.nodeInternals.values()).filter(node => node.selected);
 
     return ({
@@ -13,32 +13,44 @@ export const nodeSelector = (state: ReactFlowState) => {
     })
 }
 
-export const getNodeFromElement = (
-    element: IElement,
-    elementChildrenCount: number | undefined,
-    type: ReactFlowNodeTypeKeys,
-    position?: Position
-): Node => {
+export type ModelElementParams<TElement extends IElement = any> = {
+    element: TElement;
+    elementId?: string;
+    elementChildrenCount?: number,
+    type?: ReactFlowModelNodeTypeKeys,
+    styles: Styles;
+    parentId?: string;
+    position?: Position;
+}
+
+export const getModelNodeFromElement = (params: ModelElementParams): Node => {
     return {
-        id: element.identifier,
-        type: type,
+        id: params.elementId ?? params.element.identifier,
+        type: params.type ?? "element",
         data: {
-            element: element,
-            elementChildrenCount: elementChildrenCount
+            element: params.element,
+            elementChildrenCount: params.elementChildrenCount,
+            style: params.styles.elements,
         },
-        position: {
-            x: position?.x ?? 0,
-            y: position?.y ?? 0
-        }
+        position: params.position ?? { x: 0, y: 0 },
     }
 }
 
-export const getEdgeFromRelationship = (relationship: IRelationship): Edge => {
+export type ModelRelationshipParams = {
+    relationship: IRelationship;
+    styles: Styles;
+}
+
+export const getModelEdgeFromRelationship = (params: ModelRelationshipParams): Edge => {
     return {
-        id: `${relationship.sourceIdentifier}-${relationship.targetIdentifier}`,
+        id: `${params.relationship.sourceIdentifier}-${params.relationship.targetIdentifier}`,
         type: "smoothstep",
-        source: relationship.sourceIdentifier,
-        target: relationship.targetIdentifier,
+        data: {
+            relationship: params.relationship,
+            style: params.styles.relationships,
+        },
+        source: params.relationship.sourceIdentifier,
+        target: params.relationship.targetIdentifier,
         style: {
             stroke: "#535354",
             strokeWidth: 2

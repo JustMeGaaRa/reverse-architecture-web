@@ -8,11 +8,11 @@ import {
     BoundingBox
 } from "@workspace/core";
 import { FC } from "react";
-import { nodeSelector } from "../../utils";
+import { diagramNodeSelector } from "../../utils";
 
 export const ElementZoomControlsBackground: FC = () => {
     // NOTE: this is a workaround to show background underneath the zoom controls
-    const { selectedNodes, selectionBounds } = useStore(nodeSelector);
+    const { selectedNodes, selectionBounds } = useStore(diagramNodeSelector);
     const { viewport } = useStore(viewportSelector);
     
     const isSelectedNodeNavigatable = selectedNodes.length === 1

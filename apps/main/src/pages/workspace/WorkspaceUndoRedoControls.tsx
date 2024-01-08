@@ -5,10 +5,12 @@ import { FC } from "react";
 
 export const WorkspaceUndoRedoControls: FC<{
     position?: PanelPosition;
+    isVisible?: boolean;
 }> = ({
-    position
+    position,
+    isVisible = true
 }) => {
-    return (
+    return isVisible && (
         <WorkspacePanel position={position ?? "bottom-left"}>
             <Toolbar>
                 <ToolbarSection>

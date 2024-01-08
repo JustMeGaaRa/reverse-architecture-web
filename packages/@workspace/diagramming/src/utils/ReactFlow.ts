@@ -9,7 +9,7 @@ import {
 } from "@structurizr/dsl";
 import { ReactFlowNodeTypeKeys } from "../components";
 
-export const nodeSelector = (state: ReactFlowState) => {
+export const diagramNodeSelector = (state: ReactFlowState) => {
     const selectedNodes = Array.from(state.nodeInternals.values()).filter(node => node.selected);
 
     return ({
