@@ -30,7 +30,7 @@ export const WorkspaceRoom: FC<PropsWithChildren<{
             workspaceDocument,
             {
                 signaling: [
-                    "ws://restruct-webrtc-signaling-7452bb784b0b.herokuapp.com"
+                    "wss://restruct-webrtc-signaling-7452bb784b0b.herokuapp.com"
                 ]
             }
         );
