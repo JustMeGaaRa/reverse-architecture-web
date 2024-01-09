@@ -10,7 +10,6 @@ type UserAwarenessCallbacks = {
     onChange?: (position: Position) => void
 }
 
-// TODO: consider passing current view as a parameter
 export const useOnUserAwarenessChange = (callbacks: UserAwarenessCallbacks) => {
     const { getViewport } = useWorkspaceNavigation();
     const { onChange } = callbacks;

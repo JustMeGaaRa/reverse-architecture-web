@@ -7,7 +7,7 @@ export const PresentationModeButton: FC = () => {
     const { currentUser } = useWorkspaceRoom();
     const { presentationEnabled, presenterInfo, startPresenting, stopPresenting } = usePresentationMode();
 
-    return presentationEnabled && currentUser.info.username === presenterInfo.username ? (
+    return presentationEnabled && currentUser.info?.username === presenterInfo?.username ? (
         <IconButton
             aria-label={"stop presenting"}
             icon={<Xmark />}

@@ -25,7 +25,7 @@ export const WorkspaceRoom: FC<PropsWithChildren<{
     const [ presentation, setPresentationOptions ] = useState<PresentationOptions>({ presentationEnabled: false });
 
     useEffect(() => {
-        let webRtcProvider: WebrtcProvider = new WebrtcProvider(roomId, workspaceDocument);
+        let webRtcProvider: WebrtcProvider = new WebrtcProvider(roomId, workspaceDocument, { signaling: ["ws://localhost:4444"] });
 
         const onAwarenessChange = () => {
             const collaboratingUsers = Array

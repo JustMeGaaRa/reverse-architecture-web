@@ -17,8 +17,8 @@ export const PresenterInfo: FC<{
                         size={"md"}
                         title={presenter.fullname}
                     />
-                    <Box paddingLeft={2} paddingRight={4}>
-                        <Text color={`${presenter.color}.600`}>
+                    <Box paddingLeft={2} paddingRight={4} maxWidth={"300px"}>
+                        <Text color={`${presenter.color}.600`} noOfLines={1}>
                             {`${presenter.fullname} is presenting`}
                         </Text>
                     </Box>
