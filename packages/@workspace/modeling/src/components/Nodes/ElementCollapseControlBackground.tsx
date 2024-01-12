@@ -17,12 +17,15 @@ export const ElementCollapseControlsBackground: FC = () => {
     const doesSelectedNodeHaveChildren = selectedNodes.length === 1
         && selectedNodes[0].data.elementChildrenCount > 0;
     
-    const showCollapsePanel = doesSelectedNodeHaveChildren;
-    const elementSelectionBorderBox = new BoundingBox(selectionBounds).multiply(viewport.zoom);
+    const showCollapsePanel = doesSelectedNodeHaveChildren && viewport.zoom > 0.5;
+    const elementSelectionBorderBox = BoundingBox.fromRect(selectionBounds).scale(viewport.zoom);
 
     return (
         <WorkspaceElementPortal>
-            <ViewportStaticElement position={elementSelectionBorderBox} pointerEvents={"none"}>
+            <ViewportStaticElement
+                position={elementSelectionBorderBox.position}
+                pointerEvents={"none"}
+            >
                 {showCollapsePanel && (
                     <Box
                         className={"workspace__element-collapse-background"}

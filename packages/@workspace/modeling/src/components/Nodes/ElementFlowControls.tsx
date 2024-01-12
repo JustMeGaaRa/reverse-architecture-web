@@ -47,10 +47,10 @@ export const ElementModelFlowControls: FC<{
 
     const showEditableControls = isWorkspaceEditable && canSelectedNodeHaveChildren;
     const showSelectionBorder = areAnyNodesSelected;
-    const showCollapsePanel = doesSelectedNodeHaveChildren;
+    const showCollapsePanel = doesSelectedNodeHaveChildren && viewport.zoom > 0.5;
     const elementSelectionBorderRadius = 17 * viewport.zoom;
-    const elementSelectionBorderBox = new BoundingBox(selectionBounds).multiply(viewport.zoom);
-
+    const elementSelectionBorderBox = BoundingBox.fromRect(selectionBounds).scale(viewport.zoom);
+    
     const handleOnCollapseClick = useCallback(() => {
         onCollapseNode(selectedNodes[0]?.id);
     }, [onCollapseNode, selectedNodes]);
@@ -85,7 +85,10 @@ export const ElementModelFlowControls: FC<{
 
     return (
         <WorkspaceElementPortal>
-            <ViewportStaticElement position={elementSelectionBorderBox} zIndex={1}>
+            <ViewportStaticElement
+                position={elementSelectionBorderBox.position}
+                zIndex={1}
+            >
                 <ElementSelectionBorder
                     borderRadius={elementSelectionBorderRadius}
                     colorScheme={"lime"}

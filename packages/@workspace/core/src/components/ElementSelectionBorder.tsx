@@ -22,8 +22,8 @@ export const ElementSelectionBorder: FC<{
             borderWidth={1}
             pointerEvents={"none"}
             position={"relative"}
-            height={height}
-            width={width}
+            height={`${height}px`}
+            width={`${width}px`}
         />
     )
 }

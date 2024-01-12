@@ -54,7 +54,7 @@ export const ElementDiagramFlowControls: FC<{
     
     const showEditableControls = isWorkspaceEditable && isSelectedNodeEditable;
     const showSelectionBorder = areAnyNodesSelected;
-    const showZoomPanel = isSelectedNodeNavigatable;
+    const showZoomPanel = isSelectedNodeNavigatable && viewport.zoom >= 0.5;
     const showZoomIn = showZoomPanel && selectedNodes[0]?.type === "element";
     const showZoomOut = showZoomPanel && selectedNodes[0]?.type === "boundary";
     const elementSelectionBorderRadius = selectedNodes.every(node => node?.type === "boundary" || node?.type === "elementGroup")
@@ -62,7 +62,7 @@ export const ElementDiagramFlowControls: FC<{
         : selectedNodes.every(node => node?.type !== "boundary" && node?.type !== "elementGroup")
             ? 17 * viewport.zoom
             : 0;
-    const elementSelectionBorderBox = new BoundingBox(selectionBounds).multiply(viewport.zoom);
+    const elementSelectionBorderBox = BoundingBox.fromRect(selectionBounds).scale(viewport.zoom);
 
     const onElementPreview = useCallback((position: PositionSide) => {
         if (isSelectedNodeEditable) {
@@ -99,7 +99,10 @@ export const ElementDiagramFlowControls: FC<{
 
     return (
         <WorkspaceElementPortal>
-            <ViewportStaticElement position={elementSelectionBorderBox} zIndex={1}>
+            <ViewportStaticElement
+                position={elementSelectionBorderBox.position}
+                zIndex={1}
+            >
                 <ElementSelectionBorder
                     borderRadius={elementSelectionBorderRadius}
                     colorScheme={"lime"}

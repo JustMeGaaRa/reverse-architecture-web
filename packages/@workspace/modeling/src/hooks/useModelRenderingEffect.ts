@@ -12,7 +12,6 @@ export const useModelRenderingEffect = (workspace: IWorkspace, strategy: ISuppor
 
         getReactFlowModelAuto(reactFlowObject)
             .then(reactFlowAuto => {
-                console.log(reactFlowAuto);
                 setNodes(reactFlowAuto.nodes);
                 setEdges(reactFlowAuto.edges);
             });
