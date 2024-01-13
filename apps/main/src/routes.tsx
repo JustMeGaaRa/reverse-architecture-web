@@ -3,16 +3,17 @@ import {
     Navigate
 } from "react-router-dom";
 import {
-    CommunityPage,
+    CommunityExplorerPage,
     DashboardPage,
     ErrorPage,
     LayoutPage,
-    WorkspaceListPage,
+    WorkspaceExplorerPage,
     ProfileSettingsContent,
     SettingsPage,
     SignInPage,
     AuthorizePage,
     WorkspacePage,
+    WorkspaceSharedPage,
 } from "./pages";
 
 export const routes = createBrowserRouter([
@@ -31,7 +32,7 @@ export const routes = createBrowserRouter([
             },
             {
                 path: "workspaces",
-                element: <WorkspaceListPage />
+                element: <WorkspaceExplorerPage />
             },
             {
                 path: "workspaces/:workspaceId",
@@ -39,8 +40,13 @@ export const routes = createBrowserRouter([
                 errorElement: <ErrorPage />
             },
             {
+                path: "shared",
+                element: <WorkspaceSharedPage />,
+                errorElement: <ErrorPage />
+            },
+            {
                 path: "community",
-                element: <CommunityPage />,
+                element: <CommunityExplorerPage />,
             },
             {
                 path: "settings",

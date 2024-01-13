@@ -19,7 +19,7 @@ export const CommentThreadList: FC<{
     const { workspace } = useWorkspace();
     const { openView } = useWorkspaceNavigation();
 
-    useEffect(() => setCommentThreads(discussions), [discussions, setCommentThreads]);
+    // useEffect(() => setCommentThreads(discussions), [discussions, setCommentThreads]);
 
     const handleOnClick = useCallback((comment: CommentThread) => {
         const isCurrent = selectedThreadId === comment.commentThreadId;

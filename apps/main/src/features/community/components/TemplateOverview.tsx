@@ -28,7 +28,7 @@ import {
     ContextLevelProvider,
     ContextSheet,
     ContextSheetCloseButton,
-    ContextSheetPanel
+    ContextSheetTabContent
 } from "@reversearchitecture/ui";
 import { WorkspaceViewPath } from "@workspace/navigation";
 import { TemplateHeader } from "./TemplateHeader";
@@ -74,9 +74,9 @@ export const TemplateOverview: FC<{
     return (
         <ContextLevelProvider>
             <ContextSheet outlineRadius={[32, 32, 0, 0]} outlineWidth={[1, 1, 1, 1]}>
-                <ContextSheetPanel>
+                <ContextSheetTabContent>
                     <ContextSheet outlineRadius={[32, 32, 0, 0]} outlineWidth={[0, 0, 1, 0]}>
-                        <ContextSheetPanel padding={2} gap={2}>
+                        <ContextSheetTabContent padding={2} gap={2}>
                             <ContextSheet outlineRadius={[26, 26, 26, 26]} outlineWidth={[0, 0, 0, 0]}>
                                 {/* Section: Workspace Preview */}
                                 <Flex
@@ -92,6 +92,7 @@ export const TemplateOverview: FC<{
                                         workspace={workspace}
                                         initialView={workspace.views.systemLandscape}
                                     >
+                                        <WorkspaceViewPath workspace={workspace} /> 
                                         <WorkspacePanel position={"bottom-left"} spacing={2}>
                                             <TemplateHeader
                                                 name={information?.name}
@@ -101,7 +102,6 @@ export const TemplateOverview: FC<{
                                                 onTryItClick={onTryItClick}
                                             />
                                         </WorkspacePanel>
-                                        <WorkspaceViewPath workspace={workspace} />
                                     </WorkspaceViewer>
                                 </Flex>
                             </ContextSheet>
@@ -125,7 +125,7 @@ export const TemplateOverview: FC<{
                                     </TabPanels>
                                 </Tabs>
                             </Flex>
-                        </ContextSheetPanel>
+                        </ContextSheetTabContent>
                     </ContextSheet>
 
                     {/* Section: Navigation */}
@@ -171,7 +171,7 @@ export const TemplateOverview: FC<{
                             />
                         </ButtonGroup>
                     </Flex>
-                </ContextSheetPanel>
+                </ContextSheetTabContent>
             </ContextSheet>
         </ContextLevelProvider>
     )

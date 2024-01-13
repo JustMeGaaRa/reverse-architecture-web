@@ -1,34 +1,40 @@
-import { Divider, Flex, HStack, Icon, IconButton } from "@chakra-ui/react";
 import {
+    Button,
+    Divider,
+    Editable,
+    EditableInput,
+    EditablePreview,
+    HStack,
+    Icon,
+    IconButton,
+    Text
+} from "@chakra-ui/react";
+import {
+    ButtonSegmentedToggle,
     ContextSheet,
     ContextSheetBody,
     ContextSheetCloseButton,
     ContextSheetHeader,
+    ContextSheetPanel,
+    ContextSheetTabContent,
     ContextSheetTitle,
+    PageHomeButton,
+    Route,
+    RouteList,
     usePageHeader,
+    usePageSidebar,
 } from "@reversearchitecture/ui";
 import { WorkspaceEditor } from "@workspace/code-editor";
 import {
-    useOnUserViewportChange,
-    useOnUserViewChange,
-    useOnUserAwarenessChange,
-    UserInfo,
-    useWorkspace,
-    useWorkspaceNavigation,
-    useWorkspaceToolbarStore,
-    Viewport,
-} from "@workspace/core";
-import {
-    CollaboratingUserPane,
-    useWorkspaceRoom,
-    usePresentationMode,
-    useUserAwareness,
-    useOnFollowingUserViewportChange,
-    useFollowUserMode
-} from "@workspace/live";
-import { WorkspaceViewPath } from "@workspace/navigation";
-import { IViewDefinition, ViewType, Workspace } from "@structurizr/dsl";
-import { useStructurizrParser } from "@structurizr/react";
+    AppleShortcuts,
+    ChatLines,
+    CloudSync,
+    Code,
+    HelpCircle,
+    HomeSimple,
+    Settings,
+    ViewStructureUp
+} from "iconoir-react";
 import {
     FC,
     useCallback,
@@ -36,47 +42,86 @@ import {
     useMemo,
     useState
 } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
-    CommentApi,
-    CommentThread,
+    IViewDefinition,
+    ViewType,
+    Workspace,
+    useStructurizrParser
+} from "structurizr";
+import {
+    CollaboratingUserPane,
+    Viewport,
+    WorkspaceViewPath,
+    WorkspaceViewer,
+    useOnUserViewportChange,
+    useOnUserViewChange,
+    useOnUserAwarenessChange,
+    useWorkspace,
+    useWorkspaceNavigation,
+    useWorkspaceToolbarStore,
+    useWorkspaceRoom,
+    usePresentationMode,
+    useUserAwareness,
+    useOnFollowingUserViewportChange,
+    useFollowUserMode
+} from "workspace";
+import {
     CommentThreadList,
+    useCommentingMode,
     useCommentsStore,
 } from "../../features";
 import {
     DiscussionsPane,
-    WorkspaceContentPanel,
+    PresenterInfo,
+    PresentationToolbar,
+    SharePopover,
     UserAvatarGroup,
     WorkspaceDiagrammingToolbar,
     WorkspaceModelingToolbar,
     WorkspaceUndoRedoControls,
     WorkspaceZoomControls,
-    PresenterInfo
+    WorkspaceMenu
 } from "./";
-import { UserPlus } from "iconoir-react";
-import { WorkspaceViewer } from "workspace";
-import { PresentationToolbar } from "./PresentationToolbar";
 
-const ViewTypeParam = "type";
-const ViewIdParam = "identifier";
-const ViewPanelParam = "panel";
+export enum WorkspaceContentMode {
+    Diagramming = "diagramming",
+    Modeling = "modeling",
+    Deployment = "deployment"
+}
 
-export const WorkspaceContentEditor: FC = () => {
-    const { workspaceId } = useParams<{ workspaceId: string }>();
-    const [ queryParams, setQueryParam ] = useSearchParams([[ ViewTypeParam, ViewType.SystemLandscape ]]);
+export enum WorkspaceContentPanel {
+    None = "none",
+    Editor = "editor",
+    Comments = "comments",
+    Versions = "versions"
+}
+
+export const WorkspaceCollaborativeEditor: FC = () => {
+    const navigate = useNavigate();
     const { setHeaderContent } = usePageHeader();
+    const { setSidebarContent, setShowSidebarButton, setSidebarOpen } = usePageSidebar();
 
-    const [ structurizrDslText, setStructurizrDslText ] = useState("");
+    const [ structurizrText, setStructurizrDslText ] = useState("");
     const { parseStructurizr } = useStructurizrParser();
     const { workspace, setWorkspace } = useWorkspace();
-    const { currentView, setViewport } = useWorkspaceNavigation();
+    const { currentView, openView, setViewport } = useWorkspaceNavigation();
+
     const { reportViewport, reportMousePosition, reportView } = useUserAwareness();
     const { currentUser, collaboratingUsers } = useWorkspaceRoom();
     const { presentationEnabled, presenterInfo } = usePresentationMode();
     const { followUser } = useFollowUserMode();
-    const { users } = useMemo(() => ({
-        users: [currentUser, ...collaboratingUsers].map(user => user.info)
-    }), [currentUser, collaboratingUsers]);
+
+    const users = useMemo(() => {
+        return [currentUser, ...collaboratingUsers].map(user => user.info);
+    }, [currentUser, collaboratingUsers]);
+    
+    const currentViewUsers = useMemo(() => {
+        return collaboratingUsers.filter(x => {
+            return x.view?.type === currentView?.type
+                && x.view?.identifier === currentView?.identifier;
+        });
+    }, [collaboratingUsers, currentView?.identifier, currentView?.type]);
 
     const onFollowingUserViewportChange = useCallback((viewport: Viewport) => {
         setViewport(viewport, { duration: 200 });
@@ -90,12 +135,172 @@ export const WorkspaceContentEditor: FC = () => {
     useOnUserViewportChange({ onEnd: reportViewport });
     useOnUserViewChange({ onChange: onCurrentUserViewChange });
     useOnFollowingUserViewportChange({ onChange: onFollowingUserViewportChange });
+
+    // SECTION: sidebar content
+    const [ panel, setPanel ] = useState(WorkspaceContentPanel.None);
+    const isCodeEditorPanel = panel === WorkspaceContentPanel.Editor;
+    const isCommentsPanel = panel === WorkspaceContentPanel.Comments;
+    const isVersionHistoryPanel = panel === WorkspaceContentPanel.Versions;
+
+    const handleOnOpenEditor = useCallback(() => {
+        setPanel(WorkspaceContentPanel.Editor);
+    }, []);
+
+    const handleOnOpenComments = useCallback(() => {
+        setPanel(WorkspaceContentPanel.Comments);
+    }, []);
+
+    const handleOnOpenVersions = useCallback(() => {
+        setPanel(WorkspaceContentPanel.Versions);
+    }, []);
+
+    const handleOnClosePanel = useCallback(() => {
+        setPanel(WorkspaceContentPanel.None);
+    }, []);
     
-    // set header content
+    useEffect(() => {
+        setShowSidebarButton(false);
+        setSidebarOpen(false);
+        setSidebarContent({
+            logo: (
+                <PageHomeButton
+                    icon={<Icon as={HomeSimple} boxSize={5} />}
+                    onClick={() => navigate("/")}
+                />
+            ),
+            top:(
+                <></>
+            ),
+            middle: (
+                <RouteList>
+                    <Route
+                        icon={<Icon as={Code} boxSize={5} />}
+                        isActive={isCodeEditorPanel}
+                        title={"Code Editor"}
+                        onClick={handleOnOpenEditor}
+                    />
+                    <Route
+                        icon={<Icon as={ChatLines} boxSize={5} />}
+                        isActive={isCommentsPanel}
+                        title={"Comments"}
+                        onClick={handleOnOpenComments}
+                    />
+                    <Route
+                        icon={<Icon as={Settings} boxSize={5} />}
+                        isActive={isVersionHistoryPanel}
+                        title={"Version History"}
+                        onClick={handleOnOpenVersions}
+                    />
+                </RouteList>
+            ),
+            bottom: (
+                <RouteList>
+                    <Route
+                        icon={<Icon as={HelpCircle} boxSize={5} />}
+                        isDisabled
+                        title={"Help & Feedback"}
+                        to={"help"}
+                    />
+                </RouteList>
+            )
+        })
+    }, [
+        setSidebarContent,
+        setShowSidebarButton,
+        setSidebarOpen,
+        handleOnOpenComments,
+        handleOnOpenEditor,
+        handleOnOpenVersions,
+        navigate,
+        isCodeEditorPanel,
+        isCommentsPanel,
+        isVersionHistoryPanel
+    ]);
+    
+    // SECTION: header content
+    const [ mode, setMode ] = useState(WorkspaceContentMode.Diagramming);
+    const isDiagrammingMode = mode === WorkspaceContentMode.Diagramming;
+    const isModelingMode = mode === WorkspaceContentMode.Modeling;
+    const isDeploymentMode = mode === WorkspaceContentMode.Deployment;
+
+    const handleOnDiagrammingMode = useCallback(() => {
+        setMode(WorkspaceContentMode.Diagramming);
+        openView(workspace, { type: ViewType.SystemLandscape, identifier: "SystemLandscape" });
+    }, [openView, workspace]);
+
+    const handleOnModelingMode = useCallback(() => {
+        setMode(WorkspaceContentMode.Modeling);
+        openView(workspace, { type: ViewType.Model, identifier: "" });
+    }, [openView, workspace]);
+
+    const handleOnDeploymentMode = useCallback(() => {
+        setMode(WorkspaceContentMode.Deployment);
+        openView(workspace, { type: ViewType.Deployment, identifier: "" });
+    }, [openView, workspace]);
+
     useEffect(() => {
         setHeaderContent({
+            left: (
+                <HStack key={"workspace-page-title"} gap={2}>
+                    <Divider
+                        borderWidth={1}
+                        color={"whiteAlpha.200"}
+                        height={"32px"}
+                        orientation={"vertical"}
+                    />
+                    <Editable value={workspace.name} ml={4} maxWidth={"300px"}>
+                        <EditablePreview />
+                        <EditableInput />
+                    </Editable>
+                    <WorkspaceMenu title={workspace.name} />
+                    <IconButton
+                        aria-label={"save"}
+                        colorScheme={"gray"}
+                        variant={"ghost"}
+                        icon={<Icon as={CloudSync} boxSize={5} />}
+                        size={"md"}
+                    />
+                </HStack>
+            ),
+            middle: (
+                <ButtonSegmentedToggle>
+                    <Button
+                        colorScheme={"lime"}
+                        isActive={isDiagrammingMode}
+                        iconSpacing={0}
+                        leftIcon={<Icon as={AppleShortcuts} boxSize={4} />}
+                        paddingInline={6}
+                        title={"diagramming"}
+                        onClick={handleOnDiagrammingMode}
+                    >
+                        <Text marginX={1}>Diagramming</Text>
+                    </Button>
+                    <Button
+                        colorScheme={"lime"}
+                        isActive={isModelingMode}
+                        iconSpacing={0}
+                        leftIcon={<Icon as={ViewStructureUp} boxSize={4} />}
+                        paddingInline={6}
+                        title={"modeling"}
+                        onClick={handleOnModelingMode}
+                    >
+                        <Text marginX={1}>Modeling</Text>
+                    </Button>
+                    <Button
+                        colorScheme={"lime"}
+                        isActive={isDeploymentMode}
+                        iconSpacing={0}
+                        leftIcon={<Icon as={ViewStructureUp} boxSize={4} />}
+                        paddingInline={6}
+                        title={"deployment"}
+                        onClick={handleOnDeploymentMode}
+                    >
+                        <Text marginX={1}>Deployment</Text>
+                    </Button>
+                </ButtonSegmentedToggle>
+            ),
             right: (
-                <HStack key={"workspace-page-options"} gap={2} mr={4}>
+                <HStack gap={2} mr={4}>
                     <UserAvatarGroup
                         users={users}
                         onAvatarClick={followUser}
@@ -107,83 +312,26 @@ export const WorkspaceContentEditor: FC = () => {
                         marginX={2}
                         orientation={"vertical"}
                     />
-                    <IconButton
-                        aria-label={"share"}
-                        colorScheme={"gray"}
-                        icon={<Icon as={UserPlus} boxSize={5} />}
-                        isDisabled
-                        size={"md"}
-                    />
+                    <SharePopover />
                 </HStack>
             )
         })
-    }, [setHeaderContent, followUser, users])
+    }, [
+        setHeaderContent,
+        handleOnDiagrammingMode,
+        handleOnModelingMode,
+        handleOnDeploymentMode,
+        followUser,
+        workspace.name,
+        users,
+        isDiagrammingMode,
+        isModelingMode,
+        isDeploymentMode
+    ]);
 
-    // discussions
-    const [ commentThreads, setCommentThreads ] = useState<Array<CommentThread>>([]);
-    const { commentApi } = useMemo(() => ({ commentApi: new CommentApi() }), []);
-    const { isCommentAddingEnabled } = useWorkspaceToolbarStore();
-    const {  } = useCommentsStore();
-
-    useEffect(() => {
-        commentApi.getDiscussions(workspaceId)
-            .then(comments => setCommentThreads(comments))
-            .catch(error => console.error(error));
-    }, [workspaceId, commentApi]);
-
-    const handleOnClosePanel = useCallback(() => {
-        setQueryParam(params => {
-            params.delete("panel");
-            return new URLSearchParams(params);
-        });
-    }, [setQueryParam]);
-
-    // code editor
-    const handleOnTextChange = useCallback((value: string) => {
-        setStructurizrDslText(value);
-        // TODO: use debounce to defer the workspace parsing by 500ms
-        setWorkspace(parseStructurizr(value));
-    }, [parseStructurizr, setWorkspace]);
-
-    const handleOnWorkspaceChange = useCallback((workspace: Workspace) => {
-        // TODO: set structurizr dsl code to a respective provider
-        // const structurizrExporter = new StructurizrExportClient();
-        // setStructurizrDslText(structurizrText);
-
-        // NOTE: when the workspace is changed internally, we need to save it for further updates
-        setWorkspace(workspace);
-    }, [setWorkspace]);
-
-    const handleOnWorkspaceViewClick = useCallback((event: React.MouseEvent) => {
-        if (isCommentAddingEnabled) {
-            // TODO: get viewport, translate position and save comment
-        }
-    }, [isCommentAddingEnabled]);
-
-    const queryParamersView = useMemo(() => ({
-        type: queryParams.get(ViewTypeParam) as ViewType
-            ?? ViewType.SystemLandscape,
-        identifier: queryParams.get(ViewIdParam)
-    }), [queryParams]);
-
-    const isDiagrammingMode = useMemo(() => {
-        return queryParams.get(ViewTypeParam) !== ViewType.Model
-            && queryParams.get(ViewTypeParam) !== ViewType.Deployment;
-    }, [queryParams]);
-    const isModelingMode = useMemo(() => {
-        return queryParams.get(ViewTypeParam) === ViewType.Model;
-    }, [queryParams]);
-    const isDeploymentMode = useMemo(() => {
-        return queryParams.get(ViewTypeParam) === ViewType.Deployment;
-    }, [queryParams]);
-
-    const currentViewUsers = useMemo(() => {
-        return collaboratingUsers.filter(x => {
-            return x.view?.type === currentView?.type
-                && x.view?.identifier === currentView?.identifier;
-        });
-    }, [collaboratingUsers, currentView?.identifier, currentView?.type]);
-    
+    // SECTION: comments panel
+    const { isCommentingModeEnabled } = useCommentingMode();
+    const { commentThreads } = useCommentsStore();
     const currentViewDiscussions = useMemo(() => {
         return commentThreads.filter(x => {
             return x.metadata?.view?.type === currentView?.type
@@ -191,60 +339,78 @@ export const WorkspaceContentEditor: FC = () => {
         });
     }, [commentThreads, currentView?.identifier, currentView?.type]);
 
+    const handleOnWorkspaceViewClick = useCallback((event: React.MouseEvent) => {
+        if (isCommentingModeEnabled) {
+            // TODO: get viewport, translate position and save comment
+        }
+    }, [isCommentingModeEnabled]);
+
+    // SECTION: code editor panel
+    const handleOnStructurizrTextChange = useCallback((value: string) => {
+        setStructurizrDslText(value);
+        // TODO: use debounce to defer the workspace parsing by 500ms
+        // TODO: handle parsing errors
+        setWorkspace(parseStructurizr(value));
+    }, [parseStructurizr, setWorkspace]);
+
+    const handleOnWorkspaceChange = useCallback((workspace: Workspace) => {
+        // TODO: set structurizr dsl code to a respective provider
+        // const structurizrExporter = new StructurizrExportClient();
+        // setStructurizrDslText(structurizrText);
+        setWorkspace(workspace);
+    }, [setWorkspace]);
+
     return (
         <ContextSheet>
-            <Flex direction={"row"} height={"100%"}>
-                {queryParams.get(ViewPanelParam) === WorkspaceContentPanel.Comments && (
-                    <Flex direction={"column"} width={"400px"}>
+            <ContextSheetTabContent>
+                {panel === WorkspaceContentPanel.Comments && (
+                    <ContextSheetPanel width={"400px"}>
                         <ContextSheetHeader>
                             <ContextSheetCloseButton onClick={handleOnClosePanel} />
                             <ContextSheetTitle title={"All Discussions"} />
                         </ContextSheetHeader>
-
                         <Divider />
-
                         <ContextSheetBody>
                             <CommentThreadList discussions={commentThreads} />
                         </ContextSheetBody>
-                    </Flex>
+                    </ContextSheetPanel>
                 )}
 
-                {queryParams.get(ViewPanelParam) === WorkspaceContentPanel.Editor && (
-                    <Flex direction={"column"} width={"100%"}>
+                {panel === WorkspaceContentPanel.Editor && (
+                    <ContextSheetPanel width={"100%"}>
                         <ContextSheetHeader>
                             <ContextSheetCloseButton onClick={handleOnClosePanel} />
                             <ContextSheetTitle title={"Code Editor"} />
                         </ContextSheetHeader>
-    
                         <Divider />
-                        
                         <ContextSheetBody>
                             <WorkspaceEditor
-                                value={structurizrDslText}
-                                onChange={handleOnTextChange}
+                                value={structurizrText}
+                                onChange={handleOnStructurizrTextChange}
                             />
                         </ContextSheetBody>
-                    </Flex>
+                    </ContextSheetPanel>
                 )}
 
-                {queryParams.get(ViewPanelParam) === WorkspaceContentPanel.Settings && (
-                    <Flex direction={"column"} width={"400px"}>
+                {panel === WorkspaceContentPanel.Versions && (
+                    <ContextSheetPanel width={"400px"}>
                         <ContextSheetHeader>
                             <ContextSheetCloseButton onClick={handleOnClosePanel} />
                             <ContextSheetTitle title={"Version History"} />
                         </ContextSheetHeader>
-    
                         <Divider />
-                        
                         <ContextSheetBody>
+
                         </ContextSheetBody>
-                    </Flex>
+                    </ContextSheetPanel>
                 )}
-    
-                <ContextSheet outline={presentationEnabled ? `${presenterInfo?.color}.600` : undefined}>
+                
+                <ContextSheet
+                    outline={presentationEnabled ? `${presenterInfo?.color}.600` : undefined}
+                    outlineWidth={presentationEnabled ? [2, 2, 2, 2] : [2, 2, 0, 0]}
+                >
                     <WorkspaceViewer
                         workspace={workspace}
-                        initialView={queryParamersView}
                         onChange={handleOnWorkspaceChange}
                         onViewClick={handleOnWorkspaceViewClick}
                     >
@@ -259,7 +425,7 @@ export const WorkspaceContentEditor: FC = () => {
                         <WorkspaceZoomControls />
                     </WorkspaceViewer>
                 </ContextSheet>
-            </Flex>
+            </ContextSheetTabContent>
         </ContextSheet>
     );
 }

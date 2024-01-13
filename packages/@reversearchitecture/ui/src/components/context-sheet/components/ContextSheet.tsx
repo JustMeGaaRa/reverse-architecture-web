@@ -39,7 +39,7 @@ export const ContextSheet: FC<PropsWithChildren<{
     )
 }
 
-export const ContextSheetPanel: FC<PropsWithChildren<{
+export const ContextSheetTabContent: FC<PropsWithChildren<{
     gap?: number;
     padding?: number;
 }>> = ({
@@ -54,6 +54,19 @@ export const ContextSheetPanel: FC<PropsWithChildren<{
             gap={gap ?? 0}
             padding={padding ?? 0}
         >
+            {children}
+        </Flex>
+    )
+}
+
+export const ContextSheetPanel: FC<PropsWithChildren<{
+    width?: string;
+}>> = ({
+    children,
+    width
+}) => {
+    return (
+        <Flex direction={"column"} width={width}>
             {children}
         </Flex>
     )

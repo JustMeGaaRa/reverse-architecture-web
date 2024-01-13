@@ -3,7 +3,23 @@ import { CommentContext } from "../contexts";
 import { CommentThread } from "../types";
 
 export const useCommentsStore = () => {
-    return useContext(CommentContext);
+    const {
+        commentThreads,
+        highlightThreadId,
+        selectedThreadId,
+        setCommentThreads,
+        setHighlightThreadId,
+        setSelectedThreadId
+    } = useContext(CommentContext);
+
+    return {
+        commentThreads,
+        highlightThreadId,
+        selectedThreadId,
+        setCommentThreads,
+        setHighlightThreadId,
+        setSelectedThreadId
+    }
 }
 
 export const useOnSelectedCommentChange = (callback: (thread?: CommentThread) => void) => {

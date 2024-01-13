@@ -152,13 +152,13 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
 
     const handleOnFlowClick = useCallback((sourceNode: Node, position: Position) => {
         switch (sourceNode.data?.element?.type) {
+            case ElementType.Person:
+                onWorkspaceChange?.(addPerson(position, sourceNode.parentNode));
+                onWorkspaceChange?.(addRelationship(sourceNode.id, ""))
             case ElementType.SoftwareSystem:
                 onWorkspaceChange?.(addSoftwareSystem(position, sourceNode.parentNode));
                 onWorkspaceChange?.(addRelationship(sourceNode.id, ""))
                 break;
-            case ElementType.Person:
-                onWorkspaceChange?.(addPerson(position, sourceNode.parentNode));
-                onWorkspaceChange?.(addRelationship(sourceNode.id, ""))
         }
     }, [onWorkspaceChange, addPerson, addSoftwareSystem, addRelationship]);
 

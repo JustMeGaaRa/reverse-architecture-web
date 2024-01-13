@@ -50,7 +50,7 @@ import {
     isWorkspaceGroup,
     WorkspaceCacheWrapper
 } from "../../../features";
-import { HomePageLayoutContent } from "../../home";
+import { HomePageLayoutContent } from "..";
 import { WorkspaceStack } from "./WorkspaceStack";
 
 export enum WorkspaceListTabs {
@@ -59,7 +59,7 @@ export enum WorkspaceListTabs {
     Archived = "archived"
 }
 
-export const WorkspaceListPage: FC<PropsWithChildren> = () => {
+export const WorkspaceExplorerPage: FC<PropsWithChildren> = () => {
     const { setHeaderContent } = usePageHeader();
     const [ queryParams, setQueryParam ] = useSearchParams([[ "tab", WorkspaceListTabs.All ]]);
     const { view, setView } = useContentViewMode(ContentViewMode.Card);

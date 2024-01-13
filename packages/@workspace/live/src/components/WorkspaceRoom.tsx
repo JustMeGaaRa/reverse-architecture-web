@@ -1,17 +1,24 @@
-import { FC, PropsWithChildren, useEffect, useState } from "react";
+import { Workspace } from "@structurizr/dsl";
+import { useWorkspace, WorkspaceProvider, WorkspaceUser } from "@workspace/core";
+import { FC, PropsWithChildren, useCallback, useContext, useEffect, useState } from "react";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
 import { WorkspaceRoomContext } from "../contexts";
 import { PresentationOptions } from "../types";
-import { WorkspaceUser } from "@workspace/core";
+import { useWorkspaceRoom } from "../hooks";
 
 export const workspaceDocument = new Y.Doc();
 
 export const WorkspaceRoom: FC<PropsWithChildren<{
-    roomId: string;
+    workspace?: Workspace;
+    options?: {
+        roomId: string;
+        password?: string;
+    }
 }>> = ({
     children,
-    roomId,
+    workspace,
+    options
 }) => {
     const [ connectionProvider, setConnectionProvider ] = useState<WebrtcProvider>();
     const [ currentUser, setCurrentUser ] = useState<WorkspaceUser>({
@@ -22,16 +29,19 @@ export const WorkspaceRoom: FC<PropsWithChildren<{
         }
     });
     const [ collaboratingUsers, setCollaboratingUsers ] = useState<Array<WorkspaceUser>>([]);
-    const [ presentation, setPresentationOptions ] = useState<PresentationOptions>({ presentationEnabled: false });
+    const [ presentation, setPresentationOptions ] = useState<PresentationOptions>({
+        presentationEnabled: false,
+        presenterInfo: undefined,
+    });
 
     useEffect(() => {
         let webRtcProvider: WebrtcProvider = new WebrtcProvider(
-            roomId,
+            `restruct-room__${options.roomId}`,
             workspaceDocument,
             {
                 signaling: [
                     "wss://restruct-webrtc-signaling-7452bb784b0b.herokuapp.com"
-                ]
+                ],
             }
         );
 
@@ -56,7 +66,7 @@ export const WorkspaceRoom: FC<PropsWithChildren<{
             webRtcProvider?.disconnect();
             webRtcProvider?.destroy();
         }
-    }, [roomId]);
+    }, [options.roomId]);
 
     return (
         <WorkspaceRoomContext.Provider
@@ -70,7 +80,60 @@ export const WorkspaceRoom: FC<PropsWithChildren<{
                 setPresentationOptions
             }}
         >
-            {children}
+            <WorkspaceRemoteObserver
+                initialWorkspace={workspace ?? Workspace.Empty}
+            >
+                {children}
+            </WorkspaceRemoteObserver>
         </WorkspaceRoomContext.Provider>
     )
+}
+
+export const WorkspaceRemoteObserver: FC<PropsWithChildren<{
+    initialWorkspace?: Workspace;
+}>> = ({
+    children,
+    initialWorkspace
+}) => {
+    const [ workspace, setWorkspace ] = useState<Workspace>(Workspace.Empty);
+    const { workspaceDocument } = useWorkspaceRoom();
+
+    useEffect(() => {
+        setWorkspace(initialWorkspace ?? Workspace.Empty);
+    }, [initialWorkspace]);
+
+    useEffect(() => {
+        const onWorkspaceSyncLocal = () => {
+            const workspaceJson = workspaceMap.get("workspace") as string;
+            const structurizrText = workspaceMap.get("structurizr") as string;
+
+            setWorkspace(new Workspace(JSON.parse(workspaceJson)));
+            // setStructurizrText(structurizrText);
+            console.log(workspaceJson)
+            console.log(structurizrText);
+        }
+
+        const workspaceMap = workspaceDocument.getMap("workspace");
+        workspaceMap.observe(onWorkspaceSyncLocal);
+
+        return () => {
+            workspaceMap.unobserve(onWorkspaceSyncLocal);
+        }
+    }, [setWorkspace, workspaceDocument]);
+
+    const onWorkspaceSyncRemote = useCallback((workspace: Workspace) => {
+        const workspaceMap = workspaceDocument.getMap("workspace");
+        workspaceMap.set("workspace", JSON.stringify(workspace.toObject()));
+        
+        setWorkspace(workspace);
+    }, [setWorkspace, workspaceDocument]);
+
+    return (
+        <WorkspaceProvider
+            workspace={workspace}
+            onChange={onWorkspaceSyncRemote}
+        >
+            {children}
+        </WorkspaceProvider>
+    );
 }

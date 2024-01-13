@@ -12,6 +12,10 @@ export const WorkspaceViewUpdater: FC<{
     const { openView } = useWorkspaceNavigation();
 
     // NOTE: update the current view and do not trigger onViewChange callback, as it has not changed
-    useEffect(() => openView(workspace, currentView), [workspace, currentView, openView]);
+    useEffect(() => {
+        if (workspace && currentView) {
+            openView(workspace, currentView)
+        }
+    }, [workspace, currentView, openView]);
     return null;
 }

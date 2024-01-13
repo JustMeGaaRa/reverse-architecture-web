@@ -15,12 +15,14 @@ import {
     ComponentViewStrategy,
     IWorkspace,
     Workspace,
+    Position,
 } from "@structurizr/dsl";
 import {
     WorkspaceViewRenderer,
     useWorkspaceToolbarStore,
     getAbsolutePoint,
-    CurrentView
+    CurrentView,
+    useWorkspace
 } from "@workspace/core";
 import {
     FC,
@@ -58,6 +60,7 @@ export const ComponentView: FC<PropsWithChildren<{
 }) => {
     const [ nodes, , onNodesChange ] = useNodesState([]);
     const [ edges, , onEdgesChange ] = useEdgesState([]);
+    const store = useWorkspace();
     const reactFlowRef = useRef(null);
     const strategy = useMemo(() => new ComponentViewStrategy(workspace.model, view), [workspace, view]);
     const {
@@ -154,6 +157,26 @@ export const ComponentView: FC<PropsWithChildren<{
         onWorkspaceChange?.(addRelationship(connection.source, connection.target));
     }, [addRelationship, onWorkspaceChange]);
 
+    const handleOnFlowClick = useCallback((sourceNode: Node, position: Position) => {
+        switch (sourceNode.data?.element?.type) {
+            case ElementType.Person:
+                onWorkspaceChange?.(addPerson(position));
+                onWorkspaceChange?.(addRelationship(sourceNode.id, ""))
+            case ElementType.SoftwareSystem:
+                onWorkspaceChange?.(addSoftwareSystem(position));
+                onWorkspaceChange?.(addRelationship(sourceNode.id, ""))
+                break;
+            case ElementType.Container:
+                onWorkspaceChange?.(addContainer(position));
+                onWorkspaceChange?.(addRelationship(sourceNode.id, ""))
+                break;
+            case ElementType.Component:
+                onWorkspaceChange?.(addComponent(position, sourceNode.parentNode));
+                onWorkspaceChange?.(addRelationship(sourceNode.id, ""))
+                break;
+        }
+    }, [onWorkspaceChange, addPerson, addRelationship, addSoftwareSystem, addContainer, addComponent]);
+
     return (
         <WorkspaceViewRenderer
             ref={reactFlowRef}
@@ -161,6 +184,7 @@ export const ComponentView: FC<PropsWithChildren<{
             nodeTypes={ReactFlowNodeTypes}
             edges={edges}
             edgeTypes={ReactFlowEdgeTypes}
+            isReadonly={store.workspace === null || store.workspace === undefined}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onNodeDragStop={handleOnNodeDragStop}
@@ -175,7 +199,10 @@ export const ComponentView: FC<PropsWithChildren<{
                 variant={BackgroundVariant.Dots}
             />
             <ElementOptionsToolbar />
-            <ElementDiagramFlowControls workspace={workspace} />
+            <ElementDiagramFlowControls
+                workspace={workspace}
+                onHandleClick={handleOnFlowClick}
+            />
             <ElementZoomControlsBackground />
             {children}
         </WorkspaceViewRenderer>

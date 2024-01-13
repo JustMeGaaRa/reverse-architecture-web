@@ -48,9 +48,9 @@ import {
     CommunityTemplateModal,
     CommunityPublishingModal,
     HomePageLayoutContent,
-} from "../../home";
+} from "..";
 
-export const CommunityPage: FC<PropsWithChildren> = () => {
+export const CommunityExplorerPage: FC<PropsWithChildren> = () => {
     const { setShowSidebarButton } = usePageSidebar();
     const { setHeaderContent } = usePageHeader();
     const [ queryParams, setQueryParam ] = useSearchParams();

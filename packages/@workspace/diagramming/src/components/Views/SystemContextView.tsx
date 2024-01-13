@@ -13,6 +13,7 @@ import {
     IModel,
     ISystemContextView,
     IWorkspace,
+    Position,
     SystemContextViewStrategy,
     Workspace,
 } from "@structurizr/dsl";
@@ -20,7 +21,8 @@ import {
     WorkspaceViewRenderer,
     useWorkspaceToolbarStore,
     getAbsolutePoint,
-    CurrentView
+    CurrentView,
+    useWorkspace
 } from "@workspace/core";
 import {
     FC,
@@ -58,6 +60,7 @@ export const SystemContextView: FC<PropsWithChildren<{
 }) => {
     const [ nodes, , onNodesChange ] = useNodesState([]);
     const [ edges, , onEdgesChange ] = useEdgesState([]);
+    const store = useWorkspace();
     const reactFlowRef = useRef(null);
     const strategy = useMemo(() => new SystemContextViewStrategy(workspace.model, view), [workspace, view]);
     const {
@@ -151,6 +154,18 @@ export const SystemContextView: FC<PropsWithChildren<{
         onWorkspaceChange?.(addRelationship(connection.source, connection.target));
     }, [addRelationship, onWorkspaceChange]);
 
+    const handleOnFlowClick = useCallback((sourceNode: Node, position: Position) => {
+        switch (sourceNode.data?.element?.type) {
+            case ElementType.Person:
+                onWorkspaceChange?.(addPerson(position, sourceNode.parentNode));
+                onWorkspaceChange?.(addRelationship(sourceNode.id, ""))
+            case ElementType.SoftwareSystem:
+                onWorkspaceChange?.(addSoftwareSystem(position, sourceNode.parentNode));
+                onWorkspaceChange?.(addRelationship(sourceNode.id, ""))
+                break;
+        }
+    }, [onWorkspaceChange, addPerson, addSoftwareSystem, addRelationship]);
+
     return (
         <WorkspaceViewRenderer
             ref={reactFlowRef}
@@ -158,6 +173,7 @@ export const SystemContextView: FC<PropsWithChildren<{
             nodeTypes={ReactFlowNodeTypes}
             edges={edges}
             edgeTypes={ReactFlowEdgeTypes}
+            isReadonly={store.workspace === null || store.workspace === undefined}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onNodeDragStop={handleOnNodeDragStop}
@@ -172,7 +188,10 @@ export const SystemContextView: FC<PropsWithChildren<{
                 variant={BackgroundVariant.Dots}
             />
             <ElementOptionsToolbar />
-            <ElementDiagramFlowControls workspace={workspace} />
+            <ElementDiagramFlowControls
+                workspace={workspace}
+                onHandleClick={handleOnFlowClick}
+            />
             <ElementZoomControlsBackground />
             {children}
         </WorkspaceViewRenderer>

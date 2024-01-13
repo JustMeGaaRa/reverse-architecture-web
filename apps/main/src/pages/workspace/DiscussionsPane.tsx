@@ -24,17 +24,12 @@ export const DiscussionsPane: FC<{
     discussions
 }) => {
     const { workspace } = useWorkspace();
-    const { currentView } = useWorkspaceNavigation();
     const { account } = useAccount();
     const {
-        commentThreads,
         selectedThreadId,
         setSelectedThreadId,
-        setCommentThreads
     } = useCommentsStore();
     const { commentApi } = useMemo(() => ({ commentApi: new CommentCacheWrapper(new CommentApi()) }), []);
-
-    useEffect(() => setCommentThreads(discussions), [discussions, setCommentThreads]);
 
     const handleOnBadgeClick = useCallback((commentThreadId?: string) => {
         setSelectedThreadId(commentThreadId);
@@ -70,14 +65,9 @@ export const DiscussionsPane: FC<{
         setSelectedThreadId(undefined);
     }, [setSelectedThreadId]);
 
-    const viewDiscussions = commentThreads.filter(x => {
-        return x.metadata
-            && x.metadata.view.type === currentView.type
-            && x.metadata.view.id === currentView.identifier
-    });
-    const elementRelativeDiscussions = viewDiscussions.filter(x => x.metadata?.elementId === undefined);
-    const viewportRelativeDiscussions = viewDiscussions.filter(x => x.metadata?.elementId !== undefined);
-    const selectedDiscussion = viewDiscussions.find(x => x.commentThreadId === selectedThreadId);
+    const elementRelativeDiscussions = discussions.filter(x => x.metadata?.elementId === undefined);
+    const viewportRelativeDiscussions = discussions.filter(x => x.metadata?.elementId !== undefined);
+    const selectedDiscussion = discussions.find(x => x.commentThreadId === selectedThreadId);
 
     return (
         <WorkspaceElementPortal>

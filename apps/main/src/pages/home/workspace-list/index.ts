@@ -1,2 +1,2 @@
-export * from "./WorkspaceListPage";
+export * from "./WorkspaceExplorerPage";
 export * from "./WorkspaceStack";

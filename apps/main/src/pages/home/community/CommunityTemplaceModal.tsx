@@ -90,20 +90,20 @@ export const CommunityTemplateModal: FC<{
             <ModalContent>
                 <Flex
                     bottom={0}
-                    paddingX={8}
                     paddingTop={20}
+                    paddingX={8}
+                    position={"absolute"}
                     height={"100%"}
                     width={"100%"}
-                    position={"absolute"}
                 >
                     <TemplateOverview
                         information={info}
                         workspace={workspace}
                         discussion={discussion}
                         onCommentSend={handleOnCommentSend}
+                        onCommentsClick={handleOnCommentsClick}
                         onTryItClick={handleOnTryItClick}
                         onInformationClick={handleOnInformationClick}
-                        onCommentsClick={handleOnCommentsClick}
                         onClose={onClose}
                     />
                 </Flex>
