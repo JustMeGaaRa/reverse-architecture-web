@@ -38,12 +38,8 @@ export const useDeploymentView = (viewIdentifier: Identifier, environment: strin
     }, []);
 
     const setElementPosition = useCallback((elementId: string, position: Position) => {
-        workspace.views.deployments
-            .filter(x => x.identifier === viewIdentifier && x?.["environment"] === environment)
-            .forEach(x => x.setElementPosition(elementId, position));
-        
-        return workspace.toObject();
-    }, [viewIdentifier, environment, workspace]);
+
+    }, []);
 
     return {
         addDeploymentNode,

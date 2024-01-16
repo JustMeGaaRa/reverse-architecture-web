@@ -1,13 +1,17 @@
-import { Workspace } from "@structurizr/dsl";
+import { IWorkspace } from "@structurizr/dsl";
 import { createContext, SetStateAction, Dispatch } from "react";
+import * as Y from "yjs";
 
-// TODO: consider using mutable workspace object instead of immutable (using yjs internally for collaboration)
 export type WorkspaceStore = {
-    workspace: Workspace;
-    setWorkspace?: Dispatch<SetStateAction<Workspace>>;
+    workspaceDocument?: Y.Doc;
+    workspace: IWorkspace;
+    undoManager?: Y.UndoManager;
+    setWorkspace?: Dispatch<SetStateAction<IWorkspace>>;
 };
 
 export const WorkspaceContext = createContext<WorkspaceStore>({
+    workspaceDocument: undefined,
     workspace: undefined,
+    undoManager: undefined,
     setWorkspace: () => {},
 });

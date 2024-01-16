@@ -7,16 +7,18 @@ import {
 import { useParams } from "react-router-dom";
 import {
     Workspace,
-    useStructurizrParser
+    useStructurizrParser,
+    IWorkspace
 } from "structurizr";
 import {
     WorkspaceNavigationProvider,
     CurrentUser,
     WorkspaceRoom,
+    WorkspaceProvider,
 } from "workspace";
 import {
     CommentApi,
-    CommentsRemoteObserver,
+    CommentProvider,
     CommentThread,
     useAccount,
     useSnackbar,
@@ -35,7 +37,7 @@ export const WorkspacePage: FC = () => {
     // SECTION: loading workspace from the API
     const workspaceApi = useMemo(() => new WorkspaceCacheWrapper(new WorkspaceApi()), []);
     const { parseStructurizr } = useStructurizrParser();
-    const [ workspace, setWorkspace ] = useState<Workspace>(Workspace.Empty);
+    const [ workspace, setWorkspace ] = useState<IWorkspace>(Workspace.Empty.toObject());
     // const { openView } = useWorkspaceNavigation();
 
     useEffect(() => {
@@ -85,17 +87,19 @@ export const WorkspacePage: FC = () => {
             setDiscussions([]);
         }
     }, [workspaceId, commentApi, snackbar, setDiscussions]);
-
+    
     // NOTE: workspace provider on this page should save changes to the persistant layer,
     // as this is the user who shares and owns the workspace file
     return (
-        <WorkspaceRoom workspace={workspace} options={{ roomId: workspaceId }}>
-            <WorkspaceNavigationProvider>
-                <CommentsRemoteObserver initialDiscussions={discussions}>
-                    <CurrentUser info={account} />
-                    <WorkspaceCollaborativeEditor />
-                </CommentsRemoteObserver>
-            </WorkspaceNavigationProvider>
-        </WorkspaceRoom>
+        <WorkspaceProvider initialWorkspace={workspace}>
+            <CommentProvider initialDiscussions={discussions}>
+                <WorkspaceNavigationProvider>
+                    <WorkspaceRoom options={{ roomId: workspaceId }}>
+                        <CurrentUser info={account} />
+                        <WorkspaceCollaborativeEditor />
+                    </WorkspaceRoom>
+                </WorkspaceNavigationProvider>
+            </CommentProvider>
+        </WorkspaceProvider>
     )
 }

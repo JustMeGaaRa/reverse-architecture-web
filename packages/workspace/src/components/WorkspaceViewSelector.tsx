@@ -1,4 +1,4 @@
-import { ViewType, Workspace } from "@structurizr/dsl";
+import { IWorkspace, ViewType } from "@structurizr/dsl";
 import { useWorkspaceNavigation } from "@workspace/core";
 import {
     SystemLandscapeView,
@@ -11,13 +11,11 @@ import { ModelView } from "@workspace/modeling";
 import { FC, PropsWithChildren } from "react";
 
 export const WorkspaceViewSelector: FC<PropsWithChildren<{
-    workspace: Workspace;
-    onChange?: (workspace: Workspace) => void;
+    workspace: IWorkspace;
     onViewClick?: (event: React.MouseEvent) => void;
 }>> = ({
     children,
     workspace,
-    onChange,
     onViewClick
 }) => {
     const { currentView } = useWorkspaceNavigation();
@@ -27,7 +25,6 @@ export const WorkspaceViewSelector: FC<PropsWithChildren<{
             return (
                 <ModelView
                     workspace={workspace}
-                    onWorkspaceChange={onChange}
                     onWorkspaceViewClick={onViewClick}
                 >
                     {children}
@@ -38,7 +35,6 @@ export const WorkspaceViewSelector: FC<PropsWithChildren<{
                 <SystemLandscapeView
                     workspace={workspace}
                     view={currentView as any}
-                    onWorkspaceChange={onChange}
                     onWorkspaceViewClick={onViewClick}
                 >
                     {children}
@@ -49,7 +45,6 @@ export const WorkspaceViewSelector: FC<PropsWithChildren<{
                 <SystemContextView
                     workspace={workspace}
                     view={currentView as any}
-                    onWorkspaceChange={onChange}
                 >
                     {children}
                 </SystemContextView>
@@ -59,7 +54,6 @@ export const WorkspaceViewSelector: FC<PropsWithChildren<{
                 <ContainerView
                     workspace={workspace}
                     view={currentView as any}
-                    onWorkspaceChange={onChange}
                 >
                     {children}
                 </ContainerView>
@@ -69,7 +63,6 @@ export const WorkspaceViewSelector: FC<PropsWithChildren<{
                 <ComponentView
                     workspace={workspace}
                     view={currentView as any}
-                    onWorkspaceChange={onChange}
                 >
                     {children}
                 </ComponentView>
@@ -79,7 +72,6 @@ export const WorkspaceViewSelector: FC<PropsWithChildren<{
                 <DeploymentView
                     workspace={workspace}
                     view={currentView as any}
-                    onWorkspaceChange={onChange}
                 >
                     {children}
                 </DeploymentView>

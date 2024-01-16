@@ -47,7 +47,9 @@ import {
     IViewDefinition,
     ViewType,
     Workspace,
-    useStructurizrParser
+    useStructurizrParser,
+    DeploymentViewDefinition,
+    SystemLandscapeViewDefinition
 } from "structurizr";
 import {
     CollaboratingUserPane,
@@ -59,7 +61,6 @@ import {
     useOnUserAwarenessChange,
     useWorkspace,
     useWorkspaceNavigation,
-    useWorkspaceToolbarStore,
     useWorkspaceRoom,
     usePresentationMode,
     useUserAwareness,
@@ -224,8 +225,9 @@ export const WorkspaceCollaborativeEditor: FC = () => {
     const isDeploymentMode = mode === WorkspaceContentMode.Deployment;
 
     const handleOnDiagrammingMode = useCallback(() => {
+        const view = new SystemLandscapeViewDefinition({ identifier: "" });
         setMode(WorkspaceContentMode.Diagramming);
-        openView(workspace, { type: ViewType.SystemLandscape, identifier: "SystemLandscape" });
+        openView(workspace, view.toObject());
     }, [openView, workspace]);
 
     const handleOnModelingMode = useCallback(() => {
@@ -234,8 +236,9 @@ export const WorkspaceCollaborativeEditor: FC = () => {
     }, [openView, workspace]);
 
     const handleOnDeploymentMode = useCallback(() => {
+        const view = new DeploymentViewDefinition({ identifier: "", environment: "New Environment" });
         setMode(WorkspaceContentMode.Deployment);
-        openView(workspace, { type: ViewType.Deployment, identifier: "" });
+        openView(workspace, view.toObject());
     }, [openView, workspace]);
 
     useEffect(() => {
@@ -353,13 +356,6 @@ export const WorkspaceCollaborativeEditor: FC = () => {
         setWorkspace(parseStructurizr(value));
     }, [parseStructurizr, setWorkspace]);
 
-    const handleOnWorkspaceChange = useCallback((workspace: Workspace) => {
-        // TODO: set structurizr dsl code to a respective provider
-        // const structurizrExporter = new StructurizrExportClient();
-        // setStructurizrDslText(structurizrText);
-        setWorkspace(workspace);
-    }, [setWorkspace]);
-
     return (
         <ContextSheet>
             <ContextSheetTabContent>
@@ -411,7 +407,7 @@ export const WorkspaceCollaborativeEditor: FC = () => {
                 >
                     <WorkspaceViewer
                         workspace={workspace}
-                        onChange={handleOnWorkspaceChange}
+                        initialView={currentView}
                         onViewClick={handleOnWorkspaceViewClick}
                     >
                         <PresenterInfo presenter={presenterInfo} />

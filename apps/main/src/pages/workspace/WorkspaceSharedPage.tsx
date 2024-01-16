@@ -3,10 +3,11 @@ import { useSearchParams } from "react-router-dom";
 import {
     CurrentUser,
     WorkspaceNavigationProvider,
+    WorkspaceProvider,
     WorkspaceRoom,
 } from "workspace";
 import {
-    CommentsRemoteObserver,
+    CommentProvider,
     useAccount,
 } from "../../features";
 import {
@@ -29,13 +30,15 @@ export const WorkspaceSharedPage: FC = () => {
     // NOTE: workspace provider on this page should save changes on tha page only,
     // as this is the page for collaborating users who do not own the workspace file
     return (
-        <WorkspaceRoom options={{ roomId: roomId, password: password }}>
-            <WorkspaceNavigationProvider>
-                <CommentsRemoteObserver>
-                    <CurrentUser info={account} />
-                    <WorkspaceCollaborativeEditor />
-                </CommentsRemoteObserver>
-            </WorkspaceNavigationProvider>
-        </WorkspaceRoom>
+        <WorkspaceProvider>
+            <CommentProvider>
+                <WorkspaceNavigationProvider>
+                    <WorkspaceRoom options={{ roomId: roomId, password: password }}>
+                        <CurrentUser info={account} />
+                        <WorkspaceCollaborativeEditor />
+                    </WorkspaceRoom>
+                </WorkspaceNavigationProvider>
+            </CommentProvider>
+        </WorkspaceProvider>
     )
 }

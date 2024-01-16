@@ -1,9 +1,9 @@
+import { ViewType } from "@structurizr/dsl";
+import { WorkspaceUser } from "@workspace/core";
 import { createContext, Dispatch, SetStateAction } from "react";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
-import { ViewType } from "@structurizr/dsl";
 import { PresentationOptions } from "../types";
-import { WorkspaceUser } from "@workspace/core";
 
 export type WorkspaceRoomState = {
     workspaceDocument?: Y.Doc;

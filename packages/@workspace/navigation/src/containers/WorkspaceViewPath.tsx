@@ -5,7 +5,7 @@ import {
     Button,
     Icon,
 } from "@chakra-ui/react";
-import { ViewKeys, Workspace } from "@structurizr/dsl";
+import { IWorkspace, ViewKeys } from "@structurizr/dsl";
 import {
     PanelPosition,
     useWorkspaceNavigation,
@@ -16,7 +16,7 @@ import { FC, useCallback } from "react";
 
 export const WorkspaceViewPath: FC<{
     position?: PanelPosition;
-    workspace: Workspace;
+    workspace: IWorkspace;
     path?: ViewKeys[];
     isVisible?: boolean;
 }> = ({

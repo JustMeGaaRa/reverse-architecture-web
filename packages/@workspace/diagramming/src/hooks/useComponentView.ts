@@ -9,29 +9,24 @@ import {
     Person,
     Position,
     Relationship,
-    SoftwareSystem
+    SoftwareSystem,
+    Workspace
 } from "@structurizr/dsl";
 import { useWorkspace } from "@workspace/core";
 import { useCallback } from "react";
-import { v4 } from "uuid";
 import {
     getNodeFromElement,
     getEdgeFromRelationship
 } from "../utils";
 
 export const useComponentView = (containerIdentifier: Identifier) => {
-    const { workspace } = useWorkspace();
+    const { workspace, setWorkspace } = useWorkspace();
     const { setNodes, setEdges } = useReactFlow();
     
     // NOTE: the person added can either be an existing one or a new one
     // The existing person is included in the view, while the new one is also added to the model
     const addPerson = useCallback((position: Position) => {
         const person = getDefaultElement(ElementType.Person) as Person;
-        
-        workspace.model.addPerson(person);
-        workspace.views.components
-            .find(x => x.identifier === containerIdentifier)
-            ?.addPerson(person, position);
 
         // NOTE: in this context the person can only be added outside of container
         const node = getNodeFromElement({
@@ -40,19 +35,22 @@ export const useComponentView = (containerIdentifier: Identifier) => {
             styles: workspace.views.configuration.styles
         });
         setNodes(nodes => [...nodes, node]);
+        setWorkspace(workspace => {
+            const builder = new Workspace(workspace);
+            builder.model.addPerson(person);
+            builder.views.components
+                .find(x => x.identifier === containerIdentifier)
+                ?.addPerson(person, position);
+            return builder.toObject();
+        });
 
-        return workspace;
-    }, [containerIdentifier, setNodes, workspace]);
+        return person;
+    }, [containerIdentifier, workspace, setNodes, setWorkspace]);
     
     // NOTE: the software system added can either be an existing one or a new one
     // The existing system is included in the view, while the new one is also added to the model
     const addSoftwareSystem = useCallback((position: Position) => {
         const softwareSystem = getDefaultElement(ElementType.SoftwareSystem) as SoftwareSystem;
-        
-        workspace.model.addSoftwareSystem(softwareSystem);
-        workspace.views.components
-            .find(x => x.identifier === containerIdentifier)
-            ?.addSoftwareSystem(softwareSystem, position);
 
         // NOTE: in this context the software system can only be added outside of container
         const node = getNodeFromElement({
@@ -61,21 +59,22 @@ export const useComponentView = (containerIdentifier: Identifier) => {
             styles: workspace.views.configuration.styles
         });
         setNodes(nodes => [...nodes, node]);
+        setWorkspace(workspace => {
+            const builder = new Workspace(workspace);
+            builder.model.addSoftwareSystem(softwareSystem);
+            builder.views.components
+                .find(x => x.identifier === containerIdentifier)
+                ?.addSoftwareSystem(softwareSystem, position);
+            return builder.toObject();
+        });
 
-        return workspace;
-    }, [containerIdentifier, setNodes, workspace]);
+        return softwareSystem;
+    }, [containerIdentifier, workspace, setNodes, setWorkspace]);
     
     // NOTE: the container added can either be an existing one or a new one
     // The existing container is included in the view, while the new one is also added to the model
     const addContainer = useCallback((position: Position) => {
         const container = getDefaultElement(ElementType.Container) as Container;
-        
-        workspace.model
-            .findContainerParent(containerIdentifier)
-            .addContainer(container);
-        workspace.views.components
-            .find(x => x.identifier === containerIdentifier)
-            ?.addContainer(container, position);
         
         // NOTE: in this context the container can only be added outside of container
         const node = getNodeFromElement({
@@ -84,19 +83,22 @@ export const useComponentView = (containerIdentifier: Identifier) => {
             styles: workspace.views.configuration.styles
         });
         setNodes(nodes => [...nodes, node]);
+        setWorkspace(workspace => {
+            const builder = new Workspace(workspace);
+            builder.model
+                .findContainerParent(containerIdentifier)
+                .addContainer(container);
+            builder.views.components
+                .find(x => x.identifier === containerIdentifier)
+                ?.addContainer(container, position);
+            return builder.toObject();
+        });
 
-        return workspace;
-    }, [containerIdentifier, setNodes, workspace]);
+        return container;
+    }, [containerIdentifier, workspace, setNodes, setWorkspace]);
     
     const addComponent = useCallback((position: Position, groupId?: Identifier) => {
         const component = getDefaultElement(ElementType.Component) as Component;
-        
-        workspace.model
-            .findContainer(containerIdentifier)
-            .addComponent(component, groupId);
-        workspace.views.components
-            .find(x => x.identifier === containerIdentifier)
-            ?.addComponent(component, position);
         
         // NOTE: in this context the component can only be added as a child of the container or a group
         const node = getNodeFromElement({
@@ -106,19 +108,22 @@ export const useComponentView = (containerIdentifier: Identifier) => {
             styles: workspace.views.configuration.styles
         });
         setNodes(nodes => [...nodes, node]);
+        setWorkspace(workspace => {
+            const builder = new Workspace(workspace);
+            builder.model
+                .findContainer(containerIdentifier)
+                .addComponent(component, groupId);
+            builder.views.components
+                .find(x => x.identifier === containerIdentifier)
+                ?.addComponent(component, position);
+            return builder.toObject();
+        });
 
-        return workspace;
-    }, [containerIdentifier, workspace, setNodes]);
+        return component;
+    }, [containerIdentifier, workspace, setNodes, setWorkspace]);
     
     const addGroup = useCallback((position: Position) => {
         const group = getDefaultElement(ElementType.Group) as Group;
-        
-        workspace.model
-            .findContainer(containerIdentifier)
-            .addGroup(group);
-        workspace.views.components
-            .find(x => x.identifier === containerIdentifier)
-            ?.addGroup(group, position);
 
         // NOTE: in this context the group can only be added as a child of the container
         const node = getNodeFromElement({
@@ -132,34 +137,49 @@ export const useComponentView = (containerIdentifier: Identifier) => {
             styles: workspace.views.configuration.styles
         });
         setNodes(nodes => [...nodes, node]);
+        setWorkspace(workspace => {
+            const builder = new Workspace(workspace);
+            builder.model
+                .findContainer(containerIdentifier)
+                .addGroup(group);
+            builder.views.components
+                .find(x => x.identifier === containerIdentifier)
+                ?.addGroup(group, position);
+            return builder.toObject();
+        });
 
-        return workspace;
-    }, [containerIdentifier, workspace, setNodes]);
+        return group;
+    }, [containerIdentifier, workspace, setNodes, setWorkspace]);
     
     const addRelationship = useCallback((sourceIdentifier: Identifier, targetIdentifier: Identifier) => {
         const relationship = new Relationship({
             sourceIdentifier,
             targetIdentifier
         })
-        
-        workspace.model.addRelationship(relationship);
 
         const edge = getEdgeFromRelationship({
             relationship,
             styles: workspace.views.configuration.styles
         });
         setEdges(edges => [...edges, edge]);
+        setWorkspace(workspace => {
+            const builder = new Workspace(workspace);
+            builder.model.addRelationship(relationship);
+            return builder.toObject();
+        });
 
-        return workspace;
-    }, [workspace, setEdges]);
+        return relationship;
+    }, [workspace, setEdges, setWorkspace]);
 
     const setElementPosition = useCallback((elementId: string, position: Position) => {
-        workspace.views.components
-            .filter(x => x.identifier === containerIdentifier)
-            .forEach(x => x.setElementPosition(elementId, position));
-
-        return workspace;
-    }, [containerIdentifier, workspace]);
+        setWorkspace(workspace => {
+            const builder = new Workspace(workspace);
+            builder.views.components
+                .filter(x => x.identifier === containerIdentifier)
+                .forEach(x => x.setElementPosition(elementId, position));
+            return builder.toObject();
+        });
+    }, [containerIdentifier, setWorkspace]);
 
     return {
         addPerson,

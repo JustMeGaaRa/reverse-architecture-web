@@ -1,9 +1,9 @@
-import { IViewDefinition, Workspace } from "@structurizr/dsl";
+import { IViewDefinition, IWorkspace } from "@structurizr/dsl";
 import { FC, useEffect } from "react";
 import { useWorkspaceNavigation } from "../hooks";
 
 export const WorkspaceViewUpdater: FC<{
-    workspace: Workspace;
+    workspace: IWorkspace;
     currentView?: IViewDefinition;
 }> = ({
     workspace,

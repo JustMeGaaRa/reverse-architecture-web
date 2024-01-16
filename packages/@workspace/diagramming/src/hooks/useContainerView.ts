@@ -8,7 +8,8 @@ import {
     Person,
     Position,
     Relationship,
-    SoftwareSystem
+    SoftwareSystem,
+    Workspace
 } from "@structurizr/dsl";
 import { useWorkspace } from "@workspace/core";
 import { useCallback } from "react";
@@ -19,18 +20,13 @@ import {
 } from "../utils";
 
 export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
-    const { workspace } = useWorkspace();
+    const { workspace, setWorkspace } = useWorkspace();
     const { setNodes, setEdges } = useReactFlow();
     
     // NOTE: the person added can either be an existing one or a new one
     // The existing person is included in the view, while the new one is also added to the model
     const addPerson = useCallback((position: Position) => {
         const person = getDefaultElement(ElementType.Person) as Person;
-        
-        workspace.model.addPerson(person);
-        workspace.views.containers
-            .find(x => x.identifier === systemSoftwareIdentifier)
-            ?.addPerson(person, position);
         
         // NOTE: in this context the person can only be added outside of container
         const node = getNodeFromElement({
@@ -39,19 +35,22 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
             styles: workspace.views.configuration.styles
         });
         setNodes(nodes => [...nodes, node]);
+        setWorkspace(workspace => {
+            const builder = new Workspace(workspace);
+            builder.model.addPerson(person);
+            builder.views.containers
+                .find(x => x.identifier === systemSoftwareIdentifier)
+                ?.addPerson(person, position);
+            return builder.toObject();
+        });
 
-        return workspace;
-    }, [systemSoftwareIdentifier, setNodes, workspace]);
+        return person;
+    }, [systemSoftwareIdentifier, workspace, setNodes, setWorkspace]);
     
     // NOTE: the software system added can either be an existing one or a new one
     // The existing system is included in the view, while the new one is also added to the model
     const addSoftwareSystem = useCallback((position: Position) => {
         const softwareSystem = getDefaultElement(ElementType.SoftwareSystem) as SoftwareSystem;
-
-        workspace.model.addSoftwareSystem(softwareSystem);
-        workspace.views.containers
-            .find(x => x.identifier === systemSoftwareIdentifier)
-            ?.addSoftwareSystem(softwareSystem, position);
         
         // NOTE: in this context the software system can only be added outside of container
         const node = getNodeFromElement({
@@ -60,19 +59,20 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
             styles: workspace.views.configuration.styles
         });
         setNodes(nodes => [...nodes, node]);
+        setWorkspace(workspace => {
+            const builder = new Workspace(workspace);
+            builder.model.addSoftwareSystem(softwareSystem);
+            builder.views.containers
+                .find(x => x.identifier === systemSoftwareIdentifier)
+                ?.addSoftwareSystem(softwareSystem, position);
+            return builder.toObject();
+        });
 
-        return workspace;
-    }, [systemSoftwareIdentifier, setNodes, workspace]);
+        return softwareSystem;
+    }, [systemSoftwareIdentifier, workspace, setNodes, setWorkspace]);
     
     const addContainer = useCallback((position: Position, groupId?: Identifier) => {
         const container = getDefaultElement(ElementType.Container) as Container;
-        
-        workspace.model
-            .findSoftwareSystem(systemSoftwareIdentifier)
-            .addContainer(container, groupId);
-        workspace.views.containers
-            .find(x => x.identifier === systemSoftwareIdentifier)
-            ?.addContainer(container, position);
         
         // NOTE: in this context the container can only be added as a child of the software system or a group
         const node = getNodeFromElement({
@@ -82,19 +82,21 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
             styles: workspace.views.configuration.styles
         });
         setNodes(nodes => [...nodes, node]);
-
-        return workspace;
-    }, [systemSoftwareIdentifier, workspace, setNodes]);
+        setWorkspace(workspace => {
+            const builder = new Workspace(workspace);
+            builder.model
+                .findSoftwareSystem(systemSoftwareIdentifier)
+                .addContainer(container, groupId);
+            builder.views.containers
+                .find(x => x.identifier === systemSoftwareIdentifier)
+                ?.addContainer(container, position);
+            return builder.toObject();
+        });
+        return container;
+    }, [systemSoftwareIdentifier, workspace, setNodes, setWorkspace]);
     
     const addGroup = useCallback((position: Position) => {
         const group = getDefaultElement(ElementType.Group) as Group;
-        
-        workspace.views.containers
-            .find(x => x.identifier === systemSoftwareIdentifier)
-            ?.addGroup(group, position);
-        workspace.model
-            .findSoftwareSystem(systemSoftwareIdentifier)
-            .addGroup(group);
         
         // NOTE: in this context the group can only be added as a child of the software system
         const node = getNodeFromElement({
@@ -108,34 +110,49 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
             styles: workspace.views.configuration.styles
         });
         setNodes(nodes => [...nodes, node]);
+        setWorkspace(workspace => {
+            const builder = new Workspace(workspace);
+            builder.views.containers
+                .find(x => x.identifier === systemSoftwareIdentifier)
+                ?.addGroup(group, position);
+                builder.model
+                .findSoftwareSystem(systemSoftwareIdentifier)
+                .addGroup(group);
+            return builder.toObject();
+        });
         
-        return workspace;
-    }, [systemSoftwareIdentifier, workspace, setNodes]);
+        return group;
+    }, [systemSoftwareIdentifier, workspace, setNodes, setWorkspace]);
     
     const addRelationship = useCallback((sourceIdentifier: Identifier, targetIdentifier: Identifier) => {
         const relationship = new Relationship({
             sourceIdentifier,
             targetIdentifier
         })
-        
-        workspace.model.addRelationship(relationship);
 
         const edge = getEdgeFromRelationship({
             relationship,
             styles: workspace.views.configuration.styles
         });
         setEdges(edges => [...edges, edge]);
+        setWorkspace(workspace => {
+            const builder = new Workspace(workspace);
+            builder.model.addRelationship(relationship);
+            return builder.toObject();
+        });
 
-        return workspace;
-    }, [workspace, setEdges]);
+        return relationship;
+    }, [workspace, setEdges, setWorkspace]);
 
     const setElementPosition = useCallback((elementId: string, position: Position) => {
-        workspace.views.containers
-            .filter(x => x.identifier === systemSoftwareIdentifier)
-            .forEach(x => x.setElementPosition(elementId, position));
-
-        return workspace;
-    }, [systemSoftwareIdentifier, workspace]);
+        setWorkspace(workspace => {
+            const builder = new Workspace(workspace);
+            builder.views.containers
+                .filter(x => x.identifier === systemSoftwareIdentifier)
+                .forEach(x => x.setElementPosition(elementId, position));
+            return builder.toObject();
+        });
+    }, [systemSoftwareIdentifier, setWorkspace]);
 
     return {
         addPerson,

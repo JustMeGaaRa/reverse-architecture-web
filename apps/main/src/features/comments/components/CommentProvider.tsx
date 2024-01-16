@@ -1,20 +1,49 @@
-import { FC, PropsWithChildren, useCallback, useEffect, useState } from "react";
-import { useWorkspaceRoom } from "workspace";
+import { FC, PropsWithChildren, SetStateAction, useCallback, useEffect, useState } from "react";
+import { useWorkspace } from "workspace";
+import { Transaction, YMapEvent } from "yjs";
 import { CommentContext } from "../contexts";
-import { useCommentsStore } from "../hooks";
 import { CommentThread } from "../types";
 
 export const CommentProvider: FC<PropsWithChildren<{
-    discussions?: Array<CommentThread>;
+    initialDiscussions?: Array<CommentThread>;
 }>> = ({
     children,
-    discussions
+    initialDiscussions
 }) => {
+    const { workspaceDocument } = useWorkspace();
     const [ commentThreads, setCommentThreads ] = useState([]);
     const [ selectedThreadId, setSelectedThreadId ] = useState<string>();
     const [ highlightThreadId, setHighlightThreadId ] = useState<string>();
 
-    useEffect(() => setCommentThreads(discussions ?? []), [discussions]);
+    useEffect(() => setCommentThreads(initialDiscussions ?? []), [initialDiscussions]);
+
+    useEffect(() => {
+        const onCommentcApplyRemoteChanges = (event: YMapEvent<unknown>, transaction: Transaction) => {
+            if (!transaction.local) {
+                // TODO: use array for more granular changes
+                const discussionsJson = discussionsMap.get("discussions") as string;
+                setCommentThreads(JSON.parse(discussionsJson) as Array<CommentThread>);
+            }
+        }
+
+        const discussionsMap = workspaceDocument.getMap("discussions");
+        discussionsMap.observe(onCommentcApplyRemoteChanges);
+
+        return () => {
+            discussionsMap.unobserve(onCommentcApplyRemoteChanges);
+        }
+    }, [workspaceDocument, setCommentThreads]);
+
+    const onCommentsPublishLocalChanges = useCallback((action: SetStateAction<Array<CommentThread>>) => {
+        setCommentThreads(prevState => {
+            const newState = typeof action === "function" ? action(prevState) : action;
+
+            const discussionsMap = workspaceDocument.getMap("discussions");
+            discussionsMap.set("discussions", JSON.stringify(newState));
+
+            return newState;
+        })
+    }, [workspaceDocument]);
 
     return (
         <CommentContext.Provider
@@ -22,7 +51,7 @@ export const CommentProvider: FC<PropsWithChildren<{
                 selectedThreadId,
                 highlightThreadId,
                 commentThreads,
-                setCommentThreads,
+                setCommentThreads: onCommentsPublishLocalChanges,
                 setSelectedThreadId,
                 setHighlightThreadId
             }}
@@ -30,51 +59,4 @@ export const CommentProvider: FC<PropsWithChildren<{
             {children}
         </CommentContext.Provider>
     )
-}
-
-export const CommentsRemoteObserver: FC<PropsWithChildren<{
-    initialDiscussions?: Array<CommentThread>;
-}>> = ({
-    children,
-    initialDiscussions
-}) => {
-    const { setCommentThreads } = useCommentsStore();
-    const { workspaceDocument } = useWorkspaceRoom();
-
-    useEffect(() => {
-        const onCommentSyncLocal = () => {
-            setCommentThreads(array.toArray());
-        }
-
-        const array = workspaceDocument.getArray<CommentThread>("discussions");
-        array.observe(onCommentSyncLocal);
-
-        return () => {
-            array.unobserve(onCommentSyncLocal);
-        }
-    }, [workspaceDocument, setCommentThreads]);
-
-    const onCommentsSyncRemote = useCallback(() => {
-
-    }, []);
-
-    return (
-        <CommentProvider
-            discussions={initialDiscussions}
-            // onNewComment={onCommentsSyncRemote}
-            // onUpdatedComment={onCommentsSyncRemote}
-            // onRemovedComment={onCommentsSyncRemote}
-        >
-            {children}
-        </CommentProvider>
-    );
-}
-
-export const useCommentingMode = () => {
-    const [ isCommentingModeEnabled, setIsCommentingModeEnabled ] = useState(false);
-
-    return {
-        isCommentingModeEnabled,
-        setIsCommentingModeEnabled
-    }
 }

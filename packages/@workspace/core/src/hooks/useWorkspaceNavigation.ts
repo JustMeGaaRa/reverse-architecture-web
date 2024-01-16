@@ -2,7 +2,9 @@ import { useReactFlow } from "@reactflow/core";
 import {
     ComponentPathProvider,
     ContainerPathProvider,
+    findContainerParent,
     IElement,
+    IWorkspace,
     SystemContextPathProvider,
     SystemLandscapePathProvider,
     Tag,
@@ -23,7 +25,7 @@ export const useWorkspaceNavigation = () => {
     } = useContext(WorkspaceNavigationContext);
     const { setViewport, getViewport } = useReactFlow();
 
-    const openView = useCallback((workspace: Workspace, view: ViewKeys) => {
+    const openView = useCallback((workspace: IWorkspace, view: ViewKeys) => {
         const viewDefinition = getViewDefinition(workspace, view);
         const pathBuilders = {
             [ViewType.SystemLandscape]: new SystemLandscapePathProvider(),
@@ -37,7 +39,7 @@ export const useWorkspaceNavigation = () => {
         setCurrentViewPath(viewPath);
     }, [setCurrentView, setCurrentViewPath]);
 
-    const zoomIntoElement = useCallback((workspace: Workspace, element: IElement) => {
+    const zoomIntoElement = useCallback((workspace: IWorkspace, element: IElement) => {
         if (element.tags.some(tag => tag.name === Tag.SoftwareSystem.name)) {
             openView(workspace, {
                 identifier: element.identifier,
@@ -53,7 +55,7 @@ export const useWorkspaceNavigation = () => {
         }
     }, [openView]);
 
-    const zoomOutOfElement = useCallback((workspace: Workspace, element: IElement) => {
+    const zoomOutOfElement = useCallback((workspace: IWorkspace, element: IElement) => {
         if (element.tags.some(tag => tag.name === Tag.SoftwareSystem.name)) {
             openView(workspace, {
                 identifier: element.identifier,
@@ -61,7 +63,7 @@ export const useWorkspaceNavigation = () => {
             });
         }
         if (element.tags.some(tag => tag.name === Tag.Container.name)) {
-            const parent = workspace.model.findContainerParent(element.identifier);
+            const parent = findContainerParent(workspace.model, element.identifier);
             openView(workspace, {
                 identifier: parent.identifier,
                 type: ViewType.Container

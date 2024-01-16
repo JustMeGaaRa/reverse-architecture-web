@@ -1,10 +1,10 @@
 import { useReactFlow } from "@reactflow/core";
-import { ISupportVisitor, Workspace } from "@structurizr/dsl";
+import { ISupportVisitor, IWorkspace } from "@structurizr/dsl";
 import { getViewDefinition, useWorkspaceNavigation } from "@workspace/core";
 import { useEffect } from "react";
 import { getReactFlowAuto, getReactFlowObject } from "../utils";
 
-export const useViewRenderingEffect = (workspace: Workspace, strategy: ISupportVisitor) => {
+export const useViewRenderingEffect = (workspace: IWorkspace, strategy: ISupportVisitor) => {
     const { currentView } = useWorkspaceNavigation();
     const { setNodes, setEdges } = useReactFlow();
 
@@ -35,5 +35,5 @@ export const useViewRenderingEffect = (workspace: Workspace, strategy: ISupportV
             setEdges(reactFlowObject.edges);
         }
         
-    }, [currentView, workspace]);
+    }, [currentView]);
 }

@@ -7,27 +7,22 @@ import {
     Person,
     Position,
     Relationship,
-    SoftwareSystem
+    SoftwareSystem,
+    Workspace
 } from "@structurizr/dsl";
 import { useWorkspace } from "@workspace/core";
 import { useCallback } from "react";
-import { v4 } from "uuid";
 import {
     getNodeFromElement,
     getEdgeFromRelationship
 } from "../utils";
 
 export const useSystemContextView = (systemSoftwareIdentifier: Identifier) => {
-    const { workspace } = useWorkspace();
+    const { workspace, setWorkspace } = useWorkspace();
     const { setNodes, setEdges } = useReactFlow();
     
     const addSoftwareSystem = useCallback((position: Position, groupId?: Identifier) => {
         const softwareSystem = getDefaultElement(ElementType.SoftwareSystem) as SoftwareSystem;
-        
-        workspace.model.addSoftwareSystem(softwareSystem, groupId);
-        workspace.views.systemContexts
-            .find(x => x.identifier === systemSoftwareIdentifier)
-            ?.addSoftwareSystem(softwareSystem, position);
         
         const node = getNodeFromElement({
             element: softwareSystem,
@@ -36,17 +31,20 @@ export const useSystemContextView = (systemSoftwareIdentifier: Identifier) => {
             styles: workspace.views.configuration.styles
         });
         setNodes(nodes => [...nodes, node]);
+        setWorkspace(workspace => {
+            const builder = new Workspace(workspace);
+            builder.model.addSoftwareSystem(softwareSystem, groupId);
+            builder.views.systemContexts
+                .find(x => x.identifier === systemSoftwareIdentifier)
+                ?.addSoftwareSystem(softwareSystem, position);
+            return builder.toObject();
+        });
 
-        return workspace;
-    }, [systemSoftwareIdentifier, workspace, setNodes]);
+        return softwareSystem;
+    }, [systemSoftwareIdentifier, workspace, setNodes, setWorkspace]);
     
     const addPerson = useCallback((position: Position, groupId?: Identifier) => {
         const person = getDefaultElement(ElementType.Person) as Person;
-        
-        workspace.model.addPerson(person, groupId);
-        workspace.views.systemContexts
-            .find(x => x.identifier === systemSoftwareIdentifier)
-            ?.addPerson(person, position);
 
         const node = getNodeFromElement({
             element: person,
@@ -55,17 +53,20 @@ export const useSystemContextView = (systemSoftwareIdentifier: Identifier) => {
             styles: workspace.views.configuration.styles
         });
         setNodes(nodes => [...nodes, node]);
+        setWorkspace(workspace => {
+            const builder = new Workspace(workspace);
+            builder.model.addPerson(person, groupId);
+            builder.views.systemContexts
+                .find(x => x.identifier === systemSoftwareIdentifier)
+                ?.addPerson(person, position);
+            return builder.toObject();
+        });
 
-        return workspace;
-    }, [systemSoftwareIdentifier, workspace, setNodes]);
+        return person;
+    }, [systemSoftwareIdentifier, workspace, setNodes, setWorkspace]);
 
     const addGroup = useCallback((position: Position) => {
         const group = getDefaultElement(ElementType.Group) as Group;
-        
-        workspace.model.addGroup(group);
-        workspace.views.systemContexts
-            .find(x => x.identifier === systemSoftwareIdentifier)
-            ?.addGroup(group, position);
 
         const node = getNodeFromElement({
             element: group,
@@ -77,34 +78,48 @@ export const useSystemContextView = (systemSoftwareIdentifier: Identifier) => {
             styles: workspace.views.configuration.styles
         });
         setNodes(nodes => [...nodes, node]);
+        setWorkspace(workspace => {
+        
+            const builder = new Workspace(workspace);
+            builder.model.addGroup(group);
+            builder.views.systemContexts
+                .find(x => x.identifier === systemSoftwareIdentifier)
+                ?.addGroup(group, position);
+            return builder.toObject();
+        });
 
-        return workspace;
-    }, [systemSoftwareIdentifier, workspace, setNodes]);
+        return group;
+    }, [systemSoftwareIdentifier, workspace, setNodes, setWorkspace]);
     
     const addRelationship = useCallback((sourceIdentifier: Identifier, targetIdentifier: Identifier) => {
         const relationship = new Relationship({
             sourceIdentifier,
             targetIdentifier
-        })
-        
-        workspace.model.addRelationship(relationship);
+        });
 
         const edge = getEdgeFromRelationship({
             relationship,
             styles: workspace.views.configuration.styles
         });
         setEdges(edges => [...edges, edge]);
+        setWorkspace(workspace => {
+            const builder = new Workspace(workspace);
+            builder.model.addRelationship(relationship);
+            return builder.toObject();
+        });
 
-        return workspace;
-    }, [workspace, setEdges]);
+        return relationship;
+    }, [workspace, setEdges, setWorkspace]);
 
     const setElementPosition = useCallback((elementId: string, position: Position) => {
-        workspace.views.systemContexts
-            .filter(x => x.identifier === systemSoftwareIdentifier)
-            .forEach(x => x.setElementPosition(elementId, position));
-
-        return workspace;
-    }, [systemSoftwareIdentifier, workspace]);
+        setWorkspace(workspace => {
+            const builder = new Workspace(workspace);
+            builder.views.systemContexts
+                .filter(x => x.identifier === systemSoftwareIdentifier)
+                .forEach(x => x.setElementPosition(elementId, position));
+            return builder.toObject();
+        });
+    }, [systemSoftwareIdentifier, setWorkspace]);
 
     return {
         addPerson,

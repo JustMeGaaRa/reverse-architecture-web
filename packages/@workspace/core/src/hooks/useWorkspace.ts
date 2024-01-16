@@ -4,7 +4,9 @@ import { WorkspaceContext } from "../contexts";
 
 export const useWorkspace = () => {
     const {
+        workspaceDocument,
         workspace,
+        undoManager,
         setWorkspace
     } = useContext(WorkspaceContext);
 
@@ -13,7 +15,9 @@ export const useWorkspace = () => {
     }, []);
 
     return {
+        workspaceDocument,
         workspace,
+        undoManager,
         setWorkspace,
         deleteElements
     }

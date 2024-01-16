@@ -1,5 +1,5 @@
 import { Node, Position as PositionSide, useStore } from "@reactflow/core";
-import { Position, Tag, Workspace } from "@structurizr/dsl";
+import { IWorkspace, Position, Tag, Workspace } from "@structurizr/dsl";
 import {
     ElementFlowHandle,
     ElementSelectionBorder,
@@ -29,7 +29,7 @@ const getOffset = (position: PositionSide) => {
 }
 
 export const ElementDiagramFlowControls: FC<{
-    workspace: Workspace;
+    workspace: IWorkspace;
     onHandleClick?: (sourceNode: Node, position: Position) => void;
 }> = ({
     workspace,

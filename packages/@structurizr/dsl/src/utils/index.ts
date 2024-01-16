@@ -67,6 +67,23 @@ export const findContainer = (model: IModel, identifier: Identifier) => {
         .find(x => x.identifier === identifier);
 }
 
+export const findContainerParent = (model: IModel, containerId: Identifier): ISoftwareSystem | undefined => {
+    return model.softwareSystems
+        .concat(model.groups.flatMap(x => x.softwareSystems))
+        .find(x => x.containers.some(c => c.identifier === containerId));
+}
+
+export const findComponentParent = (model: IModel, componentId: Identifier): IContainer | undefined => {
+    const groupContainers = model.groups
+        .flatMap(x => x.softwareSystems)
+        .flatMap(x => x.containers);
+    const softwareSystemContainers = model.softwareSystems
+        .flatMap(x => x.containers);
+    return softwareSystemContainers
+        .concat(groupContainers)
+        .find(x => x.components.some(c => c.identifier === componentId));
+}
+
 export const relationshipExistsOverall = (
     relationships: IRelationship[],
     sourceIdentifier: Identifier,

@@ -7,7 +7,8 @@ import {
     Person,
     Position,
     Relationship,
-    SoftwareSystem
+    SoftwareSystem,
+    Workspace
 } from "@structurizr/dsl";
 import { useWorkspace } from "@workspace/core";
 import { useCallback } from "react";
@@ -17,15 +18,12 @@ import {
 } from "../utils";
 
 export const useSystemLandscapeView = () => {
-    const { workspace } = useWorkspace();
+    const { workspace, setWorkspace } = useWorkspace();
     const { setNodes, setEdges } = useReactFlow();
     
     const addSoftwareSystem = useCallback((position: Position, groupId?: Identifier) => {
         const softwareSystem = getDefaultElement(ElementType.SoftwareSystem) as SoftwareSystem;
-        
-        workspace?.views.systemLandscape?.addSoftwareSystem(softwareSystem, position);
-        workspace?.model.addSoftwareSystem(softwareSystem, groupId);
-        
+
         const node = getNodeFromElement({
             element: softwareSystem,
             position,
@@ -33,15 +31,18 @@ export const useSystemLandscapeView = () => {
             styles: workspace.views.configuration.styles
         });
         setNodes(nodes => [...nodes, node]);
+        setWorkspace(workspace => {
+            const builder = new Workspace(workspace);
+            builder?.views.systemLandscape?.addSoftwareSystem(softwareSystem, position);
+            builder?.model.addSoftwareSystem(softwareSystem, groupId);
+            return builder.toObject()
+        });
 
-        return workspace;
-    }, [workspace, setNodes]);
+        return softwareSystem;
+    }, [workspace, setNodes, setWorkspace]);
     
     const addPerson = useCallback((position: Position, groupId?: Identifier) => {
         const person = getDefaultElement(ElementType.Person) as Person;
-        
-        workspace?.model.addPerson(person);
-        workspace?.views.systemLandscape?.addPerson(person, position);
 
         const node = getNodeFromElement({
             element: person,
@@ -50,15 +51,18 @@ export const useSystemLandscapeView = () => {
             styles: workspace.views.configuration.styles
         });
         setNodes(nodes => [...nodes, node]);
+        setWorkspace(workspace => {
+            const builder = new Workspace(workspace);
+            builder?.model.addPerson(person);
+            builder?.views.systemLandscape?.addPerson(person, position);
+            return builder.toObject();
+        });
 
-        return workspace;
-    }, [workspace, setNodes]);
+        return person;
+    }, [workspace, setNodes, setWorkspace]);
 
     const addGroup = useCallback((position: Position) => {
         const group = getDefaultElement(ElementType.Group) as Group;
-        
-        workspace?.model.addGroup(group);
-        workspace?.views.systemLandscape?.addGroup(group, position);
 
         const node = getNodeFromElement({
             element: group,
@@ -70,33 +74,44 @@ export const useSystemLandscapeView = () => {
             styles: workspace.views.configuration.styles
         });
         setNodes(nodes => [...nodes, node]);
+        setWorkspace(workspace => {
+            const builder = new Workspace(workspace);
+            builder?.model.addGroup(group);
+            builder?.views.systemLandscape?.addGroup(group, position);
+            return builder.toObject();
+        });
 
-        return workspace;
-    }, [workspace, setNodes]);
+        return group;
+    }, [workspace, setNodes, setWorkspace]);
     
     const addRelationship = useCallback((sourceIdentifier: Identifier, targetIdentifier: Identifier) => {
         const relationship = new Relationship({
             sourceIdentifier,
             targetIdentifier
         })
-        
-        workspace?.model.addRelationship(relationship);
 
         const edge = getEdgeFromRelationship({
             relationship,
             styles: workspace.views.configuration.styles
         });
         setEdges(edges => [...edges, edge]);
+        setWorkspace(workspace => {
+            const builder = new Workspace(workspace);
+            builder?.model.addRelationship(relationship);
+            return builder.toObject();
+        });
 
-        return workspace;
-    }, [workspace, setEdges]);
+        return relationship;
+    }, [workspace, setEdges, setWorkspace]);
 
     const setElementPosition = useCallback((elementId: string, position: Position) => {
-        workspace.views.systemLandscape
-            ?.setElementPosition(elementId, position);
-        
-        return workspace;
-    }, [workspace]);
+        setWorkspace(workspace => {
+            const builder = new Workspace(workspace);
+            builder.views.systemLandscape
+                ?.setElementPosition(elementId, position);
+            return builder.toObject();
+        });
+    }, [setWorkspace]);
 
     return {
         addPerson,

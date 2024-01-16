@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { CommentContext } from "../contexts";
 import { CommentThread } from "../types";
 
@@ -28,4 +28,13 @@ export const useOnSelectedCommentChange = (callback: (thread?: CommentThread) =>
     useEffect(() => {
         callback?.(commentThreads.find((thread) => thread.commentThreadId === selectedThreadId));
     }, [selectedThreadId, commentThreads, callback]);
+}
+
+export const useCommentingMode = () => {
+    const [ isCommentingModeEnabled, setIsCommentingModeEnabled ] = useState(false);
+
+    return {
+        isCommentingModeEnabled,
+        setIsCommentingModeEnabled
+    }
 }

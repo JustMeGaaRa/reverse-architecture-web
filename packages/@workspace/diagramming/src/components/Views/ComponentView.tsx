@@ -45,16 +45,14 @@ import {
 } from "../../hooks";
 
 export const ComponentView: FC<PropsWithChildren<{
-    workspace: Workspace;
+    workspace: IWorkspace;
     view: CurrentView;
-    onWorkspaceChange?: (workspace: IWorkspace) => void;
     onNodeDragStop?: NodeMouseHandler;
     onNodesDoubleClick?: NodeMouseHandler;
 }>> = ({
     children,
     workspace,
     view,
-    onWorkspaceChange,
     onNodeDragStop,
     onNodesDoubleClick
 }) => {
@@ -81,9 +79,9 @@ export const ComponentView: FC<PropsWithChildren<{
     useViewRenderingEffect(workspace, strategy);
 
     const handleOnNodeDragStop = useCallback((event: React.MouseEvent, node: any, nodes: any[]) => {
-        onWorkspaceChange?.(setElementPosition(node.data.element.identifier, node.position));
+        setElementPosition(node.data.element.identifier, node.position);
         onNodeDragStop?.(event, node);
-    }, [onNodeDragStop, onWorkspaceChange, setElementPosition]);
+    }, [onNodeDragStop, setElementPosition]);
 
     // NOTE: following handlers are used to add elements when respective mode is enabled
     const handleOnNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
@@ -103,10 +101,10 @@ export const ComponentView: FC<PropsWithChildren<{
 
             switch (addingElementType) {
                 case ElementType.Group:
-                    onWorkspaceChange?.(addGroup(pointRelativeToNode));
+                    addGroup(pointRelativeToNode);
                     break;
                 case ElementType.Component:
-                    onWorkspaceChange?.(addComponent(pointRelativeToNode, groupId));
+                    addComponent(pointRelativeToNode, groupId);
                     break;
             }
         }
@@ -114,7 +112,6 @@ export const ComponentView: FC<PropsWithChildren<{
         reactFlowRef,
         isAddingElementEnabled,
         addingElementType,
-        onWorkspaceChange,
         getViewport,
         addGroup,
         addComponent
@@ -132,13 +129,13 @@ export const ComponentView: FC<PropsWithChildren<{
 
             switch (addingElementType) {
                 case ElementType.SoftwareSystem:
-                    onWorkspaceChange?.(addSoftwareSystem(pointTranslatedFromViewport));
+                    addSoftwareSystem(pointTranslatedFromViewport);
                     break;
                 case ElementType.Person:
-                    onWorkspaceChange?.(addPerson(pointTranslatedFromViewport));
+                    addPerson(pointTranslatedFromViewport);
                     break;
                 case ElementType.Container:
-                    onWorkspaceChange?.(addContainer(pointTranslatedFromViewport));
+                    addContainer(pointTranslatedFromViewport);
                     break;
             }
         }
@@ -146,7 +143,6 @@ export const ComponentView: FC<PropsWithChildren<{
         reactFlowRef,
         isAddingElementEnabled,
         addingElementType,
-        onWorkspaceChange,
         getViewport,
         addSoftwareSystem,
         addPerson,
@@ -154,28 +150,28 @@ export const ComponentView: FC<PropsWithChildren<{
     ]);
 
     const handleOnConnect = useCallback((connection: Connection) => {
-        onWorkspaceChange?.(addRelationship(connection.source, connection.target));
-    }, [addRelationship, onWorkspaceChange]);
+        addRelationship(connection.source, connection.target);
+    }, [addRelationship]);
 
     const handleOnFlowClick = useCallback((sourceNode: Node, position: Position) => {
         switch (sourceNode.data?.element?.type) {
             case ElementType.Person:
-                onWorkspaceChange?.(addPerson(position));
-                onWorkspaceChange?.(addRelationship(sourceNode.id, ""))
+                const person = addPerson(position);
+                const personRelationship = addRelationship(sourceNode.data?.element.identifier, person.identifier);
             case ElementType.SoftwareSystem:
-                onWorkspaceChange?.(addSoftwareSystem(position));
-                onWorkspaceChange?.(addRelationship(sourceNode.id, ""))
+                const softwareSystem = addSoftwareSystem(position);
+                const softwareSystemRelationship = addRelationship(sourceNode.data?.element.identifier, softwareSystem.identifier);
                 break;
             case ElementType.Container:
-                onWorkspaceChange?.(addContainer(position));
-                onWorkspaceChange?.(addRelationship(sourceNode.id, ""))
+                const container = addContainer(position);
+                const containerRelationship = addRelationship(sourceNode.data?.element.identifier, container.identifier);
                 break;
             case ElementType.Component:
-                onWorkspaceChange?.(addComponent(position, sourceNode.parentNode));
-                onWorkspaceChange?.(addRelationship(sourceNode.id, ""))
+                const component = addComponent(position, sourceNode.parentNode);
+                const componentRelationship = addRelationship(sourceNode.data?.element.identifier, component.identifier);
                 break;
         }
-    }, [onWorkspaceChange, addPerson, addRelationship, addSoftwareSystem, addContainer, addComponent]);
+    }, [addPerson, addRelationship, addSoftwareSystem, addContainer, addComponent]);
 
     return (
         <WorkspaceViewRenderer

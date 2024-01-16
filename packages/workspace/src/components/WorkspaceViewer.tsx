@@ -1,19 +1,17 @@
-import { IViewDefinition, Workspace } from "@structurizr/dsl";
+import { IViewDefinition, IWorkspace } from "@structurizr/dsl";
 import { WorkspaceViewUpdater } from "@workspace/core";
 import { FC, PropsWithChildren } from "react";
 import { WorkspaceNavigationWrapper, WorkspaceViewSelector } from "../components";
 
 export const WorkspaceViewer: FC<PropsWithChildren<{
-    workspace: Workspace;
+    workspace: IWorkspace;
     initialView?: IViewDefinition;
-    onChange?: (workspace: Workspace) => void;
     onViewChange?: (view: IViewDefinition) => void;
     onViewClick?: (event: React.MouseEvent) => void;
 }>> = ({
     children,
     workspace,
     initialView,
-    onChange,
     onViewChange,
     onViewClick
 }) => {
@@ -27,7 +25,6 @@ export const WorkspaceViewer: FC<PropsWithChildren<{
             />
             <WorkspaceViewSelector
                 workspace={workspace}
-                onChange={onChange}
                 onViewClick={onViewClick}
             >
                 {children}

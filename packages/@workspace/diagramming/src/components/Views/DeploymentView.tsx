@@ -41,16 +41,14 @@ import {
 } from "../../hooks";
 
 export const DeploymentView: FC<PropsWithChildren<{
-    workspace: Workspace;
+    workspace: IWorkspace;
     view: CurrentView;
-    onWorkspaceChange?: (workspace: IWorkspace) => void;
     onNodeDragStop?: NodeMouseHandler;
     onNodesDoubleClick?: NodeMouseHandler;
 }>> = ({
     children,
     workspace,
     view,
-    onWorkspaceChange,
     onNodeDragStop,
     onNodesDoubleClick
 }) => {

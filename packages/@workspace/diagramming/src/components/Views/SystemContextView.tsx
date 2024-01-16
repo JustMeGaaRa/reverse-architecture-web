@@ -45,16 +45,14 @@ import {
 } from "../../hooks";
 
 export const SystemContextView: FC<PropsWithChildren<{
-    workspace: Workspace;
-    view: CurrentView;
-    onWorkspaceChange?: (workspace: IWorkspace) => void;
+    workspace: IWorkspace;
+    view: ISystemContextView;
     onNodeDragStop?: NodeMouseHandler;
     onNodesDoubleClick?: NodeMouseHandler;
 }>> = ({
     children,
     workspace,
     view,
-    onWorkspaceChange,
     onNodeDragStop,
     onNodesDoubleClick
 }) => {
@@ -79,9 +77,9 @@ export const SystemContextView: FC<PropsWithChildren<{
     useViewRenderingEffect(workspace, strategy);
 
     const handleOnNodeDragStop = useCallback((event: React.MouseEvent, node: any, nodes: any[]) => {
-        onWorkspaceChange?.(setElementPosition(node.data.element.identifier, node.position));
+        setElementPosition(node.data.element.identifier, node.position);
         onNodeDragStop?.(event, node);
-    }, [onNodeDragStop, onWorkspaceChange, setElementPosition]);
+    }, [onNodeDragStop, setElementPosition]);
 
     // NOTE: following handlers are used to add elements when respective mode is enabled
     const handleOnNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
@@ -100,10 +98,10 @@ export const SystemContextView: FC<PropsWithChildren<{
 
             switch (addingElementType) {
                 case ElementType.SoftwareSystem:
-                    onWorkspaceChange?.(addSoftwareSystem(pointRelativeToNode, node.id));
+                    addSoftwareSystem(pointRelativeToNode, node.id)
                     break;
                 case ElementType.Person:
-                    onWorkspaceChange?.(addPerson(pointRelativeToNode, node.id));
+                    addPerson(pointRelativeToNode, node.id)
                     break;
             }
         }
@@ -111,7 +109,6 @@ export const SystemContextView: FC<PropsWithChildren<{
         reactFlowRef,
         addingElementType,
         isAddingElementEnabled,
-        onWorkspaceChange,
         getViewport,
         addSoftwareSystem,
         addPerson
@@ -129,13 +126,13 @@ export const SystemContextView: FC<PropsWithChildren<{
 
             switch (addingElementType) {
                 case ElementType.Group:
-                    onWorkspaceChange?.(addGroup(pointTranslatedFromViewport));
+                    addGroup(pointTranslatedFromViewport)
                     break;
                 case ElementType.SoftwareSystem:
-                    onWorkspaceChange?.(addSoftwareSystem(pointTranslatedFromViewport));
+                    addSoftwareSystem(pointTranslatedFromViewport)
                     break;
                 case ElementType.Person:
-                    onWorkspaceChange?.(addPerson(pointTranslatedFromViewport));
+                    addPerson(pointTranslatedFromViewport)
                     break;
             }
         }
@@ -143,7 +140,6 @@ export const SystemContextView: FC<PropsWithChildren<{
         reactFlowRef,
         addingElementType,
         isAddingElementEnabled,
-        onWorkspaceChange,
         getViewport,
         addGroup,
         addSoftwareSystem,
@@ -151,20 +147,20 @@ export const SystemContextView: FC<PropsWithChildren<{
     ]);
 
     const handleOnConnect = useCallback((connection: Connection) => {
-        onWorkspaceChange?.(addRelationship(connection.source, connection.target));
-    }, [addRelationship, onWorkspaceChange]);
+        addRelationship(connection.source, connection.target);
+    }, [addRelationship]);
 
     const handleOnFlowClick = useCallback((sourceNode: Node, position: Position) => {
         switch (sourceNode.data?.element?.type) {
             case ElementType.Person:
-                onWorkspaceChange?.(addPerson(position, sourceNode.parentNode));
-                onWorkspaceChange?.(addRelationship(sourceNode.id, ""))
+                const person = addPerson(position, sourceNode.parentNode);
+                const personRelationship = addRelationship(sourceNode.data?.element.identifier, person.identifier);
             case ElementType.SoftwareSystem:
-                onWorkspaceChange?.(addSoftwareSystem(position, sourceNode.parentNode));
-                onWorkspaceChange?.(addRelationship(sourceNode.id, ""))
+                const softwareSystem = addSoftwareSystem(position, sourceNode.parentNode);
+                const softwareSystemRelationship = addRelationship(sourceNode.data?.element.identifier, softwareSystem.identifier);
                 break;
         }
-    }, [onWorkspaceChange, addPerson, addSoftwareSystem, addRelationship]);
+    }, [addPerson, addSoftwareSystem, addRelationship]);
 
     return (
         <WorkspaceViewRenderer

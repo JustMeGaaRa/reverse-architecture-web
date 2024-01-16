@@ -1,5 +1,5 @@
 import { Node, useEdgesState, useNodesState } from "@reactflow/core";
-import { ModelViewStrategy, Position, Workspace } from "@structurizr/dsl";
+import { IWorkspace, ModelViewStrategy, Position, Workspace } from "@structurizr/dsl";
 import { WorkspaceViewRenderer } from "@workspace/core";
 import {
     FC,
@@ -21,13 +21,11 @@ import {
 } from "../../hooks";
 
 export const ModelView: FC<PropsWithChildren<{
-    workspace: Workspace;
-    onWorkspaceChange?: (workspace: Workspace) => void;
+    workspace: IWorkspace;
     onWorkspaceViewClick?: (event: React.MouseEvent) => void;
 }>> = ({
     children,
     workspace,
-    onWorkspaceChange,
     onWorkspaceViewClick
 }) => {
     const [ nodes, , onNodesChange ] = useNodesState([]);
@@ -50,12 +48,12 @@ export const ModelView: FC<PropsWithChildren<{
 
     // TODO: add element in position on react flow pane, but not in workspace view
     const handleOnFlowClick = useCallback((sourceNode: Node, position: Position) => {
-        onWorkspaceChange?.(addDefaultElement(
+        const element = addDefaultElement(
             sourceNode.data.element.type,
             position,
             sourceNode.data.element.identifier
-        ));
-    }, [onWorkspaceChange, addDefaultElement]);
+        );
+    }, [addDefaultElement]);
 
     return (
         <WorkspaceViewRenderer
