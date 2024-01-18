@@ -3,15 +3,15 @@ import { WorkspaceNavigationContext, WorkspaceNavigationProvider } from "@worksp
 import { FC, PropsWithChildren, useContext } from "react";
 
 export const WorkspaceNavigationWrapper: FC<PropsWithChildren<{
-    onViewChange?: (view: IViewDefinition) => void;
+    initialView?: IViewDefinition;
 }>> = ({
     children,
-    onViewChange,
+    initialView
 }) => {
     const provider = useContext(WorkspaceNavigationContext);
 
     return provider === null || provider === undefined ? (
-        <WorkspaceNavigationProvider onViewChange={onViewChange}>
+        <WorkspaceNavigationProvider initialView={initialView}>
             {children}
         </WorkspaceNavigationProvider>
     ) : (

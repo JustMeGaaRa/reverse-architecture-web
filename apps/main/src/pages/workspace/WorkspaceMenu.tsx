@@ -8,8 +8,8 @@ import {
     MenuItem,
     MenuList
 } from "@chakra-ui/react";
-import { StructurizrExportClient } from "@structurizr/export";
-import { useWorkspace } from "@workspace/core";
+import { StructurizrExportClient } from "structurizr";
+import { useWorkspace } from "workspace";
 import { MoreHoriz } from "iconoir-react";
 import { FC, useCallback } from "react";
 

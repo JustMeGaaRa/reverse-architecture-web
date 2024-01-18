@@ -1,4 +1,4 @@
-import { IWorkspaceMetadata, IWorkspaceTheme } from "@structurizr/dsl";
+import { IWorkspaceMetadata, IWorkspaceTheme } from "structurizr";
 
 export type WorkspaceInfo = {
     workspaceId: string;

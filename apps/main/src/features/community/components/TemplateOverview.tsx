@@ -8,8 +8,14 @@ import {
     TabPanels,
     Tabs,
 } from "@chakra-ui/react";
-import { Workspace } from "@structurizr/dsl";
-import { WorkspacePanel } from "@workspace/core";
+import {
+    ContextLevelProvider,
+    ContextSheet,
+    ContextSheetCloseButton,
+    ContextSheetTabContent
+} from "@reversearchitecture/ui";
+import { Workspace } from "structurizr";
+import { WorkspaceViewPath, WorkspacePanel, WorkspaceViewer } from "workspace";
 import {
     Bookmark,
     ChatLines,
@@ -24,15 +30,7 @@ import {
     TemplateSectionInfo,
     TemplateSectionDiscussion
 } from "../../";
-import {
-    ContextLevelProvider,
-    ContextSheet,
-    ContextSheetCloseButton,
-    ContextSheetTabContent
-} from "@reversearchitecture/ui";
-import { WorkspaceViewPath } from "@workspace/navigation";
 import { TemplateHeader } from "./TemplateHeader";
-import { WorkspaceViewer } from "workspace";
 
 export const TemplateOverview: FC<{
     information: WorkspaceInfo;

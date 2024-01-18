@@ -10,6 +10,7 @@ export const ElementFlowHandle: FC<{
     position: Position;
     referenceBox: BoundingBox;
     interactiveArea?: number;
+    isExpanded?: boolean;
     isVisible?: boolean;
     onMouseEnter?: () => void;
     onMouseLeave?: () => void;
@@ -18,6 +19,7 @@ export const ElementFlowHandle: FC<{
     position,
     referenceBox,
     interactiveArea,
+    isExpanded,
     isVisible,
     onMouseEnter,
     onMouseLeave,
@@ -31,7 +33,7 @@ export const ElementFlowHandle: FC<{
         [Position.Bottom]: { top: `${referenceBox.height + offset}px`, left: `${referenceBox.width / 2}px` },
     }), [referenceBox]);
     const handleRef = useRef<HTMLDivElement>(null);
-    const [ isExapanded, setIsExapanded ] = useState(false);
+    const [ isHovered, setIsHovered ] = useState(false);
 
     const handleMouseMove = useCallback(throttle((event: MouseEvent) => {
         const handleRect = handleRef.current?.getBoundingClientRect();
@@ -40,7 +42,7 @@ export const ElementFlowHandle: FC<{
             && mousePosition?.x <= handleRect?.right + interactiveArea
             && mousePosition?.y >= handleRect?.top - interactiveArea
             && mousePosition?.y <= handleRect?.bottom + interactiveArea;
-        setIsExapanded(isExapanded);
+        setIsHovered(isExapanded);
     }, 100), []);
 
     useMouseMove(document.querySelector(".react-flow__pane"), handleMouseMove);
@@ -58,17 +60,17 @@ export const ElementFlowHandle: FC<{
         >
             <Flex
                 aria-label={"element handle button"}
-                backgroundColor={isExapanded ? "gray.900" : "surface.tinted-white-20"}
+                backgroundColor={isExpanded || isHovered ? "gray.900" : "surface.tinted-white-20"}
                 backdropFilter={"blur(32px)"}
-                borderRadius={isExapanded ? 8 : 2}
+                borderRadius={isExpanded || isHovered ? 8 : 2}
                 boxShadow={"0px 2px 4px 0px rgba(0, 0, 0, 0.10)"}
                 alignItems={"center"}
                 justifyContent={"center"}
-                height={isExapanded ? "24px" : "8px"}
-                width={isExapanded ? "24px" : "8px"}
+                height={isExpanded || isHovered ? "24px" : "8px"}
+                width={isExpanded || isHovered ? "24px" : "8px"}
                 transitionProperty={"all"}
                 transitionDuration={"0.1s"}
-                visibility={isExapanded || isVisible ? "visible" : "hidden"}
+                visibility={isExpanded || isHovered || isVisible ? "visible" : "hidden"}
                 _hover={{
                     backgroundColor: "white",
                     borderRadius: 8,
@@ -84,9 +86,9 @@ export const ElementFlowHandle: FC<{
                     icon={<Icon as={Plus} boxSize={4} />}
                     color={"gray.100"}
                     size={"xs"}
-                    transitionDelay={isExapanded ? "0.1s" : "unset"}
+                    transitionDelay={isExpanded || isHovered ? "0.1s" : "unset"}
                     variant={"tonal"}
-                    visibility={isExapanded ? "visible" : "hidden"}
+                    visibility={isExpanded || isHovered ? "visible" : "hidden"}
                 />
             </Flex>
         </Box>

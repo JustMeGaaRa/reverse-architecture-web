@@ -1,9 +1,7 @@
 import { Box } from "@chakra-ui/react";
-import { useWorkspace, useWorkspaceNavigation } from "@workspace/core";
-import { FC, useCallback, useEffect } from "react";
-import { CommentCard, CommentGroup } from "../../../features/comments/components";
-import { useCommentsStore } from "../../../features/comments/hooks";
-import { CommentThread } from "../../../features/comments/types";
+import { useWorkspace, useWorkspaceNavigation } from "workspace";
+import { FC, useCallback } from "react";
+import { CommentCard, CommentGroup, CommentThread, useCommentsStore } from "../../../features";
 
 export const CommentThreadList: FC<{
     discussions: CommentThread[];
@@ -24,7 +22,7 @@ export const CommentThreadList: FC<{
     const handleOnClick = useCallback((comment: CommentThread) => {
         const isCurrent = selectedThreadId === comment.commentThreadId;
         setSelectedThreadId(isCurrent ? undefined : comment.commentThreadId);
-        openView(workspace, { type: comment.metadata.view.type as any, identifier: comment.metadata.view.id });
+        openView(workspace, comment.metadata.view);
     }, [workspace, selectedThreadId, setSelectedThreadId, openView]);
 
     return (

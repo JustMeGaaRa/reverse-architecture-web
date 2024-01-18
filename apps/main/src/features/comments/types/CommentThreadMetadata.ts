@@ -1,14 +1,8 @@
+import { ViewType } from "structurizr";
+
 export type CommentThreadMetadata = {
     commentThreadId?: string;
-    view: { type: CommentThreadViewType; id: string },
+    view: { type: ViewType; identifier: string },
     position?: { x: number; y: number },
     elementId?: string;
 }
-
-export type CommentThreadViewType =
-    "System Landscape" |
-    "System Context" |
-    "Container" |
-    "Component" |
-    "Deployment" |
-    "Model"

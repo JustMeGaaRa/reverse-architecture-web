@@ -1,5 +1,3 @@
-import { Box } from "@chakra-ui/react";
-// TODO: consider making this component/feature less dependent on the workspace-viewer package
 import { EmptyContent } from "@reversearchitecture/ui";
 import { Folder } from "iconoir-react";
 import { FC } from "react";

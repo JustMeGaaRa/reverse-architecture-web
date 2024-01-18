@@ -1,6 +1,4 @@
-import { IWorkspaceMetadata, IWorkspaceTheme, Workspace } from "@structurizr/dsl";
-import { StructurizrExportClient } from "@structurizr/export";
-import { useWorkspaceStore } from "../store";
+import { IWorkspaceMetadata, IWorkspaceTheme } from "structurizr";
 import { WorkspaceInfo } from "../types";
 
 type CommunityTemplate = {

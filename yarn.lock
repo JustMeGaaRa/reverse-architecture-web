@@ -10848,7 +10848,7 @@ strnum@^1.0.5:
   resolved "https://registry.npmjs.org/strnum/-/strnum-1.0.5.tgz"
   integrity sha512-J8bbNyKKXl5qYcR36TIO8W3mVGVHrmmxsd5PAItGkmyzwJvybiw2IVq5nqd0i4LSNSkB/sx9VHllbfFdr9k1JA==
 
-"structurizr@file:C:\\Users\\pavlo\\Documents\\GitHub\\justmegaara.reverse-architecture-web\\packages\\structurizr":
+structurizr@*, "structurizr@file:C:\\Users\\pavlo\\Documents\\GitHub\\justmegaara.reverse-architecture-web\\packages\\structurizr":
   version "0.1.0"
   resolved "file:packages/structurizr"
   dependencies:

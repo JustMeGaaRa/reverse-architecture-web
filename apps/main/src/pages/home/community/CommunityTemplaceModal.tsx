@@ -1,7 +1,6 @@
 import { Flex, Modal, ModalContent, ModalOverlay } from "@chakra-ui/react";
-import { IViewDefinition, ViewType, Workspace } from "@structurizr/dsl";
-import { useStructurizrParser } from "@structurizr/react";
-import { useWorkspaceTheme, WorkspaceProvider } from "@workspace/core";
+import { useStructurizrParser, Workspace } from "structurizr";
+import { useWorkspaceTheme } from "workspace";
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { v4 } from "uuid";
 import {

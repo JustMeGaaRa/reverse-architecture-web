@@ -19,15 +19,14 @@ export const WorkspaceProvider: FC<PropsWithChildren<{
 
     useEffect(() => {
         const onWorkspaceApplyRemoteChanges = (event: YMapEvent<unknown>, transaction: Transaction) => {
-            if (!transaction.local) {
-                const workspaceJson = workspaceMap.get("workspace") as string;
-                setWorkspace(JSON.parse(workspaceJson) as IWorkspace);
+            // NOTE: apply local changes as well to support undo/redo feature
+            const workspaceJson = workspaceMap.get("workspace") as string;
+            setWorkspace(JSON.parse(workspaceJson) as IWorkspace);
 
-                // TODO: set structurizr text
-                // const structurizrText = workspaceMap.get("structurizr") as string;
-                // const structurizrExporter = new StructurizrExportClient();
-                // setStructurizrText(structurizrText);
-            }
+            // TODO: set structurizr text
+            // const structurizrText = workspaceMap.get("structurizr") as string;
+            // const structurizrExporter = new StructurizrExportClient();
+            // setStructurizrText(structurizrText);
         }
 
         const workspaceMap = workspaceDocument.getMap("workspace");

@@ -1,5 +1,4 @@
-import { Workspace } from "@structurizr/dsl";
-import { StructurizrExportClient } from "@structurizr/export";
+import { StructurizrExportClient, Workspace } from "structurizr";
 import { WorkspaceApi } from "../services";
 import { useWorkspaceStore } from "../store";
 import { WorkspaceInfo } from "../types";

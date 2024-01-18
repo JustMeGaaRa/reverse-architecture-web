@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@structurizr/dsl": "*",
+    "@workspace/code-editor": "*",
     "@workspace/controls": "*",
     "@workspace/core": "*",
     "@workspace/diagramming": "*",

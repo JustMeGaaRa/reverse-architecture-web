@@ -121,6 +121,7 @@ export const ElementDiagramFlowControls: FC<{
                     position={PositionSide.Left}
                     referenceBox={elementSelectionBorderBox}
                     interactiveArea={50 * viewport.zoom}
+                    isExpanded={showSelectionBorder}
                     isVisible={showEditableControls}
                     onMouseEnter={() => onElementPreview(PositionSide.Left)}
                     onMouseLeave={handleOnMouseLeave}
@@ -130,6 +131,7 @@ export const ElementDiagramFlowControls: FC<{
                     position={PositionSide.Right}
                     referenceBox={elementSelectionBorderBox}
                     interactiveArea={50 * viewport.zoom}
+                    isExpanded={showSelectionBorder}
                     isVisible={showEditableControls}
                     onMouseEnter={() => onElementPreview(PositionSide.Right)}
                     onMouseLeave={handleOnMouseLeave}
@@ -139,6 +141,7 @@ export const ElementDiagramFlowControls: FC<{
                     position={PositionSide.Top}
                     referenceBox={elementSelectionBorderBox}
                     interactiveArea={50 * viewport.zoom}
+                    isExpanded={showSelectionBorder}
                     isVisible={showEditableControls}
                     onMouseEnter={() => onElementPreview(PositionSide.Top)}
                     onMouseLeave={handleOnMouseLeave}
@@ -148,6 +151,7 @@ export const ElementDiagramFlowControls: FC<{
                     position={PositionSide.Bottom}
                     referenceBox={elementSelectionBorderBox}
                     interactiveArea={50 * viewport.zoom}
+                    isExpanded={showSelectionBorder}
                     isVisible={showEditableControls}
                     onMouseEnter={() => onElementPreview(PositionSide.Bottom)}
                     onMouseLeave={handleOnMouseLeave}

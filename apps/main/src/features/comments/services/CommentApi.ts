@@ -1,3 +1,4 @@
+import { ViewType } from "structurizr";
 import { useCommentStore } from "../store";
 import { CommentInfo, CommentThread, CommentThreadMetadata } from "../types";
 
@@ -62,7 +63,7 @@ export class CommentApi {
                 },
             ],
             metadata: {
-                view: { type: "System Landscape", id: "System Landscape" },
+                view: { type: ViewType.SystemLandscape, identifier: "System Landscape" },
                 position: { x: 100, y: 100 }
             }
         }
@@ -100,7 +101,7 @@ export class CommentApi {
                 },
             ],
             metadata: {
-                view: { type: "System Landscape", id: "System Landscape" },
+                view: { type: ViewType.SystemLandscape, identifier: "System Landscape" },
                 position: { x: 1000, y: 1000 }
             }
         }
@@ -131,7 +132,7 @@ export class CommentApi {
                 },
             ],
             metadata: {
-                view: { type: "System Landscape", id: "System Landscape" },
+                view: { type: ViewType.SystemLandscape, identifier: "System Landscape" },
                 position: { x: 500, y: 300 }
             },
         }
@@ -155,7 +156,7 @@ export class CommentApi {
                 }
             ],
             metadata: {
-                view: { type: "Container", id: "internetBankingSystem" },
+                view: { type: ViewType.Container, identifier: "internetBankingSystem" },
                 position: { x: 500, y: 300 }
             },
         }

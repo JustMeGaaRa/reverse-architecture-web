@@ -36,9 +36,8 @@ export const WorkspacePage: FC = () => {
     
     // SECTION: loading workspace from the API
     const workspaceApi = useMemo(() => new WorkspaceCacheWrapper(new WorkspaceApi()), []);
-    const { parseStructurizr } = useStructurizrParser();
     const [ workspace, setWorkspace ] = useState<IWorkspace>(Workspace.Empty.toObject());
-    // const { openView } = useWorkspaceNavigation();
+    const { parseStructurizr } = useStructurizrParser();
 
     useEffect(() => {
         workspaceApi.getWorkspaceById(workspaceId)
@@ -87,13 +86,13 @@ export const WorkspacePage: FC = () => {
             setDiscussions([]);
         }
     }, [workspaceId, commentApi, snackbar, setDiscussions]);
-    
+
     // NOTE: workspace provider on this page should save changes to the persistant layer,
     // as this is the user who shares and owns the workspace file
     return (
         <WorkspaceProvider initialWorkspace={workspace}>
             <CommentProvider initialDiscussions={discussions}>
-                <WorkspaceNavigationProvider>
+                <WorkspaceNavigationProvider initialView={workspace.views.systemLandscape}>
                     <WorkspaceRoom options={{ roomId: workspaceId }}>
                         <CurrentUser info={account} />
                         <WorkspaceCollaborativeEditor />

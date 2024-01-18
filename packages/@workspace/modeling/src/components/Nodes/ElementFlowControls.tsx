@@ -106,6 +106,7 @@ export const ElementModelFlowControls: FC<{
                     position={PositionSide.Bottom}
                     referenceBox={elementSelectionBorderBox}
                     interactiveArea={50 * viewport.zoom}
+                    isExpanded={showSelectionBorder}
                     isVisible={showEditableControls}
                     onMouseEnter={handleOnMouseEnter}
                     onMouseLeave={handleOnMouseLeave}

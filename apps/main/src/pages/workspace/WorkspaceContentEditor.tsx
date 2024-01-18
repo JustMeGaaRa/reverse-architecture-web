@@ -24,7 +24,6 @@ import {
     usePageHeader,
     usePageSidebar,
 } from "@reversearchitecture/ui";
-import { WorkspaceEditor } from "@workspace/code-editor";
 import {
     AppleShortcuts,
     ChatLines,
@@ -54,6 +53,7 @@ import {
 import {
     CollaboratingUserPane,
     Viewport,
+    WorkspaceEditor,
     WorkspaceViewPath,
     WorkspaceViewer,
     useOnUserViewportChange,
@@ -75,11 +75,9 @@ import {
 import {
     DiscussionsPane,
     PresenterInfo,
-    PresentationToolbar,
     SharePopover,
     UserAvatarGroup,
-    WorkspaceDiagrammingToolbar,
-    WorkspaceModelingToolbar,
+    WorkspaceActionsToolbar,
     WorkspaceUndoRedoControls,
     WorkspaceZoomControls,
     WorkspaceMenu
@@ -338,7 +336,7 @@ export const WorkspaceCollaborativeEditor: FC = () => {
     const currentViewDiscussions = useMemo(() => {
         return commentThreads.filter(x => {
             return x.metadata?.view?.type === currentView?.type
-                && x.metadata?.view?.id === currentView?.identifier;
+                && x.metadata?.view?.identifier === currentView?.identifier;
         });
     }, [commentThreads, currentView?.identifier, currentView?.type]);
 
@@ -411,13 +409,11 @@ export const WorkspaceCollaborativeEditor: FC = () => {
                         onViewClick={handleOnWorkspaceViewClick}
                     >
                         <PresenterInfo presenter={presenterInfo} />
-                        <PresentationToolbar isVisible={presentationEnabled} />
                         <CollaboratingUserPane users={currentViewUsers} />
                         <DiscussionsPane discussions={currentViewDiscussions} />
                         <WorkspaceViewPath workspace={workspace} isVisible={isDiagrammingMode} />
                         <WorkspaceUndoRedoControls isVisible={!presentationEnabled} />
-                        <WorkspaceDiagrammingToolbar isVisible={!presentationEnabled && isDiagrammingMode} />
-                        <WorkspaceModelingToolbar isVisible={!presentationEnabled && isModelingMode} />
+                        <WorkspaceActionsToolbar />
                         <WorkspaceZoomControls />
                     </WorkspaceViewer>
                 </ContextSheet>

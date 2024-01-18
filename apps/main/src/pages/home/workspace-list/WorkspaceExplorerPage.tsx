@@ -22,8 +22,7 @@ import {
     useContentViewMode,
     usePageHeader
 } from "@reversearchitecture/ui";
-import { Workspace } from "@structurizr/dsl";
-import { StructurizrExportClient } from "@structurizr/export";
+import { StructurizrExportClient, Workspace } from "structurizr";
 import {
     PagePlus,
     List,
@@ -133,7 +132,7 @@ export const WorkspaceExplorerPage: FC<PropsWithChildren> = () => {
                 //     .then(workspaces => setWorkspaces(workspaces))
                 //     .catch(error => console.error(error));
             });
-    }, [workspaceApi]);
+    }, []);
 
     useEffect(() => {
         setHeaderContent({

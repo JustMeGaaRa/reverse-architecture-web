@@ -1,5 +1,5 @@
 import { Avatar, ButtonGroup, Flex, Icon, IconButton, Text } from "@chakra-ui/react";
-import { useWorkspaceTheme } from "@workspace/core";
+import { useWorkspaceTheme } from "workspace";
 import { Check, MoreHoriz } from "iconoir-react";
 import { FC } from "react";
 import { CommentInfo } from "../types";
@@ -7,7 +7,7 @@ import { CommentInfo } from "../types";
 export const CommentCard: FC<{
     comment: CommentInfo;
     replyCount?: number;
-    origin?: { type: string; id: string; };
+    origin?: { type: string; identifier: string; };
     colorScheme?: string;
     isSelected?: boolean;
     showAvatar?: boolean;
@@ -79,7 +79,7 @@ export const CommentCard: FC<{
 export const CommentNonInteractiveCard: FC<{
     comment: CommentInfo;
     replyCount?: number;
-    origin?: { type: string; id: string; };
+    origin?: { type: string; identifier: string; };
     colorScheme?: string;
     showAvatar?: boolean;
     showOrigin?: boolean;
@@ -151,7 +151,7 @@ export const CommentNonInteractiveCard: FC<{
             <Flex width={"100%"}>
                 {showOrigin && (
                     <Text color={`${getViewAccentColor(origin?.type as any)}.600`} textStyle={"b5"}>
-                        {origin?.id ? `${origin?.type} [${origin?.id}]` : `${origin?.type}`}
+                        {origin?.identifier ? `${origin?.type} [${origin?.identifier}]` : `${origin?.type}`}
                     </Text>
                 )}
             </Flex>
