@@ -3,13 +3,16 @@ import { ViewType } from "structurizr";
 import {
     CommentingModeButton,
     ConnectionModeButton,
+    DraggingModeButton,
     ElementComponentModeButton,
     ElementContainerModeButton,
     ElementDeploymentNodeModeButton,
     ElementInfrastructureNodeModeButton,
     ElementPersonModeButton,
     ElementSoftwareSystemModeButton,
-    TextEditModeButton
+    SelectionModeButton,
+    TextEditModeButton,
+    useDraggingMode
 } from "@workspace/controls";
 import {
     PanelPosition,
@@ -22,28 +25,10 @@ import {
     useWorkspaceNavigation,
     usePresentationMode,
     WorkspacePanel,
-    useWorkspaceRoom
+    useWorkspaceRoom,
 } from "workspace";
-import { Component, CursorPointer, DragHandGesture, Play, Xmark } from "iconoir-react";
+import { Component, Play, Xmark } from "iconoir-react";
 import { FC, useCallback } from "react";
-
-export const SelectionModeButton: FC = () => {
-    const { isSelectionEnabled, setSelectionMode } = useSelectionMode();
-
-    const handleOnSelectionModeClick = useCallback(() => {
-        setSelectionMode(state => !state);
-    }, [setSelectionMode]);
-    
-    return (
-        <IconButton
-            aria-label={"selection mode"}
-            aria-selected={isSelectionEnabled}
-            icon={<CursorPointer />}
-            title={"selection mode"}
-            onClick={handleOnSelectionModeClick}
-        />
-    )
-}
 
 export const WorkspaceActionsToolbar: FC<{
     position?: PanelPosition;
@@ -55,56 +40,31 @@ export const WorkspaceActionsToolbar: FC<{
     const { currentView } = useWorkspaceNavigation();
     const { currentUser } = useWorkspaceRoom();
     const { presentationEnabled, presenterInfo, startPresenting, stopPresenting } = usePresentationMode();
-    const { isSelectionEnabled, setSelectionMode } = useSelectionMode();
-
-    const isDiagrammingView = currentView?.type !== ViewType.Model && currentView?.type !== ViewType.SystemLandscape && currentView?.type !== ViewType.Deployment;
-    const isModelingView = currentView?.type === ViewType.Model;
-    const isDeploymentView = currentView?.type === ViewType.Deployment;
-
-    const handleOnSelectionModeClick = useCallback(() => {
-        setSelectionMode(true);
-    }, [setSelectionMode]);
-
-    const handleOnDraggingModeClick = useCallback(() => {
-        setSelectionMode(false);
-    }, [setSelectionMode]);
+    const { enableSelectionMode } = useSelectionMode();
+    const { enableDraggingMode } = useDraggingMode()
 
     const handleOnStartPresenting = useCallback(() => {
         startPresenting();
-        setSelectionMode(false);
-    }, [setSelectionMode, startPresenting]);
+        enableDraggingMode()
+    }, [enableDraggingMode, startPresenting]);
 
     const handleOnStopPresenting = useCallback(() => {
         stopPresenting();
-        setSelectionMode(true);
-    }, [setSelectionMode, stopPresenting]);
+        enableSelectionMode();
+    }, [enableSelectionMode, stopPresenting]);
 
     return isVisible && (
         <WorkspacePanel position={position ?? "bottom-center"}>
             <Toolbar>
                 <ToolbarSection>
-                    {/* TODO: hide selection button in presentation mode */}
                     {!presentationEnabled && (
-                        <IconButton
-                            aria-label={"selection mode"}
-                            aria-selected={isSelectionEnabled}
-                            icon={<CursorPointer />}
-                            title={"selection mode"}
-                            onClick={handleOnSelectionModeClick}
-                        />
+                        <SelectionModeButton />
                     )}
-                    <IconButton
-                        aria-label={"dragging mode"}
-                        aria-selected={!isSelectionEnabled}
-                        icon={<DragHandGesture />}
-                        title={"dragging mode"}
-                        onClick={handleOnDraggingModeClick}
-                    />
+                    <DraggingModeButton />
                 </ToolbarSection>
 
                 <ToolbarSection>
-                    {/* TODO: hide submenu button in presentation mode */}
-                    {!presentationEnabled && !isModelingView && (
+                    {!presentationEnabled && currentView?.type !== ViewType.Model && (
                         <ToolbarSubmenu>
                             <ToolbarSubmenuTrigger
                                 aria-label={"shapes submenu"}
@@ -124,8 +84,7 @@ export const WorkspaceActionsToolbar: FC<{
                     )}
 
                     <TextEditModeButton />
-                    {/* TODO: hide connection button in modeling and presentation modes */}
-                    {!presentationEnabled && !isModelingView && (
+                    {!presentationEnabled && currentView?.type !== ViewType.Model && (
                         <ConnectionModeButton />
                     )}
                     <CommentingModeButton />

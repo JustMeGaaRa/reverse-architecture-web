@@ -1,5 +1,5 @@
-import { IWorkspace, ViewType } from "@structurizr/dsl";
-import { useWorkspaceNavigation } from "@workspace/core";
+import { ViewType } from "@structurizr/dsl";
+import { useWorkspace, useWorkspaceNavigation } from "@workspace/core";
 import {
     SystemLandscapeView,
     SystemContextView,
@@ -11,13 +11,12 @@ import { ModelView } from "@workspace/modeling";
 import { FC, PropsWithChildren } from "react";
 
 export const WorkspaceViewSelector: FC<PropsWithChildren<{
-    workspace: IWorkspace;
     onViewClick?: (event: React.MouseEvent) => void;
 }>> = ({
     children,
-    workspace,
     onViewClick
 }) => {
+    const { workspace } = useWorkspace();
     const { currentView } = useWorkspaceNavigation();
 
     switch (currentView?.type) {

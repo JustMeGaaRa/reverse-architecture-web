@@ -5,33 +5,52 @@ import {
     Button,
     Icon,
 } from "@chakra-ui/react";
-import { IWorkspace, ViewKeys } from "@structurizr/dsl";
+import {
+    ViewKeys,
+    ViewType
+} from "@structurizr/dsl";
 import {
     PanelPosition,
+    useWorkspace,
     useWorkspaceNavigation,
     WorkspacePanel
 } from "@workspace/core";
 import { AppleShortcuts } from "iconoir-react";
-import { FC, useCallback } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
+import {
+    ComponentPathProvider,
+    ContainerPathProvider,
+    SystemContextPathProvider,
+    SystemLandscapePathProvider
+} from "../types";
 
-export const WorkspaceViewPath: FC<{
+export const WorkspaceViewBreadcrumbs: FC<{
     position?: PanelPosition;
-    workspace: IWorkspace;
-    path?: ViewKeys[];
     isVisible?: boolean;
 }> = ({
     position,
-    workspace,
-    path,
     isVisible = true
 }) => {
-    const { currentViewPath, openView } = useWorkspaceNavigation();
-    
-    const links = (path ?? currentViewPath).map((view, index) => ({
-        title: view.title,
-        isActive: index === currentViewPath.length - 1,
-        data: view
-    }));
+    const { workspace } = useWorkspace();
+    const { currentView, openView } = useWorkspaceNavigation();
+    const [ links, setLinks ] = useState([]);
+
+    useEffect(() => {
+        const pathBuilders = {
+            [ViewType.SystemLandscape]: new SystemLandscapePathProvider(),
+            [ViewType.SystemContext]: new SystemContextPathProvider(),
+            [ViewType.Container]: new ContainerPathProvider(),
+            [ViewType.Component]: new ComponentPathProvider()
+        };
+        const viewPath = pathBuilders[currentView.type]?.getPath(workspace, currentView) ?? [];
+        const links = viewPath.map((view, index) => ({
+            title: view.title,
+            isActive: index === viewPath.length - 1,
+            data: view
+        }));
+        
+        setLinks(links);
+    }, [currentView, workspace])
 
     const handleOnViewItemClick = useCallback((viewKeys: ViewKeys) => {
         openView(workspace, viewKeys);

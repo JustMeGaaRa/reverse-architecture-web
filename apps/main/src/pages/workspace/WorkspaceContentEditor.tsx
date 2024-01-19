@@ -1,5 +1,9 @@
 import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
     Button,
+    ButtonGroup,
     Divider,
     Editable,
     EditableInput,
@@ -19,6 +23,7 @@ import {
     ContextSheetTabContent,
     ContextSheetTitle,
     PageHomeButton,
+    ReverseArchitectureSvg,
     Route,
     RouteList,
     usePageHeader,
@@ -41,7 +46,7 @@ import {
     useMemo,
     useState
 } from "react";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
     IViewDefinition,
     ViewType,
@@ -54,7 +59,7 @@ import {
     CollaboratingUserPane,
     Viewport,
     WorkspaceEditor,
-    WorkspaceViewPath,
+    WorkspaceViewBreadcrumbs,
     WorkspaceViewer,
     useOnUserViewportChange,
     useOnUserViewChange,
@@ -163,7 +168,7 @@ export const WorkspaceCollaborativeEditor: FC = () => {
         setSidebarContent({
             logo: (
                 <PageHomeButton
-                    icon={<Icon as={HomeSimple} boxSize={5} />}
+                    icon={<ReverseArchitectureSvg showText={false} />}
                     onClick={() => navigate("/")}
                 />
             ),
@@ -223,9 +228,8 @@ export const WorkspaceCollaborativeEditor: FC = () => {
     const isDeploymentMode = mode === WorkspaceContentMode.Deployment;
 
     const handleOnDiagrammingMode = useCallback(() => {
-        const view = new SystemLandscapeViewDefinition({ identifier: "" });
         setMode(WorkspaceContentMode.Diagramming);
-        openView(workspace, view.toObject());
+        openView(workspace, workspace.views.systemLandscape);
     }, [openView, workspace]);
 
     const handleOnModelingMode = useCallback(() => {
@@ -234,9 +238,8 @@ export const WorkspaceCollaborativeEditor: FC = () => {
     }, [openView, workspace]);
 
     const handleOnDeploymentMode = useCallback(() => {
-        const view = new DeploymentViewDefinition({ identifier: "", environment: "New Environment" });
         setMode(WorkspaceContentMode.Deployment);
-        openView(workspace, view.toObject());
+        openView(workspace, workspace.views.deployments?.at(0));
     }, [openView, workspace]);
 
     useEffect(() => {
@@ -249,18 +252,33 @@ export const WorkspaceCollaborativeEditor: FC = () => {
                         height={"32px"}
                         orientation={"vertical"}
                     />
-                    <Editable value={workspace.name} ml={4} maxWidth={"300px"}>
-                        <EditablePreview />
-                        <EditableInput />
-                    </Editable>
-                    <WorkspaceMenu title={workspace.name} />
-                    <IconButton
-                        aria-label={"save"}
-                        colorScheme={"gray"}
-                        variant={"ghost"}
-                        icon={<Icon as={CloudSync} boxSize={5} />}
-                        size={"md"}
-                    />
+                    <Breadcrumb>
+                        <BreadcrumbItem>
+                            <BreadcrumbLink as={NavLink} to={"/workspaces"} marginX={2}>
+                                <Text textStyle={"b2"} color={"gray.900"}>
+                                    My Workspaces
+                                </Text>
+                            </BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbItem>
+                            <BreadcrumbLink marginX={2}>
+                                <Editable textStyle={"b2"} value={workspace.name} maxWidth={"300px"}>
+                                    <EditablePreview />
+                                    <EditableInput />
+                                </Editable>
+                            </BreadcrumbLink>
+                        </BreadcrumbItem>
+                    </Breadcrumb>
+                    <ButtonGroup spacing={1}>
+                        <WorkspaceMenu workspace={workspace} title={workspace.name} />
+                        <IconButton
+                            aria-label={"save"}
+                            colorScheme={"gray"}
+                            variant={"ghost"}
+                            icon={<Icon as={CloudSync} boxSize={5} />}
+                            size={"md"}
+                        />
+                    </ButtonGroup>
                 </HStack>
             ),
             middle: (
@@ -323,7 +341,7 @@ export const WorkspaceCollaborativeEditor: FC = () => {
         handleOnModelingMode,
         handleOnDeploymentMode,
         followUser,
-        workspace.name,
+        workspace,
         users,
         isDiagrammingMode,
         isModelingMode,
@@ -408,10 +426,10 @@ export const WorkspaceCollaborativeEditor: FC = () => {
                         initialView={currentView}
                         onViewClick={handleOnWorkspaceViewClick}
                     >
-                        <PresenterInfo presenter={presenterInfo} />
                         <CollaboratingUserPane users={currentViewUsers} />
                         <DiscussionsPane discussions={currentViewDiscussions} />
-                        <WorkspaceViewPath workspace={workspace} isVisible={isDiagrammingMode} />
+                        <PresenterInfo presenter={presenterInfo} />
+                        <WorkspaceViewBreadcrumbs isVisible={isDiagrammingMode} />
                         <WorkspaceUndoRedoControls isVisible={!presentationEnabled} />
                         <WorkspaceActionsToolbar />
                         <WorkspaceZoomControls />

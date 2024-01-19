@@ -51,7 +51,7 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
     const [ nodes, , onNodesChange ] = useNodesState([]);
     const [ edges, , onEdgesChange ] = useEdgesState([]);
     const {
-        isAddingElementEnabled,
+        enabledTool,
         addingElementType
     } = useWorkspaceToolbarStore();
     const {
@@ -74,7 +74,7 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
 
     // NOTE: following handlers are used to add elements when respective mode is enabled
     const handleOnNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
-        if (reactFlowRef.current && isAddingElementEnabled) {
+        if (reactFlowRef.current && enabledTool === "adding-element") {
             const parentOffset = reactFlowRef.current.getBoundingClientRect();
             const mousePoint = { x: event.clientX, y: event.clientY };
             const pointRelativeToViewport = {
@@ -100,7 +100,7 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
     }, [
         reactFlowRef,
         addingElementType,
-        isAddingElementEnabled,
+        enabledTool,
         getViewport,
         addSoftwareSystem,
         addPerson
@@ -115,7 +115,7 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
         };
         const pointTranslatedFromViewport = getAbsolutePoint(getViewport(), pointRelativeToViewport);
 
-        if (reactFlowRef.current && isAddingElementEnabled) {
+        if (reactFlowRef.current && enabledTool === "adding-element") {
             switch (addingElementType) {
                 case ElementType.Group:
                     addGroup(pointTranslatedFromViewport);
@@ -133,7 +133,7 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
     }, [
         reactFlowRef,
         addingElementType,
-        isAddingElementEnabled,
+        enabledTool,
         onWorkspaceViewClick,
         getViewport,
         addGroup,

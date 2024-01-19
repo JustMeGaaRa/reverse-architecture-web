@@ -1,17 +1,15 @@
 import { IconButton } from "@chakra-ui/react";
-import { useWorkspaceToolbarStore } from "@workspace/core";
 import { ChatPlusIn } from "iconoir-react";
 import { FC } from "react";
 import { useCommentingMode } from "../hooks";
 
 export const CommentingModeButton: FC = () => {
-    const { isCommentAddingEnabled } = useWorkspaceToolbarStore();
-    const { enableCommentingMode } = useCommentingMode();
+    const { isCommentingModeEnabled, enableCommentingMode } = useCommentingMode();
 
     return (
         <IconButton
             aria-label={"add comment"}
-            aria-selected={isCommentAddingEnabled}
+            aria-selected={isCommentingModeEnabled}
             icon={<ChatPlusIn />}
             title={"add comment"}
             onClick={() => enableCommentingMode()}

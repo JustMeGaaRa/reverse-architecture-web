@@ -4,10 +4,10 @@ import {
     relationshipExistsOverall,
     ISupportVisitor,
     getRelationships,
-    relationshipExistsBetweenElements,
+    relationshipExistsForElementsInView,
     IModel,
     elementIncludedInView
-} from "../..";
+} from "../";
 
 export class SystemContextViewStrategy implements ISupportVisitor {
     constructor(
@@ -16,6 +16,7 @@ export class SystemContextViewStrategy implements ISupportVisitor {
     ) {}
 
     accept(visitor: IElementVisitor): void {
+        const elementsInView = [];
         const relationships = getRelationships(this.model, true);
         const people = this.model.groups
             .flatMap(x => x.people)
@@ -29,6 +30,7 @@ export class SystemContextViewStrategy implements ISupportVisitor {
             .forEach(softwareSystem => {
                 // 2.1.1. include the current software and all software systems
                 visitor.visitSoftwareSystem(softwareSystem);
+                elementsInView.push(softwareSystem.identifier);
                 
                 // 2.1.2. include all people that are directly connected to the current software system
                 people
@@ -36,7 +38,10 @@ export class SystemContextViewStrategy implements ISupportVisitor {
                         return relationshipExistsOverall(relationships, softwareSystem.identifier, person.identifier)
                             || elementIncludedInView(this.view, person.identifier)
                     })
-                    .forEach(person => visitor.visitPerson(person));
+                    .forEach(person => {
+                        visitor.visitPerson(person);
+                        elementsInView.push(person.identifier);
+                    });
                 
                 // 2.1.3. include all software systems that are directly connected to the current container
                 softwareSystems
@@ -44,11 +49,14 @@ export class SystemContextViewStrategy implements ISupportVisitor {
                         return relationshipExistsOverall(relationships, this.view.identifier, softwareSystem.identifier)
                             || elementIncludedInView(this.view, softwareSystem.identifier)
                     })
-                    .forEach(softwareSystem => visitor.visitSoftwareSystem(softwareSystem));
+                    .forEach(softwareSystem => {
+                        visitor.visitSoftwareSystem(softwareSystem);
+                        elementsInView.push(softwareSystem.identifier);
+                    });
             });
 
         relationships
-            .filter(relationship => relationshipExistsBetweenElements(this.view, relationship))
+            .filter(relationship => relationshipExistsForElementsInView(elementsInView, relationship))
             .forEach(relationship => visitor.visitRelationship(relationship));
     }
 }

@@ -9,9 +9,4 @@ export type WorkspaceStore = {
     setWorkspace?: Dispatch<SetStateAction<IWorkspace>>;
 };
 
-export const WorkspaceContext = createContext<WorkspaceStore>({
-    workspaceDocument: undefined,
-    workspace: undefined,
-    undoManager: undefined,
-    setWorkspace: () => {},
-});
+export const WorkspaceContext = createContext<WorkspaceStore>(null);

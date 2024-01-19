@@ -1,5 +1,4 @@
 import {
-    IWorkspaceMetadata,
     IWorkspaceTheme,
     Identifier,
     Relationship,
@@ -10,10 +9,6 @@ import {
     IComponent,
     IModel,
     IRelationship,
-    IComponentView,
-    IContainerView,
-    ISystemContextView,
-    IDeploymentView,
     ElementType,
     IElement,
     SoftwareSystem,
@@ -22,7 +17,14 @@ import {
     Person,
     DeploymentNode,
     InfrastructureNode,
-    Group
+    Group,
+    ViewKeys,
+    ViewType,
+    SystemContextViewDefinition,
+    SystemLandscapeViewDefinition,
+    ContainerViewDefinition,
+    ComponentViewDefinition,
+    DeploymentViewDefinition
 } from "../";
 import { v4 } from "uuid";
 
@@ -50,6 +52,53 @@ export const fetchTheme = async (url: string): Promise<IWorkspaceTheme> => {
     }
     const theme = await themeResponse.json() as IWorkspaceTheme;
     return theme;
+}
+
+export const findViewByKeys = (workspace: IWorkspace, viewDefinition?: ViewKeys) => {
+    return [workspace.views.systemLandscape].find(x => x?.type === viewDefinition?.type)
+        ?? workspace.views.systemContexts.find(x => x.type === viewDefinition?.type && x.identifier === viewDefinition?.identifier)
+        ?? workspace.views.containers.find(x => x.type === viewDefinition?.type && x.identifier === viewDefinition?.identifier)
+        ?? workspace.views.components.find(x => x.type === viewDefinition?.type && x.identifier === viewDefinition?.identifier)
+        ?? workspace.views.deployments.find(x => x.type === viewDefinition?.type && x.identifier === viewDefinition?.identifier);
+}
+
+export const findViewByType = (workspace: IWorkspace, viewType?: ViewType) => {
+    return [workspace.views.systemLandscape].find(x => x?.type === viewType)
+        ?? workspace.views.systemContexts.find(x => x.type === viewType)
+        ?? workspace.views.containers.find(x => x.type === viewType)
+        ?? workspace.views.components.find(x => x.type === viewType)
+        ?? workspace.views.deployments.find(x => x.type === viewType);
+}
+
+export const findAnyExisting = (workspace: IWorkspace) => {
+    return workspace.views.systemLandscape
+        ?? workspace.views.systemContexts[0]
+        ?? workspace.views.containers[0]
+        ?? workspace.views.components[0]
+        ?? workspace.views.deployments[0];
+}
+
+export const getDefaultView = (type: ViewType, identifier: Identifier): IViewDefinition => {
+    switch (type) {
+        case ViewType.SystemLandscape:
+            return SystemLandscapeViewDefinition.default();
+        case ViewType.SystemContext:
+            return SystemContextViewDefinition.default(identifier);
+        case ViewType.Container:
+            return ContainerViewDefinition.default(identifier);
+        case ViewType.Component:
+            return ComponentViewDefinition.default(identifier);
+        case ViewType.Deployment:
+            return DeploymentViewDefinition.default();
+        case ViewType.Model:
+            return { type: ViewType.Model, identifier: identifier };
+    }
+}
+
+export const findViewOrDefault = (workspace: IWorkspace, viewDefinition: { type: ViewType, identifier: Identifier }) => {
+    return findViewByKeys(workspace, viewDefinition)
+        ?? findViewByType(workspace, viewDefinition.type)
+        ?? getDefaultView(viewDefinition.type, viewDefinition.identifier);
 }
 
 export const findSoftwareSystem = (model: IModel, identifier: Identifier) => {
@@ -93,6 +142,11 @@ export const relationshipExistsOverall = (
         x.sourceIdentifier === sourceIdentifier && x.targetIdentifier === targetIdentifier
         || x.sourceIdentifier === targetIdentifier && x.targetIdentifier === sourceIdentifier
     )
+}
+
+export const relationshipExistsForElementsInView = (elementsInView: Identifier[], relationship: IRelationship) => {
+    return elementsInView.some(x => x === relationship.sourceIdentifier)
+        && elementsInView.some(x => x === relationship.targetIdentifier)
 }
 
 export const relationshipExistsBetweenElements = (view: IViewDefinition, relationship: IRelationship) => {

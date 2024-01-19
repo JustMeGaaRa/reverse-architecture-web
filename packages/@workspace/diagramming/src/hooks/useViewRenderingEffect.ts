@@ -1,6 +1,6 @@
 import { useReactFlow } from "@reactflow/core";
 import { ISupportVisitor, IWorkspace } from "@structurizr/dsl";
-import { getViewDefinition, useWorkspaceNavigation } from "@workspace/core";
+import { useWorkspaceNavigation } from "@workspace/core";
 import { useEffect } from "react";
 import { getReactFlowAuto, getReactFlowObject } from "../utils";
 
@@ -10,18 +10,16 @@ export const useViewRenderingEffect = (workspace: IWorkspace, strategy: ISupport
 
     // NOTE: we need to re-render the view ONLY when the selected view changes
     useEffect(() => {
-        const viewDefinition = getViewDefinition(workspace, currentView);
         const reactFlowObject = getReactFlowObject(
             strategy,
             workspace.model,
             workspace.views.configuration,
-            viewDefinition
+            currentView
         );
 
         const shouldAutoLayout =
             currentView?.autoLayout !== null
-            && currentView?.autoLayout !== undefined
-            && currentView?.elements?.length !== 0;
+            && currentView?.autoLayout !== undefined;
         
         if (shouldAutoLayout) {
             getReactFlowAuto(reactFlowObject)

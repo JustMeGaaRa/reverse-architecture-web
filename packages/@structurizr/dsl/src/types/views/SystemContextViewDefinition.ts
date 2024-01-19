@@ -6,7 +6,6 @@ import {
     Position,
     Properties,
     SoftwareSystem,
-    ViewType,
     Group,
     ISupportImmutable,
     Person,
@@ -14,7 +13,9 @@ import {
     All,
     IAutoLayout,
     IViewDefinitionMetadata,
+    AutoLayoutDirection,
 } from "../..";
+import { ViewType } from "./ViewType";
 
 export interface ISystemContextView extends IViewDefinition {
     type: ViewType;
@@ -63,6 +64,15 @@ export class SystemContextViewDefinition implements IViewDefinition, ISupportImm
     public properties?: Properties;
     public elements: Array<IElementPosition>;
     public relationships: Array<IRelationshipPosition>;
+
+    public static default(softwareSystemIdentifier: Identifier) {
+        return new SystemContextViewDefinition({
+            identifier: softwareSystemIdentifier,
+            key: "default_system_context",
+            title: "System Context",
+            autoLayout: { direction: AutoLayoutDirection.TopBotom, rankSeparation: 300, nodeSeparation: 300 },
+        });
+    }
 
     public toObject(): ISystemContextView {
         return {

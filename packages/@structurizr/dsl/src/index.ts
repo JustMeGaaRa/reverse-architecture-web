@@ -51,23 +51,16 @@ export * from "./types/Workspace";
 export * from "./types/WorkspaceMetadata";
 
 export * from "./shared/IBuilder";
-export * from "./shared/ISupportPath";
 export * from "./shared/ISupportVisitor";
 export * from "./shared/IElementVisitor";
 export * from "./shared/ISupportImmutable";
 
 
-export * from "./builders/visitors/ComponentViewStrategy";
-export * from "./builders/visitors/ContainerViewStrategy";
-export * from "./builders/visitors/DeploymentViewStrategy";
-export * from "./builders/visitors/ModelViewStrategy";
-export * from "./builders/visitors/SystemContextViewStrategy";
-export * from "./builders/visitors/SystemLandscapeViewStrategy";
-
-export * from "./builders/providers/SystemLandscapePathProvider";
-export * from "./builders/providers/SystemContextPathProvider";
-export * from "./builders/providers/ContainerPathProvider";
-export * from "./builders/providers/ComponentPathProvider";
-export * from "./builders/providers/DeploymentPathProvider";
+export * from "./builders/ComponentViewStrategy";
+export * from "./builders/ContainerViewStrategy";
+export * from "./builders/DeploymentViewStrategy";
+export * from "./builders/ModelViewStrategy";
+export * from "./builders/SystemContextViewStrategy";
+export * from "./builders/SystemLandscapeViewStrategy";
 
 export * from "./utils";

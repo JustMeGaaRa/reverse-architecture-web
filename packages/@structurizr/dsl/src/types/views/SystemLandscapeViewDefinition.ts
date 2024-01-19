@@ -6,7 +6,6 @@ import {
     Position,
     Properties,
     SoftwareSystem,
-    ViewType,
     Group,
     Person,
     ISupportImmutable,
@@ -16,6 +15,7 @@ import {
     AutoLayoutDirection,
     IViewDefinitionMetadata,
 } from "../..";
+import { ViewType } from "./ViewType";
 
 export interface ISystemLandscapeView extends IViewDefinition {
     type: ViewType;
@@ -64,6 +64,15 @@ export class SystemLandscapeViewDefinition implements IViewDefinition, ISupportI
     public properties?: Properties;
     public elements: Array<IElementPosition>;
     public relationships: Array<IRelationshipPosition>;
+
+    public static default() {
+        return new SystemLandscapeViewDefinition({
+            identifier: undefined,
+            key: "default_system_landscape",
+            title: "System Landscape",
+            autoLayout: { direction: AutoLayoutDirection.TopBotom, rankSeparation: 300, nodeSeparation: 300 },
+        });
+    }
 
     public toObject(): ISystemLandscapeView {
         return {

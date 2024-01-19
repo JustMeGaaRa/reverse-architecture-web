@@ -1,5 +1,5 @@
 import { ReactFlowProvider } from "@reactflow/core";
-import { IViewDefinition, ViewKeys } from "@structurizr/dsl";
+import { IViewDefinition } from "@structurizr/dsl";
 import { FC, PropsWithChildren, useEffect, useState } from "react";
 import { WorkspaceNavigationContext } from "../contexts";
 
@@ -10,7 +10,6 @@ export const WorkspaceNavigationProvider: FC<PropsWithChildren<{
     initialView
 }) => {
     const [ currentView, setCurrentView ] = useState<IViewDefinition>();
-    const [ currentViewPath, setCurrentViewPath ] = useState<ViewKeys[]>([]);
 
     useEffect(() => setCurrentView(initialView), [initialView]);
 
@@ -19,9 +18,7 @@ export const WorkspaceNavigationProvider: FC<PropsWithChildren<{
             <WorkspaceNavigationContext.Provider
                 value={{
                     currentView,
-                    currentViewPath,
                     setCurrentView,
-                    setCurrentViewPath
                 }}
             >
                 {children}

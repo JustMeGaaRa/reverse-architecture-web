@@ -57,7 +57,7 @@ export const DeploymentView: FC<PropsWithChildren<{
     const reactFlowRef = useRef(null);
     const strategy = useMemo(() => new DeploymentViewStrategy(workspace.model, view, view["environment"]), [workspace, view]);
     const {
-        isAddingElementEnabled,
+        enabledTool,
         addingElementType
     } = useWorkspaceToolbarStore();
     const {
@@ -79,7 +79,7 @@ export const DeploymentView: FC<PropsWithChildren<{
 
     // NOTE: following handlers are used to add elements when respective mode is enabled
     const handleOnNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
-        if (reactFlowRef.current && isAddingElementEnabled) {
+        if (reactFlowRef.current && enabledTool === "adding-element") {
             const parentOffset = reactFlowRef.current.getBoundingClientRect();
             const mousePoint = { x: event.clientX, y: event.clientY};
             const pointRelativeToViewport = {
@@ -98,13 +98,13 @@ export const DeploymentView: FC<PropsWithChildren<{
         }
     }, [
         reactFlowRef,
-        isAddingElementEnabled,
+        enabledTool,
         addingElementType,
         getViewport,
     ]);
 
     const handleOnPaneClick = useCallback((event: React.MouseEvent) => {
-        if (reactFlowRef.current && isAddingElementEnabled) {
+        if (reactFlowRef.current && enabledTool === "adding-element") {
             const parentOffset = reactFlowRef.current.getBoundingClientRect();
             const mousePoint = { x: event.clientX, y: event.clientY};
             const pointRelativeToViewport = {
@@ -119,7 +119,7 @@ export const DeploymentView: FC<PropsWithChildren<{
         }
     }, [
         reactFlowRef,
-        isAddingElementEnabled,
+        enabledTool,
         addingElementType,
         getViewport,
     ]);

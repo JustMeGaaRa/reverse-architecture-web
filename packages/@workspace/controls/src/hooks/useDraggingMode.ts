@@ -1,27 +1,28 @@
-import { useStoreApi } from "@reactflow/core";
-import { useCallback } from "react";
 import { useWorkspaceToolbarStore } from "@workspace/core";
+import { useCallback } from "react";
 
 export const useDraggingMode = () => {
-    const { isDraggingEnabled } = useWorkspaceToolbarStore();
-    const { setState } = useStoreApi();
-
+    const { enabledTool, setEnabledTool } = useWorkspaceToolbarStore();
+    
     const enableDraggingMode = useCallback(() => {
-        setState({
-            nodesDraggable: false,
-            nodesConnectable: false,
-            elementsSelectable: true,
-        });
-        useWorkspaceToolbarStore.setState({
-            isSelectionEnabled: false,
-            isDraggingEnabled: true,
-            isAddingElementEnabled: false,
-            isConnectionLineEnabled: false,
-            isTextEditEnabled: false,
-            isMultiSelectEnabled: false,
-            isCommentAddingEnabled: false,
-        })
-    }, [setState]);
+        setEnabledTool("dragging");
+    }, [setEnabledTool]);
 
-    return { isDraggingEnabled, enableDraggingMode };
+    return {
+        isDraggingModeEnabled: enabledTool === "dragging",
+        enableDraggingMode
+    };
+}
+
+export const useSelectionMode = () => {
+    const { enabledTool, setEnabledTool } = useWorkspaceToolbarStore();
+    
+    const enableSelectionMode = useCallback(() => {
+        setEnabledTool("selection");
+    }, [setEnabledTool]);
+
+    return {
+        isSelectionModeEnabled: enabledTool === "selection",
+        enableSelectionMode
+    };
 }

@@ -1,6 +1,7 @@
 import {
     All,
     AutoLayout,
+    AutoLayoutDirection,
     Component,
     Container,
     Group,
@@ -14,9 +15,9 @@ import {
     Person,
     Position,
     Properties,
-    SoftwareSystem,
-    ViewType
+    SoftwareSystem
 } from "../..";
+import { ViewType } from "./ViewType";
 
 export interface IComponentView extends IViewDefinition {
     type: ViewType;
@@ -65,6 +66,15 @@ export class ComponentViewDefinition implements IViewDefinition, ISupportImmutab
     public properties?: Properties;
     public elements: Array<IElementPosition>;
     public relationships: Array<IRelationshipPosition>;
+
+    public static default(containerIdentifier: Identifier) {
+        return new ComponentViewDefinition({
+            identifier: containerIdentifier,
+            key: "default_system_landscape",
+            title: "System Landscape",
+            autoLayout: { direction: AutoLayoutDirection.TopBotom, rankSeparation: 300, nodeSeparation: 300 },
+        });
+    }
 
     public toObject(): IComponentView {
         return {

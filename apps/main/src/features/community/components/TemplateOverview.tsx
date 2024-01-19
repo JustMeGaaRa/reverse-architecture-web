@@ -15,7 +15,7 @@ import {
     ContextSheetTabContent
 } from "@reversearchitecture/ui";
 import { Workspace } from "structurizr";
-import { WorkspaceViewPath, WorkspacePanel, WorkspaceViewer } from "workspace";
+import { WorkspaceViewBreadcrumbs, WorkspacePanel, WorkspaceViewer } from "workspace";
 import {
     Bookmark,
     ChatLines,
@@ -90,7 +90,7 @@ export const TemplateOverview: FC<{
                                         workspace={workspace}
                                         initialView={workspace.views.systemLandscape}
                                     >
-                                        <WorkspaceViewPath workspace={workspace} /> 
+                                        <WorkspaceViewBreadcrumbs /> 
                                         <WorkspacePanel position={"bottom-left"} spacing={2}>
                                             <TemplateHeader
                                                 name={information?.name}

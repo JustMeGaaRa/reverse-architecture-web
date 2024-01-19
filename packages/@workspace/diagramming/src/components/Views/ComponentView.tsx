@@ -62,7 +62,7 @@ export const ComponentView: FC<PropsWithChildren<{
     const reactFlowRef = useRef(null);
     const strategy = useMemo(() => new ComponentViewStrategy(workspace.model, view), [workspace, view]);
     const {
-        isAddingElementEnabled,
+        enabledTool,
         addingElementType
     } = useWorkspaceToolbarStore();
     const {
@@ -85,7 +85,7 @@ export const ComponentView: FC<PropsWithChildren<{
 
     // NOTE: following handlers are used to add elements when respective mode is enabled
     const handleOnNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
-        if (reactFlowRef.current && isAddingElementEnabled) {
+        if (reactFlowRef.current && enabledTool === "adding-element") {
             const parentOffset = reactFlowRef.current.getBoundingClientRect();
             const mousePoint = { x: event.clientX, y: event.clientY};
             const pointRelativeToViewport = {
@@ -110,7 +110,7 @@ export const ComponentView: FC<PropsWithChildren<{
         }
     }, [
         reactFlowRef,
-        isAddingElementEnabled,
+        enabledTool,
         addingElementType,
         getViewport,
         addGroup,
@@ -118,7 +118,7 @@ export const ComponentView: FC<PropsWithChildren<{
     ]);
 
     const handleOnPaneClick = useCallback((event: React.MouseEvent) => {
-        if (reactFlowRef.current && isAddingElementEnabled) {
+        if (reactFlowRef.current && enabledTool === "adding-element") {
             const parentOffset = reactFlowRef.current.getBoundingClientRect();
             const mousePoint = { x: event.clientX, y: event.clientY };
             const pointRelativeToViewport = {
@@ -141,7 +141,7 @@ export const ComponentView: FC<PropsWithChildren<{
         }
     }, [
         reactFlowRef,
-        isAddingElementEnabled,
+        enabledTool,
         addingElementType,
         getViewport,
         addSoftwareSystem,

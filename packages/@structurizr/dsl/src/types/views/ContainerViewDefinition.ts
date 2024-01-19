@@ -1,6 +1,7 @@
 import {
     All,
     AutoLayout,
+    AutoLayoutDirection,
     Container,
     Group,
     IAutoLayout,
@@ -13,9 +14,9 @@ import {
     Person,
     Position,
     Properties,
-    SoftwareSystem,
-    ViewType
+    SoftwareSystem
 } from "../..";
+import { ViewType } from "./ViewType";
 
 export interface IContainerView extends IViewDefinition {
     type: ViewType;
@@ -64,6 +65,15 @@ export class ContainerViewDefinition implements IViewDefinition, ISupportImmutab
     public properties?: Properties;
     public elements: Array<IElementPosition>;
     public relationships: Array<IRelationshipPosition>;
+
+    public static default(softwareSystemIdentifier: Identifier) {
+        return new ContainerViewDefinition({
+            identifier: softwareSystemIdentifier,
+            key: "default_container",
+            title: "Container",
+            autoLayout: { direction: AutoLayoutDirection.TopBotom, rankSeparation: 300, nodeSeparation: 300 },
+        });
+    }
 
     public toObject(): IContainerView {
         return {

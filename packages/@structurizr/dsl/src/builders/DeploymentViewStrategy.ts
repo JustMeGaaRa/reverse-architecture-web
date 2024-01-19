@@ -7,7 +7,7 @@ import {
     IWorkspace,
     IDeploymentNode,
     IModel
-} from "../..";
+} from "../";
 
 export class DeploymentViewStrategy implements ISupportVisitor {
     constructor(

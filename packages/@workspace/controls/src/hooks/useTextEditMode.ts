@@ -1,26 +1,15 @@
-import { useStoreApi } from "@reactflow/core";
 import { useCallback } from "react";
 import { useWorkspaceToolbarStore } from "@workspace/core";
 
 export const useTextEditMode = () => {
-    const { setState } = useStoreApi();
+    const { enabledTool, setEnabledTool } = useWorkspaceToolbarStore();
 
     const enableTextEditMode = useCallback(() => {
-        setState({
-            nodesDraggable: false,
-            nodesConnectable: false,
-            elementsSelectable: true,
-        });
-        useWorkspaceToolbarStore.setState({
-            isSelectionEnabled: false,
-            isDraggingEnabled: false,
-            isAddingElementEnabled: false,
-            isConnectionLineEnabled: false,
-            isTextEditEnabled: true,
-            isMultiSelectEnabled: false,
-            isCommentAddingEnabled: false,
-        });
-    }, [setState]);
+        setEnabledTool("text-edit");
+    }, [setEnabledTool]);
 
-    return { enableTextEditMode }
+    return {
+        isTextEditEnabled: enabledTool === "text-edit",
+        enableTextEditMode
+    }
 }

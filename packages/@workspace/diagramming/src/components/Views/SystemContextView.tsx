@@ -62,7 +62,7 @@ export const SystemContextView: FC<PropsWithChildren<{
     const reactFlowRef = useRef(null);
     const strategy = useMemo(() => new SystemContextViewStrategy(workspace.model, view), [workspace, view]);
     const {
-        isAddingElementEnabled,
+        enabledTool,
         addingElementType
     } = useWorkspaceToolbarStore();
     const {
@@ -83,7 +83,7 @@ export const SystemContextView: FC<PropsWithChildren<{
 
     // NOTE: following handlers are used to add elements when respective mode is enabled
     const handleOnNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
-        if (reactFlowRef.current && isAddingElementEnabled) {
+        if (reactFlowRef.current && enabledTool === "adding-element") {
             const parentOffset = reactFlowRef.current.getBoundingClientRect();
             const mousePoint = { x: event.clientX, y: event.clientY };
             const pointRelativeToViewport = {
@@ -108,14 +108,14 @@ export const SystemContextView: FC<PropsWithChildren<{
     }, [
         reactFlowRef,
         addingElementType,
-        isAddingElementEnabled,
+        enabledTool,
         getViewport,
         addSoftwareSystem,
         addPerson
     ]);
 
     const handleOnPaneClick = useCallback((event: React.MouseEvent) => {
-        if (reactFlowRef.current && isAddingElementEnabled) {
+        if (reactFlowRef.current && enabledTool === "adding-element") {
             const parentOffset = reactFlowRef.current.getBoundingClientRect();
             const mousePoint = { x: event.clientX, y: event.clientY };
             const pointRelativeToViewport = {
@@ -139,7 +139,7 @@ export const SystemContextView: FC<PropsWithChildren<{
     }, [
         reactFlowRef,
         addingElementType,
-        isAddingElementEnabled,
+        enabledTool,
         getViewport,
         addGroup,
         addSoftwareSystem,

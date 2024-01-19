@@ -8,18 +8,17 @@ import {
     MenuItem,
     MenuList
 } from "@chakra-ui/react";
-import { StructurizrExportClient } from "structurizr";
-import { useWorkspace } from "workspace";
+import { IWorkspace, StructurizrExportClient } from "structurizr";
 import { MoreHoriz } from "iconoir-react";
 import { FC, useCallback } from "react";
 
 export const WorkspaceMenu: FC<{
     title: string;
+    workspace: IWorkspace;
 }> = ({
-    title
+    title,
+    workspace
 }) => {
-    const { workspace } = useWorkspace();
-
     const handleOnExportClick = useCallback(() => {
         const exportClient = new StructurizrExportClient();
         console.log(exportClient.export(workspace));

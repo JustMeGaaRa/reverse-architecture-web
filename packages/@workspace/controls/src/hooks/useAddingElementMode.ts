@@ -2,47 +2,43 @@ import { ElementType, ViewType } from "@structurizr/dsl";
 import { useWorkspaceNavigation, useWorkspaceToolbarStore, WorkspaceNavigationStore } from "@workspace/core";
 import { useCallback } from "react";
 
-const SelectedViewSelector = (state: WorkspaceNavigationStore) => {
-    return {
-        isSystemLandscapView: state.currentView?.type === ViewType.SystemLandscape,
-        isSystemContextView: state.currentView?.type === ViewType.SystemContext,
-        isContainerView: state.currentView?.type === ViewType.Container,
-        isComponentView: state.currentView?.type === ViewType.Component,
-        isDeploymentView: state.currentView?.type === ViewType.Deployment
+const AllowedViewElementSelector = (state: WorkspaceNavigationStore) => {
+    switch (state.currentView?.type) {
+        case ViewType.SystemLandscape:
+            return [ElementType.Group, ElementType.Person, ElementType.SoftwareSystem];
+        case ViewType.SystemContext:
+            return [ElementType.Group, ElementType.Person, ElementType.SoftwareSystem];
+        case ViewType.Container:
+            return [ElementType.Group, ElementType.Person, ElementType.SoftwareSystem, ElementType.Container];
+        case ViewType.Component:
+            return [ElementType.Group, ElementType.Person, ElementType.SoftwareSystem, ElementType.Container, ElementType.Component];
+        case ViewType.Deployment:
+            return [ElementType.DeploymentNode, ElementType.InfrastructureNode];
+        default:
+            return [];
     }
 }
 
 export const useAddingElementMode = () => {
     const store = useWorkspaceNavigation();
-    const {
-        isSystemLandscapView,
-        isSystemContextView,
-        isContainerView,
-        isComponentView,
-        isDeploymentView
-    } = SelectedViewSelector(store);
+    const { enabledTool, addingElementType, setAddingElementType, setEnabledTool } = useWorkspaceToolbarStore();
+    const allowedElements = AllowedViewElementSelector(store);
 
     const enableAddingElement = useCallback((type: ElementType) => {
-        useWorkspaceToolbarStore.setState({
-            isSelectionEnabled: false,
-            isDraggingEnabled: false,
-            isAddingElementEnabled: true,
-            addingElementType: type,
-            isConnectionLineEnabled: false,
-            isTextEditEnabled: false,
-            isMultiSelectEnabled: false,
-            isCommentAddingEnabled: false,
-        });
-    }, []);
+        setAddingElementType(type);
+        setEnabledTool("adding-element");
+    }, [setAddingElementType, setEnabledTool]);
 
     return {
-        allowGroup: isSystemLandscapView || isContainerView || isComponentView,
-        allowPerson: isSystemLandscapView || isSystemContextView || isContainerView || isComponentView,
-        allowSoftwareSystem: isSystemLandscapView || isSystemContextView || isContainerView || isComponentView,
-        allowContainer: isContainerView || isComponentView,
-        allowComponent: isComponentView,
-        allowDeploymentNode: isDeploymentView,
-        allowInfrastructureNode: isDeploymentView,
+        addingElementsEnabled: enabledTool === "adding-element",
+        addingElementType: addingElementType,
+        allowGroup: allowedElements.some(element => element === ElementType.Group),
+        allowPerson: allowedElements.some(element => element === ElementType.Person),
+        allowSoftwareSystem: allowedElements.some(element => element === ElementType.SoftwareSystem),
+        allowContainer: allowedElements.some(element => element === ElementType.Container),
+        allowComponent: allowedElements.some(element => element === ElementType.Component),
+        allowDeploymentNode: allowedElements.some(element => element === ElementType.DeploymentNode),
+        allowInfrastructureNode: allowedElements.some(element => element === ElementType.InfrastructureNode),
         enableAddingElement
     }
 }

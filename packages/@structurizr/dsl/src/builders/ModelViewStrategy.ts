@@ -3,7 +3,7 @@ import {
     ISupportVisitor,
     IModel,
     Relationship
-} from "../..";
+} from "../";
 
 export class ModelViewStrategy implements ISupportVisitor {
     constructor(

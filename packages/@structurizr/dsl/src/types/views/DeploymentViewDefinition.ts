@@ -1,6 +1,7 @@
 import {
     All,
     AutoLayout,
+    AutoLayoutDirection,
     Container,
     DeploymentNode,
     IAutoLayout,
@@ -13,9 +14,9 @@ import {
     IViewDefinitionMetadata,
     Position,
     Properties,
-    SoftwareSystem,
-    ViewType
+    SoftwareSystem
 } from "../..";
+import { ViewType } from "./ViewType";
 
 export interface IDeploymentView extends IViewDefinition {
     type: ViewType;
@@ -67,6 +68,15 @@ export class DeploymentViewDefinition implements IViewDefinition, ISupportImmuta
     public properties?: Properties;
     public elements: Array<IElementPosition>;
     public relationships: Array<IRelationshipPosition>;
+
+    public static default() {
+        return new DeploymentViewDefinition({
+            identifier: "default_deployment",
+            title: "Deployment for New Environment",
+            environment: "New Environment",
+            autoLayout: { direction: AutoLayoutDirection.TopBotom, rankSeparation: 300, nodeSeparation: 300 },
+        });
+    }
 
     public toObject(): IDeploymentView {
         return {

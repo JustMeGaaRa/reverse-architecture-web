@@ -15,5 +15,5 @@ export const useModelRenderingEffect = (workspace: IWorkspace, strategy: ISuppor
                 setNodes(reactFlowAuto.nodes);
                 setEdges(reactFlowAuto.edges);
             });
-    }, [workspace]);
+    }, [setEdges, setNodes, strategy, workspace]);
 }

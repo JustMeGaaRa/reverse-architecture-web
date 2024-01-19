@@ -1,4 +1,5 @@
-import { ISupportPath, IViewDefinition, IWorkspace, ViewType, Workspace } from "../..";
+import { IViewDefinition, IWorkspace, ViewType } from "@structurizr/dsl";
+import { ISupportPath } from "./ISuppportPath";
 
 export class DeploymentPathProvider implements ISupportPath {
     getPath(workspace: IWorkspace, view: IViewDefinition): Array<IViewDefinition> {
