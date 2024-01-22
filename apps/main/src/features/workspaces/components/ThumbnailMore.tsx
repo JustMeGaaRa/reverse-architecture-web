@@ -23,6 +23,18 @@ export const ThumbnailMore: FC<{
             justifyContent={"center"}
             height={"100%"}
             width={"100%"}
+            _active={{
+                background: "linear-gradient(0deg, rgba(0, 0, 0, 0.60) 0%, rgba(0, 0, 0, 0.60) 100%)"
+            }}
+            _groupActive={{
+                background: "linear-gradient(0deg, rgba(0, 0, 0, 0.60) 0%, rgba(0, 0, 0, 0.60) 100%)"
+            }}
+            _hover={{
+                background: "linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%)"
+            }}
+            _groupHover={{
+                background: "linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%)"
+            }}
         >
             <Text textStyle={"b2"} color={"gray.900"}>
                 {`+${count} more`}

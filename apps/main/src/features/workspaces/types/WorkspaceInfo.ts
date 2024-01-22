@@ -11,9 +11,22 @@ export type WorkspaceInfo = {
     coverUrl?: string;
     group?: string;
     tags: Array<string>;
+    metadata?: WorkspaceInfoMetadata;
+    statistics?: WorkspaceStats,
     content?: {
         text: string;
         metadata?: IWorkspaceMetadata;
         theme?: IWorkspaceTheme;
     }
+}
+
+export type WorkspaceInfoMetadata = {
+    isBookmarked: boolean;
+    isLiked: boolean;
+}
+
+export type WorkspaceStats = {
+    used: number;
+    bookmarked: number;
+    liked: number;
 }

@@ -52,7 +52,7 @@ export const SignInPage: FC = () => {
                     padding={16}
                 >
                     <CardHeader>
-                        <ReverseArchitectureSvg showText />
+                        <ReverseArchitectureSvg />
                     </CardHeader>
                     <CardBody>
                         <VStack spacing={8}>

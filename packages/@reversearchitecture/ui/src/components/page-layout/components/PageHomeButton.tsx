@@ -1,22 +1,40 @@
-import { IconButton } from "@chakra-ui/react";
+import { Flex, Icon, Text } from "@chakra-ui/react";
 import { FC } from "react";
+import { usePageSidebar } from "../hooks";
 
 export const PageHomeButton: FC<{
-    icon: React.ReactElement,
+    isExpanded?: boolean,
+    icon: FC<{}>,
+    title: string,
     onClick?: () => void
 }> = ({
+    isExpanded,
     icon,
+    title,
     onClick
 }) => {
+    const { sidebarOptions } = usePageSidebar();
+
     return (
-        <IconButton
+        <Flex
             aria-label={"home button"}
-            colorScheme={"gray"}
-            icon={icon}
-            size={"md"}
+            cursor={"pointer"}
+            padding={1}
+            alignItems={"center"}
             title={"home button"}
-            variant={"ghost"}
             onClick={onClick}
-        />
+        >
+            <Icon as={icon} boxSize={5} />
+            {(sidebarOptions.isOpen || isExpanded) && (
+                <Text
+                    color={"lime.600"}
+                    fontFamily={"Formula condensed"}
+                    marginX={2}
+                    textStyle={"b2"}
+                >
+                    {title}
+                </Text>
+            )}
+        </Flex>
     )
 }

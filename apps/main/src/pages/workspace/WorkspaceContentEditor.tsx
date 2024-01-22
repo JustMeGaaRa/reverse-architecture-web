@@ -11,7 +11,7 @@ import {
     HStack,
     Icon,
     IconButton,
-    Text
+    Text,
 } from "@chakra-ui/react";
 import {
     ButtonSegmentedToggle,
@@ -35,7 +35,6 @@ import {
     CloudSync,
     Code,
     HelpCircle,
-    HomeSimple,
     Settings,
     ViewStructureUp
 } from "iconoir-react";
@@ -50,10 +49,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import {
     IViewDefinition,
     ViewType,
-    Workspace,
     useStructurizrParser,
-    DeploymentViewDefinition,
-    SystemLandscapeViewDefinition
 } from "structurizr";
 import {
     CollaboratingUserPane,
@@ -168,7 +164,8 @@ export const WorkspaceCollaborativeEditor: FC = () => {
         setSidebarContent({
             logo: (
                 <PageHomeButton
-                    icon={<ReverseArchitectureSvg showText={false} />}
+                    icon={ReverseArchitectureSvg}
+                    title={"RE:STRUCT"}
                     onClick={() => navigate("/")}
                 />
             ),

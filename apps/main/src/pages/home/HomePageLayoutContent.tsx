@@ -22,7 +22,7 @@ import { useNavigate } from "react-router";
 import { useSearch } from "../../features";
 
 export const HomePageLayoutContent: FC<PropsWithChildren> = ({ children }) => {
-    const { sidebarOptions, setShowSidebarButton, setSidebarContent } = usePageSidebar();
+    const { setShowSidebarButton, setSidebarContent } = usePageSidebar();
     const { setHeaderContent } = usePageHeader();
     const navigate = useNavigate();
 
@@ -47,7 +47,8 @@ export const HomePageLayoutContent: FC<PropsWithChildren> = ({ children }) => {
         setSidebarContent({
             logo: (
                 <PageHomeButton
-                    icon={<ReverseArchitectureSvg showText={sidebarOptions.isOpen} />}
+                    icon={ReverseArchitectureSvg}
+                    title={"RE:STRUCT"}
                     onClick={() => navigate("/")}
                 />
             ),
@@ -55,7 +56,6 @@ export const HomePageLayoutContent: FC<PropsWithChildren> = ({ children }) => {
                 <RouteList>
                     <Route
                         icon={<Icon as={Home} boxSize={5} />}
-                        isDisabled
                         title={"Dashboard"}
                         to={"dashboard"}
                     />
@@ -81,6 +81,7 @@ export const HomePageLayoutContent: FC<PropsWithChildren> = ({ children }) => {
                     />
                     <Route
                         icon={<Icon as={Settings} boxSize={5} />}
+                        isDisabled
                         title={"Settings"}
                         to={"settings"}
                     />
@@ -93,7 +94,7 @@ export const HomePageLayoutContent: FC<PropsWithChildren> = ({ children }) => {
                 </RouteList>
             )
         })
-    }, [setSidebarContent, setShowSidebarButton, navigate, sidebarOptions.isOpen]);
+    }, [setSidebarContent, setShowSidebarButton, navigate]);
 
     // header section
     const [ results, setResults ] = useState<SearchGroupResult[]>([]);

@@ -7,6 +7,7 @@ import {
     TabPanel,
     TabPanels,
     Tabs,
+    Tooltip,
 } from "@chakra-ui/react";
 import {
     ContextLevelProvider,
@@ -34,36 +35,34 @@ import { TemplateHeader } from "./TemplateHeader";
 
 export const TemplateOverview: FC<{
     information: WorkspaceInfo;
+    comments: CommentThread;
     workspace: Workspace;
-    discussion: CommentThread;
-    onInformationClick?: () => void;
-    onCommentsClick?: () => void;
+    isBookmarked?: boolean,
+    isLiked?: boolean,
+    onBookmark?: () => void,
+    onLike?: () => void,
     onCommentSend?: (comment: string) => void;
     onTryItClick?: () => void;
-    onFollowClick?: () => void;
     onClose?: () => void;
 }> = ({
     information,
     workspace,
-    discussion,
-    onInformationClick,
-    onCommentsClick,
+    comments,
+    onBookmark,
+    onLike,
     onCommentSend,
     onTryItClick,
-    onFollowClick,
     onClose
 }) => {
     const [ tabIndex, setTabIndex ] = useState(0);
 
     const handleOnInformationClick = useCallback(() => {
         setTabIndex(0);
-        onInformationClick?.();
-    }, [onInformationClick]);
+    }, []);
 
     const handleOnCommentsClick = useCallback(() => {
         setTabIndex(1);
-        onCommentsClick?.();
-    }, [onCommentsClick]);
+    }, []);
 
     const handleOnCommentSend = useCallback((comment: string) => {
         onCommentSend?.(comment);
@@ -76,7 +75,6 @@ export const TemplateOverview: FC<{
                     <ContextSheet outlineRadius={[32, 32, 0, 0]} outlineWidth={[0, 0, 1, 0]}>
                         <ContextSheetTabContent padding={2} gap={2}>
                             <ContextSheet outlineRadius={[26, 26, 26, 26]} outlineWidth={[0, 0, 0, 0]}>
-                                {/* Section: Workspace Preview */}
                                 <Flex
                                     position={"relative"}
                                     borderRadius={"32px"}
@@ -95,16 +93,15 @@ export const TemplateOverview: FC<{
                                             <TemplateHeader
                                                 name={information?.name}
                                                 createdBy={information?.createdBy}
-                                                usedCount={788}
-                                                likedCount={47}
+                                                usedCount={information?.statistics?.used ?? 0}
+                                                likedCount={information?.statistics?.liked ?? 0}
                                                 onTryItClick={onTryItClick}
                                             />
                                         </WorkspacePanel>
                                     </WorkspaceViewer>
                                 </Flex>
                             </ContextSheet>
-
-                            {/* Section: Content Information */}
+                            
                             <Flex direction={"column"} padding={2} gap={4} height={"100%"} width={"480px"}>
                                 <Tabs height={"100%"} width={"100%"} index={tabIndex}>
                                     <TabPanels height={"100%"}>
@@ -116,7 +113,7 @@ export const TemplateOverview: FC<{
                                         </TabPanel>
                                         <TabPanel>
                                             <TemplateSectionDiscussion
-                                                comments={discussion?.comments ?? []}
+                                                comments={comments?.comments ?? []}
                                                 onComment={handleOnCommentSend}
                                             />
                                         </TabPanel>
@@ -125,8 +122,7 @@ export const TemplateOverview: FC<{
                             </Flex>
                         </ContextSheetTabContent>
                     </ContextSheet>
-
-                    {/* Section: Navigation */}
+                    
                     <Flex direction={"column"} padding={4} height={"100%"} width={"80px"}>
                         <ButtonGroup
                             colorScheme={"lime"}
@@ -140,33 +136,47 @@ export const TemplateOverview: FC<{
                                 onClick={onClose}
                             />
                             <Divider alignSelf={"center"} borderColor={"gray.400"} width={"24px"} />
-                            <IconButton
-                                aria-label={"information"}
-                                icon={<Icon as={InfoCircle} boxSize={6} />}
-                                isActive={tabIndex === 0}
-                                onClick={handleOnInformationClick}
-                            />
-                            <IconButton
-                                aria-label={"comments"}
-                                icon={<Icon as={ChatLines} boxSize={6} />}
-                                isActive={tabIndex === 1}
-                                onClick={handleOnCommentsClick}
-                            />
-                            <IconButton
-                                aria-label={"bookmark"}
-                                icon={<Icon as={Bookmark} boxSize={6} />}
-                                isActive={tabIndex === 2}
-                            />
-                            <IconButton
-                                aria-label={"likes"}
-                                icon={<Icon as={ThumbsUp} boxSize={6} />}
-                                isActive={tabIndex === 3}
-                            />
-                            <IconButton
-                                aria-label={"share"}
-                                icon={<Icon as={ShareAndroid} boxSize={6} />}
-                                isActive={tabIndex === 4}
-                            />
+                            <Tooltip hasArrow label={"Information"} placement={"left"}>
+                                <IconButton
+                                    aria-label={"information"}
+                                    icon={<Icon as={InfoCircle} boxSize={6} />}
+                                    isActive={tabIndex === 0}
+                                    onClick={handleOnInformationClick}
+                                />
+                            </Tooltip>
+                            <Tooltip hasArrow label={"Comments"} placement={"left"}>
+                                <IconButton
+                                    aria-label={"comments"}
+                                    icon={<Icon as={ChatLines} boxSize={6} />}
+                                    isActive={tabIndex === 1}
+                                    onClick={handleOnCommentsClick}
+                                />
+                            </Tooltip>
+                            <Tooltip hasArrow label={`Bookmarks: ${information?.statistics?.bookmarked ?? 0}`} placement={"left"}>
+                                <IconButton
+                                    aria-label={"bookmarks"}
+                                    color={information?.metadata?.isBookmarked ? "lime.600" : "gray.900"}
+                                    icon={<Icon as={Bookmark} boxSize={6} />}
+                                    variant={"menuitem"}
+                                    onClick={onBookmark}
+                                />
+                            </Tooltip>
+                            <Tooltip hasArrow label={`Likes: ${information?.statistics?.liked ?? 0}`} placement={"left"}>
+                                <IconButton
+                                    aria-label={"likes"}
+                                    color={information?.metadata?.isLiked ? "lime.600" : "gray.900"}
+                                    icon={<Icon as={ThumbsUp} boxSize={6} />}
+                                    variant={"menuitem"}
+                                    onClick={onLike}
+                                />
+                            </Tooltip>
+                            <Tooltip hasArrow label={"Share"} placement={"left"}>
+                                <IconButton
+                                    aria-label={"share"}
+                                    icon={<Icon as={ShareAndroid} boxSize={6} />}
+                                    isActive={tabIndex === 4}
+                                />
+                            </Tooltip>
                         </ButtonGroup>
                     </Flex>
                 </ContextSheetTabContent>

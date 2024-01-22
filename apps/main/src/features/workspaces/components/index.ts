@@ -5,6 +5,7 @@ export * from "./ThumbnailMore";
 export * from "./ThumbnailPlaceholder";
 export * from "./ThumbnailSelector";
 export * from "./WorkspaceCard";
+export * from "./WorkspaceCardActionBar";
 export * from "./WorkspaceCardFooter";
 export * from "./WorkspaceCardHeader";
 export * from "./WorkspaceCardView";

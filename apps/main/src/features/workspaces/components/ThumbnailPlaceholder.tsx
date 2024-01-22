@@ -18,6 +18,18 @@ export const ThumbnailPlaceholder: FC<{
             height={"100%"}
             width={"100%"}
             overflow={"hidden"}
+            _active={{
+                background: "linear-gradient(0deg, rgba(0, 0, 0, 0.60) 0%, rgba(0, 0, 0, 0.60) 100%)"
+            }}
+            _groupActive={{
+                background: "linear-gradient(0deg, rgba(0, 0, 0, 0.60) 0%, rgba(0, 0, 0, 0.60) 100%)"
+            }}
+            _hover={{
+                background: "linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%)"
+            }}
+            _groupHover={{
+                background: "linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%)"
+            }}
         >
             <svg height={"100%"} width={"100%"}>
                 <pattern

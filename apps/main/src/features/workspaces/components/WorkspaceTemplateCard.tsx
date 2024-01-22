@@ -1,17 +1,15 @@
 import {
-    Button,
-    ButtonGroup,
     Card,
     CardBody,
     CardHeader,
-    Flex,
-    Icon,
-    IconButton,
-    Text,
 } from "@chakra-ui/react";
-import { ArrowUpRightCircle, Bookmark, ThumbsUp } from "iconoir-react";
 import { FC, useCallback } from "react";
-import { ThumbnailContainer, ThumbnailSelector, WorkspaceCardHeader } from "../components";
+import {
+    ThumbnailContainer,
+    ThumbnailSelector,
+    WorkspaceCardActionBar,
+    WorkspaceCardHeader
+} from "../components";
 import { WorkspaceInfo } from "../types";
 
 export const WorkspaceTemplateCard: FC<{
@@ -48,55 +46,21 @@ export const WorkspaceTemplateCard: FC<{
                 <WorkspaceCardHeader
                     name={workspace.name}
                     createdBy={workspace.createdBy}
-                    usedCount={788}
-                    likedCount={47}
+                    usedCount={workspace.statistics?.used ?? 0}
+                    likedCount={workspace.statistics?.liked ?? 0}
                 />
             </CardHeader>
             <CardBody>
                 <ThumbnailContainer onClick={onClick}>
                     <ThumbnailSelector data={workspace} />
                 </ThumbnailContainer>
-                <Flex
-                    position={"absolute"}
-                    padding={1}
-                    bottom={0}
-                    width={"100%"}
-                    display={"none"}
-                    _groupHover={{ display: "flex" }}
-                >
-                    <Flex
-                        backgroundColor={"surface.tinted-black-40"}
-                        backdropFilter={"blur(32px)"}
-                        borderRadius={16}
-                        justifyContent={"space-between"}
-                        padding={1}
-                        width={"100%"}
-                    >
-                        <ButtonGroup gap={2} spacing={0} size={"sm"} variant={"tonal"}>
-                            <IconButton
-                                aria-label={"boomark template"}
-                                icon={<Icon as={Bookmark} />}
-                                title={"bookmark template"}
-                                onClick={handleOnBookmarkClick}
-                            />
-                            <IconButton
-                                aria-label={"like template"}
-                                icon={<Icon as={ThumbsUp} />}
-                                title={"like template"}
-                                onClick={handleOnLikeClick}
-                            />
-                        </ButtonGroup>
-                        <ButtonGroup gap={2} spacing={0} size={"sm"} variant={"tonal"}>
-                            <Button
-                                leftIcon={<Icon as={ArrowUpRightCircle} />}
-                                iconSpacing={0}
-                                onClick={handleOnTryItClick}
-                            >
-                                <Text marginX={1}>Try it out</Text>
-                            </Button>
-                        </ButtonGroup>
-                    </Flex>
-                </Flex>
+                <WorkspaceCardActionBar
+                    isBookmarked={workspace.metadata?.isBookmarked}
+                    isLiked={workspace.metadata?.isLiked}
+                    onTryItClick={handleOnTryItClick}
+                    onBookmarkClick={handleOnBookmarkClick}
+                    onLikeClick={handleOnLikeClick}
+                />
             </CardBody>
         </Card>
     )
