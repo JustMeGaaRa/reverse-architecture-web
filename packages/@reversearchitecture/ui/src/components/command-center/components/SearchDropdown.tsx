@@ -1,5 +1,5 @@
 import { Box, SlideFade, StackDivider, VStack } from "@chakra-ui/react";
-import { FC, PropsWithChildren } from "react";
+import { FC, PropsWithChildren, useCallback, useState } from "react";
 
 export const SearchDropdown: FC<PropsWithChildren<{
     isOpen: boolean;

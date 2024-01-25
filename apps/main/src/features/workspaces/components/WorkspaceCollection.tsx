@@ -1,17 +1,51 @@
-import { EmptyContent } from "@reversearchitecture/ui";
-import { Folder } from "iconoir-react";
-import { FC } from "react";
 import {
-    WorkspaceCollectionProvider,
+    ErrorBoundary,
+    ErrorMessage,
+    NoContentBoundary,
+    NoContentMessage,
+    useLocale
+} from "@reversearchitecture/ui";
+import { FC, useCallback } from "react";
+import { LocaleKeys } from "../../localization";
+import {
     WorkspaceCardView,
     WorkspaceOptionsToolbar,
     WorkspaceTableView,
     WorkspaceOptionsAutoHideWrapper
 } from "../components";
-import {
-    WorkspaceGroupInfo,
-    WorkspaceInfo
-} from "../types";
+import { useWorkspaceCollection } from "../hooks";
+import { WorkspaceInfo } from "../types";
+
+function createResource<T>(promise: Promise<T>) {
+    let status = "pending";
+    let result: T;
+
+    let suspender = promise.then(
+        (result) => {
+            status = "success";
+            result = result;
+        },
+        (error) => {
+            status = "error";
+            result = error;
+        }
+    );
+
+    const handler = {
+        read() {
+            switch (status) {
+                case "pending":
+                    throw suspender;
+                case "error":
+                    throw result;
+                default:
+                    return result;
+            }
+        }
+    };
+  
+    return handler;
+}
 
 export const WorkspaceCollection: FC<{
     workspaces: WorkspaceInfo[];
@@ -20,9 +54,9 @@ export const WorkspaceCollection: FC<{
     emptyTitle?: string;
     emptyDescription?: string;
     emptyAction?: React.ReactElement;
-    onClick?: (workspace: WorkspaceInfo | WorkspaceGroupInfo) => void;
-    onStack?: (workspaces: Array<WorkspaceInfo | WorkspaceGroupInfo>) => void;
-    onDelete?: (workspaces: Array<WorkspaceInfo | WorkspaceGroupInfo>) => void;
+    onClick?: (selectedId: string) => void;
+    onStack?: (selectedIds: string[]) => void;
+    onDelete?: (selectedIds: string[]) => void;
 }> = ({
     workspaces,
     view,
@@ -34,40 +68,112 @@ export const WorkspaceCollection: FC<{
     onStack,
     onDelete,
 }) => {
-    // TODO: actions with workspace collection: add, remove, select, click, stack, unstack, clone, export, import
-    // TODO: actions with single workspace: update (rename, thumbnail), click, clone, export
+    const { getLocalizedString } = useLocale();
+    const { remove, stack, unstack, archive, restore } = useWorkspaceCollection();
+
+    const handleOnDeleteSingle = useCallback((selectedId: string) => {
+        const selected = workspaces.find(workspace => {
+            return workspace.workspaceId === selectedId
+                || workspace.group === selectedId;
+        });
+        remove(selected);
+    }, [remove, workspaces]);
+
+    const handleOnDeleteMultiple = useCallback((selectedIds: string[]) => {
+        const selected = workspaces.filter(workspace => {
+            return selectedIds.some(selectedId => {
+                return workspace.workspaceId === selectedId
+                    || workspace.group === selectedId;
+            })
+        });
+        selected.forEach(workspace => remove(workspace));
+    }, [remove, workspaces]);
+
+    const handleOnStack = useCallback((selectedIds: string[]) => {
+        const selected = workspaces.filter(workspace => {
+            return selectedIds.some(selectedId => {
+                return workspace.workspaceId === selectedId
+                    || workspace.group === selectedId;
+            })
+        });
+        const existingName = selected.find(element => element.group !== undefined)?.group ?? "New Stack";
+        const groupName = `${existingName} (1)`;
+        stack(selected, groupName);
+    }, [stack, workspaces]);
+
+    const handleOnUnstack = useCallback((selectedIds: string[]) => {
+        const selected = workspaces.filter(workspace => {
+            return selectedIds.some(selectedId => {
+                return workspace.workspaceId === selectedId
+                    || workspace.group === selectedId;
+            })
+        });
+        unstack(selected);
+    }, [unstack, workspaces]);
+
+    const handleOnArhive = useCallback((selectedIds: string[]) => {
+        const selected = workspaces.filter(workspace => {
+            return selectedIds.some(selectedId => {
+                return workspace.workspaceId === selectedId
+                    || workspace.group === selectedId;
+            })
+        });
+        selected.forEach(workspace => archive(workspace));
+    }, [archive, workspaces]);
+
+    const handleOnRestore = useCallback((selectedIds: string[]) => {
+        const selected = workspaces.filter(workspace => {
+            return selectedIds.some(selectedId => {
+                return workspace.workspaceId === selectedId
+                    || workspace.group === selectedId;
+            })
+        });
+        selected.forEach(workspace => restore(workspace));
+    }, [restore, workspaces]);
+
     return (
-        <WorkspaceCollectionProvider>
-            {workspaces.length === 0 && (
-                <EmptyContent
-                    icon={Folder}
-                    title={emptyTitle}
-                    description={emptyDescription}
-                    action={emptyAction}
+        <ErrorBoundary
+            fallback={(
+                <ErrorMessage
+                    errorDescription={getLocalizedString(LocaleKeys.ERROR_LOADING_WORKSPACES)}
                 />
             )}
-            {workspaces.length > 0 && view === "card" && (
-                <WorkspaceCardView
-                    workspaces={workspaces}
-                    groupped={groupped}
-                    onOpen={onClick}
-                    onDelete={onDelete}
-                />
-            )}
-            {workspaces.length > 0 && view === "table" && (
-                <WorkspaceTableView
-                    workspaces={workspaces}
-                    groupped={groupped}
-                    onOpen={onClick}
-                    onDelete={onDelete}
-                />
-            )}
-            <WorkspaceOptionsAutoHideWrapper>
-                <WorkspaceOptionsToolbar
-                    onStack={onStack}
-                    onRemove={onDelete}
-                />
-            </WorkspaceOptionsAutoHideWrapper>
-        </WorkspaceCollectionProvider>
+        >
+            <NoContentBoundary
+                condition={workspaces.length === 0}
+                fallback={(
+                    <NoContentMessage
+                        actionDescription={emptyDescription}
+                        action={emptyAction}
+                    />
+                )}
+            >
+                {view === "card" && (
+                    <WorkspaceCardView
+                        workspaces={workspaces}
+                        groupped={groupped}
+                        onOpen={onClick}
+                        onDelete={handleOnDeleteSingle}
+                    />
+                )}
+                {view === "table" && (
+                    <WorkspaceTableView
+                        workspaces={workspaces}
+                        groupped={groupped}
+                        onOpen={onClick}
+                        onDelete={handleOnDeleteSingle}
+                    />
+                )}
+                <WorkspaceOptionsAutoHideWrapper>
+                    <WorkspaceOptionsToolbar
+                        onStack={handleOnStack}
+                        onUnstack={handleOnUnstack}
+                        onArchive={handleOnArhive}
+                        onRestore={handleOnRestore}
+                        onRemove={handleOnDeleteMultiple}
+                    />
+                </WorkspaceOptionsAutoHideWrapper>
+            </NoContentBoundary>
+        </ErrorBoundary>
     )
 }

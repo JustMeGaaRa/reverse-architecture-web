@@ -2,7 +2,7 @@ import { Button, Divider, Flex, Icon, Text, ToastProps } from "@chakra-ui/react"
 import { InfoCircle, WarningHexagon, WarningTriangle,  } from "iconoir-react";
 import { FC, useMemo } from "react";
 
-export const Snackbar: FC<ToastProps> = ({ status, title }) => {
+export const Snackbar: FC<ToastProps> = ({ status, title, description }) => {
     const iconProps = useMemo(() => new Map([
         ["info", { icon: InfoCircle, color: "green.600" }],
         ["success", { icon: InfoCircle, color: "blue.600" }],

@@ -3,22 +3,22 @@ import {
     WorkspaceTableRow,
     WorkspaceTable,
 } from "../components";
-import { useWorkspaceCollection } from "../hooks";
+import { useWorkspaceSelection } from "../hooks";
 import { TableColumnInfo, WorkspaceGroupInfo, WorkspaceInfo } from "../types";
-import { groupWorkspaces, isWorkspace } from "../utils";
+import { groupWorkspaces } from "../utils";
 
 export const WorkspaceTableView: FC<{
     workspaces: WorkspaceInfo[];
     groupped?: boolean;
-    onOpen?: (workspace: WorkspaceInfo | WorkspaceGroupInfo) => void;
-    onDelete?: (workspaces: Array<WorkspaceInfo | WorkspaceGroupInfo>) => void;
+    onOpen?: (selectedId: string) => void;
+    onDelete?: (selectedId: string) => void;
 }> = ({
     workspaces,
     groupped,
     onOpen,
     onDelete,
 }) => {
-    const { selected, toggleSelected } = useWorkspaceCollection();
+    const { selectedIds, toggleSelected } = useWorkspaceSelection();
     
     const nameof = function<T>(name: keyof T) { return name; };
     const columns: TableColumnInfo[] = [
@@ -38,12 +38,12 @@ export const WorkspaceTableView: FC<{
 
     }, []);
 
-    const handleOnWorkspaceOpen = useCallback((data: WorkspaceInfo | WorkspaceGroupInfo) => {
-        onOpen?.(data);
+    const handleOnWorkspaceOpen = useCallback((selectedId: string) => {
+        onOpen?.(selectedId);
     }, [onOpen]);
 
-    const handleOnWorkspaceSelect = useCallback((data: WorkspaceInfo | WorkspaceGroupInfo) => {
-        toggleSelected(data);
+    const handleOnWorkspaceSelect = useCallback((selectedId: string) => {
+        toggleSelected(selectedId);
     }, [toggleSelected]);
 
     const handleOnWorkspaceRename = useCallback((data: WorkspaceInfo | WorkspaceGroupInfo) => {
@@ -54,41 +54,41 @@ export const WorkspaceTableView: FC<{
 
     }, []);
 
-    const handleOnWorkspaceDelete = useCallback((data: WorkspaceInfo | WorkspaceGroupInfo) => {
-        onDelete?.([data]);
+    const handleOnWorkspaceDelete = useCallback((selectedId: string) => {
+        onDelete?.(selectedId);
     }, [onDelete]);
 
     return (
         <WorkspaceTable columns={columns}>
-            {groupped && groups.filter(group => group.name !== undefined).map(group => (
+            {groupped && groups.map(group => (
                 <WorkspaceTableRow
                     key={group.name}
                     columns={columns}
-                    isSelected={selected.some(x => x.name === group.name)}
-                    isGrouped={true}
                     data={group}
+                    isSelected={selectedIds.some(selectedId => selectedId === group.name)}
+                    isGrouped={true}
                     onTouchStart={() => handleOnWorkspaceTouchStart(group)}
                     onTouchEnd={() => handleOnWorkspaceTouchEnd(group)}
-                    onOpen={() => handleOnWorkspaceOpen?.(group)}
-                    onSelect={() => handleOnWorkspaceSelect?.(group)}
+                    onOpen={() => handleOnWorkspaceOpen?.(group.name)}
+                    onSelect={() => handleOnWorkspaceSelect?.(group.name)}
                     onRename={() => handleOnWorkspaceRename?.(group)}
                     onClone={() => handleOnWorkspaceClone?.(group)}
-                    onDelete={() => handleOnWorkspaceDelete?.(group)}
+                    onDelete={() => handleOnWorkspaceDelete?.(group.name)}
                 />
             ))}
-            {groupped && groups.filter(group => group.name === undefined).flatMap(group => group.workspaces).map(workspace => (
+            {groupped && groups.flatMap(group => group.workspaces).map(workspace => (
                 <WorkspaceTableRow
                     key={workspace.workspaceId}
                     columns={columns}
                     data={workspace}
-                    isSelected={selected.some(x => isWorkspace(x) && x.workspaceId === workspace.workspaceId)}
+                    isSelected={selectedIds.some(selectedId => selectedId === workspace.workspaceId)}
                     onTouchStart={() => handleOnWorkspaceTouchStart(workspace)}
                     onTouchEnd={() => handleOnWorkspaceTouchEnd(workspace)}
-                    onOpen={() => handleOnWorkspaceOpen?.(workspace)}
-                    onSelect={() => handleOnWorkspaceSelect?.(workspace)}
+                    onOpen={() => handleOnWorkspaceOpen?.(workspace.workspaceId)}
+                    onSelect={() => handleOnWorkspaceSelect?.(workspace.workspaceId)}
                     onRename={() => handleOnWorkspaceRename?.(workspace)}
                     onClone={() => handleOnWorkspaceClone?.(workspace)}
-                    onDelete={() => handleOnWorkspaceDelete?.(workspace)}
+                    onDelete={() => handleOnWorkspaceDelete?.(workspace.workspaceId)}
                 />
             ))}
             {!groupped && workspaces.map(workspace => (
@@ -96,14 +96,14 @@ export const WorkspaceTableView: FC<{
                     key={workspace.workspaceId}
                     columns={columns}
                     data={workspace}
-                    isSelected={selected.some(x => isWorkspace(x) && x.workspaceId === workspace.workspaceId)}
+                    isSelected={selectedIds.some(selectedId => selectedId === workspace.workspaceId)}
                     onTouchStart={() => handleOnWorkspaceTouchStart(workspace)}
                     onTouchEnd={() => handleOnWorkspaceTouchEnd(workspace)}
-                    onOpen={() => handleOnWorkspaceOpen?.(workspace)}
-                    onSelect={() => handleOnWorkspaceSelect?.(workspace)}
+                    onOpen={() => handleOnWorkspaceOpen?.(workspace.workspaceId)}
+                    onSelect={() => handleOnWorkspaceSelect?.(workspace.workspaceId)}
                     onRename={() => handleOnWorkspaceRename?.(workspace)}
                     onClone={() => handleOnWorkspaceClone?.(workspace)}
-                    onDelete={() => handleOnWorkspaceDelete?.(workspace)}
+                    onDelete={() => handleOnWorkspaceDelete?.(workspace.workspaceId)}
                 />
             ))}
         </WorkspaceTable>

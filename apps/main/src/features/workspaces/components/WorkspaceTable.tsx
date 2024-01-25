@@ -1,7 +1,6 @@
 import { Box, Table, TableContainer, Tbody, Th, Thead, Tr } from "@chakra-ui/react";
 import { FC, PropsWithChildren } from "react";
-import { useOnWorkspaceSelected } from "../hooks";
-import { TableColumnInfo, WorkspaceGroupInfo, WorkspaceInfo } from "../types";
+import { TableColumnInfo } from "../types";
 
 export const WorkspaceTable: FC<PropsWithChildren<{
     columns: TableColumnInfo[];

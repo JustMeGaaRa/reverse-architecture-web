@@ -92,9 +92,6 @@ export const CommunityPublishingModal: FC<{
             lastModifiedDate: new Date().toLocaleDateString(),
             lastModifiedBy: "",
             tags: [],
-            content: {
-                text: ""
-            }
         },
         onSubmit: (values, actions) => {
             onPublish(values);

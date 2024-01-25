@@ -11,23 +11,27 @@ import {
     Text,
     Button,
     Icon,
+    Flex,
+    ScaleFade,
 } from "@chakra-ui/react";
 import {
     ButtonSegmentedToggle,
     ContentViewMode,
     ContextSheet,
     ContextSheetBody,
+    ContextSheetCloseButton,
     ContextSheetHeader,
     ContextSheetTitle,
     useContentViewMode,
+    useLocale,
     usePageHeader
 } from "@reversearchitecture/ui";
-import { StructurizrExportClient, Workspace } from "structurizr";
 import {
     PagePlus,
     List,
     Upload,
-    ViewGrid
+    ViewGrid,
+    AppleShortcuts
 } from "iconoir-react";
 import {
     FC,
@@ -35,22 +39,15 @@ import {
     useCallback,
     useEffect,
     useMemo,
-    useState
 } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { v4 } from "uuid";
 import {
-    WorkspaceApi,
     WorkspaceCollection,
-    WorkspaceInfo,
-    WorkspaceGroupInfo,
-    useAccount,
-    isWorkspace,
-    isWorkspaceGroup,
-    WorkspaceCacheWrapper
+    WorkspaceApi,
+    useWorkspaceCollection
 } from "../../../features";
-import { HomePageLayoutContent } from "..";
-import { WorkspaceStack } from "./WorkspaceStack";
+import { LocaleKeys } from "../../../features";
+import { HomePageLayoutContent, WorkspaceStack, WorkspaceStackBody, WorkspaceStackHeader } from "../";
 
 export enum WorkspaceListTabs {
     All = "all",
@@ -59,85 +56,49 @@ export enum WorkspaceListTabs {
 }
 
 export const WorkspaceExplorerPage: FC<PropsWithChildren> = () => {
+    const { getLocalizedString } = useLocale();
     const { setHeaderContent } = usePageHeader();
     const [ queryParams, setQueryParam ] = useSearchParams([[ "tab", WorkspaceListTabs.All ]]);
     const { view, setView } = useContentViewMode(ContentViewMode.Card);
-    const { account } = useAccount();
-    const { workspaceApi } = useMemo(() => ({ workspaceApi: new WorkspaceCacheWrapper(new WorkspaceApi()) }), []);
-    const [ workspaces, setWorkspaces ] = useState([]);
+
+    const workspaceApi = useMemo(() => new WorkspaceApi(), []);
+    const { workspaces, archived, set, create } = useWorkspaceCollection();
     const navigate = useNavigate();
     
-    const tabIndex = queryParams.get("group")
-        ? 3
-        : queryParams.get("tab") === WorkspaceListTabs.Archived
-            ? 2
-            : queryParams.get("tab") === WorkspaceListTabs.Shared
-                ? 1
-                : 0;
+    const tabIndex = queryParams.get("group") ? 3
+        : queryParams.get("tab") === WorkspaceListTabs.Archived ? 2
+            : queryParams.get("tab") === WorkspaceListTabs.Shared ? 1 : 0;
 
     useEffect(() => {
         workspaceApi.getWorkspaces()
-            .then(workspaces => setWorkspaces(workspaces))
-            .catch(error => console.error(error));
-    }, [workspaceApi, account]);
+            .then(workspaces => {
+                set(workspaces);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }, [set, workspaceApi]);
     
     const handleOnWorkspaceCreate = useCallback(() => {
-        // TODO: encapsulate the creation of a new empty workspace
-        const structurizrExportClient = new StructurizrExportClient();
-        const workspaceId = v4();
-        const workspace: WorkspaceInfo = {
-            workspaceId,
-            name: "New Workspace",
-            createdBy: account.username,
-            createdDate: new Date().toLocaleString(),
-            lastModifiedBy: account.username,
-            lastModifiedDate: new Date().toLocaleString(),
-            tags: [],
-            content: {
-                text: structurizrExportClient.export(Workspace.Empty.toObject()),
-            }
-        };
-        workspaceApi.saveWorkspace(workspaceId, workspace)
-            .then(workspaces => setWorkspaces(workspaces))
-            .catch(error => console.error(error));
-    }, [account.username, workspaceApi]);
+        create();
+    }, [create]);
 
-    const handleOnWorkspaceRemove = useCallback((selected: any[]) => {
-        workspaceApi.deleteWorkspace(selected.map(x => x.workspaceId))
-            .then(workspaces => setWorkspaces(workspaces))
-            .catch(error => console.error(error));
-    }, [workspaceApi, setWorkspaces]);
-
-    const handleOnWorkspaceClick = useCallback((element: WorkspaceInfo | WorkspaceGroupInfo) => {
-        if (isWorkspace(element)) {
-            navigate(`/workspaces/${element.workspaceId}`);
+    const handleOnWorkspaceClick = useCallback((selectedId: string) => {
+        if (workspaces.find(workspace => workspace.workspaceId === selectedId)) {
+            navigate(`/workspaces/${selectedId}`);
         }
-        if (isWorkspaceGroup(element)) {
+        if (workspaces.find(workspace => workspace.group === selectedId)) {
             setQueryParam(params => {
-                params.set("group", element.name);
+                params.set("group", selectedId);
                 return new URLSearchParams(params);
             });
         }
-    }, [navigate, setQueryParam]);
-
-    const handleOnWorkspaceStack = useCallback((elements: Array<WorkspaceInfo | WorkspaceGroupInfo>) => {
-        elements
-            .filter(element => isWorkspace(element))
-            .map<WorkspaceInfo>(element => ({
-                ...element as WorkspaceInfo,
-                group: "Group"
-            }))
-            .forEach(element => {
-                // workspaceApi.saveWorkspace(element.workspaceId, element)
-                //     .then(workspaces => setWorkspaces(workspaces))
-                //     .catch(error => console.error(error));
-            });
-    }, []);
+    }, [workspaces, navigate, setQueryParam]);
 
     useEffect(() => {
         setHeaderContent({
             right: (
-                <ButtonGroup key={"workspace-list-actions"} mr={4} variant={"filled"}>
+                <ButtonGroup mr={4} variant={"filled"}>
                     <IconButton
                         aria-label={"import workspace"}
                         colorScheme={"gray"}
@@ -159,116 +120,129 @@ export const WorkspaceExplorerPage: FC<PropsWithChildren> = () => {
         })
     }, [setHeaderContent, handleOnWorkspaceCreate]);
 
+    const selectedGroupName = queryParams.get("group");
+
+    const handleNavigateWorkspacesTab = useCallback(() => {
+        setQueryParam({ tab: WorkspaceListTabs.All });
+    }, [setQueryParam]);
+
+    const handleNavigateSharedTab = useCallback(() => {
+        setQueryParam({ tab: WorkspaceListTabs.Shared })
+    }, [setQueryParam]);
+
+    const handleNavigateArchivedTab = useCallback(() => {
+        setQueryParam({ tab: WorkspaceListTabs.Archived })
+    }, [setQueryParam]);
+
+    const handleCloseWorkspaceStack = useCallback(() => {
+        setQueryParam({});
+    }, [setQueryParam]);
+
     return (
         <HomePageLayoutContent>
             <ContextSheet>
-                {!queryParams.get("group") && (
-                    <ContextSheetHeader>
-                        <ContextSheetTitle title={"Workspaces"} />
-                    </ContextSheetHeader>
+                {!selectedGroupName && (
+                    <>
+                        <ContextSheetHeader>
+                            <ContextSheetTitle title={"Workspaces"} />
+                        </ContextSheetHeader>
+
+                        <Divider />
+                        
+                        <ContextSheetBody>
+                            <Tabs height={"100%"} index={tabIndex}>
+                                <TabList backgroundColor={"surface.tinted-black-40"} height={12} paddingX={2}>
+                                    <Tab onClick={handleNavigateWorkspacesTab}>
+                                        My Workspaces
+                                    </Tab>
+                                    <Tab onClick={handleNavigateSharedTab}>
+                                        Shared
+                                    </Tab>
+                                    <Tab onClick={handleNavigateArchivedTab}>
+                                        Archived
+                                    </Tab>
+                                    <Box position={"absolute"} right={4}>
+                                        <ButtonSegmentedToggle size={"sm"}>
+                                            <IconButton
+                                                aria-label={"card view"}
+                                                isActive={view === ContentViewMode.Card}
+                                                icon={<Icon as={ViewGrid} boxSize={4} />}
+                                                onClick={() => setView(ContentViewMode.Card)}
+                                            />
+                                            <IconButton
+                                                aria-label={"table view"}
+                                                isActive={view === ContentViewMode.Table}
+                                                icon={<Icon as={List} boxSize={4} />}
+                                                onClick={() => setView(ContentViewMode.Table)}
+                                            />
+                                        </ButtonSegmentedToggle>
+                                    </Box>
+                                </TabList>
+                                <TabPanels height={"calc(100% - 42px)"} padding={6} overflowY={"scroll"}>
+                                    <TabPanel>
+                                        <WorkspaceCollection
+                                            workspaces={workspaces}
+                                            view={view}
+                                            groupped={true}
+                                            emptyTitle={getLocalizedString(LocaleKeys.NO_WORKSPACES_TITLE)}
+                                            emptyDescription={getLocalizedString(LocaleKeys.NO_WORKSPACES_SUGGESTION)}
+                                            emptyAction={(
+                                                <Button
+                                                    aria-label={"new project"}
+                                                    colorScheme={"lime"}
+                                                    iconSpacing={"0px"}
+                                                    leftIcon={<Icon as={PagePlus} boxSize={5} />}
+                                                    onClick={handleOnWorkspaceCreate}
+                                                >
+                                                    <Text marginX={2}>New Workspace</Text>
+                                                </Button>
+                                            )}
+                                            onClick={handleOnWorkspaceClick}
+                                        />
+                                    </TabPanel>
+                                    <TabPanel>
+                                        <WorkspaceCollection
+                                            workspaces={[]}
+                                            view={view}
+                                            groupped={true}
+                                            emptyTitle={getLocalizedString(LocaleKeys.NO_SHARED_TITLE)}
+                                            emptyDescription={getLocalizedString(LocaleKeys.NO_SHARED_WORKSPACES_SUGGESTION)}
+                                            onClick={handleOnWorkspaceClick}
+                                        />
+                                    </TabPanel>
+                                    <TabPanel>
+                                        <WorkspaceCollection
+                                            workspaces={archived}
+                                            view={view}
+                                            groupped={true}
+                                            emptyTitle={getLocalizedString(LocaleKeys.NO_ARCHIVED_TITLE)}
+                                            emptyDescription={getLocalizedString(LocaleKeys.NO_ARCHIVED_WORKSPACES_SUGGESTION)}
+                                            onClick={handleOnWorkspaceClick}
+                                        />
+                                    </TabPanel>
+                                </TabPanels>
+                            </Tabs>
+                        </ContextSheetBody>
+                    </>
                 )}
 
-                {!queryParams.get("group") && (
-                    <Divider />
-                )}
-                
-                {!queryParams.get("group") && (
-                    <ContextSheetBody>
-                        <Tabs height={"100%"} index={tabIndex}>
-                            <TabList backgroundColor={"surface.tinted-black-40"} height={12} paddingX={2}>
-                                <Tab onClick={() => setQueryParam({ tab: WorkspaceListTabs.All })}>
-                                    My Workspaces
-                                </Tab>
-                                <Tab onClick={() => setQueryParam({ tab: WorkspaceListTabs.Shared })}>
-                                    Shared
-                                </Tab>
-                                <Tab onClick={() => setQueryParam({ tab: WorkspaceListTabs.Archived })}>
-                                    Archived
-                                </Tab>
-                                <Box position={"absolute"} right={4}>
-                                    <ButtonSegmentedToggle size={"sm"}>
-                                        <IconButton
-                                            aria-label={"card view"}
-                                            isActive={view === ContentViewMode.Card}
-                                            icon={<Icon as={ViewGrid} boxSize={4} />}
-                                            onClick={() => setView(ContentViewMode.Card)}
-                                        />
-                                        <IconButton
-                                            aria-label={"table view"}
-                                            isActive={view === ContentViewMode.Table}
-                                            icon={<Icon as={List} boxSize={4} />}
-                                            onClick={() => setView(ContentViewMode.Table)}
-                                        />
-                                    </ButtonSegmentedToggle>
-                                </Box>
-                            </TabList>
-                            <TabPanels height={"calc(100% - 42px)"} padding={6} overflowY={"scroll"}>
-                                <TabPanel>
-                                    <WorkspaceCollection
-                                        workspaces={workspaces}
-                                        view={view}
-                                        groupped={true}
-                                        emptyTitle={"No workspaces"}
-                                        emptyDescription={"To get started, click the \"New Workspace\" button."}
-                                        emptyAction={(
-                                            <Button
-                                                aria-label={"new project"}
-                                                colorScheme={"lime"}
-                                                leftIcon={<Icon as={PagePlus} boxSize={5} />}
-                                                iconSpacing={"0px"}
-                                                onClick={handleOnWorkspaceCreate}
-                                            >
-                                                <Text marginX={2}>New Workspace</Text>
-                                            </Button>
-                                        )}
-                                        onClick={handleOnWorkspaceClick}
-                                        onStack={handleOnWorkspaceStack}
-                                        onDelete={handleOnWorkspaceRemove}
-                                    />
-                                </TabPanel>
-                                <TabPanel>
-                                    <WorkspaceCollection
-                                        workspaces={[]}
-                                        view={view}
-                                        groupped={true}
-                                        emptyTitle={"No shared workspaces"}
-                                        emptyDescription={"To get started, share some workspaces from the \"My Workspaces\" tab."}
-                                        onClick={handleOnWorkspaceClick}
-                                        onStack={handleOnWorkspaceStack}
-                                        onDelete={handleOnWorkspaceRemove}
-                                    />
-                                </TabPanel>
-                                <TabPanel>
-                                    <WorkspaceCollection
-                                        workspaces={[]}
-                                        view={view}
-                                        groupped={true}
-                                        emptyTitle={"No archived workspaces"}
-                                        emptyDescription={"To get started, archive some workspaces from the \"Me Workspaces\" tab."}
-                                        onClick={handleOnWorkspaceClick}
-                                        onStack={handleOnWorkspaceStack}
-                                        onDelete={handleOnWorkspaceRemove}
-                                    />
-                                </TabPanel>
-                            </TabPanels>
-                        </Tabs>
-                    </ContextSheetBody>
-                )}
-
-                {queryParams.get("group") && (
-                    <WorkspaceStack
-                        name={queryParams.get("group")}
-                        isOpen={!!queryParams.get("group")}
-                        onClose={() => setQueryParam({})}
-                    >
-                        <WorkspaceCollection
-                            workspaces={workspaces?.filter(x => x.group === queryParams.get("group")) || []}
-                            view={"card"}
-                            emptyTitle={"No workspaces in group"}
-                            emptyDescription={"To get started, click the \"New Workspace\" button to create a new workspace."}
-                            onClick={handleOnWorkspaceClick}
-                            onDelete={handleOnWorkspaceRemove}
+                {selectedGroupName && (
+                    <WorkspaceStack>
+                        <WorkspaceStackHeader
+                            title={selectedGroupName}
+                            icon={AppleShortcuts}
+                            isOpen={!!selectedGroupName}
+                            onClose={handleCloseWorkspaceStack}
                         />
+                        <WorkspaceStackBody isOpen={!!selectedGroupName}>
+                            <WorkspaceCollection
+                                workspaces={workspaces?.filter(workspace => workspace.group === selectedGroupName) || []}
+                                view={"card"}
+                                emptyTitle={getLocalizedString(LocaleKeys.NO_STACK_WORKSPACES_TITLE)}
+                                emptyDescription={getLocalizedString(LocaleKeys.NO_STACK_WORKSPACES_SUGGESTION)}
+                                onClick={handleOnWorkspaceClick}
+                            />
+                        </WorkspaceStackBody>
                     </WorkspaceStack>
                 )}
             </ContextSheet>

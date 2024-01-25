@@ -36,21 +36,21 @@ export const WorkspaceCardActionBar: FC<{
                     <IconButton
                         aria-label={"boomark template"}
                         color={isBookmarked ? "lime.600" : "gray.900"}
-                        icon={<Icon as={Bookmark} />}
+                        icon={<Icon as={Bookmark} boxSize={5} />}
                         title={"bookmark template"}
                         onClick={onBookmarkClick}
                     />
                     <IconButton
                         aria-label={"like template"}
                         color={isLiked ? "lime.600" : "gray.900"}
-                        icon={<Icon as={ThumbsUp} />}
+                        icon={<Icon as={ThumbsUp} boxSize={5} />}
                         title={"like template"}
                         onClick={onLikeClick}
                     />
                 </ButtonGroup>
                 <ButtonGroup gap={2} spacing={0} size={"sm"} variant={"tonal"}>
                     <Button
-                        leftIcon={<Icon as={ArrowUpRightCircle} />}
+                        leftIcon={<Icon as={ArrowUpRightCircle} boxSize={5} />}
                         iconSpacing={0}
                         onClick={onTryItClick}
                     >

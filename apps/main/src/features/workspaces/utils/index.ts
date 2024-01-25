@@ -23,13 +23,7 @@ export const groupWorkspaces = (workspaces: WorkspaceInfo[]) => {
         return groups;
     }, new Map<string, WorkspaceInfo[]>()));
 
-    return groups.map(([name, workspaces]) => getGroupInfo(workspaces, name));
-}
-
-export const isWorkspaceGroup = (element: any): element is WorkspaceGroupInfo => {
-    return !("workspaceId" in element);
-}
-
-export const isWorkspace = (element: any): element is WorkspaceInfo => {
-    return "workspaceId" in element;
+    return groups
+        .map(([name, workspaces]) => getGroupInfo(workspaces, name))
+        .filter(group => group.name !== undefined);
 }

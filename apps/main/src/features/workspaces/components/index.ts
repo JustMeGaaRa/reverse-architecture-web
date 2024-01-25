@@ -1,4 +1,3 @@
-export * from "./WorkspaceCollectionProvider";
 export * from "./ThumbnailContainer";
 export * from "./ThumbnailImage";
 export * from "./ThumbnailMore";

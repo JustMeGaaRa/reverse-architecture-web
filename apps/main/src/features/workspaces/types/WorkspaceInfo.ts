@@ -1,5 +1,3 @@
-import { IWorkspaceMetadata, IWorkspaceTheme } from "structurizr";
-
 export type WorkspaceInfo = {
     workspaceId: string;
     name: string;
@@ -13,11 +11,6 @@ export type WorkspaceInfo = {
     tags: Array<string>;
     metadata?: WorkspaceInfoMetadata;
     statistics?: WorkspaceStats,
-    content?: {
-        text: string;
-        metadata?: IWorkspaceMetadata;
-        theme?: IWorkspaceTheme;
-    }
 }
 
 export type WorkspaceInfoMetadata = {

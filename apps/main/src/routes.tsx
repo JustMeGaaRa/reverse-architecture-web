@@ -5,7 +5,6 @@ import {
 import {
     CommunityExplorerPage,
     DashboardPage,
-    ErrorPage,
     LayoutPage,
     WorkspaceExplorerPage,
     ProfileSettingsContent,
@@ -20,7 +19,6 @@ export const routes = createBrowserRouter([
     {
         path: "/",
         element: <LayoutPage />,
-        errorElement: <ErrorPage />,
         children: [
             {
                 index: true,
@@ -37,12 +35,10 @@ export const routes = createBrowserRouter([
             {
                 path: "workspaces/:workspaceId",
                 element: <WorkspacePage />,
-                errorElement: <ErrorPage />
             },
             {
                 path: "shared",
                 element: <WorkspaceSharedPage />,
-                errorElement: <ErrorPage />
             },
             {
                 path: "community",

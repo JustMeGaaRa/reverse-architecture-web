@@ -1,6 +1,6 @@
 import { Grid, useBreakpointValue } from "@chakra-ui/react";
 import { FC } from "react";
-import { WorkspaceTemplateCard } from "../../workspaces";
+import { useWorkspaceCollection, WorkspaceTemplateCard } from "../../workspaces";
 import { WorkspaceInfo } from "../../";
 
 export const CommunityCardView: FC<{
@@ -17,6 +17,7 @@ export const CommunityCardView: FC<{
     onLikeClick
 }) => {
     const gridColumns = useBreakpointValue({ base: 1, md: 2, lg: 3, xl: 4, "2xl": 5 });
+    const { bookmarkedIds, likedIds } = useWorkspaceCollection();
 
     return (
         <Grid gridTemplateColumns={`repeat(${gridColumns}, 1fr)`} gap={6}>
@@ -24,6 +25,8 @@ export const CommunityCardView: FC<{
                 <WorkspaceTemplateCard
                     key={workspace.workspaceId}
                     workspace={workspace}
+                    isBookmarked={bookmarkedIds.includes(workspace.workspaceId)}
+                    isLiked={likedIds.includes(workspace.workspaceId)}
                     onClick={() => onClick?.(workspace)}
                     onTryItClick={() => onTryItClick?.(workspace)}
                     onBookmarkClick={() => onBookmarkClick?.(workspace)}

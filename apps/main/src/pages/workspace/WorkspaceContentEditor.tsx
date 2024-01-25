@@ -72,6 +72,7 @@ import {
     CommentThreadList,
     useCommentingMode,
     useCommentsStore,
+    useSnackbar,
 } from "../../features";
 import {
     DiscussionsPane,
@@ -101,6 +102,7 @@ export const WorkspaceCollaborativeEditor: FC = () => {
     const navigate = useNavigate();
     const { setHeaderContent } = usePageHeader();
     const { setSidebarContent, setShowSidebarButton, setSidebarOpen } = usePageSidebar();
+    const { snackbar } = useSnackbar();
 
     const [ structurizrText, setStructurizrDslText ] = useState("");
     const { parseStructurizr } = useStructurizrParser();
@@ -239,6 +241,10 @@ export const WorkspaceCollaborativeEditor: FC = () => {
         openView(workspace, workspace.views.deployments?.at(0));
     }, [openView, workspace]);
 
+    const handleOnWorkspaceNameChange = useCallback((value: string) => {
+        // renameWorkspace(workspace, value);
+    }, []);
+
     useEffect(() => {
         setHeaderContent({
             left: (
@@ -259,7 +265,12 @@ export const WorkspaceCollaborativeEditor: FC = () => {
                         </BreadcrumbItem>
                         <BreadcrumbItem>
                             <BreadcrumbLink marginX={2}>
-                                <Editable textStyle={"b2"} value={workspace.name} maxWidth={"300px"}>
+                                <Editable
+                                    maxWidth={"300px"}
+                                    textStyle={"b2"}
+                                    defaultValue={workspace.name}
+                                    onBlur={handleOnWorkspaceNameChange}
+                                >
                                     <EditablePreview />
                                     <EditableInput />
                                 </Editable>
@@ -283,8 +294,6 @@ export const WorkspaceCollaborativeEditor: FC = () => {
                     <Button
                         colorScheme={"lime"}
                         isActive={isDiagrammingMode}
-                        iconSpacing={0}
-                        leftIcon={<Icon as={AppleShortcuts} boxSize={4} />}
                         paddingInline={6}
                         title={"diagramming"}
                         onClick={handleOnDiagrammingMode}
@@ -294,8 +303,6 @@ export const WorkspaceCollaborativeEditor: FC = () => {
                     <Button
                         colorScheme={"lime"}
                         isActive={isModelingMode}
-                        iconSpacing={0}
-                        leftIcon={<Icon as={ViewStructureUp} boxSize={4} />}
                         paddingInline={6}
                         title={"modeling"}
                         onClick={handleOnModelingMode}
@@ -305,8 +312,6 @@ export const WorkspaceCollaborativeEditor: FC = () => {
                     <Button
                         colorScheme={"lime"}
                         isActive={isDeploymentMode}
-                        iconSpacing={0}
-                        leftIcon={<Icon as={ViewStructureUp} boxSize={4} />}
                         paddingInline={6}
                         title={"deployment"}
                         onClick={handleOnDeploymentMode}
@@ -337,6 +342,7 @@ export const WorkspaceCollaborativeEditor: FC = () => {
         handleOnDiagrammingMode,
         handleOnModelingMode,
         handleOnDeploymentMode,
+        handleOnWorkspaceNameChange,
         followUser,
         workspace,
         users,

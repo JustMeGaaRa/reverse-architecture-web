@@ -20,6 +20,7 @@ import {
     ContextSheetBody,
     ContextSheetHeader,
     ContextSheetTitle,
+    useLocale,
     usePageHeader,
     usePageSidebar,
 } from "@reversearchitecture/ui";
@@ -40,22 +41,29 @@ import {
 } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
-    CommunityTemplateList,
+    CommunityTemplateCollection,
     WorkspaceInfo,
-    WorkspaceApi,
+    CommunityApi,
+    LocaleKeys,
+    useWorkspaceCollection,
 } from "../../../features";
 import {
     CommunityTemplateModal,
-    CommunityPublishingModal,
     HomePageLayoutContent,
-} from "..";
+} from "../";
+
+const capitalize = (str: string) => {
+    return str.charAt(0).toUpperCase() + str.toLowerCase().slice(1);
+}
 
 export const CommunityExplorerPage: FC<PropsWithChildren> = () => {
+    const { getLocalizedString } = useLocale();
     const { setShowSidebarButton } = usePageSidebar();
     const { setHeaderContent } = usePageHeader();
     const [ queryParams, setQueryParam ] = useSearchParams();
+    const { clone } = useWorkspaceCollection();
     
-    const { workspaceApi } = useMemo(() => ({ workspaceApi: new WorkspaceApi() }), []);
+    const communityApi = useMemo(() => new CommunityApi(), []);
     const [ workspaces, setWorkspaces ] = useState<Array<WorkspaceInfo>>([]);
     const filterCategories = useMemo(() => {
         return [
@@ -101,15 +109,22 @@ export const CommunityExplorerPage: FC<PropsWithChildren> = () => {
     }, [setHeaderContent]);
 
     useEffect(() => {
-        workspaceApi.getWorkspaces()
+        communityApi.getWorkspaces()
             .then(workspaces => {
                 setWorkspaces(workspaces);
-                setFilterTags(Array.from(new Set(workspaces.flatMap(x => x.tags))));
             })
             .catch(error => {
                 console.error(error);
             });
-    }, [workspaceApi, setShowSidebarButton]);
+
+        communityApi.getFilterTags()
+            .then(tags => {
+                setFilterTags(tags);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }, [communityApi, setShowSidebarButton]);
 
     const handleOnCategoryClick = useCallback((filter) => {
         setSelectedCategory(filter);
@@ -124,25 +139,19 @@ export const CommunityExplorerPage: FC<PropsWithChildren> = () => {
     }, [setQueryParam]);
 
     const handleOnWorskapceTryOut = useCallback((workspace: WorkspaceInfo) => {
+        // TODO: copy the tempalte to 'my workspaces' first and then navigate to it
+        // TODO: clone workspace content
         navigate(`/workspaces/${workspace.workspaceId}`);
     }, [navigate]);
-    
-    const handleOnWorkspaceBookmark = useCallback((workspace: WorkspaceInfo) => {
-        
-    }, []);
-
-    const handleOnWorkspaceLike = useCallback((workspace: WorkspaceInfo) => {
-
-    }, []);
-
-    const capitalize = (str: string) => {
-        return str.charAt(0).toUpperCase() + str.toLowerCase().slice(1);
-    }
 
     const handleOnWorkspacePublish = useCallback((workspace: WorkspaceInfo) => {
         // workspaceApi.publishWorkspace(workspace);
         // setWorkspaces(workspaces.concat(workspace));
     }, []);
+
+    const handleOnCloseTemplateModal = useCallback(() => {
+        setQueryParam({});
+    }, [setQueryParam]);
 
     return (
         <HomePageLayoutContent>
@@ -155,6 +164,7 @@ export const CommunityExplorerPage: FC<PropsWithChildren> = () => {
 
                 <ContextSheetBody>
                     <Flex direction={"column"} height={"100%"}>
+                        {/* TODO: move this code to a separatae filters component */}
                         <Box flexBasis={"80px"} flexGrow={0} flexShrink={0} padding={6}>
                             <HStack
                                 divider={
@@ -210,21 +220,18 @@ export const CommunityExplorerPage: FC<PropsWithChildren> = () => {
                             </HStack>
                         </Box>
                         <Box flexGrow={1} overflowY={"scroll"} padding={6}>
-                            <CommunityTemplateList
+                            <CommunityTemplateCollection
                                 workspaces={filteredWorkspaces}
-                                emptyTitle={"No community workspaces available yet"}
-                                emptyDescription={"To get started, click the \"New Workspace\" button to create a new project."}
+                                emptyTitle={getLocalizedString(LocaleKeys.NO_COMMUNITY_WORKSPACES_TITLE)}
+                                emptyDescription={getLocalizedString(LocaleKeys.NO_COMMUNITY_WORKSPACES_SUGGESTION)}
                                 onClick={handleOnWorkspaceClick}
-                                onTryItClick={handleOnWorskapceTryOut}
-                                onBookmarkClick={handleOnWorkspaceBookmark}
-                                onLikeClick={handleOnWorkspaceLike}
+                                onTryIt={handleOnWorskapceTryOut}
                             />
-                            
+
                             <CommunityTemplateModal
                                 workspaceId={queryParams.get("preview")}
                                 isOpen={!!queryParams.get("preview")}
-                                onTryItClick={handleOnWorskapceTryOut}
-                                onClose={() => setQueryParam({})}
+                                onClose={handleOnCloseTemplateModal}
                             />
                         </Box>
                     </Flex>

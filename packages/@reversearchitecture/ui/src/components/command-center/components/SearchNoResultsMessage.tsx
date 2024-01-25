@@ -1,8 +1,16 @@
-import { Flex, Highlight, Icon, Text } from "@chakra-ui/react"
-import { EmojiSad } from "iconoir-react"
-import { FC } from "react"
+import { Flex, Highlight, Icon, Text } from "@chakra-ui/react";
+import { EmojiSad } from "iconoir-react";
+import { FC } from "react";
 
-export const SearchEmpty: FC<{ query?: string }> = ({ query = "" }) => {
+export const SearchNoResultsMessage: FC<{
+    query: string;
+    title: string;
+    description: string;
+}> = ({
+    query,
+    title,
+    description
+}) => {
     return (
         <Flex
             direction={"column"}
@@ -14,14 +22,13 @@ export const SearchEmpty: FC<{ query?: string }> = ({ query = "" }) => {
             padding={16}
         >
             <Icon as={EmojiSad} boxSize={"72px"} color={"white"} />
-            <Text textStyle={"h6"} color={"white"} mt={8}>No matches found</Text>
+            <Text textStyle={"h6"} color={"white"} mt={8}>
+                {title}
+            </Text>
             <Text textStyle={"b2"} color={"gray.900"} mt={2}>
                 <Highlight query={query} styles={{ color: "white" }}>
-                    {`We were not able to find anything for '${query}'.`}
+                    {description}
                 </Highlight>
-            </Text>
-            <Text textStyle={"b2"} color={"gray.900"}>
-                Try something else.
             </Text>
         </Flex>
     )

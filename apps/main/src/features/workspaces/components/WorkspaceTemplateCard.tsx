@@ -14,12 +14,16 @@ import { WorkspaceInfo } from "../types";
 
 export const WorkspaceTemplateCard: FC<{
     workspace: WorkspaceInfo;
+    isBookmarked?: boolean;
+    isLiked?: boolean;
     onClick?: () => void;
     onTryItClick?: () => void;
     onBookmarkClick?: () => void;
     onLikeClick?: () => void;
 }> = ({
     workspace,
+    isBookmarked,
+    isLiked,
     onClick,
     onTryItClick,
     onBookmarkClick,
@@ -55,8 +59,8 @@ export const WorkspaceTemplateCard: FC<{
                     <ThumbnailSelector data={workspace} />
                 </ThumbnailContainer>
                 <WorkspaceCardActionBar
-                    isBookmarked={workspace.metadata?.isBookmarked}
-                    isLiked={workspace.metadata?.isLiked}
+                    isBookmarked={isBookmarked}
+                    isLiked={isLiked}
                     onTryItClick={handleOnTryItClick}
                     onBookmarkClick={handleOnBookmarkClick}
                     onLikeClick={handleOnLikeClick}

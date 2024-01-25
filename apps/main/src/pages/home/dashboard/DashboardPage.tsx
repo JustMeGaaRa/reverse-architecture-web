@@ -4,7 +4,7 @@ import {
     ContextSheetBody,
     ContextSheetHeader,
     ContextSheetTitle,
-    EmptyContent,
+    MessageContent,
     usePageHeader
 } from "@reversearchitecture/ui";
 import { Folder } from "iconoir-react";
@@ -30,7 +30,7 @@ export const DashboardPage: FC = () => {
                 <Divider />
 
                 <ContextSheetBody>
-                    <EmptyContent
+                    <MessageContent
                         icon={Folder}
                         title={"No content created yet"}
                         description={"To get started, create some new projects."}

@@ -1,21 +1,37 @@
-import { FC } from "react";
-import { useNavigate, useRouteError } from "react-router";
-import { useSnackbar } from "../features";
+import { Button } from "@chakra-ui/react";
+import { ErrorMessage } from "@reversearchitecture/ui";
+import React, { PropsWithChildren, ReactNode } from "react";
 
-export const ErrorPage: FC<{
-}> = ({
-}) => {
-    const navigate = useNavigate();
-    const { error } = useRouteError() as { error: Error };
-    const { name, message } = error ?? { name: "Error", message: "Oops, something went wrong..." };
-    const { snackbar } = useSnackbar();
+export class ErrorBoundaryPage extends React.Component<PropsWithChildren, { hasError: boolean, error?: Error }> {
+    constructor(props) {
+      super(props);
+      this.state = { hasError: false };
+    }
+    
+    static getDerivedStateFromError(error) {
+        return { hasError: true };
+    }
 
-    snackbar({
-        title: message,
-        description: message,
-        status: "error",
-        duration: 5000,
-    })
+    componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
+        this.setState(state => ({ ...state, error: error }));
+    }
 
-    return (<></>)
+    render(): ReactNode {
+        if (this.state.hasError) {
+            return (
+                <ErrorMessage
+                    errorDescription={this.state.error?.message}
+                    action={(
+                        <Button
+                            onClick={() => {}}
+                        >
+                            Reload Page
+                        </Button>
+                    )}
+                />
+            )
+        }
+        
+        return this.props.children;
+    }
 }

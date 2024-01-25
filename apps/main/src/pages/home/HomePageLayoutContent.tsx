@@ -10,16 +10,14 @@ import {
 import {
     Route,
     RouteList,
-    CommandCenter,
     ReverseArchitectureSvg,
     PageHomeButton,
     usePageSidebar,
     usePageHeader,
-    SearchGroupResult
 } from "@reversearchitecture/ui";
-import { FC, PropsWithChildren, useCallback, useEffect, useState } from "react";
+import { FC, PropsWithChildren, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { useSearch } from "../../features";
+import { CommandCenter } from "../../features";
 
 export const HomePageLayoutContent: FC<PropsWithChildren> = ({ children }) => {
     const { setShowSidebarButton, setSidebarContent } = usePageSidebar();
@@ -97,32 +95,19 @@ export const HomePageLayoutContent: FC<PropsWithChildren> = ({ children }) => {
     }, [setSidebarContent, setShowSidebarButton, navigate]);
 
     // header section
-    const [ results, setResults ] = useState<SearchGroupResult[]>([]);
-    const { onSearch } = useSearch();
-
-    const handleOnSearchChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-
-        onSearch(event.target.value)
-            .then((results) => {
-                setResults(results);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    }, [onSearch]);
-
     useEffect(() => {
         setHeaderContent({
             middle: (
-                <Box aria-label={"community page search"} width={["sm", "md", "lg"]}>
-                    <CommandCenter
-                        searchResults={results}
-                        onChange={handleOnSearchChange}
-                    />
+                <Box width={["sm", "md", "lg"]}>
+                    <CommandCenter />
                 </Box>
             ),
         })
-    }, [setHeaderContent, handleOnSearchChange, results]);
+    }, [setHeaderContent]);
 
-    return (<>{children}</>)
+    return (
+        <>
+            {children}
+        </>
+    )
 }

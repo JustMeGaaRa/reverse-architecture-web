@@ -1,3 +1,3 @@
 export * from "./CommunityExplorerPage";
-export * from "./CommunityTemplaceModal";
 export * from "./CommunityPublishingModal";
+export * from "./CommunityTemplateModal";

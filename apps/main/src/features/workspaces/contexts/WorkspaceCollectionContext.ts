@@ -3,17 +3,20 @@ import { WorkspaceGroupInfo, WorkspaceInfo } from "../types";
 
 export type ActionOptions = {
     isEnabled: boolean;
-    isAllowed: boolean;
+    isVisible: boolean;
 };
 
 export type WorkspaceCollectionActionOptions = {
     stack: ActionOptions;
     unstack: ActionOptions;
-    delete: ActionOptions;
+    remove: ActionOptions;
     clone: ActionOptions;
+    archive: ActionOptions;
+    unarchive: ActionOptions;
 };
 
 export const WorkspaceCollectionContext = createContext<{
+    workspaces: Array<WorkspaceInfo>;
     selectionModeOn: boolean;
     selected: Array<WorkspaceInfo | WorkspaceGroupInfo>;
     selectedOptions: WorkspaceCollectionActionOptions,
@@ -21,24 +24,33 @@ export const WorkspaceCollectionContext = createContext<{
     setSelected: Dispatch<SetStateAction<Array<WorkspaceInfo | WorkspaceGroupInfo>>>;
     setSelectedOptions: Dispatch<SetStateAction<WorkspaceCollectionActionOptions>>;
 }>({
+    workspaces: [],
     selectionModeOn: false,
     selected: [],
     selectedOptions: {
         stack: {
             isEnabled: false,
-            isAllowed: false,
+            isVisible: false,
         },
         unstack: {
             isEnabled: false,
-            isAllowed: false,
+            isVisible: false,
         },
-        delete: {
+        remove: {
             isEnabled: false,
-            isAllowed: false,
+            isVisible: false,
         },
         clone: {
             isEnabled: false,
-            isAllowed: false,
+            isVisible: false,
+        },
+        archive: {
+            isEnabled: false,
+            isVisible: false,
+        },
+        unarchive: {
+            isEnabled: false,
+            isVisible: false,
         },
     },
     setSelectionModeOn: () => {},

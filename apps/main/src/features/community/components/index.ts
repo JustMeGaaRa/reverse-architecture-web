@@ -1,5 +1,5 @@
 export * from "./CommunityCardView";
-export * from "./CommunityTemplateList";
+export * from "./CommunityTemplateCollection";
 export * from "./TemplateOverview";
 export * from "./TemplateSectionDiscussion";
 export * from "./TemplateSectionInfo";

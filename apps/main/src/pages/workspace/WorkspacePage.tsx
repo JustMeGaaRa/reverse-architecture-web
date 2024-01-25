@@ -23,7 +23,6 @@ import {
     useAccount,
     useSnackbar,
     WorkspaceApi,
-    WorkspaceCacheWrapper,
 } from "../../features";
 import {
     WorkspaceCollaborativeEditor,
@@ -33,23 +32,36 @@ export const WorkspacePage: FC = () => {
     const { workspaceId } = useParams<{ workspaceId: string }>();
     const { account } = useAccount();
     const { snackbar } = useSnackbar();
-    
-    // SECTION: loading workspace from the API
-    const workspaceApi = useMemo(() => new WorkspaceCacheWrapper(new WorkspaceApi()), []);
+
+    const workspaceApi = useMemo(() => new WorkspaceApi(), []);
     const [ workspace, setWorkspace ] = useState<IWorkspace>(Workspace.Empty.toObject());
     const { parseStructurizr } = useStructurizrParser();
 
+    const commentApi = useMemo(() => new CommentApi(), []);
+    const [ discussions, setDiscussions ] = useState<Array<CommentThread>>([]);
+
     useEffect(() => {
-        workspaceApi.getWorkspaceById(workspaceId)
-            .then(info => {
-                const parsedWorkspace = parseStructurizr(info.content?.text);
-                const autolayoutWorkspace = parsedWorkspace.applyMetadata(info.content?.metadata);
-                setWorkspace(autolayoutWorkspace);
-                // openView(autolayoutWorkspace, autolayoutWorkspace.views.systemLandscape);
-                // TODO: set code text as well
-                // setStructurizrDslText(info.content?.text);
-            })
+        const loadWorkspace = async (workspaceId: string) => {
+            const structurizrText = await workspaceApi.getWorkspaceContent(workspaceId);
+            const metadata = await workspaceApi.getWorkspaceMetadata(workspaceId);
+
+            const workspace = parseStructurizr(structurizrText);
+            const autolayoutWorkspace = workspace.applyMetadata(metadata);
+
+            setWorkspace(autolayoutWorkspace);
+            // TODO: set code text as well
+            // setStructurizrDslText(structurizrText);
+        }
+
+        const loadComments = async (workspaceId: string) => {
+            const comments = await commentApi.getDiscussions(workspaceId);
+            setDiscussions(comments);
+        }
+        
+        loadWorkspace(workspaceId)
             .catch(error => {
+                // TODO: load workspace from local storage to support PWA
+                setWorkspace(Workspace.Empty.toObject());
                 snackbar({
                     title: error.message,
                     description: error.message,
@@ -57,23 +69,11 @@ export const WorkspacePage: FC = () => {
                     duration: 9000,
                 })
             })
-
-        return () => {
-            setWorkspace(Workspace.Empty);
-        }
-    }, [workspaceId, workspaceApi, snackbar, parseStructurizr, setWorkspace]);
-
-    // SECTION: loading comments from the API
-    const commentApi = useMemo(() => new CommentApi(), []);
-    const [ discussions, setDiscussions ] = useState<Array<CommentThread>>([]);
-
-    useEffect(() => {
-        commentApi.getDiscussions(workspaceId)
-            .then(comments => {
-                setDiscussions(comments);
-            })
+            
+        loadComments(workspaceId)
             .catch(error => {
-                console.error(error);
+                // TODO: load comments from local storage to support PWA
+                setDiscussions([]);
                 snackbar({
                     title: error.message,
                     description: error.message,
@@ -81,11 +81,12 @@ export const WorkspacePage: FC = () => {
                     duration: 9000,
                 })
             });
-
+        
         return () => {
+            setWorkspace(Workspace.Empty);
             setDiscussions([]);
         }
-    }, [workspaceId, commentApi, snackbar, setDiscussions]);
+    }, [workspaceId, workspaceApi, commentApi, snackbar, parseStructurizr, setWorkspace, setDiscussions]);
 
     // NOTE: workspace provider on this page should save changes to the persistant layer,
     // as this is the user who shares and owns the workspace file

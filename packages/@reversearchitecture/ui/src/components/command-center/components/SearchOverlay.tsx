@@ -1,4 +1,4 @@
-import { Box, Fade, Portal, ScaleFade } from "@chakra-ui/react";
+import { Box, Portal } from "@chakra-ui/react";
 import { FC } from "react";
 
 export const SearchOverlay: FC<{ isOpen: boolean }> = ({ isOpen }) => {
@@ -12,8 +12,7 @@ export const SearchOverlay: FC<{ isOpen: boolean }> = ({ isOpen }) => {
                 left={0}
                 top={0}
                 display={isOpen ? "block" : "none"}
-            >
-            </Box>
+            />
         </Portal>
     )
 }

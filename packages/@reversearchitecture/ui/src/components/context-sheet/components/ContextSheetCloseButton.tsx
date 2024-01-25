@@ -6,7 +6,7 @@ export const ContextSheetCloseButton: FC<{
     size?: "sm" | "md" | "lg";
     onClick?: () => void;
 }> = ({
-    size = "md",
+    size = "sm",
     onClick
 }) => {
     return (

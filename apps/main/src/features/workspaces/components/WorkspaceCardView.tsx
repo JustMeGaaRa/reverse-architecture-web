@@ -6,24 +6,23 @@ import {
 } from "../components";
 import {
     useOnPressHold,
-    useOnWorkspaceSelected,
-    useWorkspaceCollection
+    useWorkspaceSelection
 } from "../hooks";
 import { WorkspaceGroupInfo, WorkspaceInfo } from "../types";
-import { groupWorkspaces, isWorkspace } from "../utils";
+import { groupWorkspaces } from "../utils";
 
 export const WorkspaceCardView: FC<{
     workspaces: WorkspaceInfo[];
     groupped?: boolean;
-    onOpen?: (workspace: WorkspaceInfo | WorkspaceGroupInfo) => void;
-    onDelete?: (workspaces: Array<WorkspaceInfo | WorkspaceGroupInfo>) => void;
+    onOpen?: (selectedId: string) => void;
+    onDelete?: (selectedId: string) => void;
 }> = ({
     workspaces,
     groupped,
     onOpen,
     onDelete,
 }) => {
-    const { selected, toggleSelected } = useWorkspaceCollection();
+    const { selectedIds, toggleSelected } = useWorkspaceSelection();
     const { onStartHold, onCancelHold } = useOnPressHold();
 
     const gridColumns = useBreakpointValue({ base: 1, md: 2, lg: 3, xl: 4, "2xl": 5 });
@@ -37,12 +36,12 @@ export const WorkspaceCardView: FC<{
 
     }, []);
 
-    const handleOnWorkspaceOpen = useCallback((data: WorkspaceInfo | WorkspaceGroupInfo) => {
-        onOpen?.(data);
+    const handleOnWorkspaceOpen = useCallback((selectedId: string) => {
+        onOpen?.(selectedId);
     }, [onOpen]);
 
-    const handleOnWorkspaceSelect = useCallback((data: WorkspaceInfo | WorkspaceGroupInfo) => {
-        toggleSelected(data);
+    const handleOnWorkspaceSelect = useCallback((selectedId: string) => {
+        toggleSelected(selectedId);
     }, [toggleSelected]);
 
     const handleOnWorkspaceRename = useCallback((data: WorkspaceInfo | WorkspaceGroupInfo) => {
@@ -53,52 +52,52 @@ export const WorkspaceCardView: FC<{
 
     }, []);
 
-    const handleOnWorkspaceDelete = useCallback((data: WorkspaceInfo | WorkspaceGroupInfo) => {
-        onDelete?.([data]);
+    const handleOnWorkspaceDelete = useCallback((selectedId: string) => {
+        onDelete?.(selectedId);
     }, [onDelete]);
 
     return (
         <Grid gridTemplateColumns={`repeat(${gridColumns}, 1fr)`} gap={6}>
-            {groupped && groups.filter(group => group.name !== undefined).map(group => (
+            {groupped && groups.map(group => (
                 <WorkspaceStackCard
                     key={group.name}
                     group={group}
-                    isSelected={selected.some(x => x.name === group.name)}
+                    isSelected={selectedIds.some(selectedId => selectedId === group.name)}
                     onTouchStart={() => handleOnWorkspaceTouchStart(group)}
                     onTouchEnd={() => handleOnWorkspaceTouchEnd(group)}
-                    onOpen={() => handleOnWorkspaceOpen?.(group)}
-                    onSelect={() => handleOnWorkspaceSelect?.(group)}
+                    onOpen={() => handleOnWorkspaceOpen?.(group.name)}
+                    onSelect={() => handleOnWorkspaceSelect?.(group.name)}
                     onRename={() => handleOnWorkspaceRename?.(group)}
                     onClone={() => handleOnWorkspaceClone?.(group)}
-                    onDelete={() => handleOnWorkspaceDelete?.(group)}
+                    onDelete={() => handleOnWorkspaceDelete?.(group.name)}
                 />
             ))}
-            {groupped && groups.filter(group => group.name === undefined).flatMap(group => group.workspaces).map(workspace => (
+            {groupped && workspaces.filter(workspace => !workspace.group).map(workspace => (
                 <WorkspaceCard
                     key={workspace.workspaceId}
                     workspace={workspace}
-                    isSelected={selected.some(x => isWorkspace(x) && x.workspaceId === workspace.workspaceId)}
+                    isSelected={selectedIds.some(selectedId => selectedId === workspace.workspaceId)}
                     onTouchStart={() => handleOnWorkspaceTouchStart(workspace)}
                     onTouchEnd={() => handleOnWorkspaceTouchEnd(workspace)}
-                    onOpen={() => handleOnWorkspaceOpen?.(workspace)}
-                    onSelect={() => handleOnWorkspaceSelect?.(workspace)}
+                    onOpen={() => handleOnWorkspaceOpen?.(workspace.workspaceId)}
+                    onSelect={() => handleOnWorkspaceSelect?.(workspace.workspaceId)}
                     onRename={() => handleOnWorkspaceRename?.(workspace)}
                     onClone={() => handleOnWorkspaceClone?.(workspace)}
-                    onDelete={() => handleOnWorkspaceDelete?.(workspace)}
+                    onDelete={() => handleOnWorkspaceDelete?.(workspace.workspaceId)}
                 />
             ))}
             {!groupped && workspaces.map(workspace => (
                 <WorkspaceCard
                     key={workspace.workspaceId}
                     workspace={workspace}
-                    isSelected={selected.some(x => isWorkspace(x) && x.workspaceId === workspace.workspaceId)}
+                    isSelected={selectedIds.some(selectedId => selectedId === workspace.workspaceId)}
                     onTouchStart={() => handleOnWorkspaceTouchStart(workspace)}
                     onTouchEnd={() => handleOnWorkspaceTouchEnd(workspace)}
-                    onOpen={() => handleOnWorkspaceOpen?.(workspace)}
-                    onSelect={() => handleOnWorkspaceSelect?.(workspace)}
+                    onOpen={() => handleOnWorkspaceOpen?.(workspace.workspaceId)}
+                    onSelect={() => handleOnWorkspaceSelect?.(workspace.workspaceId)}
                     onRename={() => handleOnWorkspaceRename?.(workspace)}
                     onClone={() => handleOnWorkspaceClone?.(workspace)}
-                    onDelete={() => handleOnWorkspaceDelete?.(workspace)}
+                    onDelete={() => handleOnWorkspaceDelete?.(workspace.workspaceId)}
                 />
             ))}
         </Grid>

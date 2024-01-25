@@ -1,7 +1,8 @@
 import { Box, Flex, Icon, Text } from "@chakra-ui/react";
+import { CloudDownload, EmojiSad, Folder } from "iconoir-react";
 import { FC } from "react";
 
-export const EmptyContent: FC<{
+export const MessageContent: FC<{
     icon: any;
     title: string;
     description: string;
@@ -26,7 +27,7 @@ export const EmptyContent: FC<{
                 position={"relative"}
                 top={"20vh"}
             >
-                <Icon as={icon} fontSize={70} strokeWidth={.4} mb={4} />
+                <Icon as={icon} boxSize={"72px"} strokeWidth={.4} mb={4} />
                 <Text
                     fontSize={20}
                     color={"white"}
@@ -47,4 +48,52 @@ export const EmptyContent: FC<{
             </Flex>
         </Flex>
     );
+}
+
+export const ErrorMessage: FC<{
+    errorDescription: string;
+    action?: React.ReactElement;
+}> = ({
+    errorDescription,
+    action
+}) => {
+    return (
+        <MessageContent
+            icon={EmojiSad}
+            title={"Something went wrong"}
+            description={errorDescription}
+            action={action}
+        />
+    )
+}
+
+export const NoContentMessage: FC<{
+    actionDescription: string;
+    action?: React.ReactElement;
+}> = ({
+    actionDescription,
+    action
+}) => {
+    return (
+        <MessageContent
+            icon={Folder}
+            title={"No content"}
+            description={actionDescription}
+            action={action}
+        />
+    )
+}
+
+export const LoadingMessage: FC<{
+    loadingDescription: string;
+}> = ({
+    loadingDescription
+}) => {
+    return (
+        <MessageContent
+            icon={CloudDownload}
+            title={"Loading Data"}
+            description={loadingDescription}
+        />
+    )
 }

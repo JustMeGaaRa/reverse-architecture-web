@@ -16,7 +16,11 @@ import {
     ContextSheetTabContent
 } from "@reversearchitecture/ui";
 import { Workspace } from "structurizr";
-import { WorkspaceViewBreadcrumbs, WorkspacePanel, WorkspaceViewer } from "workspace";
+import {
+    WorkspaceViewBreadcrumbs,
+    WorkspacePanel,
+    WorkspaceViewer
+} from "workspace";
 import {
     Bookmark,
     ChatLines,
@@ -48,6 +52,8 @@ export const TemplateOverview: FC<{
     information,
     workspace,
     comments,
+    isBookmarked,
+    isLiked,
     onBookmark,
     onLike,
     onCommentSend,
@@ -155,7 +161,7 @@ export const TemplateOverview: FC<{
                             <Tooltip hasArrow label={`Bookmarks: ${information?.statistics?.bookmarked ?? 0}`} placement={"left"}>
                                 <IconButton
                                     aria-label={"bookmarks"}
-                                    color={information?.metadata?.isBookmarked ? "lime.600" : "gray.900"}
+                                    color={isBookmarked ? "lime.600" : "gray.900"}
                                     icon={<Icon as={Bookmark} boxSize={6} />}
                                     variant={"menuitem"}
                                     onClick={onBookmark}
@@ -164,7 +170,7 @@ export const TemplateOverview: FC<{
                             <Tooltip hasArrow label={`Likes: ${information?.statistics?.liked ?? 0}`} placement={"left"}>
                                 <IconButton
                                     aria-label={"likes"}
-                                    color={information?.metadata?.isLiked ? "lime.600" : "gray.900"}
+                                    color={isLiked ? "lime.600" : "gray.900"}
                                     icon={<Icon as={ThumbsUp} boxSize={6} />}
                                     variant={"menuitem"}
                                     onClick={onLike}

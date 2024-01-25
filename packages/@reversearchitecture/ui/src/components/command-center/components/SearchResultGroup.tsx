@@ -1,4 +1,4 @@
-import { Flex, Text, VStack } from "@chakra-ui/react";
+import { Flex, Highlight, Icon, Text, VStack } from "@chakra-ui/react";
 import { Children, FC, PropsWithChildren } from "react";
 
 export const SearchResultGroup: FC<PropsWithChildren<{
@@ -38,5 +38,29 @@ export const SearchResultGroup: FC<PropsWithChildren<{
                 </Flex>
             ))}
         </VStack>
+    )
+}
+
+export const SearchResultItem: FC<{
+    icon?: any;
+    text: string;
+    query: string;
+}> = ({
+    icon,
+    text,
+    query
+}) => {
+    return (
+        <>
+            <Icon as={icon} />
+            <Text marginX={2}>
+                <Highlight
+                    query={query.split(" ")}
+                    styles={{ backgroundColor: "lime.400" }}
+                >
+                    {text}
+                </Highlight>
+            </Text>
+        </>
     )
 }
