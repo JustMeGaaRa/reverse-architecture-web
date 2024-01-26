@@ -4,6 +4,7 @@ import {
     IconButton,
     Menu,
     MenuButton,
+    MenuDivider,
     MenuItem,
     MenuList,
     Text,
@@ -17,6 +18,8 @@ export const WorkspaceCardFooter: FC<{
     onRename?: () => void;
     onSelect?: () => void;
     onClone?: () => void;
+    onArchive?: () => void;
+    onRestore?: () => void;
     onDelete?: MouseEventHandler<HTMLButtonElement>;
 }> = ({
     name,
@@ -24,6 +27,8 @@ export const WorkspaceCardFooter: FC<{
     onRename,
     onSelect,
     onClone,
+    onArchive,
+    onRestore,
     onDelete
 }) => {
     return (
@@ -58,6 +63,13 @@ export const WorkspaceCardFooter: FC<{
                     <MenuItem icon={<Icon as={Copy} boxSize={4} />} onClick={onClone}>
                         Clone
                     </MenuItem>
+                    <MenuItem icon={<Icon as={BinMinusIn} boxSize={4} />} onClick={onArchive}>
+                        Archive
+                    </MenuItem>
+                    <MenuItem icon={<Icon as={BinMinusIn} boxSize={4} />} onClick={onRestore}>
+                        Restore
+                    </MenuItem>
+                    <MenuDivider />
                     <MenuItem icon={<Icon as={BinMinusIn} boxSize={4} />} onClick={onDelete}>
                         Delete
                     </MenuItem>

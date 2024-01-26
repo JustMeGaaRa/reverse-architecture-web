@@ -10,9 +10,9 @@ const {
 export const Breadcrumb = defineMultiStyleConfig({
     baseStyle: definePartsStyle((props) => ({
         container: {
-            backgroundColor: mode("", "surface.tinted-black-10")(props),
+            backgroundColor: mode("", "surface.tinted-black-1")(props),
             backdropFilter: "blur(16px)",
-            borderRadius: 8,
+            borderRadius: 12,
         },
         separator: {
             color: mode("", "gray.900")(props),
@@ -22,12 +22,13 @@ export const Breadcrumb = defineMultiStyleConfig({
             textStyle: "b3"
         },
         item: {
-            borderRadius: 8,
             height: "24px",
             textStyle: "b3"
         },
         link: {
             borderRadius: 8,
+            display: "inline-flex",
+            gap: "4px",
             paddingX: "4px",
             paddingY: "2px",
             color: mode("", "gray.900")(props),
@@ -38,21 +39,26 @@ export const Breadcrumb = defineMultiStyleConfig({
             _hover: {
                 backgroundColor: mode("", "surface.tinted-white-10")(props),
                 backdropFilter: "blur(32px)",
-                color: mode("", "white")(props)
+                color: mode("", "white")(props),
             },
             _active: {
-                color: mode("", "gray.500")(props)
+                color: mode("", "gray.500")(props),
             },
             _activeLink: {
-                color: mode("", "gray.500")(props)
+                color: mode("", "gray.500")(props),
             },
             _selected: {
-                color: mode("", `${props.colorScheme}.600`)(props)
+                color: mode("", `${props.colorScheme}.600`)(props),
+
+                _hover: {
+                    backgroundColor: mode("", "surface.tinted-white-2")(props),
+                    backdropFilter: "blur(16px)",
+                    color: mode("", "white")(props),
+                }
             }
         }
     })),
     defaultProps: {
-        size: "md",
         colorScheme: "lime",
     }
 })

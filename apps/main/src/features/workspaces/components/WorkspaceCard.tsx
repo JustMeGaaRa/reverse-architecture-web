@@ -12,6 +12,8 @@ export const WorkspaceCard: FC<{
     onSelect?: () => void;
     onRename?: () => void;
     onClone?: () => void;
+    onArchive?: () => void;
+    onRestore?: () => void;
     onDelete?: MouseEventHandler<HTMLButtonElement>;
 }> = ({
     workspace,
@@ -22,6 +24,8 @@ export const WorkspaceCard: FC<{
     onSelect,
     onRename,
     onClone,
+    onArchive,
+    onRestore,
     onDelete
 }) => {
     return (
@@ -43,6 +47,8 @@ export const WorkspaceCard: FC<{
                     lastModifiedDate={workspace.lastModifiedDate}
                     onRename={onRename}
                     onClone={onClone}
+                    onArchive={onArchive}
+                    onRestore={onRestore}
                     onDelete={onDelete}
                 />
             </CardFooter>

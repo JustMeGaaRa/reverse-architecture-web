@@ -33,14 +33,20 @@ export const CommandCenter: FC<{
     onChange
 }) => {
     const searchRef = useRef<HTMLInputElement>(null);
+    const { getLocalizedString } = useLocale();
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const [ isClearable, setIsClearable ] = useState(false);
     const [ results, setResults ] = useState<SearchGroupResult[]>([]);
     const [ selectedIndex, setSelectedIndex ] = useState(0);
-    const { getLocalizedString } = useLocale();
-    const { onSearch } = useSearch();
+    const { search } = useSearch();
+
+    const handleOnSearchBlur = useCallback(() => {
+        onClose();
+    }, [onClose]);
 
     const handleOnSearchChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-        onSearch(event.target.value)
+        setIsClearable(event.target.value.length > 0);
+        search(event.target.value)
             .then((results) => {
                 setResults(results);
             })
@@ -48,16 +54,17 @@ export const CommandCenter: FC<{
                 console.error(error);
             });
         onChange?.(event);
-    }, [onChange, onSearch]);
+    }, [onChange, search]);
 
     const handleOnSearchCommand = useCallback(() => {
-
-    }, []);
+        onOpen();
+    }, [onOpen]);
 
     const handleOnSearchClear = useCallback(() => {
         if (searchRef?.current) {
             searchRef.current.value = null;
             searchRef.current.blur();
+            setIsClearable(searchRef.current.value.length > 0);
             onClose();
         }
     }, [onClose]);
@@ -93,12 +100,12 @@ export const CommandCenter: FC<{
                     type={"search"}
                     placeholder={getLocalizedString(LocaleKeys.SEARCH_PLACEHOLDER)}
                     onFocus={onOpen}
-                    // onBlur={onClose}
+                    onBlur={handleOnSearchBlur}
                     onChange={handleOnSearchChange}
                     onKeyDown={handleOnSearchKeyDown}
                 />
                 <InputRightElement>
-                    {!isOpen ? (
+                    {!isClearable && !isOpen ? (
                         <IconButton
                             aria-label={"command center"}
                             icon={<Icon as={Terminal} boxSize={6} />}

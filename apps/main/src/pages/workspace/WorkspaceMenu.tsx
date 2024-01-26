@@ -4,12 +4,16 @@ import {
     Menu,
     MenuButton,
     MenuDivider,
-    MenuGroup,
     MenuItem,
     MenuList
 } from "@chakra-ui/react";
-import { IWorkspace, StructurizrExportClient } from "structurizr";
-import { MoreHoriz } from "iconoir-react";
+import {
+    DrawioExportClient,
+    IWorkspace,
+    StructurizrExportClient,
+    WorkspaceJsonExportClient
+} from "structurizr";
+import { Download, InputField, MoreHoriz } from "iconoir-react";
 import { FC, useCallback } from "react";
 
 export const WorkspaceMenu: FC<{
@@ -19,8 +23,18 @@ export const WorkspaceMenu: FC<{
     title,
     workspace
 }) => {
-    const handleOnExportClick = useCallback(() => {
+    const handleOnExportStructurizrClick = useCallback(() => {
         const exportClient = new StructurizrExportClient();
+        console.log(exportClient.export(workspace));
+    }, [workspace]);
+
+    const handleOnExportJsonClick = useCallback(() => {
+        const exportClient = new WorkspaceJsonExportClient();
+        console.log(exportClient.export(workspace));
+    }, [workspace]);
+
+    const handleOnExportDrawioClick = useCallback(() => {
+        const exportClient = new DrawioExportClient();
         console.log(exportClient.export(workspace));
     }, [workspace]);
 
@@ -35,15 +49,30 @@ export const WorkspaceMenu: FC<{
                 {title}
             </MenuButton>
             <MenuList>
-                <MenuGroup>
-                    <MenuItem onClick={handleOnExportClick}>
-                        Export
-                    </MenuItem>
-                </MenuGroup>
+                <MenuItem
+                    icon={<Icon as={InputField} boxSize={5} />}
+                >
+                    Rename
+                </MenuItem>
                 <MenuDivider />
-                <MenuGroup>
-                    <MenuItem>Rename</MenuItem>
-                </MenuGroup>
+                <MenuItem
+                    icon={<Icon as={Download} boxSize={5} />}
+                    onClick={handleOnExportStructurizrClick}
+                >
+                    Export as Structurizr
+                </MenuItem>
+                <MenuItem
+                    icon={<Icon as={Download} boxSize={5} />}
+                    onClick={handleOnExportJsonClick}
+                >
+                    Export as JSON
+                </MenuItem>
+                <MenuItem
+                    icon={<Icon as={Download} boxSize={5} />}
+                    onClick={handleOnExportDrawioClick}
+                >
+                    Export as drawio
+                </MenuItem>
             </MenuList>
         </Menu>
     )

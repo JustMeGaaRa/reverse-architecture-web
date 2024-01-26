@@ -1,21 +1,27 @@
-import { FC, useCallback } from "react";
+import { FC } from "react";
 import {
     WorkspaceTableRow,
     WorkspaceTable,
 } from "../components";
 import { useWorkspaceSelection } from "../hooks";
-import { TableColumnInfo, WorkspaceGroupInfo, WorkspaceInfo } from "../types";
+import { TableColumnInfo, WorkspaceInfo } from "../types";
 import { groupWorkspaces } from "../utils";
 
 export const WorkspaceTableView: FC<{
     workspaces: WorkspaceInfo[];
     groupped?: boolean;
     onOpen?: (selectedId: string) => void;
+    onClone?: (selectedId: string) => void;
+    onArchive?: (selectedId: string) => void;
+    onRestore?: (selectedId: string) => void;
     onDelete?: (selectedId: string) => void;
 }> = ({
     workspaces,
     groupped,
     onOpen,
+    onClone,
+    onArchive,
+    onRestore,
     onDelete,
 }) => {
     const { selectedIds, toggleSelected } = useWorkspaceSelection();
@@ -30,34 +36,6 @@ export const WorkspaceTableView: FC<{
     ];
     const groups = groupWorkspaces(workspaces);
 
-    const handleOnWorkspaceTouchStart = useCallback((data: WorkspaceInfo | WorkspaceGroupInfo) => {
-
-    }, []);
-
-    const handleOnWorkspaceTouchEnd = useCallback((data: WorkspaceInfo | WorkspaceGroupInfo) => {
-
-    }, []);
-
-    const handleOnWorkspaceOpen = useCallback((selectedId: string) => {
-        onOpen?.(selectedId);
-    }, [onOpen]);
-
-    const handleOnWorkspaceSelect = useCallback((selectedId: string) => {
-        toggleSelected(selectedId);
-    }, [toggleSelected]);
-
-    const handleOnWorkspaceRename = useCallback((data: WorkspaceInfo | WorkspaceGroupInfo) => {
-
-    }, []);
-
-    const handleOnWorkspaceClone = useCallback((data: WorkspaceInfo | WorkspaceGroupInfo) => {
-
-    }, []);
-
-    const handleOnWorkspaceDelete = useCallback((selectedId: string) => {
-        onDelete?.(selectedId);
-    }, [onDelete]);
-
     return (
         <WorkspaceTable columns={columns}>
             {groupped && groups.map(group => (
@@ -67,13 +45,12 @@ export const WorkspaceTableView: FC<{
                     data={group}
                     isSelected={selectedIds.some(selectedId => selectedId === group.name)}
                     isGrouped={true}
-                    onTouchStart={() => handleOnWorkspaceTouchStart(group)}
-                    onTouchEnd={() => handleOnWorkspaceTouchEnd(group)}
-                    onOpen={() => handleOnWorkspaceOpen?.(group.name)}
-                    onSelect={() => handleOnWorkspaceSelect?.(group.name)}
-                    onRename={() => handleOnWorkspaceRename?.(group)}
-                    onClone={() => handleOnWorkspaceClone?.(group)}
-                    onDelete={() => handleOnWorkspaceDelete?.(group.name)}
+                    onOpen={() => onOpen?.(group.name)}
+                    onSelect={() => toggleSelected?.(group.name)}
+                    onClone={() => onClone?.(group.name)}
+                    onArchive={() => onArchive?.(group.name)}
+                    onRestore={() => onRestore?.(group.name)}
+                    onDelete={() => onDelete?.(group.name)}
                 />
             ))}
             {groupped && groups.flatMap(group => group.workspaces).map(workspace => (
@@ -82,13 +59,12 @@ export const WorkspaceTableView: FC<{
                     columns={columns}
                     data={workspace}
                     isSelected={selectedIds.some(selectedId => selectedId === workspace.workspaceId)}
-                    onTouchStart={() => handleOnWorkspaceTouchStart(workspace)}
-                    onTouchEnd={() => handleOnWorkspaceTouchEnd(workspace)}
-                    onOpen={() => handleOnWorkspaceOpen?.(workspace.workspaceId)}
-                    onSelect={() => handleOnWorkspaceSelect?.(workspace.workspaceId)}
-                    onRename={() => handleOnWorkspaceRename?.(workspace)}
-                    onClone={() => handleOnWorkspaceClone?.(workspace)}
-                    onDelete={() => handleOnWorkspaceDelete?.(workspace.workspaceId)}
+                    onOpen={() => onOpen?.(workspace.workspaceId)}
+                    onSelect={() => toggleSelected?.(workspace.workspaceId)}
+                    onClone={() => onClone?.(workspace.workspaceId)}
+                    onArchive={() => onArchive?.(workspace.workspaceId)}
+                    onRestore={() => onRestore?.(workspace.workspaceId)}
+                    onDelete={() => onDelete?.(workspace.workspaceId)}
                 />
             ))}
             {!groupped && workspaces.map(workspace => (
@@ -97,13 +73,12 @@ export const WorkspaceTableView: FC<{
                     columns={columns}
                     data={workspace}
                     isSelected={selectedIds.some(selectedId => selectedId === workspace.workspaceId)}
-                    onTouchStart={() => handleOnWorkspaceTouchStart(workspace)}
-                    onTouchEnd={() => handleOnWorkspaceTouchEnd(workspace)}
-                    onOpen={() => handleOnWorkspaceOpen?.(workspace.workspaceId)}
-                    onSelect={() => handleOnWorkspaceSelect?.(workspace.workspaceId)}
-                    onRename={() => handleOnWorkspaceRename?.(workspace)}
-                    onClone={() => handleOnWorkspaceClone?.(workspace)}
-                    onDelete={() => handleOnWorkspaceDelete?.(workspace.workspaceId)}
+                    onOpen={() => onOpen?.(workspace.workspaceId)}
+                    onSelect={() => toggleSelected?.(workspace.workspaceId)}
+                    onClone={() => onClone?.(workspace.workspaceId)}
+                    onArchive={() => onArchive?.(workspace.workspaceId)}
+                    onRestore={() => onRestore?.(workspace.workspaceId)}
+                    onDelete={() => onDelete?.(workspace.workspaceId)}
                 />
             ))}
         </WorkspaceTable>

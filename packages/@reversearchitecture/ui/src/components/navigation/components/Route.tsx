@@ -1,4 +1,4 @@
-import { Button, IconButton } from "@chakra-ui/react";
+import { Button, IconButton, Tooltip } from "@chakra-ui/react";
 import { FC } from "react";
 import { NavLink, To } from "react-router-dom";
 import { usePageSidebar } from "../../../components";
@@ -42,19 +42,21 @@ export const Route: FC<{
             {title}
         </Button>
     ) : (
-        <IconButton
-            as={to !== undefined ? NavLink : undefined}
-            aria-label={title}
-            isActive={isActive}
-            icon={icon}
-            isDisabled={isDisabled}
-            cursor={isDisabled ? "none" : "pointer"}
-            to={to}
-            title={title}
-            transitionProperty={"all"}
-            transitionDuration={"normal"}
-            transitionTimingFunction={"ease"}
-            onClick={onClick}
-        />
+        <Tooltip hasArrow label={title} placement={"right"}>
+            <IconButton
+                as={to !== undefined ? NavLink : undefined}
+                aria-label={title}
+                isActive={isActive}
+                icon={icon}
+                isDisabled={isDisabled}
+                cursor={isDisabled ? "none" : "pointer"}
+                to={to}
+                title={title}
+                transitionProperty={"all"}
+                transitionDuration={"normal"}
+                transitionTimingFunction={"ease"}
+                onClick={onClick}
+            />
+        </Tooltip>
     );
 }

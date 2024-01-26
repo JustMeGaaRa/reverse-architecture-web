@@ -69,7 +69,31 @@ export const WorkspaceCollection: FC<{
     onDelete,
 }) => {
     const { getLocalizedString } = useLocale();
-    const { remove, stack, unstack, archive, restore } = useWorkspaceCollection();
+    const { clone, remove, stack, unstack, archive, restore } = useWorkspaceCollection();
+
+    const handleOnCloneSingle = useCallback((selectedId: string) => {
+        const selected = workspaces.find(workspace => {
+            return workspace.workspaceId === selectedId
+                || workspace.group === selectedId;
+        });
+        clone(selected);
+    }, [clone, workspaces]);
+
+    const handleOnArhiveSingle = useCallback((selectedId: string) => {
+        const selected = workspaces.find(workspace => {
+            return workspace.workspaceId === selectedId
+                || workspace.group === selectedId;
+        });
+        archive(selected);
+    }, [archive, workspaces]);
+
+    const handleOnRestoreSingle = useCallback((selectedId: string) => {
+        const selected = workspaces.find(workspace => {
+            return workspace.workspaceId === selectedId
+                || workspace.group === selectedId;
+        });
+        restore(selected);
+    }, [restore, workspaces]);
 
     const handleOnDeleteSingle = useCallback((selectedId: string) => {
         const selected = workspaces.find(workspace => {
@@ -79,15 +103,15 @@ export const WorkspaceCollection: FC<{
         remove(selected);
     }, [remove, workspaces]);
 
-    const handleOnDeleteMultiple = useCallback((selectedIds: string[]) => {
+    const handleOnCloneMultiple = useCallback((selectedIds: string[]) => {
         const selected = workspaces.filter(workspace => {
             return selectedIds.some(selectedId => {
                 return workspace.workspaceId === selectedId
                     || workspace.group === selectedId;
             })
         });
-        selected.forEach(workspace => remove(workspace));
-    }, [remove, workspaces]);
+        selected.forEach(workspace => clone(workspace));
+    }, [clone, workspaces]);
 
     const handleOnStack = useCallback((selectedIds: string[]) => {
         const selected = workspaces.filter(workspace => {
@@ -111,7 +135,7 @@ export const WorkspaceCollection: FC<{
         unstack(selected);
     }, [unstack, workspaces]);
 
-    const handleOnArhive = useCallback((selectedIds: string[]) => {
+    const handleOnArhiveMultiple = useCallback((selectedIds: string[]) => {
         const selected = workspaces.filter(workspace => {
             return selectedIds.some(selectedId => {
                 return workspace.workspaceId === selectedId
@@ -121,7 +145,7 @@ export const WorkspaceCollection: FC<{
         selected.forEach(workspace => archive(workspace));
     }, [archive, workspaces]);
 
-    const handleOnRestore = useCallback((selectedIds: string[]) => {
+    const handleOnRestoreMultiple = useCallback((selectedIds: string[]) => {
         const selected = workspaces.filter(workspace => {
             return selectedIds.some(selectedId => {
                 return workspace.workspaceId === selectedId
@@ -130,6 +154,16 @@ export const WorkspaceCollection: FC<{
         });
         selected.forEach(workspace => restore(workspace));
     }, [restore, workspaces]);
+
+    const handleOnDeleteMultiple = useCallback((selectedIds: string[]) => {
+        const selected = workspaces.filter(workspace => {
+            return selectedIds.some(selectedId => {
+                return workspace.workspaceId === selectedId
+                    || workspace.group === selectedId;
+            })
+        });
+        selected.forEach(workspace => remove(workspace));
+    }, [remove, workspaces]);
 
     return (
         <ErrorBoundary
@@ -153,6 +187,9 @@ export const WorkspaceCollection: FC<{
                         workspaces={workspaces}
                         groupped={groupped}
                         onOpen={onClick}
+                        onClone={handleOnCloneSingle}
+                        onArchive={handleOnArhiveSingle}
+                        onRestore={handleOnRestoreSingle}
                         onDelete={handleOnDeleteSingle}
                     />
                 )}
@@ -161,15 +198,19 @@ export const WorkspaceCollection: FC<{
                         workspaces={workspaces}
                         groupped={groupped}
                         onOpen={onClick}
+                        onClone={handleOnCloneSingle}
+                        onArchive={handleOnArhiveSingle}
+                        onRestore={handleOnRestoreSingle}
                         onDelete={handleOnDeleteSingle}
                     />
                 )}
                 <WorkspaceOptionsAutoHideWrapper>
                     <WorkspaceOptionsToolbar
+                        onClone={handleOnCloneMultiple}
                         onStack={handleOnStack}
                         onUnstack={handleOnUnstack}
-                        onArchive={handleOnArhive}
-                        onRestore={handleOnRestore}
+                        onArchive={handleOnArhiveMultiple}
+                        onRestore={handleOnRestoreMultiple}
                         onRemove={handleOnDeleteMultiple}
                     />
                 </WorkspaceOptionsAutoHideWrapper>

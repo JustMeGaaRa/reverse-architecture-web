@@ -5,12 +5,14 @@ import { FC, PropsWithChildren, useCallback } from "react";
 import { useWorkspaceSelection, useWorkspaceCollectionOptions } from "../hooks";
 
 export const WorkspaceOptionsToolbar: FC<{
+    onClone?: (selectedIds: string[]) => void;
     onStack?: (selectedIds: string[]) => void;
     onUnstack?: (selectedIds: string[]) => void;
     onArchive?: (selectedIds: string[]) => void;
     onRestore?: (selectedIds: string[]) => void;
     onRemove?: (selectedIds: string[]) => void;
 }> =({
+    onClone,
     onStack,
     onUnstack,
     onArchive,
@@ -23,6 +25,10 @@ export const WorkspaceOptionsToolbar: FC<{
     const handleOnCancelSelection = useCallback(() => {
         clearSelected();
     }, [clearSelected]);
+
+    const handleOnWorkspaceClone = useCallback(() => {
+        onClone?.(selectedIds);
+    }, [onClone, selectedIds]);
 
     const handleOnWorkspacesStack = useCallback(() => {
         onStack?.(selectedIds);
@@ -83,6 +89,7 @@ export const WorkspaceOptionsToolbar: FC<{
                         icon={<Icon as={Copy} boxSize={5} />}
                         isDisabled={!clone.isEnabled}
                         title={"clone workspace"}
+                        onClick={handleOnWorkspaceClone}
                     />
                 )}
                 {archive.isVisible && (

@@ -1,16 +1,29 @@
-import { FC, PropsWithChildren } from "react";
+import React, { FC, PropsWithChildren } from "react";
 
-export const ErrorBoundary: FC<PropsWithChildren<{
+type ErrorBoundaryProps = PropsWithChildren<{
     fallback: React.ReactElement;
-}>> = ({
-    children,
-    fallback
-}) => {
-    // TODO: implement error boundary
-    
-    return (
-        <>
-            {children}
-        </>
-    )
+}>;
+
+type ErrorBoundaryState = {
+    hasError: boolean;
+}
+
+export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+    constructor(props: ErrorBoundaryProps) {
+        super(props);
+        this.state = { hasError: false };
+    }
+
+    static getDerivedStateFromError(error) {
+        // NOTE: update state so the next render will show the fallback UI.
+        return { hasError: true };
+    }
+
+    render() {
+        if (this.state.hasError) {
+            return this.props.fallback;
+        }
+        
+        return this.props.children;
+    }
 }

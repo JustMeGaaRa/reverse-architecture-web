@@ -5,6 +5,7 @@ export const colors = {
         "black-moon": "#161819"
     },
     surface: {
+        "tinted-white-30": "rgba(255, 255, 255, 0.30)",
         "tinted-white-20": "rgba(255, 255, 255, 0.20)",
         "tinted-white-10": "rgba(255, 255, 255, 0.10)",
         "tinted-white-5": "rgba(255, 255, 255, 0.05)",
@@ -14,6 +15,7 @@ export const colors = {
         "tinted-black-10": "rgba(0, 0, 0, 0.10)",
         "tinted-black-5": "rgba(0, 0, 0, 0.05)",
         "tinted-black-2": "rgba(0, 0, 0, 0.02)",
+        "tinted-black-1": "rgba(0, 0, 0, 0.01)",
     },
     gray: {
         1000: "#E8E8E8",

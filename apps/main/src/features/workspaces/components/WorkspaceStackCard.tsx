@@ -12,6 +12,8 @@ export const WorkspaceStackCard: FC<{
     onRename?: () => void;
     onSelect?: () => void;
     onClone?: () => void;
+    onArchive?: () => void;
+    onRestore?: () => void;
     onDelete?: MouseEventHandler<HTMLButtonElement>;
 }> = ({
     group,
@@ -22,6 +24,8 @@ export const WorkspaceStackCard: FC<{
     onSelect,
     onRename,
     onClone,
+    onArchive,
+    onRestore,
     onDelete
 }) => {
     const [first, second, third, ...rest] = group.workspaces;
@@ -50,6 +54,8 @@ export const WorkspaceStackCard: FC<{
                     lastModifiedDate={group.lastModifiedDate}
                     onRename={onRename}
                     onClone={onClone}
+                    onArchive={onArchive}
+                    onRestore={onRestore}
                     onDelete={onDelete}
                 />
             </CardFooter>

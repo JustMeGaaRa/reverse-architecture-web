@@ -3,77 +3,133 @@ import { createMultiStyleConfigHelpers, defineStyle } from "@chakra-ui/react";
 import { mode } from "@chakra-ui/theme-tools";
 
 const {
-    defineMultiStyleConfig,
-    definePartsStyle
+    definePartsStyle,
+    defineMultiStyleConfig
 } = createMultiStyleConfigHelpers(menuAnatomy.keys);
-
-const commandStyle = defineStyle((props) => ({
-
-}));
-
-const groupStyle = defineStyle((props) => ({
-
-}));
-
-const iconStyle = defineStyle((props) => ({
-
-}));
-
-const itemStyle = defineStyle((props) => ({
-    background: mode("", "transparent")(props),
-    borderRadius: "8px",
-    color: mode("", "white")(props),
-    _hover: {
-        backgroundColor: mode("", "gray.100")(props),
-    },
-    _active: {
-        backgroundColor: mode("", "gray.100")(props),
-        color: mode("", "yellow.900")(props),
-    },
-    _disabled: {
-        backgroundColor: mode("", "transparent")(props),
-        color: mode("", "gray.200")(props),
-    }
-}));
-
-const listStyleStyle = defineStyle((props) => ({
-    backgroundColor: mode("", "basic.black-moon")(props),
-    borderColor: mode("", "gray.200")(props),
-    borderRadius: "14px",
-    padding: "8px"
-}));
-
-const menuStyle = defineStyle((props) => ({
-
-}));
-
-const menuButtonStyle = defineStyle((props) => ({
-
-}));
-
-const buttonStyle = defineStyle((props) => ({
-
-}));
-
-const dividerStyle = defineStyle((props) => ({
-
-}));
-
-const groupTitleStyle = defineStyle((props) => ({
-
-}));
 
 export const Menu = defineMultiStyleConfig({
     baseStyle: definePartsStyle((props) => ({
-        command: commandStyle(props),
-        group: groupStyle(props),
-        icon: iconStyle(props),
-        item: itemStyle(props),
-        list: listStyleStyle(props),
-        menu: menuStyle(props),
-        menuButton: menuButtonStyle(props),
-        button: buttonStyle(props),
-        divider: dividerStyle(props),
-        groupTitle: groupTitleStyle(props)
-    }))
+        command: {
+            
+        },
+        group: {
+            
+        },
+        icon: {
+            
+        },
+        item: {
+            backgroundColor: mode("", "transparent")(props),
+            color: mode("", "gray.900")(props),
+
+            _hover: {
+                backgroundColor: mode("", "surface.tinted-white-10")(props),
+                backdropFilter: "blur(32px)",
+                boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
+                color: mode("", "white")(props),
+            },
+            _active: {
+                backgroundColor: mode("", "surface.tinted-white-5")(props),
+                backdropFilter: "blur(32px)",
+                boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
+                color: mode("", "gray.500")(props),
+            },
+            _selected: {
+                backgroundColor: mode("", "surface.tinted-white-10")(props),
+                backdropFilter: "blur(32px)",
+                boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
+                color: mode("", `${props.colorScheme}.600`)(props),
+
+                _active: {
+                    backgroundColor: mode("", "surface.tinted-white-5")(props),
+                    backdropFilter: "blur(32px)",
+                    boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
+                    color: mode("", `${props.colorScheme}.500`)(props),
+                }
+            },
+            _disabled: {
+                color: mode("", "gray.400")(props),
+            }
+        },
+        list: {
+            backgroundColor: mode("", "surface.tinted-white-5")(props),
+            backdropFilter: "blur(32px)",
+            boxShadow: mode("", "0px 4px 8px 0px rgba(0, 0, 0, 0.10)")(props),
+            borderWidth: "2px",
+            borderColor: mode("", "surface.tinted-white-30")(props),
+        },
+        menu: {
+            
+        },
+        menuButton: {
+            
+        },
+        button: {
+            
+        },
+        divider: {
+            
+        },
+        groupTitle: {
+            
+        }
+    })),
+    sizes: {
+        xs: {
+            item: {
+                borderRadius: 8,
+                height: "24px",
+                paddingX: "4px",
+                paddingY: "0px",
+                textStyle: "b3"
+            },
+            list: {
+                borderRadius: 16,
+                padding: "8px",
+            }
+        },
+        sm: {
+            item: {
+                borderRadius: 12,
+                height: "32px",
+                paddingX: "8px",
+                paddingY: "6px",
+                textStyle: "b3"
+            },
+            list: {
+                borderRadius: 16,
+                padding: "8px",
+            }
+        },
+        md: {
+            item: {
+                borderRadius: 16,
+                height: "40px",
+                paddingX: "10px",
+                paddingY: "8px",
+                textStyle: "b2"
+            },
+            list: {
+                borderRadius: 20,
+                padding: "8px",
+            }
+        },
+        lg: {
+            item: {
+                borderRadius: 16,
+                height: "48px",
+                paddingX: "12px",
+                paddingY: "12px",
+                textStyle: "b2"
+            },
+            list: {
+                borderRadius: 20,
+                padding: "8px",
+            }
+        },
+    },
+    defaultProps: {
+        colorScheme: "lime",
+        size: "md"
+    }
 });

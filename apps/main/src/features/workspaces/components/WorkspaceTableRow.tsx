@@ -4,6 +4,7 @@ import {
     IconButton,
     Menu,
     MenuButton,
+    MenuDivider,
     MenuItem,
     MenuList,
     Td,
@@ -31,6 +32,8 @@ export const WorkspaceTableRow: FC<{
     onSelect?: () => void;
     onRename?: () => void;
     onClone?: () => void;
+    onArchive?: () => void;
+    onRestore?: () => void;
     onDelete?: MouseEventHandler<HTMLButtonElement>;
 }> = ({
     data,
@@ -43,6 +46,8 @@ export const WorkspaceTableRow: FC<{
     onSelect,
     onRename,
     onClone,
+    onArchive,
+    onRestore,
     onDelete
 }) => {
     return (
@@ -132,6 +137,13 @@ export const WorkspaceTableRow: FC<{
                         <MenuItem icon={<Icon as={Copy} boxSize={4} />} onClick={onClone}>
                             Clone
                         </MenuItem>
+                        <MenuItem icon={<Icon as={BinMinusIn} boxSize={4} />} onClick={onArchive}>
+                            Archive
+                        </MenuItem>
+                        <MenuItem icon={<Icon as={BinMinusIn} boxSize={4} />} onClick={onRestore}>
+                            Restore
+                        </MenuItem>
+                        <MenuDivider />
                         <MenuItem icon={<Icon as={BinMinusIn} boxSize={4} />} onClick={onDelete}>
                             Delete
                         </MenuItem>

@@ -4,6 +4,7 @@ import {
     BreadcrumbLink,
     Button,
     Icon,
+    Text
 } from "@chakra-ui/react";
 import {
     ViewKeys,
@@ -66,17 +67,16 @@ export const WorkspaceViewBreadcrumbs: FC<{
                         isCurrentPage={link.isActive}
                     >
                         <BreadcrumbLink
-                            as={Button}
                             aria-selected={link.isActive}
                             isCurrentPage={link.isActive}
-                            leftIcon={<Icon as={AppleShortcuts} boxSize={4} />}
                             marginX={1}
-                            size={"xs"}
+                            alignItems={"center"}
+                            justifyContent={"center"}
                             title={link.title}
-                            variant={"toolitem"}
                             onClick={() => handleOnViewItemClick(link.data)}
                         >
-                            {link.title}
+                            <Icon as={AppleShortcuts} boxSize={4} />
+                            <Text noOfLines={1}>{link.title}</Text>
                         </BreadcrumbLink>
                     </BreadcrumbItem>
                 ))}

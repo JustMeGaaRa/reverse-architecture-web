@@ -68,12 +68,14 @@ export const useWorkspaceCollection = () => {
     const archive = useCallback((workspace: WorkspaceInfo) => {
         setWorkspaces(workspaces => workspaces.filter(existing => workspace.workspaceId !== existing.workspaceId));
         setArchived(archived => ([ ...archived, workspace ]));
-    }, [setWorkspaces, setArchived]);
+        setSelectedIds([]);
+    }, [setWorkspaces, setArchived, setSelectedIds]);
 
     const restore = useCallback((workspace: WorkspaceInfo) => {
-        setWorkspaces(workspaces => workspaces.filter(existing => workspace.workspaceId !== existing.workspaceId));
-        setArchived(archived => ([ ...archived, workspace ]));
-    }, [setWorkspaces, setArchived]);
+        setWorkspaces(workspaces => [ ...workspaces, workspace ]);
+        setArchived(archived => (archived.filter(existing => workspace.workspaceId !== existing.workspaceId)));
+        setSelectedIds([]);
+    }, [setWorkspaces, setArchived, setSelectedIds]);
 
     const remove = useCallback((workspace: WorkspaceInfo) => {
         setWorkspaces(workspaces => workspaces.filter(existing => workspace.workspaceId !== existing.workspaceId));

@@ -22,10 +22,12 @@ import {
     ContextSheetPanel,
     ContextSheetTabContent,
     ContextSheetTitle,
+    ErrorBoundary,
     PageHomeButton,
     ReverseArchitectureSvg,
     Route,
     RouteList,
+    useLocale,
     usePageHeader,
     usePageSidebar,
 } from "@reversearchitecture/ui";
@@ -70,6 +72,7 @@ import {
 } from "workspace";
 import {
     CommentThreadList,
+    LocaleKeys,
     useCommentingMode,
     useCommentsStore,
     useSnackbar,
@@ -100,9 +103,9 @@ export enum WorkspaceContentPanel {
 
 export const WorkspaceCollaborativeEditor: FC = () => {
     const navigate = useNavigate();
+    const { getLocalizedString } = useLocale();
     const { setHeaderContent } = usePageHeader();
     const { setSidebarContent, setShowSidebarButton, setSidebarOpen } = usePageSidebar();
-    const { snackbar } = useSnackbar();
 
     const [ structurizrText, setStructurizrDslText ] = useState("");
     const { parseStructurizr } = useStructurizrParser();
@@ -258,7 +261,7 @@ export const WorkspaceCollaborativeEditor: FC = () => {
                     <Breadcrumb>
                         <BreadcrumbItem>
                             <BreadcrumbLink as={NavLink} to={"/workspaces"} marginX={2}>
-                                <Text textStyle={"b2"} color={"gray.900"}>
+                                <Text textStyle={"b2"} color={"gray.900"} noOfLines={1}>
                                     My Workspaces
                                 </Text>
                             </BreadcrumbLink>
@@ -271,7 +274,7 @@ export const WorkspaceCollaborativeEditor: FC = () => {
                                     defaultValue={workspace.name}
                                     onBlur={handleOnWorkspaceNameChange}
                                 >
-                                    <EditablePreview />
+                                    <EditablePreview noOfLines={1} />
                                     <EditableInput />
                                 </Editable>
                             </BreadcrumbLink>
@@ -424,19 +427,25 @@ export const WorkspaceCollaborativeEditor: FC = () => {
                     outline={presentationEnabled ? `${presenterInfo?.color}.600` : undefined}
                     outlineWidth={presentationEnabled ? [2, 2, 2, 2] : [2, 2, 0, 0]}
                 >
-                    <WorkspaceViewer
-                        workspace={workspace}
-                        initialView={currentView}
-                        onViewClick={handleOnWorkspaceViewClick}
+                    <ErrorBoundary
+                        fallback={(
+                            <>{getLocalizedString(LocaleKeys.ERROR_LOADING_WORKSPACES)}</>
+                        )}
                     >
-                        <CollaboratingUserPane users={currentViewUsers} />
-                        <DiscussionsPane discussions={currentViewDiscussions} />
-                        <PresenterInfo presenter={presenterInfo} />
-                        <WorkspaceViewBreadcrumbs isVisible={isDiagrammingMode} />
-                        <WorkspaceUndoRedoControls isVisible={!presentationEnabled} />
-                        <WorkspaceActionsToolbar />
-                        <WorkspaceZoomControls />
-                    </WorkspaceViewer>
+                        <WorkspaceViewer
+                            workspace={workspace}
+                            initialView={currentView}
+                            onViewClick={handleOnWorkspaceViewClick}
+                        >
+                            <CollaboratingUserPane users={currentViewUsers} />
+                            <DiscussionsPane discussions={currentViewDiscussions} />
+                            <PresenterInfo presenter={presenterInfo} />
+                            <WorkspaceViewBreadcrumbs isVisible={isDiagrammingMode} />
+                            <WorkspaceUndoRedoControls isVisible={!presentationEnabled} />
+                            <WorkspaceActionsToolbar />
+                            <WorkspaceZoomControls />
+                        </WorkspaceViewer>
+                    </ErrorBoundary>
                 </ContextSheet>
             </ContextSheetTabContent>
         </ContextSheet>
