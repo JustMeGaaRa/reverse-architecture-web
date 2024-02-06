@@ -70,7 +70,6 @@ export const CommentCard: FC<{
                 showResolve={showResolve}
                 showOptions={showOptions}
                 showReplies={showReplies}
-
             />
         </Flex>
     )

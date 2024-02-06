@@ -1,6 +1,4 @@
-import { SearchItem } from "@reversearchitecture/ui";
-import { Page } from "iconoir-react";
-import { ISearchStrategy } from "../types";
+import { ISearchStrategy, SearchItem } from "../types";
 
 export class RecentSearchStrategy implements ISearchStrategy {
     public readonly name: string = "Recent";

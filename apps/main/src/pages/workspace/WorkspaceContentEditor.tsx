@@ -47,7 +47,8 @@ import {
     useMemo,
     useState
 } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { v4 } from "uuid";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import {
     IViewDefinition,
     ViewType,
@@ -71,6 +72,7 @@ import {
     useFollowUserMode
 } from "workspace";
 import {
+    CommentThread,
     CommentThreadList,
     LocaleKeys,
     useCommentingMode,
@@ -103,6 +105,7 @@ export enum WorkspaceContentPanel {
 
 export const WorkspaceCollaborativeEditor: FC = () => {
     const navigate = useNavigate();
+    const { workspaceId } = useParams<{ workspaceId: string }>();
     const { getLocalizedString } = useLocale();
     const { setHeaderContent } = usePageHeader();
     const { setSidebarContent, setShowSidebarButton, setSidebarOpen } = usePageSidebar();
@@ -167,13 +170,6 @@ export const WorkspaceCollaborativeEditor: FC = () => {
         setShowSidebarButton(false);
         setSidebarOpen(false);
         setSidebarContent({
-            logo: (
-                <PageHomeButton
-                    icon={ReverseArchitectureSvg}
-                    title={"RE:STRUCT"}
-                    onClick={() => navigate("/")}
-                />
-            ),
             top:(
                 <></>
             ),
@@ -367,6 +363,11 @@ export const WorkspaceCollaborativeEditor: FC = () => {
     const handleOnWorkspaceViewClick = useCallback((event: React.MouseEvent) => {
         if (isCommentingModeEnabled) {
             // TODO: get viewport, translate position and save comment
+            const discussion: CommentThread = {
+                workspaceId: workspaceId,
+                commentThreadId: v4(),
+                comments: []
+            }
         }
     }, [isCommentingModeEnabled]);
 

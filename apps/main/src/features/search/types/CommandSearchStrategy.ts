@@ -1,6 +1,5 @@
-import { SearchItem } from "@reversearchitecture/ui";
 import { TerminalTag } from "iconoir-react";
-import { ISearchStrategy } from "../types";
+import { ISearchStrategy, SearchItem } from "../types";
 
 export class CommandSearchStrategy implements ISearchStrategy {
     public readonly name: string = "Commands";
@@ -26,7 +25,7 @@ export class CommandSearchStrategy implements ISearchStrategy {
         ];
 
         if (query.trim() === "") {
-            return Promise.resolve(items.slice(0, 3));
+            return Promise.resolve(items);
         }
 
         return Promise.resolve(items.filter(item => {

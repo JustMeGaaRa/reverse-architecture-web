@@ -10,24 +10,24 @@ import {
 import {
     Route,
     RouteList,
-    ReverseArchitectureSvg,
-    PageHomeButton,
     usePageSidebar,
     usePageHeader,
 } from "@reversearchitecture/ui";
-import { FC, PropsWithChildren, useEffect } from "react";
+import { FC, PropsWithChildren, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router";
+import { useSearchParams } from "react-router-dom";
 import { CommandCenter } from "../../features";
+import { HelpShortcutsModal } from "./HelpShortcutsModal";
 
 export const HomePageLayoutContent: FC<PropsWithChildren> = ({ children }) => {
     const { setShowSidebarButton, setSidebarContent } = usePageSidebar();
     const { setHeaderContent } = usePageHeader();
+    const [ searchParams, setSearchParams ] = useSearchParams();
     const navigate = useNavigate();
 
     // reset sidebar and header content
     useEffect(() => {
         setSidebarContent({
-            logo: (<></>),
             top: (<></>),
             middle: (<></>),
             bottom: (<></>)
@@ -43,13 +43,6 @@ export const HomePageLayoutContent: FC<PropsWithChildren> = ({ children }) => {
     useEffect(() => {
         setShowSidebarButton(true);
         setSidebarContent({
-            logo: (
-                <PageHomeButton
-                    icon={ReverseArchitectureSvg}
-                    title={"RE:STRUCT"}
-                    onClick={() => navigate("/")}
-                />
-            ),
             top: (
                 <RouteList>
                     <Route
@@ -98,16 +91,27 @@ export const HomePageLayoutContent: FC<PropsWithChildren> = ({ children }) => {
     useEffect(() => {
         setHeaderContent({
             middle: (
-                <Box width={["sm", "md", "lg"]}>
-                    <CommandCenter />
-                </Box>
+                <CommandCenter width={["sm", "md", "lg"]} />
             ),
         })
     }, [setHeaderContent]);
 
+    const isOpen = searchParams.get("help") === "commands";
+
+    const onClose = useCallback(() => {
+        setSearchParams(params => {
+            params.delete("help");
+            return params;
+        })
+    }, [setSearchParams]);
+
     return (
         <>
             {children}
+            <HelpShortcutsModal
+                isOpen={isOpen}
+                onClose={onClose}
+            />
         </>
     )
 }

@@ -14,22 +14,29 @@ import {
     PageHeaderSection,
     PageSidebarSection,
     usePageHeader,
-    ContextLevelProvider
+    ContextLevelProvider,
+    PageHomeButton,
+    ReverseArchitectureSvg
 } from "@reversearchitecture/ui";
 import { FC, PropsWithChildren } from "react";
-import { Outlet } from "react-router";
+import { Outlet, useNavigate } from "react-router";
 import { AccountMenu } from "./home";
 
 export const LayoutPage: FC<PropsWithChildren> = () => {
     const { sidebarOptions } = usePageSidebar();
     const { headerOptions } = usePageHeader();
+    const navigate = useNavigate();
 
     return (
         <ContextLevelProvider>
             <Page>
                 <PageSidebar>
                     <Flex padding={3}>
-                        {sidebarOptions.sections.logo}
+                        <PageHomeButton
+                            icon={ReverseArchitectureSvg}
+                            title={"RE:STRUCT"}
+                            onClick={() => navigate("/")}
+                        />
                     </Flex>
 
                     <Flex height={"100%"} direction={"column"} padding={3}>

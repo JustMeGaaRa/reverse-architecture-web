@@ -1,7 +1,6 @@
-import { SearchItem } from "@reversearchitecture/ui";
 import { Page } from "iconoir-react";
 import { WorkspaceApi } from "../../workspaces";
-import { ISearchStrategy } from "../types";
+import { ISearchStrategy, SearchItem } from "../types";
 
 export class WorkspaceSearchStrategy implements ISearchStrategy {
     public readonly name: string = "Workspaces";

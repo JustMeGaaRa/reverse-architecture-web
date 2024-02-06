@@ -1,4 +1,4 @@
-import { SearchItem } from "@reversearchitecture/ui";
+import { SearchItem } from "./SearchGroupResult";
 
 export interface ISearchStrategy {
     readonly name: string;

@@ -1,4 +1,5 @@
 export * from "./AccountMenu";
+export * from "./HelpShortcutsModal";
 export * from "./RepositorySelectModal";
 export * from "./HomePageLayoutContent";
 export * from "./community";

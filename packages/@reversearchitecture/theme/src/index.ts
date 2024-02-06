@@ -30,7 +30,6 @@ export const RestructTheme =  extendTheme({
         Divider,
         Input,
         Menu,
-        Modal,
         Tabs,
         Tag
     },

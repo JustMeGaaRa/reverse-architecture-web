@@ -1,7 +1,6 @@
-import { SearchItem } from "@reversearchitecture/ui";
 import { Page } from "iconoir-react";
 import { CommunityApi } from "../../community";
-import { ISearchStrategy } from "../types";
+import { ISearchStrategy, SearchItem } from "../types";
 
 export class CommunitySearchStrategy implements ISearchStrategy {
     public readonly name: string = "Community";

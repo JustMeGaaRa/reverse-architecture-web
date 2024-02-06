@@ -1,7 +1,10 @@
 import { Box, Portal } from "@chakra-ui/react";
 import { FC } from "react";
+import { useSearchMenu } from "../hooks";
 
-export const SearchOverlay: FC<{ isOpen: boolean }> = ({ isOpen }) => {
+export const SearchMenuOverlay: FC = () => {
+    const { isOpen, onClose } = useSearchMenu();
+
     return (
         <Portal>
             <Box
@@ -12,6 +15,7 @@ export const SearchOverlay: FC<{ isOpen: boolean }> = ({ isOpen }) => {
                 left={0}
                 top={0}
                 display={isOpen ? "block" : "none"}
+                onClick={onClose}
             />
         </Portal>
     )
