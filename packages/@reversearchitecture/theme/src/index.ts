@@ -29,6 +29,7 @@ export const RestructTheme =  extendTheme({
         Checkbox,
         Divider,
         Input,
+        Modal,
         Menu,
         Tabs,
         Tag

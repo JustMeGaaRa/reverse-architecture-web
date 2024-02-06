@@ -120,7 +120,10 @@ export const CommunityTemplateModal: FC<{
             size={"full"}
             onClose={onClose}
         >
-            <ModalOverlay />
+            <ModalOverlay
+                backdropFilter={"auto"}
+                backdropBlur={"2px"}
+            />
             <ModalContent>
                 <Flex
                     bottom={0}

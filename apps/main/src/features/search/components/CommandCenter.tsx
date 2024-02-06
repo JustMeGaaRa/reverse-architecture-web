@@ -130,7 +130,7 @@ export const CommandCenter: FC<{
     }, [onClose, selectedIndex]);
 
     const handleOnSearchItemTemplateClick = useCallback(() => {
-        navigate(`/community/preview=?${"big-bank-plc"}`);
+        navigate(`/community?preview=${"big-bank-plc"}`);
         onClose();
     }, [navigate, onClose]);
 
