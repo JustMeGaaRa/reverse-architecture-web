@@ -51,16 +51,18 @@ export const MessageContent: FC<{
 }
 
 export const ErrorMessage: FC<{
+    errorTitle: string
     errorDescription: string;
     action?: React.ReactElement;
 }> = ({
+    errorTitle,
     errorDescription,
     action
 }) => {
     return (
         <MessageContent
             icon={EmojiSad}
-            title={"Something went wrong"}
+            title={errorTitle}
             description={errorDescription}
             action={action}
         />
@@ -68,16 +70,18 @@ export const ErrorMessage: FC<{
 }
 
 export const NoContentMessage: FC<{
+    actionTitle: string;
     actionDescription: string;
     action?: React.ReactElement;
 }> = ({
+    actionTitle,
     actionDescription,
     action
 }) => {
     return (
         <MessageContent
             icon={Folder}
-            title={"No content"}
+            title={actionTitle}
             description={actionDescription}
             action={action}
         />
@@ -85,14 +89,16 @@ export const NoContentMessage: FC<{
 }
 
 export const LoadingMessage: FC<{
+    loadingTitle: string;
     loadingDescription: string;
 }> = ({
+    loadingTitle,
     loadingDescription
 }) => {
     return (
         <MessageContent
             icon={CloudDownload}
-            title={"Loading Data"}
+            title={loadingTitle}
             description={loadingDescription}
         />
     )

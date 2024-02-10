@@ -1,9 +1,11 @@
-export type SearchGroupResult = {
+export type SearchGroup = {
     title: string;
-    results: SearchItem[];
+    link: string;
+    items: SearchItem[];
 };
 
 export type SearchItem = {
-    text: string;
+    title: string;
+    link: string;
     icon: any;
 };

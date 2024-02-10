@@ -20,6 +20,7 @@ export class ErrorBoundaryPage extends React.Component<PropsWithChildren, { hasE
         if (this.state.hasError) {
             return (
                 <ErrorMessage
+                    errorTitle={"An error occurred"}
                     errorDescription={this.state.error?.message}
                     action={(
                         <Button

@@ -1,40 +1,39 @@
 import {
-    Highlight,
+    Button,
+    ButtonGroup,
     Icon,
     IconButton,
     Input,
     InputGroup,
     InputLeftElement,
     InputRightElement,
-    Link,
     useDisclosure,
     VStack,
 } from "@chakra-ui/react";
 import {
     SearchMenu,
     SearchMenuOverlay,
-    SearchMenuGroup,
-    SearchMenuItem,
     SearchMenuList,
     SearchMenuTrigger,
     SearchMenuDivider,
     useLocale,
 } from "@reversearchitecture/ui";
 import {
-    Page,
     Search as SearchIcon,
     Terminal,
     Xmark,
 } from "iconoir-react";
-import { FC, PropsWithChildren, useCallback, useRef, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { FC, useCallback, useRef, useState } from "react";
 import { LocaleKeys } from "../../localization";
-import { CommandCenterResultGroup, CommandCenterResultItem, SearchNoResultsMessage } from "../components";
+import {
+    CommandCenterResultGroup,
+    CommandCenterResultItem,
+    SearchNoResultsMessage
+} from "../components";
 import {
     CommandSearchStrategy,
     CommunitySearchStrategy,
-    ISearchStrategy,
-    SearchItem,
+    SearchGroup,
     WorkspaceSearchStrategy
 } from "../types";
 
@@ -46,43 +45,27 @@ export const CommandCenter: FC<{
     onChange
 }) => {
     const searchRef = useRef<HTMLInputElement>(null);
-    const navigate = useNavigate();
-    const [ searchParams, setSearchParams ] = useSearchParams();
     const { getLocalizedString } = useLocale();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [ isClearable, setIsClearable ] = useState(false);
     const [ selectedIndex, setSelectedIndex ] = useState(0);
-    const [ workspaceResults, setWorkspaceResults ] = useState<SearchItem[]>([]);
-    const [ communityResults, setCommunityResults ] = useState<SearchItem[]>([]);
-    const [ commandsResults, setCommandsResults ] = useState<SearchItem[]>([]);
+    const [ searchGroups, setSearchGroups ] = useState<SearchGroup[]>([]);
 
     const search = useCallback((query: string) => {
-        const fetchSearchResults = async (strategy: ISearchStrategy, query: string) => {
-            return strategy.search(query.trim())
-                .then(results => {
-                    return {
-                        title: strategy.name,
-                        results: results
-                    }
-                })
-                .catch(error => {
-                    return {
-                        title: strategy.name,
-                        results: []
-                    }
-                })              
+        const fetchSearchGroups = async (query: string) => {
+            const communityResults = await new CommunitySearchStrategy().search(query.trim());
+            const workspaceResults = await new WorkspaceSearchStrategy().search(query.trim());
+            const commandsResults = await new CommandSearchStrategy().search(query.trim());
+
+            return [
+                communityResults,
+                workspaceResults,
+                commandsResults
+            ]
         }
 
-        fetchSearchResults(new CommunitySearchStrategy(), query)
-            .then(results => setCommunityResults(results.results))
-            .catch((error) => console.error(error));
-        
-        fetchSearchResults(new WorkspaceSearchStrategy(), query)
-            .then(results => setWorkspaceResults(results.results))
-            .catch((error) => console.error(error));
-        
-        fetchSearchResults(new CommandSearchStrategy(), query)
-            .then(results => setCommandsResults(results.results))
+        fetchSearchGroups(query)
+            .then(results => setSearchGroups(results))
             .catch((error) => console.error(error));
     }, []);
 
@@ -129,39 +112,6 @@ export const CommandCenter: FC<{
         }
     }, [onClose, selectedIndex]);
 
-    const handleOnSearchItemTemplateClick = useCallback(() => {
-        navigate(`/community?preview=${"big-bank-plc"}`);
-        onClose();
-    }, [navigate, onClose]);
-
-    const handleOnSearchItemWorkspaceClick = useCallback(() => {
-        navigate(`/workspace/${"big-bank-plc"}`);
-        onClose();
-    }, [navigate, onClose]);
-
-    const handleOnSearchItemCommandClick = useCallback(() => {
-        console.log("item clicked");
-        onClose();
-    }, [onClose]);
-
-    const handleOnSearchGroupCommunityClick = useCallback(() => {
-        navigate("/community");
-        onClose();
-    }, [navigate, onClose]);
-
-    const handleOnSearchGroupWorkspacesClick = useCallback(() => {
-        navigate("/workspaces");
-        onClose();
-    }, [navigate, onClose]);
-
-    const handleOnSearchGroupCommandsClick = useCallback(() => {
-        setSearchParams(params => {
-            params.set("help", "commands");
-            return new URLSearchParams(params);
-        })
-        onClose();
-    }, [setSearchParams, onClose]);
-
     return (
         <SearchMenu isOpen={isOpen} onClose={onClose}>
             <SearchMenuOverlay />
@@ -180,83 +130,49 @@ export const CommandCenter: FC<{
                         onKeyDown={handleOnSearchKeyDown}
                     />
                     <InputRightElement>
-                        {!isClearable && !isOpen ? (
-                            <IconButton
+                        <ButtonGroup gap={0} spacing={1} size={"sm"}>
+                            {isClearable && (
+                                <IconButton
+                                    aria-label={"clear search"}
+                                    icon={<Icon as={Xmark} boxSize={6} />}
+                                    size={"sm"}
+                                    variant={"ghost"}
+                                    title={"clear search"}
+                                    onClick={handleOnSearchClear}
+                                />
+                            )}
+                            <Button
                                 aria-label={"command center"}
-                                icon={<Icon as={Terminal} boxSize={6} />}
                                 size={"sm"}
                                 variant={"tonal"}
                                 title={"command center"}
                                 onClick={handleOnSearchCommand}
-                            />
-                        ) : (
-                            <IconButton
-                                aria-label={"clear search"}
-                                icon={<Icon as={Xmark} boxSize={6} />}
-                                size={"sm"}
-                                variant={"tonal"}
-                                title={"clear search"}
-                                onClick={handleOnSearchClear}
-                            />
-                        )}
+                            >
+                                Press /
+                            </Button>
+                        </ButtonGroup>
                     </InputRightElement>
                 </InputGroup>
             </SearchMenuTrigger>
             <SearchMenuList width={["sm", "md", "lg"]}>
                 <VStack divider={<SearchMenuDivider />} width={"100%"}>
-                    {commandsResults.length > 0 && (
+                    {searchGroups.filter(group => group.items.length > 0).map((searchGroup, index) => (
                         <CommandCenterResultGroup
-                            title={`Community (${communityResults.length})`}
-                            onClick={handleOnSearchGroupCommunityClick}
+                            key={`search-group.${index}`}
+                            searchGroup={searchGroup}
                         >
-                            {communityResults.map((searchItem, index) => (
+                            {searchGroup.items.map((searchItem, index) => (
                                 <CommandCenterResultItem
                                     key={`search-item.template.${index}`}
-                                    icon={Page}
+                                    searchItem={searchItem}
                                     query={searchRef?.current?.value ?? ""}
-                                    title={searchItem.text}
-                                    onClick={handleOnSearchItemTemplateClick}
                                 />
                             ))}
                         </CommandCenterResultGroup>
-                    )}
-                
-                    {workspaceResults.length > 0 && (
-                        <CommandCenterResultGroup
-                            title={`Workspaces (${workspaceResults.length})`}
-                            onClick={handleOnSearchGroupWorkspacesClick}
-                        >
-                            {workspaceResults.map((searchItem, index) => (
-                                <CommandCenterResultItem
-                                    key={`search-item.workspace.${index}`}
-                                    icon={Page}
-                                    query={searchRef?.current?.value ?? ""}
-                                    title={searchItem.text}
-                                    onClick={handleOnSearchItemWorkspaceClick}
-                                />
-                            ))}
-                        </CommandCenterResultGroup>
-                    )}
-                
-                    {commandsResults.length > 0 && (
-                        <CommandCenterResultGroup
-                            title={`Commands (${commandsResults.length})`}
-                            onClick={handleOnSearchGroupCommandsClick}
-                        >
-                            {commandsResults.map((searchItem, index) => (
-                                <CommandCenterResultItem
-                                    key={`search-item.command.${index}`}
-                                    icon={Page}
-                                    query={searchRef?.current?.value ?? ""}
-                                    title={searchItem.text}
-                                    onClick={handleOnSearchItemCommandClick}
-                                />
-                            ))}
-                        </CommandCenterResultGroup>
-                    )}
+                    ))}
                 </VStack>
 
-                {workspaceResults?.length === 0 && commandsResults.length === 0 && commandsResults.length === 0 && (
+                {searchGroups.every(x => x.items?.length === 0) && (
                     <SearchNoResultsMessage
                         query={searchRef?.current?.value ?? ""}
                         title={getLocalizedString(LocaleKeys.SEARCH_NO_RESULTS_TITLE)}

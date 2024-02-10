@@ -11,6 +11,7 @@ export const WorkspaceTableView: FC<{
     workspaces: WorkspaceInfo[];
     groupped?: boolean;
     onOpen?: (selectedId: string) => void;
+    onRename?: (selectedId: string, value: string) => void;
     onClone?: (selectedId: string) => void;
     onArchive?: (selectedId: string) => void;
     onRestore?: (selectedId: string) => void;

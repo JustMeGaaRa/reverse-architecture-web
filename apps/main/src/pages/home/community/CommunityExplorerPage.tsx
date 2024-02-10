@@ -41,7 +41,7 @@ import {
 } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
-    CommunityTemplateCollection,
+    CommunityTemplateExplorer,
     WorkspaceInfo,
     CommunityApi,
     LocaleKeys,
@@ -220,10 +220,15 @@ export const CommunityExplorerPage: FC<PropsWithChildren> = () => {
                             </HStack>
                         </Box>
                         <Box flexGrow={1} overflowY={"scroll"} padding={6}>
-                            <CommunityTemplateCollection
+                            <CommunityTemplateExplorer
                                 workspaces={filteredWorkspaces}
-                                emptyTitle={getLocalizedString(LocaleKeys.NO_COMMUNITY_WORKSPACES_TITLE)}
-                                emptyDescription={getLocalizedString(LocaleKeys.NO_COMMUNITY_WORKSPACES_SUGGESTION)}
+                                empty={{
+                                    title: getLocalizedString(LocaleKeys.NO_COMMUNITY_WORKSPACES_TITLE),
+                                    description: getLocalizedString(LocaleKeys.NO_COMMUNITY_WORKSPACES_SUGGESTION)
+                                }}
+                                error={{
+                                    description: getLocalizedString(LocaleKeys.ERROR_LOADING_TEMPLTES)
+                                }}
                                 onClick={handleOnWorkspaceClick}
                                 onTryIt={handleOnWorskapceTryOut}
                             />

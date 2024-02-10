@@ -1,5 +1,6 @@
 import {
     Box,
+    Button,
     Icon,
     IconButton,
     Input,
@@ -44,7 +45,7 @@ export const TemplateSectionDiscussion: FC<{
             <ContextSheetTitle title={"Comments"} />
             <InputGroup marginY={3} >
                 <InputLeftElement>
-                    <Icon as={ChatLines} boxSize={6} />
+                    <Icon as={ChatLines} boxSize={5} />
                 </InputLeftElement>
                 <Input
                     ref={inputRef}
@@ -52,13 +53,14 @@ export const TemplateSectionDiscussion: FC<{
                     onKeyDown={handleOnCommentKeyDown}
                 />
                 <InputRightElement>
-                    <IconButton
+                    <Button
                         aria-label={"send"}
-                        icon={<Icon as={Send} boxSize={6} />}
                         size={"sm"}
                         variant={"tonal"}
                         onClick={handleOnCommentSendClick}
-                    />
+                    >
+                        Send
+                    </Button>
                 </InputRightElement>
             </InputGroup>
             <Box

@@ -1,23 +1,28 @@
 import { Card, CardBody, CardFooter } from "@chakra-ui/react";
-import { FC, MouseEventHandler, TouchEventHandler } from "react";
+import { FC, useCallback } from "react";
 import { ThumbnailContainer, ThumbnailImage, WorkspaceCardFooter } from "../components";
 import { WorkspaceInfo } from "../types";
+
+type WorkspaceHandler = (workspace: WorkspaceInfo) => void;
+type WorkspaceRenameHandler = (workspace: WorkspaceInfo, value: string) => void;
 
 export const WorkspaceCard: FC<{
     workspace: WorkspaceInfo;
     isSelected?: boolean;
-    onTouchStart?: TouchEventHandler<HTMLDivElement>;
-    onTouchEnd?: TouchEventHandler<HTMLDivElement>;
-    onOpen?: MouseEventHandler<HTMLDivElement>;
-    onSelect?: () => void;
-    onRename?: () => void;
-    onClone?: () => void;
-    onArchive?: () => void;
-    onRestore?: () => void;
-    onDelete?: MouseEventHandler<HTMLButtonElement>;
+    isArchived?: boolean;
+    onTouchStart?: WorkspaceHandler;
+    onTouchEnd?: WorkspaceHandler;
+    onOpen?: WorkspaceHandler;
+    onSelect?: WorkspaceHandler;
+    onRename?: WorkspaceRenameHandler;
+    onClone?: WorkspaceHandler;
+    onArchive?: WorkspaceHandler;
+    onRestore?: WorkspaceHandler;
+    onDelete?: WorkspaceHandler;
 }> = ({
     workspace,
     isSelected,
+    isArchived,
     onTouchStart,
     onTouchEnd,
     onOpen,
@@ -28,15 +33,51 @@ export const WorkspaceCard: FC<{
     onRestore,
     onDelete
 }) => {
+    const handleOnTouchStart = useCallback(() => {
+        onTouchStart?.(workspace);
+    }, [onTouchStart, workspace]);
+
+    const handleOnTouchEnd = useCallback(() => {
+        onTouchEnd?.(workspace);
+    }, [onTouchEnd, workspace]);
+
+    const handleOnOpen = useCallback(() => {
+        onOpen?.(workspace);
+    }, [onOpen, workspace]);
+
+    const handleOnSelect = useCallback(() => {
+        onSelect?.(workspace);
+    }, [onSelect, workspace]);
+
+    const handleOnRename = useCallback((value: string) => {
+        onRename?.(workspace, value);
+    }, [onRename, workspace]);
+
+    const handleOnClone = useCallback(() => {
+        onClone?.(workspace);
+    }, [onClone, workspace]);
+
+    const handleOnArchive = useCallback(() => {
+        onArchive?.(workspace);
+    }, [onArchive, workspace]);
+
+    const handleOnRestore = useCallback(() => {
+        onRestore?.(workspace);
+    }, [onRestore, workspace]);
+
+    const handleOnDelete = useCallback(() => {
+        onDelete?.(workspace);
+    }, [onDelete, workspace]);
+
     return (
         <Card data-group>
             <CardBody>
                 <ThumbnailContainer
                     isSelected={isSelected}
-                    onTouchStart={onTouchStart}
-                    onTouchEnd={onTouchEnd}
-                    onDoubleClick={onOpen}
-                    onClick={onSelect}
+                    onTouchStart={handleOnTouchStart}
+                    onTouchEnd={handleOnTouchEnd}
+                    onDoubleClick={handleOnOpen}
+                    onClick={handleOnSelect}
                 >
                     <ThumbnailImage url={workspace.coverUrl} />
                 </ThumbnailContainer>
@@ -45,11 +86,12 @@ export const WorkspaceCard: FC<{
                 <WorkspaceCardFooter
                     name={workspace.name}
                     lastModifiedDate={workspace.lastModifiedDate}
-                    onRename={onRename}
-                    onClone={onClone}
-                    onArchive={onArchive}
-                    onRestore={onRestore}
-                    onDelete={onDelete}
+                    isArchived={isArchived}
+                    onRename={handleOnRename}
+                    onClone={handleOnClone}
+                    onArchive={handleOnArchive}
+                    onRestore={handleOnRestore}
+                    onDelete={handleOnDelete}
                 />
             </CardFooter>
         </Card>

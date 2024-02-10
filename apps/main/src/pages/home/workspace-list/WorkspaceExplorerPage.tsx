@@ -42,7 +42,7 @@ import {
 } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
-    WorkspaceCollection,
+    WorkspaceExplorer,
     WorkspaceApi,
     useWorkspaceCollection
 } from "../../../features";
@@ -180,43 +180,55 @@ export const WorkspaceExplorerPage: FC<PropsWithChildren> = () => {
                                 </TabList>
                                 <TabPanels height={"calc(100% - 42px)"} padding={6} overflowY={"scroll"}>
                                     <TabPanel>
-                                        <WorkspaceCollection
+                                        <WorkspaceExplorer
                                             workspaces={workspaces}
-                                            view={view}
-                                            groupped={true}
-                                            emptyTitle={getLocalizedString(LocaleKeys.NO_WORKSPACES_TITLE)}
-                                            emptyDescription={getLocalizedString(LocaleKeys.NO_WORKSPACES_SUGGESTION)}
-                                            emptyAction={(
-                                                <Button
-                                                    aria-label={"new project"}
-                                                    colorScheme={"lime"}
-                                                    iconSpacing={"0px"}
-                                                    leftIcon={<Icon as={PagePlus} boxSize={5} />}
-                                                    onClick={handleOnWorkspaceCreate}
-                                                >
-                                                    <Text marginX={2}>New Workspace</Text>
-                                                </Button>
-                                            )}
+                                            options={{ view, group: true }}
+                                            empty={{
+                                                title: getLocalizedString(LocaleKeys.NO_WORKSPACES_TITLE),
+                                                description: getLocalizedString(LocaleKeys.NO_WORKSPACES_SUGGESTION),
+                                                action: (
+                                                    <Button
+                                                        aria-label={"new project"}
+                                                        colorScheme={"lime"}
+                                                        iconSpacing={"0px"}
+                                                        leftIcon={<Icon as={PagePlus} boxSize={5} />}
+                                                        onClick={handleOnWorkspaceCreate}
+                                                    >
+                                                        <Text marginX={2}>New Workspace</Text>
+                                                    </Button>
+                                                )
+                                            }}
+                                            error={{
+                                                description: getLocalizedString(LocaleKeys.ERROR_LOADING_WORKSPACES)
+                                            }}
                                             onClick={handleOnWorkspaceClick}
                                         />
                                     </TabPanel>
                                     <TabPanel>
-                                        <WorkspaceCollection
+                                        <WorkspaceExplorer
                                             workspaces={[]}
-                                            view={view}
-                                            groupped={true}
-                                            emptyTitle={getLocalizedString(LocaleKeys.NO_SHARED_TITLE)}
-                                            emptyDescription={getLocalizedString(LocaleKeys.NO_SHARED_WORKSPACES_SUGGESTION)}
+                                            options={{ view, group: true }}
+                                            empty={{
+                                                title: getLocalizedString(LocaleKeys.NO_SHARED_TITLE),
+                                                description: getLocalizedString(LocaleKeys.NO_SHARED_WORKSPACES_SUGGESTION)
+                                            }}
+                                            error={{
+                                                description: getLocalizedString(LocaleKeys.ERROR_LOADING_WORKSPACES)
+                                            }}
                                             onClick={handleOnWorkspaceClick}
                                         />
                                     </TabPanel>
                                     <TabPanel>
-                                        <WorkspaceCollection
+                                        <WorkspaceExplorer
                                             workspaces={archived}
-                                            view={view}
-                                            groupped={true}
-                                            emptyTitle={getLocalizedString(LocaleKeys.NO_ARCHIVED_TITLE)}
-                                            emptyDescription={getLocalizedString(LocaleKeys.NO_ARCHIVED_WORKSPACES_SUGGESTION)}
+                                            options={{ view, group: true }}
+                                            empty={{
+                                                title: getLocalizedString(LocaleKeys.NO_ARCHIVED_TITLE),
+                                                description: getLocalizedString(LocaleKeys.NO_ARCHIVED_WORKSPACES_SUGGESTION)
+                                            }}
+                                            error={{
+                                                description: getLocalizedString(LocaleKeys.ERROR_LOADING_WORKSPACES)
+                                            }}
                                             onClick={handleOnWorkspaceClick}
                                         />
                                     </TabPanel>
@@ -235,11 +247,13 @@ export const WorkspaceExplorerPage: FC<PropsWithChildren> = () => {
                             onClose={handleCloseWorkspaceStack}
                         />
                         <WorkspaceStackBody isOpen={!!selectedGroupName}>
-                            <WorkspaceCollection
+                            <WorkspaceExplorer
                                 workspaces={workspaces?.filter(workspace => workspace.group === selectedGroupName) || []}
-                                view={"card"}
-                                emptyTitle={getLocalizedString(LocaleKeys.NO_STACK_WORKSPACES_TITLE)}
-                                emptyDescription={getLocalizedString(LocaleKeys.NO_STACK_WORKSPACES_SUGGESTION)}
+                                options={{ view: "card", group: false }}
+                                empty={{
+                                    title: getLocalizedString(LocaleKeys.NO_STACK_WORKSPACES_TITLE),
+                                    description: getLocalizedString(LocaleKeys.NO_STACK_WORKSPACES_SUGGESTION)
+                                }}
                                 onClick={handleOnWorkspaceClick}
                             />
                         </WorkspaceStackBody>

@@ -1,28 +1,34 @@
 import { Highlight, Icon } from "@chakra-ui/react";
-import { SearchMenuItem } from "@reversearchitecture/ui";
-import { FC } from "react";
+import { SearchMenuItem, useSearchMenu } from "@reversearchitecture/ui";
+import { FC, useCallback } from "react";
+import { useNavigate } from "react-router";
+import { SearchItem } from "../types";
 
 export const CommandCenterResultItem: FC<{
-    title: string;
+    searchItem: SearchItem;
     query: string;
-    icon: any;
-    onClick?: () => void;
 }> = ({
-    title,
-    query,
-    icon,
-    onClick
+    searchItem,
+    query
 }) => {
+    const navigate = useNavigate();
+    const { onClose } = useSearchMenu();
+
+    const handleOnSearchItemClick = useCallback(() => {
+        navigate(searchItem.link);
+        onClose();
+    }, [searchItem, navigate, onClose]);
+
     return (
         <SearchMenuItem
-            icon={<Icon as={icon} boxSize={4} />}
-            onClick={onClick}
+            icon={<Icon as={searchItem.icon} boxSize={4} />}
+            onClick={handleOnSearchItemClick}
         >
             <Highlight
                 query={query.split(" ")}
                 styles={{ backgroundColor: "lime.400" }}
             >
-                {title}
+                {searchItem.title}
             </Highlight>
         </SearchMenuItem>
     )

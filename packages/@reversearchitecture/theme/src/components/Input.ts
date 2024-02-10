@@ -12,18 +12,34 @@ export const Input = defineMultiStyleConfig({
 
     },
     sizes: {
+        sm: {
+            addon: {
+
+            },
+            element: {
+                height: "32px",
+                width: "auto",
+                padding: 2,
+            },
+            field: {
+                height: "32px",
+                paddingX: 2,
+                paddingY: 2,
+                borderRadius: 12,
+            }
+        },
         md: {
             addon: {
 
             },
             element: {
-                width: "40px",
                 height: "40px",
+                width: "auto",
                 padding: 2,
             },
             field: {
                 height: "40px",
-                paddingX: 10,
+                paddingX: 2,
                 paddingY: 2,
                 borderRadius: 16,
             }

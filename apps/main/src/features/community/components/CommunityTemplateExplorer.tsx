@@ -3,28 +3,34 @@ import {
     ErrorMessage,
     NoContentBoundary,
     NoContentMessage,
-    useLocale
 } from "@reversearchitecture/ui";
 import { FC, useCallback } from "react";
 import { CommunityCardView } from ".";
-import { LocaleKeys, useWorkspaceCollection, WorkspaceInfo } from "../..";
+import { useWorkspaceCollection, WorkspaceInfo } from "../..";
 
-export const CommunityTemplateCollection: FC<{
+export const CommunityTemplateExplorer: FC<{
     workspaces: WorkspaceInfo[];
-    emptyTitle?: string;
-    emptyDescription?: string;
+    empty?: {
+        title?: string;
+        description?: string;
+        action?: React.ReactElement;
+    },
+    error?: {
+        title?: string;
+        description?: string;
+        action?: React.ReactElement;
+    },
     onClick?: (workspace: WorkspaceInfo) => void;
     onTryIt?: (workspace: WorkspaceInfo) => void;
     onBookmark?: (workspace: WorkspaceInfo) => void;
     onLike?: (workspace: WorkspaceInfo) => void;
 }> = ({
     workspaces,
-    emptyTitle,
-    emptyDescription,
+    empty,
+    error,
     onClick,
     onTryIt,
 }) => {
-    const { getLocalizedString } = useLocale();
     const { bookmarkedIds, likedIds, bookmark, unbookmark, like, unlike } = useWorkspaceCollection();
 
     const handleOnBookmarkClick = useCallback((workspace: WorkspaceInfo) => {
@@ -43,7 +49,8 @@ export const CommunityTemplateCollection: FC<{
         <ErrorBoundary
             fallback={(
                 <ErrorMessage
-                    errorDescription={getLocalizedString(LocaleKeys.ERROR_LOADING_TEMPLTES)}
+                    errorTitle={error?.title}
+                    errorDescription={error?.description}
                 />
             )}
         >
@@ -51,7 +58,8 @@ export const CommunityTemplateCollection: FC<{
                 condition={workspaces.length === 0}
                 fallback={(
                     <NoContentMessage
-                        actionDescription={emptyDescription}
+                        actionTitle={empty?.title}
+                        actionDescription={empty?.description}
                     />
                 )}
             >

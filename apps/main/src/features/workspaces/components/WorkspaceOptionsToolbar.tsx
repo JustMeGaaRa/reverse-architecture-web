@@ -2,7 +2,7 @@ import { Box, Icon, IconButton, ScaleFade, Text } from "@chakra-ui/react";
 import { Toolbar, ToolbarSection } from "workspace";
 import { AppleShortcuts, BinMinusIn, Xmark, Copy } from "iconoir-react";
 import { FC, PropsWithChildren, useCallback } from "react";
-import { useWorkspaceSelection, useWorkspaceCollectionOptions } from "../hooks";
+import { useWorkspaceSelection, useWorkspaceCollectionOptions, useWorkspaceCollection } from "../hooks";
 
 export const WorkspaceOptionsToolbar: FC<{
     onClone?: (selectedIds: string[]) => void;
@@ -19,36 +19,75 @@ export const WorkspaceOptionsToolbar: FC<{
     onRestore,
     onRemove
 }) => {
+    const { workspaces, clone, remove, stack, unstack, archive, restore } = useWorkspaceCollection();
     const { selectedIds, clearSelected } = useWorkspaceSelection();
-    const { stack, unstack, clone, remove, archive, unarchive } = useWorkspaceCollectionOptions();
+    const options = useWorkspaceCollectionOptions();
 
     const handleOnCancelSelection = useCallback(() => {
         clearSelected();
     }, [clearSelected]);
 
-    const handleOnWorkspaceClone = useCallback(() => {
-        onClone?.(selectedIds);
-    }, [onClone, selectedIds]);
+    const handleOnClone = useCallback(() => {
+        const selected = workspaces.filter(workspace => {
+            return selectedIds.some(selectedId => {
+                return workspace.workspaceId === selectedId
+                    || workspace.group === selectedId;
+            })
+        });
+        selected.forEach(workspace => clone(workspace));
+    }, [clone, selectedIds, workspaces]);
 
-    const handleOnWorkspacesStack = useCallback(() => {
-        onStack?.(selectedIds);
-    }, [onStack, selectedIds]);
+    const handleOnStack = useCallback(() => {
+        const selected = workspaces.filter(workspace => {
+            return selectedIds.some(selectedId => {
+                return workspace.workspaceId === selectedId
+                    || workspace.group === selectedId;
+            })
+        });
+        const existingName = selected.find(element => element.group !== undefined)?.group ?? "New Stack";
+        const groupName = `${existingName} (1)`;
+        stack(selected, groupName);
+    }, [selectedIds, stack, workspaces]);
 
-    const handleOnWorkspacesUnstack = useCallback(() => {
-        onUnstack?.(selectedIds);
-    }, [onUnstack, selectedIds]);
+    const handleOnUnstack = useCallback(() => {
+        const selected = workspaces.filter(workspace => {
+            return selectedIds.some(selectedId => {
+                return workspace.workspaceId === selectedId
+                    || workspace.group === selectedId;
+            })
+        });
+        unstack(selected);
+    }, [selectedIds, unstack, workspaces]);
 
-    const handleOnWorkspaceArchive = useCallback(() => {
-        onArchive?.(selectedIds);
-    }, [onArchive, selectedIds]);
+    const handleOnArhive = useCallback(() => {
+        const selected = workspaces.filter(workspace => {
+            return selectedIds.some(selectedId => {
+                return workspace.workspaceId === selectedId
+                    || workspace.group === selectedId;
+            })
+        });
+        selected.forEach(workspace => archive(workspace));
+    }, [archive, selectedIds, workspaces]);
 
-    const handleOnWorkspaceRestore = useCallback(() => {
-        onRestore?.(selectedIds);
-    }, [onRestore, selectedIds]);
+    const handleOnRestore = useCallback(() => {
+        const selected = workspaces.filter(workspace => {
+            return selectedIds.some(selectedId => {
+                return workspace.workspaceId === selectedId
+                    || workspace.group === selectedId;
+            })
+        });
+        selected.forEach(workspace => restore(workspace));
+    }, [restore, selectedIds, workspaces]);
 
-    const handleOnWorkspaceRemove = useCallback(() => {
-        onRemove?.(selectedIds);
-    }, [onRemove, selectedIds]);
+    const handleOnDelete = useCallback(() => {
+        const selected = workspaces.filter(workspace => {
+            return selectedIds.some(selectedId => {
+                return workspace.workspaceId === selectedId
+                    || workspace.group === selectedId;
+            })
+        });
+        selected.forEach(workspace => remove(workspace));
+    }, [remove, selectedIds, workspaces]);
 
     return (
         <Toolbar>
@@ -65,58 +104,58 @@ export const WorkspaceOptionsToolbar: FC<{
                 </Text>
             </ToolbarSection>
             <ToolbarSection>
-                {stack.isVisible && (
+                {options.stack.isVisible && (
                     <IconButton
                         aria-label={"stack workspaces together"}
                         icon={<Icon as={AppleShortcuts} boxSize={5} />}
-                        isDisabled={!stack.isEnabled}
+                        isDisabled={!options.stack.isEnabled}
                         title={"stack workspaces together"}
-                        onClick={handleOnWorkspacesStack}
+                        onClick={handleOnStack}
                     />
                 )}
-                {unstack.isVisible && (
+                {options.unstack.isVisible && (
                     <IconButton
                         aria-label={"unstack workspaces together"}
                         icon={<Icon as={AppleShortcuts} boxSize={5} />}
-                        isDisabled={!unstack.isEnabled}
+                        isDisabled={!options.unstack.isEnabled}
                         title={"unstack workspaces apart"}
-                        onClick={handleOnWorkspacesUnstack}
+                        onClick={handleOnUnstack}
                     />
                 )}
-                {clone.isVisible && (
+                {options.clone.isVisible && (
                     <IconButton
                         aria-label={"clone workspace"}
                         icon={<Icon as={Copy} boxSize={5} />}
-                        isDisabled={!clone.isEnabled}
+                        isDisabled={!options.clone.isEnabled}
                         title={"clone workspace"}
-                        onClick={handleOnWorkspaceClone}
+                        onClick={handleOnClone}
                     />
                 )}
-                {archive.isVisible && (
+                {options.archive.isVisible && (
                     <IconButton
                         aria-label={"archive workspaces"}
                         icon={<Icon as={BinMinusIn} boxSize={5} />}
-                        isDisabled={!archive.isEnabled}
+                        isDisabled={!options.archive.isEnabled}
                         title={"archive workspaces"}
-                        onClick={handleOnWorkspaceArchive}
+                        onClick={handleOnArhive}
                     />
                 )}
-                {unarchive.isVisible && (
+                {options.unarchive.isVisible && (
                     <IconButton
                         aria-label={"unarchive workspaces"}
                         icon={<Icon as={BinMinusIn} boxSize={5} />}
-                        isDisabled={!unarchive.isEnabled}
+                        isDisabled={!options.unarchive.isEnabled}
                         title={"unarchive workspaces"}
-                        onClick={handleOnWorkspaceRestore}
+                        onClick={handleOnRestore}
                     />
                 )}
-                {remove.isVisible && (
+                {options.remove.isVisible && (
                     <IconButton
                         aria-label={"delete workspaces"}
                         icon={<Icon as={BinMinusIn} boxSize={5} />}
-                        isDisabled={!remove.isEnabled}
+                        isDisabled={!options.remove.isEnabled}
                         title={"delete workspaces"}
-                        onClick={handleOnWorkspaceRemove}
+                        onClick={handleOnDelete}
                     />
                 )}
             </ToolbarSection>

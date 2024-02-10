@@ -96,8 +96,6 @@ export const HomePageLayoutContent: FC<PropsWithChildren> = ({ children }) => {
         })
     }, [setHeaderContent]);
 
-    const isOpen = searchParams.get("help") === "commands";
-
     const onClose = useCallback(() => {
         setSearchParams(params => {
             params.delete("help");
@@ -109,7 +107,7 @@ export const HomePageLayoutContent: FC<PropsWithChildren> = ({ children }) => {
         <>
             {children}
             <HelpShortcutsModal
-                isOpen={isOpen}
+                isOpen={searchParams.get("help") === "commands"}
                 onClose={onClose}
             />
         </>

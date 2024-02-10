@@ -1,6 +1,6 @@
-import { SearchItem } from "./SearchGroupResult";
+import { SearchGroup } from "./SearchGroupResult";
 
 export interface ISearchStrategy {
     readonly name: string;
-    search(query: string): Promise<Array<SearchItem>>;
+    search(query: string): Promise<SearchGroup>;
 }
