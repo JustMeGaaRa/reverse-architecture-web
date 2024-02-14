@@ -143,19 +143,19 @@ export const Tag = defineMultiStyleConfig({
                 _active: {
                     backgroundColor: mode("", "rgba(255, 255, 255, 0.05)")(props),
                     boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
-                    color: mode("", "gary.800")(props),
+                    color: mode("", "gray.800")(props),
                     opacity: 1.0,
                 },
                 _activeLink: {
                     backgroundColor: mode("", "rgba(255, 255, 255, 0.05)")(props),
                     boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
-                    color: mode("", "gary.800")(props),
+                    color: mode("", "gray.800")(props),
                     opacity: 1.0,
                 },
                 _groupActive: {
                     backgroundColor: mode("", "rgba(255, 255, 255, 0.05)")(props),
                     boxShadow: mode("", "0px 2px 4px 0px rgba(0, 0, 0, 0.10)")(props),
-                    color: mode("", "gary.800")(props),
+                    color: mode("", "gray.800")(props),
                     opacity: 1.0,
                 },
                 _disabled: {

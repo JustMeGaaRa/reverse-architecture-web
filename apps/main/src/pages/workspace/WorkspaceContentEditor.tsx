@@ -53,6 +53,8 @@ import {
     IViewDefinition,
     ViewType,
     useStructurizrParser,
+    Workspace,
+    IWorkspace,
 } from "structurizr";
 import {
     CollaboratingUserPane,
@@ -78,6 +80,7 @@ import {
     useCommentingMode,
     useCommentsStore,
     useSnackbar,
+    useWorkspaceCollection,
 } from "../../features";
 import {
     DiscussionsPane,
@@ -104,13 +107,13 @@ export enum WorkspaceContentPanel {
 }
 
 export const WorkspaceCollaborativeEditor: FC = () => {
-    const navigate = useNavigate();
     const { workspaceId } = useParams<{ workspaceId: string }>();
     const { getLocalizedString } = useLocale();
     const { setHeaderContent } = usePageHeader();
     const { setSidebarContent, setShowSidebarButton, setSidebarOpen } = usePageSidebar();
+    const { snackbar } = useSnackbar();
 
-    const [ structurizrText, setStructurizrDslText ] = useState("");
+    const [ structurizrCode, setStructurizrCode ] = useState("");
     const { parseStructurizr } = useStructurizrParser();
     const { workspace, setWorkspace } = useWorkspace();
     const { currentView, openView, setViewport } = useWorkspaceNavigation();
@@ -150,20 +153,24 @@ export const WorkspaceCollaborativeEditor: FC = () => {
     const isCommentsPanel = panel === WorkspaceContentPanel.Comments;
     const isVersionHistoryPanel = panel === WorkspaceContentPanel.Versions;
 
-    const handleOnOpenEditor = useCallback(() => {
+    const handleOnClickEditorPanel = useCallback(() => {
         setPanel(WorkspaceContentPanel.Editor);
     }, []);
 
-    const handleOnOpenComments = useCallback(() => {
+    const handleOnClickCommentsPanel = useCallback(() => {
         setPanel(WorkspaceContentPanel.Comments);
     }, []);
 
-    const handleOnOpenVersions = useCallback(() => {
+    const handleOnClickVersionsPanel = useCallback(() => {
         setPanel(WorkspaceContentPanel.Versions);
     }, []);
 
-    const handleOnClosePanel = useCallback(() => {
+    const handleOnClickPanelClose = useCallback(() => {
         setPanel(WorkspaceContentPanel.None);
+    }, []);
+
+    const handleOnClickHelp = useCallback(() => {
+        throw new Error("Not implemented");
     }, []);
     
     useEffect(() => {
@@ -179,19 +186,19 @@ export const WorkspaceCollaborativeEditor: FC = () => {
                         icon={<Icon as={Code} boxSize={5} />}
                         isActive={isCodeEditorPanel}
                         title={"Code Editor"}
-                        onClick={handleOnOpenEditor}
+                        onClick={handleOnClickEditorPanel}
                     />
                     <Route
                         icon={<Icon as={ChatLines} boxSize={5} />}
                         isActive={isCommentsPanel}
                         title={"Comments"}
-                        onClick={handleOnOpenComments}
+                        onClick={handleOnClickCommentsPanel}
                     />
                     <Route
                         icon={<Icon as={Settings} boxSize={5} />}
                         isActive={isVersionHistoryPanel}
                         title={"Version History"}
-                        onClick={handleOnOpenVersions}
+                        onClick={handleOnClickVersionsPanel}
                     />
                 </RouteList>
             ),
@@ -202,6 +209,7 @@ export const WorkspaceCollaborativeEditor: FC = () => {
                         isDisabled
                         title={"Help & Feedback"}
                         to={"help"}
+                        onClick={handleOnClickHelp}
                     />
                 </RouteList>
             )
@@ -210,10 +218,10 @@ export const WorkspaceCollaborativeEditor: FC = () => {
         setSidebarContent,
         setShowSidebarButton,
         setSidebarOpen,
-        handleOnOpenComments,
-        handleOnOpenEditor,
-        handleOnOpenVersions,
-        navigate,
+        handleOnClickCommentsPanel,
+        handleOnClickEditorPanel,
+        handleOnClickVersionsPanel,
+        handleOnClickHelp,
         isCodeEditorPanel,
         isCommentsPanel,
         isVersionHistoryPanel
@@ -225,25 +233,69 @@ export const WorkspaceCollaborativeEditor: FC = () => {
     const isModelingMode = mode === WorkspaceContentMode.Modeling;
     const isDeploymentMode = mode === WorkspaceContentMode.Deployment;
 
-    const handleOnDiagrammingMode = useCallback(() => {
+    const handleOnClickDiagrammingMode = useCallback(() => {
         setMode(WorkspaceContentMode.Diagramming);
         openView(workspace, workspace.views.systemLandscape);
     }, [openView, workspace]);
 
-    const handleOnModelingMode = useCallback(() => {
+    const handleOnClickModelingMode = useCallback(() => {
         setMode(WorkspaceContentMode.Modeling);
         openView(workspace, { type: ViewType.Model, identifier: "" });
     }, [openView, workspace]);
 
-    const handleOnDeploymentMode = useCallback(() => {
+    const handleOnClickDeploymentMode = useCallback(() => {
         setMode(WorkspaceContentMode.Deployment);
         openView(workspace, workspace.views.deployments?.at(0));
     }, [openView, workspace]);
 
-    const handleOnWorkspaceNameChange = useCallback((value: string) => {
-        // renameWorkspace(workspace, value);
+    const handleOnChangeWorkspaceName = useCallback((value: string) => {
+        throw new Error("Not implemented");
     }, []);
 
+    // TODO: move auto save to a higher component
+    const { workspaces, set, } = useWorkspaceCollection();
+
+    const saveWorkspace = useCallback((workspaceId: string, workspace: Workspace) => {
+        // TODO: check if workspace has been modified
+        const saveWorkspaceContent = async (workspaceId: string, workspace: Workspace) => {
+            // return await workspaceApi.saveWorkspaceContent(workspaceId, workspace);
+            return workspace;
+        }
+
+        saveWorkspaceContent(workspaceId, workspace)
+            .then(workspace => {
+                set(workspaces.map(existing => {
+                    return existing.workspaceId !== workspaceId
+                        ? existing
+                        : { ...existing, content: workspace }
+                }));
+            })
+            .catch(error => {
+                snackbar({
+                    title: "Error saving workspace",
+                    description: error.message,
+                    status: "error",
+                    duration: 9000,
+                })
+            });
+    }, [workspaces, set, snackbar]);
+
+    useEffect(() => {
+        const autoSave = setInterval(() => {
+            // TODO: check if workspace has been modified
+            saveWorkspace(workspaceId, new Workspace(workspace));
+        }, 5000);
+
+        return () => {
+            clearInterval(autoSave);
+        }
+    }, [saveWorkspace, workspace, workspaceId]);
+
+    const handleOnClickWorkspaceSave = useCallback(() => {
+        saveWorkspace(workspaceId, new Workspace(workspace));
+    }, [saveWorkspace, workspaceId, workspace]);
+
+    // TODO: consider moving this to wrapper component
     useEffect(() => {
         setHeaderContent({
             left: (
@@ -268,7 +320,7 @@ export const WorkspaceCollaborativeEditor: FC = () => {
                                     maxWidth={"300px"}
                                     textStyle={"b2"}
                                     defaultValue={workspace.name}
-                                    onBlur={handleOnWorkspaceNameChange}
+                                    onBlur={handleOnChangeWorkspaceName}
                                 >
                                     <EditablePreview noOfLines={1} />
                                     <EditableInput />
@@ -281,9 +333,10 @@ export const WorkspaceCollaborativeEditor: FC = () => {
                         <IconButton
                             aria-label={"save"}
                             colorScheme={"gray"}
-                            variant={"ghost"}
                             icon={<Icon as={CloudSync} boxSize={5} />}
                             size={"md"}
+                            variant={"ghost"}
+                            onClick={handleOnClickWorkspaceSave}
                         />
                     </ButtonGroup>
                 </HStack>
@@ -295,7 +348,7 @@ export const WorkspaceCollaborativeEditor: FC = () => {
                         isActive={isDiagrammingMode}
                         paddingInline={6}
                         title={"diagramming"}
-                        onClick={handleOnDiagrammingMode}
+                        onClick={handleOnClickDiagrammingMode}
                     >
                         <Text marginX={1}>Diagramming</Text>
                     </Button>
@@ -304,7 +357,7 @@ export const WorkspaceCollaborativeEditor: FC = () => {
                         isActive={isModelingMode}
                         paddingInline={6}
                         title={"modeling"}
-                        onClick={handleOnModelingMode}
+                        onClick={handleOnClickModelingMode}
                     >
                         <Text marginX={1}>Modeling</Text>
                     </Button>
@@ -313,7 +366,7 @@ export const WorkspaceCollaborativeEditor: FC = () => {
                         isActive={isDeploymentMode}
                         paddingInline={6}
                         title={"deployment"}
-                        onClick={handleOnDeploymentMode}
+                        onClick={handleOnClickDeploymentMode}
                     >
                         <Text marginX={1}>Deployment</Text>
                     </Button>
@@ -338,10 +391,11 @@ export const WorkspaceCollaborativeEditor: FC = () => {
         })
     }, [
         setHeaderContent,
-        handleOnDiagrammingMode,
-        handleOnModelingMode,
-        handleOnDeploymentMode,
-        handleOnWorkspaceNameChange,
+        handleOnClickDiagrammingMode,
+        handleOnClickModelingMode,
+        handleOnClickDeploymentMode,
+        handleOnClickWorkspaceSave,
+        handleOnChangeWorkspaceName,
         followUser,
         workspace,
         users,
@@ -361,19 +415,20 @@ export const WorkspaceCollaborativeEditor: FC = () => {
     }, [commentThreads, currentView?.identifier, currentView?.type]);
 
     const handleOnWorkspaceViewClick = useCallback((event: React.MouseEvent) => {
-        if (isCommentingModeEnabled) {
-            // TODO: get viewport, translate position and save comment
-            const discussion: CommentThread = {
-                workspaceId: workspaceId,
-                commentThreadId: v4(),
-                comments: []
-            }
-        }
-    }, [isCommentingModeEnabled]);
+        // if (isCommentingModeEnabled) {
+        //     // TODO: get viewport, translate position and save comment
+        //     const discussion: CommentThread = {
+        //         workspaceId: workspaceId,
+        //         commentThreadId: v4(),
+        //         comments: []
+        //     }
+        // }
+        // throw new Error("Not implemented");
+    }, []);
 
     // SECTION: code editor panel
-    const handleOnStructurizrTextChange = useCallback((value: string) => {
-        setStructurizrDslText(value);
+    const handleOnChangeStructurizrCode = useCallback((value: string) => {
+        setStructurizrCode(value);
         // TODO: use debounce to defer the workspace parsing by 500ms
         // TODO: handle parsing errors
         setWorkspace(parseStructurizr(value));
@@ -385,7 +440,7 @@ export const WorkspaceCollaborativeEditor: FC = () => {
                 {panel === WorkspaceContentPanel.Comments && (
                     <ContextSheetPanel width={"400px"}>
                         <ContextSheetHeader>
-                            <ContextSheetCloseButton onClick={handleOnClosePanel} />
+                            <ContextSheetCloseButton onClick={handleOnClickPanelClose} />
                             <ContextSheetTitle title={"All Discussions"} />
                         </ContextSheetHeader>
                         <Divider />
@@ -398,14 +453,14 @@ export const WorkspaceCollaborativeEditor: FC = () => {
                 {panel === WorkspaceContentPanel.Editor && (
                     <ContextSheetPanel width={"100%"}>
                         <ContextSheetHeader>
-                            <ContextSheetCloseButton onClick={handleOnClosePanel} />
+                            <ContextSheetCloseButton onClick={handleOnClickPanelClose} />
                             <ContextSheetTitle title={"Code Editor"} />
                         </ContextSheetHeader>
                         <Divider />
                         <ContextSheetBody>
                             <WorkspaceEditor
-                                value={structurizrText}
-                                onChange={handleOnStructurizrTextChange}
+                                value={structurizrCode}
+                                onChange={handleOnChangeStructurizrCode}
                             />
                         </ContextSheetBody>
                     </ContextSheetPanel>
@@ -414,7 +469,7 @@ export const WorkspaceCollaborativeEditor: FC = () => {
                 {panel === WorkspaceContentPanel.Versions && (
                     <ContextSheetPanel width={"400px"}>
                         <ContextSheetHeader>
-                            <ContextSheetCloseButton onClick={handleOnClosePanel} />
+                            <ContextSheetCloseButton onClick={handleOnClickPanelClose} />
                             <ContextSheetTitle title={"Version History"} />
                         </ContextSheetHeader>
                         <Divider />

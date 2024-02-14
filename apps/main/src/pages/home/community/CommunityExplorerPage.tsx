@@ -57,6 +57,7 @@ const capitalize = (str: string) => {
 }
 
 export const CommunityExplorerPage: FC<PropsWithChildren> = () => {
+    const navigate = useNavigate();
     const { getLocalizedString } = useLocale();
     const { setShowSidebarButton } = usePageSidebar();
     const { setHeaderContent } = usePageHeader();
@@ -75,7 +76,6 @@ export const CommunityExplorerPage: FC<PropsWithChildren> = () => {
     const [ selectedCategory, setSelectedCategory ] = useState(filterCategories.at(0));
     const [ filterTags, setFilterTags ] = useState([]);
     const [ selectedTag, setSelectedTag ] = useState("");
-    const navigate = useNavigate();
     const filteredWorkspaces = useMemo(() => {
         switch (selectedCategory.tag) {
             case "Explore":
@@ -126,30 +126,28 @@ export const CommunityExplorerPage: FC<PropsWithChildren> = () => {
             });
     }, [communityApi, setShowSidebarButton]);
 
-    const handleOnCategoryClick = useCallback((filter) => {
+    const handleOnClickCategory = useCallback((filter) => {
         setSelectedCategory(filter);
     }, []);
 
-    const handleOnFilterClick = useCallback((tag) => {
+    const handleOnClickFilter = useCallback((tag) => {
         setSelectedTag(selected => selected === tag ? "" : tag);
     }, []);
     
-    const handleOnWorkspaceClick = useCallback((workspace: WorkspaceInfo) => {
+    const handleOnClickWorkspacePreview = useCallback((workspace: WorkspaceInfo) => {
         setQueryParam({ preview: workspace.workspaceId });
     }, [setQueryParam]);
 
-    const handleOnWorskapceTryOut = useCallback((workspace: WorkspaceInfo) => {
-        // TODO: copy the tempalte to 'my workspaces' first and then navigate to it
-        // TODO: clone workspace content
+    const handleOnClickWorskapceTryOut = useCallback((workspace: WorkspaceInfo) => {
+        clone(workspace);
         navigate(`/workspaces/${workspace.workspaceId}`);
-    }, [navigate]);
+    }, [clone, navigate]);
 
-    const handleOnWorkspacePublish = useCallback((workspace: WorkspaceInfo) => {
-        // workspaceApi.publishWorkspace(workspace);
-        // setWorkspaces(workspaces.concat(workspace));
+    const handleOnClickWorkspacePublish = useCallback((workspace: WorkspaceInfo) => {
+        throw new Error("Method not implemented.");
     }, []);
 
-    const handleOnCloseTemplateModal = useCallback(() => {
+    const handleOnClickTemplateModalClose = useCallback(() => {
         setQueryParam({});
     }, [setQueryParam]);
 
@@ -194,7 +192,7 @@ export const CommunityExplorerPage: FC<PropsWithChildren> = () => {
                                             <MenuItem
                                                 key={category.tag}
                                                 icon={category.icon}
-                                                onClick={() => handleOnCategoryClick(category)}
+                                                onClick={() => handleOnClickCategory(category)}
                                             >
                                                 {category.tag}
                                             </MenuItem>
@@ -208,7 +206,7 @@ export const CommunityExplorerPage: FC<PropsWithChildren> = () => {
                                                 data-group
                                                 key={tag}
                                                 aria-selected={selectedTag === tag}
-                                                onClick={() => handleOnFilterClick(tag)}
+                                                onClick={() => handleOnClickFilter(tag)}
                                             >
                                                 <TagLabel aria-selected={selectedTag === tag}>
                                                     {capitalize(tag)}
@@ -229,14 +227,14 @@ export const CommunityExplorerPage: FC<PropsWithChildren> = () => {
                                 error={{
                                     description: getLocalizedString(LocaleKeys.ERROR_LOADING_TEMPLTES)
                                 }}
-                                onClick={handleOnWorkspaceClick}
-                                onTryIt={handleOnWorskapceTryOut}
+                                onClick={handleOnClickWorkspacePreview}
+                                onTryIt={handleOnClickWorskapceTryOut}
                             />
 
                             <CommunityTemplateModal
                                 workspaceId={queryParams.get("preview")}
                                 isOpen={!!queryParams.get("preview")}
-                                onClose={handleOnCloseTemplateModal}
+                                onClose={handleOnClickTemplateModalClose}
                             />
                         </Box>
                     </Flex>

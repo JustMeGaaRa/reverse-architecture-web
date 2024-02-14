@@ -3,4 +3,7 @@ export * from "./ContextSheet";
 export * from "./ContextSheetBody";
 export * from "./ContextSheetCloseButton";
 export * from "./ContextSheetHeader";
+export * from "./ContextSheetOverlay";
+export * from "./ContextSheetPanel";
+export * from "./ContextSheetTabContent";
 export * from "./ContextSheetTitle";

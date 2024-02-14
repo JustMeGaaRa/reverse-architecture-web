@@ -1,5 +1,6 @@
 import {
     FC,
+    useCallback,
     useEffect,
     useMemo,
     useState
@@ -8,7 +9,8 @@ import { useParams } from "react-router-dom";
 import {
     Workspace,
     useStructurizrParser,
-    IWorkspace
+    IWorkspace,
+    StructurizrExportClient
 } from "structurizr";
 import {
     WorkspaceNavigationProvider,
@@ -22,6 +24,7 @@ import {
     CommentThread,
     useAccount,
     useSnackbar,
+    useWorkspaceCollection,
     WorkspaceApi,
 } from "../../features";
 import {
@@ -34,6 +37,7 @@ export const WorkspacePage: FC = () => {
     const { snackbar } = useSnackbar();
 
     const workspaceApi = useMemo(() => new WorkspaceApi(), []);
+    const { workspaces, set } = useWorkspaceCollection();
     const [ workspace, setWorkspace ] = useState<IWorkspace>(Workspace.Empty.toObject());
     const { parseStructurizr } = useStructurizrParser();
 
@@ -41,52 +45,62 @@ export const WorkspacePage: FC = () => {
     const [ discussions, setDiscussions ] = useState<Array<CommentThread>>([]);
 
     useEffect(() => {
-        const loadWorkspace = async (workspaceId: string) => {
+        const loadWorkspaceContent = async (workspaceId: string) => {
             const structurizrText = await workspaceApi.getWorkspaceContent(workspaceId);
             const metadata = await workspaceApi.getWorkspaceMetadata(workspaceId);
 
             const workspace = parseStructurizr(structurizrText);
             const autolayoutWorkspace = workspace.applyMetadata(metadata);
 
-            setWorkspace(autolayoutWorkspace);
-            // TODO: set code text as well
-            // setStructurizrDslText(structurizrText);
+            return autolayoutWorkspace;
         }
 
         const loadComments = async (workspaceId: string) => {
             const comments = await commentApi.getDiscussions(workspaceId);
-            setDiscussions(comments);
+
+            return comments;
         }
         
-        loadWorkspace(workspaceId)
+        loadWorkspaceContent(workspaceId)
+            .then(workspace => {
+                setWorkspace(workspace);
+                // TODO: set code text as well
+                // setStructurizrDslText(structurizrText);
+            })
             .catch(error => {
                 // TODO: load workspace from local storage to support PWA
-                setWorkspace(Workspace.Empty.toObject());
-                snackbar({
-                    title: error.message,
-                    description: error.message,
-                    status: "error",
-                    duration: 9000,
-                })
+                const localWorkspace = workspaces.find(workspace => workspace.workspaceId === workspaceId);
+                setWorkspace(localWorkspace?.content ?? Workspace.Empty.toObject());
+                // TODO: should we show an error loading data if we show local data?
+                // snackbar({
+                //     title: error.message,
+                //     description: error.message,
+                //     status: "error",
+                //     duration: 9000,
+                // })
             })
             
         loadComments(workspaceId)
+            .then(comments => {
+                setDiscussions(comments);
+            })
             .catch(error => {
                 // TODO: load comments from local storage to support PWA
                 setDiscussions([]);
-                snackbar({
-                    title: error.message,
-                    description: error.message,
-                    status: "error",
-                    duration: 9000,
-                })
+                // TODO: should we show an error loading data if we show local data?
+                // snackbar({
+                //     title: error.message,
+                //     description: error.message,
+                //     status: "error",
+                //     duration: 9000,
+                // })
             });
         
         return () => {
             setWorkspace(Workspace.Empty);
             setDiscussions([]);
         }
-    }, [workspaceId, workspaceApi, commentApi, snackbar, parseStructurizr, setWorkspace, setDiscussions]);
+    }, [workspaceId, workspaceApi, commentApi, workspaces, snackbar, parseStructurizr, setWorkspace, setDiscussions]);
 
     // NOTE: workspace provider on this page should save changes to the persistant layer,
     // as this is the user who shares and owns the workspace file

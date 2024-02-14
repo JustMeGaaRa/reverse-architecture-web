@@ -1,5 +1,5 @@
 import { Flex } from "@chakra-ui/react";
-import { FC, PropsWithChildren } from "react";
+import { DragEventHandler, FC, PropsWithChildren } from "react";
 import { ContextLevelProvider } from "../components";
 import { useContextLevel } from "../hooks";
 
@@ -7,11 +7,21 @@ export const ContextSheet: FC<PropsWithChildren<{
     outline?: string;
     outlineRadius?: [number, number, number, number];
     outlineWidth?: [number, number, number, number];
+    padding?: number;
+    gap?: number;
+    isOpen?: boolean;
+    onDragEnter?: DragEventHandler<HTMLDivElement>;
+    onDragExit?: DragEventHandler<HTMLDivElement>;
 }>> = ({
     children,
     outline,
     outlineRadius,
-    outlineWidth
+    outlineWidth,
+    padding,
+    gap,
+    isOpen = true,
+    onDragEnter,
+    onDragExit
 }) => {
     const { level, getLevelColor } = useContextLevel();
 
@@ -28,46 +38,18 @@ export const ContextSheet: FC<PropsWithChildren<{
             borderRightWidth={outlineWidth?.at(2) ?? 0}
             borderBottomWidth={outlineWidth?.at(3) ?? 0}
             direction={"column"}
+            display={!isOpen ? "none" : "flex"}
+            gap={gap ?? 0}
             height={"100%"}
             width={"100%"}
+            padding={padding ?? 0}
             position={"relative"}
+            onDragEnter={onDragEnter}
+            onDragExit={onDragExit}
         >
             <ContextLevelProvider level={level + 1} >
                 {children}
             </ContextLevelProvider>
-        </Flex>
-    )
-}
-
-export const ContextSheetTabContent: FC<PropsWithChildren<{
-    gap?: number;
-    padding?: number;
-}>> = ({
-    children,
-    gap,
-    padding
-}) => {
-    return (
-        <Flex
-            direction={"row"}
-            height={"100%"}
-            gap={gap ?? 0}
-            padding={padding ?? 0}
-        >
-            {children}
-        </Flex>
-    )
-}
-
-export const ContextSheetPanel: FC<PropsWithChildren<{
-    width?: string;
-}>> = ({
-    children,
-    width
-}) => {
-    return (
-        <Flex direction={"column"} width={width}>
-            {children}
         </Flex>
     )
 }

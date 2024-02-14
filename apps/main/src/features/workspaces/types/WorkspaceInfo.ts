@@ -1,3 +1,5 @@
+import { Workspace } from "structurizr";
+
 export type WorkspaceInfo = {
     workspaceId: string;
     name: string;
@@ -9,6 +11,8 @@ export type WorkspaceInfo = {
     coverUrl?: string;
     group?: string;
     tags: Array<string>;
+    code?: string;
+    content?: Workspace;
     metadata?: WorkspaceInfoMetadata;
     statistics?: WorkspaceStats,
 }

@@ -1,6 +1,15 @@
 import { IWorkspaceMetadata, StructurizrExportClient, Workspace } from "structurizr";
 import { WorkspaceInfo } from "../types";
 
+type WorkspaceLoadOptions = {
+    include: {
+        code: boolean;
+        content: boolean;
+        metadata: boolean;
+        theme: boolean;
+    }
+}
+
 export class WorkspaceApi {
     private readonly structurizrExportClient = new StructurizrExportClient();
     private readonly emptyWorkspace = this.structurizrExportClient.export(Workspace.Empty.toObject());
@@ -172,35 +181,63 @@ export class WorkspaceApi {
     constructor() {
     }
 
-    async getWorkspaceById(workspaceId: string): Promise<WorkspaceInfo> {
+    async getWorkspaceById(workspaceId: string, options?: WorkspaceLoadOptions): Promise<WorkspaceInfo> {
+        // GET api/v1/workspaces/{workspaceId}
         throw new Error("Method not implemented.");
     }
 
     async getWorkspaceContent(workspaceId: string): Promise<string> {
+        // GET api/v1/workspaces/{workspaceId}/content
         throw new Error("Method not implemented.");
     }
 
     async getWorkspaceMetadata(workspaceId: string): Promise<IWorkspaceMetadata> {
+        // GET api/v1/workspaces/{workspaceId}/metadata
         throw new Error("Method not implemented.");
     }
 
-    async getWorkspaces(query?: string): Promise<Array<WorkspaceInfo>> {
+    async getWorkspaces(query?: string, options?: WorkspaceLoadOptions): Promise<Array<WorkspaceInfo>> {
+        // GET api/v1/workspaces?query={query}
         throw new Error("Method not implemented.");
     }
 
-    async getArchivedWorkspaces(query?: string): Promise<Array<WorkspaceInfo>> {
+    async getArchivedWorkspaces(query?: string, options?: WorkspaceLoadOptions): Promise<Array<WorkspaceInfo>> {
+        // GET api/v1/archive?query={query}
+        throw new Error("Method not implemented.");
+    }
+
+    async getSharedWorkspaces(query?: string, options?: WorkspaceLoadOptions): Promise<Array<WorkspaceInfo>> {
+        // GET api/v1/shared?query={query}
+        throw new Error("Method not implemented.");
+    }
+
+    async getBookmarkedWorkspaces(query?: string, options?: WorkspaceLoadOptions): Promise<Array<WorkspaceInfo>> {
+        // GET api/v1/bookmarks?query={query}
+        throw new Error("Method not implemented.");
+    }
+
+    async createWorkspace(workspace: WorkspaceInfo): Promise<WorkspaceInfo> {
+        // POST api/v1/workspaces
         throw new Error("Method not implemented.");
     }
 
     async saveWorkspace(workspace: WorkspaceInfo): Promise<WorkspaceInfo> {
+        // PUT api/v1/workspaces
+        throw new Error("Method not implemented.");
+    }
+
+    async saveWorkspaceContent(workspaceId: string, workspace: Workspace): Promise<WorkspaceInfo> {
+        // PUT api/v1/workspaces/{workspaceId}/content
         throw new Error("Method not implemented.");
     }
 
     async deleteWorkspace(workspaceIds: string[]): Promise<void> {
+        // DELETE api/v1/workspaces/{workspaceId}
         throw new Error("Method not implemented.");
     }
     
     async archiveWorkspace(workspaceIds: string[]): Promise<void> {
+        // PUT api/v1/archive/{workspaceId}
         throw new Error("Method not implemented.");
     }
 }

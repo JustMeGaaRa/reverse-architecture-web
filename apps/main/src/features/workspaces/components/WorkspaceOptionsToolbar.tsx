@@ -106,55 +106,55 @@ export const WorkspaceOptionsToolbar: FC<{
             <ToolbarSection>
                 {options.stack.isVisible && (
                     <IconButton
-                        aria-label={"stack workspaces together"}
+                        aria-label={"stack workspaces"}
                         icon={<Icon as={AppleShortcuts} boxSize={5} />}
                         isDisabled={!options.stack.isEnabled}
-                        title={"stack workspaces together"}
+                        title={"stack workspaces"}
                         onClick={handleOnStack}
                     />
                 )}
                 {options.unstack.isVisible && (
                     <IconButton
-                        aria-label={"unstack workspaces together"}
+                        aria-label={"unstack workspaces"}
                         icon={<Icon as={AppleShortcuts} boxSize={5} />}
                         isDisabled={!options.unstack.isEnabled}
-                        title={"unstack workspaces apart"}
+                        title={"unstack workspaces"}
                         onClick={handleOnUnstack}
                     />
                 )}
                 {options.clone.isVisible && (
                     <IconButton
-                        aria-label={"clone workspace"}
+                        aria-label={"clone items"}
                         icon={<Icon as={Copy} boxSize={5} />}
                         isDisabled={!options.clone.isEnabled}
-                        title={"clone workspace"}
+                        title={"clone items"}
                         onClick={handleOnClone}
                     />
                 )}
                 {options.archive.isVisible && (
                     <IconButton
-                        aria-label={"archive workspaces"}
+                        aria-label={"archive items"}
                         icon={<Icon as={BinMinusIn} boxSize={5} />}
                         isDisabled={!options.archive.isEnabled}
-                        title={"archive workspaces"}
+                        title={"archive items"}
                         onClick={handleOnArhive}
                     />
                 )}
                 {options.unarchive.isVisible && (
                     <IconButton
-                        aria-label={"unarchive workspaces"}
+                        aria-label={"restore items"}
                         icon={<Icon as={BinMinusIn} boxSize={5} />}
                         isDisabled={!options.unarchive.isEnabled}
-                        title={"unarchive workspaces"}
+                        title={"restore items"}
                         onClick={handleOnRestore}
                     />
                 )}
                 {options.remove.isVisible && (
                     <IconButton
-                        aria-label={"delete workspaces"}
+                        aria-label={"delete items"}
                         icon={<Icon as={BinMinusIn} boxSize={5} />}
                         isDisabled={!options.remove.isEnabled}
-                        title={"delete workspaces"}
+                        title={"delete items"}
                         onClick={handleOnDelete}
                     />
                 )}
