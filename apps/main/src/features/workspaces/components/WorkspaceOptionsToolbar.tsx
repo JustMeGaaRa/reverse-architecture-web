@@ -4,7 +4,7 @@ import { AppleShortcuts, BinMinusIn, Xmark, Copy } from "iconoir-react";
 import { FC, PropsWithChildren, useCallback } from "react";
 import { useWorkspaceSelection, useWorkspaceCollectionOptions, useWorkspaceCollection } from "../hooks";
 
-export const WorkspaceOptionsToolbar: FC<{
+export const WorkspaceActionsToolbar: FC<{
     onClone?: (selectedIds: string[]) => void;
     onStack?: (selectedIds: string[]) => void;
     onUnstack?: (selectedIds: string[]) => void;
@@ -163,8 +163,8 @@ export const WorkspaceOptionsToolbar: FC<{
     )
 }
 
-export const WorkspaceOptionsAutoHideWrapper: FC<PropsWithChildren> = ({ children }) => {
-    const { selectedIds: selected } = useWorkspaceSelection();
+export const WorkspaceActionsAutoHideWrapper: FC<PropsWithChildren> = ({ children }) => {
+    const { selectedIds } = useWorkspaceSelection();
 
     return (
         <Box
@@ -172,9 +172,9 @@ export const WorkspaceOptionsAutoHideWrapper: FC<PropsWithChildren> = ({ childre
             bottom={4}
             left={"50%"}
             transform={"translateX(-50%)"}
-            pointerEvents={selected?.length > 0 ? "auto" : "none"}
+            pointerEvents={selectedIds?.length > 0 ? "auto" : "none"}
         >
-            <ScaleFade in={selected?.length > 0}>
+            <ScaleFade in={selectedIds?.length > 0}>
                 {children}
             </ScaleFade>
         </Box>

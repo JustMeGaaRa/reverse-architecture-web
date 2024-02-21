@@ -1,32 +1,29 @@
-import { useCallback } from "react";
+import { useCallback, useContext } from "react";
 import { StructurizrExportClient, Workspace } from "structurizr";
 import { v4 } from "uuid";
+import { WorkspaceCollectionContext } from "../contexts";
 import { useWorkspaceStore } from "../store";
 import { WorkspaceInfo } from "../types";
 
 export const useWorkspaceCollection = () => {
     const {
         workspaces,
-        archived,
         bookmarkedIds,
         likedIds,
         setWorkspaces,
-        setArchived,
-        setSelectedIds,
         setBookmarkedIds,
         setLikedIds,
     } = useWorkspaceStore();
-
-    const set = useCallback((workspaces: Array<WorkspaceInfo>) => {
-        setWorkspaces(workspaces);
-    }, [setWorkspaces]);
+    const {
+        setSelectedIds,
+    } = useContext(WorkspaceCollectionContext);
     
     const create = useCallback((author: string, info?: Partial<WorkspaceInfo>) => {
         const structurizrExportClient = new StructurizrExportClient();
         const workspaceId = v4();
         const workspace: WorkspaceInfo = {
             workspaceId,
-            name: info?.name ?? "New Workspace",
+            name: info?.content?.name ?? info?.name ?? "New Workspace",
             createdBy: author,
             createdDate: info?.createdDate ?? new Date().toLocaleString(),
             lastModifiedBy: author,
@@ -35,7 +32,6 @@ export const useWorkspaceCollection = () => {
             content: info?.content ?? Workspace.Empty,
             code: info?.code ?? structurizrExportClient.export(Workspace.Empty.toObject()),
         };
-        console.log("Creating workspace", workspace);
         setWorkspaces(workspaces => [ ...workspaces, workspace ]);
     }, [setWorkspaces]);
 
@@ -65,22 +61,27 @@ export const useWorkspaceCollection = () => {
     }, [setWorkspaces]);
 
     const archive = useCallback((workspace: WorkspaceInfo) => {
-        setWorkspaces(workspaces => workspaces.filter(existing => workspace.workspaceId !== existing.workspaceId));
-        setArchived(archived => ([ ...archived, workspace ]));
+        setWorkspaces(workspaces => workspaces.map(existing => {
+            return workspace.workspaceId !== existing.workspaceId
+                ? existing
+                : { ...existing, status: "archived" }
+        }));
         setSelectedIds([]);
-    }, [setWorkspaces, setArchived, setSelectedIds]);
+    }, [setWorkspaces, setSelectedIds]);
 
     const restore = useCallback((workspace: WorkspaceInfo) => {
-        setWorkspaces(workspaces => [ ...workspaces, workspace ]);
-        setArchived(archived => (archived.filter(existing => workspace.workspaceId !== existing.workspaceId)));
+        setWorkspaces(workspaces => workspaces.map(existing => {
+            return workspace.workspaceId !== existing.workspaceId
+                ? existing
+                : { ...existing, status: "private" }
+        }));
         setSelectedIds([]);
-    }, [setWorkspaces, setArchived, setSelectedIds]);
+    }, [setWorkspaces, setSelectedIds]);
 
     const remove = useCallback((workspace: WorkspaceInfo) => {
         setWorkspaces(workspaces => workspaces.filter(existing => workspace.workspaceId !== existing.workspaceId));
-        setArchived(archived => archived.filter(existing => workspace.workspaceId !== existing.workspaceId));
         setSelectedIds(selectedIds => selectedIds.filter(selectedId => workspace.workspaceId !== selectedId));
-    }, [setWorkspaces, setArchived, setSelectedIds]);
+    }, [setWorkspaces, setSelectedIds]);
 
     const stack = useCallback((stack: Array<WorkspaceInfo>, groupName: string) => {
         setWorkspaces(workspaces => workspaces.map(existing => {
@@ -118,10 +119,9 @@ export const useWorkspaceCollection = () => {
 
     return {
         workspaces,
-        archived,
         bookmarkedIds,
         likedIds,
-        set,
+        setWorkspaces,
         create,
         rename,
         clone,

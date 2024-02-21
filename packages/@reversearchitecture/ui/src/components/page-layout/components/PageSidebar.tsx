@@ -23,27 +23,19 @@ export const PageSidebar: FC<PropsWithChildren> = ({ children }) => {
     )
 }
 
-export const PageSidebarSection: FC<PropsWithChildren<{
+export const PageSidebarSectionOutlet: FC<PropsWithChildren<{
     section: "start" | "center" | "end"
 }>> = ({
     children,
     section
 }) => {
+    const { sidebarOptions } = usePageSidebar();
+
     return (
         <Flex direction={"column"} flex={1} justifyContent={section}>
-            {children}
-        </Flex>
-    )
-}
-
-export const PageHeaderSection: FC<PropsWithChildren<{
-    section: "start" | "center" | "end"
-}>> = ({
-    children,
-    section
-}) => {
-    return (
-        <Flex flex={1} justifyContent={section}>
+            {section === "start" && sidebarOptions.sections.top}
+            {section === "center" && sidebarOptions.sections.middle}
+            {section === "end" && sidebarOptions.sections.bottom}
             {children}
         </Flex>
     )

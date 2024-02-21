@@ -32,20 +32,20 @@ import {
 } from "../workspace";
 
 export const WorkspacePage: FC = () => {
+    console.log("workspace page");
     const { workspaceId } = useParams<{ workspaceId: string }>();
     const { account } = useAccount();
     const { snackbar } = useSnackbar();
 
-    const workspaceApi = useMemo(() => new WorkspaceApi(), []);
-    const { workspaces, set } = useWorkspaceCollection();
+    const { workspaces } = useWorkspaceCollection();
     const [ workspace, setWorkspace ] = useState<IWorkspace>(Workspace.Empty.toObject());
     const { parseStructurizr } = useStructurizrParser();
-
-    const commentApi = useMemo(() => new CommentApi(), []);
+    
     const [ discussions, setDiscussions ] = useState<Array<CommentThread>>([]);
 
     useEffect(() => {
         const loadWorkspaceContent = async (workspaceId: string) => {
+            const workspaceApi = new WorkspaceApi();
             const structurizrText = await workspaceApi.getWorkspaceContent(workspaceId);
             const metadata = await workspaceApi.getWorkspaceMetadata(workspaceId);
 
@@ -56,6 +56,7 @@ export const WorkspacePage: FC = () => {
         }
 
         const loadComments = async (workspaceId: string) => {
+            const commentApi = new CommentApi();
             const comments = await commentApi.getDiscussions(workspaceId);
 
             return comments;
@@ -100,7 +101,7 @@ export const WorkspacePage: FC = () => {
             setWorkspace(Workspace.Empty);
             setDiscussions([]);
         }
-    }, [workspaceId, workspaceApi, commentApi, workspaces, snackbar, parseStructurizr, setWorkspace, setDiscussions]);
+    }, [workspaceId, snackbar, parseStructurizr, setWorkspace, setDiscussions]);
 
     // NOTE: workspace provider on this page should save changes to the persistant layer,
     // as this is the user who shares and owns the workspace file
@@ -109,8 +110,8 @@ export const WorkspacePage: FC = () => {
             <CommentProvider initialDiscussions={discussions}>
                 <WorkspaceNavigationProvider initialView={workspace.views.systemLandscape}>
                     <WorkspaceRoom options={{ roomId: workspaceId }}>
-                        <CurrentUser info={account} />
-                        <WorkspaceCollaborativeEditor />
+                        {/* <CurrentUser info={account} />
+                        <WorkspaceCollaborativeEditor /> */}
                     </WorkspaceRoom>
                 </WorkspaceNavigationProvider>
             </CommentProvider>

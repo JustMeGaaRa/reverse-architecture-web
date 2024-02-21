@@ -7,7 +7,7 @@ export class CommunitySearchStrategy implements ISearchStrategy {
     private readonly workspaceApi: CommunityApi = new CommunityApi();
     
     search(query: string): Promise<SearchGroup> {
-        return this.workspaceApi.getWorkspaces(query)
+        return this.workspaceApi.getWorkspaces({ query })
             .then(workspaces => {
                 return {
                     title: "Community",

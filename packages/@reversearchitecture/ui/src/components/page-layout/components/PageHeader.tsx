@@ -22,3 +22,21 @@ export const PageHeader: FC<PropsWithChildren> = ({ children}) => {
         </Flex>
     )
 }
+
+export const PageHeaderSectionOutlet: FC<PropsWithChildren<{
+    section: "start" | "center" | "end"
+}>> = ({
+    children,
+    section
+}) => {
+    const { headerOptions } = usePageHeader();
+    
+    return (
+        <Flex flex={1} justifyContent={section}>
+            {section === "start" && headerOptions.sections.left}
+            {section === "center" && headerOptions.sections.middle}
+            {section === "end" && headerOptions.sections.right}
+            {children}
+        </Flex>
+    )
+}

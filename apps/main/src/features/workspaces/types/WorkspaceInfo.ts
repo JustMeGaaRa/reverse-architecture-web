@@ -1,9 +1,12 @@
 import { Workspace } from "structurizr";
 
+export type WorkspaceStatus = "private" | "shared" | "archived";
+
 export type WorkspaceInfo = {
     workspaceId: string;
     name: string;
     description?: string;
+    status?: WorkspaceStatus;
     createdBy: string;
     createdDate: string;
     lastModifiedDate: string;

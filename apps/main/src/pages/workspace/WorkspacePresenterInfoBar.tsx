@@ -2,7 +2,7 @@ import { Avatar, Box, Text } from "@chakra-ui/react";
 import { FC } from "react";
 import { Toolbar, ToolbarSection, UserInfo, WorkspacePanel } from "workspace";
 
-export const PresenterInfo: FC<{
+export const PresenterInfoBar: FC<{
     presenter: UserInfo
 }> = ({
     presenter

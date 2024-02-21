@@ -19,7 +19,8 @@ import { useSearchParams } from "react-router-dom";
 import { CommandCenter } from "../../features";
 import { HelpShortcutsModal } from "./HelpShortcutsModal";
 
-export const HomePageLayoutContent: FC<PropsWithChildren> = ({ children }) => {
+export const HomePageResetActionsWrapper: FC<PropsWithChildren> = ({ children }) => {
+    console.log("context wrapper: home page layout")
     const { setShowSidebarButton, setSidebarContent } = usePageSidebar();
     const { setHeaderContent } = usePageHeader();
     const [ searchParams, setSearchParams ] = useSearchParams();
@@ -96,7 +97,7 @@ export const HomePageLayoutContent: FC<PropsWithChildren> = ({ children }) => {
         })
     }, [setHeaderContent]);
 
-    const onClose = useCallback(() => {
+    const onClickCommandsTableClose = useCallback(() => {
         setSearchParams(params => {
             params.delete("help");
             return params;
@@ -108,7 +109,7 @@ export const HomePageLayoutContent: FC<PropsWithChildren> = ({ children }) => {
             {children}
             <HelpShortcutsModal
                 isOpen={searchParams.get("help") === "commands"}
-                onClose={onClose}
+                onClose={onClickCommandsTableClose}
             />
         </>
     )

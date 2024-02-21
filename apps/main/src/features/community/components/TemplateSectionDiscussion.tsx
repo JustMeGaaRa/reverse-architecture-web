@@ -18,9 +18,11 @@ import {
 } from "../../comments";
 
 export const TemplateSectionDiscussion: FC<{
+    isLoading?: boolean;
     comments: Array<CommentInfo>;
     onComment?: (comment: string) => void;
 }> = ({
+    isLoading,
     comments,
     onComment
 }) => {
@@ -43,32 +45,32 @@ export const TemplateSectionDiscussion: FC<{
     return (
         <>
             <ContextSheetTitle title={"Comments"} />
-            <InputGroup marginY={3} >
-                <InputLeftElement>
-                    <Icon as={ChatLines} boxSize={5} />
-                </InputLeftElement>
-                <Input
-                    ref={inputRef}
-                    placeholder={"Share your thoughts"}
-                    onKeyDown={handleOnCommentKeyDown}
-                />
-                <InputRightElement>
-                    <Button
-                        aria-label={"send"}
-                        size={"sm"}
-                        variant={"tonal"}
-                        onClick={handleOnCommentSendClick}
-                    >
-                        Send
-                    </Button>
-                </InputRightElement>
-            </InputGroup>
             <Box
-                marginTop={6}
+                padding={2}
                 height={"100%"}
                 width={"100%"}
                 overflowY={"scroll"}
             >
+                <InputGroup marginBottom={6}>
+                    <InputLeftElement>
+                        <Icon as={ChatLines} boxSize={5} />
+                    </InputLeftElement>
+                    <Input
+                        ref={inputRef}
+                        placeholder={"Share your thoughts"}
+                        onKeyDown={handleOnCommentKeyDown}
+                    />
+                    <InputRightElement>
+                        <Button
+                            aria-label={"send"}
+                            size={"sm"}
+                            variant={"tonal"}
+                            onClick={handleOnCommentSendClick}
+                        >
+                            Send
+                        </Button>
+                    </InputRightElement>
+                </InputGroup>
                 <CommentGroup>
                     {comments.map((comment, index) => (
                         <CommentNonInteractiveCard

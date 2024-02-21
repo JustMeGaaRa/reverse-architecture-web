@@ -54,9 +54,7 @@ export const UserMouseCursor: FC<{
                 boxShadow={"0px 2px 4px 0px rgba(0, 0, 0, 0.10), 12px 12px 16px 0px rgba(0, 0, 0, 0.10) inset, -12px -12px 16px 0px rgba(255, 255, 255, 0.02) inset"}
                 borderRadius={8}
                 color={color}
-                textOverflow={"ellipsis"}
                 textStyle={"b5"}
-                maxWidth={"120px"}
                 position={"absolute"}
                 paddingX={2}
                 paddingY={1}

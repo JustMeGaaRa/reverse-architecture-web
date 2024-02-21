@@ -7,7 +7,7 @@ export class WorkspaceSearchStrategy implements ISearchStrategy {
     private readonly workspaceApi: WorkspaceApi = new WorkspaceApi();
 
     search(query: string): Promise<SearchGroup> {
-        return this.workspaceApi.getWorkspaces(query)
+        return this.workspaceApi.getWorkspaces({ query })
             .then(workspaces => {
                 return {
                     title: "Workspaces",

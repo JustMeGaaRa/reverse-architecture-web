@@ -1,5 +1,6 @@
 import { Button } from "@chakra-ui/react";
-import { ErrorMessage } from "@reversearchitecture/ui";
+import { StateMessage } from "@reversearchitecture/ui";
+import { EmojiSad } from "iconoir-react";
 import React, { PropsWithChildren, ReactNode } from "react";
 
 export class ErrorBoundaryPage extends React.Component<PropsWithChildren, { hasError: boolean, error?: Error }> {
@@ -19,9 +20,10 @@ export class ErrorBoundaryPage extends React.Component<PropsWithChildren, { hasE
     render(): ReactNode {
         if (this.state.hasError) {
             return (
-                <ErrorMessage
-                    errorTitle={"An error occurred"}
-                    errorDescription={this.state.error?.message}
+                <StateMessage
+                    icon={EmojiSad}
+                    title={"An error occurred"}
+                    description={this.state.error?.message}
                     action={(
                         <Button
                             onClick={() => {}}

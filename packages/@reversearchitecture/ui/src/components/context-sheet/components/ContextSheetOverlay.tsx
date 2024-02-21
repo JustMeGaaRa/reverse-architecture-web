@@ -6,6 +6,7 @@ export const ContextSheetOverlay: FC<PropsWithChildren<{
     onDragEnter?: DragEventHandler<HTMLDivElement>;
     onDragOver?: DragEventHandler<HTMLDivElement>;
     onDragLeave?: DragEventHandler<HTMLDivElement>;
+    onDragExit?: DragEventHandler<HTMLDivElement>;
     onDrop?: DragEventHandler<HTMLDivElement>;
 }>> = ({
     children,
@@ -13,6 +14,7 @@ export const ContextSheetOverlay: FC<PropsWithChildren<{
     onDragEnter,
     onDragOver,
     onDragLeave,
+    onDragExit,
     onDrop
 }) => {
     return (
@@ -30,6 +32,7 @@ export const ContextSheetOverlay: FC<PropsWithChildren<{
             onDragEnter={onDragEnter}
             onDragOver={onDragOver}
             onDragLeave={onDragLeave}
+            onDragExit={onDragExit}
             onDrop={onDrop}
         >
             {children}

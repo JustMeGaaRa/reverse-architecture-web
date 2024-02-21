@@ -1,8 +1,15 @@
 import { IWorkspaceMetadata, StructurizrExportClient, Workspace } from "structurizr";
 import { WorkspaceInfo } from "../types";
 
-type WorkspaceLoadOptions = {
-    include: {
+export type WorkspaceLoadFilters = {
+    query?: string;
+    group?: string;
+    status?: "private" | "archived" | "shared" | "bookmarked";
+}
+
+export type WorkspaceLoadOptions = {
+    controller?: AbortController;
+    include?: {
         code: boolean;
         content: boolean;
         metadata: boolean;
@@ -177,67 +184,129 @@ export class WorkspaceApi {
             coverUrl: "",
         },
     ];
+    private readonly timeout = 500;
 
     constructor() {
     }
 
     async getWorkspaceById(workspaceId: string, options?: WorkspaceLoadOptions): Promise<WorkspaceInfo> {
         // GET api/v1/workspaces/{workspaceId}
-        throw new Error("Method not implemented.");
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                if (!options?.controller?.signal.aborted) {
+                    reject(new Error("Method not implemented."));
+                }
+            }, this.timeout)
+        })
     }
 
-    async getWorkspaceContent(workspaceId: string): Promise<string> {
+    async getWorkspaceContent(workspaceId: string, options?: WorkspaceLoadOptions): Promise<string> {
         // GET api/v1/workspaces/{workspaceId}/content
-        throw new Error("Method not implemented.");
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                if (!options?.controller?.signal.aborted) {
+                    reject(new Error("Method not implemented."));
+                }
+            }, this.timeout)
+        })
     }
 
-    async getWorkspaceMetadata(workspaceId: string): Promise<IWorkspaceMetadata> {
+    async getWorkspaceMetadata(workspaceId: string, options?: WorkspaceLoadOptions): Promise<IWorkspaceMetadata> {
         // GET api/v1/workspaces/{workspaceId}/metadata
-        throw new Error("Method not implemented.");
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                if (!options?.controller?.signal.aborted) {
+                    reject(new Error("Method not implemented."));
+                }
+            }, this.timeout)
+        })
     }
 
-    async getWorkspaces(query?: string, options?: WorkspaceLoadOptions): Promise<Array<WorkspaceInfo>> {
+    async getWorkspaces(filters?: WorkspaceLoadFilters, options?: WorkspaceLoadOptions): Promise<Array<WorkspaceInfo>> {
         // GET api/v1/workspaces?query={query}
-        throw new Error("Method not implemented.");
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                if (!options?.controller?.signal.aborted) {
+                    reject(new Error("Method not implemented."));
+                }
+            }, this.timeout)
+        })
     }
 
-    async getArchivedWorkspaces(query?: string, options?: WorkspaceLoadOptions): Promise<Array<WorkspaceInfo>> {
-        // GET api/v1/archive?query={query}
-        throw new Error("Method not implemented.");
-    }
-
-    async getSharedWorkspaces(query?: string, options?: WorkspaceLoadOptions): Promise<Array<WorkspaceInfo>> {
-        // GET api/v1/shared?query={query}
-        throw new Error("Method not implemented.");
-    }
-
-    async getBookmarkedWorkspaces(query?: string, options?: WorkspaceLoadOptions): Promise<Array<WorkspaceInfo>> {
-        // GET api/v1/bookmarks?query={query}
-        throw new Error("Method not implemented.");
-    }
-
-    async createWorkspace(workspace: WorkspaceInfo): Promise<WorkspaceInfo> {
+    async createWorkspace(workspace: WorkspaceInfo, options?: WorkspaceLoadOptions): Promise<WorkspaceInfo> {
         // POST api/v1/workspaces
-        throw new Error("Method not implemented.");
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                if (!options?.controller?.signal.aborted) {
+                    reject(new Error("Method not implemented."));
+                }
+            }, this.timeout)
+        })
     }
 
-    async saveWorkspace(workspace: WorkspaceInfo): Promise<WorkspaceInfo> {
+    async saveWorkspace(workspace: WorkspaceInfo, options?: WorkspaceLoadOptions): Promise<WorkspaceInfo> {
         // PUT api/v1/workspaces
-        throw new Error("Method not implemented.");
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                if (!options?.controller?.signal.aborted) {
+                    reject(new Error("Method not implemented."));
+                }
+            }, this.timeout)
+        })
     }
 
-    async saveWorkspaceContent(workspaceId: string, workspace: Workspace): Promise<WorkspaceInfo> {
+    async saveWorkspaceContent(workspaceId: string, workspace: Workspace, options?: WorkspaceLoadOptions): Promise<WorkspaceInfo> {
         // PUT api/v1/workspaces/{workspaceId}/content
-        throw new Error("Method not implemented.");
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                if (!options?.controller?.signal.aborted) {
+                    reject(new Error("Method not implemented."));
+                }
+            }, this.timeout)
+        })
     }
 
-    async deleteWorkspace(workspaceIds: string[]): Promise<void> {
+    async deleteWorkspace(workspaceIds: string[], options?: WorkspaceLoadOptions): Promise<void> {
         // DELETE api/v1/workspaces/{workspaceId}
-        throw new Error("Method not implemented.");
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                if (!options?.controller?.signal.aborted) {
+                    reject(new Error("Method not implemented."));
+                }
+            }, this.timeout)
+        })
     }
     
-    async archiveWorkspace(workspaceIds: string[]): Promise<void> {
+    async archiveWorkspace(workspaceIds: string[], options?: WorkspaceLoadOptions): Promise<void> {
         // PUT api/v1/archive/{workspaceId}
-        throw new Error("Method not implemented.");
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                if (!options?.controller?.signal.aborted) {
+                    reject(new Error("Method not implemented."));
+                }
+            }, this.timeout)
+        })
+    }
+    
+    async restoreWorkspace(workspaceIds: string[], options?: WorkspaceLoadOptions): Promise<void> {
+        // PUT api/v1/archive/{workspaceId}
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                if (!options?.controller?.signal.aborted) {
+                    reject(new Error("Method not implemented."));
+                }
+            }, this.timeout)
+        })
+    }
+    
+    async bookmarkWorkspace(workspaceIds: string[], options?: WorkspaceLoadOptions): Promise<void> {
+        // PUT api/v1/archive/{workspaceId}
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                if (!options?.controller?.signal.aborted) {
+                    reject(new Error("Method not implemented."));
+                }
+            }, this.timeout)
+        })
     }
 }

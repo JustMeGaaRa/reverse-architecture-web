@@ -35,12 +35,13 @@ import {
     TemplateSectionInfo,
     TemplateSectionDiscussion
 } from "../../";
-import { TemplateHeader } from "./TemplateHeader";
+import { TemplateActionBar } from "./TemplateActionBar";
 
 export const TemplateOverview: FC<{
     information: WorkspaceInfo;
     comments: CommentThread;
     workspace: Workspace;
+    isLoading?: boolean;
     isBookmarked?: boolean,
     isLiked?: boolean,
     onBookmark?: () => void,
@@ -52,6 +53,7 @@ export const TemplateOverview: FC<{
     information,
     workspace,
     comments,
+    isLoading,
     isBookmarked,
     isLiked,
     onBookmark,
@@ -96,11 +98,12 @@ export const TemplateOverview: FC<{
                                     >
                                         <WorkspaceViewBreadcrumbs /> 
                                         <WorkspacePanel position={"bottom-left"} spacing={2}>
-                                            <TemplateHeader
+                                            <TemplateActionBar
                                                 name={information?.name}
                                                 createdBy={information?.createdBy}
                                                 usedCount={information?.statistics?.used ?? 0}
                                                 likedCount={information?.statistics?.liked ?? 0}
+                                                isLoading={isLoading}
                                                 onTryItClick={onTryItClick}
                                             />
                                         </WorkspacePanel>
@@ -113,12 +116,14 @@ export const TemplateOverview: FC<{
                                     <TabPanels height={"100%"}>
                                         <TabPanel>
                                             <TemplateSectionInfo
+                                                isLoading={isLoading}
                                                 title={workspace.name}
                                                 description={workspace?.description}
                                             />
                                         </TabPanel>
                                         <TabPanel>
                                             <TemplateSectionDiscussion
+                                                isLoading={isLoading}
                                                 comments={comments?.comments ?? []}
                                                 onComment={handleOnCommentSend}
                                             />
@@ -138,6 +143,7 @@ export const TemplateOverview: FC<{
                             variant={"menuitem"}
                         >
                             <ContextSheetCloseButton
+                                isDisabled={isLoading}
                                 size={"lg"}
                                 onClick={onClose}
                             />

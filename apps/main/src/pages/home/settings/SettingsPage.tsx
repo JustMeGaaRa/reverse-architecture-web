@@ -12,7 +12,7 @@ import {
 import { ProfileCircle } from "iconoir-react";
 import { FC, useEffect } from "react";
 import { Outlet } from "react-router";
-import { HomePageLayoutContent } from "../../home";
+import { HomePageResetActionsWrapper } from "../../home";
 
 export const SettingsPage: FC = () => {
     const { setHeaderContent } = usePageHeader();
@@ -24,7 +24,7 @@ export const SettingsPage: FC = () => {
     }, [setHeaderContent]);
 
     return (
-        <HomePageLayoutContent>
+        <HomePageResetActionsWrapper>
             <ContextSheet>
                 <Flex
                     direction={"row"}
@@ -59,6 +59,6 @@ export const SettingsPage: FC = () => {
                     <Outlet />
                 </Flex>
             </ContextSheet>
-        </HomePageLayoutContent>
+        </HomePageResetActionsWrapper>
     );
 };

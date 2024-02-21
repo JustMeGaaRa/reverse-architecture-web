@@ -1,5 +1,4 @@
 import { createContext, Dispatch, SetStateAction } from "react";
-import { WorkspaceGroupInfo, WorkspaceInfo } from "../types";
 
 export type ActionOptions = {
     isEnabled: boolean;
@@ -16,17 +15,15 @@ export type WorkspaceCollectionActionOptions = {
 };
 
 export const WorkspaceCollectionContext = createContext<{
-    workspaces: Array<WorkspaceInfo>;
     selectionModeOn: boolean;
-    selected: Array<WorkspaceInfo | WorkspaceGroupInfo>;
-    selectedOptions: WorkspaceCollectionActionOptions,
+    selectedIds: Array<string>;
+    selectedOptions: WorkspaceCollectionActionOptions;
     setSelectionModeOn: Dispatch<SetStateAction<boolean>>;
-    setSelected: Dispatch<SetStateAction<Array<WorkspaceInfo | WorkspaceGroupInfo>>>;
+    setSelectedIds: Dispatch<SetStateAction<Array<string>>>;
     setSelectedOptions: Dispatch<SetStateAction<WorkspaceCollectionActionOptions>>;
 }>({
-    workspaces: [],
     selectionModeOn: false,
-    selected: [],
+    selectedIds: [],
     selectedOptions: {
         stack: {
             isEnabled: false,
@@ -54,6 +51,6 @@ export const WorkspaceCollectionContext = createContext<{
         },
     },
     setSelectionModeOn: () => {},
-    setSelected: () => {},
+    setSelectedIds: () => {},
     setSelectedOptions: () => {},
 });

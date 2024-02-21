@@ -1,6 +1,5 @@
 import {
     Box,
-    ButtonGroup,
     Divider,
     IconButton,
     Tabs,
@@ -8,8 +7,6 @@ import {
     TabList,
     TabPanel,
     TabPanels,
-    Text,
-    Button,
     Icon,
     useDisclosure,
 } from "@chakra-ui/react";
@@ -21,13 +18,12 @@ import {
     ContextSheetHeader,
     ContextSheetOverlay,
     ContextSheetTitle,
-    MessageContent,
+    StateMessage,
     useContentViewMode,
+    useLoaderState,
     useLocale,
-    usePageHeader
 } from "@reversearchitecture/ui";
 import {
-    PagePlus,
     List,
     Upload,
     ViewGrid,
@@ -37,20 +33,25 @@ import {
     FC,
     PropsWithChildren,
     useCallback,
-    useEffect,
     useMemo,
 } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useFilePicker } from "use-file-picker";
+import { validateStructurizr } from "structurizr";
 import {
+    LocaleKeys,
     WorkspaceExplorer,
-    WorkspaceApi,
     useWorkspaceCollection,
     useAccount,
-    useSnackbar
+    useSnackbar,
+    WorkspaceCollectionProvider
 } from "../../../features";
-import { LocaleKeys } from "../../../features";
-import { HomePageLayoutContent, WorkspaceStack, WorkspaceStackBody, WorkspaceStackHeader } from "../";
+import {
+    HomePageResetActionsWrapper,
+    WorkspaceExplorerPageActionWrapper,
+    WorkspaceStack,
+    WorkspaceStackBody,
+    WorkspaceStackHeader
+} from "../";
 
 export enum WorkspaceListTabs {
     All = "all",
@@ -59,30 +60,56 @@ export enum WorkspaceListTabs {
 }
 
 export const WorkspaceExplorerPage: FC<PropsWithChildren> = () => {
+    console.log("workspace explorer page")
     const navigate = useNavigate();
-    const { getLocalizedString } = useLocale();
-    const { setHeaderContent } = usePageHeader();
     const [ queryParams, setQueryParam ] = useSearchParams([[ "tab", WorkspaceListTabs.All ]]);
+    const { getLocalizedString } = useLocale();
     const { snackbar } = useSnackbar();
     const { account } = useAccount();
 
-    const workspaceApi = useMemo(() => new WorkspaceApi(), []);
-    const { workspaces, archived, set, create } = useWorkspaceCollection();
+    const { isLoading, onStartLoading, onStopLoading } = useLoaderState();
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
-    useEffect(() => {
-        workspaceApi.getWorkspaces()
-            .then(workspaces => {
-                set(workspaces);
+    const { workspaces, create } = useWorkspaceCollection();
+
+    const handleOnDragEnterWorkspaceFile = useCallback((event: React.DragEvent<HTMLDivElement>) => {
+        onOpen();
+    }, [onOpen]);
+
+    const handleOnDragOverWorkspaceFile = useCallback((event: React.DragEvent<HTMLDivElement>) => {
+        event.preventDefault();
+    }, []);
+
+    const handleOnDragExitWorkspaceFile = useCallback((event: React.DragEvent<HTMLDivElement>) => {
+        onClose();
+    }, [onClose]);
+
+    const handleOnDropWorkspaceFile = useCallback((event: React.DragEvent<HTMLDivElement>) => {
+        event.preventDefault();
+        event.dataTransfer.files[0].text()
+            .then(content => {
+                onStartLoading();
+                
+                if (validateStructurizr(content)) {
+                    create(account.username, { code: content });
+                }
+                else {
+                    // TODO: workspace file is not valid, so show error message
+                }
+        
+                onStopLoading();
+                onClose();
             })
             .catch(error => {
                 snackbar({
                     title: "Error importing workspace",
-                    description: error?.message,
+                    description: error.message,
                     status: "error",
                     duration: 9000
                 })
+                onClose();
             });
-    }, [set, snackbar, workspaceApi]);
+    }, [account.username, create, onClose, onStartLoading, onStopLoading, snackbar]);
     
     const handleOnClickWorkspaceCreate = useCallback(() => {
         create(account.username);
@@ -99,99 +126,11 @@ export const WorkspaceExplorerPage: FC<PropsWithChildren> = () => {
             });
         }
     }, [workspaces, navigate, setQueryParam]);
-
-    const createWorkspaceFromFile = useCallback((code: string) => {
-        // TODO: create a workspace based on selected file contents
-    }, []);
-
-    const {
-        isOpen: isOverlayOpen,
-        onOpen: onOverlayOpen,
-        onClose: onOverlayClose
-    } = useDisclosure();
-    const { openFilePicker } = useFilePicker({
-        accept: ".dsl",
-        multiple: false,
-        readAs: "Text",
-        readFilesContent: true,
-        onFilesRejected: ({ errors }) => {
-            snackbar({
-                title: "Error importing workspace",
-                description: errors[0] as string,
-                status: "error",
-                duration: 9000
-            })
-            onOverlayClose();
-        },
-        onFilesSuccessfullySelected: ({ filesContent }) => {
-            createWorkspaceFromFile(filesContent[0].content);
-            onOverlayClose();
-        },
-    });
-
-    const handleOnClickWorkspaceImport = useCallback(() => {
-        // NOTE: don't include in the dependency array as
-        // this function is not wrapped in a 'useCallback' and causes infinite re-renders
-        openFilePicker();
-    }, []);
-
-    const handleOnDragEnterWorkspaceFile = useCallback((event: React.DragEvent<HTMLDivElement>) => {
-        onOverlayOpen();
-    }, [onOverlayOpen]);
-
-    const handleOnDragOverWorkspaceFile = useCallback((event: React.DragEvent<HTMLDivElement>) => {
-        event.preventDefault();
-    }, []);
-
-    const handleOnDragLeaveWorkspaceFile = useCallback((event: React.DragEvent<HTMLDivElement>) => {
-        onOverlayClose();
-    }, [onOverlayClose]);
-
-    const handleOnDropWorkspaceFile = useCallback((event: React.DragEvent<HTMLDivElement>) => {
-        event.preventDefault();
-        event.dataTransfer.files[0].text()
-            .then(code => {
-                createWorkspaceFromFile(code);
-                onOverlayClose();
-            })
-            .catch(error => {
-                snackbar({
-                    title: "Error importing workspace",
-                    description: error.message,
-                    status: "error",
-                    duration: 9000
-                })
-            });
-    }, [createWorkspaceFromFile, onOverlayClose, snackbar]);
-
-    useEffect(() => {
-        setHeaderContent({
-            right: (
-                <ButtonGroup mr={4} variant={"filled"}>
-                    <IconButton
-                        aria-label={"import workspace"}
-                        colorScheme={"gray"}
-                        icon={<Icon as={Upload} boxSize={5} />}
-                        title={"Import Workspace"}
-                        onClick={handleOnClickWorkspaceImport}
-                    />
-                    <Button
-                        aria-label={"new project"}
-                        colorScheme={"lime"}
-                        leftIcon={<Icon as={PagePlus} boxSize={5} />}
-                        iconSpacing={"0px"}
-                        onClick={handleOnClickWorkspaceCreate}
-                    >
-                        <Text marginX={2}>New Workspace</Text>
-                    </Button>
-                </ButtonGroup>
-            )
-        })
-    }, [setHeaderContent, handleOnClickWorkspaceCreate, handleOnClickWorkspaceImport]);
     
-    const tabIndex = useMemo(() => queryParams.get("group") ? 3
+    const tabIndex = useMemo(() => (queryParams.get("group") ? 3
         : queryParams.get("tab") === WorkspaceListTabs.Archived ? 2
-            : queryParams.get("tab") === WorkspaceListTabs.Shared ? 1 : 0, [queryParams]);
+            : queryParams.get("tab") === WorkspaceListTabs.Shared ? 1 : 0
+    ),[queryParams]);
     
     const { view, setView } = useContentViewMode(ContentViewMode.Card);
 
@@ -214,134 +153,107 @@ export const WorkspaceExplorerPage: FC<PropsWithChildren> = () => {
     }, [setQueryParam]);
 
     return (
-        <HomePageLayoutContent>
-            <ContextSheet
-                isOpen={!selectedGroupName}
-                outline={isOverlayOpen ? "lime.600" : undefined}
-                onDragEnter={handleOnDragEnterWorkspaceFile}
-            >
-                <ContextSheetOverlay
-                    isOpen={isOverlayOpen}
-                    onDragOver={handleOnDragOverWorkspaceFile}
-                    onDragLeave={handleOnDragLeaveWorkspaceFile}
-                    onDrop={handleOnDropWorkspaceFile}
+        <HomePageResetActionsWrapper>
+            <WorkspaceExplorerPageActionWrapper>
+                <ContextSheet
+                    isOpen={!selectedGroupName}
+                    outline={isOpen ? "lime.600" : undefined}
+                    onDragEnter={handleOnDragEnterWorkspaceFile}
                 >
-                    <MessageContent
-                        icon={Upload}
-                        title={"Drop the file"}
-                        description={"Drag and drop a file to create a new workspace"}
-                    />
-                </ContextSheetOverlay>
-                
-                <ContextSheetHeader>
-                    <ContextSheetTitle title={"Workspaces"} />
-                </ContextSheetHeader>
+                    <ContextSheetHeader>
+                        <ContextSheetTitle title={"Workspaces"} />
+                    </ContextSheetHeader>
 
-                <Divider />
+                    <Divider />
+                    
+                    <ContextSheetBody>
+                        <Tabs height={"100%"} index={tabIndex}>
+                            <TabList backgroundColor={"surface.tinted-black-40"} height={12} paddingX={2}>
+                                <Tab onClick={handleOnClickWorkspacesTab}>
+                                    My Workspaces
+                                </Tab>
+                                <Tab onClick={handleOnClickWorkspacesSharedTab}>
+                                    Shared
+                                </Tab>
+                                <Tab onClick={handleOnClickWorkspacesArchiveTab}>
+                                    Archived
+                                </Tab>
+                                <Box position={"absolute"} right={4}>
+                                    <ButtonSegmentedToggle size={"sm"}>
+                                        <IconButton
+                                            aria-label={"card view"}
+                                            isActive={view === ContentViewMode.Card}
+                                            icon={<Icon as={ViewGrid} boxSize={4} />}
+                                            onClick={() => setView(ContentViewMode.Card)}
+                                        />
+                                        <IconButton
+                                            aria-label={"table view"}
+                                            isActive={view === ContentViewMode.Table}
+                                            icon={<Icon as={List} boxSize={4} />}
+                                            onClick={() => setView(ContentViewMode.Table)}
+                                        />
+                                    </ButtonSegmentedToggle>
+                                </Box>
+                            </TabList>
+                            <TabPanels height={"calc(100% - 42px)"} padding={6} overflowY={"scroll"}>
+                                <TabPanel>
+                                    <WorkspaceCollectionProvider>
+                                        <WorkspaceExplorer
+                                            filters={{ status: "private" }}
+                                            options={{ view, group: true }}
+                                            onClick={handleOnClickWorkspaceOpen}
+                                        />
+                                    </WorkspaceCollectionProvider>
+                                </TabPanel>
+                                <TabPanel>
+                                    <WorkspaceCollectionProvider>
+                                        <WorkspaceExplorer
+                                            filters={{ status: "shared" }}
+                                            options={{ view, group: true }}
+                                            onClick={handleOnClickWorkspaceOpen}
+                                        />
+                                    </WorkspaceCollectionProvider>
+                                </TabPanel>
+                                <TabPanel>
+                                    <WorkspaceCollectionProvider>
+                                        <WorkspaceExplorer
+                                            filters={{ status: "archived" }}
+                                            options={{ view, group: true }}
+                                            onClick={handleOnClickWorkspaceOpen}
+                                        />
+                                    </WorkspaceCollectionProvider>
+                                </TabPanel>
+                            </TabPanels>
+                        </Tabs>
+                    </ContextSheetBody>
+                    
+                    <ContextSheetOverlay
+                        isOpen={isOpen}
+                        onDragOver={handleOnDragOverWorkspaceFile}
+                        onDragExit={handleOnDragExitWorkspaceFile}
+                        onDrop={handleOnDropWorkspaceFile}
+                    >
+                        <StateMessage
+                            icon={Upload}
+                            title={getLocalizedString(LocaleKeys.IMPORT_FILE_TITLE)}
+                            description={getLocalizedString(LocaleKeys.IMPORT_FILE_DESCRIPTION)}
+                        />
+                    </ContextSheetOverlay>
+                </ContextSheet>
                 
-                <ContextSheetBody>
-                    <Tabs height={"100%"} index={tabIndex}>
-                        <TabList backgroundColor={"surface.tinted-black-40"} height={12} paddingX={2}>
-                            <Tab onClick={handleOnClickWorkspacesTab}>
-                                My Workspaces
-                            </Tab>
-                            <Tab onClick={handleOnClickWorkspacesSharedTab}>
-                                Shared
-                            </Tab>
-                            <Tab onClick={handleOnClickWorkspacesArchiveTab}>
-                                Archived
-                            </Tab>
-                            <Box position={"absolute"} right={4}>
-                                <ButtonSegmentedToggle size={"sm"}>
-                                    <IconButton
-                                        aria-label={"card view"}
-                                        isActive={view === ContentViewMode.Card}
-                                        icon={<Icon as={ViewGrid} boxSize={4} />}
-                                        onClick={() => setView(ContentViewMode.Card)}
-                                    />
-                                    <IconButton
-                                        aria-label={"table view"}
-                                        isActive={view === ContentViewMode.Table}
-                                        icon={<Icon as={List} boxSize={4} />}
-                                        onClick={() => setView(ContentViewMode.Table)}
-                                    />
-                                </ButtonSegmentedToggle>
-                            </Box>
-                        </TabList>
-                        <TabPanels height={"calc(100% - 42px)"} padding={6} overflowY={"scroll"}>
-                            <TabPanel>
-                                <WorkspaceExplorer
-                                    workspaces={workspaces}
-                                    options={{ view, group: true }}
-                                    empty={{
-                                        title: getLocalizedString(LocaleKeys.NO_WORKSPACES_TITLE),
-                                        description: getLocalizedString(LocaleKeys.NO_WORKSPACES_SUGGESTION),
-                                        action: (
-                                            <Button
-                                                aria-label={"new project"}
-                                                colorScheme={"lime"}
-                                                iconSpacing={"0px"}
-                                                leftIcon={<Icon as={PagePlus} boxSize={5} />}
-                                                onClick={handleOnClickWorkspaceCreate}
-                                            >
-                                                <Text marginX={2}>New Workspace</Text>
-                                            </Button>
-                                        )
-                                    }}
-                                    error={{
-                                        description: getLocalizedString(LocaleKeys.ERROR_LOADING_WORKSPACES)
-                                    }}
-                                    onClick={handleOnClickWorkspaceOpen}
-                                />
-                            </TabPanel>
-                            <TabPanel>
-                                <WorkspaceExplorer
-                                    workspaces={[]}
-                                    options={{ view, group: true }}
-                                    empty={{
-                                        title: getLocalizedString(LocaleKeys.NO_SHARED_TITLE),
-                                        description: getLocalizedString(LocaleKeys.NO_SHARED_WORKSPACES_SUGGESTION)
-                                    }}
-                                    error={{
-                                        description: getLocalizedString(LocaleKeys.ERROR_LOADING_WORKSPACES)
-                                    }}
-                                    onClick={handleOnClickWorkspaceOpen}
-                                />
-                            </TabPanel>
-                            <TabPanel>
-                                <WorkspaceExplorer
-                                    workspaces={archived}
-                                    options={{ view, group: true }}
-                                    empty={{
-                                        title: getLocalizedString(LocaleKeys.NO_ARCHIVED_TITLE),
-                                        description: getLocalizedString(LocaleKeys.NO_ARCHIVED_WORKSPACES_SUGGESTION)
-                                    }}
-                                    error={{
-                                        description: getLocalizedString(LocaleKeys.ERROR_LOADING_WORKSPACES)
-                                    }}
-                                    onClick={handleOnClickWorkspaceOpen}
-                                />
-                            </TabPanel>
-                        </TabPanels>
-                    </Tabs>
-                </ContextSheetBody>
-            </ContextSheet>
-            
-            <WorkspaceStack isOpen={!!selectedGroupName} onClose={handleOnClickWorkspaceStackClose}>
-                <WorkspaceStackHeader title={selectedGroupName} icon={AppleShortcuts} />
-                <WorkspaceStackBody>
-                    <WorkspaceExplorer
-                        workspaces={workspaces?.filter(workspace => workspace.group === selectedGroupName) || []}
-                        options={{ view: "card", group: false }}
-                        empty={{
-                            title: getLocalizedString(LocaleKeys.NO_STACK_WORKSPACES_TITLE),
-                            description: getLocalizedString(LocaleKeys.NO_STACK_WORKSPACES_SUGGESTION)
-                        }}
-                        onClick={handleOnClickWorkspaceOpen}
-                    />
-                </WorkspaceStackBody>
-            </WorkspaceStack>
-            
-        </HomePageLayoutContent>
+                <WorkspaceStack isOpen={!!selectedGroupName} onClose={handleOnClickWorkspaceStackClose}>
+                    <WorkspaceStackHeader title={selectedGroupName} icon={AppleShortcuts} />
+                    <WorkspaceStackBody>
+                        <WorkspaceCollectionProvider>
+                            <WorkspaceExplorer
+                                filters={{ group: selectedGroupName }}
+                                options={{ view: "card", group: false }}
+                                onClick={handleOnClickWorkspaceOpen}
+                            />
+                        </WorkspaceCollectionProvider>
+                    </WorkspaceStackBody>
+                </WorkspaceStack>
+            </WorkspaceExplorerPageActionWrapper>
+        </HomePageResetActionsWrapper>
     )
 }

@@ -1,13 +1,13 @@
-import { useCallback } from "react";
-import { useWorkspaceStore } from "../store";
+import { useCallback, useContext } from "react";
+import { WorkspaceCollectionContext } from "../contexts";
 
 export const useWorkspaceSelection = () => {
     const {
-        // selectionModeOn,
+        selectionModeOn,
         selectedIds,
-        // setSelectionModeOn,
+        setSelectionModeOn,
         setSelectedIds
-    } = useWorkspaceStore();
+    } = useContext(WorkspaceCollectionContext);
 
     const addSelected = useCallback((selectedId: string) => {
         setSelectedIds(selectedIds => ([ ...selectedIds, selectedId ]));
@@ -31,9 +31,9 @@ export const useWorkspaceSelection = () => {
     }, [setSelectedIds]);
 
     return {
-        // selectionModeOn,
+        selectionModeOn,
         selectedIds,
-        // setSelectionModeOn,
+        setSelectionModeOn,
         addSelected,
         removeSelected,
         toggleSelected,

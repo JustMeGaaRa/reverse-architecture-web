@@ -1,8 +1,12 @@
-import { Button, Divider, Flex, Icon, Text, ToastProps } from "@chakra-ui/react";
-import { InfoCircle, WarningHexagon, WarningTriangle,  } from "iconoir-react";
+import { ButtonGroup, Divider, Flex, Icon, IconButton, Text, ToastProps } from "@chakra-ui/react";
+import { InfoCircle, WarningHexagon, WarningTriangle, Xmark,  } from "iconoir-react";
 import { FC, useMemo } from "react";
 
-export const Snackbar: FC<ToastProps> = ({ status, title, description }) => {
+export type SnackbarProps = ToastProps & {
+    action?: React.ReactElement;
+};
+
+export const Snackbar: FC<SnackbarProps> = ({ action, status, title, isClosable, onClose }) => {
     const iconProps = useMemo(() => new Map([
         ["info", { icon: InfoCircle, color: "green.600" }],
         ["success", { icon: InfoCircle, color: "blue.600" }],
@@ -44,10 +48,21 @@ export const Snackbar: FC<ToastProps> = ({ status, title, description }) => {
                 </Text>
             </Flex>
             <Flex flexGrow={0} alignItems={"center"}>
-                <Divider orientation={"vertical"} height={"16px"} padding={1} />
-                <Button size={"sm"} variant={"ghost"}>
-                    Action
-                </Button>
+                {action && (
+                    <Divider orientation={"vertical"} height={"16px"} padding={1} />
+                )}
+                <ButtonGroup size={"sm"} variant={"ghost"}>
+                    {action}
+                    {isClosable && (
+                        <IconButton
+                            aria-label={"close"}
+                            icon={<Icon as={Xmark} boxSize={5} />}
+                            title={"close"}
+                            variant={"tonal"}
+                            onClick={onClose}
+                        />
+                    )}
+                </ButtonGroup>
             </Flex>
         </Flex>
     )

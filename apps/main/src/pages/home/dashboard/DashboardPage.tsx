@@ -4,12 +4,12 @@ import {
     ContextSheetBody,
     ContextSheetHeader,
     ContextSheetTitle,
-    MessageContent,
+    StateMessage,
     usePageHeader
 } from "@reversearchitecture/ui";
 import { Folder } from "iconoir-react";
 import { FC, useEffect } from "react";
-import { HomePageLayoutContent } from "../../home";
+import { HomePageResetActionsWrapper } from "../../home";
 
 export const DashboardPage: FC = () => {
     const { setHeaderContent } = usePageHeader();
@@ -21,7 +21,7 @@ export const DashboardPage: FC = () => {
     }, [setHeaderContent]);
     
     return (
-        <HomePageLayoutContent>
+        <HomePageResetActionsWrapper>
             <ContextSheet>
                 <ContextSheetHeader>
                     <ContextSheetTitle title={"Dashboard"} />
@@ -30,13 +30,13 @@ export const DashboardPage: FC = () => {
                 <Divider />
 
                 <ContextSheetBody>
-                    <MessageContent
+                    <StateMessage
                         icon={Folder}
                         title={"No content created yet"}
                         description={"To get started, create some new projects."}
                     />
                 </ContextSheetBody>
             </ContextSheet>
-        </HomePageLayoutContent>
+        </HomePageResetActionsWrapper>
     );
 }

@@ -1,6 +1,17 @@
-import { Box, Flex, ScaleFade } from "@chakra-ui/react";
-import { ContextSheet, ContextSheetBody, ContextSheetCloseButton, ContextSheetHeader, ContextSheetTitle } from "@reversearchitecture/ui";
-import { createContext, FC, PropsWithChildren, useContext } from "react";
+import { ScaleFade } from "@chakra-ui/react";
+import {
+    ContextSheet,
+    ContextSheetBody,
+    ContextSheetCloseButton,
+    ContextSheetHeader,
+    ContextSheetTitle
+} from "@reversearchitecture/ui";
+import {
+    createContext,
+    FC,
+    PropsWithChildren,
+    useContext
+} from "react";
 
 export const WorkspaceStackContext = createContext<{
     isOpen: boolean;
@@ -44,7 +55,8 @@ export const WorkspaceStackHeader: FC<{
         <ScaleFade in={isOpen}>
             <ContextSheetHeader
                 backgroundColor={"surface.tinted-white-10"}
-                justifyContent={"space-between"}
+                outlineRadius={[24, 24, 24, 24]}
+                padding={2}
             >
                 <ContextSheetTitle icon={icon} title={title} />
                 <ContextSheetCloseButton size={"lg"} onClick={onClose} />
@@ -64,6 +76,7 @@ export const WorkspaceStackBody: FC<PropsWithChildren> = ({ children }) => {
         >
             <ContextSheetBody
                 backgroundColor={"surface.tinted-white-5"}
+                outlineRadius={[24, 24, 24, 24]}
                 padding={4}
             >
                 {children}

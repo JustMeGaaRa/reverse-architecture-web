@@ -7,8 +7,9 @@ export const useSnackbar = () => {
 
     const snackbar = useCallback((props: ToastProps) => {
         toast({
-            position: "top-right",
-            duration: 9000,
+            position: "bottom-right",
+            duration: 5000,
+            isClosable: true,
             ...props,
             render: (props) => (<Snackbar {...props} />)
         });

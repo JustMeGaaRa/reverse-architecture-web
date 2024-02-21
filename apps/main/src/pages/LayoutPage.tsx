@@ -10,21 +10,20 @@ import {
     Page,
     PageBody,
     PageHeader,
-    usePageSidebar,
-    PageHeaderSection,
-    PageSidebarSection,
-    usePageHeader,
+    PageHeaderSectionOutlet,
+    PageSidebarSectionOutlet,
     ContextLevelProvider,
     PageHomeButton,
-    ReverseArchitectureSvg
+    ReverseArchitectureSvg,
+    usePageSidebar,
 } from "@reversearchitecture/ui";
 import { FC, PropsWithChildren } from "react";
-import { Outlet, useNavigate } from "react-router";
+import { Outlet as RouterOutlet, useNavigate } from "react-router";
 import { AccountMenu } from "./home";
 
 export const LayoutPage: FC<PropsWithChildren> = () => {
+    console.log("layout page")
     const { sidebarOptions } = usePageSidebar();
-    const { headerOptions } = usePageHeader();
     const navigate = useNavigate();
 
     return (
@@ -40,15 +39,9 @@ export const LayoutPage: FC<PropsWithChildren> = () => {
                     </Flex>
 
                     <Flex height={"100%"} direction={"column"} padding={3}>
-                        <PageSidebarSection section={"start"}>
-                            {sidebarOptions.sections.top}
-                        </PageSidebarSection>
-                        <PageSidebarSection section={"center"}>
-                            {sidebarOptions.sections.middle}
-                        </PageSidebarSection>
-                        <PageSidebarSection section={"end"}>
-                            {sidebarOptions.sections.bottom}
-                        </PageSidebarSection>
+                        <PageSidebarSectionOutlet section={"start"} />
+                        <PageSidebarSectionOutlet section={"center"} />
+                        <PageSidebarSectionOutlet section={"end"} />
                     </Flex>
 
                     <Flex display={sidebarOptions.showButton ? "block" : "none"}>
@@ -61,19 +54,13 @@ export const LayoutPage: FC<PropsWithChildren> = () => {
                 </PageSidebar>
                 <PageBody>
                     <PageHeader>
-                        <PageHeaderSection section={"start"}>
-                            {headerOptions.sections.left}
-                        </PageHeaderSection>
-                        <PageHeaderSection section={"center"}>
-                            {headerOptions.sections.middle}
-                        </PageHeaderSection>
-                        <PageHeaderSection section={"end"}>
-                            {headerOptions.sections.right}
-                        </PageHeaderSection>
+                        <PageHeaderSectionOutlet section={"start"} />
+                        <PageHeaderSectionOutlet section={"center"} />
+                        <PageHeaderSectionOutlet section={"end"} />
                     </PageHeader>
                     
                     <PageContent>
-                        <Outlet />
+                        <RouterOutlet />
                     </PageContent>
                 </PageBody>
             </Page>

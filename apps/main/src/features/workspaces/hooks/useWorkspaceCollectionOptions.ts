@@ -1,12 +1,11 @@
-import { useCallback } from "react";
-import { useWorkspaceStore } from "../store";
+import { useCallback, useContext } from "react";
+import { WorkspaceCollectionContext } from "../contexts";
 
-// TODO: consider removing this hook as it is replaced by useWorkspaceCollection
 export const useWorkspaceCollectionOptions = () => {
     const {
         selectedOptions,
         setSelectedOptions
-    } = useWorkspaceStore();
+    } = useContext(WorkspaceCollectionContext);
 
     const enableStacking = useCallback(() => {
         setSelectedOptions(options => {

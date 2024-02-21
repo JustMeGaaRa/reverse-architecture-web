@@ -84,8 +84,8 @@ import {
 } from "../../features";
 import {
     DiscussionsPane,
-    PresenterInfo,
-    SharePopover,
+    PresenterInfoBar,
+    WorkspaceSharePopover,
     UserAvatarGroup,
     WorkspaceActionsToolbar,
     WorkspaceUndoRedoControls,
@@ -253,7 +253,7 @@ export const WorkspaceCollaborativeEditor: FC = () => {
     }, []);
 
     // TODO: move auto save to a higher component
-    const { workspaces, set, } = useWorkspaceCollection();
+    const { workspaces, setWorkspaces } = useWorkspaceCollection();
 
     const saveWorkspace = useCallback((workspaceId: string, workspace: Workspace) => {
         // TODO: check if workspace has been modified
@@ -264,7 +264,7 @@ export const WorkspaceCollaborativeEditor: FC = () => {
 
         saveWorkspaceContent(workspaceId, workspace)
             .then(workspace => {
-                set(workspaces.map(existing => {
+                setWorkspaces(workspaces.map(existing => {
                     return existing.workspaceId !== workspaceId
                         ? existing
                         : { ...existing, content: workspace }
@@ -278,7 +278,7 @@ export const WorkspaceCollaborativeEditor: FC = () => {
                     duration: 9000,
                 })
             });
-    }, [workspaces, set, snackbar]);
+    }, [workspaces, setWorkspaces, snackbar]);
 
     useEffect(() => {
         const autoSave = setInterval(() => {
@@ -385,7 +385,7 @@ export const WorkspaceCollaborativeEditor: FC = () => {
                         marginX={2}
                         orientation={"vertical"}
                     />
-                    <SharePopover />
+                    <WorkspaceSharePopover />
                 </HStack>
             )
         })
@@ -433,6 +433,7 @@ export const WorkspaceCollaborativeEditor: FC = () => {
         // TODO: handle parsing errors
         setWorkspace(parseStructurizr(value));
     }, [parseStructurizr, setWorkspace]);
+    console.log("workspace content editor", workspace)
 
     return (
         <ContextSheet>
@@ -440,8 +441,8 @@ export const WorkspaceCollaborativeEditor: FC = () => {
                 {panel === WorkspaceContentPanel.Comments && (
                     <ContextSheetPanel width={"400px"}>
                         <ContextSheetHeader>
-                            <ContextSheetCloseButton onClick={handleOnClickPanelClose} />
                             <ContextSheetTitle title={"All Discussions"} />
+                            <ContextSheetCloseButton onClick={handleOnClickPanelClose} />
                         </ContextSheetHeader>
                         <Divider />
                         <ContextSheetBody>
@@ -453,8 +454,8 @@ export const WorkspaceCollaborativeEditor: FC = () => {
                 {panel === WorkspaceContentPanel.Editor && (
                     <ContextSheetPanel width={"100%"}>
                         <ContextSheetHeader>
-                            <ContextSheetCloseButton onClick={handleOnClickPanelClose} />
                             <ContextSheetTitle title={"Code Editor"} />
+                            <ContextSheetCloseButton onClick={handleOnClickPanelClose} />
                         </ContextSheetHeader>
                         <Divider />
                         <ContextSheetBody>
@@ -469,8 +470,8 @@ export const WorkspaceCollaborativeEditor: FC = () => {
                 {panel === WorkspaceContentPanel.Versions && (
                     <ContextSheetPanel width={"400px"}>
                         <ContextSheetHeader>
-                            <ContextSheetCloseButton onClick={handleOnClickPanelClose} />
                             <ContextSheetTitle title={"Version History"} />
+                            <ContextSheetCloseButton onClick={handleOnClickPanelClose} />
                         </ContextSheetHeader>
                         <Divider />
                         <ContextSheetBody>
@@ -483,11 +484,6 @@ export const WorkspaceCollaborativeEditor: FC = () => {
                     outline={presentationEnabled ? `${presenterInfo?.color}.600` : undefined}
                     outlineWidth={presentationEnabled ? [2, 2, 2, 2] : [2, 2, 0, 0]}
                 >
-                    <ErrorBoundary
-                        fallback={(
-                            <>{getLocalizedString(LocaleKeys.ERROR_LOADING_WORKSPACES)}</>
-                        )}
-                    >
                         <WorkspaceViewer
                             workspace={workspace}
                             initialView={currentView}
@@ -495,13 +491,13 @@ export const WorkspaceCollaborativeEditor: FC = () => {
                         >
                             <CollaboratingUserPane users={currentViewUsers} />
                             <DiscussionsPane discussions={currentViewDiscussions} />
-                            <PresenterInfo presenter={presenterInfo} />
+                            <PresenterInfoBar presenter={presenterInfo} />
                             <WorkspaceViewBreadcrumbs isVisible={isDiagrammingMode} />
                             <WorkspaceUndoRedoControls isVisible={!presentationEnabled} />
                             <WorkspaceActionsToolbar />
                             <WorkspaceZoomControls />
                         </WorkspaceViewer>
-                    </ErrorBoundary>
+                        
                 </ContextSheet>
             </ContextSheetTabContent>
         </ContextSheet>

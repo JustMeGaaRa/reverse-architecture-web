@@ -1,13 +1,23 @@
-import { HStack, Icon, Text } from "@chakra-ui/react";
+import { HStack, Icon, Skeleton, Text } from "@chakra-ui/react";
 import { FC } from "react";
 
-export const ContextSheetTitle: FC<{ icon?: any; title: string }> = ({ icon, title }) => {
+export const ContextSheetTitle: FC<{
+    isLoading?: boolean;
+    icon?: any;
+    title: string
+}> = ({
+    isLoading,
+    icon,
+    title
+}) => {
     return (
         <HStack padding={2}>
             {icon && (<Icon as={icon} boxSize={8} />)}
-            <Text as={"h6"} noOfLines={1} textStyle={"h6"}>
-                {title}
-            </Text>
+            <Skeleton isLoaded={!isLoading} borderRadius={"md"}>
+                <Text as={"h6"} noOfLines={1} textStyle={"h6"}>
+                    {title}
+                </Text>
+            </Skeleton>
         </HStack>
     )
 }

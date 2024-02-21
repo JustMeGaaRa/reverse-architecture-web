@@ -17,7 +17,7 @@ import { Copy, UserPlus } from "iconoir-react";
 import { FC, useCallback } from "react";
 import { useSharingOptions } from "workspace";
 
-export const SharePopover: FC = () => {
+export const WorkspaceSharePopover: FC = () => {
     const { getSharedLink } = useSharingOptions();
     
     const handleOnCopySharedLink = useCallback(() => {

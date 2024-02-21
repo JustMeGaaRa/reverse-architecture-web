@@ -10,15 +10,30 @@ type CommunityTemplate = {
     tags: Array<string>;
 }
 
+type CommunityLoadFilters = {
+    query?: string;
+    category?: string;
+    tags?: Array<string>;
+}
+
+type CommunityLoadOptions = {
+    controller?: AbortController;
+}
+
 type WorkspaceApiOptions = {
     owner: string;
     repository: string;
 }
 
+const withTimeout = <T>(promise: Promise<T>, timeout: number): Promise<T> => {
+    const delay = new Promise(resolve => setTimeout(resolve, timeout));
+    return Promise.all([promise, delay]).then(([result]) => result);
+}
+
 export class CommunityApi {
     private readonly githubUrl: string = "https://raw.githubusercontent.com/";
     private readonly baseUrl: string = "";
-    private readonly workspaces: Array<WorkspaceInfo>;
+    private readonly timeout: number = 500;
 
     constructor(
         public readonly options: WorkspaceApiOptions = {
@@ -29,57 +44,74 @@ export class CommunityApi {
         this.baseUrl = `${this.githubUrl}/${this.options.owner}/${this.options.repository}/main/workspaces`;
     }
 
-    getFilterTags(): Promise<string[]> {
-        return this.fetchWorkspaceList()
-            .then(workspaces => {
-                return Array.from(new Set(workspaces.flatMap(workspace => workspace.tags)))
-            });
+    async getFilterTags(): Promise<string[]> {
+        const workspaces = await withTimeout(this.fetchWorkspaceList(), this.timeout);
+        return Array.from(new Set(workspaces.flatMap(workspace => workspace.tags)));
     }
 
-    async getWorkspaceById(workspaceId: string): Promise<WorkspaceInfo> {
-        const list = await this.fetchWorkspaceList();
+    async getWorkspaceById(workspaceId: string, options?: CommunityLoadOptions): Promise<WorkspaceInfo> {
+        const list = await withTimeout(this.fetchWorkspaceList(), this.timeout);
         const workspaceInfo = list.find(w => w.workspaceId === workspaceId);
         return workspaceInfo;
     }
 
-    async getWorkspaces(query?: string, tags?: string[]): Promise<WorkspaceInfo[]> {
+    async getWorkspaces(filters: CommunityLoadFilters, options?: CommunityLoadOptions): Promise<WorkspaceInfo[]> {
         // TODO: consider moving this to the backend
-        const chunks = (query ? query.split(" ") : [])
+        const chunks = (filters.query ? filters.query.split(" ") : [])
             .map(chunk => chunk.trim())
             .filter(chunk => chunk.length > 0);
         
-        const workspaces = await this.fetchWorkspaceList();
-        return chunks.length === 0
-            ? workspaces
-            : workspaces.filter(workspace => {
+        let filtered = await withTimeout(this.fetchWorkspaceList(), this.timeout);
+
+        if (filters?.category !== undefined && filters?.category === "Explore") {
+            filtered = filtered.filter(x => {
+                return filters.tags?.every(tag => x.tags?.includes(tag))
+                    || filters.tags === undefined
+                    || filters.tags?.length === 0;
+            });
+        }
+        if (filters?.category !== undefined && filters?.category !== "Explore") {
+            filtered = filtered.filter(x => {
+                return x.tags?.includes(filters?.category)
+                    && (filters.tags?.every(tag => x.tags?.includes(tag))
+                    || filters.tags === undefined
+                    || filters.tags?.length === 0);
+            });
+        }
+
+        if (chunks.length > 0) {
+            filtered = filtered.filter(workspace => {
                 return chunks.some(chunk => workspace.name.toLowerCase().includes(chunk.toLowerCase()))
             })
+        }
+
+        return filtered;
     }
 
-    async getWorkspaceContent(workspaceId: string): Promise<string> {
-        const workspaceResponse = await fetch(`${this.baseUrl}/${workspaceId}/workspace.dsl`);
+    async getWorkspaceContent(workspaceId: string, options?: CommunityLoadOptions): Promise<string> {
+        const workspaceResponse = await withTimeout(fetch(`${this.baseUrl}/${workspaceId}/workspace.dsl`), this.timeout);
         const text = workspaceResponse.ok ? await workspaceResponse.text() as string : "";
         return text;
     }
 
-    async getWorkspaceMetadata(workspaceId: string): Promise<IWorkspaceMetadata> {
-        const metadataResponse = await fetch(`${this.baseUrl}/${workspaceId}/workspace.metadata.json`);
+    async getWorkspaceMetadata(workspaceId: string, options?: CommunityLoadOptions): Promise<IWorkspaceMetadata> {
+        const metadataResponse = await withTimeout(fetch(`${this.baseUrl}/${workspaceId}/workspace.metadata.json`), this.timeout);
         const metadata = metadataResponse.ok ? await metadataResponse.json() as IWorkspaceMetadata : undefined;
         return metadata;
     }
 
-    async getWorkspaceTheme(workspaceId: string): Promise<IWorkspaceTheme> {
-        const themeResponse = await fetch(`${this.baseUrl}/${workspaceId}/workspace.theme.json`);
+    async getWorkspaceTheme(workspaceId: string, options?: CommunityLoadOptions): Promise<IWorkspaceTheme> {
+        const themeResponse = await withTimeout(fetch(`${this.baseUrl}/${workspaceId}/workspace.theme.json`), this.timeout);
         const theme = themeResponse.ok ? await themeResponse.json() as IWorkspaceTheme : undefined;
         return theme;
     }
 
-    async publishWorkspace(workspace: WorkspaceInfo): Promise<void> {
+    async publishWorkspace(workspace: WorkspaceInfo, options?: CommunityLoadOptions): Promise<void> {
         // TODO: implement by creating a request on GitHub
         return undefined;
     }
 
-    async fetchWorkspaceList(): Promise<Array<WorkspaceInfo>> {
+    async fetchWorkspaceList(options?: CommunityLoadOptions): Promise<Array<WorkspaceInfo>> {
         const workspaceListResponse = await fetch(`${this.baseUrl}/list.json`);
         const { values } = workspaceListResponse.ok ? await workspaceListResponse.json() : { values: [] };
         const workspaces = (values as CommunityTemplate[])

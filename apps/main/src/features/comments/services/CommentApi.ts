@@ -2,8 +2,14 @@ import { ViewType } from "structurizr";
 import { useCommentStore } from "../store";
 import { CommentInfo, CommentThread, CommentThreadMetadata } from "../types";
 
+const withTimeout = <T>(promise: Promise<T>, timeout: number): Promise<T> => {
+    const delay = new Promise(resolve => setTimeout(resolve, timeout));
+    return Promise.all([promise, delay]).then(([result]) => result);
+}
+
 export class CommentApi {
     private readonly comments: Array<CommentThread> = [];
+    private readonly timeout = 500;
 
     constructor(
         private readonly baseUrl: string = ""
@@ -164,27 +170,27 @@ export class CommentApi {
     }
 
     async getBiscussionById(workspaceId: string, commentThreadId: string): Promise<CommentThread> {
-        const discussion = useCommentStore.getState().discussions.find(x => x.workspaceId === workspaceId && x.commentThreadId === commentThreadId);
-        return Promise.resolve(discussion);
+        const discussion = Promise.resolve(useCommentStore.getState().discussions.find(x => x.workspaceId === workspaceId && x.commentThreadId === commentThreadId));
+        return withTimeout(discussion, this.timeout);
     }
 
     async getDiscussions(workspaceId: string): Promise<Array<CommentThread>> {
-        const discussions = useCommentStore.getState().discussions.filter(x => x.workspaceId === workspaceId) ?? [];
-        return Promise.resolve(discussions);
+        const discussions = Promise.resolve(useCommentStore.getState().discussions.filter(x => x.workspaceId === workspaceId) ?? []);
+        return withTimeout(discussions, this.timeout);
     }
 
     async saveDiscussions(workspaceId: string, comment: CommentInfo, metadata: CommentThreadMetadata): Promise<CommentThread> {
-        const discussion = useCommentStore.getState().startDiscussion(workspaceId, comment, metadata);
-        return Promise.resolve(discussion);
+        const discussion = Promise.resolve(useCommentStore.getState().startDiscussion(workspaceId, comment, metadata));
+        return withTimeout(discussion, this.timeout);
     }
 
     async deleteDiscussions(workspaceId: string, commentId: string): Promise<CommentThread> {
-        const discussion = useCommentStore.getState().resolveDiscussion(workspaceId, commentId);
-        return Promise.resolve(discussion);
+        const discussion = Promise.resolve(useCommentStore.getState().resolveDiscussion(workspaceId, commentId));
+        return withTimeout(discussion, this.timeout);
     }
 
     async saveDiscussionReply(workspaceId: string, commentThreadId: string, comment: CommentInfo): Promise<CommentThread> {
-        const discussion = useCommentStore.getState().replyInDiscussion(workspaceId, commentThreadId, comment);
-        return Promise.resolve(discussion);
+        const discussion = Promise.resolve(useCommentStore.getState().replyInDiscussion(workspaceId, commentThreadId, comment));
+        return withTimeout(discussion, this.timeout);
     }
 }
