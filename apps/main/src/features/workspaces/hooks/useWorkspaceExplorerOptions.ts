@@ -1,7 +1,7 @@
 import { useCallback, useContext } from "react";
 import { WorkspaceCollectionContext } from "../contexts";
 
-export const useWorkspaceCollectionOptions = () => {
+export const useWorkspaceExplorerOptions = () => {
     const {
         selectedOptions,
         setSelectedOptions

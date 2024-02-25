@@ -20,11 +20,10 @@ import { CommandCenter } from "../../features";
 import { HelpShortcutsModal } from "./HelpShortcutsModal";
 
 export const HomePageResetActionsWrapper: FC<PropsWithChildren> = ({ children }) => {
-    console.log("context wrapper: home page layout")
+    const navigate = useNavigate();
     const { setShowSidebarButton, setSidebarContent } = usePageSidebar();
     const { setHeaderContent } = usePageHeader();
     const [ searchParams, setSearchParams ] = useSearchParams();
-    const navigate = useNavigate();
 
     // reset sidebar and header content
     useEffect(() => {

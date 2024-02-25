@@ -1,4 +1,5 @@
 export * from "./useOnPressHold";
-export * from "./useWorkspaceCollection";
-export * from "./useWorkspaceCollectionOptions";
+export * from "./useWorkspaceExplorer";
+export * from "./useWorkspaceExplorerOptions";
 export * from "./useWorkspaceSelection";
+export * from "./useWorkspaceSelectionStore";

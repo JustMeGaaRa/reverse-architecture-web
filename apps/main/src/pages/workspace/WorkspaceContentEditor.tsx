@@ -80,7 +80,7 @@ import {
     useCommentingMode,
     useCommentsStore,
     useSnackbar,
-    useWorkspaceCollection,
+    useWorkspaceExplorer,
 } from "../../features";
 import {
     DiscussionsPane,
@@ -253,7 +253,7 @@ export const WorkspaceCollaborativeEditor: FC = () => {
     }, []);
 
     // TODO: move auto save to a higher component
-    const { workspaces, setWorkspaces } = useWorkspaceCollection();
+    const { workspaces, setWorkspaces } = useWorkspaceExplorer();
 
     const saveWorkspace = useCallback((workspaceId: string, workspace: Workspace) => {
         // TODO: check if workspace has been modified

@@ -49,7 +49,7 @@ import {
     TemplateSectionInfo,
     useAccount,
     useSnackbar,
-    useWorkspaceCollection,
+    useWorkspaceExplorer,
     WorkspaceInfo
 } from "../../../features";
 
@@ -84,7 +84,7 @@ export const CommunityTemplateModal: FC<{
 }) => {
     const { snackbar } = useSnackbar();
     const { account } = useAccount();
-    const { bookmarkedIds, likedIds, bookmark, unbookmark, like, unlike } = useWorkspaceCollection();
+    const { bookmarkedIds, likedIds, bookmark, unbookmark, like, unlike } = useWorkspaceExplorer();
 
     const [ information, setInformation ] = useState<WorkspaceInfo>();
     const [ template, setTemplate ] = useState(Workspace.Empty);
@@ -94,27 +94,29 @@ export const CommunityTemplateModal: FC<{
     const { isLoading, onStartLoading, onStopLoading } = useLoaderState();
 
     useEffect(() => {
-        onStartLoading();
-
-        loadTemplate(workspaceId)
-            .then(({ information, workspace }) => {
-                setInformation(information);
-                setTemplate(workspace);
-                onStopLoading();
-            })
-            .catch(error => {
-                onStopLoading();
-                snackbar({
-                    title: error.message,
-                    description: error.message,
-                    status: "error"
+        if (workspaceId) {
+            onStartLoading();
+    
+            loadTemplate(workspaceId)
+                .then(({ information, workspace }) => {
+                    setInformation(information);
+                    setTemplate(workspace);
+                    onStopLoading();
                 })
-            })
-
-        return () => {
-            setInformation(undefined);
-            setTemplate(Workspace.Empty);
-            setDiscussion(undefined);
+                .catch(error => {
+                    onStopLoading();
+                    snackbar({
+                        title: error.message,
+                        description: error.message,
+                        status: "error"
+                    })
+                })
+    
+            return () => {
+                setInformation(undefined);
+                setTemplate(Workspace.Empty);
+                setDiscussion(undefined);
+            }
         }
     }, [workspaceId, onStartLoading, onStopLoading, snackbar]);
 

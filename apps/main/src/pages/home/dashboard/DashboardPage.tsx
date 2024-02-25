@@ -5,14 +5,17 @@ import {
     ContextSheetHeader,
     ContextSheetTitle,
     StateMessage,
+    useLocale,
     usePageHeader
 } from "@reversearchitecture/ui";
 import { Folder } from "iconoir-react";
 import { FC, useEffect } from "react";
+import { LocaleKeys } from "../../../features";
 import { HomePageResetActionsWrapper } from "../../home";
 
 export const DashboardPage: FC = () => {
     const { setHeaderContent } = usePageHeader();
+    const { getLocalizedString } = useLocale();
 
     useEffect(() => {
         setHeaderContent({
@@ -32,8 +35,8 @@ export const DashboardPage: FC = () => {
                 <ContextSheetBody>
                     <StateMessage
                         icon={Folder}
-                        title={"No content created yet"}
-                        description={"To get started, create some new projects."}
+                        title={getLocalizedString(LocaleKeys.DASHBOARD_PAGE__NO_CONTENT__TITLE)}
+                        description={getLocalizedString(LocaleKeys.DASHBOARD_PAGE__NO_CONTENT__DESCRIPTION)}
                     />
                 </ContextSheetBody>
             </ContextSheet>

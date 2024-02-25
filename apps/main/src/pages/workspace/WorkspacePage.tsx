@@ -24,7 +24,7 @@ import {
     CommentThread,
     useAccount,
     useSnackbar,
-    useWorkspaceCollection,
+    useWorkspaceExplorer,
     WorkspaceApi,
 } from "../../features";
 import {
@@ -37,7 +37,7 @@ export const WorkspacePage: FC = () => {
     const { account } = useAccount();
     const { snackbar } = useSnackbar();
 
-    const { workspaces } = useWorkspaceCollection();
+    const { workspaces } = useWorkspaceExplorer();
     const [ workspace, setWorkspace ] = useState<IWorkspace>(Workspace.Empty.toObject());
     const { parseStructurizr } = useStructurizrParser();
     

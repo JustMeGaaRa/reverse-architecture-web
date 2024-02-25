@@ -22,9 +22,8 @@ import { Outlet as RouterOutlet, useNavigate } from "react-router";
 import { AccountMenu } from "./home";
 
 export const LayoutPage: FC<PropsWithChildren> = () => {
-    console.log("layout page")
-    const { sidebarOptions } = usePageSidebar();
     const navigate = useNavigate();
+    const { sidebarOptions } = usePageSidebar();
 
     return (
         <ContextLevelProvider>

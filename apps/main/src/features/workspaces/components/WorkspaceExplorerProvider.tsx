@@ -1,9 +1,7 @@
 import { FC, PropsWithChildren, useState } from "react"
 import { WorkspaceCollectionActionOptions, WorkspaceCollectionContext } from "../contexts"
 
-export const WorkspaceCollectionProvider: FC<PropsWithChildren> = ({
-    children
-}) => {
+export const WorkspaceExplorerProvider: FC<PropsWithChildren> = ({ children }) => {
     const [ selectionModeOn, setSelectionModeOn ] = useState<boolean>(false);
     const [ selectedIds, setSelectedIds ] = useState<Array<string>>([]);
     const [ selectedOptions, setSelectedOptions ] = useState<WorkspaceCollectionActionOptions>({

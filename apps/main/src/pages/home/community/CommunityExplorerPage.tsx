@@ -39,7 +39,7 @@ import {
     CommunityTemplateExplorer,
     WorkspaceInfo,
     CommunityApi,
-    useWorkspaceCollection,
+    useWorkspaceExplorer,
 } from "../../../features";
 import {
     CommunityExplorerPageActionsWrapper,
@@ -50,7 +50,7 @@ import {
 export const CommunityExplorerPage: FC<PropsWithChildren> = () => {
     const navigate = useNavigate();
     const [ queryParams, setQueryParam ] = useSearchParams();
-    const { clone } = useWorkspaceCollection();
+    const { clone } = useWorkspaceExplorer();
     
     const handleOnFilterChange = useCallback((category: string, tag: string) => {
         // switch (category) {

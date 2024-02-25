@@ -1,11 +1,11 @@
-import { useCallback, useContext } from "react";
+import { useCallback } from "react";
 import { StructurizrExportClient, Workspace } from "structurizr";
 import { v4 } from "uuid";
-import { WorkspaceCollectionContext } from "../contexts";
+import { useWorkspaceSelectionStore } from "../hooks";
 import { useWorkspaceStore } from "../store";
 import { WorkspaceInfo } from "../types";
 
-export const useWorkspaceCollection = () => {
+export const useWorkspaceExplorer = () => {
     const {
         workspaces,
         bookmarkedIds,
@@ -16,7 +16,7 @@ export const useWorkspaceCollection = () => {
     } = useWorkspaceStore();
     const {
         setSelectedIds,
-    } = useContext(WorkspaceCollectionContext);
+    } = useWorkspaceSelectionStore();
     
     const create = useCallback((author: string, info?: Partial<WorkspaceInfo>) => {
         const structurizrExportClient = new StructurizrExportClient();

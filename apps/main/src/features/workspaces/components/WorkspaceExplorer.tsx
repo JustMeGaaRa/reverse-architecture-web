@@ -10,7 +10,7 @@ import { EmojiSad, Folder } from "iconoir-react";
 import { FC, useCallback, useEffect, useState } from "react";
 import { LocaleKeys } from "../../localization";
 import { useSnackbar } from "../../snackbar";
-import { useWorkspaceCollection, useWorkspaceSelection } from "../hooks";
+import { useWorkspaceExplorer, useWorkspaceSelection } from "../hooks";
 import { WorkspaceApi, WorkspaceLoadFilters } from "../services";
 import { TableColumnInfo, WorkspaceGroupInfo, WorkspaceInfo } from "../types";
 import { groupWorkspaces } from "../utils";
@@ -25,6 +25,7 @@ import {
 } from "./";
 
 export const WorkspaceExplorer: FC<{
+    isActive?: boolean;
     filters?: WorkspaceLoadFilters,
     options?: {
         view: "card" | "table";
@@ -39,6 +40,7 @@ export const WorkspaceExplorer: FC<{
     onRestore?: (selectedId: string) => void;
     onDelete?: (selectedId: string) => void;
 }> = ({
+    isActive,
     filters,
     options = {
         view: "card",
@@ -59,9 +61,9 @@ export const WorkspaceExplorer: FC<{
     
     const [ error, setError ] = useState<{ title: string, description: string } | undefined>();
     const { isLoading, onStartLoading, onStopLoading } = useLoaderState({ isLoading: true });
-    const { workspaces, setWorkspaces } = useWorkspaceCollection();
-    const { clone, rename, stack, remove, archive, restore } = useWorkspaceCollection();
-    const { selectedIds, toggleSelected } = useWorkspaceSelection();
+    const { workspaces, setWorkspaces } = useWorkspaceExplorer();
+    const { clone, rename, stack, remove, archive, restore } = useWorkspaceExplorer();
+    const { selectedIds, toggleSelected, clearSelected } = useWorkspaceSelection();
     
     const nameof = function<T>(name: keyof T) { return name; };
     const columns: TableColumnInfo[] = [
@@ -73,8 +75,12 @@ export const WorkspaceExplorer: FC<{
     ];
 
     useEffect(() => {
+        if (!isActive) return;
+
         const workspaceApi = new WorkspaceApi();
         const controller = new AbortController();
+
+        clearSelected();
         onStartLoading();
 
         workspaceApi.getWorkspaces({ ...filters }, { controller })
@@ -98,7 +104,7 @@ export const WorkspaceExplorer: FC<{
         return () => {
             controller.abort();
         }
-    }, [filters, getLocalizedString, onStartLoading, onStopLoading, setWorkspaces, snackbar]);
+    }, [filters, clearSelected, getLocalizedString, onStartLoading, onStopLoading, setWorkspaces, snackbar]);
     
     const groups = groupWorkspaces(workspaces);
 
@@ -283,7 +289,7 @@ export const WorkspaceExplorer: FC<{
             {!isLoading && workspaces.length === 0 && (
                 <StateMessage
                     icon={Folder}
-                    title={getLocalizedString(LocaleKeys.NO_WORKSPACES_TITLE)}
+                    title={getLocalizedString(LocaleKeys.WORKSPACE_EXPLORER__NO_WORKSPACES__TITLE)}
                     description={getLocalizedString(LocaleKeys.NO_WORKSPACES_SUGGESTION)}
                 />
             )}

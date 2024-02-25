@@ -7,7 +7,7 @@ export * from "./WorkspaceCard";
 export * from "./WorkspaceCardActionBar";
 export * from "./WorkspaceCardFooter";
 export * from "./WorkspaceCardHeader";
-export * from "./WorkspaceCollectionProvider";
+export * from "./WorkspaceExplorerProvider";
 export * from "./WorkspaceExplorer";
 export * from "./WorkspaceGrid";
 export * from "./WorkspaceOptionsToolbar";

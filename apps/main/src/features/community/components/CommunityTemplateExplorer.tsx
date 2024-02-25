@@ -12,7 +12,7 @@ import {
     CommunityApi,
     LocaleKeys,
     useSnackbar,
-    useWorkspaceCollection,
+    useWorkspaceExplorer,
     WorkspaceGrid,
     WorkspaceInfo,
     WorkspaceTemplateCard
@@ -38,7 +38,7 @@ export const CommunityTemplateExplorer: FC<{
     const [ error, setError ] = useState<{ title: string, description: string } | undefined>();
     const { isLoading, onStartLoading, onStopLoading } = useLoaderState({ isLoading: true });
     const [ workspaces, setWorkspaces ] = useState<Array<WorkspaceInfo>>([]);
-    const { bookmarkedIds, likedIds, bookmark, unbookmark, like, unlike } = useWorkspaceCollection();
+    const { bookmarkedIds, likedIds, bookmark, unbookmark, like, unlike } = useWorkspaceExplorer();
 
     useEffect(() => {
         const communityApi = new CommunityApi();

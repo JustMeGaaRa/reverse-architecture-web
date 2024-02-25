@@ -2,7 +2,7 @@ import { Box, Icon, IconButton, ScaleFade, Text } from "@chakra-ui/react";
 import { Toolbar, ToolbarSection } from "workspace";
 import { AppleShortcuts, BinMinusIn, Xmark, Copy } from "iconoir-react";
 import { FC, PropsWithChildren, useCallback } from "react";
-import { useWorkspaceSelection, useWorkspaceCollectionOptions, useWorkspaceCollection } from "../hooks";
+import { useWorkspaceSelection, useWorkspaceExplorerOptions, useWorkspaceExplorer } from "../hooks";
 
 export const WorkspaceActionsToolbar: FC<{
     onClone?: (selectedIds: string[]) => void;
@@ -19,9 +19,9 @@ export const WorkspaceActionsToolbar: FC<{
     onRestore,
     onRemove
 }) => {
-    const { workspaces, clone, remove, stack, unstack, archive, restore } = useWorkspaceCollection();
+    const { workspaces, clone, remove, stack, unstack, archive, restore } = useWorkspaceExplorer();
     const { selectedIds, clearSelected } = useWorkspaceSelection();
-    const options = useWorkspaceCollectionOptions();
+    const options = useWorkspaceExplorerOptions();
 
     const handleOnCancelSelection = useCallback(() => {
         clearSelected();

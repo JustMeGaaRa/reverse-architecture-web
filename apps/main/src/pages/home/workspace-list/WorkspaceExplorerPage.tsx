@@ -40,10 +40,10 @@ import { validateStructurizr } from "structurizr";
 import {
     LocaleKeys,
     WorkspaceExplorer,
-    useWorkspaceCollection,
+    useWorkspaceExplorer,
     useAccount,
     useSnackbar,
-    WorkspaceCollectionProvider
+    WorkspaceExplorerProvider
 } from "../../../features";
 import {
     HomePageResetActionsWrapper,
@@ -70,7 +70,7 @@ export const WorkspaceExplorerPage: FC<PropsWithChildren> = () => {
     const { isLoading, onStartLoading, onStopLoading } = useLoaderState();
     const { isOpen, onOpen, onClose } = useDisclosure();
 
-    const { workspaces, create } = useWorkspaceCollection();
+    const { workspaces, create } = useWorkspaceExplorer();
 
     const handleOnDragEnterWorkspaceFile = useCallback((event: React.DragEvent<HTMLDivElement>) => {
         onOpen();
@@ -197,31 +197,34 @@ export const WorkspaceExplorerPage: FC<PropsWithChildren> = () => {
                             </TabList>
                             <TabPanels height={"calc(100% - 42px)"} padding={6} overflowY={"scroll"}>
                                 <TabPanel>
-                                    <WorkspaceCollectionProvider>
+                                    <WorkspaceExplorerProvider>
                                         <WorkspaceExplorer
+                                            isActive={tabIndex === 0}
                                             filters={{ status: "private" }}
                                             options={{ view, group: true }}
                                             onClick={handleOnClickWorkspaceOpen}
                                         />
-                                    </WorkspaceCollectionProvider>
+                                    </WorkspaceExplorerProvider>
                                 </TabPanel>
                                 <TabPanel>
-                                    <WorkspaceCollectionProvider>
+                                    <WorkspaceExplorerProvider>
                                         <WorkspaceExplorer
+                                            isActive={tabIndex === 1}
                                             filters={{ status: "shared" }}
                                             options={{ view, group: true }}
                                             onClick={handleOnClickWorkspaceOpen}
                                         />
-                                    </WorkspaceCollectionProvider>
+                                    </WorkspaceExplorerProvider>
                                 </TabPanel>
                                 <TabPanel>
-                                    <WorkspaceCollectionProvider>
+                                    <WorkspaceExplorerProvider>
                                         <WorkspaceExplorer
+                                            isActive={tabIndex === 2}
                                             filters={{ status: "archived" }}
                                             options={{ view, group: true }}
                                             onClick={handleOnClickWorkspaceOpen}
                                         />
-                                    </WorkspaceCollectionProvider>
+                                    </WorkspaceExplorerProvider>
                                 </TabPanel>
                             </TabPanels>
                         </Tabs>
@@ -244,13 +247,14 @@ export const WorkspaceExplorerPage: FC<PropsWithChildren> = () => {
                 <WorkspaceStack isOpen={!!selectedGroupName} onClose={handleOnClickWorkspaceStackClose}>
                     <WorkspaceStackHeader title={selectedGroupName} icon={AppleShortcuts} />
                     <WorkspaceStackBody>
-                        <WorkspaceCollectionProvider>
+                        <WorkspaceExplorerProvider>
                             <WorkspaceExplorer
+                                isActive={!!selectedGroupName}
                                 filters={{ group: selectedGroupName }}
                                 options={{ view: "card", group: false }}
                                 onClick={handleOnClickWorkspaceOpen}
                             />
-                        </WorkspaceCollectionProvider>
+                        </WorkspaceExplorerProvider>
                     </WorkspaceStackBody>
                 </WorkspaceStack>
             </WorkspaceExplorerPageActionWrapper>

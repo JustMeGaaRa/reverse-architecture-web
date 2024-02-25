@@ -4,14 +4,14 @@ import { PagePlus, Upload } from "iconoir-react";
 import { FC, PropsWithChildren, useCallback, useEffect } from "react";
 import { validateStructurizr } from "structurizr";
 import { useFilePicker } from "use-file-picker";
-import { useAccount, useSnackbar, useWorkspaceCollection } from "../../../features";
+import { useAccount, useSnackbar, useWorkspaceExplorer } from "../../../features";
 
 export const WorkspaceExplorerPageActionWrapper: FC<PropsWithChildren> = ({ children }) => {
     console.log("context wrapper: workspace explorer page")
     const { setHeaderContent } = usePageHeader();
     const { snackbar } = useSnackbar();
     const { account } = useAccount();
-    const { create } = useWorkspaceCollection();
+    const { create } = useWorkspaceExplorer();
 
     const createWorkspaceFromFile = useCallback((content: string) => {
         // TODO: when loading a workspace file, we shoul show a loading indicator
