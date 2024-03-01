@@ -91,7 +91,7 @@ export const WorkspaceExplorerPage: FC<PropsWithChildren> = () => {
                 onStartLoading();
                 
                 if (validateStructurizr(content)) {
-                    create(account.username, { code: content });
+                    create(account.username, { content: { structurizr: content } });
                 }
                 else {
                     // TODO: workspace file is not valid, so show error message

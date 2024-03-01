@@ -1,120 +1,141 @@
-import {
-    FC,
-    useCallback,
-    useEffect,
-    useMemo,
-    useState
-} from "react";
+import { useLoaderState } from "@reversearchitecture/ui";
+import { FC, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import {
-    Workspace,
-    useStructurizrParser,
-    IWorkspace,
-    StructurizrExportClient
+    parseStructurizr
 } from "structurizr";
 import {
     WorkspaceNavigationProvider,
     CurrentUser,
     WorkspaceRoom,
     WorkspaceProvider,
+    useWorkspace,
+    useWorkspaceNavigation,
 } from "workspace";
 import {
     CommentApi,
-    CommentProvider,
-    CommentThread,
+    loadWorkspaceContent,
     useAccount,
+    useCommentsStore,
     useSnackbar,
     useWorkspaceExplorer,
-    WorkspaceApi,
 } from "../../features";
 import {
     WorkspaceCollaborativeEditor,
+    WorkspacePageActionsWrapper,
 } from "../workspace";
 
 export const WorkspacePage: FC = () => {
     console.log("workspace page");
     const { workspaceId } = useParams<{ workspaceId: string }>();
     const { account } = useAccount();
-    const { snackbar } = useSnackbar();
-
-    const { workspaces } = useWorkspaceExplorer();
-    const [ workspace, setWorkspace ] = useState<IWorkspace>(Workspace.Empty.toObject());
-    const { parseStructurizr } = useStructurizrParser();
-    
-    const [ discussions, setDiscussions ] = useState<Array<CommentThread>>([]);
-
-    useEffect(() => {
-        const loadWorkspaceContent = async (workspaceId: string) => {
-            const workspaceApi = new WorkspaceApi();
-            const structurizrText = await workspaceApi.getWorkspaceContent(workspaceId);
-            const metadata = await workspaceApi.getWorkspaceMetadata(workspaceId);
-
-            const workspace = parseStructurizr(structurizrText);
-            const autolayoutWorkspace = workspace.applyMetadata(metadata);
-
-            return autolayoutWorkspace;
-        }
-
-        const loadComments = async (workspaceId: string) => {
-            const commentApi = new CommentApi();
-            const comments = await commentApi.getDiscussions(workspaceId);
-
-            return comments;
-        }
-        
-        loadWorkspaceContent(workspaceId)
-            .then(workspace => {
-                setWorkspace(workspace);
-                // TODO: set code text as well
-                // setStructurizrDslText(structurizrText);
-            })
-            .catch(error => {
-                // TODO: load workspace from local storage to support PWA
-                const localWorkspace = workspaces.find(workspace => workspace.workspaceId === workspaceId);
-                setWorkspace(localWorkspace?.content ?? Workspace.Empty.toObject());
-                // TODO: should we show an error loading data if we show local data?
-                // snackbar({
-                //     title: error.message,
-                //     description: error.message,
-                //     status: "error",
-                //     duration: 9000,
-                // })
-            })
-            
-        loadComments(workspaceId)
-            .then(comments => {
-                setDiscussions(comments);
-            })
-            .catch(error => {
-                // TODO: load comments from local storage to support PWA
-                setDiscussions([]);
-                // TODO: should we show an error loading data if we show local data?
-                // snackbar({
-                //     title: error.message,
-                //     description: error.message,
-                //     status: "error",
-                //     duration: 9000,
-                // })
-            });
-        
-        return () => {
-            setWorkspace(Workspace.Empty);
-            setDiscussions([]);
-        }
-    }, [workspaceId, snackbar, parseStructurizr, setWorkspace, setDiscussions]);
 
     // NOTE: workspace provider on this page should save changes to the persistant layer,
     // as this is the user who shares and owns the workspace file
     return (
-        <WorkspaceProvider initialWorkspace={workspace}>
-            <CommentProvider initialDiscussions={discussions}>
-                <WorkspaceNavigationProvider initialView={workspace.views.systemLandscape}>
-                    <WorkspaceRoom options={{ roomId: workspaceId }}>
-                        {/* <CurrentUser info={account} />
-                        <WorkspaceCollaborativeEditor /> */}
-                    </WorkspaceRoom>
-                </WorkspaceNavigationProvider>
-            </CommentProvider>
+        <WorkspaceProvider>
+            <WorkspaceNavigationProvider>
+                <WorkspaceRoom options={{ roomId: workspaceId }}>
+                    <WorkspacePageActionsWrapper workspaceId={workspaceId}>
+                        <WorkspaceContentLoader workspaceId={workspaceId} />
+                        
+                        <CurrentUser info={account} />
+                        <WorkspaceCollaborativeEditor />
+                    </WorkspacePageActionsWrapper>
+                </WorkspaceRoom>
+            </WorkspaceNavigationProvider>
         </WorkspaceProvider>
     )
+}
+
+export const WorkspaceContentLoader: FC<{
+    workspaceId: string;
+}> = ({
+    workspaceId
+}) => {
+    console.log("workspace page: content loader")
+    const { snackbar } = useSnackbar();
+    const { workspaces, setWorkspaces } = useWorkspaceExplorer();
+    const { setWorkspace } = useWorkspace();
+    const { openView } = useWorkspaceNavigation();
+
+    useEffect(() => {
+        // NOTE: load workspace from the server and update the local storage asynchroniously
+        loadWorkspaceContent(workspaceId)
+            .then(({ structurizr, metadata }) => {
+                setWorkspaces(workspaces => workspaces.map(workspace => {
+                    return workspace.workspaceId !== workspaceId
+                        ? workspace
+                        : { ...workspace, content: { structurizr, metadata } }
+                }))
+            })
+            .catch(error => {
+                snackbar({
+                    title: "Error loading workspace",
+                    description: error.message,
+                    status: "error"
+                })
+            })
+    }, [workspaceId, setWorkspaces, snackbar]);
+
+    useEffect(() => {
+        if (workspaceId) {
+            try {
+                // NOTE: load workspace from local storage
+                // TODO: refactor this code so that when the workspace is saved is does not trigger this effect
+                const localWorkspace = workspaces.find(workspace => workspace.workspaceId === workspaceId);
+                const parsedWorkspace = parseStructurizr(localWorkspace.content?.structurizr);
+                const autolayoutWorkspace = parsedWorkspace.applyMetadata(localWorkspace.content?.metadata);
+                setWorkspace(autolayoutWorkspace);
+                openView(autolayoutWorkspace, autolayoutWorkspace.views.systemLandscape)
+            }
+            catch (error) {
+                snackbar({
+                    title: "Error parsing workspace",
+                    description: error.message,
+                    status: "error"
+                })
+            }
+        }
+    }, [workspaceId, workspaces, snackbar, setWorkspace, openView]);
+
+    return null;
+}
+
+export const WorkspaceCommentsLoader: FC<{
+    workspaceId: string;
+}> = ({
+    workspaceId
+}) => {
+    console.log("workspace page: comments loader")
+    const { snackbar } = useSnackbar();
+    const { setCommentThreads } = useCommentsStore();
+    const { isLoading, onStartLoading, onStopLoading } = useLoaderState();
+
+    useEffect(() => {
+        const commentApi = new CommentApi();
+        const controller = new AbortController();
+
+        onStartLoading();
+        
+        commentApi.getDiscussions(workspaceId)
+            .then(comments => {
+                onStopLoading();
+                setCommentThreads(comments);
+            })
+            .catch(error => {
+                onStopLoading();
+                snackbar({
+                    title: "Error loading comments",
+                    description: error.message,
+                    status: "error"
+                })
+            });
+        
+        return () => {
+            setCommentThreads([]);
+        }
+    }, [workspaceId, setCommentThreads, snackbar, onStartLoading, onStopLoading]);
+
+    return null;
 }

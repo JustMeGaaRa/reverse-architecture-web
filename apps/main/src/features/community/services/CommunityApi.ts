@@ -51,8 +51,10 @@ export class CommunityApi {
 
     async getWorkspaceById(workspaceId: string, options?: CommunityLoadOptions): Promise<WorkspaceInfo> {
         const list = await withTimeout(this.fetchWorkspaceList(), this.timeout);
+        const structurizr = await this.getWorkspaceContent(workspaceId, options);
+        const metadata = await this.getWorkspaceMetadata(workspaceId, options);
         const workspaceInfo = list.find(w => w.workspaceId === workspaceId);
-        return workspaceInfo;
+        return { ...workspaceInfo, content: { structurizr, metadata }};
     }
 
     async getWorkspaces(filters: CommunityLoadFilters, options?: CommunityLoadOptions): Promise<WorkspaceInfo[]> {

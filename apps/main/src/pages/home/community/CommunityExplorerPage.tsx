@@ -20,7 +20,6 @@ import {
     useLoaderState,
 } from "@reversearchitecture/ui";
 import {
-    PagePlus,
     Compass,
     FireFlame,
     NavArrowDown,
@@ -40,6 +39,7 @@ import {
     WorkspaceInfo,
     CommunityApi,
     useWorkspaceExplorer,
+    useSnackbar,
 } from "../../../features";
 import {
     CommunityExplorerPageActionsWrapper,
@@ -50,21 +50,12 @@ import {
 export const CommunityExplorerPage: FC<PropsWithChildren> = () => {
     const navigate = useNavigate();
     const [ queryParams, setQueryParam ] = useSearchParams();
+    const { snackbar } = useSnackbar();
     const { clone } = useWorkspaceExplorer();
+    const [ filters, setFitlers ] = useState({ category: undefined, tag: undefined });
     
     const handleOnFilterChange = useCallback((category: string, tag: string) => {
-        // switch (category) {
-        //     case "Explore":
-        //         return workspaces.filter(x => {
-        //             return x.tags?.includes(tag)
-        //                 || tag === "";
-        //         });
-        //     default:
-        //         return workspaces.filter(x => {
-        //             return x.tags?.includes(category)
-        //                 && x.tags?.includes(tag);
-        //         });
-        // }
+        setFitlers({ category, tag });
     }, []);
     
     const handleOnClickWorkspacePreview = useCallback((workspace: WorkspaceInfo) => {
@@ -72,9 +63,20 @@ export const CommunityExplorerPage: FC<PropsWithChildren> = () => {
     }, [setQueryParam]);
 
     const handleOnClickWorskapceTryOut = useCallback((workspace: WorkspaceInfo) => {
-        clone(workspace);
-        navigate(`/workspaces/${workspace.workspaceId}`);
-    }, [clone, navigate]);
+        const communityApi = new CommunityApi();
+        communityApi.getWorkspaceById(workspace.workspaceId)
+            .then(workspace => {
+                const clonedWorkspace = clone(workspace);
+                navigate(`/workspaces/${clonedWorkspace.workspaceId}`);
+            })
+            .catch(error => {
+                snackbar({
+                    title: "Error cloning workspace",
+                    description: error.message,
+                    status: "error"
+                })
+            });
+    }, [clone, navigate, snackbar]);
 
     const handleOnClickTemplateModalClose = useCallback(() => {
         setQueryParam({});
@@ -97,6 +99,7 @@ export const CommunityExplorerPage: FC<PropsWithChildren> = () => {
                             </Box>
                             <Box flexGrow={1} overflowY={"scroll"} padding={6}>
                                 <CommunityTemplateExplorer
+                                    filters={filters}
                                     onClick={handleOnClickWorkspacePreview}
                                     onTryIt={handleOnClickWorskapceTryOut}
                                 />

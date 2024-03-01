@@ -18,6 +18,7 @@ export const PageHomeButton: FC<{
     return (
         <Flex
             aria-label={"home button"}
+            className={"restuct__page-home-button"}
             cursor={"pointer"}
             padding={1}
             alignItems={"center"}

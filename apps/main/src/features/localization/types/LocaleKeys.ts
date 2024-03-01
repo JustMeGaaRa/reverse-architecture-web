@@ -40,16 +40,16 @@ export const LocaleKeys = {
 export const enUSLocale = "en-US";
 export const enUSLocaleStrings: Record<string, string> = {
     [LocaleKeys.DASHBOARD_PAGE__NO_CONTENT__TITLE]:         "No content created yet",
-    [LocaleKeys.DASHBOARD_PAGE__NO_CONTENT__DESCRIPTION]:   "To get started, Create some content.",
+    [LocaleKeys.DASHBOARD_PAGE__NO_CONTENT__DESCRIPTION]:   "To get started, please check some starting guides.",
 
     [LocaleKeys.WORKSPACE_EXPLORER__NO_WORKSPACES__TITLE]:  "No workspaces",
-    [LocaleKeys.NO_WORKSPACES_SUGGESTION]:                  "To get started, create a workspace by clicking \"New Workspace\" button below.",
+    [LocaleKeys.NO_WORKSPACES_SUGGESTION]:                  "To get started, create a workspace by clicking \"New Workspace\" button.",
 
     [LocaleKeys.NO_SHARED_TITLE]:                           "No shared workspaces",
-    [LocaleKeys.NO_SHARED_WORKSPACES_SUGGESTION]:           "To get started, share some workspaces from the \"My Workspaces\" tab.",
+    [LocaleKeys.NO_SHARED_WORKSPACES_SUGGESTION]:           "Shared workspaces will appear on this page as soon as someone shares a workspace with you.",
     
     [LocaleKeys.WORKSPACE_EXPLORER__NO_ARCHIVED__TITLE]:    "No archived workspaces",
-    [LocaleKeys.NO_ARCHIVED_WORKSPACES_SUGGESTION]:         "To get started, archive some workspaces from the \"Me Workspaces\" tab.",
+    [LocaleKeys.NO_ARCHIVED_WORKSPACES_SUGGESTION]:         "Archived workspaces will appear on this page when they get archived.",
     
     [LocaleKeys.NO_STACK_WORKSPACES_TITLE]:             "No workspaces in stack",
     [LocaleKeys.NO_STACK_WORKSPACES_SUGGESTION]:        "There are no elements in workspace stack.",
@@ -63,9 +63,9 @@ export const enUSLocaleStrings: Record<string, string> = {
     [LocaleKeys.LOADING_TEMPLATES_TITLE]:               "Loading community templates",
     [LocaleKeys.LOADING_TEMPLATES_DESCRIPTION]:         "Please wait while we load community templates.",
 
-    [LocaleKeys.ERROR_LOADING_WORKSPACES_TITLE]:        "Cannot load workspaces",
+    [LocaleKeys.ERROR_LOADING_WORKSPACES_TITLE]:        "Error loading workspaces",
     [LocaleKeys.ERROR_LOADING_WORKSPACES_DESCRIPTION]:  "Something went wrong while loading workspaces.",
-    [LocaleKeys.ERROR_LOADING_TEMPLTES_TITLE]:          "Cannot load templates",
+    [LocaleKeys.ERROR_LOADING_TEMPLTES_TITLE]:          "Error loading templates",
     [LocaleKeys.ERROR_LOADING_TEMPLTES_DESCRIPTION]:    "Something went wrong while loading community templates.",
 
     [LocaleKeys.SEARCH_PLACEHOLDER]:                    "Type \"/\" to search commands",

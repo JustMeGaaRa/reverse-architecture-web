@@ -1,13 +1,16 @@
 import { Flex } from "@chakra-ui/react";
 import { FC, PropsWithChildren } from "react";
 import { usePageHeader } from "../hooks";
+import { createPortal } from "react-dom";
 
 export const PageHeader: FC<PropsWithChildren> = ({ children}) => {
+    console.log("page header")
     const { headerOptions } = usePageHeader();
     const { height } = headerOptions;
 
     return (
         <Flex
+            className={"restruct__page-header"}
             direction={"row"}
             alignItems={"center"}
             flexGrow={0}
@@ -23,20 +26,28 @@ export const PageHeader: FC<PropsWithChildren> = ({ children}) => {
     )
 }
 
-export const PageHeaderSectionOutlet: FC<PropsWithChildren<{
+export const PageHeaderSectionOutlet: FC<{
+    section: "start" | "center" | "end"
+}> = ({
+    section
+}) => {
+    console.log("page header section outlet", section)
+    
+    return (
+        <Flex
+            id={`restruct__header-section-${section}`}
+            flex={1}
+            justifyContent={section}
+        />
+    )
+}
+
+export const PageHeaderSectionPortal: FC<PropsWithChildren<{
     section: "start" | "center" | "end"
 }>> = ({
     children,
     section
 }) => {
-    const { headerOptions } = usePageHeader();
-    
-    return (
-        <Flex flex={1} justifyContent={section}>
-            {section === "start" && headerOptions.sections.left}
-            {section === "center" && headerOptions.sections.middle}
-            {section === "end" && headerOptions.sections.right}
-            {children}
-        </Flex>
-    )
+    const domNode = document.getElementById(`restruct__header-section-${section}`);
+    return !domNode ? null : createPortal(children, domNode);
 }

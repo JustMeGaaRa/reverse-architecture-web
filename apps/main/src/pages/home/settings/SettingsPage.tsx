@@ -6,34 +6,19 @@ import {
     ContextSheetTitle,
     Route,
     RouteList,
-    RouteSection,
-    usePageHeader
+    RouteSection
 } from "@reversearchitecture/ui";
 import { ProfileCircle } from "iconoir-react";
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import { Outlet } from "react-router";
 import { HomePageResetActionsWrapper } from "../../home";
 
 export const SettingsPage: FC = () => {
-    const { setHeaderContent } = usePageHeader();
-
-    useEffect(() => {
-        setHeaderContent({
-            right: (<></>)
-        })
-    }, [setHeaderContent]);
-
     return (
         <HomePageResetActionsWrapper>
             <ContextSheet>
-                <Flex
-                    direction={"row"}
-                    height={"100%"}
-                >
-                    <Box
-                        height={"100%"}
-                        width={"400px"}
-                    >
+                <Flex direction={"row"} height={"100%"}>
+                    <Box height={"100%"} width={"400px"}>
                         <ContextSheetHeader>
                             <ContextSheetTitle title={"Settings"} />
                         </ContextSheetHeader>

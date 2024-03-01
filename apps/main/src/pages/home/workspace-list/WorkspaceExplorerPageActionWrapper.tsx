@@ -1,22 +1,22 @@
 import { Button, ButtonGroup, Icon, IconButton, Text } from "@chakra-ui/react";
-import { usePageHeader } from "@reversearchitecture/ui";
+import { PageHeaderSectionPortal } from "@reversearchitecture/ui";
 import { PagePlus, Upload } from "iconoir-react";
-import { FC, PropsWithChildren, useCallback, useEffect } from "react";
+import { FC, PropsWithChildren, useCallback } from "react";
 import { validateStructurizr } from "structurizr";
 import { useFilePicker } from "use-file-picker";
 import { useAccount, useSnackbar, useWorkspaceExplorer } from "../../../features";
 
 export const WorkspaceExplorerPageActionWrapper: FC<PropsWithChildren> = ({ children }) => {
     console.log("context wrapper: workspace explorer page")
-    const { setHeaderContent } = usePageHeader();
-    const { snackbar } = useSnackbar();
+
     const { account } = useAccount();
+    const { snackbar } = useSnackbar();
     const { create } = useWorkspaceExplorer();
 
     const createWorkspaceFromFile = useCallback((content: string) => {
         // TODO: when loading a workspace file, we shoul show a loading indicator
         if (validateStructurizr(content)) {
-            create(account.username, { code: content });
+            create(account.username, { content: { structurizr: content } });
         }
         else {
             // TODO: workspace file is not valid, so show error message
@@ -39,21 +39,20 @@ export const WorkspaceExplorerPageActionWrapper: FC<PropsWithChildren> = ({ chil
             createWorkspaceFromFile(filesContent[0].content);
         },
     });
-    
-    const handleOnClickWorkspaceCreate = useCallback(() => {
-        create(account.username);
-    }, [account.username, create]);
 
     const handleOnClickWorkspaceImport = useCallback(() => {
         // NOTE: don't include in the dependency array as
         // this function is not wrapped in a 'useCallback' and causes infinite re-renders
         openFilePicker();
     }, []);
+    
+    const handleOnClickWorkspaceCreate = useCallback(() => {
+        create(account.username);
+    }, [account.username, create]);
 
-    useEffect(() => {
-        console.log("context wrapper: workspace explorer page: effect")
-        setHeaderContent({
-            right: (
+    return (
+        <>
+            <PageHeaderSectionPortal section={"end"}>
                 <ButtonGroup mr={4} variant={"filled"}>
                     <IconButton
                         aria-label={"import workspace"}
@@ -72,12 +71,8 @@ export const WorkspaceExplorerPageActionWrapper: FC<PropsWithChildren> = ({ chil
                         <Text marginX={2}>New Workspace</Text>
                     </Button>
                 </ButtonGroup>
-            )
-        })
-    }, [setHeaderContent, handleOnClickWorkspaceCreate, handleOnClickWorkspaceImport]);
+            </PageHeaderSectionPortal>
 
-    return (
-        <>
             {children}
         </>
     )

@@ -17,12 +17,14 @@ import { Download, InputField, MoreHoriz } from "iconoir-react";
 import { FC, useCallback } from "react";
 
 export const WorkspaceMenu: FC<{
-    title: string;
     workspace: IWorkspace;
 }> = ({
-    title,
     workspace
 }) => {
+    const handleOnRenameClick = useCallback(() => {
+        throw new Error("Not implemented");
+    }, []);
+    
     const handleOnExportStructurizrClick = useCallback(() => {
         const exportClient = new StructurizrExportClient();
         console.log(exportClient.export(workspace));
@@ -46,11 +48,12 @@ export const WorkspaceMenu: FC<{
                 variant={"ghost"}
                 icon={<Icon as={MoreHoriz} boxSize={5} />}
             >
-                {title}
+                {workspace.name}
             </MenuButton>
             <MenuList>
                 <MenuItem
                     icon={<Icon as={InputField} boxSize={5} />}
+                    onClick={handleOnRenameClick}
                 >
                     Rename
                 </MenuItem>

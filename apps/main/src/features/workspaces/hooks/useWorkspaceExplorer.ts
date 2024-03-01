@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { StructurizrExportClient, Workspace } from "structurizr";
+import { parseStructurizr, StructurizrExportClient, Workspace } from "structurizr";
 import { v4 } from "uuid";
 import { useWorkspaceSelectionStore } from "../hooks";
 import { useWorkspaceStore } from "../store";
@@ -21,18 +21,26 @@ export const useWorkspaceExplorer = () => {
     const create = useCallback((author: string, info?: Partial<WorkspaceInfo>) => {
         const structurizrExportClient = new StructurizrExportClient();
         const workspaceId = v4();
-        const workspace: WorkspaceInfo = {
+        const workspace = info?.content?.structurizr
+            ? parseStructurizr(info?.content?.structurizr)
+            : Workspace.Empty;
+        const workspaceInfo: WorkspaceInfo = {
             workspaceId,
-            name: info?.content?.name ?? info?.name ?? "New Workspace",
+            name: info?.name ?? workspace.name ?? "New Workspace",
+            description: info?.description ?? workspace.description ?? "",
             createdBy: author,
             createdDate: info?.createdDate ?? new Date().toLocaleString(),
             lastModifiedBy: author,
             lastModifiedDate: info?.lastModifiedDate ?? new Date().toLocaleString(),
             tags: info?.tags ?? [],
-            content: info?.content ?? Workspace.Empty,
-            code: info?.code ?? structurizrExportClient.export(Workspace.Empty.toObject()),
+            content: {
+                structurizr: info?.content?.structurizr
+                    ?? structurizrExportClient.export(workspace),
+            },
         };
-        setWorkspaces(workspaces => [ ...workspaces, workspace ]);
+        setWorkspaces(workspaces => [ ...workspaces, workspaceInfo ]);
+
+        return workspaceInfo;
     }, [setWorkspaces]);
 
     const rename = useCallback((workspace: WorkspaceInfo, name: string) => {
@@ -45,6 +53,8 @@ export const useWorkspaceExplorer = () => {
                 ? existing
                 : renamedWorkspace
         }));
+
+        return renamedWorkspace;
     }, [setWorkspaces]);
 
     const clone = useCallback((workspace: WorkspaceInfo) => {
@@ -53,29 +63,33 @@ export const useWorkspaceExplorer = () => {
             workspaceId: v4(),
             name: `${workspace.name} Copy`,
         }
-        setWorkspaces(workspaces => workspaces.map(existing => {
-            return workspace.workspaceId !== existing.workspaceId
-                ? existing
-                : clonedWorkspace
-        }));
+        setWorkspaces(workspaces => [...workspaces, clonedWorkspace]);
+
+        return clonedWorkspace;
     }, [setWorkspaces]);
 
     const archive = useCallback((workspace: WorkspaceInfo) => {
+        const archivedWorkspace: WorkspaceInfo = { ...workspace, status: "archived" }
         setWorkspaces(workspaces => workspaces.map(existing => {
-            return workspace.workspaceId !== existing.workspaceId
+            return archivedWorkspace.workspaceId !== existing.workspaceId
                 ? existing
-                : { ...existing, status: "archived" }
+                : archivedWorkspace
         }));
         setSelectedIds([]);
+
+        return archivedWorkspace;
     }, [setWorkspaces, setSelectedIds]);
 
     const restore = useCallback((workspace: WorkspaceInfo) => {
+        const restoredWorkspace: WorkspaceInfo = { ...workspace, status: "private" }
         setWorkspaces(workspaces => workspaces.map(existing => {
             return workspace.workspaceId !== existing.workspaceId
                 ? existing
-                : { ...existing, status: "private" }
+                : restoredWorkspace
         }));
         setSelectedIds([]);
+
+        return restoredWorkspace;
     }, [setWorkspaces, setSelectedIds]);
 
     const remove = useCallback((workspace: WorkspaceInfo) => {

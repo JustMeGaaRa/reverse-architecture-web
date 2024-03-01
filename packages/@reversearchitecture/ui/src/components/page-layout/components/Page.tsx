@@ -3,10 +3,12 @@ import { FC, PropsWithChildren } from "react";
 import { ContextLevelProvider, useContextLevel } from "../../../components";
 
 export const Page: FC<PropsWithChildren> = ({ children }) => {
+    console.log("page")
     const { level, getLevelColor } = useContextLevel();
     
     return (
         <Flex
+            className={"restruct__page"}
             backgroundColor={getLevelColor(level)}
             direction={"row"}
             height={"100vh"}

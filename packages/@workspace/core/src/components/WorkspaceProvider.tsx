@@ -5,15 +5,11 @@ import { WorkspaceContext } from "../contexts";
 
 const WorkspaceMapParam = "workspace";
 const workspaceDocument = new Y.Doc();
+const undoManager = new Y.UndoManager(workspaceDocument.getMap(WorkspaceMapParam));
 
-export const WorkspaceProvider: FC<PropsWithChildren<{
-    initialWorkspace?: IWorkspace;
-}>> = ({
-    children,
-    initialWorkspace
-}) => {
+export const WorkspaceProvider: FC<PropsWithChildren> = ({ children }) => {
+    console.log("workspace provider");
     const [ workspace, setWorkspace ] = useState<IWorkspace>(Workspace.Empty.toObject());
-    const [ undoManager, setUndoManager ] = useState<Y.UndoManager>();
 
     const setWorkspaceYDoc = useCallback((stateAction: SetStateAction<IWorkspace>) => {
         setWorkspace(currentWorkspace => {
@@ -29,33 +25,30 @@ export const WorkspaceProvider: FC<PropsWithChildren<{
 
             return updatedWorkspace;
         });
-    }, [setWorkspace]);
+    }, []);
 
+    // useEffect(() => {
+    //     console.log("workspace provider: initialize")
+    //     // NOTE: initialize workspace document for initial state, before initializing undo manager
+    //     setWorkspaceYDoc(initialWorkspace ?? Workspace.Empty.toObject());
+    //     const undoManager = new Y.UndoManager(workspaceDocument.getMap(WorkspaceMapParam));
+    //     setUndoManager(undoManager);
+    // }, [initialWorkspace, setWorkspaceYDoc]);
+ 
     useEffect(() => {
-        // NOTE: initialize workspace document for initial state, before initializing undo manager
-        setWorkspaceYDoc(initialWorkspace ?? Workspace.Empty.toObject());
-        const undoManager = new Y.UndoManager(workspaceDocument.getMap(WorkspaceMapParam));
-        setUndoManager(undoManager);
-    }, [initialWorkspace, setWorkspaceYDoc]);
-
-    useEffect(() => {
-        const onWorkspaceApplyRemoteChanges = () => {
+        const onWorkspaceApplyChanges = () => {
+            console.log("workspace provider: apply changes")
             // NOTE: apply any changes to the documents (undo/redo and remote changes support)
             const workspaceJson = workspaceMap.get(WorkspaceMapParam) as string;
             const workspaceObject = JSON.parse(workspaceJson) as IWorkspace;
             setWorkspace(workspaceObject);
-
-            // TODO: set structurizr text
-            // const structurizrText = workspaceMap.get("structurizr") as string;
-            // const structurizrExporter = new StructurizrExportClient();
-            // setStructurizrText(structurizrText);
         }
 
         const workspaceMap = workspaceDocument.getMap(WorkspaceMapParam);
-        workspaceMap.observe(onWorkspaceApplyRemoteChanges);
+        workspaceMap.observe(onWorkspaceApplyChanges);
 
         return () => {
-            workspaceMap.unobserve(onWorkspaceApplyRemoteChanges);
+            workspaceMap.unobserve(onWorkspaceApplyChanges);
         }
     }, [setWorkspace]);
 

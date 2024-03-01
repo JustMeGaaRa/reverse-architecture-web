@@ -1,4 +1,4 @@
-import { Workspace } from "structurizr";
+import { IWorkspaceMetadata } from "structurizr";
 
 export type WorkspaceStatus = "private" | "shared" | "archived";
 
@@ -6,18 +6,20 @@ export type WorkspaceInfo = {
     workspaceId: string;
     name: string;
     description?: string;
+    coverUrl?: string;
     status?: WorkspaceStatus;
+    group?: string;
     createdBy: string;
     createdDate: string;
     lastModifiedDate: string;
     lastModifiedBy: string;
-    coverUrl?: string;
-    group?: string;
     tags: Array<string>;
-    code?: string;
-    content?: Workspace;
     metadata?: WorkspaceInfoMetadata;
-    statistics?: WorkspaceStats,
+    statistics?: WorkspaceInfoStats,
+    content?: {
+        structurizr?: string;
+        metadata?: IWorkspaceMetadata
+    }
 }
 
 export type WorkspaceInfoMetadata = {
@@ -25,7 +27,7 @@ export type WorkspaceInfoMetadata = {
     isLiked: boolean;
 }
 
-export type WorkspaceStats = {
+export type WorkspaceInfoStats = {
     used: number;
     bookmarked: number;
     liked: number;

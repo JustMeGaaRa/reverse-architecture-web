@@ -19,7 +19,8 @@ export const useWorkspaceSelection = () => {
         const hasAnySelected = selectedIds.length > 0;
         const hasSelectedArchived = selectedIds.some(selectedId => {
             return workspaces.some(workspace => {
-                return workspace.workspaceId === selectedId;
+                return workspace.workspaceId === selectedId
+                    && workspace.status === "archived";
             })
         });
         const hasSelectedGroup = selectedIds.some(selectedId => {
@@ -48,7 +49,7 @@ export const useWorkspaceSelection = () => {
             },
             unstack: {
                 ...selectedOptions.unstack,
-                isVisible: true,
+                isVisible: onlySelectedGroups,
                 isEnabled: onlySelectedGroups
             },
             remove: {
@@ -63,12 +64,12 @@ export const useWorkspaceSelection = () => {
             },
             archive: {
                 ...selectedOptions.archive,
-                isVisible: true,
+                isVisible: !hasSelectedArchived && onlySelectedWorkspaces,
                 isEnabled: !hasSelectedArchived && onlySelectedWorkspaces
             },
             unarchive: {
                 ...selectedOptions.unarchive,
-                isVisible: true,
+                isVisible: hasSelectedArchived,
                 isEnabled: hasSelectedArchived
             }
         }));

@@ -9,7 +9,7 @@ import { routes } from "./routes";
 
 const root = createRoot(document.getElementById("root"));
 root.render(
-    <StrictMode>
+    // <StrictMode>
         <LocalizationProvider defaultLocale={enUSLocale} defaultLocaleStrings={enUSLocaleStrings}>
             <AccountProvider>
                 <ChakraProvider resetCSS theme={RestructTheme}>
@@ -19,5 +19,5 @@ root.render(
                 </ChakraProvider>
             </AccountProvider>
         </LocalizationProvider>
-    </StrictMode>
+    // </StrictMode>
 );

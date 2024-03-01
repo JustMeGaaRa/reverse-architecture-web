@@ -21,7 +21,7 @@
     "@svgr/cli": "^8.1.0",
     "eslint-config-custom": "*",
     "prettier": "latest",
-    "turbo": "^1.10.15"
+    "turbo": "^1.12.4"
   },
   "engines": {
     "node": ">=14.0.0"

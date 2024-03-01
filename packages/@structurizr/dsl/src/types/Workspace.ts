@@ -9,6 +9,7 @@ import {
 } from "../";
 
 export interface IWorkspace {
+    version: number;
     name?: string;
     description?: string;
     lastModifiedDate?: Date;
@@ -19,6 +20,7 @@ export interface IWorkspace {
 
 export class Workspace implements ISupportImmutable<IWorkspace> {
     constructor(params: IWorkspace) {
+        this.version = params.version;
         this.name = params.name;
         this.description = params.description;
         this.lastModifiedDate = params.lastModifiedDate ?? new Date();
@@ -27,14 +29,16 @@ export class Workspace implements ISupportImmutable<IWorkspace> {
         this.views = new Views(params.views);
     }
 
+    public readonly version: number;
     public readonly name?: string;
     public readonly description?: string;
-    public readonly lastModifiedDate?: Date;
+    public readonly lastModifiedDate: Date;
     public readonly properties?: Properties;
     public readonly model: Model;
     public readonly views: Views;
 
     public static Empty = new Workspace({
+        version: 1,
         name: "Empty Workspace",
         description: "An empty workspace.",
         model: {
@@ -63,6 +67,8 @@ export class Workspace implements ISupportImmutable<IWorkspace> {
     });
 
     public applyMetadata(metadata: IWorkspaceMetadata): Workspace {
+        if (metadata === null || metadata === undefined) return this;
+        
         if (metadata.views.systemLandscape) {
             this.views.systemLandscape?.applyMetadata(metadata.views.systemLandscape);
         }
@@ -83,6 +89,7 @@ export class Workspace implements ISupportImmutable<IWorkspace> {
 
     public toObject(): IWorkspace {
         return {
+            version: this.version,
             name: this.name,
             description: this.description,
             lastModifiedDate: this.lastModifiedDate,

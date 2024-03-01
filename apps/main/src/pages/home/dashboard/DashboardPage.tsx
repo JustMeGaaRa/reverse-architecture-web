@@ -5,23 +5,15 @@ import {
     ContextSheetHeader,
     ContextSheetTitle,
     StateMessage,
-    useLocale,
-    usePageHeader
+    useLocale
 } from "@reversearchitecture/ui";
 import { Folder } from "iconoir-react";
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import { LocaleKeys } from "../../../features";
 import { HomePageResetActionsWrapper } from "../../home";
 
 export const DashboardPage: FC = () => {
-    const { setHeaderContent } = usePageHeader();
     const { getLocalizedString } = useLocale();
-
-    useEffect(() => {
-        setHeaderContent({
-            right: (<></>)
-        })
-    }, [setHeaderContent]);
     
     return (
         <HomePageResetActionsWrapper>

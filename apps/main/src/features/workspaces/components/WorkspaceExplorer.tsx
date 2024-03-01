@@ -104,7 +104,7 @@ export const WorkspaceExplorer: FC<{
         return () => {
             controller.abort();
         }
-    }, [filters, clearSelected, getLocalizedString, onStartLoading, onStopLoading, setWorkspaces, snackbar]);
+    }, [isActive, filters, clearSelected, getLocalizedString, onStartLoading, onStopLoading, setWorkspaces, snackbar]);
     
     const groups = groupWorkspaces(workspaces);
 

@@ -59,6 +59,7 @@ export class StructurizrVisitor extends VisitorCtor {
         views: any }
     ): Workspace {
         return new Workspace({
+            version: 1,
             name: trimQuotes(ctx.StringLiteral?.at(0)?.image) ?? "Empty Workspace",
             description: trimQuotes(ctx.StringLiteral?.at(1)?.image),
             model: this.visit(ctx.model),
