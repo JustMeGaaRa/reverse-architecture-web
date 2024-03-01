@@ -26,16 +26,11 @@ export const WorkspaceNavigationWrapper: FC<PropsWithChildren<{
     )
 }
 
-export const WorkspaceWrapper: FC<PropsWithChildren<{
-    initialWorkspace?: IWorkspace;
-}>> = ({
-    children,
-    initialWorkspace
-}) => {
+export const WorkspaceWrapper: FC<PropsWithChildren> = ({ children }) => {
     const provider = useContext(WorkspaceContext);
 
     return provider === null || provider === undefined ? (
-        <WorkspaceProvider initialWorkspace={initialWorkspace}>
+        <WorkspaceProvider>
             {children}
         </WorkspaceProvider>
     ) : (

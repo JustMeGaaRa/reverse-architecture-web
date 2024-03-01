@@ -1,6 +1,6 @@
 import { IViewDefinition, IWorkspace } from "@structurizr/dsl";
 import { FC, useEffect } from "react";
-import { useWorkspaceNavigation } from "../hooks";
+import { useWorkspace, useWorkspaceNavigation } from "../hooks";
 
 export const WorkspaceViewUpdater: FC<{
     workspace: IWorkspace;
@@ -17,5 +17,21 @@ export const WorkspaceViewUpdater: FC<{
             openView(workspace, currentView)
         }
     }, [workspace, currentView, openView]);
+    return null;
+}
+
+export const WorkspaceUpdater: FC<{
+    workspace: IWorkspace;
+}> = ({
+    workspace
+}) => {
+    const { setWorkspace } = useWorkspace();
+
+    useEffect(() => {
+        if (workspace) {
+            setWorkspace(workspace);
+        }
+    }, [workspace, setWorkspace]);
+
     return null;
 }
