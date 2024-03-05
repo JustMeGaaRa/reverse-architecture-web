@@ -1,5 +1,12 @@
 import { Icon, IconButton } from "@chakra-ui/react";
-import { ViewType } from "structurizr";
+import {
+    Toolbar,
+    ToolbarSection,
+    ToolbarSubmenu,
+    ToolbarSubmenuContent,
+    ToolbarSubmenuTrigger
+} from "@restruct/ui";
+import { ViewType } from "@structurizr/react";
 import {
     CommentingModeButton,
     ConnectionModeButton,
@@ -13,20 +20,15 @@ import {
     SelectionModeButton,
     TextEditModeButton,
     useDraggingMode
-} from "@workspace/controls";
+} from "@workspace/react";
 import {
     PanelPosition,
-    Toolbar,
-    ToolbarSubmenuTrigger,
-    ToolbarSection,
-    ToolbarSubmenu,
-    ToolbarSubmenuContent,
     useSelectionMode,
     useWorkspaceNavigation,
     usePresentationMode,
     WorkspacePanel,
     useWorkspaceRoom,
-} from "workspace";
+} from "@workspace/react";
 import { Component, Play, Xmark } from "iconoir-react";
 import { FC, useCallback } from "react";
 

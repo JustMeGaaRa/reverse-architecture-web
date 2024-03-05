@@ -12,7 +12,7 @@ import {
     IWorkspace,
     StructurizrExportClient,
     WorkspaceJsonExportClient
-} from "structurizr";
+} from "@structurizr/react";
 import { Download, InputField, MoreHoriz } from "iconoir-react";
 import { FC, useCallback } from "react";
 

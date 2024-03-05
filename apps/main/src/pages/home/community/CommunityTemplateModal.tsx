@@ -13,12 +13,11 @@ import {
     Tooltip
 } from "@chakra-ui/react";
 import {
-    ContextLevelProvider,
-    ContextSheet,
-    ContextSheetCloseButton,
-    ContextSheetTabContent,
-    useLoaderState
-} from "@reversearchitecture/ui";
+    ShellProvider,
+    Shell,
+    ShellCloseButton,
+    ShellTabContent
+} from "@restruct/ui";
 import {
     Bookmark,
     ChatLines,
@@ -32,13 +31,13 @@ import {
     useEffect,
     useState
 } from "react";
-import { parseStructurizr, Workspace } from "structurizr";
+import { parseStructurizr, Workspace } from "@structurizr/react";
 import { v4 } from "uuid";
 import {
     WorkspacePanel,
     WorkspaceViewBreadcrumbs,
     WorkspaceViewer
-} from "workspace";
+} from "@workspace/react";
 import {
     CommentApi,
     CommentThread,
@@ -52,6 +51,7 @@ import {
     useWorkspaceExplorer,
     WorkspaceInfo
 } from "../../../features";
+import { useLoaderState } from "../../../hooks";
 
 // TODO: come up with a convention or a way to identify the main thread discussion
 const discussionThreadId = "workspace-discussion";
@@ -202,12 +202,12 @@ export const CommunityTemplateModal: FC<{
                 height={"100%"}
                 width={"100%"}
             >
-                <ContextLevelProvider>
-                    <ContextSheet outlineRadius={[32, 32, 0, 0]} outlineWidth={[1, 1, 1, 1]}>
-                        <ContextSheetTabContent>
-                            <ContextSheet outlineRadius={[32, 32, 0, 0]} outlineWidth={[0, 0, 1, 0]}>
-                                <ContextSheetTabContent padding={2} gap={2}>
-                                    <ContextSheet outlineRadius={[26, 26, 26, 26]} outlineWidth={[0, 0, 0, 0]}>
+                <ShellProvider>
+                    <Shell outlineRadius={[32, 32, 0, 0]} outlineWidth={[1, 1, 1, 1]}>
+                        <ShellTabContent>
+                            <Shell outlineRadius={[32, 32, 0, 0]} outlineWidth={[0, 0, 1, 0]}>
+                                <ShellTabContent padding={2} gap={2}>
+                                    <Shell outlineRadius={[26, 26, 26, 26]} outlineWidth={[0, 0, 0, 0]}>
                                         <Flex
                                             position={"relative"}
                                             borderRadius={"32px"}
@@ -234,7 +234,7 @@ export const CommunityTemplateModal: FC<{
                                                 </WorkspacePanel>
                                             </WorkspaceViewer>
                                         </Flex>
-                                    </ContextSheet>
+                                    </Shell>
                                     
                                     <Flex direction={"column"} padding={2} gap={4} height={"100%"} width={"480px"}>
                                         <Tabs height={"100%"} width={"100%"} index={tabIndex}>
@@ -256,8 +256,8 @@ export const CommunityTemplateModal: FC<{
                                             </TabPanels>
                                         </Tabs>
                                     </Flex>
-                                </ContextSheetTabContent>
-                            </ContextSheet>
+                                </ShellTabContent>
+                            </Shell>
                             
                             <Flex direction={"column"} padding={4} height={"100%"} width={"80px"}>
                                 <ButtonGroup
@@ -267,7 +267,7 @@ export const CommunityTemplateModal: FC<{
                                     width={"48px"}
                                     variant={"menuitem"}
                                 >
-                                    <ContextSheetCloseButton
+                                    <ShellCloseButton
                                         isDisabled={isLoading}
                                         size={"lg"}
                                         onClick={onClose}
@@ -316,9 +316,9 @@ export const CommunityTemplateModal: FC<{
                                     </Tooltip>
                                 </ButtonGroup>
                             </Flex>
-                        </ContextSheetTabContent>
-                    </ContextSheet>
-                </ContextLevelProvider>
+                        </ShellTabContent>
+                    </Shell>
+                </ShellProvider>
             </ModalContent>
         </Modal>
     )

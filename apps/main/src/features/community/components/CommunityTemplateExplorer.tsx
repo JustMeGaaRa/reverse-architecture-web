@@ -1,22 +1,20 @@
 import { useBreakpointValue } from "@chakra-ui/react";
-import {
-    ErrorBoundary,
-    LoadingMessage,
-    StateMessage,
-    useLoaderState,
-    useLocale,
-} from "@reversearchitecture/ui";
+import { useLocale } from "@restruct/ui";
 import { EmojiSad, Folder } from "iconoir-react";
 import { FC, useCallback, useEffect, useState } from "react";
 import {
     CommunityApi,
+    ErrorBoundary,
+    LoadingMessage,
     LocaleKeys,
+    StateMessage,
     useSnackbar,
     useWorkspaceExplorer,
     WorkspaceGrid,
     WorkspaceInfo,
     WorkspaceTemplateCard
 } from "../..";
+import { useLoaderState } from "../../../hooks";
 
 export const CommunityTemplateExplorer: FC<{
     filters?: { category?: string, tag?: string };

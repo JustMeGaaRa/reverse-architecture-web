@@ -1,5 +1,5 @@
 import { Highlight, Icon } from "@chakra-ui/react";
-import { SearchMenuItem, useSearchMenu } from "@reversearchitecture/ui";
+import { SearchMenuItem, useSearchMenu } from "@restruct/ui";
 import { FC, useCallback } from "react";
 import { useNavigate } from "react-router";
 import { SearchItem } from "../types";

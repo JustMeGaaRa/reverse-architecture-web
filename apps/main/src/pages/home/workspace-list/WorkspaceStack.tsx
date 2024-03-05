@@ -1,11 +1,11 @@
 import { ScaleFade } from "@chakra-ui/react";
 import {
-    ContextSheet,
-    ContextSheetBody,
-    ContextSheetCloseButton,
-    ContextSheetHeader,
-    ContextSheetTitle
-} from "@reversearchitecture/ui";
+    Shell,
+    ShellBody,
+    ShellCloseButton,
+    ShellHeader,
+    ShellTitle
+} from "@restruct/ui";
 import {
     createContext,
     FC,
@@ -35,9 +35,9 @@ export const WorkspaceStack: FC<PropsWithChildren<{
 }) => {
     return (
         <WorkspaceStackContext.Provider value={{ isOpen, onClose }}>
-            <ContextSheet isOpen={isOpen} gap={2} padding={2}>
+            <Shell isOpen={isOpen} gap={2} padding={2}>
                 {children}
-            </ContextSheet>
+            </Shell>
         </WorkspaceStackContext.Provider>
     )
 }
@@ -53,14 +53,14 @@ export const WorkspaceStackHeader: FC<{
 
     return (
         <ScaleFade in={isOpen}>
-            <ContextSheetHeader
+            <ShellHeader
                 backgroundColor={"surface.tinted-white-10"}
                 outlineRadius={[24, 24, 24, 24]}
                 padding={2}
             >
-                <ContextSheetTitle icon={icon} title={title} />
-                <ContextSheetCloseButton size={"lg"} onClick={onClose} />
-            </ContextSheetHeader>
+                <ShellTitle icon={icon} title={title} />
+                <ShellCloseButton size={"lg"} onClick={onClose} />
+            </ShellHeader>
         </ScaleFade>
     )
 }
@@ -74,13 +74,13 @@ export const WorkspaceStackBody: FC<PropsWithChildren> = ({ children }) => {
             style={{ height: "100%" }}
             transition={{ enter: { delay: 0.3 } }}
         >
-            <ContextSheetBody
+            <ShellBody
                 backgroundColor={"surface.tinted-white-5"}
                 outlineRadius={[24, 24, 24, 24]}
                 padding={4}
             >
                 {children}
-            </ContextSheetBody>
+            </ShellBody>
         </ScaleFade>
     )
 }

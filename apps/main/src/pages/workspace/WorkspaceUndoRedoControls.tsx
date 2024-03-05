@@ -1,5 +1,6 @@
 import { Icon, IconButton } from "@chakra-ui/react";
-import { PanelPosition, Toolbar, ToolbarSection, WorkspacePanel, useWorkspace } from "workspace";
+import { Toolbar, ToolbarSection } from "@restruct/ui";
+import { PanelPosition, WorkspacePanel, useWorkspace } from "@workspace/react";
 import { Redo, Undo } from "iconoir-react";
 import { FC, useCallback } from "react";
 

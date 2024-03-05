@@ -1,5 +1,5 @@
 import { SkeletonText, Text } from "@chakra-ui/react";
-import { ContextSheetTitle } from "@reversearchitecture/ui";
+import { ShellTitle } from "@restruct/ui";
 import { FC } from "react";
 
 export const TemplateSectionInfo: FC<{
@@ -13,7 +13,7 @@ export const TemplateSectionInfo: FC<{
 }) => {
     return (
         <>
-            <ContextSheetTitle isLoading={isLoading} title={title} />
+            <ShellTitle isLoading={isLoading} title={title} />
             <SkeletonText
                 isLoaded={!isLoading}
                 borderRadius={"md"}

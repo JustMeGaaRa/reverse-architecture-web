@@ -17,7 +17,7 @@ import {
     SearchMenuTrigger,
     SearchMenuDivider,
     useLocale,
-} from "@reversearchitecture/ui";
+} from "@restruct/ui";
 import {
     Search as SearchIcon,
     Terminal,

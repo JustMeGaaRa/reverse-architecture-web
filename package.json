@@ -7,7 +7,7 @@
     "packages/*",
     "packages/@justmegaara/*",
     "packages/@monaco-editor/*",
-    "packages/@reversearchitecture/*",
+    "packages/@restruct/*",
     "packages/@structurizr/*",
     "packages/@workspace/*"
   ],

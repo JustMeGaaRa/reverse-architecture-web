@@ -1,5 +1,5 @@
 import { Avatar, AvatarGroup } from "@chakra-ui/react";
-import { UserInfo } from "workspace";
+import { UserInfo } from "@workspace/react";
 import { FC } from "react";
 
 export const UserAvatarGroup: FC<{

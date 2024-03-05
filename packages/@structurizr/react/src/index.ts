@@ -1,3 +1,3 @@
-export * from "./components/StructurizrProvider";
-export * from "./components/WorkspaceProvider";
-export * from "./hooks/useStructurizrParser";
+export * from "@structurizr/dsl";
+export * from "@structurizr/export";
+export * from "@structurizr/parser";

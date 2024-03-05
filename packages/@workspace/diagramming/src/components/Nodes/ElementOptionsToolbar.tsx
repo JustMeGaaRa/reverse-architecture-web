@@ -8,7 +8,7 @@ import {
     ToolbarSubmenu,
     ToolbarSubmenuContent,
     ToolbarSubmenuTrigger
-} from "@workspace/toolbar";
+} from "@restruct/toolbar";
 import {
     BinMinusIn,
     Circle,

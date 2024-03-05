@@ -1,8 +1,8 @@
 import { Button, ButtonGroup, Icon, IconButton, Text } from "@chakra-ui/react";
-import { PageHeaderSectionPortal } from "@reversearchitecture/ui";
+import { PageHeaderSectionPortal } from "@restruct/ui";
+import { validateStructurizr } from "@structurizr/react";
 import { PagePlus, Upload } from "iconoir-react";
 import { FC, PropsWithChildren, useCallback } from "react";
-import { validateStructurizr } from "structurizr";
 import { useFilePicker } from "use-file-picker";
 import { useAccount, useSnackbar, useWorkspaceExplorer } from "../../../features";
 

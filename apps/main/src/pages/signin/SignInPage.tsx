@@ -10,7 +10,7 @@ import {
     Text,
     VStack,
 } from "@chakra-ui/react";
-import { ReverseArchitectureSvg } from "@reversearchitecture/ui";
+import { ReverseArchitectureSvg } from "@restruct/ui";
 import { Github } from "iconoir-react";
 import { FC, useCallback } from "react";
 import { useNavigate } from "react-router-dom";

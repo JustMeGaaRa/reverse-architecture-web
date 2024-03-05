@@ -1,13 +1,9 @@
 import { useBreakpointValue } from "@chakra-ui/react";
-import {
-    ErrorBoundary,
-    LoadingMessage,
-    StateMessage,
-    useLoaderState,
-    useLocale,
-} from "@reversearchitecture/ui";
+import { useLocale } from "@restruct/ui";
 import { EmojiSad, Folder } from "iconoir-react";
 import { FC, useCallback, useEffect, useState } from "react";
+import { useLoaderState } from "../../../hooks";
+import { ErrorBoundary } from "../../error-boundary";
 import { LocaleKeys } from "../../localization";
 import { useSnackbar } from "../../snackbar";
 import { useWorkspaceExplorer, useWorkspaceSelection } from "../hooks";
@@ -22,6 +18,8 @@ import {
     WorkspaceCard,
     WorkspaceTable,
     WorkspaceTableRow,
+    StateMessage,
+    LoadingMessage,
 } from "./";
 
 export const WorkspaceExplorer: FC<{

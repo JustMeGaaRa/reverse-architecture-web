@@ -1,4 +1,4 @@
-import { ViewType } from "structurizr";
+import { ViewType } from "@structurizr/react";
 
 export type CommentThreadMetadata = {
     commentThreadId?: string;

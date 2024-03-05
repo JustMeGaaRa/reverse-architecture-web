@@ -1,3 +1,4 @@
+export * from "./useContentViewMode";
 export * from "./useOnPressHold";
 export * from "./useWorkspaceAutoSaveEffect";
 export * from "./useWorkspaceExplorer";

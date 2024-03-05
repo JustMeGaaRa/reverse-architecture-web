@@ -1,7 +1,7 @@
 {
   "name": "@structurizr/react",
   "version": "0.1.0",
-  "description": "A library with hooks and bindings for Structurizr DSL.",
+  "description": "A meta-package for all structurizr packages for building the Structurizr syntax and manipulate the Workspace object.",
   "main": "dist/index.js",
   "keywords": [
     "structurizr",
@@ -9,8 +9,7 @@
     "c4-model",
     "c4",
     "architecture",
-    "diagram",
-    "react"
+    "diagram"
   ],
   "author": "JustMeGaaRa",
   "license": "MIT",
@@ -20,16 +19,11 @@
   },
   "dependencies": {
     "@structurizr/dsl": "*",
-    "@structurizr/parser": "*",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "@structurizr/export": "*",
+    "@structurizr/parser": "*"
+
   },
   "devDependencies": {
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0",
-    "eslint": "^8.51.0",
-    "eslint-config-custom": "*",
-    "tsconfig": "*",
     "typescript": "^5.2.2"
   },
   "repository": {

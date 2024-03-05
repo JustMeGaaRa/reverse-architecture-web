@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { Workspace } from "structurizr";
-import { useWorkspace } from "workspace";
+import { Workspace } from "@structurizr/react";
+import { useWorkspace } from "@workspace/react";
 import { useSnackbar } from "../../snackbar";
 import { saveWorkspaceContent } from "../services";
 import { useWorkspaceExplorer } from "./useWorkspaceExplorer";

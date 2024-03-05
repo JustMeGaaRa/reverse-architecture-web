@@ -1,9 +1,8 @@
-import { useLoaderState } from "@reversearchitecture/ui";
 import { FC, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import {
     parseStructurizr
-} from "structurizr";
+} from "@structurizr/react";
 import {
     WorkspaceNavigationProvider,
     CurrentUser,
@@ -11,7 +10,7 @@ import {
     WorkspaceProvider,
     useWorkspace,
     useWorkspaceNavigation,
-} from "workspace";
+} from "@workspace/react";
 import {
     CommentApi,
     loadWorkspaceContent,
@@ -20,6 +19,7 @@ import {
     useSnackbar,
     useWorkspaceExplorer,
 } from "../../features";
+import { useLoaderState } from "../../hooks";
 import {
     WorkspaceCollaborativeEditor,
     WorkspacePageActionsWrapper,

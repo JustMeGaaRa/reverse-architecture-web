@@ -1,5 +1,5 @@
 import { Link } from "@chakra-ui/react";
-import { SearchMenuGroup, useSearchMenu } from "@reversearchitecture/ui";
+import { SearchMenuGroup, useSearchMenu } from "@restruct/ui";
 import { FC, PropsWithChildren, useCallback } from "react";
 import { useNavigate } from "react-router";
 import { SearchGroup } from "../types";

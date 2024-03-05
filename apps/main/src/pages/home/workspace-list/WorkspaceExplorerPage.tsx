@@ -12,17 +12,14 @@ import {
 } from "@chakra-ui/react";
 import {
     ButtonSegmentedToggle,
-    ContentViewMode,
-    ContextSheet,
-    ContextSheetBody,
-    ContextSheetHeader,
-    ContextSheetOverlay,
-    ContextSheetTitle,
-    StateMessage,
-    useContentViewMode,
-    useLoaderState,
+    Shell,
+    ShellBody,
+    ShellHeader,
+    ShellOverlay,
+    ShellTitle,
     useLocale,
-} from "@reversearchitecture/ui";
+} from "@restruct/ui";
+import { validateStructurizr } from "@structurizr/react";
 import {
     List,
     Upload,
@@ -36,14 +33,16 @@ import {
     useMemo,
 } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { validateStructurizr } from "structurizr";
 import {
     LocaleKeys,
     WorkspaceExplorer,
     useWorkspaceExplorer,
     useAccount,
     useSnackbar,
-    WorkspaceExplorerProvider
+    WorkspaceExplorerProvider,
+    ContentViewMode,
+    useContentViewMode,
+    StateMessage
 } from "../../../features";
 import {
     HomePageResetActionsWrapper,
@@ -52,6 +51,7 @@ import {
     WorkspaceStackBody,
     WorkspaceStackHeader
 } from "../";
+import { useLoaderState } from "../../../hooks";
 
 export enum WorkspaceListTabs {
     All = "all",
@@ -155,18 +155,18 @@ export const WorkspaceExplorerPage: FC<PropsWithChildren> = () => {
     return (
         <HomePageResetActionsWrapper>
             <WorkspaceExplorerPageActionWrapper>
-                <ContextSheet
+                <Shell
                     isOpen={!selectedGroupName}
                     outline={isOpen ? "lime.600" : undefined}
                     onDragEnter={handleOnDragEnterWorkspaceFile}
                 >
-                    <ContextSheetHeader>
-                        <ContextSheetTitle title={"Workspaces"} />
-                    </ContextSheetHeader>
+                    <ShellHeader>
+                        <ShellTitle title={"Workspaces"} />
+                    </ShellHeader>
 
                     <Divider />
                     
-                    <ContextSheetBody>
+                    <ShellBody>
                         <Tabs height={"100%"} index={tabIndex}>
                             <TabList backgroundColor={"surface.tinted-black-40"} height={12} paddingX={2}>
                                 <Tab onClick={handleOnClickWorkspacesTab}>
@@ -228,9 +228,9 @@ export const WorkspaceExplorerPage: FC<PropsWithChildren> = () => {
                                 </TabPanel>
                             </TabPanels>
                         </Tabs>
-                    </ContextSheetBody>
+                    </ShellBody>
                     
-                    <ContextSheetOverlay
+                    <ShellOverlay
                         isOpen={isOpen}
                         onDragOver={handleOnDragOverWorkspaceFile}
                         onDragExit={handleOnDragExitWorkspaceFile}
@@ -241,8 +241,8 @@ export const WorkspaceExplorerPage: FC<PropsWithChildren> = () => {
                             title={getLocalizedString(LocaleKeys.IMPORT_FILE_TITLE)}
                             description={getLocalizedString(LocaleKeys.IMPORT_FILE_DESCRIPTION)}
                         />
-                    </ContextSheetOverlay>
-                </ContextSheet>
+                    </ShellOverlay>
+                </Shell>
                 
                 <WorkspaceStack isOpen={!!selectedGroupName} onClose={handleOnClickWorkspaceStackClose}>
                     <WorkspaceStackHeader title={selectedGroupName} icon={AppleShortcuts} />

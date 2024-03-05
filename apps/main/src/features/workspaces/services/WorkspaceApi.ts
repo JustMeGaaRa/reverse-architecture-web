@@ -1,4 +1,4 @@
-import { IWorkspaceMetadata, StructurizrExportClient, Workspace } from "structurizr";
+import { IWorkspaceMetadata, StructurizrExportClient, Workspace } from "@structurizr/react";
 import { WorkspaceInfo } from "../types";
 
 export type WorkspaceLoadFilters = {

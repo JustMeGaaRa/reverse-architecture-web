@@ -1,0 +1,41 @@
+{
+  "name": "@restruct/search-menu",
+  "version": "0.1.0",
+  "description": "A search component with dropdown items menu.",
+  "main": "dist/index.js",
+  "keywords": [
+    "reverse-architecture",
+    "restruct",
+    "search-menu"
+  ],
+  "author": "JustMeGaaRa",
+  "license": "MIT",
+  "scripts": {
+    "build": "npx tsc",
+    "dev": "npx tsc -w",
+    "lint": "eslint \"**/*.ts*\""
+  },
+  "dependencies": {
+    "@chakra-ui/react": "^2.8.2",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "framer-motion": "^10.16.4",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "eslint": "^8.51.0",
+    "eslint-config-custom": "*",
+    "tsconfig": "*",
+    "typescript": "^5.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JustMeGaaRa/reverse-architecture-web.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JustMeGaaRa/reverse-architecture-web/issues"
+  }
+}

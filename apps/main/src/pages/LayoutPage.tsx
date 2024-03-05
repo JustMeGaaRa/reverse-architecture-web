@@ -12,11 +12,12 @@ import {
     PageHeader,
     PageHeaderSectionOutlet,
     PageSidebarSectionOutlet,
-    ContextLevelProvider,
+    ShellProvider,
     PageHomeButton,
     ReverseArchitectureSvg,
     usePageSidebar,
-} from "@reversearchitecture/ui";
+    useShellLevel,
+} from "@restruct/ui";
 import { FC, PropsWithChildren } from "react";
 import { Outlet as RouterOutlet, useNavigate } from "react-router";
 import { AccountMenu } from "./home";
@@ -24,19 +25,25 @@ import { AccountMenu } from "./home";
 export const LayoutPage: FC<PropsWithChildren> = () => {
     const navigate = useNavigate();
     const { sidebarOptions } = usePageSidebar();
+    const { level, getLevelColor } = useShellLevel();
 
     return (
-        <ContextLevelProvider>
-            <Page>
-                <PageSidebar>
-                    <Flex padding={3}>
-                        <PageHomeButton
-                            icon={ReverseArchitectureSvg}
-                            title={"RE:STRUCT"}
-                            onClick={() => navigate("/")}
-                        />
-                    </Flex>
+        <Page backgroundColor={getLevelColor(level)}>
+            <PageHeader>
+                <Flex padding={3}>
+                    <PageHomeButton
+                        icon={ReverseArchitectureSvg}
+                        title={"RE:STRUCT"}
+                        onClick={() => navigate("/")}
+                    />
+                </Flex>
 
+                <PageHeaderSectionOutlet section={"start"} />
+                <PageHeaderSectionOutlet section={"center"} />
+                <PageHeaderSectionOutlet section={"end"} />
+            </PageHeader>
+            <PageBody>
+                <PageSidebar>
                     <Flex height={"100%"} direction={"column"} padding={3}>
                         <PageSidebarSectionOutlet section={"start"} />
                         <PageSidebarSectionOutlet section={"center"} />
@@ -44,25 +51,17 @@ export const LayoutPage: FC<PropsWithChildren> = () => {
                     </Flex>
 
                     <Flex display={sidebarOptions.showButton ? "block" : "none"}>
-                        <Box padding={2}>
-                            <AccountMenu expanded={sidebarOptions.isOpen} />
-                        </Box>
+                        <AccountMenu expanded={sidebarOptions.isOpen} />
                         <Divider backgroundColor={"whiteAlpha.200"} />
                         <PageSidebarToggleButton />
                     </Flex>
                 </PageSidebar>
-                <PageBody>
-                    <PageHeader>
-                        <PageHeaderSectionOutlet section={"start"} />
-                        <PageHeaderSectionOutlet section={"center"} />
-                        <PageHeaderSectionOutlet section={"end"} />
-                    </PageHeader>
-                    
-                    <PageContent>
+                <PageContent>
+                    <ShellProvider level={level + 1}>
                         <RouterOutlet />
-                    </PageContent>
-                </PageBody>
-            </Page>
-        </ContextLevelProvider>
+                    </ShellProvider>
+                </PageContent>
+            </PageBody>
+        </Page>
     )
 }

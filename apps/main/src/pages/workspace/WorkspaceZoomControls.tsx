@@ -1,5 +1,6 @@
 import { Button, IconButton, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
-import { PanelPosition, useZoom, Toolbar, ToolbarSection, WorkspacePanel } from "workspace";
+import { Toolbar, ToolbarSection } from "@restruct/ui";
+import { PanelPosition, WorkspacePanel, useZoom } from "@workspace/react";
 import { Minus, Plus } from "iconoir-react";
 import { FC, useMemo } from "react";
 

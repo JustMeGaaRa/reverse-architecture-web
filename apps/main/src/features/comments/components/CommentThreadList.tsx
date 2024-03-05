@@ -1,5 +1,5 @@
 import { Box } from "@chakra-ui/react";
-import { useWorkspace, useWorkspaceNavigation } from "workspace";
+import { useWorkspace, useWorkspaceNavigation } from "@workspace/react";
 import { FC, useCallback } from "react";
 import { CommentCard, CommentGroup, CommentThread, useCommentsStore } from "../../../features";
 

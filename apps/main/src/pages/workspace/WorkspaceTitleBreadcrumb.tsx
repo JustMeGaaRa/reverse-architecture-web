@@ -7,9 +7,9 @@ import {
     EditablePreview,
     Text
 } from "@chakra-ui/react"
+import { IWorkspace } from "@structurizr/react";
 import { FC, useCallback } from "react"
 import { NavLink } from "react-router-dom";
-import { IWorkspace } from "structurizr";
 
 export const WorksapceTitleBreadcrumb: FC<{
     workspace: IWorkspace;

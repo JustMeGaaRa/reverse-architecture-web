@@ -1,4 +1,4 @@
-import { ViewType } from "structurizr";
+import { ViewType } from "@structurizr/react";
 import { useCommentStore } from "../store";
 import { CommentInfo, CommentThread, CommentThreadMetadata } from "../types";
 

@@ -6,17 +6,15 @@ import {
     NotificationBell,
     Settings,
     QuestionMarkCircle
-} from "@reversearchitecture/icons";
+} from "@restruct/icons";
 import {
-    Route,
-    RouteList,
     PageHeaderSectionPortal,
     PageSidebarSectionPortal,
     usePageSidebar,
-} from "@reversearchitecture/ui";
+} from "@restruct/ui";
 import { FC, PropsWithChildren, useCallback, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { CommandCenter } from "../../features";
+import { CommandCenter, Route, RouteList } from "../../features";
 import { HelpShortcutsModal } from "./HelpShortcutsModal";
 
 export const HomePageResetActionsWrapper: FC<PropsWithChildren> = ({ children }) => {

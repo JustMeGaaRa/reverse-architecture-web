@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren, SetStateAction, useCallback, useEffect, useState } from "react";
-import { useWorkspace } from "workspace";
+import { useWorkspace } from "@workspace/react";
 import { Transaction, YMapEvent } from "yjs";
 import { CommentContext } from "../contexts";
 import { CommentThread } from "../types";

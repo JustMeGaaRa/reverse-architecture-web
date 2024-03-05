@@ -5,7 +5,7 @@ import {
     WorkspaceNavigationProvider,
     WorkspaceProvider,
     WorkspaceRoom,
-} from "workspace";
+} from "@workspace/react";
 import {
     useAccount,
 } from "../../features";

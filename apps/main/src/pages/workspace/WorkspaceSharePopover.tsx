@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { Copy, UserPlus } from "iconoir-react";
 import { FC, useCallback } from "react";
-import { useSharingOptions } from "workspace";
+import { useSharingOptions } from "@workspace/react";
 
 export const WorkspaceSharePopover: FC = () => {
     const { getSharedLink } = useSharingOptions();

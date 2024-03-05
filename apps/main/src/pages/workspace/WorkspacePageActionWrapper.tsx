@@ -10,10 +10,8 @@ import {
     ButtonSegmentedToggle,
     PageHeaderSectionPortal,
     PageSidebarSectionPortal,
-    Route,
-    RouteList,
     usePageSidebar,
-} from "@reversearchitecture/ui";
+} from "@restruct/ui";
 import {
     ChatLines,
     Code,
@@ -30,14 +28,16 @@ import {
 } from "react";
 import {
     ViewType,
-} from "structurizr";
+} from "@structurizr/react";
 import {
     useWorkspace,
     useWorkspaceNavigation,
     useWorkspaceRoom,
     useFollowUserMode
-} from "workspace";
+} from "@workspace/react";
 import {
+    Route,
+    RouteList,
     useSnackbar,
     useWorkspaceExplorer,
 } from "../../features";

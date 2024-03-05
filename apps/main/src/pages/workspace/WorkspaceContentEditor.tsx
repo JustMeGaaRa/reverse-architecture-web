@@ -1,52 +1,20 @@
+import { Divider } from "@chakra-ui/react";
 import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    Button,
-    ButtonGroup,
-    Divider,
-    Editable,
-    EditableInput,
-    EditablePreview,
-    HStack,
-    Icon,
-    IconButton,
-    Text,
-} from "@chakra-ui/react";
-import {
-    ButtonSegmentedToggle,
-    ContextSheet,
-    ContextSheetBody,
-    ContextSheetCloseButton,
-    ContextSheetHeader,
-    ContextSheetPanel,
-    ContextSheetTabContent,
-    ContextSheetTitle,
-    RouteList,
-    useLocale,
-    usePageHeader,
-    usePageSidebar,
-} from "@reversearchitecture/ui";
-import {
-    ChatLines,
-    CloudSync,
-    Code,
-    HelpCircle,
-    Settings,
-} from "iconoir-react";
+    Shell,
+    ShellBody,
+    ShellCloseButton,
+    ShellHeader,
+    ShellPanel,
+    ShellTabContent,
+    ShellTitle,
+} from "@restruct/ui";
 import {
     FC,
     useCallback,
-    useEffect,
     useMemo,
     useState
 } from "react";
-import { NavLink, useParams } from "react-router-dom";
-import {
-    ViewType,
-    useStructurizrParser,
-    Workspace,
-} from "structurizr";
+import { parseStructurizr } from "@structurizr/react";
 import {
     CollaboratingUserPane,
     WorkspaceEditor,
@@ -60,25 +28,19 @@ import {
     useWorkspaceRoom,
     usePresentationMode,
     useUserAwareness,
-    useOnFollowingUserViewportChange,
-    useFollowUserMode
-} from "workspace";
+    useOnFollowingUserViewportChange
+} from "@workspace/react";
 import {
     CommentThreadList,
     useCommentingMode,
-    useCommentsStore,
-    useSnackbar,
-    useWorkspaceExplorer,
+    useCommentsStore
 } from "../../features";
 import {
     DiscussionsPane,
     PresenterInfoBar,
-    WorkspaceSharePopover,
-    UserAvatarGroup,
     WorkspaceActionsToolbar,
     WorkspaceUndoRedoControls,
-    WorkspaceZoomControls,
-    WorkspaceMenu
+    WorkspaceZoomControls
 } from "./";
 
 export enum WorkspaceContentMode {
@@ -98,7 +60,6 @@ export const WorkspaceCollaborativeEditor: FC = () => {
     console.log("workspace collaborative editor")
 
     const [ structurizrCode, setStructurizrCode ] = useState("");
-    const { parseStructurizr } = useStructurizrParser();
     const { workspace, setWorkspace } = useWorkspace();
     const { currentView, setViewport } = useWorkspaceNavigation();
 
@@ -155,54 +116,54 @@ export const WorkspaceCollaborativeEditor: FC = () => {
         // TODO: use debounce to defer the workspace parsing by 500ms
         // TODO: handle parsing errors
         setWorkspace(parseStructurizr(value));
-    }, [parseStructurizr, setWorkspace]);
+    }, [setWorkspace]);
 
     return (
-        <ContextSheet>
-            <ContextSheetTabContent>
+        <Shell>
+            <ShellTabContent>
                 {isVersionHistoryPanel && (
-                    <ContextSheetPanel width={"400px"}>
-                        <ContextSheetHeader>
-                            <ContextSheetTitle title={"All Discussions"} />
-                            <ContextSheetCloseButton onClick={handleOnClickPanelClose} />
-                        </ContextSheetHeader>
+                    <ShellPanel width={"400px"}>
+                        <ShellHeader>
+                            <ShellTitle title={"All Discussions"} />
+                            <ShellCloseButton onClick={handleOnClickPanelClose} />
+                        </ShellHeader>
                         <Divider />
-                        <ContextSheetBody>
+                        <ShellBody>
                             <CommentThreadList discussions={commentThreads} />
-                        </ContextSheetBody>
-                    </ContextSheetPanel>
+                        </ShellBody>
+                    </ShellPanel>
                 )}
 
                 {isCodeEditorPanel && (
-                    <ContextSheetPanel width={"100%"}>
-                        <ContextSheetHeader>
-                            <ContextSheetTitle title={"Code Editor"} />
-                            <ContextSheetCloseButton onClick={handleOnClickPanelClose} />
-                        </ContextSheetHeader>
+                    <ShellPanel width={"100%"}>
+                        <ShellHeader>
+                            <ShellTitle title={"Code Editor"} />
+                            <ShellCloseButton onClick={handleOnClickPanelClose} />
+                        </ShellHeader>
                         <Divider />
-                        <ContextSheetBody>
+                        <ShellBody>
                             <WorkspaceEditor
                                 value={structurizrCode}
                                 onChange={handleOnChangeStructurizrCode}
                             />
-                        </ContextSheetBody>
-                    </ContextSheetPanel>
+                        </ShellBody>
+                    </ShellPanel>
                 )}
 
                 {isCommentsPanel && (
-                    <ContextSheetPanel width={"400px"}>
-                        <ContextSheetHeader>
-                            <ContextSheetTitle title={"Version History"} />
-                            <ContextSheetCloseButton onClick={handleOnClickPanelClose} />
-                        </ContextSheetHeader>
+                    <ShellPanel width={"400px"}>
+                        <ShellHeader>
+                            <ShellTitle title={"Version History"} />
+                            <ShellCloseButton onClick={handleOnClickPanelClose} />
+                        </ShellHeader>
                         <Divider />
-                        <ContextSheetBody>
+                        <ShellBody>
 
-                        </ContextSheetBody>
-                    </ContextSheetPanel>
+                        </ShellBody>
+                    </ShellPanel>
                 )}
                 
-                <ContextSheet
+                <Shell
                     outline={presentationEnabled ? `${presenterInfo?.color}.600` : undefined}
                     outlineWidth={presentationEnabled ? [2, 2, 2, 2] : [2, 2, 0, 0]}
                 >
@@ -220,8 +181,8 @@ export const WorkspaceCollaborativeEditor: FC = () => {
                             <WorkspaceZoomControls />
                         </WorkspaceViewer>
                         
-                </ContextSheet>
-            </ContextSheetTabContent>
-        </ContextSheet>
+                </Shell>
+            </ShellTabContent>
+        </Shell>
     );
 }

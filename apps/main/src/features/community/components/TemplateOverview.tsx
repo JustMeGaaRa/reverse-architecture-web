@@ -10,17 +10,17 @@ import {
     Tooltip,
 } from "@chakra-ui/react";
 import {
-    ContextLevelProvider,
-    ContextSheet,
-    ContextSheetCloseButton,
-    ContextSheetTabContent
-} from "@reversearchitecture/ui";
-import { Workspace } from "structurizr";
+    ShellProvider,
+    Shell,
+    ShellCloseButton,
+    ShellTabContent
+} from "@restruct/ui";
+import { Workspace } from "@structurizr/react";
 import {
     WorkspaceViewBreadcrumbs,
     WorkspacePanel,
     WorkspaceViewer
-} from "workspace";
+} from "@workspace/react";
 import {
     Bookmark,
     ChatLines,
@@ -77,12 +77,12 @@ export const TemplateOverview: FC<{
     }, [onCommentSend]);
 
     return (
-        <ContextLevelProvider>
-            <ContextSheet outlineRadius={[32, 32, 0, 0]} outlineWidth={[1, 1, 1, 1]}>
-                <ContextSheetTabContent>
-                    <ContextSheet outlineRadius={[32, 32, 0, 0]} outlineWidth={[0, 0, 1, 0]}>
-                        <ContextSheetTabContent padding={2} gap={2}>
-                            <ContextSheet outlineRadius={[26, 26, 26, 26]} outlineWidth={[0, 0, 0, 0]}>
+        <ShellProvider>
+            <Shell outlineRadius={[32, 32, 0, 0]} outlineWidth={[1, 1, 1, 1]}>
+                <ShellTabContent>
+                    <Shell outlineRadius={[32, 32, 0, 0]} outlineWidth={[0, 0, 1, 0]}>
+                        <ShellTabContent padding={2} gap={2}>
+                            <Shell outlineRadius={[26, 26, 26, 26]} outlineWidth={[0, 0, 0, 0]}>
                                 <Flex
                                     position={"relative"}
                                     borderRadius={"32px"}
@@ -109,7 +109,7 @@ export const TemplateOverview: FC<{
                                         </WorkspacePanel>
                                     </WorkspaceViewer>
                                 </Flex>
-                            </ContextSheet>
+                            </Shell>
                             
                             <Flex direction={"column"} padding={2} gap={4} height={"100%"} width={"480px"}>
                                 <Tabs height={"100%"} width={"100%"} index={tabIndex}>
@@ -131,8 +131,8 @@ export const TemplateOverview: FC<{
                                     </TabPanels>
                                 </Tabs>
                             </Flex>
-                        </ContextSheetTabContent>
-                    </ContextSheet>
+                        </ShellTabContent>
+                    </Shell>
                     
                     <Flex direction={"column"} padding={4} height={"100%"} width={"80px"}>
                         <ButtonGroup
@@ -142,7 +142,7 @@ export const TemplateOverview: FC<{
                             width={"48px"}
                             variant={"menuitem"}
                         >
-                            <ContextSheetCloseButton
+                            <ShellCloseButton
                                 isDisabled={isLoading}
                                 size={"lg"}
                                 onClick={onClose}
@@ -191,8 +191,8 @@ export const TemplateOverview: FC<{
                             </Tooltip>
                         </ButtonGroup>
                     </Flex>
-                </ContextSheetTabContent>
-            </ContextSheet>
-        </ContextLevelProvider>
+                </ShellTabContent>
+            </Shell>
+        </ShellProvider>
     )
 }

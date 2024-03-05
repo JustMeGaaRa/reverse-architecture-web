@@ -1,5 +1,5 @@
 import { Button, ButtonGroup, Icon, Text } from "@chakra-ui/react";
-import { PageHeaderSectionPortal } from "@reversearchitecture/ui";
+import { PageHeaderSectionPortal } from "@restruct/ui";
 import { PagePlus } from "iconoir-react";
 import { FC, PropsWithChildren, useCallback } from "react";
 

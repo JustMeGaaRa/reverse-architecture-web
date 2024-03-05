@@ -1,5 +1,5 @@
 import { Box, Icon, IconButton, ScaleFade, Text } from "@chakra-ui/react";
-import { Toolbar, ToolbarSection } from "workspace";
+import { Toolbar, ToolbarSection } from "@restruct/ui";
 import { AppleShortcuts, BinMinusIn, Xmark, Copy } from "iconoir-react";
 import { FC, PropsWithChildren, useCallback } from "react";
 import { useWorkspaceSelection, useWorkspaceExplorerOptions, useWorkspaceExplorer } from "../hooks";

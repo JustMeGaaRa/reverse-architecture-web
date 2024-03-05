@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { parseStructurizr, StructurizrExportClient, Workspace } from "structurizr";
+import { parseStructurizr, StructurizrExportClient, Workspace } from "@structurizr/react";
 import { v4 } from "uuid";
 import { useWorkspaceSelectionStore } from "../hooks";
 import { useWorkspaceStore } from "../store";

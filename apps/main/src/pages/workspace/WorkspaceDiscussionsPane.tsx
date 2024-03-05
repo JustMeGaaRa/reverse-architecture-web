@@ -4,7 +4,7 @@ import {
     ViewportStaticElement,
     WorkspaceElementPortal,
     useWorkspace,
-} from "workspace";
+} from "@workspace/react";
 import { FC, useCallback, useMemo } from "react";
 import { v4 } from "uuid";
 import {

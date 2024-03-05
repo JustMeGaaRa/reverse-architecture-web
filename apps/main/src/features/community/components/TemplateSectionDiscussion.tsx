@@ -8,7 +8,7 @@ import {
     InputLeftElement,
     InputRightElement,
 } from "@chakra-ui/react";
-import { ContextSheetTitle } from "@reversearchitecture/ui";
+import { ShellTitle } from "@restruct/ui";
 import { ChatLines, Send } from "iconoir-react";
 import { FC, useCallback, useRef } from "react";
 import {
@@ -44,7 +44,7 @@ export const TemplateSectionDiscussion: FC<{
 
     return (
         <>
-            <ContextSheetTitle title={"Comments"} />
+            <ShellTitle title={"Comments"} />
             <Box
                 padding={2}
                 height={"100%"}

@@ -13,12 +13,11 @@ import {
     TagLabel
 } from "@chakra-ui/react";
 import {
-    ContextSheet,
-    ContextSheetBody,
-    ContextSheetHeader,
-    ContextSheetTitle,
-    useLoaderState,
-} from "@reversearchitecture/ui";
+    Shell,
+    ShellBody,
+    ShellHeader,
+    ShellTitle
+} from "@restruct/ui";
 import {
     Compass,
     FireFlame,
@@ -46,6 +45,7 @@ import {
     CommunityTemplateModal,
     HomePageResetActionsWrapper,
 } from "../";
+import { useLoaderState } from "../../../hooks";
 
 export const CommunityExplorerPage: FC<PropsWithChildren> = () => {
     const navigate = useNavigate();
@@ -85,14 +85,14 @@ export const CommunityExplorerPage: FC<PropsWithChildren> = () => {
     return (
         <HomePageResetActionsWrapper>
             <CommunityExplorerPageActionsWrapper>
-                <ContextSheet>
-                    <ContextSheetHeader>
-                        <ContextSheetTitle title={"Community"} />
-                    </ContextSheetHeader>
+                <Shell>
+                    <ShellHeader>
+                        <ShellTitle title={"Community"} />
+                    </ShellHeader>
 
                     <Divider />
 
-                    <ContextSheetBody>
+                    <ShellBody>
                         <Flex direction={"column"} height={"100%"}>
                             <Box flexBasis={"80px"} flexGrow={0} flexShrink={0} padding={6}>
                                 <CommunityTemplateFilters onFilterChange={handleOnFilterChange} />
@@ -105,8 +105,8 @@ export const CommunityExplorerPage: FC<PropsWithChildren> = () => {
                                 />
                             </Box>
                         </Flex>
-                    </ContextSheetBody>
-                </ContextSheet>
+                    </ShellBody>
+                </Shell>
                 
                 <CommunityTemplateModal
                     workspaceId={queryParams.get("preview")}

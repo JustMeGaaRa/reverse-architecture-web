@@ -1,7 +1,6 @@
 import {
     Avatar,
     Flex,
-    IconButton,
     Menu,
     MenuButton,
     MenuDivider,
@@ -29,6 +28,7 @@ export const AccountMenu: FC<PropsWithChildren<{
                 borderRadius={20}
                 colorScheme={"gray"}
                 rightIcon={<NavArrowUp />}
+                padding={2}
                 size={"xl"}
                 title={account.fullname}
                 variant={"ghost"}

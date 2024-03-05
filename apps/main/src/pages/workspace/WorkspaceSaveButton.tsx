@@ -10,7 +10,7 @@ import {
     MetadataExportClient,
     StructurizrExportClient,
     Workspace
-} from "structurizr";
+} from "@structurizr/react";
 import {
     saveWorkspaceContent,
     useSnackbar,

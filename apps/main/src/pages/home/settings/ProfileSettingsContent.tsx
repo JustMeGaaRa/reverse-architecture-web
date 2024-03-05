@@ -1,30 +1,30 @@
 import { Divider } from "@chakra-ui/react";
 import {
-    ContextSheet,
-    ContextSheetBody,
-    ContextSheetHeader,
-    ContextSheetTitle,
-    StateMessage
-} from "@reversearchitecture/ui";
+    Shell,
+    ShellBody,
+    ShellHeader,
+    ShellTitle,
+} from "@restruct/ui";
 import { Folder } from "iconoir-react";
 import { FC } from "react";
+import { StateMessage } from "../../../features";
 
 export const ProfileSettingsContent: FC = () => {
     return (
-        <ContextSheet>
-            <ContextSheetHeader>
-                <ContextSheetTitle title={"Profile"} />
-            </ContextSheetHeader>
+        <Shell>
+            <ShellHeader>
+                <ShellTitle title={"Profile"} />
+            </ShellHeader>
 
             <Divider />
 
-            <ContextSheetBody>
+            <ShellBody>
                 <StateMessage
                     icon={Folder}
                     title={"No profile settings yet"}
                     description={"To get started, click the \"Create New Project\" button to create a new project."}
                 />
-            </ContextSheetBody>
-        </ContextSheet>
+            </ShellBody>
+        </Shell>
     );
 };
