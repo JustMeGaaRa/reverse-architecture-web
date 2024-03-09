@@ -155,108 +155,102 @@ export const WorkspaceExplorerPage: FC<PropsWithChildren> = () => {
     return (
         <HomePageResetActionsWrapper>
             <WorkspaceExplorerPageActionWrapper>
-                <Shell
-                    isOpen={!selectedGroupName}
-                    outline={isOpen ? "lime.600" : undefined}
-                    onDragEnter={handleOnDragEnterWorkspaceFile}
-                >
-                    <ShellHeader>
-                        <ShellTitle title={"Workspaces"} />
-                    </ShellHeader>
+                <WorkspaceExplorerProvider>
+                    <Shell
+                        isOpen={!selectedGroupName}
+                        outline={isOpen ? "lime.600" : undefined}
+                        onDragEnter={handleOnDragEnterWorkspaceFile}
+                    >
+                        <ShellHeader>
+                            <ShellTitle title={"Workspaces"} />
+                        </ShellHeader>
 
-                    <Divider />
-                    
-                    <ShellBody>
-                        <Tabs height={"100%"} index={tabIndex}>
-                            <TabList backgroundColor={"surface.tinted-black-40"} height={12} paddingX={2}>
-                                <Tab onClick={handleOnClickWorkspacesTab}>
-                                    My Workspaces
-                                </Tab>
-                                <Tab onClick={handleOnClickWorkspacesSharedTab}>
-                                    Shared
-                                </Tab>
-                                <Tab onClick={handleOnClickWorkspacesArchiveTab}>
-                                    Archived
-                                </Tab>
-                                <Box position={"absolute"} right={4}>
-                                    <ButtonSegmentedToggle size={"sm"}>
-                                        <IconButton
-                                            aria-label={"card view"}
-                                            isActive={view === ContentViewMode.Card}
-                                            icon={<Icon as={ViewGrid} boxSize={4} />}
-                                            onClick={() => setView(ContentViewMode.Card)}
-                                        />
-                                        <IconButton
-                                            aria-label={"table view"}
-                                            isActive={view === ContentViewMode.Table}
-                                            icon={<Icon as={List} boxSize={4} />}
-                                            onClick={() => setView(ContentViewMode.Table)}
-                                        />
-                                    </ButtonSegmentedToggle>
-                                </Box>
-                            </TabList>
-                            <TabPanels height={"calc(100% - 42px)"} padding={6} overflowY={"scroll"}>
-                                <TabPanel>
-                                    <WorkspaceExplorerProvider>
+                        <Divider />
+                        
+                        <ShellBody>
+                            <Tabs height={"100%"} index={tabIndex}>
+                                <TabList backgroundColor={"surface.tinted-black-40"} height={12} paddingX={2}>
+                                    <Tab onClick={handleOnClickWorkspacesTab}>
+                                        My Workspaces
+                                    </Tab>
+                                    <Tab onClick={handleOnClickWorkspacesSharedTab}>
+                                        Shared
+                                    </Tab>
+                                    <Tab onClick={handleOnClickWorkspacesArchiveTab}>
+                                        Archived
+                                    </Tab>
+                                    <Box position={"absolute"} right={4}>
+                                        <ButtonSegmentedToggle size={"sm"}>
+                                            <IconButton
+                                                aria-label={"card view"}
+                                                isActive={view === ContentViewMode.Card}
+                                                icon={<Icon as={ViewGrid} boxSize={4} />}
+                                                onClick={() => setView(ContentViewMode.Card)}
+                                            />
+                                            <IconButton
+                                                aria-label={"table view"}
+                                                isActive={view === ContentViewMode.Table}
+                                                icon={<Icon as={List} boxSize={4} />}
+                                                onClick={() => setView(ContentViewMode.Table)}
+                                            />
+                                        </ButtonSegmentedToggle>
+                                    </Box>
+                                </TabList>
+                                <TabPanels height={"calc(100% - 42px)"} padding={6} overflowY={"scroll"}>
+                                    <TabPanel>
                                         <WorkspaceExplorer
                                             isActive={tabIndex === 0}
                                             filters={{ status: "private" }}
                                             options={{ view, group: true }}
                                             onClick={handleOnClickWorkspaceOpen}
                                         />
-                                    </WorkspaceExplorerProvider>
-                                </TabPanel>
-                                <TabPanel>
-                                    <WorkspaceExplorerProvider>
+                                    </TabPanel>
+                                    <TabPanel>
                                         <WorkspaceExplorer
                                             isActive={tabIndex === 1}
                                             filters={{ status: "shared" }}
                                             options={{ view, group: true }}
                                             onClick={handleOnClickWorkspaceOpen}
                                         />
-                                    </WorkspaceExplorerProvider>
-                                </TabPanel>
-                                <TabPanel>
-                                    <WorkspaceExplorerProvider>
+                                    </TabPanel>
+                                    <TabPanel>
                                         <WorkspaceExplorer
                                             isActive={tabIndex === 2}
                                             filters={{ status: "archived" }}
                                             options={{ view, group: true }}
                                             onClick={handleOnClickWorkspaceOpen}
                                         />
-                                    </WorkspaceExplorerProvider>
-                                </TabPanel>
-                            </TabPanels>
-                        </Tabs>
-                    </ShellBody>
+                                    </TabPanel>
+                                </TabPanels>
+                            </Tabs>
+                        </ShellBody>
+                        
+                        <ShellOverlay
+                            isOpen={isOpen}
+                            onDragOver={handleOnDragOverWorkspaceFile}
+                            onDragExit={handleOnDragExitWorkspaceFile}
+                            onDrop={handleOnDropWorkspaceFile}
+                        >
+                            <StateMessage
+                                icon={Upload}
+                                title={getLocalizedString(LocaleKeys.IMPORT_FILE_TITLE)}
+                                description={getLocalizedString(LocaleKeys.IMPORT_FILE_DESCRIPTION)}
+                            />
+                        </ShellOverlay>
+                    </Shell>
                     
-                    <ShellOverlay
-                        isOpen={isOpen}
-                        onDragOver={handleOnDragOverWorkspaceFile}
-                        onDragExit={handleOnDragExitWorkspaceFile}
-                        onDrop={handleOnDropWorkspaceFile}
-                    >
-                        <StateMessage
-                            icon={Upload}
-                            title={getLocalizedString(LocaleKeys.IMPORT_FILE_TITLE)}
-                            description={getLocalizedString(LocaleKeys.IMPORT_FILE_DESCRIPTION)}
-                        />
-                    </ShellOverlay>
-                </Shell>
-                
-                <WorkspaceStack isOpen={!!selectedGroupName} onClose={handleOnClickWorkspaceStackClose}>
-                    <WorkspaceStackHeader title={selectedGroupName} icon={AppleShortcuts} />
-                    <WorkspaceStackBody>
-                        <WorkspaceExplorerProvider>
+                    <WorkspaceStack isOpen={!!selectedGroupName} onClose={handleOnClickWorkspaceStackClose}>
+                        <WorkspaceStackHeader title={selectedGroupName} icon={AppleShortcuts} />
+                        <WorkspaceStackBody>
                             <WorkspaceExplorer
                                 isActive={!!selectedGroupName}
                                 filters={{ group: selectedGroupName }}
                                 options={{ view: "card", group: false }}
                                 onClick={handleOnClickWorkspaceOpen}
                             />
-                        </WorkspaceExplorerProvider>
-                    </WorkspaceStackBody>
-                </WorkspaceStack>
+                        </WorkspaceStackBody>
+                    </WorkspaceStack>
+                </WorkspaceExplorerProvider>
             </WorkspaceExplorerPageActionWrapper>
         </HomePageResetActionsWrapper>
     )

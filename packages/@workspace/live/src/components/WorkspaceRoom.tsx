@@ -29,15 +29,8 @@ export const WorkspaceRoom: FC<PropsWithChildren<{
     });
 
     useEffect(() => {
-        let webRtcProvider: WebrtcProvider = new WebrtcProvider(
-            `restruct-room__${options.roomId}`,
-            workspaceDocument,
-            {
-                signaling: [
-                    "wss://restruct-webrtc-signaling-7452bb784b0b.herokuapp.com"
-                ],
-            }
-        );
+        const signaling = { signaling: [ "wss://restruct-webrtc-signaling-7452bb784b0b.herokuapp.com" ] };
+        let webRtcProvider = new WebrtcProvider(`restruct-room__${options.roomId}`, workspaceDocument, signaling);
 
         const onAwarenessChange = () => {
             const collaboratingUsers = Array

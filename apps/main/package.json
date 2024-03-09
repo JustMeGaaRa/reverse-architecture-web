@@ -38,6 +38,7 @@
     "uuid": "9.0.0",
     "use-file-picker": "^2.1.1",
     "web-vitals": "^2.1.4",
+    "y-indexeddb": "^9.0.12",
     "y-webrtc": "^10.2.5",
     "y-protocols": "^1.0.5",
     "yjs": "^13.5.47",
