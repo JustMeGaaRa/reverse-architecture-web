@@ -2,7 +2,7 @@ import { Icon } from "@chakra-ui/react";
 import { Handle, NodeProps, Position, useStore } from "@reactflow/core";
 import {
     IElement,
-    ElementStyle,
+    ElementStyleCollection,
     ElementStyleProperties,
     foldStyles,
 } from "@structurizr/dsl";
@@ -22,7 +22,7 @@ export function ReactFlowNodeWrapper(ElementNodeComponent: FC<PropsWithChildren<
     onMouseLeave?: () => void;
 }>>): FC<NodeProps<{
     element: IElement;
-    style: ElementStyle;
+    style: ElementStyleCollection;
     width?: number;
     height?: number;
 }>> {

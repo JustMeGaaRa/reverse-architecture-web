@@ -2,7 +2,7 @@ import { NodeProps, useReactFlow, useStore } from "@reactflow/core";
 import { NodeResizer } from "@reactflow/node-resizer";
 import {
     IElement,
-    ElementStyle,
+    ElementStyleCollection,
     ElementStyleProperties,
     foldStyles,
 } from "@structurizr/dsl";
@@ -22,7 +22,7 @@ export function ReactFlowBoundaryWrapper(ElementBoundaryComponent: FC<PropsWithC
     onMouseLeave?: () => void;
 }>>): FC<NodeProps<{
     element: IElement;
-    style: ElementStyle;
+    style: ElementStyleCollection;
     width?: number;
     height?: number;
 }>> {

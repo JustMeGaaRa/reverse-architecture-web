@@ -2,14 +2,8 @@ import * as Y from "yjs";
 import { IndexeddbPersistence } from "y-indexeddb";
 import { WebrtcProvider } from "y-webrtc";
 import { v4 } from "uuid";
-import { CommentCollection, Structurizr, Workspace, WorkspaceInfo } from "../types";
+import { Workspace, WorkspaceInfo } from "../types";
 import { IWorkspaceSnapshot } from "../interfaces";
-
-export class WorkspaceApi {
-    public async saveWorkspaceContent(workspaceId: string, workspace: Workspace) {
-        throw new Error("Not implemented");
-    }
-}
 
 export const createExplorerDocument = (): [Y.Doc] => {
     const explorerDocument = new Y.Doc();
@@ -89,39 +83,6 @@ export const remove = (explorerDocument: Y.Doc, workspaceId: string) => {
     return workspaceInfoPromise;
 }
 
-
-export const openComments = (workspaceId: string): [Promise<CommentCollection>, Y.Doc, IndexeddbPersistence] => {
-    // initialize workspace comments from the persisted document
-    const commentsDocument = new Y.Doc({ guid: workspaceId });
-    const commentsPersistanceId = `comments-${workspaceId}`;
-    const commentsPersistance = new IndexeddbPersistence(commentsPersistanceId, commentsDocument);
-
-    const commentsPromise = commentsPersistance.whenSynced.then(persistance => {
-        // initialize comments document
-        const comments = new CommentCollection(commentsDocument);
-
-        return comments;
-    });
-
-    return [commentsPromise, commentsDocument, commentsPersistance];
-}
-
-export const openStructurizr = (workspaceId: string): [Promise<Structurizr>, Y.Doc, IndexeddbPersistence] => {
-    // initialize structurizr code from the persisted document
-    const structurizrDocument = new Y.Doc({ guid: workspaceId });
-    const structurizrPersistanceId = `structurizr-${workspaceId}`;
-    const structurizrPersistance = new IndexeddbPersistence(structurizrPersistanceId, structurizrDocument);
-
-    const structurizrPromise = structurizrPersistance.whenSynced.then(persistance => {
-        const structurizr = new Structurizr(structurizrDocument);
-        // structurizr.fromSnapshot(emptyStructirizr());
-
-        return structurizr;
-    });
-
-    return [structurizrPromise, structurizrDocument, structurizrPersistance];
-}
-
 export const sync = (workspaceId: string, workspace: Workspace) => {
     const workspaceApi = new WorkspaceApi();
     const controller = new AbortController();
@@ -135,6 +96,12 @@ export const sync = (workspaceId: string, workspace: Workspace) => {
 
         });
 };
+
+export class WorkspaceApi {
+    public async saveWorkspaceContent(workspaceId: string, workspace: Workspace) {
+        throw new Error("Not implemented");
+    }
+}
 
 export const emptyWorkspace = (): IWorkspaceSnapshot => {
     return {
@@ -166,4 +133,18 @@ export const emptyWorkspace = (): IWorkspaceSnapshot => {
 
 export const parseStructurizr = (structurizr: string): IWorkspaceSnapshot => {
     throw new Error("Not implemented");
+}
+
+export const createCommentsPersistance = (commentsDocument: Y.Doc, workspaceId: string): [IndexeddbPersistence] => {
+    // initialize workspace comments from the persisted document
+    const commentsPersistanceId = `comments-${workspaceId}`;
+    const commentsPersistance = new IndexeddbPersistence(commentsPersistanceId, commentsDocument);
+    return [commentsPersistance];
+}
+
+export const createStructurizrPersistance = (structurizrDocument: Y.Doc, workspaceId: string): [IndexeddbPersistence] => {
+    // initialize structurizr code from the persisted document
+    const structurizrPersistanceId = `structurizr-${workspaceId}`;
+    const structurizrPersistance = new IndexeddbPersistence(structurizrPersistanceId, structurizrDocument);
+    return [structurizrPersistance];
 }

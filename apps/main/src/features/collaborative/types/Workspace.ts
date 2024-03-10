@@ -1,6 +1,6 @@
 import * as Y from "yjs";
 import { v4 } from "uuid";
-import { IModel, IProperties, ISupportSnapshot, IViews, IWorkspaceSnapshot } from "../interfaces";
+import { IComponent, IContainer, IDeploymentEnvironment, IGroup, IModel, IPerson, IProperties, IRelationship, ISoftwareSystem, ISupportSnapshot, IViews, IWorkspaceSnapshot } from "../interfaces";
 
 export type WorkspaceStatus = "private" | "shared" | "archived";
 
@@ -105,51 +105,16 @@ export class Model implements ISupportSnapshot<IModel> {
     public get relationships(): Array<Relationship> { return this.relationshipsArray?.map(relationship => new Relationship(relationship)); }
 
     public fromSnapshot(model: IModel) {
-
+        throw new Error("Method not implemented.");
     }
 
     public toSnapshot(): IModel {
         return {
-            // people: this.people.map(person => person.toSnapshot()),
-            // softwareSystems: this.softwareSystems.map(softwareSystem => softwareSystem.toSnapshot()),
-            // deploymentEnvironments: this.deploymentEnvironments.map(deploymentEnvironment => deploymentEnvironment.toSnapshot()),
-            // relationships: this.relationships.map(relationship => relationship.toSnapshot()),
-            // groups: this.groups.map(group => group.toSnapshot())
-            people: this.people?.map(person => ({
-                identifier: person.identifier,
-                type: person.type,
-                name: person.name,
-                description: person.description,
-                tags: person.tags?.map(tag => tag.name) ?? [],
-                url: person.url,
-            })),
-            softwareSystems: this.softwareSystems?.map(softwareSystem => ({
-                identifier: softwareSystem.identifier,
-                type: softwareSystem.type,
-                name: softwareSystem.name,
-                description: softwareSystem.description,
-                technology: softwareSystem.technology,
-                tags: softwareSystem.tags?.map(tag => tag.name) ?? [],
-                url: softwareSystem.url,
-                containers: softwareSystem.containers?.map(container => ({
-                    identifier: container.identifier,
-                    type: container.type,
-                    name: container.name,
-                    description: container.description,
-                    technology: container.technology,
-                    tags: container.tags?.map(tag => tag.name) ?? [],
-                    url: container.url,
-                    components: container.components?.map(component => ({
-                        identifier: component.identifier,
-                        type: component.type,
-                        name: component.name,
-                        description: component.description,
-                        technology: component.technology,
-                        tags: component.tags?.map(tag => tag.name) ?? [],
-                        url: component.url,
-                    })),
-                })),
-            })),
+            people: this.people?.map(person => person.toSnapshot()),
+            softwareSystems: this.softwareSystems?.map(softwareSystem => softwareSystem.toSnapshot()),
+            deploymentEnvironments: this.deploymentEnvironments?.map(deploymentEnvironment => deploymentEnvironment.toSnapshot()),
+            relationships: this.relationships?.map(relationship => relationship.toSnapshot()),
+            groups: this.groups?.map(group => group.toSnapshot())
         };
     }
 
@@ -234,26 +199,19 @@ export class Model implements ISupportSnapshot<IModel> {
 }
 
 export class Views implements ISupportSnapshot<IViews> {
-    private readonly systemLandscapeArray: Y.Array<Y.Map<unknown>>;
-    private readonly systemContextsArray: Y.Array<Y.Map<unknown>>;
-    private readonly containersArray: Y.Array<Y.Map<unknown>>;
-    private readonly componentsArray: Y.Array<Y.Map<unknown>>;
-    private readonly deploymentsArray: Y.Array<Y.Map<unknown>>;
+    private get systemLandscapeArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("systemLandscapeViews") as Y.Array<Y.Map<unknown>>; }
+    private get systemContextsArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("systemContextViews") as Y.Array<Y.Map<unknown>>; }
+    private get containersArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("containerViews") as Y.Array<Y.Map<unknown>>; }
+    private get componentsArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("componentViews") as Y.Array<Y.Map<unknown>>; }
+    private get deploymentsArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("deploymentViews") as Y.Array<Y.Map<unknown>>; }
+    private get configurationMap(): Y.Map<unknown> { return this.propertiesMap.get("configuration") as Y.Map<unknown>; }
 
-    constructor(
-        private readonly propertiesMap: Y.Map<unknown>
-    ) {
+    constructor(private readonly propertiesMap: Y.Map<unknown>) {
         if (!propertiesMap.has("systemLandscapeViews")) propertiesMap.set("systemLandscapeViews", new Y.Array<Y.Map<unknown>>());
         if (!propertiesMap.has("systemContextViews")) propertiesMap.set("systemContextViews", new Y.Array<Y.Map<unknown>>());
         if (!propertiesMap.has("containerViews")) propertiesMap.set("containerViews", new Y.Array<Y.Map<unknown>>());
         if (!propertiesMap.has("componentViews")) propertiesMap.set("componentViews", new Y.Array<Y.Map<unknown>>());
         if (!propertiesMap.has("deploymentViews")) propertiesMap.set("deploymentViews", new Y.Array<Y.Map<unknown>>());
-        
-        this.systemLandscapeArray = propertiesMap.get("systemLandscapeViews") as Y.Array<Y.Map<unknown>>,
-        this.systemContextsArray = propertiesMap.get("systemContextViews") as Y.Array<Y.Map<unknown>>,
-        this.containersArray = propertiesMap.get("containerViews") as Y.Array<Y.Map<unknown>>,
-        this.componentsArray = propertiesMap.get("componentViews") as Y.Array<Y.Map<unknown>>,
-        this.deploymentsArray = propertiesMap.get("deploymentViews") as Y.Array<Y.Map<unknown>>;
     }
 
     public get systemLandscape(): Array<any> { return this.systemLandscapeArray?.map(view => new SystemLandscapeView(view)); }
@@ -261,9 +219,10 @@ export class Views implements ISupportSnapshot<IViews> {
     public get containers(): Array<any> { return this.containersArray?.map(view => new ContainerView(view)); }
     public get components(): Array<any> { return this.componentsArray?.map(view => new ComponentView(view)); }
     public get deployments(): Array<any> { return this.deploymentsArray?.map(view => new DeploymentView(view)); }
+    public get configuration(): Configuration { return new Configuration(this.configurationMap); }
 
     public fromSnapshot(views: IViews) {
-        
+        throw new Error("Method not implemented.");
     }
 
     public toSnapshot(): IViews {
@@ -332,11 +291,10 @@ export class Tag {
     }
 }
 
-export class Person {
-    public constructor(
-        private readonly propertiesMap: Y.Map<unknown>
-    ) {
-    }
+export class Person implements ISupportSnapshot<IPerson> {
+    private get relationshipsArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("relationships") as Y.Array<Y.Map<unknown>>; }
+
+    public constructor(private readonly propertiesMap: Y.Map<unknown>) { }
 
     public readonly type: ElementType.Person;
     public get identifier(): Identifier { return this.propertiesMap.get("identifier") as Identifier; }
@@ -345,9 +303,35 @@ export class Person {
     public get tags(): Array<Tag> { return this.propertiesMap.get("tags") as Array<Tag>; }
     public get url(): Url { return this.propertiesMap.get("url") as Url; }
     public get relationships(): Array<Relationship> { return this.propertiesMap.get("relationships") as Array<Relationship>; }
+
+    public toSnapshot() {
+        return {
+            identifier: this.identifier,
+            type: this.type,
+            name: this.name,
+            description: this.description,
+            tags: this.tags?.map(tag => tag.name) ?? [],
+            url: this.url,
+        }
+    }
+        
+    public addRelationship() {
+        if (!this.propertiesMap.has("relationships")) this.propertiesMap.set("relationships", new Y.Array<Y.Map<unknown>>());
+        const uniqueId = new String(v4()).substring(0, 8);
+        const relationshipMap = new Y.Map([
+            ["sourceIdentifier", ""],
+            ["targetIdentifier", ""],
+            ["description", ""],
+            ["technology", []],
+            ["tags", []],
+            ["url", ""]
+        ]);
+        this.relationshipsArray.push([relationshipMap]);
+        return new Relationship(relationshipMap);
+    }
 }
 
-export class SoftwareSystem {
+export class SoftwareSystem implements ISupportSnapshot<ISoftwareSystem> {
     private get groupsArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("groups") as Y.Array<Y.Map<unknown>>; }
     private get containersArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("containers") as Y.Array<Y.Map<unknown>>; }
     private get relationshipsArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("relationships") as Y.Array<Y.Map<unknown>>; }
@@ -364,6 +348,19 @@ export class SoftwareSystem {
     public get tags(): Array<Tag> { return this.propertiesMap.get("tags") as Array<Tag>; }
     public get url(): Url { return this.propertiesMap.get("url") as Url; }
     public get relationships(): Array<Relationship> { return this.propertiesMap.get("relationships") as Array<Relationship>; }
+
+    public toSnapshot() {
+        return {
+            identifier: this.identifier,
+            type: this.type,
+            name: this.name,
+            description: this.description,
+            technology: this.technology,
+            tags: this.tags?.map(tag => tag.name) ?? [],
+            url: this.url,
+            containers: this.containers?.map(container => container.toSnapshot()),
+        }
+    }
 
     public addContainer() {
         if (!this.propertiesMap.has("containers")) this.propertiesMap.set("containers", new Y.Array<Y.Map<unknown>>());
@@ -415,15 +412,12 @@ export class SoftwareSystem {
     }
 }
 
-export class Container {
+export class Container implements ISupportSnapshot<IContainer> {
     private get groupsArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("groups") as Y.Array<Y.Map<unknown>>; }
     private get componentsArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("components") as Y.Array<Y.Map<unknown>>; }
     private get relationshipsArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("relationships") as Y.Array<Y.Map<unknown>>; }
 
-    public constructor(private readonly propertiesMap: Y.Map<unknown>) {
-        if (!propertiesMap.has("groups")) propertiesMap.set("groups", new Y.Array<Y.Map<unknown>>());
-        if (!propertiesMap.has("components")) propertiesMap.set("components", new Y.Array<Y.Map<unknown>>());
-    }
+    public constructor(private readonly propertiesMap: Y.Map<unknown>) { }
 
     public readonly type: ElementType.Container;
     public get groups(): Array<Group> { return this.groupsArray?.map(group => new Group(group)); }
@@ -436,7 +430,21 @@ export class Container {
     public get url(): Url { return this.propertiesMap.get("url") as Url; }
     public get relationships(): Array<Relationship> { return this.propertiesMap.get("relationships") as Array<Relationship>; }
 
+    public toSnapshot(): IContainer {
+        return {
+            identifier: this.identifier,
+            type: this.type,
+            name: this.name,
+            description: this.description,
+            technology: this.technology,
+            tags: this.tags?.map(tag => tag.name) ?? [],
+            url: this.url,
+            components: this.components?.map(component => component.toSnapshot()),
+        }
+    }
+
     public addComponent() {
+        if (!this.propertiesMap.has("components")) this.propertiesMap.set("components", new Y.Array<Y.Map<unknown>>());
         const uniqueId = new String(v4()).substring(0, 8);
         const componentMap = new Y.Map([
             ["identifier", `component-${uniqueId}`],
@@ -452,6 +460,7 @@ export class Container {
     }
     
     public addGroup() {
+        if (!this.propertiesMap.has("groups")) this.propertiesMap.set("groups", new Y.Array<Y.Map<unknown>>());
         const uniqueId = new String(v4()).substring(0, 8);
         const groupMap = new Y.Map([
             ["identifier", `group-${uniqueId}`],
@@ -482,7 +491,7 @@ export class Container {
     }
 }
 
-export class Component {
+export class Component implements ISupportSnapshot<IComponent> {
     private get relationshipsArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("relationships") as Y.Array<Y.Map<unknown>>; }
 
     public constructor(private readonly propertiesMap: Y.Map<unknown>) { }
@@ -495,6 +504,18 @@ export class Component {
     public get tags(): Array<Tag> { return this.propertiesMap.get("tags") as Array<Tag>; }
     public get url(): Url { return this.propertiesMap.get("url") as Url; }
     public get relationships(): Array<Relationship> { return this.propertiesMap.get("relationships") as Array<Relationship>; }
+
+    public toSnapshot(): IComponent {
+        return {
+            identifier: this.identifier,
+            type: this.type,
+            name: this.name,
+            description: this.description,
+            technology: this.technology,
+            tags: this.tags?.map(tag => tag.name) ?? [],
+            url: this.url,
+        }
+    }
     
     public addRelationship() {
         if (!this.propertiesMap.has("relationships")) this.propertiesMap.set("relationships", new Y.Array<Y.Map<unknown>>());
@@ -512,13 +533,19 @@ export class Component {
     }
 }
 
-export class DeploymentEnvironment {
-    public constructor(
-        private readonly propertiesMap: Y.Map<unknown>,
-    ) { }
+export class DeploymentEnvironment implements ISupportSnapshot<IDeploymentEnvironment> {
+    public constructor(private readonly propertiesMap: Y.Map<unknown>) { }
+    
+    public readonly type: ElementType.DeploymentNode;
+
+    public toSnapshot(): IDeploymentEnvironment {
+        return {
+            type: this.type,
+        }
+    }
 }
 
-export class Relationship {
+export class Relationship implements ISupportSnapshot<IRelationship> {
     public constructor(private readonly propertiesMap: Y.Map<unknown>) { }
 
     public readonly type: RelationshipType.Relationship;
@@ -528,9 +555,21 @@ export class Relationship {
     public get technology(): Array<Technology> { return this.propertiesMap.get("technology") as Array<Technology>; }
     public get tags(): Array<Tag> { return this.propertiesMap.get("tags") as Array<Tag>; }
     public get url(): Url { return this.propertiesMap.get("url") as Url; }
+
+    public toSnapshot(): IRelationship {
+        return Object.freeze({
+            type: this.type,
+            sourceIdentifier: this.sourceIdentifier,
+            targetIdentifier: this.targetIdentifier,
+            description: this.description,
+            technology: this.technology,
+            tags: this.tags?.map(tag => tag.name) ?? [],
+            url: this.url,
+        })
+    }
 }
 
-export class Group {
+export class Group implements ISupportSnapshot<IGroup> {
     private get peopleArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("people") as Y.Array<Y.Map<unknown>>; }
     private get softwareSystemsArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("softwareSystems") as Y.Array<Y.Map<unknown>>; }
     private get containersArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("containers") as Y.Array<Y.Map<unknown>>; }
@@ -546,6 +585,19 @@ export class Group {
     public get identifier(): Identifier { return this.propertiesMap.get("identifier") as Identifier; }
     public get name(): string { return this.propertiesMap.get("name") as string; }
     public get tags(): Array<Tag> { return this.propertiesMap.get("tags") as Array<Tag>; }
+
+    public toSnapshot(): IGroup {
+        return {
+            identifier: this.identifier,
+            type: this.type,
+            name: this.name,
+            tags: this.tags?.map(tag => tag.name) ?? [],
+            people: this.people?.map(person => person.toSnapshot()),
+            softwareSystems: this.softwareSystems?.map(softwareSystem => softwareSystem.toSnapshot()),
+            containers: this.containers?.map(container => container.toSnapshot()),
+            components: this.components?.map(component => component.toSnapshot())
+        }
+    }
 }
 
 export class SystemLandscapeView {
@@ -573,6 +625,44 @@ export class ComponentView {
 }
 
 export class DeploymentView {
+    public constructor(
+        private readonly propertiesMap: Y.Map<unknown>,
+    ) { }
+}
+
+export class Configuration {
+    public constructor(
+        private readonly propertiesMap: Y.Map<unknown>,
+    ) { }
+
+    public get styles(): Styles { return new Styles(this.propertiesMap.get("styles") as Y.Map<unknown>); }
+}
+
+export class Styles {
+    private get elementsArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("elements") as Y.Array<Y.Map<unknown>>; }
+    private get relationshipsArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("relationships") as Y.Array<Y.Map<unknown>>; }
+
+    public constructor(
+        private readonly propertiesMap: Y.Map<unknown>,
+    ) { }
+
+    public get elements(): Array<ElementStyle> { return this.elementsArray.map(element => new ElementStyle(element)); }
+    public get relationships(): Array<RelationshipStyle> { return this.relationshipsArray.map(relationship => new RelationshipStyle(relationship)); }
+}
+
+export class ElementStyle {
+    public constructor(
+        private readonly propertiesMap: Y.Map<unknown>,
+    ) { }
+}
+
+export class RelationshipStyle {
+    public constructor(
+        private readonly propertiesMap: Y.Map<unknown>,
+    ) { }
+}
+
+export class Theme {
     public constructor(
         private readonly propertiesMap: Y.Map<unknown>,
     ) { }

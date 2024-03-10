@@ -1,7 +1,7 @@
 import {
-    ElementStyle,
+    ElementStyleCollection,
     IElementVisitor,
-    RelationshipStyle,
+    RelationshipStyleCollection,
     Styles,
     IComponent,
     IContainer,
@@ -208,7 +208,7 @@ export class StructurizrExportVisitor implements IElementVisitor {
         );
     }
 
-    visitElementStyle(elementStyle: ElementStyle): string[] {
+    visitElementStyle(elementStyle: ElementStyleCollection): string[] {
         return !elementStyle ? [] : elementStyle
             .flatMap(style => {
                 const properties = Object.keys(style)
@@ -218,7 +218,7 @@ export class StructurizrExportVisitor implements IElementVisitor {
             });
     }
 
-    visitRelationshipStyle(relationshipStyle: RelationshipStyle): string[] {
+    visitRelationshipStyle(relationshipStyle: RelationshipStyleCollection): string[] {
         return !relationshipStyle ? [] : relationshipStyle
             .flatMap(style => {
                 const properties = Object.keys(style)

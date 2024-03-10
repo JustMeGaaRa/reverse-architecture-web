@@ -1,7 +1,7 @@
 import {
-    ElementStyle,
+    ElementStyleCollection,
     IElementVisitor,
-    RelationshipStyle,
+    RelationshipStyleCollection,
     Styles,
     IComponent,
     IContainer,
@@ -66,10 +66,10 @@ export class WorkspaceJsonExportVisitor implements IElementVisitor {
     visitStyles(styles: Styles): string {
         return JSON.stringify(styles, null, this.beautify ? this.indent : undefined);
     }
-    visitElementStyle(elementStyle: ElementStyle): string {
+    visitElementStyle(elementStyle: ElementStyleCollection): string {
         return JSON.stringify(elementStyle, null, this.beautify ? this.indent : undefined);
     }
-    visitRelationshipStyle(relationshipStyle: RelationshipStyle): string {
+    visitRelationshipStyle(relationshipStyle: RelationshipStyleCollection): string {
         return JSON.stringify(relationshipStyle, null, this.beautify ? this.indent : undefined);
     }
 }

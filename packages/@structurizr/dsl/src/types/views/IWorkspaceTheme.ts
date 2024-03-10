@@ -1,8 +1,8 @@
 import {
     StructurizrElementTagDefaultStyle,
     StructurizrRelationshipTagDefaultStyle,
-    ElementStyle,
-    RelationshipStyle,
+    ElementStyleCollection,
+    RelationshipStyleCollection,
     Tag
 } from "../..";
 
@@ -10,8 +10,8 @@ export interface IWorkspaceTheme {
     name: string;
     description: string;
     lastModifiedDate: Date;
-    elements: ElementStyle,
-    relationships: RelationshipStyle;
+    elements: ElementStyleCollection,
+    relationships: RelationshipStyleCollection;
 }
 
 export const StructurizrDefaultTheme: IWorkspaceTheme = {

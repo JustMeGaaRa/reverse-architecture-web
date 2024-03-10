@@ -20,6 +20,45 @@ export interface IModel {
     // groups: IGroup[];
 }
 
+export interface IPerson {
+}
+
+export interface ISoftwareSystem {
+}
+
+export interface IContainer {
+}
+
+export interface IComponent {
+}
+
+export interface IDeploymentEnvironment {
+}
+
+export interface IRelationship {
+}
+
+export interface IGroup {
+}
+
+export interface ISystemLandscapeView {
+}
+
+export interface ISystemContextView {
+}
+
+export interface IContainerView {
+}
+
+export interface IComponentView {
+}
+
+export interface IDeploymentView {
+}
+
+export interface IConfiguration {
+}
+
 export interface IViews {
     // systemLandscape?: ISystemLandscapeView[];
     // systemContexts: ISystemContextView[];

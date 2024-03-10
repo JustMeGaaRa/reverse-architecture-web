@@ -5,13 +5,13 @@ import {
 import { Tag } from "../model/Tag";
 
 export interface Styles {
-    elements: ElementStyle;
-    relationships: RelationshipStyle;
+    elements: ElementStyleCollection;
+    relationships: RelationshipStyleCollection;
 }
 
-export type ElementStyle = Array<Style<ElementStyleProperties>>;
+export type ElementStyleCollection = Array<Style<ElementStyleProperties>>;
 
-export type RelationshipStyle = Array<Style<RelationshipStyleProperties>>;
+export type RelationshipStyleCollection = Array<Style<RelationshipStyleProperties>>;
 
 export type Style<TProperties> = Partial<TProperties> & { tag: string };
 
