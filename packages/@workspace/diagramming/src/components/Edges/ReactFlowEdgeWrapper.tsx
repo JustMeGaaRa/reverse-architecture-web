@@ -2,7 +2,7 @@ import {
     StructurizrRelationshipTagDefaultStyle,
     foldStyles,
     Relationship,
-    RelationshipStyle,
+    RelationshipStyleCollection,
     RelationshipStyleProperties
 } from "@structurizr/dsl";
 import { EdgeProps } from "@reactflow/core";
@@ -14,7 +14,7 @@ export function ReactFlowEdgeWrapper(EdgeElement: FC<{
     selected?: boolean;
 }>): FC<EdgeProps<{
     relationship: Relationship;
-    style: RelationshipStyle;
+    style: RelationshipStyleCollection;
 }>> {
     return function WrappedEdge({
         data,
