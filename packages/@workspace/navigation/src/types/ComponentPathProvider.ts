@@ -1,8 +1,8 @@
-import { IViewDefinition, IWorkspace, ViewType } from "@structurizr/dsl";
+import { IViewDefinition, IWorkspaceSnapshot, ViewType } from "@structurizr/dsl";
 import { ISupportPath } from "./ISuppportPath";
 
 export class ComponentPathProvider implements ISupportPath {
-    getPath(workspace: IWorkspace, view: IViewDefinition): Array<IViewDefinition> {
+    getPath(workspace: IWorkspaceSnapshot, view: IViewDefinition): Array<IViewDefinition> {
         const softwareSystems = workspace.model.groups
             .flatMap(group => group.softwareSystems)
             .concat(workspace.model.softwareSystems);

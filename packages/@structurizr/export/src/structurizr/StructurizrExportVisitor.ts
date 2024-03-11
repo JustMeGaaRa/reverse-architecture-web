@@ -15,7 +15,7 @@ import {
     IRelationship,
     ISoftwareSystem,
     ISoftwareSystemInstance,
-    IWorkspace,
+    IWorkspaceSnapshot,
     IViews,
     Technology,
     Tag,
@@ -46,7 +46,7 @@ export class StructurizrExportVisitor implements IElementVisitor {
         private readonly options?: StructurizrFormattingOptions
     ) {}
 
-    visitWorkspace(workspace: IWorkspace): string[] {
+    visitWorkspace(workspace: IWorkspaceSnapshot): string[] {
         const model = this.visitModel(workspace.model);
         const views = this.visitViews(workspace.views);
         return formatStatement(
@@ -152,7 +152,7 @@ export class StructurizrExportVisitor implements IElementVisitor {
     }
 
     visitViews(views: IViews): string[] {
-        const systemLandscape = (views.systemLandscape ? [views.systemLandscape] : []).flatMap(x => this.visitSystemLandscapeView(x));
+        const systemLandscape = (views.systemLandscape ?? []).flatMap(x => this.visitSystemLandscapeView(x));
         const systemContext = (views.systemContexts ?? []).flatMap(x => this.visitSystemContextView(x));
         const containers = (views.containers ?? []).flatMap(x => this.visitContainerView(x));
         const components = (views.components ?? []).flatMap(x => this.visitComponentView(x));

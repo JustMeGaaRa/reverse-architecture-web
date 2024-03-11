@@ -5,12 +5,14 @@ import {
 import { CloudSync } from "iconoir-react";
 import { FC, useCallback } from "react"
 import {
-    IWorkspace,
+    IWorkspaceSnapshot,
     IWorkspaceMetadata,
-    MetadataExportClient,
-    StructurizrExportClient,
     Workspace
-} from "@structurizr/react";
+} from "@structurizr/dsl";
+import {
+    MetadataExportClient,
+    StructurizrExportClient, 
+} from "@structurizr/export";
 import {
     saveWorkspaceContent,
     useSnackbar,
@@ -19,7 +21,7 @@ import {
 
 export const WorkspaceSaveButton: FC<{
     workspaceId: string;
-    workspace: IWorkspace;
+    workspace: IWorkspaceSnapshot;
 }> = ({
     workspaceId,
     workspace

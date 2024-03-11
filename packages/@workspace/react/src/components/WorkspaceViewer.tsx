@@ -1,10 +1,10 @@
-import { IViewDefinition, IWorkspace } from "@structurizr/dsl";
+import { IViewDefinition, IWorkspaceSnapshot } from "@structurizr/dsl";
 import { WorkspaceUpdater, WorkspaceViewUpdater } from "@workspace/core";
 import { FC, PropsWithChildren } from "react";
 import { WorkspaceNavigationWrapper, WorkspaceViewSelector, WorkspaceWrapper } from "../components";
 
 export const WorkspaceViewer: FC<PropsWithChildren<{
-    workspace: IWorkspace;
+    workspace: IWorkspaceSnapshot;
     initialView?: IViewDefinition;
     onViewClick?: (event: React.MouseEvent) => void;
 }>> = ({

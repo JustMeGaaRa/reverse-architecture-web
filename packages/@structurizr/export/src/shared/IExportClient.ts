@@ -1,5 +1,5 @@
-import { IWorkspace } from "@structurizr/dsl";
+import { IWorkspaceSnapshot } from "@structurizr/dsl";
 
 export interface IExportClient {
-    export(workspace: IWorkspace): string;
+    export(workspace: IWorkspaceSnapshot): string;
 }

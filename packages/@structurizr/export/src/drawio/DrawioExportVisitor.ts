@@ -5,12 +5,9 @@ import {
 } from "@justmegaara/mxgraph";
 import {
     IElement,
-    Person,
-    Relationship,
     Tag,
     IElementVisitor,
     IViewDefinition,
-    Group,
     IElementPosition,
     IComponent,
     IContainer,
@@ -18,7 +15,10 @@ import {
     IDeploymentNode,
     IInfrastructureNode,
     ISoftwareSystem,
-    ISoftwareSystemInstance
+    ISoftwareSystemInstance,
+    IGroup,
+    IPerson,
+    IRelationship
 } from "@structurizr/dsl";
 import { ElementHtmlUtils } from "./utils";
 import {
@@ -36,11 +36,11 @@ export class DrawioExportVisitor implements IElementVisitor {
         private builder: DrawioDiagramBuilder
     ) {}
 
-    visitGroup(group: Group, params?: { parentId?: string; }) {
+    visitGroup(group: IGroup, params?: { parentId?: string; }) {
         throw new Error("Method not implemented.");
     }
 
-    visitPerson(person: Person, params?: { parentId?: string }) {
+    visitPerson(person: IPerson, params?: { parentId?: string }) {
         const mxObject: MxObject = {
             _placeholders: "1",
             _c4Name: person.name,
@@ -135,11 +135,11 @@ export class DrawioExportVisitor implements IElementVisitor {
         throw new Error("Method not implemented.");
     }
 
-    visitRelationship(relationship: Relationship, params?: { parentId?: string }) {
+    visitRelationship(relationship: IRelationship, params?: { parentId?: string }) {
         const mxObject: MxObject = {
             _placeholders: "1",
             _c4Type: "Relationship",
-            _c4Technology: relationship.technology?.map(x => x.name).join('/'),
+            _c4Technology: relationship.technology.join('/'),
             _c4Description: relationship.description,
             _label: ElementHtmlUtils.relationshipHtmlBuilder(relationship),
             _id: `${relationship.sourceIdentifier}_${relationship.targetIdentifier}`,
@@ -198,7 +198,7 @@ export class DrawioExportVisitor implements IElementVisitor {
             _c4Name: node.name,
             _c4Type: node.tags[1].name,
             _c4Description: node.description,
-            _c4Technology: node.technology?.map(x => x.name).join(','),
+            _c4Technology: node.technology.join(','),
             _label: ElementHtmlUtils.elementHtmlBuilder(node),
             _id: node.identifier,
             mxCell: {
@@ -244,7 +244,7 @@ export class DrawioExportVisitor implements IElementVisitor {
             _c4Name: node.name,
             _c4Type: "DeploymentNodeBoundary", // "ContainerScopeBoundary", "SystemScopeBoundary"
             _c4Application: node.tags[1].name,
-            _c4Technology: node.technology?.map(x => x.name).join(','),
+            _c4Technology: node.technology.join(','),
             _label: ElementHtmlUtils.scopeHtmlBuilder(node),
             _id: node.identifier,
             mxCell: {

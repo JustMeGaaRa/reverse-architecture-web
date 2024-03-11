@@ -15,7 +15,7 @@ import {
     ISoftwareSystem,
     ISoftwareSystemInstance,
     IViews,
-    IWorkspace
+    IWorkspaceSnapshot
 } from "@structurizr/dsl";
 
 export class WorkspaceJsonExportVisitor implements IElementVisitor {
@@ -24,7 +24,7 @@ export class WorkspaceJsonExportVisitor implements IElementVisitor {
         private readonly indent: number = 4
     ) { }
 
-    visitWorkspace(workspace: IWorkspace): string {
+    visitWorkspace(workspace: IWorkspaceSnapshot): string {
         return JSON.stringify(workspace, null, 4);
     }
     visitModel(model: IModel): string {

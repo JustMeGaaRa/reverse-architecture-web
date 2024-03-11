@@ -1,8 +1,8 @@
 import { Box, useColorModeValue } from "@chakra-ui/react";
 import {
-    StructurizrRelationshipTagDefaultStyle,
     Relationship,
-    RelationshipStyleProperties
+    RelationshipStyleProperties,
+    StructurizrRelationshipTagDefaultStyle
 } from "@structurizr/dsl";
 import {
     EdgeLabelRenderer,

@@ -2,8 +2,8 @@ import {
     IElementVisitor,
     ISupportVisitor,
     IModel,
-    Relationship
-} from "../";
+} from "../interfaces";
+import { RelationshipType } from "../types";
 
 export class ModelViewStrategy implements ISupportVisitor {
     constructor(
@@ -24,41 +24,41 @@ export class ModelViewStrategy implements ISupportVisitor {
                             .concat(container.components)
                             .forEach((component, index) => {
                                 visitor.visitComponent(component)
-                                visitor.visitRelationship(
-                                    new Relationship({
-                                        sourceIdentifier: container.identifier,
-                                        targetIdentifier: component.identifier,
-                                    })
-                                )
+                                visitor.visitRelationship({
+                                    type: RelationshipType.Relationship,
+                                    sourceIdentifier: container.identifier,
+                                    targetIdentifier: component.identifier,
+                                    tags: []
+                                })
                             });
                         
                         visitor.visitContainer(container)
-                        visitor.visitRelationship(
-                            new Relationship({
-                                sourceIdentifier: softwareSystem.identifier,
-                                targetIdentifier: container.identifier,
-                            })
-                        )
+                        visitor.visitRelationship({
+                            type: RelationshipType.Relationship,
+                            sourceIdentifier: softwareSystem.identifier,
+                            targetIdentifier: container.identifier,
+                            tags: []
+                        })
                     });
                 
                 visitor.visitSoftwareSystem(softwareSystem)
-                visitor.visitRelationship(
-                    new Relationship({
-                        sourceIdentifier: "workspace",
-                        targetIdentifier: softwareSystem.identifier,
-                    })
-                )
+                visitor.visitRelationship({
+                    type: RelationshipType.Relationship,
+                    sourceIdentifier: "workspace",
+                    targetIdentifier: softwareSystem.identifier,
+                    tags: []
+                })
             });
         
         this.model.people
             .forEach((person, index) => {    
                 visitor.visitPerson(person)
-                visitor.visitRelationship(
-                    new Relationship({
-                        sourceIdentifier: "workspace",
-                        targetIdentifier: person.identifier,
-                    })
-                )
+                visitor.visitRelationship({
+                    type: RelationshipType.Relationship,
+                    sourceIdentifier: "workspace",
+                    targetIdentifier: person.identifier,
+                    tags: []
+                })
             });
     }
 }

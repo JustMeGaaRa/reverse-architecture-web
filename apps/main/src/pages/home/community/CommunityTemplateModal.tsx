@@ -31,7 +31,8 @@ import {
     useEffect,
     useState
 } from "react";
-import { parseStructurizr, Workspace } from "@structurizr/react";
+import { Workspace } from "@structurizr/dsl";
+import { parseStructurizr } from "@structurizr/parser";
 import { v4 } from "uuid";
 import {
     WorkspacePanel,
@@ -62,7 +63,7 @@ const loadTemplate = async (workspaceId: string) => {
     const structurizrText = await communityApi.getWorkspaceContent(workspaceId);
     const metadata = await communityApi.getWorkspaceMetadata(workspaceId)
 
-    const template = parseStructurizr(structurizrText);
+    const template = new Workspace(parseStructurizr(structurizrText));
     const workspace = template.applyMetadata(metadata);
     return { information, workspace };
 }
@@ -219,7 +220,7 @@ export const CommunityTemplateModal: FC<{
                                         >
                                             <WorkspaceViewer
                                                 workspace={template}
-                                                initialView={template.views.systemLandscape}
+                                                initialView={template.views.systemLandscape?.[0]}
                                             >
                                                 <WorkspaceViewBreadcrumbs /> 
                                                 <WorkspacePanel position={"bottom-left"} spacing={2}>

@@ -1,9 +1,9 @@
-import { IWorkspace } from "@structurizr/dsl";
+import { IWorkspaceSnapshot } from "@structurizr/dsl";
 import { IExportClient } from "../shared/IExportClient";
 import { WorkspaceJsonExportVisitor } from "./WorkspaceJsonExportVisitor";
 
 export class WorkspaceJsonExportClient implements IExportClient {
-    export(workspace: IWorkspace): string {
+    export(workspace: IWorkspaceSnapshot): string {
         const visitor = new WorkspaceJsonExportVisitor();
         return visitor.visitWorkspace(workspace);
     }

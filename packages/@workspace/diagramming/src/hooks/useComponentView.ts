@@ -41,7 +41,7 @@ export const useComponentView = (containerIdentifier: Identifier) => {
             builder.views.components
                 .find(x => x.identifier === containerIdentifier)
                 ?.addPerson(person, position);
-            return builder.toObject();
+            return builder.toSnapshot();
         });
 
         return person;
@@ -65,7 +65,7 @@ export const useComponentView = (containerIdentifier: Identifier) => {
             builder.views.components
                 .find(x => x.identifier === containerIdentifier)
                 ?.addSoftwareSystem(softwareSystem, position);
-            return builder.toObject();
+            return builder.toSnapshot();
         });
 
         return softwareSystem;
@@ -91,7 +91,7 @@ export const useComponentView = (containerIdentifier: Identifier) => {
             builder.views.components
                 .find(x => x.identifier === containerIdentifier)
                 ?.addContainer(container, position);
-            return builder.toObject();
+            return builder.toSnapshot();
         });
 
         return container;
@@ -116,7 +116,7 @@ export const useComponentView = (containerIdentifier: Identifier) => {
             builder.views.components
                 .find(x => x.identifier === containerIdentifier)
                 ?.addComponent(component, position);
-            return builder.toObject();
+            return builder.toSnapshot();
         });
 
         return component;
@@ -145,7 +145,7 @@ export const useComponentView = (containerIdentifier: Identifier) => {
             builder.views.components
                 .find(x => x.identifier === containerIdentifier)
                 ?.addGroup(group, position);
-            return builder.toObject();
+            return builder.toSnapshot();
         });
 
         return group;
@@ -165,7 +165,7 @@ export const useComponentView = (containerIdentifier: Identifier) => {
         setWorkspace(workspace => {
             const builder = new Workspace(workspace);
             builder.model.addRelationship(relationship);
-            return builder.toObject();
+            return builder.toSnapshot();
         });
 
         return relationship;
@@ -177,7 +177,7 @@ export const useComponentView = (containerIdentifier: Identifier) => {
             builder.views.components
                 .filter(x => x.identifier === containerIdentifier)
                 .forEach(x => x.setElementPosition(elementId, position));
-            return builder.toObject();
+            return builder.toSnapshot();
         });
     }, [containerIdentifier, setWorkspace]);
 

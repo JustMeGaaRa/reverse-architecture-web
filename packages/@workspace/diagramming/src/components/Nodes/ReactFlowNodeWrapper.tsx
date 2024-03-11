@@ -1,4 +1,3 @@
-import { Icon } from "@chakra-ui/react";
 import { Handle, NodeProps, Position, useStore } from "@reactflow/core";
 import {
     IElement,
@@ -7,7 +6,6 @@ import {
     foldStyles,
 } from "@structurizr/dsl";
 import { ReverseArchitectureElementStyle } from "@workspace/core";
-import { Lock } from "iconoir-react";
 import { FC, PropsWithChildren, useMemo } from "react";
 import { ElementLockedIcon } from "./ElementLockedIcon";
 

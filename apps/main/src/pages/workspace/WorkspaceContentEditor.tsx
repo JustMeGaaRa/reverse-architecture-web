@@ -14,7 +14,7 @@ import {
     useMemo,
     useState
 } from "react";
-import { parseStructurizr } from "@structurizr/react";
+import { parseStructurizr } from "@structurizr/parser";
 import {
     CollaboratingUserPane,
     WorkspaceEditor,

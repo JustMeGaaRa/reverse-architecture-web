@@ -1,4 +1,4 @@
-import { IViewDefinition, IWorkspace } from "@structurizr/dsl";
+import { IViewDefinition } from "@structurizr/dsl";
 import { 
     WorkspaceContext,
     WorkspaceNavigationContext,

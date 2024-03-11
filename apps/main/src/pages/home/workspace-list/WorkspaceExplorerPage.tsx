@@ -19,7 +19,7 @@ import {
     ShellTitle,
     useLocale,
 } from "@restruct/ui";
-import { validateStructurizr } from "@structurizr/react";
+import { validateStructurizr } from "@structurizr/parser";
 import {
     List,
     Upload,

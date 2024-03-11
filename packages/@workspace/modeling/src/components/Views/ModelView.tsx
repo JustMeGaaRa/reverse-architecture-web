@@ -1,5 +1,5 @@
 import { Node, useEdgesState, useNodesState } from "@reactflow/core";
-import { IWorkspace, ModelViewStrategy, Position, Workspace } from "@structurizr/dsl";
+import { IWorkspaceSnapshot, ModelViewStrategy, Position, Workspace } from "@structurizr/dsl";
 import { WorkspaceViewRenderer } from "@workspace/core";
 import {
     FC,
@@ -21,7 +21,7 @@ import {
 } from "../../hooks";
 
 export const ModelView: FC<PropsWithChildren<{
-    workspace: IWorkspace;
+    workspace: IWorkspaceSnapshot;
     onWorkspaceViewClick?: (event: React.MouseEvent) => void;
 }>> = ({
     children,

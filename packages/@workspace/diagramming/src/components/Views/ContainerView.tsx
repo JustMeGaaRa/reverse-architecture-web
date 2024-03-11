@@ -13,7 +13,7 @@ import {
     IModel,
     IContainerView,
     ContainerViewStrategy,
-    IWorkspace,
+    IWorkspaceSnapshot,
     Workspace,
     Position,
 } from "@structurizr/dsl";
@@ -45,7 +45,7 @@ import {
 } from "../../hooks";
 
 export const ContainerView: FC<PropsWithChildren<{
-    workspace: IWorkspace;
+    workspace: IWorkspaceSnapshot;
     view: IContainerView;
     onNodeDragStop?: NodeMouseHandler;
     onNodesDoubleClick?: NodeMouseHandler;

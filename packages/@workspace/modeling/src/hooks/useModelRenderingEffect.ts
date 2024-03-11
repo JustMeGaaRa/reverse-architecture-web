@@ -1,9 +1,9 @@
 import { useReactFlow } from "@reactflow/core";
-import { ISupportVisitor, IWorkspace } from "@structurizr/dsl";
+import { ISupportVisitor, IWorkspaceSnapshot } from "@structurizr/dsl";
 import { useEffect } from "react";
 import { getReactFlowModelAuto, getReactFlowModelObject } from "../utils";
 
-export const useModelRenderingEffect = (workspace: IWorkspace, strategy: ISupportVisitor) => {
+export const useModelRenderingEffect = (workspace: IWorkspaceSnapshot, strategy: ISupportVisitor) => {
     const { setNodes, setEdges } = useReactFlow();
     
     // NOTE: we need to re-render the view ONLY when the model changes

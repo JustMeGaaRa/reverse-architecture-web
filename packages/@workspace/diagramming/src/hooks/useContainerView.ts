@@ -41,7 +41,7 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
             builder.views.containers
                 .find(x => x.identifier === systemSoftwareIdentifier)
                 ?.addPerson(person, position);
-            return builder.toObject();
+            return builder.toSnapshot();
         });
 
         return person;
@@ -65,7 +65,7 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
             builder.views.containers
                 .find(x => x.identifier === systemSoftwareIdentifier)
                 ?.addSoftwareSystem(softwareSystem, position);
-            return builder.toObject();
+            return builder.toSnapshot();
         });
 
         return softwareSystem;
@@ -90,7 +90,7 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
             builder.views.containers
                 .find(x => x.identifier === systemSoftwareIdentifier)
                 ?.addContainer(container, position);
-            return builder.toObject();
+            return builder.toSnapshot();
         });
         return container;
     }, [systemSoftwareIdentifier, workspace, setNodes, setWorkspace]);
@@ -118,7 +118,7 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
                 builder.model
                 .findSoftwareSystem(systemSoftwareIdentifier)
                 .addGroup(group);
-            return builder.toObject();
+            return builder.toSnapshot();
         });
         
         return group;
@@ -138,7 +138,7 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
         setWorkspace(workspace => {
             const builder = new Workspace(workspace);
             builder.model.addRelationship(relationship);
-            return builder.toObject();
+            return builder.toSnapshot();
         });
 
         return relationship;
@@ -150,7 +150,7 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
             builder.views.containers
                 .filter(x => x.identifier === systemSoftwareIdentifier)
                 .forEach(x => x.setElementPosition(elementId, position));
-            return builder.toObject();
+            return builder.toSnapshot();
         });
     }, [systemSoftwareIdentifier, setWorkspace]);
 

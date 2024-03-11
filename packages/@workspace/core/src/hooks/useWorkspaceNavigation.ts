@@ -4,7 +4,7 @@ import {
     findViewOrDefault,
     IElement,
     IViewDefinition,
-    IWorkspace,
+    IWorkspaceSnapshot,
     Tag,
     ViewType,
 } from "@structurizr/dsl";
@@ -18,12 +18,12 @@ export const useWorkspaceNavigation = () => {
     } = useContext(WorkspaceNavigationContext);
     const { setViewport, getViewport } = useReactFlow();
 
-    const openView = useCallback((workspace: IWorkspace, viewDefinition: IViewDefinition) => {
+    const openView = useCallback((workspace: IWorkspaceSnapshot, viewDefinition: IViewDefinition) => {
         const view = findViewOrDefault(workspace, viewDefinition);
         setCurrentView(view);
     }, [setCurrentView]);
 
-    const zoomIntoElement = useCallback((workspace: IWorkspace, element: IElement) => {
+    const zoomIntoElement = useCallback((workspace: IWorkspaceSnapshot, element: IElement) => {
         if (element.tags.some(tag => tag.name === Tag.SoftwareSystem.name)) {
             const view = findViewOrDefault(workspace, {
                 identifier: element.identifier,
@@ -41,7 +41,7 @@ export const useWorkspaceNavigation = () => {
         }
     }, [setCurrentView]);
 
-    const zoomOutOfElement = useCallback((workspace: IWorkspace, element: IElement) => {
+    const zoomOutOfElement = useCallback((workspace: IWorkspaceSnapshot, element: IElement) => {
         if (element.tags.some(tag => tag.name === Tag.SoftwareSystem.name)) {
             const view = findViewOrDefault(workspace, {
                 identifier: element.identifier,

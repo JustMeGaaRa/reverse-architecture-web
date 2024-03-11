@@ -1,4 +1,4 @@
-import { IWorkspaceMetadata, IWorkspaceTheme } from "@structurizr/react";
+import { IWorkspaceMetadata, IWorkspaceTheme } from "@structurizr/dsl";
 import { WorkspaceInfo } from "../../workspaces";
 
 type CommunityTemplate = {

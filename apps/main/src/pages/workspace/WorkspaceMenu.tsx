@@ -7,17 +7,17 @@ import {
     MenuItem,
     MenuList
 } from "@chakra-ui/react";
+import { IWorkspaceSnapshot } from "@structurizr/dsl";
 import {
     DrawioExportClient,
-    IWorkspace,
     StructurizrExportClient,
     WorkspaceJsonExportClient
-} from "@structurizr/react";
+} from "@structurizr/export";
 import { Download, InputField, MoreHoriz } from "iconoir-react";
 import { FC, useCallback } from "react";
 
 export const WorkspaceMenu: FC<{
-    workspace: IWorkspace;
+    workspace: IWorkspaceSnapshot;
 }> = ({
     workspace
 }) => {

@@ -33,9 +33,10 @@ export const useSystemLandscapeView = () => {
         setNodes(nodes => [...nodes, node]);
         setWorkspace(workspace => {
             const builder = new Workspace(workspace);
-            builder?.views.systemLandscape?.addSoftwareSystem(softwareSystem, position);
+            // TODO: refactor and adapt to the collection of views
+            // builder?.views.systemLandscape?.addSoftwareSystem(softwareSystem, position);
             builder?.model.addSoftwareSystem(softwareSystem, groupId);
-            return builder.toObject()
+            return builder.toSnapshot()
         });
 
         return softwareSystem;
@@ -54,8 +55,8 @@ export const useSystemLandscapeView = () => {
         setWorkspace(workspace => {
             const builder = new Workspace(workspace);
             builder?.model.addPerson(person);
-            builder?.views.systemLandscape?.addPerson(person, position);
-            return builder.toObject();
+            // builder?.views.systemLandscape?.addPerson(person, position);
+            return builder.toSnapshot();
         });
 
         return person;
@@ -77,8 +78,8 @@ export const useSystemLandscapeView = () => {
         setWorkspace(workspace => {
             const builder = new Workspace(workspace);
             builder?.model.addGroup(group);
-            builder?.views.systemLandscape?.addGroup(group, position);
-            return builder.toObject();
+            // builder?.views.systemLandscape?.addGroup(group, position);
+            return builder.toSnapshot();
         });
 
         return group;
@@ -98,7 +99,7 @@ export const useSystemLandscapeView = () => {
         setWorkspace(workspace => {
             const builder = new Workspace(workspace);
             builder?.model.addRelationship(relationship);
-            return builder.toObject();
+            return builder.toSnapshot();
         });
 
         return relationship;
@@ -107,9 +108,9 @@ export const useSystemLandscapeView = () => {
     const setElementPosition = useCallback((elementId: string, position: Position) => {
         setWorkspace(workspace => {
             const builder = new Workspace(workspace);
-            builder.views.systemLandscape
-                ?.setElementPosition(elementId, position);
-            return builder.toObject();
+            // builder.views.systemLandscape
+            //     ?.setElementPosition(elementId, position);
+            return builder.toSnapshot();
         });
     }, [setWorkspace]);
 

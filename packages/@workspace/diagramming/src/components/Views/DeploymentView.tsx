@@ -13,7 +13,7 @@ import {
     IModel,
     DeploymentViewStrategy,
     IDeploymentView,
-    IWorkspace,
+    IWorkspaceSnapshot,
     Workspace,
 } from "@structurizr/dsl";
 import {
@@ -41,7 +41,7 @@ import {
 } from "../../hooks";
 
 export const DeploymentView: FC<PropsWithChildren<{
-    workspace: IWorkspace;
+    workspace: IWorkspaceSnapshot;
     view: CurrentView;
     onNodeDragStop?: NodeMouseHandler;
     onNodesDoubleClick?: NodeMouseHandler;

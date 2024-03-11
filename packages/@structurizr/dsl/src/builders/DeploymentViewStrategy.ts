@@ -1,13 +1,10 @@
 import {
     IElementVisitor,
     IViewDefinition,
-    Workspace,
-    DeploymentNode,
     ISupportVisitor,
-    IWorkspace,
     IDeploymentNode,
     IModel
-} from "../";
+} from "../interfaces";
 
 export class DeploymentViewStrategy implements ISupportVisitor {
     constructor(

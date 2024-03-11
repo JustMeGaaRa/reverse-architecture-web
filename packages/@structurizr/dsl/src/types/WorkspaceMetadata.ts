@@ -1,27 +1,15 @@
-import { ISupportImmutable } from "../shared/ISupportImmutable";
-import { Identifier } from "./model/Identifier";
-import { Position } from "./views/Position";
+import {
+    IElementPosition,
+    IRelationshipPosition,
+    ISupportSnapshot,
+    IViewDefinitionMetadata,
+    IViewsMetadata,
+    IWorkspaceMetadata
+} from "../interfaces";
+import { Identifier } from "./Identifier";
+import { Position } from "./Position";
 
-export interface IElementPosition {
-    id: string;
-    x: number;
-    y: number;
-    height?: number;
-    width?: number;
-}
-
-export interface IRelationshipPosition {
-    id: string;
-}
-
-export interface IViewDefinitionMetadata {
-    identifier: Identifier;
-    key?: string;
-    elements?: Array<IElementPosition>;
-    relationships?: Array<IRelationshipPosition>;
-}
-
-export class ViewDefinitionMetadata implements ISupportImmutable<IViewDefinitionMetadata> {
+export class ViewDefinitionMetadata implements ISupportSnapshot<IViewDefinitionMetadata> {
     constructor(values: IViewDefinitionMetadata) {
         this.identifier = values.identifier;
         this.key = values.key;
@@ -34,7 +22,7 @@ export class ViewDefinitionMetadata implements ISupportImmutable<IViewDefinition
     public elements: Array<IElementPosition>;
     public relationships: Array<IRelationshipPosition>;
 
-    public toObject(): IViewDefinitionMetadata {
+    public toSnapshot(): IViewDefinitionMetadata {
         return {
             identifier: this.identifier,
             key: this.key,
@@ -58,47 +46,33 @@ export class ViewDefinitionMetadata implements ISupportImmutable<IViewDefinition
     }
 }
 
-export interface IViewsMetadata {
-    systemLandscape: IViewDefinitionMetadata;
-    systemContexts: Array<IViewDefinitionMetadata>;
-    containers: Array<IViewDefinitionMetadata>;
-    components: Array<IViewDefinitionMetadata>;
-    deployments: Array<IViewDefinitionMetadata>;
-}
-
-export class ViewsMetadata implements ISupportImmutable<IViewsMetadata> {
+export class ViewsMetadata implements ISupportSnapshot<IViewsMetadata> {
     constructor(values: IViewsMetadata) {
-        this.systemLandscape = values.systemLandscape ? new ViewDefinitionMetadata(values.systemLandscape) : undefined;
-        this.systemContexts = values.systemContexts.map(x => new ViewDefinitionMetadata(x));
-        this.containers = values.containers.map(x => new ViewDefinitionMetadata(x));
-        this.components = values.components.map(x => new ViewDefinitionMetadata(x));
-        this.deployments = values.deployments.map(x => new ViewDefinitionMetadata(x));
+        this.systemLandscape = values.systemLandscape?.map(x => new ViewDefinitionMetadata(x)) ?? [];
+        this.systemContexts = values.systemContexts?.map(x => new ViewDefinitionMetadata(x)) ?? [];
+        this.containers = values.containers?.map(x => new ViewDefinitionMetadata(x)) ?? [];
+        this.components = values.components?.map(x => new ViewDefinitionMetadata(x)) ?? [];
+        this.deployments = values.deployments?.map(x => new ViewDefinitionMetadata(x)) ?? [];
     }
     
-    public readonly systemLandscape?: ViewDefinitionMetadata;
+    public readonly systemLandscape: Array<ViewDefinitionMetadata>;
     public readonly systemContexts: Array<ViewDefinitionMetadata>;
     public readonly containers: Array<ViewDefinitionMetadata>;
     public readonly components: Array<ViewDefinitionMetadata>;
     public readonly deployments: Array<ViewDefinitionMetadata>;
 
-    public toObject(): IViewsMetadata {
+    public toSnapshot(): IViewsMetadata {
         return {
-            systemLandscape: this.systemLandscape?.toObject(),
-            systemContexts: this.systemContexts.map(x => x.toObject()),
-            containers: this.containers.map(x => x.toObject()),
-            components: this.components.map(x => x.toObject()),
-            deployments: this.deployments.map(x => x.toObject())
+            systemLandscape: this.systemLandscape.map(x => x.toSnapshot()),
+            systemContexts: this.systemContexts.map(x => x.toSnapshot()),
+            containers: this.containers.map(x => x.toSnapshot()),
+            components: this.components.map(x => x.toSnapshot()),
+            deployments: this.deployments.map(x => x.toSnapshot())
         };
     }
 }
 
-export interface IWorkspaceMetadata {
-    name: string;
-    lastModifiedDate: Date;
-    views: IViewsMetadata;
-}
-
-export class WorkspaceMetadata implements ISupportImmutable<IWorkspaceMetadata> {
+export class WorkspaceMetadata implements ISupportSnapshot<IWorkspaceMetadata> {
     constructor(values: IWorkspaceMetadata) {
         this.name = values.name;
         this.lastModifiedDate = values.lastModifiedDate;
@@ -121,11 +95,11 @@ export class WorkspaceMetadata implements ISupportImmutable<IWorkspaceMetadata> 
         }
     });
 
-    public toObject(): IWorkspaceMetadata {
+    public toSnapshot(): IWorkspaceMetadata {
         return {
             name: this.name,
             lastModifiedDate: this.lastModifiedDate,
-            views: this.views.toObject()
+            views: this.views.toSnapshot()
         };
     }
 }

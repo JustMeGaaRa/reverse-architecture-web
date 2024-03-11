@@ -1,28 +1,13 @@
-import {
-    Container,
-    DeploymentEnvironment,
-    Group,
-    Identifier,
-    IDeploymentEnvironment,
-    IGroup,
-    IPerson,
-    IRelationship,
-    ISoftwareSystem,
-    ISupportImmutable,
-    Person,
-    Relationship,
-    SoftwareSystem
-} from "../";
+import { IModel, ISupportSnapshot } from "../interfaces";
+import { Container } from "./Container";
+import { DeploymentEnvironment } from "./DeploymentEnvironment";
+import { Group } from "./Group";
+import { Identifier } from "./Identifier";
+import { Person } from "./Person";
+import { Relationship } from "./Relationship";
+import { SoftwareSystem } from "./SoftwareSystem";
 
-export interface IModel {
-    people: IPerson[];
-    softwareSystems: ISoftwareSystem[];
-    deploymentEnvironments: IDeploymentEnvironment[];
-    relationships: IRelationship[];
-    groups: IGroup[];
-}
-
-export class Model implements ISupportImmutable<IModel> {
+export class Model implements ISupportSnapshot<IModel> {
     constructor(params: IModel) {
         this.people = params.people ? params.people.map(p => new Person(p)) : [];
         this.softwareSystems = params.softwareSystems ? params.softwareSystems.map(s => new SoftwareSystem(s)) : [];
@@ -37,13 +22,13 @@ export class Model implements ISupportImmutable<IModel> {
     public readonly relationships: Relationship[];
     public readonly groups: Group[];
 
-    public toObject(): IModel {
+    public toSnapshot(): IModel {
         return {
-            people: this.people.map(p => p.toObject()),
-            softwareSystems: this.softwareSystems.map(s => s.toObject()),
-            deploymentEnvironments: this.deploymentEnvironments.map(d => d.toObject()),
-            relationships: this.relationships.map(r => r.toObject()),
-            groups: this.groups.map(g => g.toObject())
+            people: this.people.map(p => p.toSnapshot()),
+            softwareSystems: this.softwareSystems.map(s => s.toSnapshot()),
+            deploymentEnvironments: this.deploymentEnvironments.map(d => d.toSnapshot()),
+            relationships: this.relationships.map(r => r.toSnapshot()),
+            groups: this.groups.map(g => g.toSnapshot())
         }
     }
 

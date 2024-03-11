@@ -1,3 +1,4 @@
-export * from "@structurizr/dsl";
-export * from "@structurizr/export";
-export * from "@structurizr/parser";
+export * from "./components";
+export * from "./contexts";
+export * from "./hooks";
+export * from "./utils";

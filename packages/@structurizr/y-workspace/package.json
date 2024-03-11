@@ -1,0 +1,39 @@
+{
+  "name": "@structurizr/y-workspace",
+  "version": "0.1.0",
+  "description": "A y.js implementation of the workspace object for rela-time collaboration apps.",
+  "main": "dist/index.js",
+  "keywords": [
+    "structurizr",
+    "dsl",
+    "c4-model",
+    "c4",
+    "architecture",
+    "yjs",
+    "workspace",
+    "collaborative"
+  ],
+  "author": "JustMeGaaRa",
+  "license": "MIT",
+  "scripts": {
+    "build": "npx tsc",
+    "dev": "npx tsc -w"
+  },
+  "dependencies": {
+    "@structurizr/dsl": "*"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2"
+  },
+  "peerDependencies": {
+    "yjs": "^13.5.47",
+    "uuid": "^9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JustMeGaaRa/reverse-architecture-web.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JustMeGaaRa/reverse-architecture-web/issues"
+  }
+}

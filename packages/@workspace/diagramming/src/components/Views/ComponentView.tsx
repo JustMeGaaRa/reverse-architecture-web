@@ -13,7 +13,7 @@ import {
     IModel,
     IComponentView,
     ComponentViewStrategy,
-    IWorkspace,
+    IWorkspaceSnapshot,
     Workspace,
     Position,
 } from "@structurizr/dsl";
@@ -45,7 +45,7 @@ import {
 } from "../../hooks";
 
 export const ComponentView: FC<PropsWithChildren<{
-    workspace: IWorkspace;
+    workspace: IWorkspaceSnapshot;
     view: CurrentView;
     onNodeDragStop?: NodeMouseHandler;
     onNodesDoubleClick?: NodeMouseHandler;

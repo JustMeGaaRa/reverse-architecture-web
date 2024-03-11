@@ -1,16 +1,18 @@
 import {
     IViewDefinition,
     IElementVisitor,
-    relationshipExistsOverall,
     ISupportVisitor,
-    getRelationships,
-    relationshipExistsForElementsInView,
     IPerson,
     ISoftwareSystem,
     IContainer,
-    IModel,
-    elementIncludedInView
-} from "../";
+    IModel
+} from "../interfaces";
+import {
+    elementIncludedInView,
+    getRelationships,
+    relationshipExistsForElementsInView,
+    relationshipExistsOverall
+} from "../utils";
 
 export class ContainerViewStrategy implements ISupportVisitor {
     constructor(

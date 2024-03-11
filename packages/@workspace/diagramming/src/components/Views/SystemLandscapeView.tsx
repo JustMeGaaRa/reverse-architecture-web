@@ -9,7 +9,7 @@ import {
 import {
     ElementType,
     ISystemLandscapeView,
-    IWorkspace,
+    IWorkspaceSnapshot,
     Position,
     SystemLandscapeViewStrategy,
 } from "@structurizr/dsl";
@@ -39,7 +39,7 @@ import {
 } from "../../hooks";
 
 export const SystemLandscapeView: FC<PropsWithChildren<{
-    workspace: IWorkspace;
+    workspace: IWorkspaceSnapshot;
     view: ISystemLandscapeView;
     onWorkspaceViewClick?: (event: React.MouseEvent) => void;
 }>> = ({

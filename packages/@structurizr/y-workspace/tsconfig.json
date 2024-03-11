@@ -1,0 +1,16 @@
+{
+    "display": "@structurizr/y-workspace",
+    "extends": "tsconfig/react-library.json",
+    "include": [
+        "./src/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist"
+    ],
+    "compilerOptions": {
+        "strict": false,
+        "outDir": "./dist",
+        "rootDir": "./src"
+    }
+}

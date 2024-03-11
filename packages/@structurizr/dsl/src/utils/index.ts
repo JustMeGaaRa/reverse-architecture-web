@@ -1,16 +1,7 @@
 import {
-    IWorkspaceTheme,
     Identifier,
     Relationship,
-    IViewDefinition,
-    IWorkspace,
-    ISoftwareSystem,
-    IContainer,
-    IComponent,
-    IModel,
-    IRelationship,
     ElementType,
-    IElement,
     SoftwareSystem,
     Container,
     Component,
@@ -18,17 +9,29 @@ import {
     DeploymentNode,
     InfrastructureNode,
     Group,
-    ViewKeys,
     ViewType,
     SystemContextViewDefinition,
     SystemLandscapeViewDefinition,
     ContainerViewDefinition,
     ComponentViewDefinition,
-    DeploymentViewDefinition
-} from "../";
+    DeploymentViewDefinition,
+    RelationshipType
+} from "../types";
+import {
+    IComponent,
+    IContainer,
+    IElement,
+    IModel,
+    IRelationship,
+    ISoftwareSystem,
+    IViewDefinition,
+    IWorkspaceSnapshot,
+    IWorkspaceTheme,
+    ViewKeys
+} from "../interfaces";
 import { v4 } from "uuid";
 
-export const applyTheme = (workspace: IWorkspace, theme: IWorkspaceTheme): IWorkspace => {
+export const applyTheme = (workspace: IWorkspaceSnapshot, theme: IWorkspaceTheme): IWorkspaceSnapshot => {
     return {
         ...workspace,
         views: {
@@ -54,24 +57,24 @@ export const fetchTheme = async (url: string): Promise<IWorkspaceTheme> => {
     return theme;
 }
 
-export const findViewByKeys = (workspace: IWorkspace, viewDefinition?: ViewKeys) => {
-    return [workspace.views.systemLandscape].find(x => x?.type === viewDefinition?.type)
+export const findViewByKeys = (workspace: IWorkspaceSnapshot, viewDefinition?: ViewKeys) => {
+    return workspace.views.systemLandscape.find(x => x?.type === viewDefinition?.type)
         ?? workspace.views.systemContexts.find(x => x.type === viewDefinition?.type && x.identifier === viewDefinition?.identifier)
         ?? workspace.views.containers.find(x => x.type === viewDefinition?.type && x.identifier === viewDefinition?.identifier)
         ?? workspace.views.components.find(x => x.type === viewDefinition?.type && x.identifier === viewDefinition?.identifier)
         ?? workspace.views.deployments.find(x => x.type === viewDefinition?.type && x.identifier === viewDefinition?.identifier);
 }
 
-export const findViewByType = (workspace: IWorkspace, viewType?: ViewType) => {
-    return [workspace.views.systemLandscape].find(x => x?.type === viewType)
+export const findViewByType = (workspace: IWorkspaceSnapshot, viewType?: ViewType) => {
+    return workspace.views.systemLandscape.find(x => x.type === viewType)
         ?? workspace.views.systemContexts.find(x => x.type === viewType)
         ?? workspace.views.containers.find(x => x.type === viewType)
         ?? workspace.views.components.find(x => x.type === viewType)
         ?? workspace.views.deployments.find(x => x.type === viewType);
 }
 
-export const findAnyExisting = (workspace: IWorkspace) => {
-    return workspace.views.systemLandscape
+export const findAnyExisting = (workspace: IWorkspaceSnapshot) => {
+    return workspace.views.systemLandscape[0]
         ?? workspace.views.systemContexts[0]
         ?? workspace.views.containers[0]
         ?? workspace.views.components[0]
@@ -95,7 +98,7 @@ export const getDefaultView = (type: ViewType, identifier: Identifier): IViewDef
     }
 }
 
-export const findViewOrDefault = (workspace: IWorkspace, viewDefinition: { type: ViewType, identifier: Identifier }) => {
+export const findViewOrDefault = (workspace: IWorkspaceSnapshot, viewDefinition: { type: ViewType, identifier: Identifier }) => {
     return findViewByKeys(workspace, viewDefinition)
         ?? findViewByType(workspace, viewDefinition.type)
         ?? getDefaultView(viewDefinition.type, viewDefinition.identifier);
@@ -198,14 +201,16 @@ export const getRelationships = (model: IModel, implied: boolean) => {
                 relationships.push(relationship);
 
                 // add implied software system relationship
-                relationships.push(new Relationship({
+                relationships.push({
+                    type: RelationshipType.Relationship,
                     sourceIdentifier: relationship.sourceIdentifier === container.identifier
                         ? softwareSystemIdentifier
                         : relationship.sourceIdentifier,
                     targetIdentifier: relationship.targetIdentifier === container.identifier
                         ? softwareSystemIdentifier
-                        : relationship.targetIdentifier
-                }));
+                        : relationship.targetIdentifier,
+                    tags: []
+                });
             }
 
             getComponentImpliedRelationships(
@@ -227,24 +232,28 @@ export const getRelationships = (model: IModel, implied: boolean) => {
                 relationships.push(relationship);
 
                 // add implied container relationship
-                relationships.push(new Relationship({
+                relationships.push({
+                    type: RelationshipType.Relationship,
                     sourceIdentifier: relationship.sourceIdentifier === component.identifier
                         ? containerIdentifier
                         : relationship.sourceIdentifier,
                     targetIdentifier: relationship.targetIdentifier === component.identifier
                         ? containerIdentifier
-                        : relationship.targetIdentifier
-                }));
+                        : relationship.targetIdentifier,
+                    tags: []
+                });
 
                 // add implied software system relationship
-                relationships.push(new Relationship({
+                relationships.push({
+                    type: RelationshipType.Relationship,
                     sourceIdentifier: relationship.sourceIdentifier === component.identifier
                         ? softwareSystemIdentifier
                         : relationship.sourceIdentifier,
                     targetIdentifier: relationship.targetIdentifier === component.identifier
                         ? softwareSystemIdentifier
-                        : relationship.targetIdentifier
-                }));
+                        : relationship.targetIdentifier,
+                    tags: []
+                });
             }
         }
     }

@@ -12,10 +12,12 @@ import {
     ElementType,
     Group,
     InfrastructureNode,
+    IRelationship,
     Model,
     Person,
     Relationship,
     RelationshipStyleProperties,
+    RelationshipType,
     SoftwareSystem,
     SoftwareSystemInstance,
     Style,
@@ -140,12 +142,15 @@ export class StructurizrVisitor extends VisitorCtor {
         const properties = this.visit(ctx.elementProperties);
         const relationships = ctx.relationship
             ?.map<Relationship>((x) => this.visit(x))
-            ?.map((x) => {
-                return new Relationship({
+            ?.map<IRelationship>((x) => {
+                return {
                     ...x,
+                    type: RelationshipType.Relationship,
                     sourceIdentifier: x.sourceIdentifier.toLocaleUpperCase() === TokenName.ThisLiteral.toLocaleUpperCase() ? identifier : x.sourceIdentifier,
-                    targetIdentifier: x.targetIdentifier.toLocaleUpperCase() === TokenName.ThisLiteral.toLocaleUpperCase() ? identifier : x.targetIdentifier
-                });
+                    targetIdentifier: x.targetIdentifier.toLocaleUpperCase() === TokenName.ThisLiteral.toLocaleUpperCase() ? identifier : x.targetIdentifier,
+                    tags: x.tags ?? [],
+                    technology: x.technology ?? []
+                };
             });
 
         return new SoftwareSystem({
@@ -176,12 +181,15 @@ export class StructurizrVisitor extends VisitorCtor {
         const properties = this.visit(ctx.elementProperties);
         const relationships = ctx.relationship
             ?.map<Relationship>((x) => this.visit(x))
-            ?.map((x) => {
-                return new Relationship({
+            ?.map<IRelationship>((x) => {
+                return {
                     ...x,
+                    type: RelationshipType.Relationship,
                     sourceIdentifier: x.sourceIdentifier.toLocaleUpperCase() === TokenName.ThisLiteral.toLocaleUpperCase() ? identifier : x.sourceIdentifier,
-                    targetIdentifier: x.targetIdentifier.toLocaleUpperCase() === TokenName.ThisLiteral.toLocaleUpperCase() ? identifier : x.targetIdentifier
-                });
+                    targetIdentifier: x.targetIdentifier.toLocaleUpperCase() === TokenName.ThisLiteral.toLocaleUpperCase() ? identifier : x.targetIdentifier,
+                    tags: x.tags ?? [],
+                    technology: x.technology ?? []
+                };
             });
         
         return new Container({
@@ -212,12 +220,15 @@ export class StructurizrVisitor extends VisitorCtor {
         const properties = this.visit(ctx.elementProperties);
         const relationships = ctx.relationship
             ?.map<Relationship>((x) => this.visit(x))
-            ?.map((x) => {
-                return new Relationship({
+            ?.map<IRelationship>((x) => {
+                return {
                     ...x,
+                    type: RelationshipType.Relationship,
                     sourceIdentifier: x.sourceIdentifier.toLocaleUpperCase() === TokenName.ThisLiteral.toLocaleUpperCase() ? identifier : x.sourceIdentifier,
-                    targetIdentifier: x.targetIdentifier.toLocaleUpperCase() === TokenName.ThisLiteral.toLocaleUpperCase() ? identifier : x.targetIdentifier
-                });
+                    targetIdentifier: x.targetIdentifier.toLocaleUpperCase() === TokenName.ThisLiteral.toLocaleUpperCase() ? identifier : x.targetIdentifier,
+                    tags: x.tags ?? [],
+                    technology: x.technology ?? []
+                };
             });
 
         return new Component({
@@ -395,9 +406,9 @@ export class StructurizrVisitor extends VisitorCtor {
             containers: ctx.containerView?.map((x) => this.visit(x)) ?? [],
             components: ctx.componentView?.map((x) => this.visit(x)) ?? [],
             deployments: ctx.deploymentView?.map((x) => this.visit(x)) ?? [],
-            filtered: [],
-            custom: [],
-            dynamics: [],
+            // filtered: [],
+            // custom: [],
+            // dynamics: [],
             configuration: new Configuration({
                 styles: this.visit(ctx.styles),
                 themes: themes ? [themes] : []

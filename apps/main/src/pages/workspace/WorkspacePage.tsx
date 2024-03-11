@@ -1,8 +1,7 @@
 import { FC, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import {
-    parseStructurizr
-} from "@structurizr/react";
+import { Workspace } from "@structurizr/dsl";
+import { parseStructurizr } from "@structurizr/parser";
 import {
     WorkspaceNavigationProvider,
     CurrentUser,
@@ -84,10 +83,10 @@ export const WorkspaceContentLoader: FC<{
                 // NOTE: load workspace from local storage
                 // TODO: refactor this code so that when the workspace is saved is does not trigger this effect
                 const localWorkspace = workspaces.find(workspace => workspace.workspaceId === workspaceId);
-                const parsedWorkspace = parseStructurizr(localWorkspace.content?.structurizr);
+                const parsedWorkspace = new Workspace(parseStructurizr(localWorkspace.content?.structurizr));
                 const autolayoutWorkspace = parsedWorkspace.applyMetadata(localWorkspace.content?.metadata);
                 setWorkspace(autolayoutWorkspace);
-                openView(autolayoutWorkspace, autolayoutWorkspace.views.systemLandscape)
+                openView(autolayoutWorkspace, autolayoutWorkspace.views.systemLandscape?.[0])
             }
             catch (error) {
                 snackbar({

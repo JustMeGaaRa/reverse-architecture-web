@@ -12,9 +12,9 @@ export const useAutoLayoutMode = () => {
         const isAutoLayoutEnabled = false;//currentView.autoLayout !== undefined;
         const builder = new Workspace(workspace);
 
-        builder.views.systemLandscape?.type === currentView.type
-            && builder.views.systemLandscape?.identifier === currentView.identifier
-            && builder.views.systemLandscape?.setAutoLayout(!isAutoLayoutEnabled);
+        builder.views.systemLandscape
+            .filter(view => view.type === currentView.type && view.identifier === currentView.identifier)
+            .forEach(x => x.setAutoLayout(!isAutoLayoutEnabled));
         builder.views.systemContexts
             .filter(view => view.type === currentView.type && view.identifier === currentView.identifier)
             .forEach(x => x.setAutoLayout(!isAutoLayoutEnabled));

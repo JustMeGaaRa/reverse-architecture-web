@@ -1,4 +1,4 @@
-import { Workspace } from "@structurizr/react";
+import { Workspace } from "@structurizr/dsl";
 import { WorkspaceApi } from "./WorkspaceApi";
 
 

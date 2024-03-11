@@ -1,4 +1,4 @@
-import { IWorkspaceMetadata } from "@structurizr/react";
+import { IWorkspaceMetadata } from "@structurizr/dsl";
 
 export type WorkspaceStatus = "private" | "shared" | "archived";
 

@@ -8,7 +8,7 @@ import {
     DeploymentViewStrategy,
     ISupportVisitor,
     IViewDefinition,
-    IWorkspace,
+    IWorkspaceSnapshot,
     SystemContextViewStrategy
 } from "@structurizr/dsl";
 import { DrawioExportVisitor } from "./DrawioExportVisitor";
@@ -18,7 +18,7 @@ import { XMLBuilder } from "fast-xml-parser";
 import { v4 } from "uuid";
 
 export class DrawioExportClient implements IExportClient {
-    export(workspace: IWorkspace): string {
+    export(workspace: IWorkspaceSnapshot): string {
         const createView = (view: IViewDefinition, client: ISupportVisitor) => {
             const defaultParent: MXCell = {
                 _id: v4()
@@ -46,7 +46,9 @@ export class DrawioExportClient implements IExportClient {
                 _host: "reversearchitecture.io",
                 _type: "browser",
                 diagram: [
-                    createView(workspace.views.systemLandscape, new SystemContextViewStrategy(workspace.model, workspace.views.systemLandscape)),
+                    ...workspace.views.systemLandscape.map(view => {
+                        return createView(view, new SystemContextViewStrategy(workspace.model, view))
+                    }),
                     ...workspace.views.systemContexts.map(view => {
                         return createView(view, new SystemContextViewStrategy(workspace.model, view))
                     }),

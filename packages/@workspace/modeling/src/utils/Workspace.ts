@@ -1,12 +1,12 @@
 import { Node, Edge, ReactFlowJsonObject } from "@reactflow/core";
-import { ISupportVisitor, IWorkspace, Position, Tag } from "@structurizr/dsl";
+import { ISupportVisitor, IWorkspaceSnapshot, Position, Tag } from "@structurizr/dsl";
 import { BoundingBox, ReactFlowBuilder } from "@workspace/core";
 import { ReactFlowModelVisitor } from "../types";
 import { getModelNodeFromElement } from "../utils";
 
 export const getReactFlowModelObject = (
     strategy: ISupportVisitor,
-    workspace: IWorkspace,
+    workspace: IWorkspaceSnapshot,
 ): ReactFlowJsonObject => {
     const reactFlowBuilder = new ReactFlowBuilder();
 

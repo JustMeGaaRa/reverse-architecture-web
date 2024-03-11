@@ -1,10 +1,10 @@
 import { useReactFlow } from "@reactflow/core";
-import { ISupportVisitor, IWorkspace } from "@structurizr/dsl";
+import { ISupportVisitor, IWorkspaceSnapshot } from "@structurizr/dsl";
 import { useWorkspaceNavigation } from "@workspace/core";
 import { useEffect } from "react";
 import { getReactFlowAuto, getReactFlowObject } from "../utils";
 
-export const useViewRenderingEffect = (workspace: IWorkspace, strategy: ISupportVisitor) => {
+export const useViewRenderingEffect = (workspace: IWorkspaceSnapshot, strategy: ISupportVisitor) => {
     const { currentView } = useWorkspaceNavigation();
     const { setNodes, setEdges } = useReactFlow();
 

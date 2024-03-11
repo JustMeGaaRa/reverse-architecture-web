@@ -2,7 +2,6 @@ import {
     createBrowserRouter,
     Navigate
 } from "react-router-dom";
-import { TestSharedPage, TestWorkspaceExplorerPage, TestWorkspacePage } from "./features/collaborative/components";
 import {
     CommunityExplorerPage,
     DashboardPage,
@@ -15,6 +14,7 @@ import {
     WorkspacePage,
     WorkspaceSharedPage,
 } from "./pages";
+import { TestSharedPage, TestWorkspaceExplorerPage, TestWorkspacePage } from "./pages/test-page";
 
 export const routes = createBrowserRouter([
     {

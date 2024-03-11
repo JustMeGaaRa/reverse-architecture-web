@@ -1,4 +1,4 @@
-import { IElement, Relationship, Technology } from "@structurizr/dsl";
+import { IElement, IRelationship, Relationship, Technology } from "@structurizr/dsl";
 import { EdgeStyle, NodeStyle } from "./types";
 
 export class ElementHtmlUtils {
@@ -47,7 +47,7 @@ export class ElementHtmlUtils {
         return htmlObject.toHtml();
     }
 
-    static relationshipHtmlBuilder(rel: Relationship) {
+    static relationshipHtmlBuilder(rel: IRelationship) {
         const htmlObject = html(
             div(
                 { textAlign: "left" },

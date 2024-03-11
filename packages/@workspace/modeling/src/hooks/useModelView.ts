@@ -34,7 +34,7 @@ export const useModelView = () => {
         setWorkspace(workspace => {
             const builder = new Workspace(workspace);
             builder.model.addPerson(person);
-            return builder.toObject();
+            return builder.toSnapshot();
         });
 
         return person;
@@ -54,7 +54,7 @@ export const useModelView = () => {
         setWorkspace(workspace => {
             const builder = new Workspace(workspace);
             builder?.model.addSoftwareSystem(softwareSystem);
-            return builder.toObject();
+            return builder.toSnapshot();
         });
 
         return softwareSystem;
@@ -76,7 +76,7 @@ export const useModelView = () => {
             builder.model
                 .findSoftwareSystem(systemSoftwareIdentifier)
                 .addContainer(container);
-            return builder.toObject();
+            return builder.toSnapshot();
         });
 
         return container;
@@ -98,7 +98,7 @@ export const useModelView = () => {
             builder.model
                 .findContainer(containerIdentifier)
                 .addComponent(component);
-            return builder.toObject();
+            return builder.toSnapshot();
         });
 
         return component;
@@ -120,7 +120,7 @@ export const useModelView = () => {
             // builder.model.deploymentEnvironments
             //     .find(x => x.identifier === environmentIdentifier)
             //     .addDeploymentNode(deploymentNode);
-            return builder.toObject();
+            return builder.toSnapshot();
         });
 
         return deploymentNode;
@@ -142,7 +142,7 @@ export const useModelView = () => {
             // builder.model.deploymentEnvironments
             //     .find(x => x.identifier === environmentIdentifier)
             //     .addInfrastructureNode(deploymentNode);
-            return builder.toObject();
+            return builder.toSnapshot();
         });
 
         return infrastructureNode;

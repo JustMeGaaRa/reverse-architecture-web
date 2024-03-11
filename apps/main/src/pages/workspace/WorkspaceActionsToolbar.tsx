@@ -6,7 +6,7 @@ import {
     ToolbarSubmenuContent,
     ToolbarSubmenuTrigger
 } from "@restruct/ui";
-import { ViewType } from "@structurizr/react";
+import { ViewType } from "@structurizr/dsl";
 import {
     CommentingModeButton,
     ConnectionModeButton,

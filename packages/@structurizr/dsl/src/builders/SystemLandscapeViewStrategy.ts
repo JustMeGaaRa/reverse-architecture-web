@@ -1,13 +1,15 @@
 import {
-    IViewDefinition,
     IElementVisitor,
-    ISupportVisitor,
-    relationshipExistsForElementsInView,
-    getRelationships,
+    IModel,
     IPerson,
     ISoftwareSystem,
-    IModel
-} from "../";
+    ISupportVisitor,
+    IViewDefinition
+} from "../interfaces";
+import {
+    relationshipExistsForElementsInView,
+    getRelationships
+} from "../utils";
 
 export class SystemLandscapeViewStrategy implements ISupportVisitor {
     constructor(

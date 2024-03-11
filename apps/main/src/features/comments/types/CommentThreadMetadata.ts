@@ -1,4 +1,4 @@
-import { ViewType } from "@structurizr/react";
+import { ViewType } from "@structurizr/dsl";
 
 export type CommentThreadMetadata = {
     commentThreadId?: string;

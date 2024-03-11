@@ -1,4 +1,6 @@
-import { IWorkspaceMetadata, StructurizrExportClient, Workspace } from "@structurizr/react";
+import { IWorkspaceMetadata, Workspace } from "@structurizr/dsl";
+import { StructurizrExportClient } from "@structurizr/export";
+
 import { WorkspaceInfo } from "../types";
 
 export type WorkspaceLoadFilters = {
@@ -19,7 +21,7 @@ export type WorkspaceLoadOptions = {
 
 export class WorkspaceApi {
     private readonly structurizrExportClient = new StructurizrExportClient();
-    private readonly emptyWorkspace = this.structurizrExportClient.export(Workspace.Empty.toObject());
+    private readonly emptyWorkspace = this.structurizrExportClient.export(Workspace.Empty.toSnapshot());
     private readonly workspaces: Array<WorkspaceInfo> = [
         {
             workspaceId: "workspace-1",

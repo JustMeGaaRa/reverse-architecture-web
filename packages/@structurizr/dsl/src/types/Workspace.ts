@@ -1,30 +1,15 @@
-import {
-    IModel,
-    Model,
-    IViews,
-    Views,
-    Properties,
-    ISupportImmutable,
-    IWorkspaceMetadata,
-} from "../";
+import { ISupportSnapshot, IWorkspaceMetadata, IWorkspaceSnapshot } from "../interfaces";
+import { Model } from "./Model";
+import { Properties } from "./Properties";
+import { Views } from "./Views";
 
-export interface IWorkspace {
-    version: number;
-    name?: string;
-    description?: string;
-    lastModifiedDate?: Date;
-    properties?: Properties;
-    model: IModel;
-    views: IViews;
-}
-
-export class Workspace implements ISupportImmutable<IWorkspace> {
-    constructor(params: IWorkspace) {
+export class Workspace implements ISupportSnapshot<IWorkspaceSnapshot> {
+    constructor(params: IWorkspaceSnapshot) {
         this.version = params.version;
         this.name = params.name;
         this.description = params.description;
         this.lastModifiedDate = params.lastModifiedDate ?? new Date();
-        this.properties = params.properties;
+        // this.properties = new Properties(params.properties);
         this.model = new Model(params.model);
         this.views = new Views(params.views);
     }
@@ -52,10 +37,10 @@ export class Workspace implements ISupportImmutable<IWorkspace> {
             systemContexts: [],
             containers: [],
             components: [],
-            dynamics: [],
+            // dynamics: [],
             deployments: [],
-            filtered: [],
-            custom: [],
+            // filtered: [],
+            // custom: [],
             configuration: {
                 styles: {
                     elements: [],
@@ -69,9 +54,9 @@ export class Workspace implements ISupportImmutable<IWorkspace> {
     public applyMetadata(metadata: IWorkspaceMetadata): Workspace {
         if (metadata === null || metadata === undefined) return this;
         
-        if (metadata.views.systemLandscape) {
-            this.views.systemLandscape?.applyMetadata(metadata.views.systemLandscape);
-        }
+        metadata.views.systemContexts.forEach(view => {
+            this.views.systemLandscape.find(x => x.identifier === view.identifier).applyMetadata(view);
+        })
         metadata.views.systemContexts.forEach(view => {
             this.views.systemContexts.find(x => x.identifier === view.identifier)?.applyMetadata(view);
         })
@@ -87,15 +72,15 @@ export class Workspace implements ISupportImmutable<IWorkspace> {
         return this;
     }
 
-    public toObject(): IWorkspace {
+    public toSnapshot(): IWorkspaceSnapshot {
         return {
             version: this.version,
             name: this.name,
             description: this.description,
             lastModifiedDate: this.lastModifiedDate,
             properties: this.properties,
-            model: this.model.toObject(),
-            views: this.views.toObject()
+            model: this.model.toSnapshot(),
+            views: this.views.toSnapshot()
         };
     }
 }

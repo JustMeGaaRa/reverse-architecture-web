@@ -15,7 +15,7 @@ import {
     ShellCloseButton,
     ShellTabContent
 } from "@restruct/ui";
-import { Workspace } from "@structurizr/react";
+import { Workspace } from "@structurizr/dsl";
 import {
     WorkspaceViewBreadcrumbs,
     WorkspacePanel,
@@ -94,7 +94,7 @@ export const TemplateOverview: FC<{
                                 >
                                     <WorkspaceViewer
                                         workspace={workspace}
-                                        initialView={workspace.views.systemLandscape}
+                                        initialView={workspace.views.systemLandscape?.[0]}
                                     >
                                         <WorkspaceViewBreadcrumbs /> 
                                         <WorkspacePanel position={"bottom-left"} spacing={2}>

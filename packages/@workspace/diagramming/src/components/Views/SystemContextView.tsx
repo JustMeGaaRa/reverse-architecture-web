@@ -12,7 +12,7 @@ import {
     IConfiguration,
     IModel,
     ISystemContextView,
-    IWorkspace,
+    IWorkspaceSnapshot,
     Position,
     SystemContextViewStrategy,
     Workspace,
@@ -45,7 +45,7 @@ import {
 } from "../../hooks";
 
 export const SystemContextView: FC<PropsWithChildren<{
-    workspace: IWorkspace;
+    workspace: IWorkspaceSnapshot;
     view: ISystemContextView;
     onNodeDragStop?: NodeMouseHandler;
     onNodesDoubleClick?: NodeMouseHandler;

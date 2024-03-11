@@ -1,0 +1,35 @@
+import { IDeploymentEnvironment, ISupportSnapshot } from "../interfaces";
+import { DeploymentGroup } from "./DeploymentGroup";
+import { DeploymentNode } from "./DeploymentNode";
+import { Identifier } from "./Identifier";
+import { Relationship } from "./Relationship";
+
+type DeploymentEnvironmentParams =
+    Required<Pick<IDeploymentEnvironment, "identifier" | "name" | "deploymentNodes">>
+    & Partial<Omit<IDeploymentEnvironment, "identifier" | "name" | "deploymentNodes" | "type">>;
+
+export class DeploymentEnvironment implements ISupportSnapshot<IDeploymentEnvironment> {
+    constructor(params: DeploymentEnvironmentParams) {
+        this.identifier = params.identifier;
+        this.name = params.name;
+        this.deploymentGroups = params.deploymentGroups ? params.deploymentGroups.map(g => new DeploymentGroup(g.name)) : [];
+        this.deploymentNodes = params.deploymentNodes ? params.deploymentNodes.map(n => new DeploymentNode(n)) : [];
+        this.relationships = params.relationships ? params.relationships.map(r => new Relationship(r)) : [];
+    }
+    
+    public readonly identifier: Identifier;
+    public readonly name: string;
+    public readonly deploymentGroups: DeploymentGroup[];
+    public readonly deploymentNodes: DeploymentNode[];
+    public readonly relationships: Relationship[];
+
+    public toSnapshot(): IDeploymentEnvironment {
+        return {
+            identifier: this.identifier,
+            name: this.name,
+            deploymentGroups: this.deploymentGroups,
+            deploymentNodes: this.deploymentNodes.map(n => n.toSnapshot()),
+            relationships: this.relationships.map(r => r.toSnapshot())
+        }
+    }
+}

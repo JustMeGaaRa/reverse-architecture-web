@@ -37,7 +37,7 @@ export const useSystemContextView = (systemSoftwareIdentifier: Identifier) => {
             builder.views.systemContexts
                 .find(x => x.identifier === systemSoftwareIdentifier)
                 ?.addSoftwareSystem(softwareSystem, position);
-            return builder.toObject();
+            return builder.toSnapshot();
         });
 
         return softwareSystem;
@@ -59,7 +59,7 @@ export const useSystemContextView = (systemSoftwareIdentifier: Identifier) => {
             builder.views.systemContexts
                 .find(x => x.identifier === systemSoftwareIdentifier)
                 ?.addPerson(person, position);
-            return builder.toObject();
+            return builder.toSnapshot();
         });
 
         return person;
@@ -85,7 +85,7 @@ export const useSystemContextView = (systemSoftwareIdentifier: Identifier) => {
             builder.views.systemContexts
                 .find(x => x.identifier === systemSoftwareIdentifier)
                 ?.addGroup(group, position);
-            return builder.toObject();
+            return builder.toSnapshot();
         });
 
         return group;
@@ -105,7 +105,7 @@ export const useSystemContextView = (systemSoftwareIdentifier: Identifier) => {
         setWorkspace(workspace => {
             const builder = new Workspace(workspace);
             builder.model.addRelationship(relationship);
-            return builder.toObject();
+            return builder.toSnapshot();
         });
 
         return relationship;
@@ -117,7 +117,7 @@ export const useSystemContextView = (systemSoftwareIdentifier: Identifier) => {
             builder.views.systemContexts
                 .filter(x => x.identifier === systemSoftwareIdentifier)
                 .forEach(x => x.setElementPosition(elementId, position));
-            return builder.toObject();
+            return builder.toSnapshot();
         });
     }, [systemSoftwareIdentifier, setWorkspace]);
 

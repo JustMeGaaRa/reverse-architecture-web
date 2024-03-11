@@ -26,9 +26,7 @@ import {
     useState,
     PropsWithChildren
 } from "react";
-import {
-    ViewType,
-} from "@structurizr/react";
+import { ViewType } from "@structurizr/dsl";
 import {
     useWorkspace,
     useWorkspaceNavigation,
@@ -116,7 +114,7 @@ export const WorkspacePageActionsWrapper: FC<PropsWithChildren<{
 
     const handleOnClickDiagrammingMode = useCallback(() => {
         setMode(WorkspaceContentMode.Diagramming);
-        openView(workspace, workspace.views.systemLandscape);
+        openView(workspace, workspace.views.systemLandscape[0]);
     }, [openView, workspace]);
 
     const handleOnClickModelingMode = useCallback(() => {
