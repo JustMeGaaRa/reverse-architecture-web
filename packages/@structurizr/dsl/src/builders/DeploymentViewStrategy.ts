@@ -1,9 +1,9 @@
 import {
-    IElementVisitor,
-    IViewDefinition,
-    ISupportVisitor,
     IDeploymentNode,
-    IModel
+    IElementVisitor,
+    IModel,
+    ISupportVisitor,
+    IViewDefinition
 } from "../interfaces";
 
 export class DeploymentViewStrategy implements ISupportVisitor {

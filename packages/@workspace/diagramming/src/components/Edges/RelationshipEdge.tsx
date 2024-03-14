@@ -1,7 +1,7 @@
 import { Box, useColorModeValue } from "@chakra-ui/react";
 import {
     Relationship,
-    RelationshipStyleProperties,
+    IRelationshipStyleProperties,
     StructurizrRelationshipTagDefaultStyle
 } from "@structurizr/dsl";
 import {
@@ -17,7 +17,7 @@ import { MarkerType } from "@workspace/core";
 
 export const RelationshipBezierEdge: FC<{
     data: Relationship;
-    style: RelationshipStyleProperties;
+    style: IRelationshipStyleProperties;
     selected?: boolean;
 }> = ({
     data,

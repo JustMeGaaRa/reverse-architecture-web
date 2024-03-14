@@ -1,7 +1,6 @@
 import { Button, HStack, VStack, Text, ButtonGroup, Box } from "@chakra-ui/react";
 import {
     WorkspaceExplorerProvider,
-    WorkspaceProvider,
     YjsDocumentProvider,
     YjsWebrtcProviderProvider,
     YjsUndoManagerProvider,
@@ -22,11 +21,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import * as Y from "yjs";
 import { WorkspaceRenderer } from "./WorkspaceRenderer";
 
-export const TestWorkspaceInfo: FC<{
-    workspaceId: string;
-}> = ({
-    workspaceId
-}) => {
+export const TestWorkspaceInfo: FC<{ workspaceId: string; }> = ({ workspaceId }) => {
     const navigate = useNavigate();
     const { document } = useYjsCollaborative();
     const { setWorkspaces } = useWorkspaceExplorer();
@@ -114,7 +109,7 @@ export const TestWorkspaceExplorerPage: FC = () => {
     )
 }
 
-export const TestWorkspace: FC = () => {
+export const WorkspaceControls: FC<PropsWithChildren> = ({ children }) => {
     const { undoManager } = useYjsCollaborative();
     const { workspace } = useWorkspace();
 
@@ -122,21 +117,16 @@ export const TestWorkspace: FC = () => {
         const softwareSystem = workspace.model.addSoftwareSystem();
         const container = softwareSystem.addContainer();
         const component = container.addComponent();
-        console.log("add software system", workspace.toSnapshot());
     }, [workspace]);
 
-    return workspace !== undefined && workspace != null && (
-        <Box backgroundColor={"black"} height={"100vh"}>
-            {/* <HStack>
-                <Text>{workspace?.version}</Text>
-                <ButtonGroup>
-                    <Button isDisabled={!undoManager?.canUndo()} onClick={() => undoManager.undo()}>Undo</Button>
-                    <Button isDisabled={!undoManager?.canRedo()} onClick={() => undoManager.redo()}>Redo</Button>
-                    <Button onClick={handleOnAddSoftwareSystem}>Add</Button>
-                </ButtonGroup>
-            </HStack> */}
-            <WorkspaceRenderer workspace={workspace} />
-        </Box>
+    return (
+        <HStack position={"absolute"} padding={4} right={0} zIndex={1000}>
+            <ButtonGroup>
+                <Button onClick={handleOnAddSoftwareSystem}>Add</Button>
+                <Button isDisabled={!undoManager?.canUndo()} onClick={() => undoManager.undo()}>Undo</Button>
+                <Button isDisabled={!undoManager?.canRedo()} onClick={() => undoManager.redo()}>Redo</Button>
+            </ButtonGroup>
+        </HStack>
     )
 }
 
@@ -147,22 +137,23 @@ export const TestWorkspacePage: FC = () => {
         <YjsDocumentProvider guid={workspaceId}>
             <YjsWebrtcProviderProvider>
                 <YjsUndoManagerProvider>
-                    <WorkspaceProvider>
-                        <TestWorkspaceLoader workspaceId={workspaceId}>
-                            <TestWorkspaceConnector workspaceId={workspaceId}>
-                                <TestWorkspaceInitializer />
-                            </TestWorkspaceConnector>
-                        </TestWorkspaceLoader>
-
-                        <TestWorkspace />
-                    </WorkspaceProvider>
+                    <Box backgroundColor={"black"} height={"100vh"}>
+                        <WorkspaceRenderer>
+                            <WorkspaceIndexeddbLoader workspaceId={workspaceId}>
+                                <WorkspaceWebrtcConnector workspaceId={workspaceId}>
+                                    <WorkspaceInitializer />
+                                </WorkspaceWebrtcConnector>
+                            </WorkspaceIndexeddbLoader>
+                            <WorkspaceControls />
+                        </WorkspaceRenderer>
+                    </Box>
                 </YjsUndoManagerProvider>
             </YjsWebrtcProviderProvider>
         </YjsDocumentProvider>
     )
 }
 
-export const TestWorkspaceLoader: FC<PropsWithChildren<{ workspaceId: string; }>> = ({ children, workspaceId }) => {
+export const WorkspaceIndexeddbLoader: FC<PropsWithChildren<{ workspaceId: string; }>> = ({ children, workspaceId }) => {
     const [ isLoading, setIsLoading ] = useState(true);
     const { document, setPersistance } = useYjsCollaborative();
 
@@ -193,7 +184,7 @@ export const TestWorkspaceLoader: FC<PropsWithChildren<{ workspaceId: string; }>
         );
 }
 
-export const TestWorkspaceConnector: FC<PropsWithChildren<{ workspaceId: string; }>> = ({ children, workspaceId }) => {
+export const WorkspaceWebrtcConnector: FC<PropsWithChildren<{ workspaceId: string; }>> = ({ children, workspaceId }) => {
     const [ isLoading, setIsLoading ] = useState(true);
     const { document, setConnection } = useYjsCollaborative();
 
@@ -222,7 +213,7 @@ export const TestWorkspaceConnector: FC<PropsWithChildren<{ workspaceId: string;
         );
 }
 
-export const TestWorkspaceInitializer: FC<PropsWithChildren<{}>> = ({ children }) => {
+export const WorkspaceInitializer: FC<PropsWithChildren<{}>> = ({ children }) => {
     const { setWorkspace } = useWorkspace();
     const { document, setUndoManager } = useYjsCollaborative();
     
@@ -231,27 +222,11 @@ export const TestWorkspaceInitializer: FC<PropsWithChildren<{}>> = ({ children }
             const modelMap = document.getMap("model");
             const viewsMap = document.getMap("views");
             const propertiesMap = document.getMap("properties");
-    
-            const workspace = new Workspace(document);
-            console.log("add software system", workspace.toSnapshot());
-                        
             const undoManager = new Y.UndoManager([modelMap, viewsMap, propertiesMap]);
+            const workspace = new Workspace(document);
+
             setUndoManager(undoManager);
             setWorkspace(workspace);
-            
-            const modelObserver = () => { console.log("model changed", workspace.toSnapshot()) };
-            const viewsObserver = () => { console.log("views changed", workspace.toSnapshot()) };
-            const propertiesObserver = () => { console.log("properties changed", workspace.toSnapshot()) };
-    
-            modelMap.observeDeep(modelObserver);
-            viewsMap.observeDeep(viewsObserver)
-            propertiesMap.observeDeep(propertiesObserver);
-
-            return () => {
-                modelMap.unobserveDeep(modelObserver);
-                viewsMap.unobserveDeep(viewsObserver);
-                propertiesMap.unobserveDeep(propertiesObserver);
-            }
         }
     }, [document, setUndoManager, setWorkspace]);
 
@@ -269,13 +244,14 @@ export const TestSharedPage: FC = () => {
         <YjsDocumentProvider guid={workspaceId}>
             <YjsWebrtcProviderProvider>
                 <YjsUndoManagerProvider>
-                    <WorkspaceProvider>
-                        <TestWorkspaceConnector workspaceId={workspaceId}>
-                            <TestWorkspaceInitializer />
-                        </TestWorkspaceConnector>
-                        
-                        <TestWorkspace />
-                    </WorkspaceProvider>
+                    <Box backgroundColor={"black"} height={"100vh"}>
+                        <WorkspaceRenderer>
+                            <WorkspaceWebrtcConnector workspaceId={workspaceId}>
+                                <WorkspaceInitializer />
+                            </WorkspaceWebrtcConnector>
+                            <WorkspaceControls />
+                        </WorkspaceRenderer>
+                    </Box>
                 </YjsUndoManagerProvider>
             </YjsWebrtcProviderProvider>
         </YjsDocumentProvider>

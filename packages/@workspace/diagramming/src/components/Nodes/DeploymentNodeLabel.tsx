@@ -1,11 +1,11 @@
 import { Flex, Text } from "@chakra-ui/react";
-import { DeploymentNode, ElementStyleProperties } from "@structurizr/dsl";
+import { DeploymentNode, IElementStyleProperties } from "@structurizr/dsl";
 import { FC } from "react";
 import { BoundaryLabel } from "./BoundaryLabel";
 
 export const DeploymentNodeLabel: FC<{
     element: DeploymentNode;
-    style?: Partial<ElementStyleProperties>;
+    style?: Partial<IElementStyleProperties>;
 }> = ({
     element,
     style

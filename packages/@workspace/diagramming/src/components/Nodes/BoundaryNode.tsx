@@ -1,11 +1,11 @@
 import { Box, Flex } from "@chakra-ui/react";
-import { IElement, ElementStyleProperties } from "@structurizr/dsl";
+import { IElement, IElementStyleProperties } from "@structurizr/dsl";
 import { FC, PropsWithChildren } from "react";
 import { BoundaryLabel } from "./BoundaryLabel";
 
 export const BoundaryNode: FC<PropsWithChildren<{
     element: IElement;
-    style: ElementStyleProperties;
+    style: IElementStyleProperties;
     width?: number;
     height?: number;
     onMouseEnter?: () => void;

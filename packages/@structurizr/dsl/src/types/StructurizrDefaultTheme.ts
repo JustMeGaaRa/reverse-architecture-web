@@ -1,12 +1,12 @@
 import { IWorkspaceTheme } from "../interfaces"
-import { ElementStyleProperties } from "./ElementStyleProperties"
+import { IElementStyleProperties } from "./ElementStyleProperties"
 import { LineStyle } from "./LineStyle"
-import { RelationshipStyleProperties } from "./RelationshipStyleProperties"
+import { IRelationshipStyleProperties } from "./RelationshipStyleProperties"
 import { RoutingStyle } from "./RoutingStyle"
 import { ShapeType } from "./ShapeType"
 import { Tag } from "./Tag"
 
-export const StructurizrElementTagDefaultStyle: ElementStyleProperties = {
+export const StructurizrElementTagDefaultStyle: IElementStyleProperties = {
     shape: ShapeType.Box,
     icon: "",
     width: 450,
@@ -23,7 +23,7 @@ export const StructurizrElementTagDefaultStyle: ElementStyleProperties = {
     properties: new Map(),
 }
 
-export const StructurizrRelationshipTagDefaultStyle: RelationshipStyleProperties = {
+export const StructurizrRelationshipTagDefaultStyle: IRelationshipStyleProperties = {
     color: "#707070",
     fontSize: 24,
     opacity: 100,

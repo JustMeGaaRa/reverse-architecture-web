@@ -3,14 +3,14 @@ import {
     foldStyles,
     Relationship,
     RelationshipStyleCollection,
-    RelationshipStyleProperties
+    IRelationshipStyleProperties
 } from "@structurizr/dsl";
 import { EdgeProps } from "@reactflow/core";
 import { FC, useMemo } from "react";
 
 export function ReactFlowEdgeWrapper(EdgeElement: FC<{
     data: Relationship;
-    style: RelationshipStyleProperties;
+    style: IRelationshipStyleProperties;
     selected?: boolean;
 }>): FC<EdgeProps<{
     relationship: Relationship;

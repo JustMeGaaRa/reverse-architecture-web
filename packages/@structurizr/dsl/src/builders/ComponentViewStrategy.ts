@@ -1,12 +1,12 @@
 import {
-    IViewDefinition,
+    IComponent,
+    IContainer,
     IElementVisitor,
-    ISupportVisitor,
+    IModel,
     IPerson,
     ISoftwareSystem,
-    IContainer,
-    IComponent,
-    IModel
+    ISupportVisitor,
+    IViewDefinition
 } from "../interfaces";
 import {
     elementIncludedInView,

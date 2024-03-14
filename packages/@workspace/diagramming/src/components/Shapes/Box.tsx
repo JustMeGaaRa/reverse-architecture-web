@@ -1,10 +1,10 @@
 import { Flex } from "@chakra-ui/react";
-import { ElementStyleProperties } from "@structurizr/dsl";
+import { IElementStyleProperties } from "@structurizr/dsl";
 import { FC, PropsWithChildren } from "react";
 import { HexColor } from "../../utils";
 
 export type DefaultBoxProps = {
-    style: ElementStyleProperties;
+    style: IElementStyleProperties;
     selected?: boolean,
 }
 

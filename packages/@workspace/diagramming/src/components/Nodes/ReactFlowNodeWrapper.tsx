@@ -2,7 +2,7 @@ import { Handle, NodeProps, Position, useStore } from "@reactflow/core";
 import {
     IElement,
     ElementStyleCollection,
-    ElementStyleProperties,
+    IElementStyleProperties,
     foldStyles,
 } from "@structurizr/dsl";
 import { ReverseArchitectureElementStyle } from "@workspace/core";
@@ -11,7 +11,7 @@ import { ElementLockedIcon } from "./ElementLockedIcon";
 
 export function ReactFlowNodeWrapper(ElementNodeComponent: FC<PropsWithChildren<{
     element: IElement;
-    style: ElementStyleProperties;
+    style: IElementStyleProperties;
     width?: number;
     height?: number;
     isSelected?: boolean;

@@ -1,9 +1,9 @@
 import { Box, Flex } from "@chakra-ui/react";
-import { ElementStyleProperties } from "@structurizr/dsl";
+import { IElementStyleProperties } from "@structurizr/dsl";
 import { FC, PropsWithChildren } from "react";
 
 export const RoundedBox: FC<PropsWithChildren<{
-    style: ElementStyleProperties;
+    style: IElementStyleProperties;
 }>> = ({
     children,
     style,

@@ -19,7 +19,9 @@
   },
   "dependencies": {
     "@structurizr/dsl": "*",
-    "@structurizr/y-workspace": "*"
+    "@structurizr/y-workspace": "*",
+    "@reactflow/background": "^11.1.10",
+    "@reactflow/core": "^11.6.1"
   },
   "devDependencies": {
     "typescript": "^5.2.2"

@@ -1,8 +1,4 @@
-import {
-    IElementVisitor,
-    ISupportVisitor,
-    IModel,
-} from "../interfaces";
+import { IElementVisitor, IModel, ISupportVisitor } from "../interfaces";
 import { RelationshipType } from "../types";
 
 export class ModelViewStrategy implements ISupportVisitor {

@@ -121,11 +121,11 @@ export const StylesContext = createContext<{
     setStyles: () => { console.log("Styles Context: dummy setStyles") },
 });
 
-export const ThemeContext = createContext<{
-    theme: Types.Theme;
-    setTheme: Dispatch<SetStateAction<Types.Theme>>;
+export const ThemesContext = createContext<{
+    themes: Types.Theme;
+    setThemes: Dispatch<SetStateAction<Types.Theme>>;
 }>({
-    theme: null,
-    setTheme: () => { console.log("Theme Context: dummy setTheme") },
+    themes: null,
+    setThemes: () => { console.log("Themes Context: dummy setThemes") },
 });
 

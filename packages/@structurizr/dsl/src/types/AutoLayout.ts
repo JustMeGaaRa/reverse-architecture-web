@@ -1,5 +1,5 @@
-import { AutoLayoutDirection } from "./AutoLayoutDirection";
 import { IAutoLayout, ISupportSnapshot } from "../interfaces";
+import { AutoLayoutDirection } from "./AutoLayoutDirection";
 
 export class AutoLayout implements ISupportSnapshot<IAutoLayout> {
     constructor(values?: IAutoLayout) {

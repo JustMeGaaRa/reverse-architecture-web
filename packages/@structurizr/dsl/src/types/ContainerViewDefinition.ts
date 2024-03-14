@@ -1,11 +1,4 @@
-import {
-    ISupportSnapshot,
-    IContainerView,
-    IViewDefinition,
-    IElementPosition,
-    IRelationshipPosition,
-    IViewDefinitionMetadata
-} from "../interfaces";
+import { IContainerView, IElementPosition, IRelationshipPosition, ISupportSnapshot, IViewDefinition, IViewDefinitionMetadata } from "../interfaces";
 import { AutoLayout } from "./AutoLayout";
 import { AutoLayoutDirection } from "./AutoLayoutDirection";
 import { Container } from "./Container";

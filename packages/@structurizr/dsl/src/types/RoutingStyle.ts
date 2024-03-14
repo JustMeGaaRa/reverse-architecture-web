@@ -1,5 +1,5 @@
 export enum RoutingStyle {
     Direct = "Direct",
-    orthogonal = "Orthogonal",
+    Orthogonal = "Orthogonal",
     Curved = "Curved"
 }

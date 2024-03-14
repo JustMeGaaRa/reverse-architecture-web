@@ -3,7 +3,7 @@ import { NodeResizer } from "@reactflow/node-resizer";
 import {
     IElement,
     ElementStyleCollection,
-    ElementStyleProperties,
+    IElementStyleProperties,
     foldStyles,
 } from "@structurizr/dsl";
 import { ReverseArchitectureElementStyle } from "@workspace/core";
@@ -13,7 +13,7 @@ import { ElementLockedIcon } from "./ElementLockedIcon";
 
 export function ReactFlowBoundaryWrapper(ElementBoundaryComponent: FC<PropsWithChildren<{
     element: IElement;
-    style: ElementStyleProperties;
+    style: IElementStyleProperties;
     width?: number;
     height?: number;
     isSelected?: boolean;

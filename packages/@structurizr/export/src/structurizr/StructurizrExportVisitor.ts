@@ -2,7 +2,7 @@ import {
     ElementStyleCollection,
     IElementVisitor,
     RelationshipStyleCollection,
-    Styles,
+    IStyles,
     IComponent,
     IContainer,
     IContainerInstance,
@@ -199,7 +199,7 @@ export class StructurizrExportVisitor implements IElementVisitor {
         );
     }
 
-    visitStyles(styles: Styles): string[] {
+    visitStyles(styles: IStyles): string[] {
         const elements = this.visitElementStyle(styles?.elements);
         const relationships = this.visitRelationshipStyle(styles?.relationships);
         return formatStatement(

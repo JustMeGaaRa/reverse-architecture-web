@@ -1,4 +1,4 @@
-import { ISupportSnapshot, IContainer, IElement } from "../interfaces";
+import { IContainer, IElement, ISupportSnapshot } from "../interfaces";
 import { Component } from "./Component";
 import { ElementType } from "./ElementType";
 import { Group } from "./Group";

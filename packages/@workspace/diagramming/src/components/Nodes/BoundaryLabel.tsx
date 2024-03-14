@@ -1,11 +1,11 @@
 import { VStack, Text } from "@chakra-ui/react";
-import { IElement, ElementStyleProperties } from "@structurizr/dsl";
+import { IElement, IElementStyleProperties } from "@structurizr/dsl";
 import { FC } from "react";
 import { formatElementTag } from "../../utils";
 
 export const BoundaryLabel: FC<{
     element: IElement;
-    style?: Partial<ElementStyleProperties>;
+    style?: Partial<IElementStyleProperties>;
 }> = ({
     element,
     style

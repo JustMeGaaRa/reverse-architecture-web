@@ -4,7 +4,7 @@ import { Properties } from "./Properties";
 import { ShapeType } from "./ShapeType";
 import { Url } from "./Url";
 
-export interface ElementStyleProperties {
+export interface IElementStyleProperties {
     background: Color;
     border: LineStyle;
     color: Color;

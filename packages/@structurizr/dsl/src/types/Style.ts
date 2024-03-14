@@ -1,15 +1,10 @@
-import { ElementStyleProperties } from "./ElementStyleProperties";
-import { RelationshipStyleProperties } from "./RelationshipStyleProperties";
+import { IElementStyleProperties } from "./ElementStyleProperties";
+import { IRelationshipStyleProperties } from "./RelationshipStyleProperties";
 import { Tag } from "./Tag";
 
-export interface Styles {
-    elements: ElementStyleCollection;
-    relationships: RelationshipStyleCollection;
-}
+export type ElementStyleCollection = Array<Style<IElementStyleProperties>>;
 
-export type ElementStyleCollection = Array<Style<ElementStyleProperties>>;
-
-export type RelationshipStyleCollection = Array<Style<RelationshipStyleProperties>>;
+export type RelationshipStyleCollection = Array<Style<IRelationshipStyleProperties>>;
 
 export type Style<TProperties> = Partial<TProperties> & { tag: string };
 

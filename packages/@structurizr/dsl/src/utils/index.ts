@@ -17,19 +17,8 @@ import {
     DeploymentViewDefinition,
     RelationshipType
 } from "../types";
-import {
-    IComponent,
-    IContainer,
-    IElement,
-    IModel,
-    IRelationship,
-    ISoftwareSystem,
-    IViewDefinition,
-    IWorkspaceSnapshot,
-    IWorkspaceTheme,
-    ViewKeys
-} from "../interfaces";
 import { v4 } from "uuid";
+import { IComponent, IContainer, IElement, IModel, IRelationship, ISoftwareSystem, IViewDefinition, IWorkspaceSnapshot, IWorkspaceTheme, ViewKeys } from "../interfaces";
 
 export const applyTheme = (workspace: IWorkspaceSnapshot, theme: IWorkspaceTheme): IWorkspaceSnapshot => {
     return {

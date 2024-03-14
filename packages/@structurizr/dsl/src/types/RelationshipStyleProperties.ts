@@ -3,7 +3,7 @@ import { LineStyle } from "./LineStyle";
 import { Properties } from "./Properties";
 import { RoutingStyle } from "./RoutingStyle";
 
-export interface RelationshipStyleProperties {
+export interface IRelationshipStyleProperties {
     color: Color;
     fontSize: number;
     opacity: number;

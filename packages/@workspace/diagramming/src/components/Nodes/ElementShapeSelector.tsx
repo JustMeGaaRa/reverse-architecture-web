@@ -1,9 +1,9 @@
-import { ElementStyleProperties, ShapeType } from "@structurizr/dsl";
+import { IElementStyleProperties, ShapeType } from "@structurizr/dsl";
 import { FC, PropsWithChildren } from "react";
 import { RoundedBox } from "../Shapes";
 
 export const ElementShapeSelector: FC<PropsWithChildren<{
-    style: ElementStyleProperties;
+    style: IElementStyleProperties;
 }>> = ({
     children,
     style

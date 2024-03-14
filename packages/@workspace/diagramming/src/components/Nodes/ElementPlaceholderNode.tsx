@@ -1,12 +1,12 @@
 import { Box } from "@chakra-ui/react";
-import { IElement, ElementStyleProperties } from "@structurizr/dsl";
+import { IElement, IElementStyleProperties } from "@structurizr/dsl";
 import { FC, PropsWithChildren } from "react";
 import { ElementLabel } from "./ElementLabel";
 import { ElementShapeSelector } from "./ElementShapeSelector";
 
 export const ElementPlaceholderNode: FC<PropsWithChildren<{
     element: IElement;
-    style: ElementStyleProperties;
+    style: IElementStyleProperties;
     height?: number;
     width?: number;
     onMouseEnter?: () => void;

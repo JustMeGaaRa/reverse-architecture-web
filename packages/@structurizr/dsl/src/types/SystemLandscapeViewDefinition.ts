@@ -1,11 +1,4 @@
-import {
-    ISupportSnapshot,
-    ISystemLandscapeView,
-    IViewDefinition,
-    IElementPosition,
-    IRelationshipPosition,
-    IViewDefinitionMetadata
-} from "../interfaces";
+import { ISystemLandscapeView, IViewDefinition, ISupportSnapshot, IElementPosition, IRelationshipPosition, IViewDefinitionMetadata } from "../interfaces";
 import { AutoLayout } from "./AutoLayout";
 import { AutoLayoutDirection } from "./AutoLayoutDirection";
 import { Group } from "./Group";

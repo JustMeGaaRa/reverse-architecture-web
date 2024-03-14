@@ -1,11 +1,11 @@
 import { Box, HStack, Text, VStack } from "@chakra-ui/react";
-import { IElement, ElementStyleProperties } from "@structurizr/dsl";
+import { IElement, IElementStyleProperties } from "@structurizr/dsl";
 import { FC } from "react";
 import { formatElementTag, formatElementTechnology } from "../../utils";
 
 export const ElementLabel: FC<{
     element: IElement;
-    style?: Partial<ElementStyleProperties>;
+    style?: Partial<IElementStyleProperties>;
     showDescription?: boolean;
     onMouseEnter?: () => void;
     onMouseLeave?: () => void;

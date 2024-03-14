@@ -2,7 +2,7 @@ import { Flex } from "@chakra-ui/react";
 import { NodeResizer } from "@reactflow/node-resizer";
 import {
     DeploymentNode as DeploymentNodeType,
-    ElementStyleProperties
+    IElementStyleProperties
 } from "@structurizr/dsl";
 import { FC, useCallback, useState } from "react";
 import { HexColor } from "../../utils";
@@ -10,7 +10,7 @@ import { DeploymentNodeLabel } from "./DeploymentNodeLabel";
 
 export const DeploymentNode: FC<{
     element: DeploymentNodeType;
-    style: ElementStyleProperties;
+    style: IElementStyleProperties;
     width?: number;
     height?: number;
     isSelected?: boolean,

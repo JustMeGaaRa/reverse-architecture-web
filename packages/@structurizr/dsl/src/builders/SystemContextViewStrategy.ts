@@ -1,10 +1,15 @@
 import {
-    IViewDefinition,
     IElementVisitor,
-    ISupportVisitor,
     IModel,
+    ISupportVisitor,
+    IViewDefinition
 } from "../interfaces";
-import { elementIncludedInView, getRelationships, relationshipExistsForElementsInView, relationshipExistsOverall } from "../utils";
+import {
+    elementIncludedInView,
+    getRelationships,
+    relationshipExistsForElementsInView,
+    relationshipExistsOverall
+} from "../utils";
 
 export class SystemContextViewStrategy implements ISupportVisitor {
     constructor(

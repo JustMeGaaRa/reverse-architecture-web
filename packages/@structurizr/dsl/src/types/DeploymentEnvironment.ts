@@ -12,7 +12,7 @@ export class DeploymentEnvironment implements ISupportSnapshot<IDeploymentEnviro
     constructor(params: DeploymentEnvironmentParams) {
         this.identifier = params.identifier;
         this.name = params.name;
-        this.deploymentGroups = params.deploymentGroups ? params.deploymentGroups.map(g => new DeploymentGroup(g.name)) : [];
+        this.deploymentGroups = params.deploymentGroups ?? [];
         this.deploymentNodes = params.deploymentNodes ? params.deploymentNodes.map(n => new DeploymentNode(n)) : [];
         this.relationships = params.relationships ? params.relationships.map(r => new Relationship(r)) : [];
     }

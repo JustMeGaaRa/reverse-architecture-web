@@ -4,7 +4,7 @@ import {
     IRelationship,
     Position,
     Size,
-    Styles,
+    IStyles,
     Tag,
 } from "@structurizr/dsl";
 import { ReactFlowNodeTypeKeys } from "../components";
@@ -23,7 +23,7 @@ export const diagramNodeSelector = (state: ReactFlowState) => {
 export type ElementParams<TElement extends IElement = any> = {
     element: TElement;
     elementId?: string;
-    styles: Styles;
+    styles: IStyles;
     parentId?: string;
     isBoundary?: boolean;
     position: Position;
@@ -59,7 +59,7 @@ export const getNodeFromElement = (params: ElementParams): Node => {
 
 export type RelationshipParams = {
     relationship: IRelationship;
-    styles: Styles;
+    styles: IStyles;
 }
 
 export const getEdgeFromRelationship = (params: RelationshipParams): Edge => {

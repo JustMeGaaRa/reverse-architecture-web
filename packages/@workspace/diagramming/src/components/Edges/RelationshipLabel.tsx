@@ -1,11 +1,11 @@
 import { Text, VStack } from "@chakra-ui/react";
-import { Relationship, RelationshipStyleProperties } from "@structurizr/dsl";
+import { Relationship, IRelationshipStyleProperties } from "@structurizr/dsl";
 import { FC } from "react";
 
 export const RelationshipLabel: FC<{
     data: Relationship;
     selected?: boolean;
-    style?: Partial<RelationshipStyleProperties>;
+    style?: Partial<IRelationshipStyleProperties>;
 }> = ({
     data,
     selected,

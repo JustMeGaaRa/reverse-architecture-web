@@ -1,4 +1,4 @@
-import { IElement, IPerson, ISupportSnapshot } from "../interfaces";
+import { IPerson, IElement, ISupportSnapshot } from "../interfaces";
 import { ElementType } from "./ElementType";
 import { Identifier } from "./Identifier";
 import { Relationship } from "./Relationship";

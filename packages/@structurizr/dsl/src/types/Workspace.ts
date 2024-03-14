@@ -1,4 +1,4 @@
-import { ISupportSnapshot, IWorkspaceMetadata, IWorkspaceSnapshot } from "../interfaces";
+import { ISupportSnapshot, IWorkspaceSnapshot, IWorkspaceMetadata } from "../interfaces";
 import { Model } from "./Model";
 import { Properties } from "./Properties";
 import { Views } from "./Views";

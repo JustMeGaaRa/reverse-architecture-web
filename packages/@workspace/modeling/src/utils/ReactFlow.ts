@@ -1,5 +1,5 @@
 import { Edge, getNodesBounds, Node, ReactFlowState } from "@reactflow/core";
-import { IElement, IRelationship, Position, Size, Styles } from "@structurizr/dsl";
+import { IElement, IRelationship, Position, Size, IStyles } from "@structurizr/dsl";
 import { ReactFlowModelNodeTypeKeys } from "../components";
 
 export const modelNodeSelector = (state: ReactFlowState) => {
@@ -18,7 +18,7 @@ export type ModelElementParams<TElement extends IElement = any> = {
     elementId?: string;
     elementChildrenCount?: number,
     type?: ReactFlowModelNodeTypeKeys,
-    styles: Styles;
+    styles: IStyles;
     parentId?: string;
     position?: Position;
     size?: Size;
@@ -41,7 +41,7 @@ export const getModelNodeFromElement = (params: ModelElementParams): Node => {
 
 export type ModelRelationshipParams = {
     relationship: IRelationship;
-    styles: Styles;
+    styles: IStyles;
 }
 
 export const getModelEdgeFromRelationship = (params: ModelRelationshipParams): Edge => {

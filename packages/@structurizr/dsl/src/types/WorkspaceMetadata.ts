@@ -1,11 +1,4 @@
-import {
-    IElementPosition,
-    IRelationshipPosition,
-    ISupportSnapshot,
-    IViewDefinitionMetadata,
-    IViewsMetadata,
-    IWorkspaceMetadata
-} from "../interfaces";
+import { ISupportSnapshot, IViewDefinitionMetadata, IElementPosition, IRelationshipPosition, IViewsMetadata, IWorkspaceMetadata } from "../interfaces";
 import { Identifier } from "./Identifier";
 import { Position } from "./Position";
 

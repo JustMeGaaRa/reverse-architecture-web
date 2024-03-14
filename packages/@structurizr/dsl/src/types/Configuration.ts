@@ -1,6 +1,5 @@
-import { IConfiguration, ISupportSnapshot } from "../interfaces";
+import { IConfiguration, IStyles, ISupportSnapshot } from "../interfaces";
 import { Branding } from "./Branding";
-import { Styles } from "./Style";
 import { Terminology } from "./Terminology";
 
 export class Configuration implements ISupportSnapshot<IConfiguration> {
@@ -15,7 +14,7 @@ export class Configuration implements ISupportSnapshot<IConfiguration> {
         // this.terminology = params.terminology;
     }
 
-    public readonly styles: Styles;
+    public readonly styles: IStyles;
     public readonly theme?: string;
     public readonly themes: string[];
     public readonly branding?: Branding;

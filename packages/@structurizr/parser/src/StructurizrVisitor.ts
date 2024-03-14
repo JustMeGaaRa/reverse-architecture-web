@@ -8,7 +8,6 @@ import {
     DeploymentEnvironment,
     DeploymentNode,
     DeploymentViewDefinition,
-    ElementStyleProperties,
     ElementType,
     Group,
     InfrastructureNode,
@@ -16,19 +15,19 @@ import {
     Model,
     Person,
     Relationship,
-    RelationshipStyleProperties,
     RelationshipType,
     SoftwareSystem,
     SoftwareSystemInstance,
     Style,
-    Styles,
+    IStyles,
     SystemContextViewDefinition,
     SystemLandscapeViewDefinition,
     Tag,
     Technology,
     Views,
-    ViewType,
-    Workspace
+    Workspace,
+    IElementStyleProperties,
+    IRelationshipStyleProperties
 } from "@structurizr/dsl";
 import { StructurizrParser } from "./StructurizrParser";
 import { TokenName } from "./TokenName";
@@ -475,7 +474,7 @@ export class StructurizrVisitor extends VisitorCtor {
     styles(ctx: {
         elementStyle?: any[];
         relationshipStyle?: any[];
-    }): Styles {
+    }): IStyles {
         return {
             elements: ctx.elementStyle
                 ?.reduce((style, value) => ([ ...style, this.visit(value) ]), [])
@@ -501,7 +500,7 @@ export class StructurizrVisitor extends VisitorCtor {
         opacity?: any;
         metadata?: any;
         description?: any;
-    }): Style<ElementStyleProperties> {
+    }): Style<IElementStyleProperties> {
         return {
             tag: trimQuotes(ctx.StringLiteral?.at(0)?.image),
             shape: this.visit(ctx.shape),
@@ -530,7 +529,7 @@ export class StructurizrVisitor extends VisitorCtor {
         width?: any;
         position?: any;
         opacity?: any;
-    }): Style<RelationshipStyleProperties> {
+    }): Style<IRelationshipStyleProperties> {
         return {
             tag: trimQuotes(ctx.StringLiteral?.at(0)?.image), 
             thickness: this.visit(ctx.thinkness),
