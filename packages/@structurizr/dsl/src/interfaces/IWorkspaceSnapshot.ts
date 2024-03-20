@@ -7,7 +7,7 @@ export interface IWorkspaceSnapshot {
     version: number;
     name?: string;
     description?: string;
-    lastModifiedDate?: Date;
+    lastModifiedDate?: string;
     properties?: IProperties;
     model: IModel;
     views: IViews;

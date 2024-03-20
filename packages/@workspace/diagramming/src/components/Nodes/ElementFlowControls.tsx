@@ -1,18 +1,14 @@
 import { Node, Position as PositionSide, useStore } from "@reactflow/core";
 import { IWorkspaceSnapshot, Position, Tag, Workspace } from "@structurizr/dsl";
-import {
-    ElementFlowHandle,
-    ElementSelectionBorder,
-    useWorkspace,
-    viewportSelector,
-    WorkspaceElementPortal,
-    ViewportStaticElement,
-    BoundingBox,
-    useWorkspaceNavigation,
-} from "@workspace/core";
+import { useWorkspace } from "@structurizr/react";
 import { FC, useCallback } from "react";
-import { useViewFlowBuilder } from "../../hooks";
-import { diagramNodeSelector } from "../../utils";
+import { useViewFlowBuilder, useWorkspaceNavigation } from "../../hooks";
+import { BoundingBox } from "../../types";
+import { diagramNodeSelector, viewportSelector } from "../../utils";
+import { ElementFlowHandle } from "../ElementFlowHandle";
+import { ElementSelectionBorder } from "../ElementSelectionBorder";
+import { ViewportStaticElement } from "../ViewportStaticElement";
+import { WorkspaceElementPortal } from "../WorkspaceElementPortal";
 import { ElementZoomControl } from "./ElementZoomControl";
 
 const getOffset = (position: PositionSide) => {

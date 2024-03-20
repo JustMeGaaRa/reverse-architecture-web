@@ -18,6 +18,16 @@ import {
     ShellCloseButton,
     ShellTabContent
 } from "@restruct/ui";
+import { Workspace } from "@structurizr/dsl";
+import { parseStructurizr } from "@structurizr/parser";
+import { WorkspaceProvider } from "@structurizr/react";
+import { IWorkspaceInfo } from "@structurizr/y-workspace";
+import {
+    WorkspaceNavigationProvider,
+    WorkspacePanel,
+    WorkspaceViewBreadcrumbs,
+    WorkspaceViewer
+} from "@workspace/react";
 import {
     Bookmark,
     ChatLines,
@@ -31,26 +41,17 @@ import {
     useEffect,
     useState
 } from "react";
-import { Workspace } from "@structurizr/dsl";
-import { parseStructurizr } from "@structurizr/parser";
 import { v4 } from "uuid";
-import {
-    WorkspacePanel,
-    WorkspaceViewBreadcrumbs,
-    WorkspaceViewer
-} from "@workspace/react";
 import {
     CommentApi,
     CommentThread,
     CommunityApi,
     TemplateActionBar,
-    TemplateOverview,
     TemplateSectionDiscussion,
     TemplateSectionInfo,
     useAccount,
     useSnackbar,
-    useWorkspaceExplorer,
-    WorkspaceInfo
+    useWorkspaceExplorer
 } from "../../../features";
 import { useLoaderState } from "../../../hooks";
 
@@ -61,10 +62,9 @@ const loadTemplate = async (workspaceId: string) => {
     const communityApi = new CommunityApi()
     const information = await communityApi.getWorkspaceById(workspaceId);
     const structurizrText = await communityApi.getWorkspaceContent(workspaceId);
-    const metadata = await communityApi.getWorkspaceMetadata(workspaceId)
-
+    const metadata = await communityApi.getWorkspaceMetadata(workspaceId);
     const template = new Workspace(parseStructurizr(structurizrText));
-    const workspace = template.applyMetadata(metadata);
+    const workspace = template.applyMetadata(metadata).toSnapshot();
     return { information, workspace };
 }
 
@@ -87,12 +87,12 @@ export const CommunityTemplateModal: FC<{
     const { account } = useAccount();
     const { bookmarkedIds, likedIds, bookmark, unbookmark, like, unlike } = useWorkspaceExplorer();
 
-    const [ information, setInformation ] = useState<WorkspaceInfo>();
-    const [ template, setTemplate ] = useState(Workspace.Empty);
+    const [ information, setInformation ] = useState<IWorkspaceInfo>();
+    const [ template, setTemplate ] = useState(Workspace.Empty.toSnapshot());
     const [ discussion, setDiscussion ] = useState<CommentThread>(undefined);
     
     const [ tabIndex, setTabIndex ] = useState(0);
-    const { isLoading, onStartLoading, onStopLoading } = useLoaderState();
+    const [ isLoading, onStartLoading, onStopLoading ] = useLoaderState();
 
     useEffect(() => {
         if (workspaceId) {
@@ -115,7 +115,7 @@ export const CommunityTemplateModal: FC<{
     
             return () => {
                 setInformation(undefined);
-                setTemplate(Workspace.Empty);
+                setTemplate(Workspace.Empty.toSnapshot());
                 setDiscussion(undefined);
             }
         }
@@ -218,22 +218,26 @@ export const CommunityTemplateModal: FC<{
                                             transitionDuration={"0.3s"}
                                             transitionTimingFunction={"ease"}
                                         >
-                                            <WorkspaceViewer
-                                                workspace={template}
-                                                initialView={template.views.systemLandscape?.[0]}
-                                            >
-                                                <WorkspaceViewBreadcrumbs /> 
-                                                <WorkspacePanel position={"bottom-left"} spacing={2}>
-                                                    <TemplateActionBar
-                                                        name={information?.name}
-                                                        createdBy={information?.createdBy}
-                                                        usedCount={information?.statistics?.used ?? 0}
-                                                        likedCount={information?.statistics?.liked ?? 0}
-                                                        isLoading={isLoading}
-                                                        onTryItClick={handleOnWorskapceTryOut}
-                                                    />
-                                                </WorkspacePanel>
-                                            </WorkspaceViewer>
+                                            <WorkspaceProvider>
+                                                <WorkspaceNavigationProvider>
+                                                    <WorkspaceViewer
+                                                        workspace={template}
+                                                        initialView={template.views.systemLandscape}
+                                                    >
+                                                        <WorkspaceViewBreadcrumbs /> 
+                                                        <WorkspacePanel position={"bottom-left"} spacing={2}>
+                                                            <TemplateActionBar
+                                                                name={information?.name}
+                                                                createdBy={information?.createdBy}
+                                                                usedCount={information?.statistics?.used ?? 0}
+                                                                likedCount={information?.statistics?.liked ?? 0}
+                                                                isLoading={isLoading}
+                                                                onTryItClick={handleOnWorskapceTryOut}
+                                                            />
+                                                        </WorkspacePanel>
+                                                    </WorkspaceViewer>
+                                                </WorkspaceNavigationProvider>
+                                            </WorkspaceProvider>
                                         </Flex>
                                     </Shell>
                                     

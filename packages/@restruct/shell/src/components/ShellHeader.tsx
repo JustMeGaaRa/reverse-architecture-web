@@ -13,6 +13,7 @@ export const ShellHeader: FC<PropsWithChildren<{
 }) => {
     return (
         <Flex
+            className={"restruct__shell-header"}
             backgroundColor={backgroundColor ?? "none"}
             boxSizing={"border-box"}
             borderTopLeftRadius={outlineRadius?.at(0) ?? 0}

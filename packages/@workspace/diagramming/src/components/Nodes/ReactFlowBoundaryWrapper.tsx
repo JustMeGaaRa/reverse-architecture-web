@@ -6,8 +6,8 @@ import {
     IElementStyleProperties,
     foldStyles,
 } from "@structurizr/dsl";
-import { ReverseArchitectureElementStyle } from "@workspace/core";
 import { FC, PropsWithChildren, useCallback, useMemo } from "react";
+import { ReverseArchitectureElementStyle } from "../../types";
 import { diagramNodeSelector } from "../../utils";
 import { ElementLockedIcon } from "./ElementLockedIcon";
 

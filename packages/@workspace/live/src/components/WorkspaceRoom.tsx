@@ -1,8 +1,8 @@
-import { useWorkspace, WorkspaceUser } from "@workspace/core";
+import { useYjsCollaborative } from "@yjs/react";
 import { FC, PropsWithChildren, useEffect, useState } from "react";
 import { WebrtcProvider } from "y-webrtc";
 import { WorkspaceRoomContext } from "../contexts";
-import { PresentationOptions } from "../types";
+import { PresentationOptions, WorkspaceUser } from "../types";
 
 export const WorkspaceRoom: FC<PropsWithChildren<{
     options?: {
@@ -13,8 +13,8 @@ export const WorkspaceRoom: FC<PropsWithChildren<{
     children,
     options
 }) => {
-    const { workspaceDocument } = useWorkspace();
-    const [ connectionProvider, setConnectionProvider ] = useState<WebrtcProvider>();
+    const [ isLoading, setIsLoading ] = useState(true);
+    const { document, setConnection } = useYjsCollaborative();
     const [ currentUser, setCurrentUser ] = useState<WorkspaceUser>({
         info: {
             username: "jonathan.joestar",
@@ -29,37 +29,37 @@ export const WorkspaceRoom: FC<PropsWithChildren<{
     });
 
     useEffect(() => {
-        const signaling = { signaling: [ "wss://restruct-webrtc-signaling-7452bb784b0b.herokuapp.com" ] };
-        let webRtcProvider = new WebrtcProvider(`restruct-room__${options.roomId}`, workspaceDocument, signaling);
+        if (options.roomId) {
+            const signaling = { signaling: [ "wss://restruct-webrtc-signaling-7452bb784b0b.herokuapp.com" ] };
+            const connection = new WebrtcProvider(options.roomId, document, signaling);
 
-        const onAwarenessChange = () => {
-            const collaboratingUsers = Array
-                .from(webRtcProvider.awareness.getStates() ?? [])
-                .filter(([key, ]) => key !== webRtcProvider.awareness.clientID)
-                .map(([, value]) => value as WorkspaceUser)
-                .filter(user => user !== null && user !== undefined)
-            
-            setCollaboratingUsers(collaboratingUsers);
+            const onAwarenessChange = () => {
+                const collaboratingUsers = Array
+                    .from(connection.awareness.getStates() ?? [])
+                    .filter(([key, ]) => key !== connection.awareness.clientID)
+                    .map(([, value]) => value as WorkspaceUser)
+                    .filter(user => user !== null && user !== undefined)
+                
+                setCollaboratingUsers(collaboratingUsers);
+            }
+
+            connection.awareness?.on("change", onAwarenessChange);
+            connection.awareness?.on("update", onAwarenessChange);
+
+            setConnection(connection);
+            setIsLoading(false);
+
+            return () => {
+                connection.awareness?.off("change", onAwarenessChange);
+                connection.awareness?.off("update", onAwarenessChange);
+                connection.destroy();
+            }
         }
-
-        webRtcProvider.awareness?.on("change", onAwarenessChange);
-        webRtcProvider.awareness?.on("update", onAwarenessChange);
-        
-        setConnectionProvider(webRtcProvider);
-
-        return () => {
-            webRtcProvider.awareness?.off("change", onAwarenessChange);
-            webRtcProvider.awareness?.off("update", onAwarenessChange);
-            webRtcProvider?.disconnect();
-            webRtcProvider?.destroy();
-        }
-    }, [options.roomId, workspaceDocument]);
+    }, [document, options.roomId, setConnection]);
 
     return (
         <WorkspaceRoomContext.Provider
             value={{
-                workspaceDocument,
-                connectionProvider,
                 currentUser,
                 collaboratingUsers,
                 presentation,
@@ -67,7 +67,7 @@ export const WorkspaceRoom: FC<PropsWithChildren<{
                 setPresentationOptions
             }}
         >
-            {children}
+            {isLoading ? (<></>) : (children)}
         </WorkspaceRoomContext.Provider>
     )
 }

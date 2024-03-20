@@ -4,7 +4,6 @@ import { usePageHeader } from "../hooks";
 import { createPortal } from "react-dom";
 
 export const PageHeader: FC<PropsWithChildren> = ({ children}) => {
-    console.log("page header")
     const { headerOptions } = usePageHeader();
     const { height } = headerOptions;
 
@@ -13,10 +12,6 @@ export const PageHeader: FC<PropsWithChildren> = ({ children}) => {
             className={"restruct__page-header"}
             direction={"row"}
             alignItems={"center"}
-            flexGrow={0}
-            flexShrink={0}
-            flexBasis={`${height}px`}
-            minHeight={`${height}px`}
             height={`${height}px`}
             width={"100%"}
             position={"relative"}
@@ -31,8 +26,6 @@ export const PageHeaderSectionOutlet: FC<{
 }> = ({
     section
 }) => {
-    console.log("page header section outlet", section)
-    
     return (
         <Flex
             id={`restruct__header-section-${section}`}

@@ -7,8 +7,6 @@ export const Page: FC<PropsWithChildren<{
     children,
     backgroundColor
 }) => {
-    console.log("page")
-    
     return (
         <Flex
             className={"restruct__page"}

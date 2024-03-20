@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren, CSSProperties } from "react";
-import { MarkerType } from "@workspace/core";
+import { MarkerType } from "../MarkerType";
 
 type BaseEdgeProps = {
     path: string,

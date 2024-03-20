@@ -8,21 +8,26 @@ import { Relationship } from "./Relationship";
 import { SoftwareSystem } from "./SoftwareSystem";
 
 export class Model implements ISupportSnapshot<IModel>, IObservable {
+    private get groupsArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("groups") as Y.Array<Y.Map<unknown>>; }
     private get peopleArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("people") as Y.Array<Y.Map<unknown>>;}
     private get softwareSystemsArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("softwareSystems") as Y.Array<Y.Map<unknown>>; }
     private get deploymentEnvironmentsArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("deploymentEnvironments") as Y.Array<Y.Map<unknown>>; }
-    private get groupsArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("groups") as Y.Array<Y.Map<unknown>>; }
     private get relationshipsArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("relationships") as Y.Array<Y.Map<unknown>>; }
 
     constructor(private readonly propertiesMap: Y.Map<unknown>) { }
 
+    public get groups(): Array<Group> { return this.groupsArray?.map(group => new Group(group)); }
     public get people(): Array<Person> { return this.peopleArray?.map(person => new Person(person)); }
     public get softwareSystems(): Array<SoftwareSystem> { return this.softwareSystemsArray?.map(softwareSystem => new SoftwareSystem(softwareSystem));  }
     public get deploymentEnvironments(): Array<DeploymentEnvironment> { return this.deploymentEnvironmentsArray?.map(deploymentEnvironment => new DeploymentEnvironment(deploymentEnvironment));  }
-    public get groups(): Array<Group> { return this.groupsArray?.map(group => new Group(group)); }
     public get relationships(): Array<Relationship> { return this.relationshipsArray?.map(relationship => new Relationship(relationship)); }
 
     public fromSnapshot(model: IModel) {
+        model.groups.forEach(group => this.addGroup().fromSnapshot(group));
+        model.people.forEach(person => this.addPerson().fromSnapshot(person));
+        model.softwareSystems.forEach(softwareSystem => this.addSoftwareSystem().fromSnapshot(softwareSystem));
+        model.deploymentEnvironments.forEach(deploymentEnvironment => this.addDeploymentEnvironment().fromSnapshot(deploymentEnvironment));
+        model.relationships.forEach(relationship => this.addRelationship().fromSnapshot(relationship));
     }
 
     public toSnapshot(): IModel {

@@ -1,4 +1,4 @@
-import { useCallback, useContext } from "react"
+import { useCallback, useContext } from "react";
 import { WorkspaceRoomContext } from "../contexts";
 
 export const useSharingOptions = () => {

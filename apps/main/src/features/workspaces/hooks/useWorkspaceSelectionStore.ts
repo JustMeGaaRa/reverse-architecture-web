@@ -1,6 +1,6 @@
 import { useContext } from "react"
-import { WorkspaceCollectionContext } from "../contexts";
+import { WorkspaceExplorerContext, WorkspaceSelectionContext } from "../contexts";
 
 export const useWorkspaceSelectionStore = () => {
-    return useContext(WorkspaceCollectionContext);
+    return useContext(WorkspaceSelectionContext);
 }

@@ -1,4 +1,4 @@
-import { Icon, IconButton } from "@chakra-ui/react";
+import { Icon, IconButton, Text } from "@chakra-ui/react";
 import {
     Toolbar,
     ToolbarSection,
@@ -6,30 +6,21 @@ import {
     ToolbarSubmenuContent,
     ToolbarSubmenuTrigger
 } from "@restruct/ui";
-import { ViewType } from "@structurizr/dsl";
-import {
-    CommentingModeButton,
-    ConnectionModeButton,
-    DraggingModeButton,
-    ElementComponentModeButton,
-    ElementContainerModeButton,
-    ElementDeploymentNodeModeButton,
-    ElementInfrastructureNodeModeButton,
-    ElementPersonModeButton,
-    ElementSoftwareSystemModeButton,
-    SelectionModeButton,
-    TextEditModeButton,
-    useDraggingMode
-} from "@workspace/react";
+import { ElementType, ViewType } from "@structurizr/dsl";
 import {
     PanelPosition,
-    useSelectionMode,
     useWorkspaceNavigation,
     usePresentationMode,
     WorkspacePanel,
     useWorkspaceRoom,
+    useSelectionMode,
+    useDraggingMode,
+    useTextEditMode,
+    useWorkspaceToolbarStore,
+    useCommentingMode,
+    useAddingElementMode,
 } from "@workspace/react";
-import { Component, Play, Xmark } from "iconoir-react";
+import { ChatPlusIn, Component, CursorPointer, DragHandGesture, Keyframe, KeyframePlusIn, Keyframes, KeyframesCouple, Linear, MagicWand, Play, User, Xmark } from "iconoir-react";
 import { FC, useCallback } from "react";
 
 export const WorkspaceActionsToolbar: FC<{
@@ -111,5 +102,225 @@ export const WorkspaceActionsToolbar: FC<{
                 </ToolbarSection>
             </Toolbar>
         </WorkspacePanel>
+    )
+}
+
+export const TextEditModeButton: FC = () => {
+    const { isTextEditEnabled, enableTextEditMode } = useTextEditMode();
+
+    const handleOnTextEditModeClick = useCallback(() => {
+        enableTextEditMode();
+    }, [enableTextEditMode]);
+
+    return (
+        <IconButton
+            aria-label={"text edit mode"}
+            aria-selected={isTextEditEnabled}
+            icon={<Text />}
+            title={"text edit mode"}
+            onClick={handleOnTextEditModeClick}
+        />
+    )
+}
+
+export const SelectionModeButton: FC = () => {
+    const { isSelectionModeEnabled, enableSelectionMode } = useSelectionMode();
+
+    const handleOnSelectionModeClick = useCallback(() => {
+        enableSelectionMode()
+    }, [enableSelectionMode]);
+
+    return (
+        <IconButton
+            aria-label={"selection mode"}
+            aria-selected={isSelectionModeEnabled}
+            icon={<CursorPointer />}
+            title={"selection mode"}
+            onClick={handleOnSelectionModeClick}
+        />
+    )
+}
+
+export const DraggingModeButton: FC = () => {
+    const { isDraggingModeEnabled, enableDraggingMode } = useDraggingMode();
+    
+    const handleOnDraggingModeClick = useCallback(() => {
+        enableDraggingMode();
+    }, [enableDraggingMode]);
+
+    return (
+        <IconButton
+            aria-label={"dragging mode"}
+            aria-selected={isDraggingModeEnabled}
+            icon={<DragHandGesture />}
+            title={"dragging mode"}
+            onClick={handleOnDraggingModeClick}
+        />
+    )
+}
+
+export const AssistantModeButton: FC = () => {
+    const { } = useWorkspaceToolbarStore();
+    const { } = useCommentingMode();
+
+    return (
+        <IconButton
+            aria-label={"assistant"}
+            icon={<MagicWand />}
+            title={"assistant"}
+        />
+    )
+}
+
+export const CommentingModeButton: FC = () => {
+    const { isCommentingModeEnabled, enableCommentingMode } = useCommentingMode();
+
+    return (
+        <IconButton
+            aria-label={"add comment"}
+            aria-selected={isCommentingModeEnabled}
+            icon={<ChatPlusIn />}
+            title={"add comment"}
+            onClick={() => enableCommentingMode()}
+        />
+    )
+}
+
+export const ConnectionModeButton: FC = () => {
+    const { enabledTool, setEnabledTool } = useWorkspaceToolbarStore();
+
+    const enableConnectionMode = useCallback(() => {
+        setEnabledTool("connection");
+    }, [setEnabledTool]);
+
+    return (
+        <IconButton
+            aria-label={"connection mode"}
+            aria-selected={enabledTool === "connection"}
+            icon={<Linear />}
+            title={"connection mode"}
+            onClick={() => enableConnectionMode()}
+        />
+    )
+}
+
+export const ElementComponentModeButton: FC = () => {
+    const {
+        addingElementsEnabled,
+        addingElementType,
+        allowComponent,
+        enableAddingElement
+    } = useAddingElementMode();
+
+    return allowComponent && (
+        <IconButton
+            aria-label={"component mode"}
+            aria-selected={addingElementsEnabled && addingElementType === ElementType.Component}
+            icon={<Keyframes />}
+            title={"component mode"}
+            onClick={() => enableAddingElement(ElementType.Component)}
+        />
+    )
+}
+
+export const ElementContainerModeButton: FC = () => {
+    const {
+        addingElementsEnabled,
+        addingElementType,
+        allowContainer,
+        enableAddingElement
+    } = useAddingElementMode();
+
+    return allowContainer && (
+        <IconButton
+            aria-label={"container mode"}
+            aria-selected={addingElementsEnabled && addingElementType === ElementType.Container}
+            icon={<KeyframesCouple />}
+            title={"container mode"}
+            onClick={() => enableAddingElement(ElementType.Container)}
+        />
+    )
+}
+
+export const ElementDeploymentNodeModeButton: FC = () => {
+    const {
+        addingElementsEnabled,
+        addingElementType,
+        allowDeploymentNode,
+        enableAddingElement
+    } = useAddingElementMode();
+
+    return allowDeploymentNode && (
+        <></>
+    )
+}
+
+export const ElementGroupModeButton: FC = () => {
+    const {
+        addingElementsEnabled,
+        addingElementType,
+        allowGroup,
+        enableAddingElement
+    } = useAddingElementMode();
+
+    return allowGroup && (
+        <IconButton
+            aria-label={"group mode"}
+            aria-selected={addingElementsEnabled && addingElementType === ElementType.Group}
+            icon={<KeyframePlusIn />}
+            title={"group mode"}
+            onClick={() => enableAddingElement(ElementType.Group)}
+        />
+    )
+}
+
+export const ElementInfrastructureNodeModeButton: FC = () => {
+    const {
+        addingElementsEnabled,
+        addingElementType,
+        allowInfrastructureNode,
+        enableAddingElement
+    } = useAddingElementMode();
+
+    return allowInfrastructureNode && (
+        <></>
+    )
+}
+
+export const ElementPersonModeButton: FC = () => {
+    const {
+        addingElementsEnabled,
+        addingElementType,
+        allowPerson,
+        enableAddingElement
+    } = useAddingElementMode();
+
+    return allowPerson && (
+        <IconButton
+            aria-label={"person mode"}
+            aria-selected={addingElementsEnabled && addingElementType === ElementType.Person}
+            icon={<User />}
+            title={"person mode"}
+            onClick={() => enableAddingElement(ElementType.Person)}
+        />
+    )
+}
+
+export const ElementSoftwareSystemModeButton: FC = () => {
+    const {
+        addingElementsEnabled,
+        addingElementType,
+        allowSoftwareSystem,
+        enableAddingElement
+    } = useAddingElementMode();
+
+    return allowSoftwareSystem && (
+        <IconButton
+            aria-label={"software system mode"}
+            aria-selected={addingElementsEnabled && addingElementType === ElementType.SoftwareSystem}
+            icon={<Keyframe />}
+            title={"software system mode"}
+            onClick={() => enableAddingElement(ElementType.SoftwareSystem)}
+        />
     )
 }

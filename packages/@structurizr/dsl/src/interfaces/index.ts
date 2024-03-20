@@ -15,6 +15,7 @@ export * from "./IElementPosition";
 export * from "./IElementVisitor";
 export * from "./IGroup";
 export * from "./IModel";
+export * from "./IModelMetadata";
 export * from "./IHealthCheck";
 export * from "./IInfrastructureNode";
 export * from "./IObservable";

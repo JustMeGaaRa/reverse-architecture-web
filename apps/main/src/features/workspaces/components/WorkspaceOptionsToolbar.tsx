@@ -2,6 +2,7 @@ import { Box, Icon, IconButton, ScaleFade, Text } from "@chakra-ui/react";
 import { Toolbar, ToolbarSection } from "@restruct/ui";
 import { AppleShortcuts, BinMinusIn, Xmark, Copy } from "iconoir-react";
 import { FC, PropsWithChildren, useCallback } from "react";
+import { useAccount } from "../../authentication";
 import { useWorkspaceSelection, useWorkspaceExplorerOptions, useWorkspaceExplorer } from "../hooks";
 
 export const WorkspaceActionsToolbar: FC<{
@@ -19,6 +20,7 @@ export const WorkspaceActionsToolbar: FC<{
     onRestore,
     onRemove
 }) => {
+    const { account } = useAccount();
     const { workspaces, clone, remove, stack, unstack, archive, restore } = useWorkspaceExplorer();
     const { selectedIds, clearSelected } = useWorkspaceSelection();
     const options = useWorkspaceExplorerOptions();
@@ -34,8 +36,9 @@ export const WorkspaceActionsToolbar: FC<{
                     || workspace.group === selectedId;
             })
         });
-        selected.forEach(workspace => clone(workspace));
-    }, [clone, selectedIds, workspaces]);
+        // TODO: implement cloneMultiple
+        // selected.forEach(workspace => clone(account.username, workspace.workspaceId));
+    }, [account.username, clone, selectedIds, workspaces]);
 
     const handleOnStack = useCallback(() => {
         const selected = workspaces.filter(workspace => {

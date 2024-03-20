@@ -5,8 +5,8 @@ import {
     IElementStyleProperties,
     foldStyles,
 } from "@structurizr/dsl";
-import { ReverseArchitectureElementStyle } from "@workspace/core";
 import { FC, PropsWithChildren, useMemo } from "react";
+import { ReverseArchitectureElementStyle } from "../../types";
 import { ElementLockedIcon } from "./ElementLockedIcon";
 
 export function ReactFlowNodeWrapper(ElementNodeComponent: FC<PropsWithChildren<{
@@ -78,6 +78,49 @@ export function ReactFlowNodeWrapper(ElementNodeComponent: FC<PropsWithChildren<
                         height: "100%",
                         width: "100%",
                         display: isTarget ? "block" : "none",
+                    }}
+                />
+            </ElementNodeComponent>
+        )
+    }
+}
+
+export function ReactFlowModelNodeWrapper(ElementNodeComponent: FC<PropsWithChildren<{
+    element: IElement;
+    elementChildrenCount?: number;
+    isSelected?: boolean;
+    isHovered?: boolean;
+}>>): FC<NodeProps<{
+    element: IElement;
+    elementChildrenCount?: number;
+}>> {
+    return function ReactFlowNodeComponent({ id, data, selected }) {
+        return (
+            <ElementNodeComponent
+                element={data.element}
+                elementChildrenCount={data.elementChildrenCount}
+                isSelected={selected}
+            >
+                <Handle
+                    id={"handle-source-bottom"}
+                    type={"source"}
+                    position={Position.Bottom}
+                    style={{
+                        background: "none",
+                        border: "none",
+                        pointerEvents: "none",
+                        bottom: "0px",
+                    }}
+                />
+                <Handle
+                    id={"handle-target-top"}
+                    type={"target"}
+                    position={Position.Top}
+                    style={{
+                        background: "none",
+                        border: "none",
+                        pointerEvents: "none",
+                        top: "0px",
                     }}
                 />
             </ElementNodeComponent>

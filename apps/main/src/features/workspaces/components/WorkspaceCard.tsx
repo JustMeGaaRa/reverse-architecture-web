@@ -1,13 +1,13 @@
 import { Card, CardBody, CardFooter } from "@chakra-ui/react";
+import { IWorkspaceInfo } from "@structurizr/y-workspace";
 import { FC, useCallback } from "react";
 import { ThumbnailContainer, ThumbnailImage, WorkspaceCardFooter } from "../components";
-import { WorkspaceInfo } from "../types";
 
-type WorkspaceHandler = (workspace: WorkspaceInfo) => void;
-type WorkspaceRenameHandler = (workspace: WorkspaceInfo, value: string) => void;
+type WorkspaceHandler = (workspace: IWorkspaceInfo) => void;
+type WorkspaceRenameHandler = (workspace: IWorkspaceInfo, value: string) => void;
 
 export const WorkspaceCard: FC<{
-    workspace: WorkspaceInfo;
+    workspace: IWorkspaceInfo;
     isSelected?: boolean;
     isArchived?: boolean;
     onTouchStart?: WorkspaceHandler;

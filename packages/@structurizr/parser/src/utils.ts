@@ -6,33 +6,23 @@ import { StructurizrVisitor } from "./StructurizrVisitor";
 // TODO: return IWorkspaceSnapshot type iusntead of any after refactoring the code
 export const parseStructurizr = (structurizr: string): IWorkspaceSnapshot => {
     const parseText = (structurizr: string) => {
-        try {
-            const parser = new StructurizrParser();
-            const result = StructurizrLexer.tokenize(structurizr);
-            parser.input = result.tokens;
-            const cstNode = parser.workspace();
-            return cstNode;
-        }
-        catch (error) {
-            throw error;
-        }
+        const structurizrParser = new StructurizrParser();
+        const lexingResult = StructurizrLexer.tokenize(structurizr);
+        structurizrParser.input = lexingResult.tokens;
+        const workspaceCstNode = structurizrParser.workspace();
+        return workspaceCstNode;
     }
 
     const parseCst = (workspaceCst: any): Workspace => {
-        try {
-            const visitor = new StructurizrVisitor();
-            const workspace = visitor.visit(workspaceCst);
-            return workspace;
-        }
-        catch (error) {
-            throw error;
-        }
+        const structurizrVisitor = new StructurizrVisitor();
+        const workspace = structurizrVisitor.visit(workspaceCst);
+        return workspace;
     }
 
     return parseCst(parseText(structurizr));
 };
 
-export const validateStructurizr = (structurizr: string): boolean => {
+export const isStructurizrValid = (structurizr: string): boolean => {
     try {
         parseStructurizr(structurizr);
         return true;

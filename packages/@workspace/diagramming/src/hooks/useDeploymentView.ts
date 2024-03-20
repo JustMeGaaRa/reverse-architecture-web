@@ -7,7 +7,7 @@ import {
     Relationship,
     SoftwareSystem
 } from "@structurizr/dsl";
-import { useWorkspace } from "@workspace/core";
+import { useWorkspace } from "@structurizr/react";
 import { useCallback } from "react";
 import {
     getNodeFromElement,
@@ -15,7 +15,6 @@ import {
 } from "../utils";
 
 export const useDeploymentView = (viewIdentifier: Identifier, environment: string) => {
-    const { workspace } = useWorkspace();
     
     const addDeploymentNode = useCallback((position: Position, parentNodeIdentifier?: Identifier) => {
 

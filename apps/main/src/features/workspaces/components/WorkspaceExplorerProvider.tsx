@@ -1,7 +1,23 @@
+import { WorkspaceInfo } from "@structurizr/y-workspace";
 import { FC, PropsWithChildren, useState } from "react"
-import { WorkspaceCollectionActionOptions, WorkspaceCollectionContext } from "../contexts"
+import { WorkspaceCollectionActionOptions, WorkspaceExplorerContext, WorkspaceSelectionContext } from "../contexts"
 
 export const WorkspaceExplorerProvider: FC<PropsWithChildren> = ({ children }) => {
+    const [ workspaces, setWorkspaces ] = useState<Array<WorkspaceInfo>>([]);
+
+    return (
+        <WorkspaceExplorerContext.Provider
+            value={{
+                workspaces,
+                setWorkspaces,
+            }}
+        >
+            {children}
+        </WorkspaceExplorerContext.Provider>
+    )
+}
+
+export const WorkspaceSelectionProvider: FC<PropsWithChildren> = ({ children }) => {
     const [ selectionModeOn, setSelectionModeOn ] = useState<boolean>(false);
     const [ selectedIds, setSelectedIds ] = useState<Array<string>>([]);
     const [ selectedOptions, setSelectedOptions ] = useState<WorkspaceCollectionActionOptions>({
@@ -30,9 +46,9 @@ export const WorkspaceExplorerProvider: FC<PropsWithChildren> = ({ children }) =
             isVisible: false,
         },
     });
-
+    
     return (
-        <WorkspaceCollectionContext.Provider
+        <WorkspaceSelectionContext.Provider
             value={{
                 selectionModeOn,
                 selectedIds,
@@ -43,6 +59,6 @@ export const WorkspaceExplorerProvider: FC<PropsWithChildren> = ({ children }) =
             }}
         >
             {children}
-        </WorkspaceCollectionContext.Provider>
+        </WorkspaceSelectionContext.Provider>
     )
 }

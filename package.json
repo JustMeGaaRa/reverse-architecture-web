@@ -5,6 +5,7 @@
   "workspaces": [
     "apps/*",
     "packages/*",
+    "packages/@yjs/*",
     "packages/@justmegaara/*",
     "packages/@monaco-editor/*",
     "packages/@restruct/*",

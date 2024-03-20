@@ -33,6 +33,7 @@ import {
     useToken,
     VStack
 } from "@chakra-ui/react";
+import { IWorkspaceInfo } from "@structurizr/y-workspace";
 import { useFormik } from "formik";
 import {
     NavArrowLeft,
@@ -41,13 +42,12 @@ import {
 } from "iconoir-react";
 import { FC, useState } from "react";
 import { v4 } from "uuid";
-import { WorkspaceInfo } from "../../../features";
 
 export const CommunityPublishingModal: FC<{
-    workspaces: WorkspaceInfo[];
+    workspaces: IWorkspaceInfo[];
     isOpen: boolean;
     onClose: () => void;
-    onPublish: (workspace: WorkspaceInfo) => void;
+    onPublish: (workspace: IWorkspaceInfo) => void;
 }> = ({
     workspaces,
     isOpen,
@@ -82,14 +82,15 @@ export const CommunityPublishingModal: FC<{
         isSubmitting,
         handleChange,
         handleSubmit
-    } = useFormik<WorkspaceInfo>({
+    } = useFormik<IWorkspaceInfo>({
         initialValues: {
             workspaceId: v4(),
             name: "",
+            status: "public",
+            coverUrl: "",
             description: "",
-            createdDate: new Date().toLocaleDateString(),
             createdBy: "",
-            lastModifiedDate: new Date().toLocaleDateString(),
+            lastModifiedDate: new Date().toUTCString(),
             lastModifiedBy: "",
             tags: [],
         },

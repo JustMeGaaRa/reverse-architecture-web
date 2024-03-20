@@ -1,131 +1,162 @@
-import * as Types from "@structurizr/y-workspace";
+import {
+    IComponent,
+    IComponentView,
+    IContainer,
+    IContainerView,
+    IDeploymentEnvironment,
+    IDeploymentView,
+    IGroup,
+    IModel,
+    IModelMetadata,
+    IPerson,
+    IRelationship,
+    ISoftwareSystem,
+    IStyles,
+    ISystemContextView,
+    ISystemLandscapeView,
+    IViewDefinitionMetadata,
+    IViews,
+    Theme
+} from "@structurizr/dsl";
 import { createContext, Dispatch, SetStateAction } from "react";
 
 export const ModelContext = createContext<{
-    model: Types.Model;
-    setModel: Dispatch<SetStateAction<Types.Model>>;
+    model: IModel;
+    metadata: IModelMetadata;
+    setModel: Dispatch<SetStateAction<IModel>>;
+    setMetadata: Dispatch<SetStateAction<IModelMetadata>>;
 }>({
     model: null,
-    setModel: () => { console.log("Model Context: dummy setModel") },
+    metadata: null,
+    setModel: () => { console.debug("Model Context: dummy setModel") },
+    setMetadata: () => { console.debug("Model Context: dummy setMetadata") },
 });
 
 export const ViewsContext = createContext<{
-    views: Types.Views;
-    setViews: Dispatch<SetStateAction<Types.Views>>;
+    views: IViews;
+    setViews: Dispatch<SetStateAction<IViews>>;
 }>({
     views: null,
-    setViews: () => { console.log("Views Context: dummy setViews") },
+    setViews: () => { console.debug("Views Context: dummy setViews") },
 });
 
 export const PersonContext = createContext<{
-    person: Types.Person;
-    setPerson: Dispatch<SetStateAction<Types.Person>>;
+    person: IPerson;
+    setPerson: Dispatch<SetStateAction<IPerson>>;
 }>({
     person: null,
-    setPerson: () => { console.log("Person Context: dummy setPerson") },
+    setPerson: () => { console.debug("Person Context: dummy setPerson") },
 });
 
 export const GroupContext = createContext<{
-    group: Types.Group;
-    setGroup: Dispatch<SetStateAction<Types.Group>>;
+    group: IGroup;
+    setGroup: Dispatch<SetStateAction<IGroup>>;
 }>({
     group: null,
-    setGroup: () => { console.log("Group Context: dummy setGroup") },
+    setGroup: () => { console.debug("Group Context: dummy setGroup") },
 });
 
 export const SoftwareSystemContext = createContext<{
-    softwareSystem: Types.SoftwareSystem;
-    setSoftwareSystem: Dispatch<SetStateAction<Types.SoftwareSystem>>;
+    softwareSystem: ISoftwareSystem;
+    setSoftwareSystem: Dispatch<SetStateAction<ISoftwareSystem>>;
 }>({
     softwareSystem: null,
-    setSoftwareSystem: () => { console.log("SoftwareSystem Context: dummy setSoftwareSystem") },
+    setSoftwareSystem: () => { console.debug("SoftwareSystem Context: dummy setSoftwareSystem") },
 });
 
 export const ContainerContext = createContext<{
-    container: Types.Container;
-    setContainer: Dispatch<SetStateAction<Types.Container>>;
+    container: IContainer;
+    setContainer: Dispatch<SetStateAction<IContainer>>;
 }>({
     container: null,
-    setContainer: () => { console.log("Container Context: dummy setContainer") },
+    setContainer: () => { console.debug("Container Context: dummy setContainer") },
 });
 
 export const ComponentContext = createContext<{
-    component: Types.Component;
-    setComponent: Dispatch<SetStateAction<Types.Component>>;
+    component: IComponent;
+    setComponent: Dispatch<SetStateAction<IComponent>>;
 }>({
     component: null,
-    setComponent: () => { console.log("Component Context: dummy setComponent") },
+    setComponent: () => { console.debug("Component Context: dummy setComponent") },
 });
 
 export const DeploymentEnvironmentContext = createContext<{
-    deploymentEnvironment: Types.DeploymentEnvironment;
-    setDeploymentEnvironment: Dispatch<SetStateAction<Types.DeploymentEnvironment>>;
+    deploymentEnvironment: IDeploymentEnvironment;
+    setDeploymentEnvironment: Dispatch<SetStateAction<IDeploymentEnvironment>>;
 }>({
     deploymentEnvironment: null,
-    setDeploymentEnvironment: () => { console.log("DeploymentEnvironment Context: dummy setDeploymentEnvironment") },
+    setDeploymentEnvironment: () => { console.debug("DeploymentEnvironment Context: dummy setDeploymentEnvironment") },
 });
 
 export const RelationshipContext = createContext<{
-    relationship: Types.Relationship;
-    setRelationship: Dispatch<SetStateAction<Types.Relationship>>;
+    relationship: IRelationship;
+    setRelationship: Dispatch<SetStateAction<IRelationship>>;
 }>({
     relationship: null,
-    setRelationship: () => { console.log("Relationship Context: dummy setRelationship") },
+    setRelationship: () => { console.debug("Relationship Context: dummy setRelationship") },
+});
+
+export const ViewMetadataContext = createContext<{
+    metadata: IViewDefinitionMetadata;
+    setMetadata: Dispatch<SetStateAction<IViewDefinitionMetadata>>;
+}>({
+    metadata: null,
+    setMetadata: () => { console.debug("ViewMetadata Context: dummy setMetadata") },
 });
 
 export const SystemLandscapeViewContext = createContext<{
-    systemLandscapeView: Types.SystemLandscapeView;
-    setSystemLandscapeView: Dispatch<SetStateAction<Types.SystemLandscapeView>>;
+    systemLandscapeView: ISystemLandscapeView;
+    setSystemLandscapeView: Dispatch<SetStateAction<ISystemLandscapeView>>;
 }>({
     systemLandscapeView: null,
-    setSystemLandscapeView: () => { console.log("SystemLandscapeView Context: dummy setSystemLandscapeView") },
+    setSystemLandscapeView: () => { console.debug("SystemLandscapeView Context: dummy setSystemLandscapeView") },
 });
 
 export const SystemContextViewContext = createContext<{
-    systemContextView: Types.SystemContextView;
-    setSystemContextView: Dispatch<SetStateAction<Types.SystemContextView>>;
+    systemContextView: ISystemContextView;
+    setSystemContextView: Dispatch<SetStateAction<ISystemContextView>>;
 }>({
     systemContextView: null,
-    setSystemContextView: () => { console.log("SystemContextView Context: dummy setSystemContextView") },
+    setSystemContextView: () => { console.debug("SystemContextView Context: dummy setSystemContextView") },
 });
 
 export const ContainerViewContext = createContext<{
-    containerView: Types.ContainerView;
-    setContainerView: Dispatch<SetStateAction<Types.ContainerView>>;
+    containerView: IContainerView;
+    setContainerView: Dispatch<SetStateAction<IContainerView>>;
 }>({
     containerView: null,
-    setContainerView: () => { console.log("ContainerView Context: dummy setContainerView") },
+    setContainerView: () => { console.debug("ContainerView Context: dummy setContainerView") },
 });
 
 export const ComponentViewContext = createContext<{
-    componentView: Types.ComponentView;
-    setComponentView: Dispatch<SetStateAction<Types.ComponentView>>;
+    componentView: IComponentView;
+    setComponentView: Dispatch<SetStateAction<IComponentView>>;
 }>({
     componentView: null,
-    setComponentView: () => { console.log("ComponentView Context: dummy setComponentView") },
+    setComponentView: () => { console.debug("ComponentView Context: dummy setComponentView") },
 });
 
 export const DeploymentViewContext = createContext<{
-    deploymentView: Types.DeploymentView;
-    setDeploymentView: Dispatch<SetStateAction<Types.DeploymentView>>;
+    deploymentView: IDeploymentView;
+    setDeploymentView: Dispatch<SetStateAction<IDeploymentView>>;
 }>({
     deploymentView: null,
-    setDeploymentView: () => { console.log("DeploymentView Context: dummy setDeploymentView") },
+    setDeploymentView: () => { console.debug("DeploymentView Context: dummy setDeploymentView") },
 });
 
 export const StylesContext = createContext<{
-    styles: Types.Styles;
-    setStyles: Dispatch<SetStateAction<Types.Styles>>;
+    styles: IStyles;
+    setStyles: Dispatch<SetStateAction<IStyles>>;
 }>({
     styles: null,
-    setStyles: () => { console.log("Styles Context: dummy setStyles") },
+    setStyles: () => { console.debug("Styles Context: dummy setStyles") },
 });
 
 export const ThemesContext = createContext<{
-    themes: Types.Theme;
-    setThemes: Dispatch<SetStateAction<Types.Theme>>;
+    themes: Array<Theme>;
+    setThemes: Dispatch<SetStateAction<Array<Theme>>>;
 }>({
     themes: null,
-    setThemes: () => { console.log("Themes Context: dummy setThemes") },
+    setThemes: () => { console.debug("Themes Context: dummy setThemes") },
 });
 

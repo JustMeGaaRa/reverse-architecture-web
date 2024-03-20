@@ -8,7 +8,7 @@ export const ShellPanel: FC<PropsWithChildren<{
     width
 }) => {
     return (
-        <Flex direction={"column"} width={width}>
+        <Flex className={"restruct__shell-panel"} direction={"column"} width={width}>
             {children}
         </Flex>
     )

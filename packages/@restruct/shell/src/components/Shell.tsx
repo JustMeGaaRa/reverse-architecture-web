@@ -27,6 +27,7 @@ export const Shell: FC<PropsWithChildren<{
 
     return (
         <Flex
+            className={"restruct__shell"}
             backgroundColor={getLevelColor(level)}
             borderColor={outline ?? "gray.400"}
             borderTopLeftRadius={outlineRadius?.at(0) ?? 32}

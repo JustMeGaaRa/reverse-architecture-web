@@ -152,7 +152,7 @@ export class StructurizrExportVisitor implements IElementVisitor {
     }
 
     visitViews(views: IViews): string[] {
-        const systemLandscape = (views.systemLandscape ?? []).flatMap(x => this.visitSystemLandscapeView(x));
+        const systemLandscape = views.systemLandscape && this.visitSystemLandscapeView(views.systemLandscape);
         const systemContext = (views.systemContexts ?? []).flatMap(x => this.visitSystemContextView(x));
         const containers = (views.containers ?? []).flatMap(x => this.visitContainerView(x));
         const components = (views.components ?? []).flatMap(x => this.visitComponentView(x));

@@ -27,13 +27,13 @@ import {
     Views,
     Workspace,
     IElementStyleProperties,
-    IRelationshipStyleProperties
+    IRelationshipStyleProperties,
 } from "@structurizr/dsl";
 import { StructurizrParser } from "./StructurizrParser";
 import { TokenName } from "./TokenName";
 
-const parser = new StructurizrParser();
-const VisitorCtor = parser.getBaseCstVisitorConstructorWithDefaults();
+const structurizrParser = new StructurizrParser();
+const WorkspaceVisitorCtor = structurizrParser.getBaseCstVisitorConstructorWithDefaults();
 
 function trimQuotes(text: string): string {
     return text?.replace(/^"(.*)"$/, '$1');
@@ -48,7 +48,7 @@ interface PropertyContext {
     UrlLiteral?: Array<{ image?: string }>;
 }
 
-export class StructurizrVisitor extends VisitorCtor {
+export class StructurizrVisitor extends WorkspaceVisitorCtor {
     constructor() {
         super();
         this.validateVisitor();

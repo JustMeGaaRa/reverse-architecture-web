@@ -13,6 +13,7 @@ export const ShellBody: FC<PropsWithChildren<{
 }) => {
     return (
         <Box
+            className={"restruct__shell-body"}
             backgroundColor={backgroundColor ?? "none"}
             boxSizing={"border-box"}
             borderTopLeftRadius={outlineRadius?.at(0) ?? 0}

@@ -1,5 +1,5 @@
+import { useYjsCollaborative } from "@yjs/react";
 import { FC, PropsWithChildren, SetStateAction, useCallback, useEffect, useState } from "react";
-import { useWorkspace } from "@workspace/react";
 import { Transaction, YMapEvent } from "yjs";
 import { CommentContext } from "../contexts";
 import { CommentThread } from "../types";
@@ -10,7 +10,7 @@ export const CommentProvider: FC<PropsWithChildren<{
     children,
     initialDiscussions
 }) => {
-    const { workspaceDocument } = useWorkspace();
+    const { document } = useYjsCollaborative();
     const [ commentThreads, setCommentThreads ] = useState([]);
     const [ selectedThreadId, setSelectedThreadId ] = useState<string>();
     const [ highlightThreadId, setHighlightThreadId ] = useState<string>();
@@ -26,24 +26,24 @@ export const CommentProvider: FC<PropsWithChildren<{
             }
         }
 
-        const discussionsMap = workspaceDocument.getMap("discussions");
+        const discussionsMap = document.getMap("discussions");
         discussionsMap.observe(onCommentcApplyRemoteChanges);
 
         return () => {
             discussionsMap.unobserve(onCommentcApplyRemoteChanges);
         }
-    }, [workspaceDocument, setCommentThreads]);
+    }, [document, setCommentThreads]);
 
     const onCommentsPublishLocalChanges = useCallback((action: SetStateAction<Array<CommentThread>>) => {
         setCommentThreads(prevState => {
             const newState = typeof action === "function" ? action(prevState) : action;
 
-            const discussionsMap = workspaceDocument.getMap("discussions");
+            const discussionsMap = document.getMap("discussions");
             discussionsMap.set("discussions", JSON.stringify(newState));
 
             return newState;
         })
-    }, [workspaceDocument]);
+    }, [document]);
 
     return (
         <CommentContext.Provider

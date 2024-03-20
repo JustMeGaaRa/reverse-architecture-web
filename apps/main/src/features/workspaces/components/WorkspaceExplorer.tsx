@@ -1,15 +1,25 @@
 import { useBreakpointValue } from "@chakra-ui/react";
 import { useLocale } from "@restruct/ui";
+import { WorkspaceInfo } from "@structurizr/y-workspace";
+import { useYjsCollaborative } from "@yjs/react";
 import { EmojiSad, Folder } from "iconoir-react";
 import { FC, useCallback, useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useLoaderState } from "../../../hooks";
+import { useAccount } from "../../authentication";
 import { ErrorBoundary } from "../../error-boundary";
 import { LocaleKeys } from "../../localization";
 import { useSnackbar } from "../../snackbar";
 import { useWorkspaceExplorer, useWorkspaceSelection } from "../hooks";
-import { WorkspaceApi, WorkspaceLoadFilters } from "../services";
-import { TableColumnInfo, WorkspaceGroupInfo, WorkspaceInfo } from "../types";
-import { groupWorkspaces } from "../utils";
+import { WorkspaceLoadFilters } from "../services";
+import { TableColumnInfo, IWorkspaceGroupInfo } from "../types";
+import {
+    createExplorerDocument,
+    createExplorerPersistance,
+    getWorkspaces,
+    groupWorkspaces,
+    withTimeout
+} from "../utils";
 import {
     WorkspaceActionsToolbar,
     WorkspaceActionsAutoHideWrapper,
@@ -54,117 +64,154 @@ export const WorkspaceExplorer: FC<{
     onDelete,
 }) => {
     const gridColumns = useBreakpointValue({ base: 1, md: 2, lg: 3, xl: 4, "2xl": 5 });
+    const navigate = useNavigate();
+    const [ queryParams, setQueryParam ] = useSearchParams();
     const { getLocalizedString } = useLocale();
+    const { account } = useAccount();
     const { snackbar } = useSnackbar();
     
-    const [ error, setError ] = useState<{ title: string, description: string } | undefined>();
-    const { isLoading, onStartLoading, onStopLoading } = useLoaderState({ isLoading: true });
-    const { workspaces, setWorkspaces } = useWorkspaceExplorer();
-    const { clone, rename, stack, remove, archive, restore } = useWorkspaceExplorer();
-    const { selectedIds, toggleSelected, clearSelected } = useWorkspaceSelection();
+    const { clone, remove, removeMultiple, rename, stack, archive, restore } = useWorkspaceExplorer();
+    const { selectedIds, toggleSelected } = useWorkspaceSelection();
+    const [ error, setError ] = useState<{ title: string, description: string }>();
     
     const nameof = function<T>(name: keyof T) { return name; };
     const columns: TableColumnInfo[] = [
         { title: "Name", name: nameof<WorkspaceInfo>("name") },
-        { title: "Created Date", name: nameof<WorkspaceInfo>("createdDate") },
+        { title: "Status", name: nameof<WorkspaceInfo>("status") },
         { title: "Created By", name: nameof<WorkspaceInfo>("createdBy") },
         { title: "Last Modified Date", name: nameof<WorkspaceInfo>("lastModifiedDate") },
         { title: "Last Modified By", name: nameof<WorkspaceInfo>("lastModifiedBy") },
     ];
+    
+    const { workspaces, setWorkspaces } = useWorkspaceExplorer();
+    const { document, setDocument, setPersistance } = useYjsCollaborative();
+    const [ isLoading, onStartLoading, onStopLoading ] = useLoaderState({ isLoading: true });
 
     useEffect(() => {
         if (!isActive) return;
 
-        const workspaceApi = new WorkspaceApi();
-        const controller = new AbortController();
-
-        clearSelected();
         onStartLoading();
+        const [document] = createExplorerDocument();
+        const [persitance] = createExplorerPersistance(document);
 
-        workspaceApi.getWorkspaces({ ...filters }, { controller })
-            .then(workspaces => {
-                onStopLoading();
-                setWorkspaces(workspaces);
-            })
-            .catch(error => {
-                onStopLoading();
-                setError({
-                    title: getLocalizedString(LocaleKeys.ERROR_LOADING_WORKSPACES_TITLE),
-                    description: getLocalizedString(LocaleKeys.ERROR_LOADING_WORKSPACES_DESCRIPTION),
+        withTimeout(persitance.whenSynced, 500).then(_ => {
+            const workspaces = getWorkspaces(document)
+                .map(x => x.toSnapshot())
+                .filter(x =>{
+                    const isGroupMatch = filters?.group === undefined || x.group === filters.group;
+                    const isStatusMatch = filters?.status === undefined || x.status === filters.status;
+                    return isGroupMatch && isStatusMatch;
                 })
-                snackbar({
-                    title: getLocalizedString(LocaleKeys.ERROR_LOADING_WORKSPACES_TITLE),
-                    description: getLocalizedString(LocaleKeys.ERROR_LOADING_WORKSPACES_DESCRIPTION),
-                    status: "error"
-                })
-            });
-        
+            setDocument(document);
+            setPersistance(persitance);
+            setWorkspaces(workspaces);
+            onStopLoading();
+        });
+
         return () => {
-            controller.abort();
+            persitance.destroy();
+            setDocument(undefined);
+            setPersistance(undefined);
         }
-    }, [isActive, filters, clearSelected, getLocalizedString, onStartLoading, onStopLoading, setWorkspaces, snackbar]);
-    
+    }, [isActive, onStartLoading, onStopLoading, setDocument, setPersistance, setWorkspaces]);
+
     const groups = groupWorkspaces(workspaces);
 
-    const handleOnSelectGroup = useCallback((group: WorkspaceGroupInfo) => {
+    const handleOnSelectGroup = useCallback((group: IWorkspaceGroupInfo) => {
         toggleSelected(group.name);
     }, [toggleSelected]);
 
-    const handleOnOpenGroup = useCallback((group: WorkspaceGroupInfo) => {
+    const handleOnOpenGroup = useCallback((group: IWorkspaceGroupInfo) => {
+        setQueryParam(params => {
+            params.set("group", group.name);
+            return new URLSearchParams(params);
+        });
         onClick?.(group.name);
-    }, [onClick]);
+    }, [onClick, setQueryParam]);
 
-    const handleOnRenameGroup = useCallback((group: WorkspaceGroupInfo, value: string) => {
+    const handleOnRenameGroup = useCallback((group: IWorkspaceGroupInfo, value: string) => {
         stack(group.workspaces, value);
         onStack?.(group.workspaces.map(workspace => workspace.workspaceId));
     }, [onStack, stack]);
 
-    const handleOnCloneGroup = useCallback((group: WorkspaceGroupInfo) => {
+    const handleOnCloneGroup = useCallback((group: IWorkspaceGroupInfo) => {
         group.workspaces.forEach(workspace => {
             // TODO: clone both workspaces and group (with different ids)
-            clone(workspace);
-            onClone?.(workspace.workspaceId);
+            clone(account.username, workspace.workspaceId, {
+                onSuccess: (workspaceId) => {
+                    onClone?.(workspaceId);
+                },
+                onError: (error) => {
+                    snackbar({
+                        title: "An error occurred when deleting the workspace",
+                        description: error.message,
+                        status: "error",
+                        duration: 9000
+                    });
+                }
+            });
         });
-    }, [onClone, clone]);
+    }, [account.username, clone, onClone, snackbar]);
 
-    const handleOnArhiveGroup = useCallback((group: WorkspaceGroupInfo) => {
+    const handleOnArhiveGroup = useCallback((group: IWorkspaceGroupInfo) => {
         group.workspaces.forEach(workspace => {
             archive(workspace);
             onArchive?.(workspace.workspaceId);
         });
     }, [onArchive, archive]);
 
-    const handleOnRestoreGroup = useCallback((group: WorkspaceGroupInfo) => {
+    const handleOnRestoreGroup = useCallback((group: IWorkspaceGroupInfo) => {
         group.workspaces.forEach(workspace => {
             restore(workspace);
             onRestore?.(workspace.workspaceId);
         });
     }, [onRestore, restore]);
 
-    const handleOnDeleteGroup = useCallback((group: WorkspaceGroupInfo) => {
-        group.workspaces.forEach(workspace => {
-            remove(workspace);
-            onDelete?.(workspace.workspaceId);
-        });
-    }, [onDelete, remove]);
+    const handleOnDeleteGroup = useCallback((group: IWorkspaceGroupInfo) => {
+        removeMultiple(group.workspaces, {
+            onSuccess: (workspaceId) => {
+                onDelete?.(workspaceId);
+            },
+            onError: (error) => {
+                snackbar({
+                    title: "An error occurred when deleting the workspace",
+                    description: error.message,
+                    status: "error",
+                    duration: 9000
+                });
+            }
+        })
+    }, [onDelete, removeMultiple, snackbar]);
 
     const handleOnOpen = useCallback((workspace: WorkspaceInfo) => {
+        navigate(`/workspaces/${workspace.workspaceId}`);
         onClick?.(workspace.workspaceId);
-    }, [onClick]);
+    }, [navigate, onClick]);
 
     const handleOnSelect = useCallback((workspace: WorkspaceInfo) => {
         toggleSelected(workspace.workspaceId);
     }, [toggleSelected]);
 
     const handleOnRename = useCallback((workspace: WorkspaceInfo, value: string) => {
-        rename(workspace, value);
+        rename(workspace.workspaceId, value);
         onRename?.(workspace.workspaceId, value);
     }, [onRename, rename]);
 
     const handleOnClone = useCallback((workspace: WorkspaceInfo) => {
-        clone(workspace);
-        onClone?.(workspace.workspaceId);
-    }, [onClone, clone]);
+        clone(account.username, workspace.workspaceId, {
+            onSuccess: (workspaceId) => {
+                onClone?.(workspaceId);
+            },
+            onError: (error) => {
+                snackbar({
+                    title: "An error occurred when deleting the workspace",
+                    description: error.message,
+                    status: "error",
+                    duration: 9000
+                });
+            }
+        });
+    }, [account.username, clone, onClone, snackbar]);
 
     const handleOnArhive = useCallback((workspace: WorkspaceInfo) => {
         archive(workspace);
@@ -177,9 +224,20 @@ export const WorkspaceExplorer: FC<{
     }, [onRestore, restore]);
 
     const handleOnDelete = useCallback((workspace: WorkspaceInfo) => {
-        remove(workspace);
-        onDelete?.(workspace.workspaceId);
-    }, [onDelete, remove]);
+        remove(workspace, {
+            onSuccess: (workspaceId) => {
+                onDelete?.(workspaceId);
+            },
+            onError: (error) => {
+                snackbar({
+                    title: "An error occurred when deleting the workspace",
+                    description: error.message,
+                    status: "error",
+                    duration: 9000
+                });
+            }
+        })
+    }, [onDelete, remove, snackbar]);
 
     return (
         <ErrorBoundary fallback={<StateMessage icon={EmojiSad} {...error} />}>
@@ -187,6 +245,13 @@ export const WorkspaceExplorer: FC<{
                 <LoadingMessage
                     title={getLocalizedString(LocaleKeys.LOADING_WORKSPCES_TITLE)}
                     description={getLocalizedString(LocaleKeys.LOADING_WORKSPACES_DESCRIPTION)}
+                />
+            )}
+            {!isLoading && workspaces.length === 0 && (
+                <StateMessage
+                    icon={Folder}
+                    title={getLocalizedString(LocaleKeys.WORKSPACE_EXPLORER__NO_WORKSPACES__TITLE)}
+                    description={getLocalizedString(LocaleKeys.NO_WORKSPACES_SUGGESTION)}
                 />
             )}
             {!isLoading && workspaces.length > 0 && options?.view !== "table" && (
@@ -283,13 +348,6 @@ export const WorkspaceExplorer: FC<{
                         />
                     ))}
                 </WorkspaceTable>
-            )}
-            {!isLoading && workspaces.length === 0 && (
-                <StateMessage
-                    icon={Folder}
-                    title={getLocalizedString(LocaleKeys.WORKSPACE_EXPLORER__NO_WORKSPACES__TITLE)}
-                    description={getLocalizedString(LocaleKeys.NO_WORKSPACES_SUGGESTION)}
-                />
             )}
             <WorkspaceActionsAutoHideWrapper>
                 <WorkspaceActionsToolbar />

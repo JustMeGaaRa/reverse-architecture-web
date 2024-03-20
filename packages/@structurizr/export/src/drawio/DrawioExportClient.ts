@@ -46,9 +46,7 @@ export class DrawioExportClient implements IExportClient {
                 _host: "reversearchitecture.io",
                 _type: "browser",
                 diagram: [
-                    ...workspace.views.systemLandscape.map(view => {
-                        return createView(view, new SystemContextViewStrategy(workspace.model, view))
-                    }),
+                    createView(workspace.views.systemLandscape, new SystemContextViewStrategy(workspace.model, workspace.views.systemLandscape)),
                     ...workspace.views.systemContexts.map(view => {
                         return createView(view, new SystemContextViewStrategy(workspace.model, view))
                     }),

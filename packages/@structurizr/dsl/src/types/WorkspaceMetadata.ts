@@ -34,21 +34,21 @@ export class ViewDefinitionMetadata implements ISupportSnapshot<IViewDefinitionM
     public setRelationshipPosition(relationshipId: string) {
         this.relationships = [
             ...this.relationships.filter(x => x.id !== relationshipId),
-            { id: relationshipId }
+            { id: relationshipId, x: 0, y: 0 }
         ]
     }
 }
 
 export class ViewsMetadata implements ISupportSnapshot<IViewsMetadata> {
     constructor(values: IViewsMetadata) {
-        this.systemLandscape = values.systemLandscape?.map(x => new ViewDefinitionMetadata(x)) ?? [];
+        this.systemLandscape = values.systemLandscape ? new ViewDefinitionMetadata(values.systemLandscape) : undefined;
         this.systemContexts = values.systemContexts?.map(x => new ViewDefinitionMetadata(x)) ?? [];
         this.containers = values.containers?.map(x => new ViewDefinitionMetadata(x)) ?? [];
         this.components = values.components?.map(x => new ViewDefinitionMetadata(x)) ?? [];
         this.deployments = values.deployments?.map(x => new ViewDefinitionMetadata(x)) ?? [];
     }
     
-    public readonly systemLandscape: Array<ViewDefinitionMetadata>;
+    public readonly systemLandscape?: ViewDefinitionMetadata;
     public readonly systemContexts: Array<ViewDefinitionMetadata>;
     public readonly containers: Array<ViewDefinitionMetadata>;
     public readonly components: Array<ViewDefinitionMetadata>;
@@ -56,7 +56,7 @@ export class ViewsMetadata implements ISupportSnapshot<IViewsMetadata> {
 
     public toSnapshot(): IViewsMetadata {
         return {
-            systemLandscape: this.systemLandscape.map(x => x.toSnapshot()),
+            systemLandscape: this.systemLandscape?.toSnapshot(),
             systemContexts: this.systemContexts.map(x => x.toSnapshot()),
             containers: this.containers.map(x => x.toSnapshot()),
             components: this.components.map(x => x.toSnapshot()),

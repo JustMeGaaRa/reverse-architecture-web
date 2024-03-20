@@ -19,7 +19,6 @@ export * from "./SoftwareSystem";
 export * from "./Styles";
 export * from "./SystemContextView";
 export * from "./SystemLandscapeView";
-export * from "./Theme";
 export * from "./Views";
 export * from "./Workspace";
 export * from "./WorkspaceInfo";

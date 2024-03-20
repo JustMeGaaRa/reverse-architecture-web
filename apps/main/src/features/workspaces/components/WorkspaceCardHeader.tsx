@@ -42,7 +42,6 @@ export const WorkspaceCardHeader: FC<{
                         {createdBy}
                     </Text>
                     <HStack gap={4} height={"14px"}>
-                        {/* // TODO: style the tags properly */}
                         <Tag variant={"unstyled"} size={"xs"}>
                             <TagLeftIcon as={ProfileCircle} height={"12px"} width={"12px"} marginInlineEnd={1} />
                             <TagLabel textStyle={"b5"}>{`${usedCount} used`}</TagLabel>

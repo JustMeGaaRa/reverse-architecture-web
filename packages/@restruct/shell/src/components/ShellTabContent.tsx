@@ -11,6 +11,7 @@ export const ShellTabContent: FC<PropsWithChildren<{
 }) => {
     return (
         <Flex
+            className={"restruct__shell-tab-content"}
             direction={"row"}
             height={"100%"}
             gap={gap ?? 0}

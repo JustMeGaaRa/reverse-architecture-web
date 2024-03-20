@@ -47,7 +47,7 @@ export const fetchTheme = async (url: string): Promise<IWorkspaceTheme> => {
 }
 
 export const findViewByKeys = (workspace: IWorkspaceSnapshot, viewDefinition?: ViewKeys) => {
-    return workspace.views.systemLandscape.find(x => x?.type === viewDefinition?.type)
+    return [workspace.views.systemLandscape].find(x => x.type === viewDefinition?.type && x.identifier === viewDefinition?.identifier)
         ?? workspace.views.systemContexts.find(x => x.type === viewDefinition?.type && x.identifier === viewDefinition?.identifier)
         ?? workspace.views.containers.find(x => x.type === viewDefinition?.type && x.identifier === viewDefinition?.identifier)
         ?? workspace.views.components.find(x => x.type === viewDefinition?.type && x.identifier === viewDefinition?.identifier)
@@ -55,7 +55,7 @@ export const findViewByKeys = (workspace: IWorkspaceSnapshot, viewDefinition?: V
 }
 
 export const findViewByType = (workspace: IWorkspaceSnapshot, viewType?: ViewType) => {
-    return workspace.views.systemLandscape.find(x => x.type === viewType)
+    return [workspace.views.systemLandscape].find(x => x.type === viewType)
         ?? workspace.views.systemContexts.find(x => x.type === viewType)
         ?? workspace.views.containers.find(x => x.type === viewType)
         ?? workspace.views.components.find(x => x.type === viewType)
@@ -63,7 +63,7 @@ export const findViewByType = (workspace: IWorkspaceSnapshot, viewType?: ViewTyp
 }
 
 export const findAnyExisting = (workspace: IWorkspaceSnapshot) => {
-    return workspace.views.systemLandscape[0]
+    return workspace.views.systemLandscape
         ?? workspace.views.systemContexts[0]
         ?? workspace.views.containers[0]
         ?? workspace.views.components[0]

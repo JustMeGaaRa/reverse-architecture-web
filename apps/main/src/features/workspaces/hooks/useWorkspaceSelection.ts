@@ -1,21 +1,20 @@
-import { useCallback } from "react";
-import { useWorkspaceSelectionStore } from "../hooks";
-import { useWorkspaceStore } from "../store";
-import { WorkspaceInfo } from "../types";
+import { IWorkspaceInfo } from "@structurizr/y-workspace";
+import { useCallback, useContext } from "react";
+import { WorkspaceExplorerContext, WorkspaceSelectionContext } from "../contexts";
 
 export const useWorkspaceSelection = () => {
     const {
         workspaces
-    } = useWorkspaceStore();
+    } = useContext(WorkspaceExplorerContext);
     const {
         selectionModeOn,
         selectedIds,
         setSelectionModeOn,
         setSelectedIds,
         setSelectedOptions
-    } = useWorkspaceSelectionStore();
+    } = useContext(WorkspaceSelectionContext);
 
-    const updateSelectionOptions = useCallback((selectedIds: Array<string>, workspaces: Array<WorkspaceInfo>) => {
+    const updateSelectionOptions = useCallback((selectedIds: Array<string>, workspaces: Array<IWorkspaceInfo>) => {
         const hasAnySelected = selectedIds.length > 0;
         const hasSelectedArchived = selectedIds.some(selectedId => {
             return workspaces.some(workspace => {

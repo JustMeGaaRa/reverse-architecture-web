@@ -1,4 +1,16 @@
-import { UserInfo } from "@workspace/core";
+import { Position, ViewType } from "@structurizr/dsl";
+import { UserInfo } from "@workspace/diagramming";
+
+export type UserAwareness = {
+    view: { type: ViewType, identifier: string };
+    mouse?: Position;
+    cursor?: Position;
+}
+
+export type WorkspaceUser = Partial<UserAwareness> & {
+    info: UserInfo;
+    following?: UserInfo;
+};
 
 export type PresentationOptions = {
     presentationEnabled: boolean;

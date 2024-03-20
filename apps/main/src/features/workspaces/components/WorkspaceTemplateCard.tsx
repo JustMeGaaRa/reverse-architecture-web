@@ -1,8 +1,5 @@
-import {
-    Card,
-    CardBody,
-    CardHeader,
-} from "@chakra-ui/react";
+import { Card, CardBody, CardHeader } from "@chakra-ui/react";
+import { IWorkspaceInfo } from "@structurizr/y-workspace";
 import { FC, useCallback } from "react";
 import {
     ThumbnailContainer,
@@ -10,10 +7,9 @@ import {
     WorkspaceCardActionBar,
     WorkspaceCardHeader
 } from "../components";
-import { WorkspaceInfo } from "../types";
 
 export const WorkspaceTemplateCard: FC<{
-    workspace: WorkspaceInfo;
+    workspace: IWorkspaceInfo;
     isBookmarked?: boolean;
     isLiked?: boolean;
     onClick?: () => void;

@@ -1,7 +1,6 @@
 import { IWorkspaceMetadata, Workspace } from "@structurizr/dsl";
 import { StructurizrExportClient } from "@structurizr/export";
-
-import { WorkspaceInfo } from "../types";
+import { IWorkspaceInfo } from "@structurizr/y-workspace";
 
 export type WorkspaceLoadFilters = {
     query?: string;
@@ -22,13 +21,13 @@ export type WorkspaceLoadOptions = {
 export class WorkspaceApi {
     private readonly structurizrExportClient = new StructurizrExportClient();
     private readonly emptyWorkspace = this.structurizrExportClient.export(Workspace.Empty.toSnapshot());
-    private readonly workspaces: Array<WorkspaceInfo> = [
+    private readonly workspaces: Array<IWorkspaceInfo> = [
         {
             workspaceId: "workspace-1",
             name: "Workspace 1",
-            createdDate: "20.09.23",
+            status: "private",
             createdBy: "jonathan.joestar",
-            lastModifiedDate: new Date().toLocaleDateString(),
+            lastModifiedDate: new Date().toUTCString(),
             lastModifiedBy: "jonathan.joestar",
             tags: [],
             group: "Group 1",
@@ -37,9 +36,9 @@ export class WorkspaceApi {
         {
             workspaceId: "workspace-2",
             name: "Workspace 2",
-            createdDate: "20.09.23",
+            status: "private",
             createdBy: "caesar.zeppeli",
-            lastModifiedDate: new Date().toLocaleDateString(),
+            lastModifiedDate: new Date().toUTCString(),
             lastModifiedBy: "caesar.zeppeli",
             tags: [],
             group: "Group 2",
@@ -48,9 +47,9 @@ export class WorkspaceApi {
         {
             workspaceId: "workspace-3",
             name: "Workspace 3",
-            createdDate: "20.09.23",
+            status: "private",
             createdBy: "jotaro.kujo",
-            lastModifiedDate: new Date().toLocaleDateString(),
+            lastModifiedDate: new Date().toUTCString(),
             lastModifiedBy: "jotaro.kujo",
             tags: [],
             group: "Group 2",
@@ -59,9 +58,9 @@ export class WorkspaceApi {
         {
             workspaceId: "workspace-4",
             name: "Workspace 4",
-            createdDate: "20.09.23",
+            status: "private",
             createdBy: "jotaro.kujo",
-            lastModifiedDate: new Date().toLocaleDateString(),
+            lastModifiedDate: new Date().toUTCString(),
             lastModifiedBy: "jotaro.kujo",
             tags: [],
             group: "Group 3",
@@ -70,9 +69,9 @@ export class WorkspaceApi {
         {
             workspaceId: "workspace-5",
             name: "Workspace 5",
-            createdDate: "20.09.23",
+            status: "private",
             createdBy: "jonathan.joestar",
-            lastModifiedDate: new Date().toLocaleDateString(),
+            lastModifiedDate: new Date().toUTCString(),
             lastModifiedBy: "jonathan.joestar",
             tags: [],
             group: "Group 3",
@@ -81,9 +80,9 @@ export class WorkspaceApi {
         {
             workspaceId: "workspace-6",
             name: "Workspace 6",
-            createdDate: "20.09.23",
+            status: "private",
             createdBy: "caesar.zeppeli",
-            lastModifiedDate: new Date().toLocaleDateString(),
+            lastModifiedDate: new Date().toUTCString(),
             lastModifiedBy: "caesar.zeppeli",
             tags: [],
             group: "Group 3",
@@ -92,9 +91,9 @@ export class WorkspaceApi {
         {
             workspaceId: "workspace-7",
             name: "Workspace 7",
-            createdDate: "20.09.23",
+            status: "private",
             createdBy: "jotaro.kujo",
-            lastModifiedDate: new Date().toLocaleDateString(),
+            lastModifiedDate: new Date().toUTCString(),
             lastModifiedBy: "jotaro.kujo",
             tags: [],
             group: "Group 3",
@@ -103,9 +102,9 @@ export class WorkspaceApi {
         {
             workspaceId: "workspace-8",
             name: "Workspace 8",
-            createdDate: "20.09.23",
+            status: "private",
             createdBy: "jotaro.kujo",
-            lastModifiedDate: new Date().toLocaleDateString(),
+            lastModifiedDate: new Date().toUTCString(),
             lastModifiedBy: "jotaro.kujo",
             tags: [],
             group: "Group 4",
@@ -114,9 +113,9 @@ export class WorkspaceApi {
         {
             workspaceId: "workspace-9",
             name: "Workspace 9",
-            createdDate: "20.09.23",
+            status: "private",
             createdBy: "jotaro.kujo",
-            lastModifiedDate: new Date().toLocaleDateString(),
+            lastModifiedDate: new Date().toUTCString(),
             lastModifiedBy: "jotaro.kujo",
             tags: [],
             group: "Group 4",
@@ -125,9 +124,9 @@ export class WorkspaceApi {
         {
             workspaceId: "workspace-10",
             name: "Workspace 10",
-            createdDate: "20.09.23",
+            status: "private",
             createdBy: "jotaro.kujo",
-            lastModifiedDate: new Date().toLocaleDateString(),
+            lastModifiedDate: new Date().toUTCString(),
             lastModifiedBy: "jotaro.kujo",
             tags: [],
             group: "Group 4",
@@ -136,9 +135,9 @@ export class WorkspaceApi {
         {
             workspaceId: "workspace-11",
             name: "Workspace 11",
-            createdDate: "20.09.23",
+            status: "private",
             createdBy: "jotaro.kujo",
-            lastModifiedDate: new Date().toLocaleDateString(),
+            lastModifiedDate: new Date().toUTCString(),
             lastModifiedBy: "jotaro.kujo",
             tags: [],
             group: "Group 4",
@@ -147,9 +146,9 @@ export class WorkspaceApi {
         {
             workspaceId: "workspace-12",
             name: "Workspace 12",
-            createdDate: "20.09.23",
+            status: "private",
             createdBy: "jotaro.kujo",
-            lastModifiedDate: new Date().toLocaleDateString(),
+            lastModifiedDate: new Date().toUTCString(),
             lastModifiedBy: "jotaro.kujo",
             tags: [],
             group: "Group 4",
@@ -158,9 +157,9 @@ export class WorkspaceApi {
         {
             workspaceId: "workspace-13",
             name: "Workspace 11",
-            createdDate: "20.09.23",
+            status: "private",
             createdBy: "jotaro.kujo",
-            lastModifiedDate: new Date().toLocaleDateString(),
+            lastModifiedDate: new Date().toUTCString(),
             lastModifiedBy: "jotaro.kujo",
             tags: [],
             coverUrl: "",
@@ -168,9 +167,9 @@ export class WorkspaceApi {
         {
             workspaceId: "workspace-14",
             name: "Workspace 14",
-            createdDate: "20.09.23",
+            status: "private",
             createdBy: "jotaro.kujo",
-            lastModifiedDate: new Date().toLocaleDateString(),
+            lastModifiedDate: new Date().toUTCString(),
             lastModifiedBy: "jotaro.kujo",
             tags: [],
             coverUrl: "",
@@ -178,9 +177,9 @@ export class WorkspaceApi {
         {
             workspaceId: "workspace-15",
             name: "Workspace 15",
-            createdDate: "20.09.23",
+            status: "private",
             createdBy: "jotaro.kujo",
-            lastModifiedDate: new Date().toLocaleDateString(),
+            lastModifiedDate: new Date().toUTCString(),
             lastModifiedBy: "jotaro.kujo",
             tags: [],
             coverUrl: "",
@@ -191,7 +190,7 @@ export class WorkspaceApi {
     constructor() {
     }
 
-    async getWorkspaceById(workspaceId: string, options?: WorkspaceLoadOptions): Promise<WorkspaceInfo> {
+    async getWorkspaceById(workspaceId: string, options?: WorkspaceLoadOptions): Promise<IWorkspaceInfo> {
         // GET api/v1/workspaces/{workspaceId}
         return new Promise((resolve, reject) => {
             setTimeout(() => {
@@ -224,7 +223,7 @@ export class WorkspaceApi {
         })
     }
 
-    async getWorkspaces(filters?: WorkspaceLoadFilters, options?: WorkspaceLoadOptions): Promise<Array<WorkspaceInfo>> {
+    async getWorkspaces(filters?: WorkspaceLoadFilters, options?: WorkspaceLoadOptions): Promise<Array<IWorkspaceInfo>> {
         // GET api/v1/workspaces?query={query}
         return new Promise((resolve, reject) => {
             setTimeout(() => {
@@ -235,7 +234,7 @@ export class WorkspaceApi {
         })
     }
 
-    async createWorkspace(workspace: WorkspaceInfo, options?: WorkspaceLoadOptions): Promise<WorkspaceInfo> {
+    async createWorkspace(workspace: IWorkspaceInfo, options?: WorkspaceLoadOptions): Promise<IWorkspaceInfo> {
         // POST api/v1/workspaces
         return new Promise((resolve, reject) => {
             setTimeout(() => {
@@ -246,7 +245,7 @@ export class WorkspaceApi {
         })
     }
 
-    async saveWorkspace(workspace: WorkspaceInfo, options?: WorkspaceLoadOptions): Promise<WorkspaceInfo> {
+    async saveWorkspace(workspace: IWorkspaceInfo, options?: WorkspaceLoadOptions): Promise<IWorkspaceInfo> {
         // PUT api/v1/workspaces
         return new Promise((resolve, reject) => {
             setTimeout(() => {
@@ -257,7 +256,7 @@ export class WorkspaceApi {
         })
     }
 
-    async saveWorkspaceContent(workspaceId: string, workspace: Workspace, options?: WorkspaceLoadOptions): Promise<WorkspaceInfo> {
+    async saveWorkspaceContent(workspaceId: string, workspace: Workspace, options?: WorkspaceLoadOptions): Promise<IWorkspaceInfo> {
         // PUT api/v1/workspaces/{workspaceId}/content
         return new Promise((resolve, reject) => {
             setTimeout(() => {

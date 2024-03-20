@@ -1,6 +1,7 @@
 import { Box, Text, useToken } from "@chakra-ui/react";
-import { ViewportAnimatedElement, WorkspaceUser } from "@workspace/core";
+import { ViewportAnimatedElement } from "@workspace/diagramming";
 import { FC } from "react";
+import { WorkspaceUser } from "../types";
 
 export const UserMouseCursor: FC<{
     colorScheme: string,

@@ -9,28 +9,28 @@ import {
 import { Folder } from "iconoir-react";
 import { FC } from "react";
 import { LocaleKeys, StateMessage } from "../../../features";
-import { HomePageResetActionsWrapper } from "../../home";
+import { HomeNavigationActions } from "../../home";
 
 export const DashboardPage: FC = () => {
     const { getLocalizedString } = useLocale();
     
     return (
-        <HomePageResetActionsWrapper>
-            <Shell>
-                <ShellHeader>
-                    <ShellTitle title={"Dashboard"} />
-                </ShellHeader>
+        <Shell>
+            <HomeNavigationActions />
+            
+            <ShellHeader>
+                <ShellTitle title={"Dashboard"} />
+            </ShellHeader>
 
-                <Divider />
+            <Divider />
 
-                <ShellBody>
-                    <StateMessage
-                        icon={Folder}
-                        title={getLocalizedString(LocaleKeys.DASHBOARD_PAGE__NO_CONTENT__TITLE)}
-                        description={getLocalizedString(LocaleKeys.DASHBOARD_PAGE__NO_CONTENT__DESCRIPTION)}
-                    />
-                </ShellBody>
-            </Shell>
-        </HomePageResetActionsWrapper>
+            <ShellBody>
+                <StateMessage
+                    icon={Folder}
+                    title={getLocalizedString(LocaleKeys.DASHBOARD_PAGE__NO_CONTENT__TITLE)}
+                    description={getLocalizedString(LocaleKeys.DASHBOARD_PAGE__NO_CONTENT__DESCRIPTION)}
+                />
+            </ShellBody>
+        </Shell>
     );
 }

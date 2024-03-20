@@ -27,17 +27,17 @@ export const WorkspaceMenu: FC<{
     
     const handleOnExportStructurizrClick = useCallback(() => {
         const exportClient = new StructurizrExportClient();
-        console.log(exportClient.export(workspace));
+        console.debug(exportClient.export(workspace));
     }, [workspace]);
 
     const handleOnExportJsonClick = useCallback(() => {
         const exportClient = new WorkspaceJsonExportClient();
-        console.log(exportClient.export(workspace));
+        console.debug(exportClient.export(workspace));
     }, [workspace]);
 
     const handleOnExportDrawioClick = useCallback(() => {
         const exportClient = new DrawioExportClient();
-        console.log(exportClient.export(workspace));
+        console.debug(exportClient.export(workspace));
     }, [workspace]);
 
     return (
@@ -48,7 +48,7 @@ export const WorkspaceMenu: FC<{
                 variant={"ghost"}
                 icon={<Icon as={MoreHoriz} boxSize={5} />}
             >
-                {workspace.name}
+                {workspace?.name}
             </MenuButton>
             <MenuList>
                 <MenuItem

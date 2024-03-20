@@ -1,13 +1,13 @@
 import { Card, CardBody, CardFooter, SimpleGrid } from "@chakra-ui/react";
 import { FC, useCallback } from "react";
 import { ThumbnailContainer, ThumbnailSelector, WorkspaceCardFooter } from "../components";
-import { WorkspaceGroupInfo } from "../types";
+import { IWorkspaceGroupInfo } from "../types";
 
-type WorkspaceGroupHandler = (workspace: WorkspaceGroupInfo) => void;
-type WorkspaceGroupRenameHandler = (workspace: WorkspaceGroupInfo, value: string) => void;
+type WorkspaceGroupHandler = (workspace: IWorkspaceGroupInfo) => void;
+type WorkspaceGroupRenameHandler = (workspace: IWorkspaceGroupInfo, value: string) => void;
 
 export const WorkspaceStackCard: FC<{
-    group: WorkspaceGroupInfo;
+    group: IWorkspaceGroupInfo;
     isSelected?: boolean;
     onTouchStart?: WorkspaceGroupHandler;
     onTouchEnd?: WorkspaceGroupHandler;

@@ -5,9 +5,20 @@ export class ComponentView implements ISupportSnapshot<IComponentView> {
     public constructor(private readonly propertiesMap: Y.Map<unknown>) { }
 
     public readonly type: ViewType.Component;
+
     public get identifier(): Identifier { return this.propertiesMap.get("identifier") as Identifier; }
+    public set identifier(value: Identifier) { this.propertiesMap.set("identifier", value); }
+
+    public fromSnapshot(componentView: IComponentView) {
+        this.identifier = componentView.identifier;
+    }
 
     public toSnapshot(): IComponentView {
-        throw new Error("Method not implemented.");
+        return Object.freeze({
+            type: this.type,
+            identifier: this.identifier,
+            elements: [],
+            relationships: []
+        });
     }
 }

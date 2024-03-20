@@ -1,10 +1,8 @@
 import { Box } from "@chakra-ui/react";
-import {
-    WorkspaceElementPortal,
-    WorkspaceUser,
-} from "@workspace/core";
+import { WorkspaceElementPortal } from "@workspace/diagramming";
 import { FC } from "react";
-import { CollaboratingUser } from ".";
+import { WorkspaceUser } from "../types";
+import { CollaboratingUser } from "./CollaboratingUser";
 
 export const CollaboratingUserPane: FC<{ users: Array<WorkspaceUser> }> = ({ users }) => {
     return (

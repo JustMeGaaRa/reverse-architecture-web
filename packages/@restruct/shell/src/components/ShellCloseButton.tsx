@@ -14,6 +14,7 @@ export const ShellCloseButton: FC<{
     return (
         <IconButton
             aria-label={"close context sheet"}
+            className={"restruct__shell-close"}
             colorScheme={"gray"}
             isDisabled={isDisabled}
             icon={<Icon as={Xmark} boxSize={6} />}

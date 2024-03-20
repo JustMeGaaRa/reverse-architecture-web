@@ -10,8 +10,8 @@ import { SystemLandscapeViewDefinition } from "./SystemLandscapeViewDefinition";
 export class Views implements ISupportSnapshot<IViews> {
     constructor(params: IViews) {
         this.systemLandscape = params.systemLandscape
-            ? params.systemLandscape.map(s => new SystemLandscapeViewDefinition(s))
-            : [new SystemLandscapeViewDefinition({ identifier: "" })];
+            ? new SystemLandscapeViewDefinition(params.systemLandscape)
+            : new SystemLandscapeViewDefinition({ identifier: "" });
         this.systemContexts = params.systemContexts
             ? params.systemContexts.map(s => new SystemContextViewDefinition(s))
             : [];
@@ -33,7 +33,7 @@ export class Views implements ISupportSnapshot<IViews> {
         // this.properties = params.properties;
     }
 
-    public readonly systemLandscape?: SystemLandscapeViewDefinition[];
+    public readonly systemLandscape?: SystemLandscapeViewDefinition;
     public readonly systemContexts: SystemContextViewDefinition[];
     public readonly containers: ContainerViewDefinition[];
     public readonly components: ComponentViewDefinition[];
@@ -46,7 +46,7 @@ export class Views implements ISupportSnapshot<IViews> {
 
     public toSnapshot(): IViews {
         return {
-            systemLandscape: this.systemLandscape.map(s => s.toSnapshot()),
+            systemLandscape: this.systemLandscape?.toSnapshot(),
             systemContexts: this.systemContexts.map(s => s.toSnapshot()),
             containers: this.containers.map(c => c.toSnapshot()),
             components: this.components.map(c => c.toSnapshot()),

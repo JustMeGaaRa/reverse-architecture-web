@@ -1,7 +1,6 @@
 import { Icon, IconButton } from "@chakra-ui/react";
 import { Position, useReactFlow, useStore } from "@reactflow/core";
 import { NodeToolbar } from "@reactflow/node-toolbar";
-import { useWorkspace } from "@workspace/core";
 import {
     Toolbar,
     ToolbarSection,
@@ -9,6 +8,7 @@ import {
     ToolbarSubmenuContent,
     ToolbarSubmenuTrigger
 } from "@restruct/toolbar";
+import { useWorkspace } from "@structurizr/react";
 import {
     BinMinusIn,
     Circle,
@@ -31,7 +31,7 @@ import { diagramNodeSelector } from "../../utils";
 export const ElementOptionsToolbar: FC = () => {
     const { selectedNodeIds, selectedNodes } = useStore(diagramNodeSelector);
     const { setNodes } = useReactFlow();
-    const { workspace, deleteElements } = useWorkspace();
+    const { workspace } = useWorkspace();
 
     const handleOnClickLockNode = useCallback(() => {
         setNodes(nodes => nodes.map(node => node.selected ? { ...node, draggable: false } : node));
@@ -42,8 +42,8 @@ export const ElementOptionsToolbar: FC = () => {
     }, [setNodes]);
 
     const handleOnRemoveElement = useCallback(() => {
-        deleteElements(selectedNodes.map(x => x.data.element))
-    }, [deleteElements, selectedNodes]);
+        // deleteElements(selectedNodes.map(x => x.data.element))
+    }, []);
 
     return (
         <NodeToolbar

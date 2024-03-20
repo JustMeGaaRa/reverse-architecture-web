@@ -11,7 +11,7 @@ export const ShellTitle: FC<{
     title
 }) => {
     return (
-        <HStack padding={2}>
+        <HStack className={"restruct__shell-title"} padding={2}>
             {icon && (<Icon as={icon} boxSize={8} />)}
             <Skeleton isLoaded={!isLoading} borderRadius={"md"}>
                 <Text as={"h6"} noOfLines={1} textStyle={"h6"}>

@@ -54,9 +54,9 @@ export class Workspace implements ISupportSnapshot<IWorkspaceSnapshot> {
     public applyMetadata(metadata: IWorkspaceMetadata): Workspace {
         if (metadata === null || metadata === undefined) return this;
         
-        metadata.views.systemContexts.forEach(view => {
-            this.views.systemLandscape.find(x => x.identifier === view.identifier).applyMetadata(view);
-        })
+        if (metadata.views.systemLandscape) {
+            this.views.systemLandscape.applyMetadata(metadata.views.systemLandscape);
+        }
         metadata.views.systemContexts.forEach(view => {
             this.views.systemContexts.find(x => x.identifier === view.identifier)?.applyMetadata(view);
         })

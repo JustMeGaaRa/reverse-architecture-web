@@ -1,5 +1,5 @@
 import { IWorkspaceMetadata, IWorkspaceTheme } from "@structurizr/dsl";
-import { WorkspaceInfo } from "../../workspaces";
+import { IWorkspaceInfo, WorkspaceInfo } from "@structurizr/y-workspace";
 
 type CommunityTemplate = {
     workspaceId: string;
@@ -49,15 +49,15 @@ export class CommunityApi {
         return Array.from(new Set(workspaces.flatMap(workspace => workspace.tags)));
     }
 
-    async getWorkspaceById(workspaceId: string, options?: CommunityLoadOptions): Promise<WorkspaceInfo> {
+    async getWorkspaceById(workspaceId: string, options?: CommunityLoadOptions): Promise<IWorkspaceInfo> {
         const list = await withTimeout(this.fetchWorkspaceList(), this.timeout);
         const structurizr = await this.getWorkspaceContent(workspaceId, options);
         const metadata = await this.getWorkspaceMetadata(workspaceId, options);
         const workspaceInfo = list.find(w => w.workspaceId === workspaceId);
-        return { ...workspaceInfo, content: { structurizr, metadata }};
+        return workspaceInfo;
     }
 
-    async getWorkspaces(filters: CommunityLoadFilters, options?: CommunityLoadOptions): Promise<WorkspaceInfo[]> {
+    async getWorkspaces(filters: CommunityLoadFilters, options?: CommunityLoadOptions): Promise<IWorkspaceInfo[]> {
         // TODO: consider moving this to the backend
         const chunks = (filters.query ? filters.query.split(" ") : [])
             .map(chunk => chunk.trim())
@@ -113,19 +113,20 @@ export class CommunityApi {
         return undefined;
     }
 
-    async fetchWorkspaceList(options?: CommunityLoadOptions): Promise<Array<WorkspaceInfo>> {
+    async fetchWorkspaceList(options?: CommunityLoadOptions): Promise<Array<IWorkspaceInfo>> {
         const workspaceListResponse = await fetch(`${this.baseUrl}/list.json`);
         const { values } = workspaceListResponse.ok ? await workspaceListResponse.json() : { values: [] };
         const workspaces = (values as CommunityTemplate[])
-            .map<WorkspaceInfo>(info => ({
+            .map<IWorkspaceInfo>(info => ({
                 workspaceId: info.workspaceId,
                 name: info.name,
+                coverUrl: info.preview,
+                status: "public",
                 createdBy: info.author,
                 createdDate: info.updated,
                 lastModifiedBy: info.author,
-                lastModifiedDate: info.updated,
-                coverUrl: info.preview,
-                tags: info.tags,
+                lastModifiedDate: new Date(info.updated).toUTCString(),
+                tags: info.tags
             }));
         
         return workspaces;

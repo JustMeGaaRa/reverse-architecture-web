@@ -1,16 +1,28 @@
-import { FC, useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { WorkspaceProvider } from "@structurizr/react";
 import {
     CurrentUser,
     WorkspaceNavigationProvider,
-    WorkspaceProvider,
-    WorkspaceRoom,
+    WorkspaceRoom
 } from "@workspace/react";
 import {
-    useAccount,
-} from "../../features";
+    YjsDocumentProvider,
+    YjsUndoManagerProvider,
+    YjsWebrtcProviderProvider
+} from "@yjs/react";
 import {
-    WorkspaceCollaborativeEditor, WorkspacePageActionsWrapper,
+    FC,
+    PropsWithChildren,
+    useCallback,
+    useEffect,
+    useState
+} from "react";
+import { useSearchParams } from "react-router-dom";
+import { useAccount } from "../../features";
+import { useLoaderState } from "../../hooks";
+import {
+    WorkspaceCollaborativeEditor,
+    WorkspaceInitializer,
+    WorkspacePageActions
 } from "../workspace";
 
 const SharedRoomCodeparam = "code";
@@ -19,37 +31,77 @@ export const WorkspaceSharedPage: FC = () => {
     const [ queryParams ] = useSearchParams([[ SharedRoomCodeparam, "" ]]);
     const { account } = useAccount();
     
-    const [ roomId, setRoomId ] = useState();
-    const [ roomPassword, setRoomPassword ] = useState();
-    const code = useMemo(() => queryParams.get(SharedRoomCodeparam), [queryParams]);
+    const [ roomId, setRoomId ] = useState<string>();
+    const [ roomPassword, setRoomPassword ] = useState<string>();
+
+    const handleOnSessionLoaded = useCallback((roomId: string, roomPassword: string) => {
+        setRoomId(roomId);
+        setRoomPassword(roomPassword);
+    }, []);
 
     // TODO: refactor this component so that the this page shows sync icon, not save button
+    
     // NOTE: workspace provider on this page should save changes on tha page only,
     // as this is the page for collaborating users who do not own the workspace file
     return (
-        <WorkspaceProvider>
-            <WorkspaceNavigationProvider>
-                <WorkspaceRoom options={{ roomId: roomId, password: roomPassword }}>
-                    <WorkspacePageActionsWrapper workspaceId={undefined}>
-                        <WorkspaceSessionLoader code={code} />
+        <WorkspaceSessionLoader
+            code={queryParams.get(SharedRoomCodeparam)}
+            onSessionLoaded={handleOnSessionLoaded}
+        >
 
-                        <CurrentUser info={account} />
-                        <WorkspaceCollaborativeEditor />
-                    </WorkspacePageActionsWrapper>
-                </WorkspaceRoom>
-            </WorkspaceNavigationProvider>
-        </WorkspaceProvider>
+            <YjsDocumentProvider guid={roomId}>
+                <YjsWebrtcProviderProvider>
+                    <YjsUndoManagerProvider>
+
+                        <WorkspaceProvider>
+                            <WorkspaceRoom options={{ roomId: roomId, password: roomPassword }}>
+
+                                <CurrentUser info={account} />
+                                <WorkspaceInitializer />
+
+                                <WorkspaceNavigationProvider>
+                                    <WorkspacePageActions workspaceId={roomId} />
+                                    <WorkspaceCollaborativeEditor />
+                                </WorkspaceNavigationProvider>
+
+                            </WorkspaceRoom>
+                        </WorkspaceProvider>
+            
+                    </YjsUndoManagerProvider>
+                </YjsWebrtcProviderProvider>
+            </YjsDocumentProvider>
+
+        </WorkspaceSessionLoader>
     )
 }
 
-export const WorkspaceSessionLoader: FC<{
+export const WorkspaceSessionLoader: FC<PropsWithChildren<{
     code: string;
-}> = ({
-    code
+    onSessionLoaded?: (roomId: string, roomPassword: string) => void;
+}>> = ({
+    children,
+    code,
+    onSessionLoaded
 }) => {
+    const [ isLoading, , onStopLoading ] = useLoaderState({ isLoading: true });
+    
     useEffect(() => {
-        
-    }, []);
+        // TODO: load the session from the server
+        const roomId = code;
+        const roomPassword = undefined;
 
-    return null;
+        onSessionLoaded?.(roomId, roomPassword);
+        onStopLoading();
+    }, [code, onSessionLoaded, onStopLoading]);
+
+    return isLoading
+        ? (
+            <>
+                Loading...
+            </>
+        ) : (
+            <>
+                {children}
+            </>
+        );
 }

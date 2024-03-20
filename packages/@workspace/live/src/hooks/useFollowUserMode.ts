@@ -1,4 +1,4 @@
-import { UserInfo } from "@workspace/core";
+import { UserInfo } from "@workspace/diagramming";
 import { useCallback, useContext } from "react";
 import { WorkspaceRoomContext } from "../contexts";
 

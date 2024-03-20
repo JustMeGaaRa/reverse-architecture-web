@@ -1,28 +1,23 @@
 import { useReactFlow } from "@reactflow/core";
-import { ISupportVisitor, IWorkspaceSnapshot } from "@structurizr/dsl";
-import { useWorkspaceNavigation } from "@workspace/core";
+import { IViewDefinition, IWorkspaceSnapshot } from "@structurizr/dsl";
+import { useWorkspace } from "@structurizr/react";
 import { useEffect } from "react";
-import { getReactFlowAuto, getReactFlowObject } from "../utils";
+import { ElkjsAutoLayoutStrategy } from "../types";
+import { getReactFlowObject } from "../utils";
+import { useViewStrategy } from "./useViewStrategy";
 
-export const useViewRenderingEffect = (workspace: IWorkspaceSnapshot, strategy: ISupportVisitor) => {
-    const { currentView } = useWorkspaceNavigation();
+export const useViewRenderingEffect = (currentView: IViewDefinition) => {
+    const { workspace } = useWorkspace();
+    const { strategy } = useViewStrategy();
     const { setNodes, setEdges } = useReactFlow();
 
     // NOTE: we need to re-render the view ONLY when the selected view changes
     useEffect(() => {
-        const reactFlowObject = getReactFlowObject(
-            strategy,
-            workspace.model,
-            workspace.views.configuration,
-            currentView
-        );
-
-        const shouldAutoLayout =
-            currentView?.autoLayout !== null
-            && currentView?.autoLayout !== undefined;
+        const reactFlowObject = getReactFlowObject(strategy, workspace, currentView);
+        const autoLayoutStrategy = new ElkjsAutoLayoutStrategy();
         
-        if (shouldAutoLayout) {
-            getReactFlowAuto(reactFlowObject)
+        if (!!currentView?.autoLayout) {
+            autoLayoutStrategy.execute(reactFlowObject)
                 .then(reactFlowAuto => {
                     setNodes(reactFlowAuto.nodes);
                     setEdges(reactFlowAuto.edges);
@@ -33,5 +28,9 @@ export const useViewRenderingEffect = (workspace: IWorkspaceSnapshot, strategy: 
             setEdges(reactFlowObject.edges);
         }
         
-    }, [currentView]);
+        return () => {
+            setNodes([]);
+            setEdges([]);
+        }
+    }, [setNodes, setEdges, workspace, currentView, strategy]);
 }

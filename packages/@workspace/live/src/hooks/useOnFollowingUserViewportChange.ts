@@ -1,4 +1,4 @@
-import { Viewport } from "@workspace/core";
+import { Viewport } from "@workspace/diagramming";
 import { useContext, useEffect } from "react";
 import { WorkspaceRoomContext } from "../contexts";
 import { UserAwarenessViewportParam } from "../types";

@@ -1,14 +1,11 @@
 import { Box } from "@chakra-ui/react";
 import { useStore } from "@reactflow/core";
 import { Tag } from "@structurizr/dsl";
-import {
-    viewportSelector,
-    WorkspaceElementPortal,
-    ViewportStaticElement,
-    BoundingBox
-} from "@workspace/core";
 import { FC } from "react";
-import { diagramNodeSelector } from "../../utils";
+import { BoundingBox } from "../../types";
+import { diagramNodeSelector, viewportSelector } from "../../utils";
+import { ViewportStaticElement } from "../ViewportStaticElement";
+import { WorkspaceElementPortal } from "../WorkspaceElementPortal";
 
 export const ElementZoomControlsBackground: FC = () => {
     // NOTE: this is a workaround to show background underneath the zoom controls

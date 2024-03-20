@@ -1,5 +1,6 @@
 import { useBreakpointValue } from "@chakra-ui/react";
 import { useLocale } from "@restruct/ui";
+import { IWorkspaceInfo, WorkspaceInfo } from "@structurizr/y-workspace";
 import { EmojiSad, Folder } from "iconoir-react";
 import { FC, useCallback, useEffect, useState } from "react";
 import {
@@ -11,17 +12,16 @@ import {
     useSnackbar,
     useWorkspaceExplorer,
     WorkspaceGrid,
-    WorkspaceInfo,
     WorkspaceTemplateCard
 } from "../..";
 import { useLoaderState } from "../../../hooks";
 
 export const CommunityTemplateExplorer: FC<{
     filters?: { category?: string, tag?: string };
-    onClick?: (workspace: WorkspaceInfo) => void;
-    onTryIt?: (workspace: WorkspaceInfo) => void;
-    onBookmark?: (workspace: WorkspaceInfo) => void;
-    onLike?: (workspace: WorkspaceInfo) => void;
+    onClick?: (workspace: IWorkspaceInfo) => void;
+    onTryIt?: (workspace: IWorkspaceInfo) => void;
+    onBookmark?: (workspace: IWorkspaceInfo) => void;
+    onLike?: (workspace: IWorkspaceInfo) => void;
 }> = ({
     filters,
     onClick,
@@ -34,8 +34,8 @@ export const CommunityTemplateExplorer: FC<{
     const { snackbar } = useSnackbar();
     
     const [ error, setError ] = useState<{ title: string, description: string } | undefined>();
-    const { isLoading, onStartLoading, onStopLoading } = useLoaderState({ isLoading: true });
-    const [ workspaces, setWorkspaces ] = useState<Array<WorkspaceInfo>>([]);
+    const [ isLoading, onStartLoading, onStopLoading ] = useLoaderState({ isLoading: true });
+    const [ workspaces, setWorkspaces ] = useState<Array<IWorkspaceInfo>>([]);
     const { bookmarkedIds, likedIds, bookmark, unbookmark, like, unlike } = useWorkspaceExplorer();
 
     useEffect(() => {
@@ -66,14 +66,14 @@ export const CommunityTemplateExplorer: FC<{
         }
     }, [filters, getLocalizedString, onStartLoading, onStopLoading, snackbar]);
 
-    const handleOnBookmarkClick = useCallback((workspace: WorkspaceInfo) => {
+    const handleOnBookmarkClick = useCallback((workspace: IWorkspaceInfo) => {
         bookmarkedIds.includes(workspace.workspaceId)
             ? unbookmark(workspace.workspaceId)
             : bookmark(workspace.workspaceId);
         onBookmark?.(workspace);
     }, [bookmarkedIds, unbookmark, bookmark, onBookmark]);
 
-    const handleOnLikeClick = useCallback((workspace: WorkspaceInfo) => {
+    const handleOnLikeClick = useCallback((workspace: IWorkspaceInfo) => {
         likedIds.includes(workspace.workspaceId)
             ? unlike(workspace.workspaceId)
             : like(workspace.workspaceId);

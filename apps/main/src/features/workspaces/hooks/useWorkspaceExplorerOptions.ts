@@ -1,11 +1,8 @@
 import { useCallback, useContext } from "react";
-import { WorkspaceCollectionContext } from "../contexts";
+import { WorkspaceSelectionContext } from "../contexts";
 
 export const useWorkspaceExplorerOptions = () => {
-    const {
-        selectedOptions,
-        setSelectedOptions
-    } = useContext(WorkspaceCollectionContext);
+    const { selectedOptions, setSelectedOptions } = useContext(WorkspaceSelectionContext);
 
     const enableStacking = useCallback(() => {
         setSelectedOptions(options => {

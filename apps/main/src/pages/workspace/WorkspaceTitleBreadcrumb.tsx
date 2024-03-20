@@ -12,15 +12,17 @@ import { FC, useCallback } from "react"
 import { NavLink } from "react-router-dom";
 
 export const WorksapceTitleBreadcrumb: FC<{
+    isLoading?: boolean;
     workspace: IWorkspaceSnapshot;
 }> = ({
+    isLoading,
     workspace
 }) => {
     const handleOnChangeWorkspaceName = useCallback((value: string) => {
         throw new Error("Not implemented");
     }, []);
     
-    return (
+    return !isLoading && (
         <Breadcrumb>
             <BreadcrumbItem>
                 <BreadcrumbLink as={NavLink} to={"/workspaces"} marginX={2}>
@@ -34,7 +36,7 @@ export const WorksapceTitleBreadcrumb: FC<{
                     <Editable
                         maxWidth={"300px"}
                         textStyle={"b2"}
-                        defaultValue={workspace.name}
+                        defaultValue={workspace?.name}
                         onBlur={handleOnChangeWorkspaceName}
                     >
                         <EditablePreview noOfLines={1} />

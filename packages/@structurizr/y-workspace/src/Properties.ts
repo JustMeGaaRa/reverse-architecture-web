@@ -13,8 +13,8 @@ export class Properties {
     public get description(): string { return this.propertiesMap.get("description") as string; }
     public set description(value: string) { this.propertiesMap.set("description", value); }
 
-    public get lastModifiedDate(): Date { return this.propertiesMap.get("lastModifiedDate") as Date; }
-    public set lastModifiedDate(value: Date) { this.propertiesMap.set("lastModifiedDate", value); }
+    public get lastModifiedDate(): string { return new Date(this.propertiesMap.get("lastModifiedDate") as number).toUTCString(); }
+    public set lastModifiedDate(value: string) { this.propertiesMap.set("lastModifiedDate", new Date(value).getDate()); }
 
     public toSnapshot(): IProperties {
         return Object.freeze({

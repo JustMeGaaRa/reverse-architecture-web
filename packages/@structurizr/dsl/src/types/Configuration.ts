@@ -1,6 +1,7 @@
 import { IConfiguration, IStyles, ISupportSnapshot } from "../interfaces";
 import { Branding } from "./Branding";
 import { Terminology } from "./Terminology";
+import { Theme } from "./Theme";
 
 export class Configuration implements ISupportSnapshot<IConfiguration> {
     constructor(params: Partial<IConfiguration>) {
@@ -15,8 +16,8 @@ export class Configuration implements ISupportSnapshot<IConfiguration> {
     }
 
     public readonly styles: IStyles;
-    public readonly theme?: string;
-    public readonly themes: string[];
+    public readonly theme?: Theme;
+    public readonly themes: Theme[];
     public readonly branding?: Branding;
     public readonly terminology?: Terminology;
 

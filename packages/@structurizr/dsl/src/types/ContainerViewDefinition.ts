@@ -84,7 +84,7 @@ export class ContainerViewDefinition implements IViewDefinition, ISupportSnapsho
     public setRelationshipPosition(relationshipId: string) {
         this.relationships = [
             ...this.relationships.filter(x => x.id !== relationshipId),
-            { id: relationshipId }
+            { id: relationshipId, x: 0, y: 0 }
         ]
     }
 

@@ -1,5 +1,5 @@
 import { Position, ViewType } from "@structurizr/dsl";
-import { Viewport } from "@workspace/core";
+import { Viewport } from "@workspace/diagramming";
 import { useCallback, useContext } from "react";
 import { WorkspaceRoomContext } from "../contexts";
 import {

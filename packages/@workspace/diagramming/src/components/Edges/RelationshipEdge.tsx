@@ -13,7 +13,7 @@ import { FC, useCallback } from "react";
 import { RelationshipLabel } from "./RelationshipLabel";
 import { BaseEdge } from "./BaseEdge";
 import { getEdgeParams } from "./utils";
-import { MarkerType } from "@workspace/core";
+import { MarkerType } from "../MarkerType";
 
 export const RelationshipBezierEdge: FC<{
     data: Relationship;

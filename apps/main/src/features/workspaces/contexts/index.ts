@@ -1,1 +1,1 @@
-export * from "./WorkspaceCollectionContext";
+export * from "./WorkspaceExplorerContext";

@@ -1,9 +1,9 @@
 import { Box, ScaleFade } from "@chakra-ui/react";
+import { useWorkspace } from "@structurizr/react";
 import {
     NodeRelativeElement,
     ViewportStaticElement,
-    WorkspaceElementPortal,
-    useWorkspace,
+    WorkspaceElementPortal
 } from "@workspace/react";
 import { FC, useCallback, useMemo } from "react";
 import { v4 } from "uuid";

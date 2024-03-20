@@ -1,17 +1,16 @@
-import { WorkspaceUser } from "@workspace/core";
+import { useYjsCollaborative } from "@yjs/react";
 import { useCallback, useContext } from "react";
 import { WorkspaceRoomContext } from "../contexts";
-import { UserInfoRequired } from "../types";
+import { UserInfoRequired, WorkspaceUser } from "../types";
 
 export const useWorkspaceRoom = () => {
     const {
-        workspaceDocument,
-        connectionProvider,
         currentUser,
         collaboratingUsers,
         presentation,
         setCurrentUser,
     } = useContext(WorkspaceRoomContext);
+    const { connection } = useYjsCollaborative();
     
     const joinRoom = useCallback((userInfo: UserInfoRequired) => {
         const colorSchemes = [
@@ -25,18 +24,16 @@ export const useWorkspaceRoom = () => {
             color: userInfo.color ?? colorSchemes.at(randomIndex)
         }
         const currentUser: WorkspaceUser = { info: userInfoWithColor }
-        connectionProvider?.awareness.setLocalState({ info: userInfoWithColor });
+        connection?.awareness.setLocalState({ info: userInfoWithColor });
         setCurrentUser(currentUser);
-    }, [connectionProvider?.awareness, setCurrentUser]);
+    }, [connection?.awareness, setCurrentUser]);
     
     const leaveRoom = useCallback(() => {
-        connectionProvider?.awareness.setLocalState({ info: undefined });
+        connection?.awareness.setLocalState({ info: undefined });
         setCurrentUser(undefined);
-    }, [connectionProvider?.awareness, setCurrentUser]);
+    }, [connection?.awareness, setCurrentUser]);
 
     return {
-        workspaceDocument,
-        connectionProvider,
         currentUser,
         collaboratingUsers,
         presentation,

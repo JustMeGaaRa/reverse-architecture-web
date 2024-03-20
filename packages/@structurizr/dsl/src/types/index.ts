@@ -19,6 +19,7 @@ export * from "./SoftwareSystemInstance";
 export * from "./Tag";
 export * from "./Technology";
 export * from "./Terminology";
+export * from "./Theme";
 export * from "./Url";
 
 export * from "./AutoLayout";

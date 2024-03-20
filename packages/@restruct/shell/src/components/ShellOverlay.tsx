@@ -19,6 +19,7 @@ export const ShellOverlay: FC<PropsWithChildren<{
 }) => {
     return (
         <Box
+            className={"restruct__shell-overlay"}
             backgroundColor={"surface.tinted-black-60"}
             backdropFilter={"blur(32px)"}
             borderTopLeftRadius={32}

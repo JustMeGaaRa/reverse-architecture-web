@@ -1,8 +1,8 @@
-import { WorkspaceInfo } from "../../workspaces/types";
+import { IWorkspaceInfo } from "@structurizr/y-workspace";
 
-export type WorkspaceGroupInfo = {
+export interface IWorkspaceGroupInfo {
     name: string;
     lastModifiedDate: string;
     lastModifiedBy: string;
-    workspaces: Array<WorkspaceInfo>;
+    workspaces: Array<IWorkspaceInfo>;
 }

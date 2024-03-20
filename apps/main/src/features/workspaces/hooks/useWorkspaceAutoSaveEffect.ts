@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { Workspace } from "@structurizr/dsl";
-import { useWorkspace } from "@workspace/react";
 import { useSnackbar } from "../../snackbar";
 import { saveWorkspaceContent } from "../services";
 import { useWorkspaceExplorer } from "./useWorkspaceExplorer";
+import { useWorkspace } from "@structurizr/react";
 
 export type WorkspaceAutoSaveOptions = {
     interval?: number;
@@ -20,11 +20,11 @@ export const useWorkspaceAutoSaveEffect = (workspaceId: string, options?: Worksp
             // TODO: save workspace structurizr code to local storage
             saveWorkspaceContent(workspaceId, new Workspace(workspace))
                 .then(workspace => {
-                    setWorkspaces(workspaces => workspaces.map(existing => {
-                        return existing.workspaceId !== workspaceId
-                            ? existing
-                            : { ...existing, content: { ...existing.content } }
-                    }));
+                    // setWorkspaces(workspaces => workspaces.map(existing => {
+                    //     return existing.workspaceId !== workspaceId
+                    //         ? existing
+                    //         : { ...existing, content: { ...existing.content } }
+                    // }));
                 })
                 .catch(error => {
                     snackbar({

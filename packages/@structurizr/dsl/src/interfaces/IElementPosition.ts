@@ -1,4 +1,3 @@
-
 export interface IElementPosition {
     id: string;
     x: number;

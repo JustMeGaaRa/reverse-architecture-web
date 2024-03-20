@@ -1,104 +1,161 @@
-import { FC, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { Workspace } from "@structurizr/dsl";
-import { parseStructurizr } from "@structurizr/parser";
+import { useWorkspace, WorkspaceProvider } from "@structurizr/react";
+import { Workspace } from "@structurizr/y-workspace";
 import {
     WorkspaceNavigationProvider,
     CurrentUser,
     WorkspaceRoom,
-    WorkspaceProvider,
-    useWorkspace,
-    useWorkspaceNavigation,
+    useWorkspaceNavigation
 } from "@workspace/react";
 import {
+    useYjsCollaborative,
+    YjsDocumentProvider,
+    YjsIndexeddbPersistanceProvider,
+    YjsUndoManagerProvider,
+    YjsWebrtcProviderProvider
+} from "@yjs/react";
+import {
+    FC,
+    PropsWithChildren,
+    useEffect
+} from "react";
+import { useParams } from "react-router-dom";
+import * as Y from "yjs";
+import {
     CommentApi,
-    loadWorkspaceContent,
+    createWorkspaceConnection,
+    createWorkspacePersistance,
     useAccount,
     useCommentsStore,
     useSnackbar,
-    useWorkspaceExplorer,
 } from "../../features";
 import { useLoaderState } from "../../hooks";
 import {
     WorkspaceCollaborativeEditor,
-    WorkspacePageActionsWrapper,
+    WorkspacePageActions,
 } from "../workspace";
 
 export const WorkspacePage: FC = () => {
-    console.log("workspace page");
     const { workspaceId } = useParams<{ workspaceId: string }>();
     const { account } = useAccount();
+
+    // TODO: pass roomId and password to the workspace room
 
     // NOTE: workspace provider on this page should save changes to the persistant layer,
     // as this is the user who shares and owns the workspace file
     return (
-        <WorkspaceProvider>
-            <WorkspaceNavigationProvider>
-                <WorkspaceRoom options={{ roomId: workspaceId }}>
-                    <WorkspacePageActionsWrapper workspaceId={workspaceId}>
-                        <WorkspaceContentLoader workspaceId={workspaceId} />
+        <YjsDocumentProvider guid={workspaceId}>
+            <YjsIndexeddbPersistanceProvider>
+                <YjsWebrtcProviderProvider>
+                    <YjsUndoManagerProvider>
                         
-                        <CurrentUser info={account} />
-                        <WorkspaceCollaborativeEditor />
-                    </WorkspacePageActionsWrapper>
-                </WorkspaceRoom>
-            </WorkspaceNavigationProvider>
-        </WorkspaceProvider>
+                        <WorkspaceProvider>
+                            <WorkspaceIndexeddbLoader workspaceId={workspaceId}>
+                                <WorkspaceRoom options={{ roomId: workspaceId }}>
+                                    
+                                    <CurrentUser info={account} />
+
+                                    <WorkspaceNavigationProvider>
+                                        <WorkspaceInitializer />
+                                        <WorkspacePageActions workspaceId={workspaceId} />            
+                                        <WorkspaceCollaborativeEditor />
+                                    </WorkspaceNavigationProvider>
+
+                                </WorkspaceRoom>
+                            </WorkspaceIndexeddbLoader>
+                        </WorkspaceProvider>
+            
+                    </YjsUndoManagerProvider>
+                </YjsWebrtcProviderProvider>
+            </YjsIndexeddbPersistanceProvider>
+        </YjsDocumentProvider>
     )
 }
 
-export const WorkspaceContentLoader: FC<{
-    workspaceId: string;
-}> = ({
-    workspaceId
-}) => {
-    console.log("workspace page: content loader")
-    const { snackbar } = useSnackbar();
-    const { workspaces, setWorkspaces } = useWorkspaceExplorer();
-    const { setWorkspace } = useWorkspace();
-    const { openView } = useWorkspaceNavigation();
+export const WorkspaceIndexeddbLoader: FC<PropsWithChildren<{ workspaceId: string; }>> = ({ children, workspaceId }) => {
+    const [ isLoading, , onStopLoading ] = useLoaderState({ isLoading: true });
+    const { document, setPersistance } = useYjsCollaborative();
 
     useEffect(() => {
-        // NOTE: load workspace from the server and update the local storage asynchroniously
-        loadWorkspaceContent(workspaceId)
-            .then(({ structurizr, metadata }) => {
-                setWorkspaces(workspaces => workspaces.map(workspace => {
-                    return workspace.workspaceId !== workspaceId
-                        ? workspace
-                        : { ...workspace, content: { structurizr, metadata } }
-                }))
-            })
-            .catch(error => {
-                snackbar({
-                    title: "Error loading workspace",
-                    description: error.message,
-                    status: "error"
-                })
-            })
-    }, [workspaceId, setWorkspaces, snackbar]);
+        if (workspaceId && document) {
+            const [persistance] = createWorkspacePersistance(workspaceId, document);
+
+            persistance.whenSynced.then(persistance => {
+                setPersistance(persistance);
+                onStopLoading();
+            });
+
+            return () => {
+                persistance.destroy();
+            }
+        }
+    }, [document, onStopLoading, setPersistance, workspaceId]);
+
+    return isLoading
+        ? (
+            <>
+                Loading...
+            </>
+        ) : (
+            <>
+                {children}
+            </>
+        );
+}
+
+export const WorkspaceWebrtcConnector: FC<PropsWithChildren<{ workspaceId: string; }>> = ({ children, workspaceId }) => {
+    const [ isLoading, , onStopLoading ] = useLoaderState({ isLoading: true });
+    const { document, setConnection } = useYjsCollaborative();
 
     useEffect(() => {
         if (workspaceId) {
-            try {
-                // NOTE: load workspace from local storage
-                // TODO: refactor this code so that when the workspace is saved is does not trigger this effect
-                const localWorkspace = workspaces.find(workspace => workspace.workspaceId === workspaceId);
-                const parsedWorkspace = new Workspace(parseStructurizr(localWorkspace.content?.structurizr));
-                const autolayoutWorkspace = parsedWorkspace.applyMetadata(localWorkspace.content?.metadata);
-                setWorkspace(autolayoutWorkspace);
-                openView(autolayoutWorkspace, autolayoutWorkspace.views.systemLandscape?.[0])
-            }
-            catch (error) {
-                snackbar({
-                    title: "Error parsing workspace",
-                    description: error.message,
-                    status: "error"
-                })
+            const [connection] = createWorkspaceConnection(workspaceId, document);
+
+            setConnection(connection);
+            onStopLoading();
+
+            return () => {
+                connection.destroy();
             }
         }
-    }, [workspaceId, workspaces, snackbar, setWorkspace, openView]);
+    }, [document, onStopLoading, setConnection, workspaceId]);
 
-    return null;
+    return isLoading
+        ? (
+            <>
+                Loading...
+            </>
+        ) : (
+            <>
+                {children}
+            </>
+        );
+}
+
+export const WorkspaceInitializer: FC<PropsWithChildren<{}>> = ({ children }) => {
+    const { setWorkspace } = useWorkspace();
+    const { document, setUndoManager } = useYjsCollaborative();
+    const { setCurrentView } = useWorkspaceNavigation();
+    
+    useEffect(() => {
+        if (document) {
+            const modelMap = document.getMap("model");
+            const viewsMap = document.getMap("views");
+            const propertiesMap = document.getMap("properties");
+            const undoManager = new Y.UndoManager([modelMap, viewsMap, propertiesMap]);
+            const workspace = new Workspace(document);
+            const workspaceSnapshot = workspace.toSnapshot();
+
+            setUndoManager(undoManager);
+            setWorkspace(workspaceSnapshot);
+            setCurrentView(workspaceSnapshot.views.systemLandscape);
+        }
+    }, [document, setCurrentView, setUndoManager, setWorkspace]);
+
+    return (
+        <>
+            {children}
+        </>
+    )
 }
 
 export const WorkspaceCommentsLoader: FC<{
@@ -106,10 +163,9 @@ export const WorkspaceCommentsLoader: FC<{
 }> = ({
     workspaceId
 }) => {
-    console.log("workspace page: comments loader")
     const { snackbar } = useSnackbar();
     const { setCommentThreads } = useCommentsStore();
-    const { isLoading, onStartLoading, onStopLoading } = useLoaderState();
+    const [ isLoading, onStartLoading, onStopLoading ] = useLoaderState();
 
     useEffect(() => {
         const commentApi = new CommentApi();

@@ -1,18 +1,10 @@
-import { Workspace, WorkspaceInfo } from "@structurizr/y-workspace";
+import { IWorkspaceSnapshot } from "@structurizr/dsl";
 import { createContext, Dispatch, SetStateAction } from "react";
 
-export const WorkspaceExplorerContext = createContext<{
-    workspaces: Array<WorkspaceInfo>;
-    setWorkspaces: Dispatch<SetStateAction<Array<WorkspaceInfo>>>;
-}>({
-    workspaces: [],
-    setWorkspaces: () => { console.log("Workspace Explorer Context: dummy setWorkspaces") },
-});
-
 export const WorkspaceContext = createContext<{
-    workspace: Workspace;
-    setWorkspace: Dispatch<SetStateAction<Workspace>>;
+    workspace: IWorkspaceSnapshot;
+    setWorkspace: Dispatch<SetStateAction<IWorkspaceSnapshot>>;
 }>({
-    workspace: null,
-    setWorkspace: () => { console.log("Workspace Context: dummy setWorkspace") },
+    workspace: undefined,
+    setWorkspace: () => { console.debug("Workspace Context: dummy setWorkspace") },
 });

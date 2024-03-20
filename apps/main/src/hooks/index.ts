@@ -1,7 +1,12 @@
 import { useCallback, useState } from "react";
 
-export const useLoaderState = (initial?: { isLoading: boolean }) => {
-    const [loading, setLoading] = useState(initial?.isLoading ?? false);
+/**
+ * Custom hook for managing loader state.
+ * @param initial - Optional initial loader state.
+ * @returns An array containing the current loader state, a function to start loading, and a function to stop loading.
+ */
+export const useLoaderState = (initial?: { isLoading: boolean }): [boolean, () => void, () => void] => {
+    const [isLoading, setLoading] = useState(initial?.isLoading ?? false);
 
     const onStartLoading = useCallback(() => {
         setLoading(true);
@@ -11,9 +16,5 @@ export const useLoaderState = (initial?: { isLoading: boolean }) => {
         setLoading(false);
     }, []);
 
-    return {
-        isLoading: loading,
-        onStartLoading,
-        onStopLoading
-    }
+    return [isLoading, onStartLoading, onStopLoading];
 }

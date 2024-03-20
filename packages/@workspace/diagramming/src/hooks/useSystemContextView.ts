@@ -10,7 +10,7 @@ import {
     SoftwareSystem,
     Workspace
 } from "@structurizr/dsl";
-import { useWorkspace } from "@workspace/core";
+import { useWorkspace } from "@structurizr/react";
 import { useCallback } from "react";
 import {
     getNodeFromElement,

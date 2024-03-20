@@ -18,6 +18,7 @@ import {
     ShellHeader,
     ShellTitle
 } from "@restruct/ui";
+import { IWorkspaceInfo } from "@structurizr/y-workspace";
 import {
     Compass,
     FireFlame,
@@ -35,17 +36,14 @@ import {
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
     CommunityTemplateExplorer,
-    WorkspaceInfo,
     CommunityApi,
     useWorkspaceExplorer,
     useSnackbar,
 } from "../../../features";
-import {
-    CommunityExplorerPageActionsWrapper,
-    CommunityTemplateModal,
-    HomePageResetActionsWrapper,
-} from "../";
 import { useLoaderState } from "../../../hooks";
+import { HomeNavigationActions } from "../HomeNavigationActions";
+import { CommunityExplorerActions } from "./CommunityExplorerActions";
+import { CommunityTemplateModal } from "./CommunityTemplateModal";
 
 export const CommunityExplorerPage: FC<PropsWithChildren> = () => {
     const navigate = useNavigate();
@@ -58,16 +56,16 @@ export const CommunityExplorerPage: FC<PropsWithChildren> = () => {
         setFitlers({ category, tag });
     }, []);
     
-    const handleOnClickWorkspacePreview = useCallback((workspace: WorkspaceInfo) => {
+    const handleOnClickWorkspacePreview = useCallback((workspace: IWorkspaceInfo) => {
         setQueryParam({ preview: workspace.workspaceId });
     }, [setQueryParam]);
 
-    const handleOnClickWorskapceTryOut = useCallback((workspace: WorkspaceInfo) => {
+    const handleOnClickWorskapceTryOut = useCallback((workspace: IWorkspaceInfo) => {
         const communityApi = new CommunityApi();
         communityApi.getWorkspaceById(workspace.workspaceId)
             .then(workspace => {
-                const clonedWorkspace = clone(workspace);
-                navigate(`/workspaces/${clonedWorkspace.workspaceId}`);
+                // const clonedWorkspace = clone(workspace);
+                // navigate(`/workspaces/${clonedWorkspace.workspaceId}`);
             })
             .catch(error => {
                 snackbar({
@@ -83,38 +81,37 @@ export const CommunityExplorerPage: FC<PropsWithChildren> = () => {
     }, [setQueryParam]);
 
     return (
-        <HomePageResetActionsWrapper>
-            <CommunityExplorerPageActionsWrapper>
-                <Shell>
-                    <ShellHeader>
-                        <ShellTitle title={"Community"} />
-                    </ShellHeader>
+        <Shell>
+            <HomeNavigationActions />
+            <CommunityExplorerActions />
 
-                    <Divider />
+            <ShellHeader>
+                <ShellTitle title={"Community"} />
+            </ShellHeader>
 
-                    <ShellBody>
-                        <Flex direction={"column"} height={"100%"}>
-                            <Box flexBasis={"80px"} flexGrow={0} flexShrink={0} padding={6}>
-                                <CommunityTemplateFilters onFilterChange={handleOnFilterChange} />
-                            </Box>
-                            <Box flexGrow={1} overflowY={"scroll"} padding={6}>
-                                <CommunityTemplateExplorer
-                                    filters={filters}
-                                    onClick={handleOnClickWorkspacePreview}
-                                    onTryIt={handleOnClickWorskapceTryOut}
-                                />
-                            </Box>
-                        </Flex>
-                    </ShellBody>
-                </Shell>
-                
-                <CommunityTemplateModal
-                    workspaceId={queryParams.get("preview")}
-                    isOpen={!!queryParams.get("preview")}
-                    onClose={handleOnClickTemplateModalClose}
-                />
-            </CommunityExplorerPageActionsWrapper>
-        </HomePageResetActionsWrapper>
+            <Divider />
+
+            <ShellBody>
+                <Flex direction={"column"} height={"100%"}>
+                    <Box flexBasis={"80px"} flexGrow={0} flexShrink={0} padding={6}>
+                        <CommunityTemplateFilters onFilterChange={handleOnFilterChange} />
+                    </Box>
+                    <Box flexGrow={1} overflowY={"scroll"} padding={6}>
+                        <CommunityTemplateExplorer
+                            filters={filters}
+                            onClick={handleOnClickWorkspacePreview}
+                            onTryIt={handleOnClickWorskapceTryOut}
+                        />
+                    </Box>
+                </Flex>
+            </ShellBody>
+
+            <CommunityTemplateModal
+                workspaceId={queryParams.get("preview")}
+                isOpen={!!queryParams.get("preview")}
+                onClose={handleOnClickTemplateModalClose}
+            />
+        </Shell>
     );
 }
 
@@ -134,7 +131,7 @@ export const CommunityTemplateFilters: FC<{
     const [ filterTags, setFilterTags ] = useState([]);
     const [ selectedTag, setSelectedTag ] = useState("");
 
-    const { isLoading, onStartLoading, onStopLoading } = useLoaderState({ isLoading: true });
+    const [ isLoading, onStartLoading, onStopLoading ] = useLoaderState({ isLoading: true });
 
     useEffect(() => {
         const communityApi = new CommunityApi();

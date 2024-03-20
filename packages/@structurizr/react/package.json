@@ -18,13 +18,14 @@
     "dev": "npx tsc -w"
   },
   "dependencies": {
-    "@structurizr/dsl": "*",
-    "@structurizr/y-workspace": "*",
-    "@reactflow/background": "^11.1.10",
-    "@reactflow/core": "^11.6.1"
+    "@structurizr/dsl": "*"
   },
   "devDependencies": {
     "typescript": "^5.2.2"
+  },
+  "peerDependencies": {
+    "@reactflow/background": "^11.1.10",
+    "@reactflow/core": "^11.6.1"
   },
   "repository": {
     "type": "git",
