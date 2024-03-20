@@ -1,5 +1,6 @@
 import { Position, ViewType } from "@structurizr/dsl";
 import { Viewport } from "@workspace/diagramming";
+import { useYjsCollaborative } from "@yjs/react";
 import { useCallback, useContext } from "react";
 import { WorkspaceRoomContext } from "../contexts";
 import {
@@ -10,33 +11,29 @@ import {
 } from "../types";
 
 export const useUserAwareness = () => {
-    const {
-        workspaceDocument,
-        connectionProvider,
-        currentUser,
-        setCurrentUser
-    } = useContext(WorkspaceRoomContext);
+    const { currentUser, setCurrentUser } = useContext(WorkspaceRoomContext);
+    const { document, connection } = useYjsCollaborative();
 
     const reportMousePosition = useCallback((mouse: Position) => {
-        connectionProvider?.awareness.setLocalStateField(UserAwarenessMouseParam, mouse);
+        connection?.awareness.setLocalStateField(UserAwarenessMouseParam, mouse);
         setCurrentUser(state => ({ ...state, mouse }));
-    }, [connectionProvider?.awareness, setCurrentUser]);
+    }, [connection?.awareness, setCurrentUser]);
 
     const reportCursorPosition = useCallback((cursor: Position) => {
-        connectionProvider?.awareness.setLocalStateField(UserAwarenessCursorParam, cursor);
+        connection?.awareness.setLocalStateField(UserAwarenessCursorParam, cursor);
         setCurrentUser(state => ({ ...state, cursor }));
-    }, [connectionProvider?.awareness, setCurrentUser]);
+    }, [connection?.awareness, setCurrentUser]);
 
     const reportViewport = useCallback((viewport: Viewport) => {
-        const map = workspaceDocument.getMap(currentUser.info.username);
+        const map = document.getMap(currentUser.info.username);
         map.set(UserAwarenessViewportParam, viewport);
         setCurrentUser(state => ({ ...state, viewport }));
-    }, [workspaceDocument, currentUser.info.username, setCurrentUser]);
+    }, [document, currentUser.info.username, setCurrentUser]);
 
     const reportView = useCallback((view: { type: ViewType, identifier: string }) => {
-        connectionProvider?.awareness.setLocalStateField(UserAwarenessViewParam, view);
+        connection?.awareness.setLocalStateField(UserAwarenessViewParam, view);
         setCurrentUser(state => ({ ...state, view }));
-    }, [connectionProvider?.awareness, setCurrentUser]);
+    }, [connection?.awareness, setCurrentUser]);
 
     return {
         reportMousePosition,

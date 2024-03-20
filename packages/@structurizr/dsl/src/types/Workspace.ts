@@ -8,7 +8,7 @@ export class Workspace implements ISupportSnapshot<IWorkspaceSnapshot> {
         this.version = params.version;
         this.name = params.name;
         this.description = params.description;
-        this.lastModifiedDate = params.lastModifiedDate ?? new Date();
+        this.lastModifiedDate = params.lastModifiedDate ?? new Date().toUTCString();
         // this.properties = new Properties(params.properties);
         this.model = new Model(params.model);
         this.views = new Views(params.views);
@@ -17,7 +17,7 @@ export class Workspace implements ISupportSnapshot<IWorkspaceSnapshot> {
     public readonly version: number;
     public readonly name?: string;
     public readonly description?: string;
-    public readonly lastModifiedDate: Date;
+    public readonly lastModifiedDate: string;
     public readonly properties?: Properties;
     public readonly model: Model;
     public readonly views: Views;

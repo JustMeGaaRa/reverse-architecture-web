@@ -1,14 +1,14 @@
-import { useCallback, useContext } from "react";
-import { WorkspaceRoomContext } from "../contexts";
+import { useYjsCollaborative } from "@yjs/react";
+import { useCallback } from "react";
 
 export const useSharingOptions = () => {
-    const { connectionProvider } = useContext(WorkspaceRoomContext);
+    const { connection } = useYjsCollaborative();
 
     const getSharedLink = useCallback(() => {
-        const room = connectionProvider?.roomName;
-        const code = connectionProvider?.room.key;
+        const room = connection?.roomName;
+        const code = connection?.room.key;
         return `${window.location.origin}/shared?room=${room}&code=${code}`;
-    }, [connectionProvider]);
+    }, [connection]);
 
     return {
         getSharedLink

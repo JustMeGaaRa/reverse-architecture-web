@@ -1,8 +1,8 @@
 import { IViewDefinition } from "@structurizr/dsl";
+import { WorkspaceProvider } from "@structurizr/react";
 import { FC, PropsWithChildren, useContext } from "react";
 import { WorkspaceContext, WorkspaceNavigationContext } from "../contexts";
 import { WorkspaceNavigationProvider } from "./WorkspaceNavigationProvider";
-import { WorkspaceProvider } from "./WorkspaceProvider";
 
 export const WorkspaceNavigationWrapper: FC<PropsWithChildren<{
     initialView?: IViewDefinition;

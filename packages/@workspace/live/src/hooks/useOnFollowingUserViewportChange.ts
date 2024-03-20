@@ -1,4 +1,5 @@
 import { Viewport } from "@workspace/diagramming";
+import { useYjsCollaborative } from "@yjs/react";
 import { useContext, useEffect } from "react";
 import { WorkspaceRoomContext } from "../contexts";
 import { UserAwarenessViewportParam } from "../types";
@@ -8,7 +9,8 @@ type FollowUserCallbacks = {
 }
 
 export const useOnFollowingUserViewportChange = (callbacks: FollowUserCallbacks) => {
-    const { workspaceDocument, currentUser, presentation } = useContext(WorkspaceRoomContext);
+    const { currentUser, presentation } = useContext(WorkspaceRoomContext);
+    const { document } = useYjsCollaborative();
     const { onChange } = callbacks;
 
     useEffect(() => {
@@ -22,14 +24,14 @@ export const useOnFollowingUserViewportChange = (callbacks: FollowUserCallbacks)
                 onChange?.(map.get(UserAwarenessViewportParam) as Viewport);
             }
 
-            const map = workspaceDocument.getMap(currentUser.following.username);
+            const map = document.getMap(currentUser.following.username);
             map.observe(onFollowingUserViewportChanged);
 
             return () => {
                 map.unobserve(onFollowingUserViewportChanged);
             }
         }
-    }, [workspaceDocument, currentUser.following, currentUser.info.username, onChange]);
+    }, [document, currentUser.following, currentUser.info.username, onChange]);
 
     useEffect(() => {
         if (presentation.presenterInfo !== null && presentation.presenterInfo !== undefined) {
@@ -44,12 +46,12 @@ export const useOnFollowingUserViewportChange = (callbacks: FollowUserCallbacks)
                 }
             }
     
-            const map = workspaceDocument.getMap(presentation.presenterInfo.username);
+            const map = document.getMap(presentation.presenterInfo.username);
             map.observe(onPresentingUserViewportChanged);
     
             return () => {
                 map.unobserve(onPresentingUserViewportChanged);
             }
         }
-    }, [workspaceDocument, presentation, currentUser.info.username, onChange]);
+    }, [document, presentation, currentUser.info.username, onChange]);
 }

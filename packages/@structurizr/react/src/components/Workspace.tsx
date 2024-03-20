@@ -59,7 +59,7 @@ export const WorkspaceProvider: FC<PropsWithChildren> = ({ children }) => {
         name: "",
         description: "",
         version: 0,
-        lastModifiedDate: new Date(),
+        lastModifiedDate: new Date().toUTCString(),
         model: {
             groups: [],
             people: [],

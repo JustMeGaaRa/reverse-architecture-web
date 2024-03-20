@@ -5,11 +5,7 @@ import { WorkspaceRoomContext } from "../contexts";
 import { PresentationEnabledParam, PresentationMapName, PresenterInfoParam } from "../types";
 
 export const usePresentationMode = () => {
-    const {
-        currentUser,
-        presentation,
-        setPresentationOptions
-    } = useContext(WorkspaceRoomContext);
+    const { currentUser, presentation, setPresentationOptions } = useContext(WorkspaceRoomContext);
     const { document } = useYjsCollaborative();
 
     useEffect(() => {
