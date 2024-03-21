@@ -25,10 +25,13 @@ import {
     useUserAwareness,
     useOnFollowingUserViewportChange
 } from "@workspace/react";
+import { useYjsCollaborative } from "@yjs/react";
+import * as Y from "yjs";
 import {
     FC,
     PropsWithChildren,
     useCallback,
+    useEffect,
     useMemo,
     useState
 } from "react";
@@ -44,6 +47,7 @@ import {
     WorkspaceUndoRedoControls,
     WorkspaceZoomControls
 } from "./";
+import { Workspace } from "@structurizr/y-workspace";
 
 export enum WorkspaceContentMode {
     Diagramming = "diagramming",
@@ -59,10 +63,28 @@ export enum WorkspaceContentPanel {
 }
 
 export const WorkspaceCollaborativeEditor: FC<PropsWithChildren> = ({ children }) => {
-    const [ structurizrCode, setStructurizrCode ] = useState("");
-    const { workspace, setWorkspace } = useWorkspace();
     const { currentView } = useWorkspaceNavigation();
+    const [ structurizrCode, setStructurizrCode ] = useState("");
     // const { setViewport } = useReactFlow();
+    
+    const { document, setUndoManager } = useYjsCollaborative();
+    const { setWorkspace } = useWorkspace();
+    const { setCurrentView } = useWorkspaceNavigation();
+    
+    useEffect(() => {
+        if (document) {
+            const modelMap = document.getMap("model");
+            const viewsMap = document.getMap("views");
+            const propertiesMap = document.getMap("properties");
+            const undoManager = new Y.UndoManager([modelMap, viewsMap, propertiesMap]);
+            const workspace = new Workspace(document);
+            const workspaceSnapshot = workspace.toSnapshot();
+            
+            setUndoManager(undoManager);
+            setWorkspace(workspaceSnapshot);
+            setCurrentView(workspaceSnapshot.views.systemLandscape);
+        }
+    }, [document, setCurrentView, setUndoManager, setWorkspace]);
 
     const { reportViewport, reportMousePosition, reportView } = useUserAwareness();
     const { collaboratingUsers } = useWorkspaceRoom();

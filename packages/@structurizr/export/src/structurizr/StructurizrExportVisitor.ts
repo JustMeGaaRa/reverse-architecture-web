@@ -21,7 +21,9 @@ import {
     Tag,
     ISystemContextView,
     IContainerView,
-    IDeploymentView
+    IDeploymentView,
+    IComponentView,
+    ISystemLandscapeView
 } from "@structurizr/dsl";
 
 function indentLines(lines: string[]): string[] {
@@ -164,7 +166,7 @@ export class StructurizrExportVisitor implements IElementVisitor {
             [...systemLandscape, ...systemContext, ...containers, ...components, ...deployments]);
     }
 
-    visitSystemLandscapeView(view: ISystemContextView): string[] {
+    visitSystemLandscapeView(view: ISystemLandscapeView): string[] {
         return formatStatement(
             `systemLandscape "${view.title}"`,
             ["include *", "autoLayout"]
@@ -185,7 +187,7 @@ export class StructurizrExportVisitor implements IElementVisitor {
         );
     }
 
-    visitComponentView(view: IContainerView): string[] {
+    visitComponentView(view: IComponentView): string[] {
         return formatStatement(
             `component ${view.identifier} "${view.key}"`,
             ["include *", "autoLayout"]

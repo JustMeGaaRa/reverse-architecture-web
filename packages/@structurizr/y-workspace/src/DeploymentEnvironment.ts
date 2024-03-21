@@ -1,8 +1,15 @@
-import { Identifier, IDeploymentEnvironment, ISupportSnapshot } from "@structurizr/dsl";
+import {
+    Identifier,
+    IDeploymentEnvironment,
+    ISupportSnapshot
+} from "@structurizr/dsl";
 import * as Y from "yjs";
-import { v4 } from "uuid";
 import { DeploymentNode } from "./DeploymentNode";
 import { Relationship } from "./Relationship";
+import {
+    createDeploymentNodePropertiesMap,
+    createRelationshipPropertiesMap
+} from "./utils";
 
 export class DeploymentEnvironment implements ISupportSnapshot<IDeploymentEnvironment> {
     private get deploymentNodesArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("deploymentNodes") as Y.Array<Y.Map<unknown>>; }
@@ -42,31 +49,14 @@ export class DeploymentEnvironment implements ISupportSnapshot<IDeploymentEnviro
 
     public addDeploymentNode() {
         if (!this.propertiesMap.has("deploymentNodes")) this.propertiesMap.set("deploymentNodes", new Y.Array<Y.Map<unknown>>());
-        const uniqueId = new String(v4()).substring(0, 8);
-        const deploymentNodeMap = new Y.Map([
-            ["identifier", uniqueId],
-            ["name", ""],
-            ["description", ""],
-            ["technology", []],
-            ["instances", 1],
-            ["tags", []],
-            ["url", ""]
-        ]);
+        const deploymentNodeMap = createDeploymentNodePropertiesMap();
         this.deploymentNodesArray.push([deploymentNodeMap]);
         return new DeploymentNode(deploymentNodeMap);
     }
-    
+
     public addRelationship() {
         if (!this.propertiesMap.has("relationships")) this.propertiesMap.set("relationships", new Y.Array<Y.Map<unknown>>());
-        const uniqueId = new String(v4()).substring(0, 8);
-        const relationshipMap = new Y.Map([
-            ["sourceIdentifier", ""],
-            ["targetIdentifier", ""],
-            ["description", ""],
-            ["technology", []],
-            ["tags", []],
-            ["url", ""]
-        ]);
+        const relationshipMap = createRelationshipPropertiesMap();
         this.relationshipsArray.push([relationshipMap]);
         return new Relationship(relationshipMap);
     }

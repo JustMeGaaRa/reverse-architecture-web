@@ -1,3 +1,5 @@
+export * from "./Animation";
+export * from "./AutoLayout";
 export * from "./Component";
 export * from "./Model";
 export * from "./Views";
@@ -22,3 +24,4 @@ export * from "./SystemLandscapeView";
 export * from "./Views";
 export * from "./Workspace";
 export * from "./WorkspaceInfo";
+export * from "./utils";

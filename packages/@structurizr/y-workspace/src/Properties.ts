@@ -16,6 +16,13 @@ export class Properties {
     public get lastModifiedDate(): string { return new Date(this.propertiesMap.get("lastModifiedDate") as number).toUTCString(); }
     public set lastModifiedDate(value: string) { this.propertiesMap.set("lastModifiedDate", new Date(value).getDate()); }
 
+    public fromSnapshot(properties: IProperties) {
+        this.version = properties["version"];
+        this.name = properties["name"];
+        this.description = properties["description"];
+        this.lastModifiedDate = properties["lastModifiedDate"];
+    }
+
     public toSnapshot(): IProperties {
         return Object.freeze({
             version: this.version,

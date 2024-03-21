@@ -1,14 +1,12 @@
-import { useYjsCollaborative } from "@yjs/react";
 import { useCallback } from "react";
 
 export const useSharingOptions = () => {
-    const { connection } = useYjsCollaborative();
-
     const getSharedLink = useCallback(() => {
-        const room = connection?.roomName;
-        const code = connection?.room.key;
+        // TODO: fetch the roomId and code from the server in exchange for the sessionId
+        const room = "";
+        const code = "";
         return `${window.location.origin}/shared?room=${room}&code=${code}`;
-    }, [connection]);
+    }, []);
 
     return {
         getSharedLink

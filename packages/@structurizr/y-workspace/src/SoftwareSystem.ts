@@ -1,9 +1,21 @@
-import { ElementType, Identifier, ISoftwareSystem, ISupportSnapshot, Tag, Technology, Url } from "@structurizr/dsl";
+import {
+    ElementType,
+    Identifier,
+    ISoftwareSystem,
+    ISupportSnapshot,
+    Tag,
+    Technology,
+    Url
+} from "@structurizr/dsl";
 import * as Y from "yjs";
-import { v4 } from "uuid";
 import { Container } from "./Container";
 import { Group } from "./Group";
 import { Relationship } from "./Relationship";
+import {
+    createContainerPropertiesMap,
+    createGroupPropertiesMap,
+    createRelationshipPropertiesMap
+} from "./utils";
 
 export class SoftwareSystem implements ISupportSnapshot<ISoftwareSystem> {
     private get groupsArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("groups") as Y.Array<Y.Map<unknown>>; }
@@ -65,49 +77,21 @@ export class SoftwareSystem implements ISupportSnapshot<ISoftwareSystem> {
 
     public addContainer() {
         if (!this.propertiesMap.has("containers")) this.propertiesMap.set("containers", new Y.Array<Y.Map<unknown>>());
-        const uniqueId = new String(v4()).substring(0, 8);
-        const containerMap = new Y.Map([
-            ["identifier", `container-${uniqueId}`],
-            ["name", "Container"],
-            ["description", ""],
-            ["technology", []],
-            ["tags", []],
-            ["url", ""],
-            ["relationships", []],
-            ["components", new Y.Array<Y.Map<unknown>>()],
-            ["groups", new Y.Array<Y.Map<unknown>>()]
-        ]);
+        const containerMap = createContainerPropertiesMap();
         this.containersArray.push([containerMap]);
         return new Container(containerMap);
     }
     
     public addGroup() {
         if (!this.propertiesMap.has("groups")) this.propertiesMap.set("groups", new Y.Array<Y.Map<unknown>>());
-        const uniqueId = new String(v4()).substring(0, 8);
-        const groupMap = new Y.Map([
-            ["identifier", `group-${uniqueId}`],
-            ["name", "Group"],
-            ["tags", []],
-            ["people", new Y.Array<Y.Map<unknown>>()],
-            ["softwareSystems", new Y.Array<Y.Map<unknown>>()],
-            ["containers", new Y.Array<Y.Map<unknown>>()],
-            ["components", new Y.Array<Y.Map<unknown>>()]
-        ]);
+        const groupMap = createGroupPropertiesMap();
         this.groupsArray.push([groupMap]);
         return new Group(groupMap);
     }
-    
+
     public addRelationship() {
         if (!this.propertiesMap.has("relationships")) this.propertiesMap.set("relationships", new Y.Array<Y.Map<unknown>>());
-        const uniqueId = new String(v4()).substring(0, 8);
-        const relationshipMap = new Y.Map([
-            ["sourceIdentifier", ""],
-            ["targetIdentifier", ""],
-            ["description", ""],
-            ["technology", []],
-            ["tags", []],
-            ["url", ""]
-        ]);
+        const relationshipMap = createRelationshipPropertiesMap();
         this.relationshipsArray.push([relationshipMap]);
         return new Relationship(relationshipMap);
     }

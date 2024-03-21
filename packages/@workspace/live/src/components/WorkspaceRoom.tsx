@@ -13,8 +13,8 @@ export const WorkspaceRoom: FC<PropsWithChildren<{
     children,
     options
 }) => {
-    const [ isLoading, setIsLoading ] = useState(true);
     const { document, setConnection } = useYjsCollaborative();
+    const [ isLoading, setIsLoading ] = useState(true);
     const [ currentUser, setCurrentUser ] = useState<WorkspaceUser>({
         info: {
             username: "jonathan.joestar",
@@ -45,7 +45,7 @@ export const WorkspaceRoom: FC<PropsWithChildren<{
 
             connection.awareness?.on("change", onAwarenessChange);
             connection.awareness?.on("update", onAwarenessChange);
-
+            
             setConnection(connection);
             setIsLoading(false);
 

@@ -55,7 +55,6 @@ export const WorkspacePage: FC = () => {
                                     <CurrentUser info={account} />
 
                                     <WorkspaceNavigationProvider>
-                                        <WorkspaceInitializer />
                                         <WorkspacePageActions workspaceId={workspaceId} />            
                                         <WorkspaceCollaborativeEditor />
                                     </WorkspaceNavigationProvider>
@@ -72,8 +71,8 @@ export const WorkspacePage: FC = () => {
 }
 
 export const WorkspaceIndexeddbLoader: FC<PropsWithChildren<{ workspaceId: string; }>> = ({ children, workspaceId }) => {
-    const [ isLoading, , onStopLoading ] = useLoaderState({ isLoading: true });
     const { document, setPersistance } = useYjsCollaborative();
+    const [ isLoading, , onStopLoading ] = useLoaderState({ isLoading: true });
 
     useEffect(() => {
         if (workspaceId && document) {
@@ -103,8 +102,8 @@ export const WorkspaceIndexeddbLoader: FC<PropsWithChildren<{ workspaceId: strin
 }
 
 export const WorkspaceWebrtcConnector: FC<PropsWithChildren<{ workspaceId: string; }>> = ({ children, workspaceId }) => {
-    const [ isLoading, , onStopLoading ] = useLoaderState({ isLoading: true });
     const { document, setConnection } = useYjsCollaborative();
+    const [ isLoading, , onStopLoading ] = useLoaderState({ isLoading: true });
 
     useEffect(() => {
         if (workspaceId) {
@@ -132,8 +131,8 @@ export const WorkspaceWebrtcConnector: FC<PropsWithChildren<{ workspaceId: strin
 }
 
 export const WorkspaceInitializer: FC<PropsWithChildren<{}>> = ({ children }) => {
-    const { setWorkspace } = useWorkspace();
     const { document, setUndoManager } = useYjsCollaborative();
+    const { setWorkspace } = useWorkspace();
     const { setCurrentView } = useWorkspaceNavigation();
     
     useEffect(() => {

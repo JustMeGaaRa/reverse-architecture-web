@@ -1,10 +1,24 @@
-import { ElementType, Identifier, IDeploymentNode, ISupportSnapshot, Tag, Technology, Url } from "@structurizr/dsl";
+import {
+    ElementType,
+    Identifier,
+    IDeploymentNode,
+    ISupportSnapshot,
+    Tag,
+    Technology,
+    Url
+} from "@structurizr/dsl";
 import * as Y from "yjs";
-import { v4 } from "uuid";
 import { ContainerInstance } from "./ContainerInstance";
 import { InfrastructureNode } from "./InfrastructureNode";
 import { Relationship } from "./Relationship";
 import { SoftwareSystemInstance } from "./SoftwareSystemInstance";
+import {
+    createContainerInstancePropertiesMap,
+    createDeploymentNodePropertiesMap,
+    createInfrastructureNodePropertiesMap,
+    createRelationshipPropertiesMap,
+    createSoftwareSystemInstancePropertiesMap
+} from "./utils";
 
 export class DeploymentNode implements ISupportSnapshot<IDeploymentNode> {
     private get deploymentNodesArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("deploymentNodes") as Y.Array<Y.Map<unknown>>; }
@@ -79,76 +93,35 @@ export class DeploymentNode implements ISupportSnapshot<IDeploymentNode> {
 
     public addDeploymentNode() {
         if (!this.propertiesMap.has("deploymentNodes")) this.propertiesMap.set("deploymentNodes", new Y.Array<Y.Map<unknown>>());
-        const uniqueId = new String(v4()).substring(0, 8);
-        const deploymentNodeMap = new Y.Map([
-            ["identifier", uniqueId],
-            ["name", ""],
-            ["description", ""],
-            ["technology", []],
-            ["instances", 1],
-            ["tags", []],
-            ["url", ""]
-        ]);
+        const deploymentNodeMap = createDeploymentNodePropertiesMap();
         this.deploymentNodesArray.push([deploymentNodeMap]);
         return new DeploymentNode(deploymentNodeMap);
     }
 
     public addInfrastructureNode() {
         if (!this.propertiesMap.has("infrastructureNodes")) this.propertiesMap.set("infrastructureNodes", new Y.Array<Y.Map<unknown>>());
-        const uniqueId = new String(v4()).substring(0, 8);
-        const infrastructureNodeMap = new Y.Map([
-            ["identifier", uniqueId],
-            ["name", ""],
-            ["description", ""],
-            ["technology", []],
-            ["tags", []],
-            ["url", ""]
-        ]);
+        const infrastructureNodeMap = createInfrastructureNodePropertiesMap();
         this.infrastructureNodesArray.push([infrastructureNodeMap]);
         return new InfrastructureNode(infrastructureNodeMap);
     }
 
     public addSoftwareSystemInstance() {
         if (!this.propertiesMap.has("softwareSystemInstances")) this.propertiesMap.set("softwareSystemInstances", new Y.Array<Y.Map<unknown>>());
-        const uniqueId = new String(v4()).substring(0, 8);
-        const softwareSystemInstanceMap = new Y.Map([
-            ["identifier", uniqueId],
-            ["name", ""],
-            ["description", ""],
-            ["technology", []],
-            ["tags", []],
-            ["url", ""]
-        ]);
+        const softwareSystemInstanceMap = createSoftwareSystemInstancePropertiesMap();
         this.softwareSystemInstancesArray.push([softwareSystemInstanceMap]);
         return new SoftwareSystemInstance(softwareSystemInstanceMap);
     }
 
     public addContainerInstance() {
         if (!this.propertiesMap.has("containerInstances")) this.propertiesMap.set("containerInstances", new Y.Array<Y.Map<unknown>>());
-        const uniqueId = new String(v4()).substring(0, 8);
-        const containerInstanceMap = new Y.Map([
-            ["identifier", uniqueId],
-            ["name", ""],
-            ["description", ""],
-            ["technology", []],
-            ["tags", []],
-            ["url", ""]
-        ]);
+        const containerInstanceMap = createContainerInstancePropertiesMap();
         this.containerInstancesArray.push([containerInstanceMap]);
         return new ContainerInstance(containerInstanceMap);
     }
-    
+
     public addRelationship() {
         if (!this.propertiesMap.has("relationships")) this.propertiesMap.set("relationships", new Y.Array<Y.Map<unknown>>());
-        const uniqueId = new String(v4()).substring(0, 8);
-        const relationshipMap = new Y.Map([
-            ["sourceIdentifier", ""],
-            ["targetIdentifier", ""],
-            ["description", ""],
-            ["technology", []],
-            ["tags", []],
-            ["url", ""]
-        ]);
+        const relationshipMap = createRelationshipPropertiesMap();
         this.relationshipsArray.push([relationshipMap]);
         return new Relationship(relationshipMap);
     }

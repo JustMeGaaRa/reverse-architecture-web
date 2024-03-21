@@ -5,10 +5,10 @@ import { IElementPosition } from "./IElementPosition";
 import { IProperties } from "./IProperties";
 import { IAutoLayout } from "./IAutoLayout";
 
-
 export interface IContainerView extends IViewDefinition {
     type: ViewType;
     identifier: string;
+    softwareSystemIdentifier: Identifier;
     key?: string;
     include?: Array<Identifier | All>;
     exclude?: Array<Identifier>;

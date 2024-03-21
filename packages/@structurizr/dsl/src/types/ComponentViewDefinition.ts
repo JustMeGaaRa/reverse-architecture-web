@@ -32,6 +32,7 @@ export class ComponentViewDefinition implements IViewDefinition, ISupportSnapsho
 
     public type: ViewType;
     public identifier: string;
+    public containerIdentifier: string;
     public key?: string;
     public include: Array<Identifier | All>;
     public exclude: Array<Identifier>;
@@ -56,6 +57,7 @@ export class ComponentViewDefinition implements IViewDefinition, ISupportSnapsho
         return {
             type: this.type,
             identifier: this.identifier,
+            containerIdentifier: this.containerIdentifier,
             key: this.key,
             include: this.include,
             autoLayout: this.autoLayout?.toSnapshot(),

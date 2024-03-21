@@ -1,5 +1,5 @@
 import { useReactFlow } from "@reactflow/core";
-import { IViewDefinition, IWorkspaceSnapshot } from "@structurizr/dsl";
+import { IViewDefinition } from "@structurizr/dsl";
 import { useWorkspace } from "@structurizr/react";
 import { useEffect } from "react";
 import { ElkjsAutoLayoutStrategy } from "../types";
@@ -32,5 +32,5 @@ export const useViewRenderingEffect = (currentView: IViewDefinition) => {
             setNodes([]);
             setEdges([]);
         }
-    }, [setNodes, setEdges, workspace, currentView, strategy]);
+    }, [setNodes, setEdges, workspace, currentView]);
 }

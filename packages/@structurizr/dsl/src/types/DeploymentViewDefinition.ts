@@ -32,6 +32,7 @@ export class DeploymentViewDefinition implements IViewDefinition, ISupportSnapsh
 
     public type: ViewType;
     public identifier: string;
+    public softwareSystemIdentifier: string;
     public environment: string;
     public key?: string;
     public description?: string;
@@ -61,6 +62,7 @@ export class DeploymentViewDefinition implements IViewDefinition, ISupportSnapsh
         return {
             type: this.type,
             identifier: this.identifier,
+            softwareSystemIdentifier: this.softwareSystemIdentifier,
             environment: this.environment,
             key: this.key,
             description: this.description,

@@ -17,7 +17,6 @@ export const useWorkspaceExplorer = () => {
     const { document } = useYjsCollaborative();
     
     const create = useCallback((author: string, snapshot?: IWorkspaceSnapshot, callbacks?: IActionCallbacks) => {
-        console.log("Creating workspace...");
         Structurizr
             .create(document, author, snapshot)
             .then(workspaceInfo => {;

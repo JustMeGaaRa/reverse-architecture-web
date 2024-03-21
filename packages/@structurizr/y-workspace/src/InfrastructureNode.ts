@@ -1,7 +1,15 @@
-import { ElementType, Identifier, IInfrastructureNode, ISupportSnapshot, Tag, Technology, Url } from "@structurizr/dsl";
+import {
+    ElementType,
+    Identifier,
+    IInfrastructureNode,
+    ISupportSnapshot,
+    Tag,
+    Technology,
+    Url
+} from "@structurizr/dsl";
 import * as Y from "yjs";
-import { v4 } from "uuid";
 import { Relationship } from "./Relationship";
+import { createRelationshipPropertiesMap } from "./utils";
 
 export class InfrastructureNode implements ISupportSnapshot<IInfrastructureNode> {
     private get relationshipsArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("relationships") as Y.Array<Y.Map<unknown>>; }
@@ -52,18 +60,10 @@ export class InfrastructureNode implements ISupportSnapshot<IInfrastructureNode>
             relationships: this.relationships?.map(relationship => relationship.toSnapshot())
         })
     }
-    
+
     public addRelationship() {
         if (!this.propertiesMap.has("relationships")) this.propertiesMap.set("relationships", new Y.Array<Y.Map<unknown>>());
-        const uniqueId = new String(v4()).substring(0, 8);
-        const relationshipMap = new Y.Map([
-            ["sourceIdentifier", ""],
-            ["targetIdentifier", ""],
-            ["description", ""],
-            ["technology", []],
-            ["tags", []],
-            ["url", ""]
-        ]);
+        const relationshipMap = createRelationshipPropertiesMap();
         this.relationshipsArray.push([relationshipMap]);
         return new Relationship(relationshipMap);
     }
