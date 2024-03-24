@@ -1,5 +1,6 @@
 import * as Y from "yjs";
 import { v4 } from "uuid";
+import { AutoLayoutDirection } from "@structurizr/dsl";
 
 export const createUniqueIdentifier = () => {
     return new String(v4()).substring(0, 8);
@@ -254,4 +255,19 @@ export const createDeploymentViewPropertiesMap = () => {
         ["properties", new Y.Map<unknown>()]
     ]);
     return deploymentViewMap;
+}
+
+export const createAutoLayoutPropertiesMap = () => {
+    const autoLayoutMap = new Y.Map([
+        ["direction", AutoLayoutDirection.TopBotom],
+        ["rankSeparation", 300],
+        ["nodeSeparation", 300]
+    ]);
+    return autoLayoutMap;
+}
+
+export const createAnimationPropertiesMap = () => {
+    // TODO: initialize the animation properties map
+    const animationMap = new Y.Map();
+    return animationMap;
 }

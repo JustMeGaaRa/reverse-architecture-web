@@ -2,7 +2,6 @@ import {
     findContainerParent,
     findViewOrDefault,
     IElement,
-    IViewDefinition,
     IWorkspaceSnapshot,
     Tag,
     ViewType,
@@ -12,11 +11,6 @@ import { WorkspaceNavigationContext } from "../contexts";
 
 export const useWorkspaceNavigation = () => {
     const { currentView, setCurrentView } = useContext(WorkspaceNavigationContext);
-
-    const openView = useCallback((workspace: IWorkspaceSnapshot, viewDefinition: IViewDefinition) => {
-        const view = findViewOrDefault(workspace, viewDefinition);
-        setCurrentView(view);
-    }, [setCurrentView]);
 
     const zoomIntoElement = useCallback((workspace: IWorkspaceSnapshot, element: IElement) => {
         if (element.tags.some(tag => tag.name === Tag.SoftwareSystem.name)) {
@@ -57,7 +51,6 @@ export const useWorkspaceNavigation = () => {
     return {
         currentView,
         setCurrentView,
-        openView,
         zoomIntoElement,
         zoomOutOfElement,
     }

@@ -1,7 +1,6 @@
-import { IViewDefinition, IViewDefinitionMetadata } from "@structurizr/dsl";
-import { FC, PropsWithChildren, useState } from "react";
+import { IViewDefinitionMetadata } from "@structurizr/dsl";
+import { FC, PropsWithChildren } from "react";
 import { ViewMetadataContext } from "../contexts";
-import { useViewRenderingEffect } from "../hooks";
 
 export const Views: FC<PropsWithChildren> = ({ children }) => {
     return (
@@ -17,9 +16,4 @@ export const ViewMetadataProvider: FC<PropsWithChildren<{ metadata: IViewDefinit
             {children}
         </ViewMetadataContext.Provider>
     );
-}
-
-export const ViewRenderingEffect: FC<{ view: IViewDefinition }> = ({ view }) => {
-    useViewRenderingEffect(view);
-    return null;
 }

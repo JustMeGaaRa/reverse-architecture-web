@@ -1,15 +1,21 @@
 import { Node } from "@reactflow/core";
 import { ElementType, ISystemLandscapeView, Position, SystemLandscapeViewStrategy } from "@structurizr/dsl";
 import { useWorkspace } from "@structurizr/react";
-import { FC, PropsWithChildren, useCallback } from "react";
-import { useSystemLandscapeView } from "../hooks";
+import { FC, PropsWithChildren, useCallback, useEffect } from "react";
+import { useSystemLandscapeView, useViewRenderer } from "../hooks";
 import { ElementOptionsToolbar, ElementDiagramFlowControls, ElementZoomControlsBackground } from "./Nodes";
-import { ViewMetadataProvider, ViewRenderingEffect } from "./Views";
-import { ViewStrategyProvider } from "./ViewStrategyProvider";
+import { ViewMetadataProvider } from "./Views";
 
 export const SystemLandscapeView: FC<PropsWithChildren<{ view: ISystemLandscapeView }>> = ({ children, view }) => {
     const { workspace } = useWorkspace();
     const { addSoftwareSystem, addPerson, addRelationship } = useSystemLandscapeView();
+    const { renderView } = useViewRenderer();
+
+    // NOTE: we need to re-render the view ONLY when the selected view changes
+    useEffect(() => {
+        const strategy = new SystemLandscapeViewStrategy(workspace.model, view);
+        return renderView(workspace, view, strategy);
+    }, [workspace, view, renderView]);
     
     const handleOnFlowClick = useCallback((sourceNode: Node, position: Position) => {
         switch (sourceNode.data?.element?.type) {
@@ -25,17 +31,14 @@ export const SystemLandscapeView: FC<PropsWithChildren<{ view: ISystemLandscapeV
     }, [addPerson, addSoftwareSystem, addRelationship]);
 
     return (
-        <ViewStrategyProvider strategy={new SystemLandscapeViewStrategy(workspace.model, view)}>
-            <ViewMetadataProvider metadata={view}>
-                <ElementOptionsToolbar />
-                <ElementDiagramFlowControls
-                    workspace={workspace}
-                    onHandleClick={handleOnFlowClick}
-                />
-                <ElementZoomControlsBackground />
-                <ViewRenderingEffect view={view} />
-                {children}
-            </ViewMetadataProvider>
-        </ViewStrategyProvider>
+        <ViewMetadataProvider metadata={view}>
+            <ElementOptionsToolbar />
+            <ElementDiagramFlowControls
+                workspace={workspace}
+                onHandleClick={handleOnFlowClick}
+            />
+            <ElementZoomControlsBackground />
+            {children}
+        </ViewMetadataProvider>
     )
 }

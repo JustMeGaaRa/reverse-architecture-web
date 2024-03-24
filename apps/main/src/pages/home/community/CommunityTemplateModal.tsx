@@ -222,7 +222,7 @@ export const CommunityTemplateModal: FC<{
                                                 <WorkspaceNavigationProvider>
                                                     <WorkspaceViewer
                                                         workspace={template}
-                                                        initialView={template.views.systemLandscape}
+                                                        view={template.views.systemLandscape}
                                                     >
                                                         <WorkspaceViewBreadcrumbs /> 
                                                         <WorkspacePanel position={"bottom-left"} spacing={2}>

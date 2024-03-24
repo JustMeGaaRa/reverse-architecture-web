@@ -1,8 +1,7 @@
 import { Connection } from "@reactflow/core";
 import { ElementType, IElement, IViewDefinition, IWorkspaceSnapshot, Position, ViewType } from "@structurizr/dsl";
-import { useWorkspace } from "@structurizr/react";
-import { FC, PropsWithChildren, useCallback, useEffect } from "react";
-import { useWorkspaceNavigation, useWorkspaceToolbarStore } from "../hooks";
+import { FC, PropsWithChildren, useCallback } from "react";
+import { useWorkspaceToolbarStore } from "../hooks";
 import { ComponentView } from "./ComponentView";
 import { ContainerView } from "./ContainerView";
 import { DeploymentView } from "./DeploymentView";
@@ -13,19 +12,16 @@ import { Views } from "./Views";
 import { Workspace } from "./Workspace";
 
 export const WorkspaceViewer: FC<PropsWithChildren<{
-    workspace?: IWorkspaceSnapshot;
-    initialView?: IViewDefinition;
+    workspace: IWorkspaceSnapshot;
+    view: IViewDefinition;
 }>> = ({
     children,
-    workspace: workspaceSnapshot,
-    initialView: viewSnapshot
+    workspace,
+    view
 }) => {
-    const { workspace, setWorkspace } = useWorkspace();
-    const { currentView, setCurrentView } = useWorkspaceNavigation();
+    // const { workspace, setWorkspace } = useWorkspace();
+    // const { currentView, setCurrentView } = useWorkspaceNavigation();
     const { enabledTool, addingElementType } = useWorkspaceToolbarStore();
-
-    useEffect(() => { if (workspaceSnapshot) { setWorkspace(workspaceSnapshot) }}, [workspaceSnapshot, setWorkspace]);
-    useEffect(() => { if (viewSnapshot) { setCurrentView(viewSnapshot) }}, [viewSnapshot, setCurrentView]);
     
     // const {
     //     addGroup,
@@ -53,8 +49,8 @@ export const WorkspaceViewer: FC<PropsWithChildren<{
     // } = useContainerView(view.identifier);
 
     const handleOnElementClick = useCallback((event: React.MouseEvent, element: IElement, relativePosition: Position) => {
-        if (currentView && enabledTool === "adding-element") {
-            switch (currentView?.type) {
+        if (view && enabledTool === "adding-element") {
+            switch (view?.type) {
                 case ViewType.Model:
                     break;
                 case ViewType.SystemLandscape:
@@ -101,11 +97,11 @@ export const WorkspaceViewer: FC<PropsWithChildren<{
                     break;
             }
         }
-    }, [addingElementType, currentView, enabledTool]);
+    }, [addingElementType, view, enabledTool]);
 
     const handleOnViewClick = useCallback((event: React.MouseEvent, relativePosition: Position) => {
-        if (currentView && enabledTool === "adding-element") {
-            switch (currentView?.type) {
+        if (view && enabledTool === "adding-element") {
+            switch (view?.type) {
                 case ViewType.Model:
                     break;
                 case ViewType.SystemLandscape:
@@ -166,11 +162,11 @@ export const WorkspaceViewer: FC<PropsWithChildren<{
         // if (isCommentingModeEnabled) {
         //     throw new Error("Not implemented");
         // }
-    }, [addingElementType, currentView, enabledTool]);
+    }, [addingElementType, view, enabledTool]);
 
     const handleOnElementDragStop = useCallback((event: React.MouseEvent, element: IElement) => {
-        if (currentView) {
-            switch (currentView?.type) {
+        if (view) {
+            switch (view?.type) {
                 case ViewType.Model:
                     break;
                 case ViewType.SystemLandscape:
@@ -189,11 +185,11 @@ export const WorkspaceViewer: FC<PropsWithChildren<{
                     break;
             }
         }
-    }, [currentView]);
+    }, [view]);
 
     const handleOnElementsConnect = useCallback((connection: Connection) => {
-        if (currentView) {
-            switch (currentView?.type) {
+        if (view) {
+            switch (view?.type) {
                 case ViewType.Model:
                     break;
                 case ViewType.SystemLandscape:
@@ -212,7 +208,7 @@ export const WorkspaceViewer: FC<PropsWithChildren<{
                     break;
             }
         }
-    }, [currentView]);
+    }, [view]);
 
     return (
         <Workspace
@@ -222,37 +218,42 @@ export const WorkspaceViewer: FC<PropsWithChildren<{
             onElementDragStop={handleOnElementDragStop}
             onElementsConnect={handleOnElementsConnect}
         >
-            {currentView?.type === ViewType.Model && (
+            {view !== undefined && view?.type === ViewType.Model && (
                 <Model model={workspace?.model}>
 
                 </Model>
             )}
             <Views>
-                {workspace.views.systemLandscape?.type === currentView?.type && (
-                    <SystemLandscapeView key={workspace.views.systemLandscape?.identifier} view={workspace?.views.systemLandscape}>
-
-                    </SystemLandscapeView>
+                {view !== undefined && view.type === ViewType.SystemLandscape && (
+                    <SystemLandscapeView
+                        key={workspace.views.systemLandscape?.identifier}
+                        view={workspace?.views.systemLandscape}
+                    />
                 )}
-                {workspace.views.systemContexts.filter(view => view.type === currentView?.type && view.identifier === currentView?.identifier).map(view => (
-                    <SystemContextView key={view.identifier} view={view}>
-
-                    </SystemContextView>
-                ))}
-                {workspace.views.containers.filter(view => view.type === currentView?.type && view.identifier === currentView?.identifier).map(view => (
-                    <ContainerView key={view.identifier} view={view}>
-
-                    </ContainerView>
-                ))}
-                {workspace.views.components.filter(view => view.type === currentView?.type && view.identifier === currentView?.identifier).map(view => (
-                    <ComponentView key={view.identifier} view={view}>
-
-                    </ComponentView>
-                ))}
-                {workspace.views.deployments.filter(view => view.type === currentView?.type && view.identifier === currentView?.identifier).map(view => (
-                    <DeploymentView key={view.identifier} view={view}>
-
-                    </DeploymentView>
-                ))}
+                {view !== undefined && view.type === ViewType.SystemContext && (
+                    <SystemContextView
+                        key={view.identifier}
+                        view={workspace.views.systemContexts.find(view => view.identifier === view.identifier)}
+                    />
+                )}
+                {view !== undefined && view.type === ViewType.Container && (
+                    <ContainerView
+                        key={view.identifier}
+                        view={workspace.views.containers.find(view => view.identifier === view.identifier)}
+                    />
+                )}
+                {view !== undefined && view.type === ViewType.Component && (
+                    <ComponentView
+                        key={view.identifier}
+                        view={workspace.views.components.find(view => view.identifier === view?.identifier)}
+                    />
+                )}
+                {view !== undefined && view.type === ViewType.Deployment && (
+                    <DeploymentView
+                        key={view.identifier}
+                        view={workspace.views.deployments.find(view => view.identifier === view?.identifier)}
+                    />
+                )}
                 {children}
             </Views>
         </Workspace>

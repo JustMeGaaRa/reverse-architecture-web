@@ -3,6 +3,7 @@ import * as Y from "yjs";
 import { AutoLayout } from "./AutoLayout";
 import { Animation } from "./Animation";
 import { Properties } from "./Properties";
+import { createAnimationPropertiesMap, createAutoLayoutPropertiesMap } from "./utils";
 
 export class ComponentView implements ISupportSnapshot<IComponentView> {
     private get autoLayoutMap(): Y.Map<unknown> { return this.propertiesMap.get("autoLayout") as Y.Map<unknown>; }
@@ -10,7 +11,7 @@ export class ComponentView implements ISupportSnapshot<IComponentView> {
 
     public constructor(private readonly propertiesMap: Y.Map<unknown>) { }
 
-    public readonly type: ViewType.Component;
+    public get type(): ViewType { return ViewType.Component; }
 
     public get identifier(): Identifier { return this.propertiesMap.get("identifier") as Identifier; }
     public set identifier(value: Identifier) { this.propertiesMap.set("identifier", value); }
@@ -53,8 +54,19 @@ export class ComponentView implements ISupportSnapshot<IComponentView> {
         this.title = componentView.title;
         this.elements = componentView.elements;
         this.relationships = componentView.relationships;
-        componentView.autoLayout && this.autoLayout.fromSnapshot(componentView.autoLayout);
-        componentView.animation && this.animation.fromSnapshot(componentView.animation);
+
+        if (componentView.autoLayout) {
+            const autoLayoutMap = createAutoLayoutPropertiesMap();
+            this.propertiesMap.set("autoLayout", autoLayoutMap);
+            this.autoLayout.fromSnapshot(componentView.autoLayout);
+        }
+
+        if (componentView.animation) {
+            const animationMap = createAnimationPropertiesMap();
+            this.propertiesMap.set("animation", animationMap);
+            this.animation.fromSnapshot(componentView.animation);
+        }
+
         componentView.properties && this.properties.fromSnapshot(componentView.properties);
     }
 

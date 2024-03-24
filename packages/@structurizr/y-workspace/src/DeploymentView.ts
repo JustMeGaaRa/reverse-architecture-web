@@ -3,6 +3,7 @@ import * as Y from "yjs";
 import { AutoLayout } from "./AutoLayout";
 import { Animation } from "./Animation";
 import { Properties } from "./Properties";
+import { createAutoLayoutPropertiesMap, createAnimationPropertiesMap } from "./utils";
 
 export class DeploymentView implements ISupportSnapshot<IDeploymentView> {
     private get autoLayoutMap(): Y.Map<unknown> { return this.propertiesMap.get("autoLayout") as Y.Map<unknown>; }
@@ -10,7 +11,7 @@ export class DeploymentView implements ISupportSnapshot<IDeploymentView> {
 
     public constructor(private readonly propertiesMap: Y.Map<unknown>) { }
 
-    public readonly type: ViewType.Deployment;
+    public get type(): ViewType { return ViewType.Deployment; }
 
     public get identifier(): Identifier { return this.propertiesMap.get("identifier") as Identifier; }
     public set identifier(value: Identifier) { this.propertiesMap.set("identifier", value); }
@@ -57,8 +58,19 @@ export class DeploymentView implements ISupportSnapshot<IDeploymentView> {
         this.title = deploymentView.title;
         this.elements = deploymentView.elements;
         this.relationships = deploymentView.relationships;
-        deploymentView.autoLayout && this.autoLayout.fromSnapshot(deploymentView.autoLayout);
-        deploymentView.animation && this.animation.fromSnapshot(deploymentView.animation);
+
+        if (deploymentView.autoLayout) {
+            const autoLayoutMap = createAutoLayoutPropertiesMap();
+            this.propertiesMap.set("autoLayout", autoLayoutMap);
+            this.autoLayout.fromSnapshot(deploymentView.autoLayout);
+        }
+
+        if (deploymentView.animation) {
+            const animationMap = createAnimationPropertiesMap();
+            this.propertiesMap.set("animation", animationMap);
+            this.animation.fromSnapshot(deploymentView.animation);
+        }
+
         deploymentView.properties && this.properties.fromSnapshot(deploymentView.properties);
     }
 

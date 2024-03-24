@@ -30,7 +30,7 @@ export const WorkspaceViewBreadcrumbs: FC<{
     isVisible = true
 }) => {
     const { workspace } = useWorkspace();
-    const { currentView, openView } = useWorkspaceNavigation();
+    const { currentView, setCurrentView } = useWorkspaceNavigation();
     const [ links, setLinks ] = useState([]);
 
     useEffect(() => {
@@ -53,8 +53,8 @@ export const WorkspaceViewBreadcrumbs: FC<{
     }, [currentView, workspace])
 
     const handleOnViewItemClick = useCallback((viewKeys: ViewKeys) => {
-        openView(workspace, viewKeys);
-    }, [openView, workspace]);
+        setCurrentView(viewKeys);
+    }, [setCurrentView]);
 
     return isVisible && (
         <WorkspacePanel position={position ?? "top-left"}>

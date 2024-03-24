@@ -15,16 +15,15 @@ export const CommentThreadList: FC<{
         setCommentThreads,
         setSelectedThreadId
     } = useCommentsStore();
-    const { workspace } = useWorkspace();
-    const { openView } = useWorkspaceNavigation();
+    const { setCurrentView } = useWorkspaceNavigation();
 
     // useEffect(() => setCommentThreads(discussions), [discussions, setCommentThreads]);
 
     const handleOnClick = useCallback((comment: CommentThread) => {
         const isCurrent = selectedThreadId === comment.commentThreadId;
         setSelectedThreadId(isCurrent ? undefined : comment.commentThreadId);
-        openView(workspace, comment.metadata.view);
-    }, [workspace, selectedThreadId, setSelectedThreadId, openView]);
+        setCurrentView(comment.metadata.view);
+    }, [selectedThreadId, setSelectedThreadId, setCurrentView]);
 
     return (
         <Box

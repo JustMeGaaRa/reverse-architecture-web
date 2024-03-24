@@ -2,16 +2,20 @@ import { Node } from "@reactflow/core";
 import { ElementType, IContainerView, ContainerViewStrategy, Position } from "@structurizr/dsl";
 import { useWorkspace } from "@structurizr/react";
 import { FC, PropsWithChildren, useCallback, useEffect } from "react";
-import { useViewRenderingEffect, useContainerView, useViewStrategy } from "../hooks";
+import { useContainerView, useViewRenderer } from "../hooks";
 import { ElementOptionsToolbar, ElementDiagramFlowControls, ElementZoomControlsBackground } from "./Nodes";
+import { ViewMetadataProvider } from "./Views";
 
 export const ContainerView: FC<PropsWithChildren<{ view: IContainerView }>> = ({ children, view }) => {
     const { workspace } = useWorkspace();
-    const { setStrategy } = useViewStrategy();
     const { addSoftwareSystem, addPerson, addContainer, addRelationship } = useContainerView(view.identifier);
+    const { renderView } = useViewRenderer();
 
-    useEffect(() => setStrategy(new ContainerViewStrategy(workspace.model, view)), [setStrategy, view, workspace.model]);
-    useViewRenderingEffect(view);
+    // NOTE: we need to re-render the view ONLY when the selected view changes
+    useEffect(() => {
+        const strategy = new ContainerViewStrategy(workspace.model, view);
+        return renderView(workspace, view, strategy);
+    }, [workspace, view, renderView]);
 
     const handleOnFlowClick = useCallback((sourceNode: Node, position: Position) => {
         switch (sourceNode.data?.element?.type) {
@@ -30,7 +34,7 @@ export const ContainerView: FC<PropsWithChildren<{ view: IContainerView }>> = ({
     }, [addPerson, addRelationship, addSoftwareSystem, addContainer]);
 
     return (
-        <>
+        <ViewMetadataProvider metadata={view}>
             <ElementOptionsToolbar />
             <ElementDiagramFlowControls
                 workspace={workspace}
@@ -38,6 +42,6 @@ export const ContainerView: FC<PropsWithChildren<{ view: IContainerView }>> = ({
             />
             <ElementZoomControlsBackground />
             {children}
-        </>
+        </ViewMetadataProvider>
     )
 }

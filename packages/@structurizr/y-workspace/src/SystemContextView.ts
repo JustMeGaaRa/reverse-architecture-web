@@ -3,6 +3,7 @@ import * as Y from "yjs";
 import { AutoLayout } from "./AutoLayout";
 import { Animation } from "./Animation";
 import { Properties } from "./Properties";
+import { createAnimationPropertiesMap, createAutoLayoutPropertiesMap } from "./utils";
 
 export class SystemContextView implements ISupportSnapshot<ISystemContextView> {
     private get autoLayoutMap(): Y.Map<unknown> { return this.propertiesMap.get("autoLayout") as Y.Map<unknown>; }
@@ -10,7 +11,7 @@ export class SystemContextView implements ISupportSnapshot<ISystemContextView> {
 
     public constructor(private readonly propertiesMap: Y.Map<unknown>) { }
 
-    public readonly type: ViewType.SystemContext;
+    public get type(): ViewType { return ViewType.SystemContext; }
 
     public get identifier(): Identifier { return this.propertiesMap.get("identifier") as Identifier; }
     public set identifier(value: Identifier) { this.propertiesMap.set("identifier", value); }
@@ -53,8 +54,19 @@ export class SystemContextView implements ISupportSnapshot<ISystemContextView> {
         this.title = systemContextView.title;
         this.elements = systemContextView.elements;
         this.relationships = systemContextView.relationships;
-        systemContextView.autoLayout && this.autoLayout.fromSnapshot(systemContextView.autoLayout);
-        systemContextView.animation && this.animation.fromSnapshot(systemContextView.animation);
+
+        if (systemContextView.autoLayout) {
+            const autoLayoutMap = createAutoLayoutPropertiesMap();
+            this.propertiesMap.set("autoLayout", autoLayoutMap);
+            this.autoLayout.fromSnapshot(systemContextView.autoLayout);
+        }
+
+        if (systemContextView.animation) {
+            const animationMap = createAnimationPropertiesMap();
+            this.propertiesMap.set("animation", animationMap);
+            this.animation.fromSnapshot(systemContextView.animation);
+        }
+
         systemContextView.properties && this.properties.fromSnapshot(systemContextView.properties);
     }
 

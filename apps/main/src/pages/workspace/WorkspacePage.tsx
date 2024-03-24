@@ -70,7 +70,7 @@ export const WorkspacePage: FC = () => {
     )
 }
 
-export const WorkspaceIndexeddbLoader: FC<PropsWithChildren<{ workspaceId: string; }>> = ({ children, workspaceId }) => {
+export const WorkspaceIndexeddbLoader: FC<PropsWithChildren<{ workspaceId: string }>> = ({ children, workspaceId }) => {
     const { document, setPersistance } = useYjsCollaborative();
     const [ isLoading, , onStopLoading ] = useLoaderState({ isLoading: true });
 
@@ -101,7 +101,7 @@ export const WorkspaceIndexeddbLoader: FC<PropsWithChildren<{ workspaceId: strin
         );
 }
 
-export const WorkspaceWebrtcConnector: FC<PropsWithChildren<{ workspaceId: string; }>> = ({ children, workspaceId }) => {
+export const WorkspaceWebrtcConnector: FC<PropsWithChildren<{ workspaceId: string }>> = ({ children, workspaceId }) => {
     const { document, setConnection } = useYjsCollaborative();
     const [ isLoading, , onStopLoading ] = useLoaderState({ isLoading: true });
 
@@ -130,7 +130,7 @@ export const WorkspaceWebrtcConnector: FC<PropsWithChildren<{ workspaceId: strin
         );
 }
 
-export const WorkspaceInitializer: FC<PropsWithChildren<{}>> = ({ children }) => {
+export const WorkspaceInitializer: FC<PropsWithChildren> = ({ children }) => {
     const { document, setUndoManager } = useYjsCollaborative();
     const { setWorkspace } = useWorkspace();
     const { setCurrentView } = useWorkspaceNavigation();
@@ -157,11 +157,7 @@ export const WorkspaceInitializer: FC<PropsWithChildren<{}>> = ({ children }) =>
     )
 }
 
-export const WorkspaceCommentsLoader: FC<{
-    workspaceId: string;
-}> = ({
-    workspaceId
-}) => {
+export const WorkspaceCommentsLoader: FC<{ workspaceId: string }> = ({ workspaceId }) => {
     const { snackbar } = useSnackbar();
     const { setCommentThreads } = useCommentsStore();
     const [ isLoading, onStartLoading, onStopLoading ] = useLoaderState();

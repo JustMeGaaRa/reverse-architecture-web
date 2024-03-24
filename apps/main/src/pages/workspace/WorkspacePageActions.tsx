@@ -89,7 +89,7 @@ export const WorkspacePageActions: FC<{ workspaceId: string }> = ({ workspaceId 
 
     // SECTION: header content
     const { workspace } = useWorkspace();
-    const { openView } = useWorkspaceNavigation();
+    const { setCurrentView } = useWorkspaceNavigation();
     const { currentUser, collaboratingUsers } = useWorkspaceRoom();
     const { followUser } = useFollowUserMode();
 
@@ -103,18 +103,18 @@ export const WorkspacePageActions: FC<{ workspaceId: string }> = ({ workspaceId 
 
     const handleOnClickDiagrammingMode = useCallback(() => {
         setMode(WorkspaceContentMode.Diagramming);
-        openView(workspace, workspace.views.systemLandscape[0]);
-    }, [openView, workspace]);
+        setCurrentView(workspace.views.systemLandscape);
+    }, [setCurrentView, workspace]);
 
     const handleOnClickModelingMode = useCallback(() => {
         setMode(WorkspaceContentMode.Modeling);
-        openView(workspace, { type: ViewType.Model, identifier: "" });
-    }, [openView, workspace]);
+        setCurrentView({ type: ViewType.Model, identifier: "" });
+    }, [setCurrentView]);
 
     const handleOnClickDeploymentMode = useCallback(() => {
         setMode(WorkspaceContentMode.Deployment);
-        openView(workspace, workspace.views.deployments?.at(0));
-    }, [openView, workspace]);
+        setCurrentView(workspace.views.deployments?.at(0));
+    }, [setCurrentView, workspace]);
 
     // TODO: consider moving autosave effect to some other component
     // useWorkspaceAutoSaveEffect(workspaceId);

@@ -63,13 +63,12 @@ export enum WorkspaceContentPanel {
 }
 
 export const WorkspaceCollaborativeEditor: FC<PropsWithChildren> = ({ children }) => {
-    const { currentView } = useWorkspaceNavigation();
+    const { workspace, setWorkspace } = useWorkspace();
+    const { currentView, setCurrentView } = useWorkspaceNavigation();
     const [ structurizrCode, setStructurizrCode ] = useState("");
     // const { setViewport } = useReactFlow();
     
     const { document, setUndoManager } = useYjsCollaborative();
-    const { setWorkspace } = useWorkspace();
-    const { setCurrentView } = useWorkspaceNavigation();
     
     useEffect(() => {
         if (document) {
@@ -79,7 +78,8 @@ export const WorkspaceCollaborativeEditor: FC<PropsWithChildren> = ({ children }
             const undoManager = new Y.UndoManager([modelMap, viewsMap, propertiesMap]);
             const workspace = new Workspace(document);
             const workspaceSnapshot = workspace.toSnapshot();
-            
+            console.log("workspaceSnapshot", workspaceSnapshot)
+
             setUndoManager(undoManager);
             setWorkspace(workspaceSnapshot);
             setCurrentView(workspaceSnapshot.views.systemLandscape);
@@ -183,11 +183,11 @@ export const WorkspaceCollaborativeEditor: FC<PropsWithChildren> = ({ children }
                     outline={presentationEnabled ? `${presenterInfo?.color}.600` : undefined}
                     outlineWidth={presentationEnabled ? [2, 2, 2, 2] : [2, 2, 0, 0]}
                 >
-                    <WorkspaceViewer>
+                    <WorkspaceViewer workspace={workspace} view={currentView}>
                         <CollaboratingUserPane users={currentViewUsers} />
                         {/* <DiscussionsPane discussions={currentViewDiscussions} /> */}
                         <PresenterInfoBar presenter={presenterInfo} />
-                        <WorkspaceViewBreadcrumbs isVisible={isDiagrammingMode} />
+                        {/* <WorkspaceViewBreadcrumbs isVisible={isDiagrammingMode} /> */}
                         <WorkspaceUndoRedoControls isVisible={!presentationEnabled} />
                         <WorkspaceActionsToolbar />
                         <WorkspaceZoomControls />

@@ -2,16 +2,20 @@ import { Node } from "@reactflow/core";
 import { ElementType, IComponentView, ComponentViewStrategy, Position } from "@structurizr/dsl";
 import { useWorkspace } from "@structurizr/react";
 import { FC, PropsWithChildren, useCallback, useEffect } from "react";
-import { useViewRenderingEffect, useComponentView, useViewStrategy } from "../hooks";
+import { useComponentView, useViewRenderer } from "../hooks";
 import { ElementOptionsToolbar, ElementDiagramFlowControls, ElementZoomControlsBackground } from "./Nodes";
+import { ViewMetadataProvider } from "./Views";
 
 export const ComponentView: FC<PropsWithChildren<{ view: IComponentView }>> = ({ children, view }) => {
     const { workspace } = useWorkspace();
-    const { setStrategy } = useViewStrategy();
     const { addSoftwareSystem, addPerson, addContainer, addComponent, addRelationship } = useComponentView(view.identifier);
+    const { renderView } = useViewRenderer();
 
-    useEffect(() => setStrategy(new ComponentViewStrategy(workspace.model, view)), [setStrategy, view, workspace.model]);
-    useViewRenderingEffect(view);
+    // NOTE: we need to re-render the view ONLY when the selected view changes
+    useEffect(() => {
+        const strategy = new ComponentViewStrategy(workspace.model, view);
+        return renderView(workspace, view, strategy);
+    }, [workspace, view, renderView]);
 
     const handleOnFlowClick = useCallback((sourceNode: Node, position: Position) => {
         switch (sourceNode.data?.element?.type) {
@@ -34,7 +38,7 @@ export const ComponentView: FC<PropsWithChildren<{ view: IComponentView }>> = ({
     }, [addPerson, addRelationship, addSoftwareSystem, addContainer, addComponent]);
 
     return (
-        <>
+        <ViewMetadataProvider metadata={view}>
             <ElementOptionsToolbar />
             <ElementDiagramFlowControls
                 workspace={workspace}
@@ -42,6 +46,6 @@ export const ComponentView: FC<PropsWithChildren<{ view: IComponentView }>> = ({
             />
             <ElementZoomControlsBackground />
             {children}
-        </>
+        </ViewMetadataProvider>
     )
 }

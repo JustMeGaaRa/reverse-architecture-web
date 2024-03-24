@@ -3,6 +3,7 @@ import * as Y from "yjs";
 import { AutoLayout } from "./AutoLayout";
 import { Animation } from "./Animation";
 import { Properties } from "./Properties";
+import { createAnimationPropertiesMap, createAutoLayoutPropertiesMap } from "./utils";
 
 export class SystemLandscapeView implements ISupportSnapshot<ISystemLandscapeView> {
     private get autoLayoutMap(): Y.Map<unknown> { return this.propertiesMap.get("autoLayout") as Y.Map<unknown>; }
@@ -10,7 +11,7 @@ export class SystemLandscapeView implements ISupportSnapshot<ISystemLandscapeVie
 
     public constructor(private readonly propertiesMap: Y.Map<unknown>) { }
 
-    public readonly type: ViewType.SystemLandscape;
+    public get type(): ViewType { return ViewType.SystemLandscape; }
 
     public get identifier(): Identifier { return this.propertiesMap.get("identifier") as Identifier; }
     public set identifier(value: Identifier) { this.propertiesMap.set("identifier", value); }
@@ -49,8 +50,19 @@ export class SystemLandscapeView implements ISupportSnapshot<ISystemLandscapeVie
         this.title = systemLandscapeView.title;
         this.elements = systemLandscapeView.elements;
         this.relationships = systemLandscapeView.relationships;
-        systemLandscapeView.autoLayout && this.autoLayout.fromSnapshot(systemLandscapeView.autoLayout);
-        systemLandscapeView.animation && this.animation.fromSnapshot(systemLandscapeView.animation);
+
+        if (systemLandscapeView.autoLayout) {
+            const autoLayoutMap = createAutoLayoutPropertiesMap();
+            this.propertiesMap.set("autoLayout", autoLayoutMap);
+            this.autoLayout.fromSnapshot(systemLandscapeView.autoLayout);
+        }
+
+        if (systemLandscapeView.animation) {
+            const animationMap = createAnimationPropertiesMap();
+            this.propertiesMap.set("animation", animationMap);
+            this.animation.fromSnapshot(systemLandscapeView.animation);
+        }
+        
         systemLandscapeView.properties && this.properties.fromSnapshot(systemLandscapeView.properties);
     }
 
