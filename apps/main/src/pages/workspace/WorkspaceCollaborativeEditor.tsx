@@ -1,5 +1,5 @@
 import { Divider } from "@chakra-ui/react";
-import { useReactFlow } from "@reactflow/core";
+import { StructurizrEditor } from "@monaco-editor/structurizr";
 import {
     Shell,
     ShellBody,
@@ -7,26 +7,17 @@ import {
     ShellHeader,
     ShellPanel,
     ShellTabContent,
-    ShellTitle,
+    ShellTitle
 } from "@restruct/ui";
 import { parseStructurizr } from "@structurizr/parser";
 import { useWorkspace } from "@structurizr/react";
+import { Workspace } from "@structurizr/y-workspace";
 import {
-    CollaboratingUserPane,
-    WorkspaceEditor,
-    WorkspaceViewBreadcrumbs,
-    WorkspaceViewer,
-    useOnUserViewportChange,
-    useOnUserViewChange,
-    useOnUserAwarenessChange,
-    useWorkspaceNavigation,
-    useWorkspaceRoom,
-    usePresentationMode,
-    useUserAwareness,
-    useOnFollowingUserViewportChange
+    CollaboratingUserPane, usePresentationMode,
+    useUserAwareness, useWorkspaceNavigation,
+    useWorkspaceRoom, WorkspaceViewer
 } from "@workspace/react";
 import { useYjsCollaborative } from "@yjs/react";
-import * as Y from "yjs";
 import {
     FC,
     PropsWithChildren,
@@ -35,19 +26,18 @@ import {
     useMemo,
     useState
 } from "react";
+import * as Y from "yjs";
 import {
     CommentThreadList,
     useCommentingMode,
     useCommentsStore
 } from "../../features";
 import {
-    DiscussionsPane,
     PresenterInfoBar,
     WorkspaceActionsToolbar,
     WorkspaceUndoRedoControls,
     WorkspaceZoomControls
 } from "./";
-import { Workspace } from "@structurizr/y-workspace";
 
 export enum WorkspaceContentMode {
     Diagramming = "diagramming",
@@ -78,7 +68,6 @@ export const WorkspaceCollaborativeEditor: FC<PropsWithChildren> = ({ children }
             const undoManager = new Y.UndoManager([modelMap, viewsMap, propertiesMap]);
             const workspace = new Workspace(document);
             const workspaceSnapshot = workspace.toSnapshot();
-            console.log("workspaceSnapshot", workspaceSnapshot)
 
             setUndoManager(undoManager);
             setWorkspace(workspaceSnapshot);
@@ -158,7 +147,7 @@ export const WorkspaceCollaborativeEditor: FC<PropsWithChildren> = ({ children }
                         </ShellHeader>
                         <Divider />
                         <ShellBody>
-                            <WorkspaceEditor
+                            <StructurizrEditor
                                 value={structurizrCode}
                                 onChange={handleOnChangeStructurizrCode}
                             />

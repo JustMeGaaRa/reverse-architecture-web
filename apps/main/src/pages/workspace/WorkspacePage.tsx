@@ -1,10 +1,7 @@
 import { useWorkspace, WorkspaceProvider } from "@structurizr/react";
 import { Workspace } from "@structurizr/y-workspace";
 import {
-    WorkspaceNavigationProvider,
-    CurrentUser,
-    WorkspaceRoom,
-    useWorkspaceNavigation
+    CurrentUser, useWorkspaceNavigation, WorkspaceNavigationProvider, WorkspaceRoom
 } from "@workspace/react";
 import {
     useYjsCollaborative,
@@ -26,12 +23,12 @@ import {
     createWorkspacePersistance,
     useAccount,
     useCommentsStore,
-    useSnackbar,
+    useSnackbar
 } from "../../features";
 import { useLoaderState } from "../../hooks";
 import {
     WorkspaceCollaborativeEditor,
-    WorkspacePageActions,
+    WorkspacePageActions
 } from "../workspace";
 
 export const WorkspacePage: FC = () => {

@@ -34,57 +34,9 @@ export const Workspace: FC<PropsWithChildren<{ workspace: IWorkspaceSnapshot }>>
                         size={2}
                         variant={BackgroundVariant.Dots}
                     />
-                    
-                    {/* <svg width="100%" height="100%">
-                        <defs>
-                            <pattern id="smallGrid" width="50" height="50" patternUnits="userSpaceOnUse">
-                                <path d="M 50 0 L 0 0 0 50" fill="none" stroke="gray" strokeWidth="0.5"/>
-                            </pattern>
-                            <pattern id="grid" width="500" height="500" patternUnits="userSpaceOnUse">
-                                <rect width="500" height="500" fill="url(#smallGrid)"/>
-                                <path d="M 500 0 L 0 0 0 500" fill="none" stroke="gray" strokeWidth="1"/>
-                            </pattern>
-                        </defs>
-                        <rect width="100%" height="100%" fill="url(#grid)" />
-                    </svg> */}
                     {children}
                 </ReactFlow>
             </ReactFlowProvider>
-        </WorkspaceContext.Provider>
-    )
-}
-
-export const WorkspaceProvider: FC<PropsWithChildren> = ({ children }) => {
-    const [ workspace, setWorkspace ] = useState<IWorkspaceSnapshot>({
-        name: "",
-        description: "",
-        version: 0,
-        lastModifiedDate: new Date().toUTCString(),
-        model: {
-            groups: [],
-            people: [],
-            softwareSystems: [],
-            deploymentEnvironments: [],
-            relationships: []
-        },
-        views: {
-            systemContexts: [],
-            containers: [],
-            components: [],
-            deployments: [],
-            configuration: {
-                themes: [],
-                styles: {
-                    elements: [],
-                    relationships: []
-                }
-            }
-        }
-    });
-
-    return (
-        <WorkspaceContext.Provider value={{ workspace, setWorkspace }}>
-            {children}
         </WorkspaceContext.Provider>
     )
 }

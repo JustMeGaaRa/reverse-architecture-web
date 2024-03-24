@@ -19,11 +19,7 @@ import {
 import { useSearchParams } from "react-router-dom";
 import { useAccount } from "../../features";
 import { useLoaderState } from "../../hooks";
-import {
-    WorkspaceCollaborativeEditor,
-    WorkspaceInitializer,
-    WorkspacePageActions
-} from "../workspace";
+import { WorkspaceCollaborativeEditor, WorkspacePageActions } from "./";
 
 const SharedRoomCodeparam = "code";
 
@@ -57,7 +53,6 @@ export const WorkspaceSharedPage: FC = () => {
                             <WorkspaceRoom options={{ roomId: roomId, password: roomPassword }}>
 
                                 <CurrentUser info={account} />
-                                <WorkspaceInitializer />
 
                                 <WorkspaceNavigationProvider>
                                     <WorkspacePageActions workspaceId={roomId} />

@@ -1,11 +1,15 @@
 {
   "name": "@monaco-editor/structurizr",
   "version": "0.1.0",
-  "description": "A Structurizr DSL language definition for Monaco editor.",
+  "description": "A Structurizr DSL language definition for Monaco editor and code editor adapter.",
   "main": "dist/index.js",
   "keywords": [
     "structurizr",
-    "monaco-editor"
+    "monaco-editor",
+    "c4",
+    "c4-model",
+    "structurizr",
+    "workspace"
   ],
   "author": "JustMeGaaRa",
   "license": "MIT",

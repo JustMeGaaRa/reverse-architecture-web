@@ -3,7 +3,7 @@ import { ElementType, ISystemLandscapeView, Position, SystemLandscapeViewStrateg
 import { useWorkspace } from "@structurizr/react";
 import { FC, PropsWithChildren, useCallback, useEffect } from "react";
 import { useSystemLandscapeView, useViewRenderer } from "../hooks";
-import { ElementOptionsToolbar, ElementDiagramFlowControls, ElementZoomControlsBackground } from "./Nodes";
+import { ElementDiagramFlowControls, ElementOptionsToolbar, ElementZoomControlsBackground } from "./Nodes";
 import { ViewMetadataProvider } from "./Views";
 
 export const SystemLandscapeView: FC<PropsWithChildren<{ view: ISystemLandscapeView }>> = ({ children, view }) => {

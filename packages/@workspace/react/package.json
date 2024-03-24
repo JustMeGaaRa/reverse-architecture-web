@@ -23,7 +23,6 @@
   },
   "dependencies": {
     "@structurizr/dsl": "*",
-    "@workspace/code-editor": "*",
     "@workspace/diagramming": "*",
     "@workspace/live": "*",
     "react": "^18.0.0",

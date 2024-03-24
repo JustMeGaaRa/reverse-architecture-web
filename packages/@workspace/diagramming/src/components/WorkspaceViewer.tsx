@@ -19,34 +19,7 @@ export const WorkspaceViewer: FC<PropsWithChildren<{
     workspace,
     view
 }) => {
-    // const { workspace, setWorkspace } = useWorkspace();
-    // const { currentView, setCurrentView } = useWorkspaceNavigation();
     const { enabledTool, addingElementType } = useWorkspaceToolbarStore();
-    
-    // const {
-    //     addGroup,
-    //     addSoftwareSystem,
-    //     addPerson,
-    //     addRelationship,
-    //     setElementPosition
-    // } = useSystemLandscapeView();
-    
-    // const {
-    //     addGroup,
-    //     addSoftwareSystem,
-    //     addPerson,
-    //     addRelationship,
-    //     setElementPosition
-    // } = useSystemContextView(view.identifier);
-    
-    // const {
-    //     addGroup,
-    //     addSoftwareSystem,
-    //     addPerson,
-    //     addContainer,
-    //     addRelationship,
-    //     setElementPosition
-    // } = useContainerView(view.identifier);
 
     const handleOnElementClick = useCallback((event: React.MouseEvent, element: IElement, relativePosition: Position) => {
         if (view && enabledTool === "adding-element") {

@@ -18,3 +18,4 @@ export * from "./Theme";
 export * from "./Themes";
 export * from "./Views";
 export * from "./Workspace";
+export * from "./WorkspaceProvider";

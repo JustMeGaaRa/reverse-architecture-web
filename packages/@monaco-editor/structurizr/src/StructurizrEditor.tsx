@@ -1,8 +1,8 @@
 import Editor, { Monaco } from "@monaco-editor/react";
-import { StructurizrLanguage } from "@monaco-editor/structurizr";
 import { FC, useCallback, useRef } from "react";
+import { StructurizrLanguage } from "./StructurizrLanguage";
 
-export const WorkspaceEditor: FC<{
+export const StructurizrEditor: FC<{
     value: string,
     onChange?: (value: string) => void,
 }> = ({
