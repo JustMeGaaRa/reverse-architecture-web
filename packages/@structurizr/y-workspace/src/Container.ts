@@ -21,10 +21,12 @@ export class Container implements ISupportSnapshot<IContainer> {
     private get groupsArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("groups") as Y.Array<Y.Map<unknown>>; }
     private get componentsArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("components") as Y.Array<Y.Map<unknown>>; }
     private get relationshipsArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("relationships") as Y.Array<Y.Map<unknown>>; }
+    private get technologyArray(): Y.Array<string> { return this.propertiesMap.get("technology") as Y.Array<string>; }
+    private get tagsArray(): Y.Array<string> { return this.propertiesMap.get("tags") as Y.Array<string>; }
 
     public constructor(private readonly propertiesMap: Y.Map<unknown>) { }
 
-    public readonly type: ElementType.Container;
+    public get type(): ElementType.Container { return ElementType.Container; }
 
     public get identifier(): Identifier { return this.propertiesMap.get("identifier") as Identifier; }
     public set identifier(value: Identifier) { this.propertiesMap.set("identifier", value); }
@@ -35,15 +37,11 @@ export class Container implements ISupportSnapshot<IContainer> {
     public get description(): string { return this.propertiesMap.get("description") as string; }
     public set description(value: string) { this.propertiesMap.set("description", value); }
 
-    public get technology(): Array<Technology> { return this.propertiesMap.get("technology") as Array<Technology>; }
-    public set technology(value: Array<Technology>) { this.propertiesMap.set("technology", value); }
-
-    public get tags(): Array<Tag> { return this.propertiesMap.get("tags") as Array<Tag>; }
-    public set tags(value: Array<Tag>) { this.propertiesMap.set("tags", value); }
-
     public get url(): Url { return this.propertiesMap.get("url") as Url; }
     public set url(value: Url) { this.propertiesMap.set("url", value); }
 
+    public get technology(): Array<Technology> { return this.technologyArray?.map(technology => new Technology(technology)); }
+    public get tags(): Array<Tag> { return this.tagsArray?.map(tag => new Tag(tag)); }
     public get groups(): Array<Group> { return this.groupsArray?.map(group => new Group(group)); }
     public get components(): Array<Component> { return this.componentsArray?.map(component => new Component(component)); }
     public get relationships(): Array<Relationship> { return this.relationshipsArray.map(relationship => new Relationship(relationship)); }
@@ -52,9 +50,9 @@ export class Container implements ISupportSnapshot<IContainer> {
         this.identifier = container.identifier;
         this.name = container.name;
         this.description = container.description;
-        this.technology = container.technology;
-        this.tags = container.tags;
         this.url = container.url;
+        this.technologyArray.push(container.technology?.map(x => x.name) ?? []);
+        this.tagsArray.push(container.tags?.map(x => x.name) ?? []);
         container.groups?.forEach(group => this.addGroup().fromSnapshot(group));
         container.components?.forEach(component => this.addComponent().fromSnapshot(component));
         container.relationships?.forEach(relationship => this.addRelationship().fromSnapshot(relationship));

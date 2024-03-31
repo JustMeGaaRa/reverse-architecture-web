@@ -14,7 +14,7 @@ export class Group implements ISupportSnapshot<IGroup> {
 
     public constructor(private readonly propertiesMap: Y.Map<unknown>) { }
 
-    public readonly type: ElementType.Group;
+    public get type(): ElementType.Group { return ElementType.Group; }
 
     public get identifier(): Identifier { return this.propertiesMap.get("identifier") as Identifier; }
     public set identifier(value: Identifier) { this.propertiesMap.set("identifier", value); }

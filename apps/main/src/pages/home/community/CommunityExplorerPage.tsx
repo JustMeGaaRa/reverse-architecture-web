@@ -38,12 +38,12 @@ import {
     CommunityTemplateExplorer,
     CommunityApi,
     useWorkspaceExplorer,
+    useLoaderState,
     useSnackbar,
+    CommunityTemplateModal,
 } from "../../../features";
-import { useLoaderState } from "../../../hooks";
 import { HomeNavigationActions } from "../HomeNavigationActions";
 import { CommunityExplorerActions } from "./CommunityExplorerActions";
-import { CommunityTemplateModal } from "./CommunityTemplateModal";
 
 export const CommunityExplorerPage: FC<PropsWithChildren> = () => {
     const navigate = useNavigate();

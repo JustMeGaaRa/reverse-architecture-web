@@ -1,6 +1,6 @@
-import { UserInfo } from "@workspace/diagramming";
 import { useCallback, useContext } from "react";
 import { WorkspaceRoomContext } from "../contexts";
+import { UserInfo } from "../types";
 
 export const useFollowUserMode = () => {
     const { currentUser, setCurrentUser } = useContext(WorkspaceRoomContext);

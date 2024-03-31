@@ -8,7 +8,7 @@ export class Person implements ISupportSnapshot<IPerson> {
 
     public constructor(private readonly propertiesMap: Y.Map<unknown>) { }
 
-    public readonly type: ElementType.Person;
+    public get type(): ElementType.Person { return ElementType.Person; }
 
     public get identifier(): Identifier { return this.propertiesMap.get("identifier") as Identifier; }
     public set identifier(value: Identifier) { this.propertiesMap.set("identifier", value); }

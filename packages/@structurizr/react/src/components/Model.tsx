@@ -1,42 +1,27 @@
-import { useReactFlow } from "@reactflow/core";
-import { IModel, IModelMetadata } from "@structurizr/dsl";
-import { FC, PropsWithChildren, useState, useEffect } from "react";
-import { useWorkspace } from "../hooks";
+import { IModel, IModelMetadata, ModelViewStrategy } from "@structurizr/dsl";
+import { FC, PropsWithChildren, useEffect, useState } from "react";
 import { ModelContext } from "../contexts";
+import { useViewRenderer, useWorkspace } from "../hooks";
+import { ElementVariantProvider } from "./ElementVariantProvider";
+import { ViewMetadataProvider } from "./ViewMetadataProvider";
 
-export const Model: FC<PropsWithChildren> = ({ children }) => {
-    const [ model, setModel ] = useState<IModel>();
+export const Model: FC<PropsWithChildren<{ model: IModel }>> = ({ children, model }) => {
     const [ metadata, setMetadata ] = useState<IModelMetadata>();
     const { workspace } = useWorkspace();
-    const { setNodes, setEdges } = useReactFlow();
-
+    const { renderModel } = useViewRenderer();
+    
     useEffect(() => {
-        if (workspace) {
-            // const updateFlow = () => {
-            //     const workspaceSnapshot = workspace.toSnapshot();
-            //     console.log("model updated", workspaceSnapshot);
-
-            //     const strategy = new ModelViewStrategy(workspaceSnapshot.model);
-            //     const reactFlowAuto = { nodes: [], edges: [] };
-            //     const metadata = { elements: [], relationships: [] };
-                
-            //     setMetadata(metadata);
-            //     setNodes(reactFlowAuto.nodes);
-            //     setEdges(reactFlowAuto.edges);
-            // }
-    
-            // workspace.model.subscribe(updateFlow);
-            // updateFlow();
-    
-            // return () => {
-            //     workspace.model.unsubscribe(updateFlow);
-            // }
-        }
-    }, [workspace, setEdges, setNodes]);
+        const strategy = new ModelViewStrategy(model);
+        return renderModel(workspace, strategy);
+    }, [workspace, model, renderModel]);
 
     return (
-        <ModelContext.Provider value={{ model, metadata, setModel, setMetadata }}>
-            {children}
+        <ModelContext.Provider value={{ model, metadata, setMetadata }}>
+            <ViewMetadataProvider metadata={undefined}>
+                <ElementVariantProvider initialVariant={"model"}>
+                    {children}
+                </ElementVariantProvider>
+            </ViewMetadataProvider>
         </ModelContext.Provider>
     )
 }

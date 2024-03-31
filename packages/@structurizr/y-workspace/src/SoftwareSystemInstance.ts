@@ -4,7 +4,7 @@ import * as Y from "yjs";
 export class SoftwareSystemInstance implements ISupportSnapshot<ISoftwareSystemInstance> {
     public constructor(private readonly propertiesMap: Y.Map<unknown>) { }
 
-    public readonly type: ElementType.SoftwareSystemInstance;
+    public get type(): ElementType.SoftwareSystemInstance { return ElementType.SoftwareSystemInstance; }
 
     public get identifier(): Identifier { return this.propertiesMap.get("identifier") as Identifier; }
     public set identifier(value: Identifier) { this.propertiesMap.set("identifier", value); }

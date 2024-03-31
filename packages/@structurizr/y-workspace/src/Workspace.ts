@@ -49,14 +49,14 @@ export class Workspace implements ISupportSnapshot<IWorkspaceSnapshot>, IObserva
     }
 
     public subscribe(observer: () => void): void {
-        this.modelMap.observe(observer);
-        this.viewsMap.observe(observer);
-        this.propertiesMap.observe(observer);
+        this.modelMap.observeDeep(observer);
+        this.viewsMap.observeDeep(observer);
+        this.propertiesMap.observeDeep(observer);
     }
 
     public unsubscribe(observer: () => void): void {
-        this.modelMap.unobserve(observer);
-        this.viewsMap.unobserve(observer);
-        this.propertiesMap.unobserve(observer);
+        this.modelMap.unobserveDeep(observer);
+        this.viewsMap.unobserveDeep(observer);
+        this.propertiesMap.unobserveDeep(observer);
     }
 }

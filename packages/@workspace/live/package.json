@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@yjs/react": "*",
-    "@workspace/diagramming": "*",
+    "@structurizr/react": "*",
     "lodash": "^4.17.21",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",

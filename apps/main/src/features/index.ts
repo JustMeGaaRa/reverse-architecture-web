@@ -6,4 +6,5 @@ export * from "./localization";
 export * from "./navigation";
 export * from "./search";
 export * from "./snackbar";
-export * from "./workspaces";
+export * from "./workspace-explorer";
+export * from "./workspace-renderer";

@@ -4,7 +4,7 @@ import * as Y from "yjs";
 export class Relationship implements ISupportSnapshot<IRelationship> {
     public constructor(private readonly propertiesMap: Y.Map<unknown>) { }
 
-    public readonly type: RelationshipType.Relationship;
+    public get type(): RelationshipType.Relationship { return RelationshipType.Relationship; }
     
     public get sourceIdentifier(): Identifier { return this.propertiesMap.get("sourceIdentifier") as Identifier; }
     public set sourceIdentifier(value: Identifier) { this.propertiesMap.set("sourceIdentifier", value); }

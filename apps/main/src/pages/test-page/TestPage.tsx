@@ -1,13 +1,12 @@
 import { Button, HStack, VStack, Text, ButtonGroup, Box } from "@chakra-ui/react";
-import { useWorkspace } from "@structurizr/react";
+import { useWorkspace, WorkspaceProvider } from "@structurizr/react";
 import { WorkspaceInfo } from "@structurizr/y-workspace";
 import { useYjsCollaborative, YjsDocumentProvider, YjsIndexeddbPersistanceProvider, YjsUndoManagerProvider, YjsWebrtcProviderProvider } from "@yjs/react";
 import { FC, PropsWithChildren, useCallback, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import * as Y from "yjs";
-import { create, createExplorerDocument, createExplorerPersistance, remove, useWorkspaceExplorer, WorkspaceExplorerProvider } from "../../features";
+import { create, createExplorerDocument, createExplorerPersistance, remove, useWorkspaceExplorer, WorkspaceExplorerProvider, WorkspaceRenderer } from "../../features";
 import { WorkspaceIndexeddbLoader, WorkspaceInitializer, WorkspaceWebrtcConnector } from "../workspace";
-import { WorkspaceRenderer } from "./WorkspaceRenderer";
 
 export const TestWorkspaceInfo: FC<{ workspaceId: string; }> = ({ workspaceId }) => {
     const navigate = useNavigate();
@@ -128,14 +127,16 @@ export const TestWorkspacePage: FC = () => {
 
                     <Box backgroundColor={"black"} height={"100vh"}>
                         
-                        <WorkspaceRenderer>
-                            <WorkspaceIndexeddbLoader workspaceId={workspaceId}>
-                                <WorkspaceWebrtcConnector workspaceId={workspaceId}>
-                                    <WorkspaceInitializer />
-                                </WorkspaceWebrtcConnector>
-                            </WorkspaceIndexeddbLoader>
-                            <WorkspaceControls />
-                        </WorkspaceRenderer>
+                        <WorkspaceProvider>
+                            <WorkspaceRenderer workspace={undefined} view={undefined}>
+                                <WorkspaceIndexeddbLoader workspaceId={workspaceId}>
+                                    <WorkspaceWebrtcConnector workspaceId={workspaceId}>
+                                        <WorkspaceInitializer />
+                                    </WorkspaceWebrtcConnector>
+                                </WorkspaceIndexeddbLoader>
+                                <WorkspaceControls />
+                            </WorkspaceRenderer>
+                        </WorkspaceProvider>
 
                     </Box>
 
@@ -155,12 +156,14 @@ export const TestSharedPage: FC = () => {
 
                     <Box backgroundColor={"black"} height={"100vh"}>
 
-                        <WorkspaceRenderer>
-                            <WorkspaceWebrtcConnector workspaceId={workspaceId}>
-                                <WorkspaceInitializer />
-                            </WorkspaceWebrtcConnector>
-                            <WorkspaceControls />
-                        </WorkspaceRenderer>
+                        <WorkspaceProvider>
+                            <WorkspaceRenderer workspace={undefined} view={undefined}>
+                                <WorkspaceWebrtcConnector workspaceId={workspaceId}>
+                                    <WorkspaceInitializer />
+                                </WorkspaceWebrtcConnector>
+                                <WorkspaceControls />
+                            </WorkspaceRenderer>
+                        </WorkspaceProvider>
 
                     </Box>
 

@@ -21,10 +21,12 @@ export class SoftwareSystem implements ISupportSnapshot<ISoftwareSystem> {
     private get groupsArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("groups") as Y.Array<Y.Map<unknown>>; }
     private get containersArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("containers") as Y.Array<Y.Map<unknown>>; }
     private get relationshipsArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("relationships") as Y.Array<Y.Map<unknown>>; }
+    private get technologyArray(): Y.Array<string> { return this.propertiesMap.get("technology") as Y.Array<string>; }
+    private get tagsArray(): Y.Array<string> { return this.propertiesMap.get("tags") as Y.Array<string>; }
 
     public constructor(private readonly propertiesMap: Y.Map<unknown>) { }
 
-    public readonly type: ElementType.SoftwareSystem;
+    public get type(): ElementType.SoftwareSystem { return ElementType.SoftwareSystem; }
 
     public get identifier(): Identifier { return this.propertiesMap.get("identifier") as Identifier; }
     public set identifier(value: Identifier) { this.propertiesMap.set("identifier", value); }
@@ -35,15 +37,11 @@ export class SoftwareSystem implements ISupportSnapshot<ISoftwareSystem> {
     public get description(): string { return this.propertiesMap.get("description") as string; }
     public set description(value: string) { this.propertiesMap.set("description", value); }
 
-    public get technology(): Array<Technology> { return this.propertiesMap.get("technology") as Array<Technology>; }
-    public set technology(value: Array<Technology>) { this.propertiesMap.set("technology", value); }
-
-    public get tags(): Array<Tag> { return this.propertiesMap.get("tags") as Array<Tag>; }
-    public set tags(value: Array<Tag>) { this.propertiesMap.set("tags", value); }
-
     public get url(): Url { return this.propertiesMap.get("url") as Url; }
     public set url(value: Url) { this.propertiesMap.set("url", value); }
-
+    
+    public get technology(): Array<Technology> { return this.technologyArray?.map(technology => new Technology(technology)); }
+    public get tags(): Array<Tag> { return this.tagsArray?.map(tag => new Tag(tag)); }
     public get groups(): Array<Group> { return this.groupsArray?.map(group => new Group(group)); }
     public get containers(): Array<Container> { return this.containersArray?.map(container => new Container(container)); }
     public get relationships(): Array<Relationship> { return this.relationshipsArray.map(relationship => new Relationship(relationship)); }
@@ -52,9 +50,9 @@ export class SoftwareSystem implements ISupportSnapshot<ISoftwareSystem> {
         this.identifier = softwareSystem.identifier;
         this.name = softwareSystem.name;
         this.description = softwareSystem.description;
-        this.technology = softwareSystem.technology;
-        this.tags = softwareSystem.tags;
         this.url = softwareSystem.url;
+        this.technologyArray.push(softwareSystem.technology?.map(x => x.name) ?? []);
+        this.tagsArray.push(softwareSystem.tags?.map(x => x.name) ?? []);
         softwareSystem.groups?.forEach(group => this.addGroup().fromSnapshot(group));
         softwareSystem.containers?.forEach(container => this.addContainer().fromSnapshot(container));
         softwareSystem.relationships?.forEach(relationship => this.addRelationship().fromSnapshot(relationship));

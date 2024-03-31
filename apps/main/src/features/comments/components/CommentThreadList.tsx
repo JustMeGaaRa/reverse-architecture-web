@@ -1,14 +1,14 @@
 import { Box } from "@chakra-ui/react";
-import { useWorkspace } from "@structurizr/react";
-import { useWorkspaceNavigation } from "@workspace/react";
 import { FC, useCallback } from "react";
-import { CommentCard, CommentGroup, CommentThread, useCommentsStore } from "../../../features";
+import {
+    CommentCard,
+    CommentGroup,
+    CommentThread,
+    useCommentsStore,
+    useWorkspaceNavigation
+} from "../../../features";
 
-export const CommentThreadList: FC<{
-    discussions: CommentThread[];
-}> = ({
-    discussions
-}) => {
+export const CommentThreadList: FC = () => {
     const {
         commentThreads,
         selectedThreadId,

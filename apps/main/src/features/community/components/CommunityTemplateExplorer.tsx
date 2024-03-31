@@ -9,12 +9,12 @@ import {
     LoadingMessage,
     LocaleKeys,
     StateMessage,
+    useLoaderState,
     useSnackbar,
     useWorkspaceExplorer,
     WorkspaceGrid,
     WorkspaceTemplateCard
-} from "../..";
-import { useLoaderState } from "../../../hooks";
+} from "../../../features";
 
 export const CommunityTemplateExplorer: FC<{
     filters?: { category?: string, tag?: string };

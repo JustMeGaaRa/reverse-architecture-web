@@ -13,10 +13,12 @@ import { createRelationshipPropertiesMap } from "./utils";
 
 export class InfrastructureNode implements ISupportSnapshot<IInfrastructureNode> {
     private get relationshipsArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("relationships") as Y.Array<Y.Map<unknown>>; }
+    private get technologyArray(): Y.Array<string> { return this.propertiesMap.get("technology") as Y.Array<string>; }
+    private get tagsArray(): Y.Array<string> { return this.propertiesMap.get("tags") as Y.Array<string>; }
 
     public constructor(private readonly propertiesMap: Y.Map<unknown>) { }
 
-    public readonly type: ElementType.InfrastructureNode;
+    public get type(): ElementType.InfrastructureNode { return ElementType.InfrastructureNode; }
 
     public get identifier(): Identifier { return this.propertiesMap.get("identifier") as Identifier; }
     public set identifier(value: Identifier) { this.propertiesMap.set("identifier", value); }
@@ -27,24 +29,20 @@ export class InfrastructureNode implements ISupportSnapshot<IInfrastructureNode>
     public get description(): string { return this.propertiesMap.get("description") as string; }
     public set description(value: string) { this.propertiesMap.set("description", value); }
 
-    public get technology(): Array<Technology> { return this.propertiesMap.get("technology") as Array<Technology>; }
-    public set technology(value: Array<Technology>) { this.propertiesMap.set("technology", value); }
-
-    public get tags(): Array<Tag> { return this.propertiesMap.get("tags") as Array<Tag>; }
-    public set tags(value: Array<Tag>) { this.propertiesMap.set("tags", value); }
-
     public get url(): Url { return this.propertiesMap.get("url") as Url; }
     public set url(value: Url) { this.propertiesMap.set("url", value); }
 
+    public get technology(): Array<Technology> { return this.technologyArray?.map(technology => new Technology(technology)); }
+    public get tags(): Array<Tag> { return this.tagsArray?.map(tag => new Tag(tag)); }
     public get relationships(): Array<Relationship> { return this.relationshipsArray.map(relationship => new Relationship(relationship)); }
 
     public fromSnapshot(infrastructureNode: IInfrastructureNode) {
         this.identifier = infrastructureNode.identifier;
         this.name = infrastructureNode.name;
         this.description = infrastructureNode.description;
-        this.technology = infrastructureNode.technology;
-        this.tags = infrastructureNode.tags;
         this.url = infrastructureNode.url;
+        this.technologyArray.push(infrastructureNode.technology?.map(x => x.name) ?? []);
+        this.tagsArray.push(infrastructureNode.tags?.map(x => x.name) ?? []);
         infrastructureNode.relationships?.forEach(relationship => this.addRelationship().fromSnapshot(relationship));
     }
 

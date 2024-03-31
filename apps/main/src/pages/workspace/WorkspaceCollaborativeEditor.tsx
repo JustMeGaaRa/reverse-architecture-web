@@ -13,10 +13,11 @@ import { parseStructurizr } from "@structurizr/parser";
 import { useWorkspace } from "@structurizr/react";
 import { Workspace } from "@structurizr/y-workspace";
 import {
-    CollaboratingUserPane, usePresentationMode,
-    useUserAwareness, useWorkspaceNavigation,
-    useWorkspaceRoom, WorkspaceViewer
-} from "@workspace/react";
+    CollaboratingUserPane,
+    usePresentationMode,
+    useUserAwareness,
+    useWorkspaceRoom
+} from "@workspace/live";
 import { useYjsCollaborative } from "@yjs/react";
 import {
     FC,
@@ -29,15 +30,15 @@ import {
 import * as Y from "yjs";
 import {
     CommentThreadList,
-    useCommentingMode,
-    useCommentsStore
-} from "../../features";
-import {
     PresenterInfoBar,
+    useWorkspaceNavigation,
     WorkspaceActionsToolbar,
+    WorkspaceEditor,
+    WorkspaceRenderer,
     WorkspaceUndoRedoControls,
+    WorkspaceViewBreadcrumbs,
     WorkspaceZoomControls
-} from "./";
+} from "../../features";
 
 export enum WorkspaceContentMode {
     Diagramming = "diagramming",
@@ -53,12 +54,17 @@ export enum WorkspaceContentPanel {
 }
 
 export const WorkspaceCollaborativeEditor: FC<PropsWithChildren> = ({ children }) => {
-    const { workspace, setWorkspace } = useWorkspace();
-    const { currentView, setCurrentView } = useWorkspaceNavigation();
-    const [ structurizrCode, setStructurizrCode ] = useState("");
-    // const { setViewport } = useReactFlow();
-    
     const { document, setUndoManager } = useYjsCollaborative();
+    const { collaboratingUsers } = useWorkspaceRoom();
+    const { currentView, setCurrentView } = useWorkspaceNavigation();
+    const { setWorkspace } = useWorkspace();
+    const [ yworkspace, setYWorkspace ] = useState<Workspace>();
+    const [ structurizrCode, setStructurizrCode ] = useState("");
+
+    const { reportViewport, reportMousePosition, reportView } = useUserAwareness();
+    const { presentationEnabled, presenterInfo } = usePresentationMode();
+
+    // const { setViewport } = useReactFlow();
     
     useEffect(() => {
         if (document) {
@@ -71,13 +77,15 @@ export const WorkspaceCollaborativeEditor: FC<PropsWithChildren> = ({ children }
 
             setUndoManager(undoManager);
             setWorkspace(workspaceSnapshot);
+            setYWorkspace(workspace);
             setCurrentView(workspaceSnapshot.views.systemLandscape);
         }
-    }, [document, setCurrentView, setUndoManager, setWorkspace]);
+    }, [document, setCurrentView, setUndoManager, setWorkspace, setYWorkspace]);
 
-    const { reportViewport, reportMousePosition, reportView } = useUserAwareness();
-    const { collaboratingUsers } = useWorkspaceRoom();
-    const { presentationEnabled, presenterInfo } = usePresentationMode();
+    // useOnUserAwarenessChange({ onChange: reportMousePosition });
+    // useOnUserViewportChange({ onEnd: reportViewport });
+    // useOnUserViewChange({ onChange: reportView });
+    // useOnFollowingUserViewportChange({ onChange: setViewport });
     
     const currentViewUsers = useMemo(() => {
         return collaboratingUsers.filter(x => {
@@ -85,11 +93,6 @@ export const WorkspaceCollaborativeEditor: FC<PropsWithChildren> = ({ children }
                 && x.view?.identifier === currentView?.identifier;
         });
     }, [collaboratingUsers, currentView?.identifier, currentView?.type]);
-
-    // useOnUserAwarenessChange({ onChange: reportMousePosition });
-    // useOnUserViewportChange({ onEnd: reportViewport });
-    // useOnUserViewChange({ onChange: reportView });
-    // useOnFollowingUserViewportChange({ onChange: setViewport });
     
     // TODO: get selected mode from query params
     const [ mode, setMode ] = useState(WorkspaceContentMode.Diagramming);
@@ -105,23 +108,13 @@ export const WorkspaceCollaborativeEditor: FC<PropsWithChildren> = ({ children }
         setPanel(WorkspaceContentPanel.None);
     }, []);
 
-    // SECTION: comments panel
-    const { isCommentingModeEnabled } = useCommentingMode();
-    const { commentThreads } = useCommentsStore();
-    const currentViewDiscussions = useMemo(() => {
-        return commentThreads.filter(x => {
-            return x.metadata?.view?.type === currentView?.type
-                && x.metadata?.view?.identifier === currentView?.identifier;
-        });
-    }, [commentThreads, currentView?.identifier, currentView?.type]);
-
     // SECTION: code editor panel
     const handleOnChangeStructurizrCode = useCallback((value: string) => {
         setStructurizrCode(value);
         // TODO: use debounce to defer the workspace parsing by 500ms
         // TODO: handle parsing errors
-        setWorkspace(parseStructurizr(value));
-    }, [setWorkspace]);
+        // setWorkspace(parseStructurizr(value));
+    }, [setYWorkspace]);
 
     return (
         <Shell>
@@ -134,7 +127,7 @@ export const WorkspaceCollaborativeEditor: FC<PropsWithChildren> = ({ children }
                         </ShellHeader>
                         <Divider />
                         <ShellBody>
-                            <CommentThreadList discussions={commentThreads} />
+                            <CommentThreadList />
                         </ShellBody>
                     </ShellPanel>
                 )}
@@ -172,16 +165,16 @@ export const WorkspaceCollaborativeEditor: FC<PropsWithChildren> = ({ children }
                     outline={presentationEnabled ? `${presenterInfo?.color}.600` : undefined}
                     outlineWidth={presentationEnabled ? [2, 2, 2, 2] : [2, 2, 0, 0]}
                 >
-                    <WorkspaceViewer workspace={workspace} view={currentView}>
+                    {/* TODO: use the editable version of the workspace renderer */}
+                    <WorkspaceEditor workspace={yworkspace} view={currentView} discussions={[]}>
                         <CollaboratingUserPane users={currentViewUsers} />
-                        {/* <DiscussionsPane discussions={currentViewDiscussions} /> */}
                         <PresenterInfoBar presenter={presenterInfo} />
-                        {/* <WorkspaceViewBreadcrumbs isVisible={isDiagrammingMode} /> */}
+                        <WorkspaceViewBreadcrumbs isVisible={isDiagrammingMode} />
                         <WorkspaceUndoRedoControls isVisible={!presentationEnabled} />
                         <WorkspaceActionsToolbar />
                         <WorkspaceZoomControls />
                         {children}
-                    </WorkspaceViewer>
+                    </WorkspaceEditor>
                 </Shell>
             </ShellTabContent>
         </Shell>

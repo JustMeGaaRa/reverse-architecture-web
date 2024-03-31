@@ -1,8 +1,7 @@
-import { UserInfo } from "@workspace/diagramming";
 import { useYjsCollaborative } from "@yjs/react";
 import { useCallback, useContext, useEffect } from "react";
 import { WorkspaceRoomContext } from "../contexts";
-import { PresentationEnabledParam, PresentationMapName, PresenterInfoParam } from "../types";
+import { PresentationEnabledParam, PresentationMapName, PresenterInfoParam, UserInfo } from "../types";
 
 export const usePresentationMode = () => {
     const { currentUser, presentation, setPresentationOptions } = useContext(WorkspaceRoomContext);

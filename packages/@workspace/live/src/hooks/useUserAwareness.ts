@@ -1,5 +1,5 @@
 import { Position, ViewType } from "@structurizr/dsl";
-import { Viewport } from "@workspace/diagramming";
+import { Viewport } from "@structurizr/react";
 import { useYjsCollaborative } from "@yjs/react";
 import { useCallback, useContext } from "react";
 import { WorkspaceRoomContext } from "../contexts";

@@ -26,10 +26,12 @@ export class DeploymentNode implements ISupportSnapshot<IDeploymentNode> {
     private get softwareSystemInstancesArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("softwareSystemInstances") as Y.Array<Y.Map<unknown>>; }
     private get containerInstancesArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("containerInstances") as Y.Array<Y.Map<unknown>>; }
     private get relationshipsArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("relationships") as Y.Array<Y.Map<unknown>>; }
+    private get technologyArray(): Y.Array<string> { return this.propertiesMap.get("technology") as Y.Array<string>; }
+    private get tagsArray(): Y.Array<string> { return this.propertiesMap.get("tags") as Y.Array<string>; }
 
     public constructor(private readonly propertiesMap: Y.Map<unknown>) { }
 
-    public readonly type: ElementType.DeploymentNode;
+    public get type(): ElementType.DeploymentNode { return ElementType.DeploymentNode; }
 
     public get identifier(): Identifier { return this.propertiesMap.get("identifier") as Identifier; }
     public set identifier(value: Identifier) { this.propertiesMap.set("identifier", value); }
@@ -40,18 +42,14 @@ export class DeploymentNode implements ISupportSnapshot<IDeploymentNode> {
     public get description(): string { return this.propertiesMap.get("description") as string; }
     public set description(value: string) { this.propertiesMap.set("description", value); }
 
-    public get technology(): Array<Technology> { return this.propertiesMap.get("technology") as Array<Technology>; }
-    public set technology(value: Array<Technology>) { this.propertiesMap.set("technology", value); }
-
     public get instances(): number { return this.propertiesMap.get("instances") as number; }
     public set instances(value: number) { this.propertiesMap.set("instances", value); }
-
-    public get tags(): Array<Tag> { return this.propertiesMap.get("tags") as Array<Tag>; }
-    public set tags(value: Array<Tag>) { this.propertiesMap.set("tags", value); }
 
     public get url(): Url { return this.propertiesMap.get("url") as Url; }
     public set url(value: Url) { this.propertiesMap.set("url", value); }
 
+    public get technology(): Array<Technology> { return this.technologyArray?.map(technology => new Technology(technology)); }
+    public get tags(): Array<Tag> { return this.tagsArray?.map(tag => new Tag(tag)); }
     public get deploymentNodes(): Array<DeploymentNode> { return this.deploymentNodesArray?.map(node => new DeploymentNode(node)); }
     public get infrastructureNodes(): Array<InfrastructureNode> { return this.infrastructureNodesArray?.map(node => new InfrastructureNode(node)); }
     public get softwareSystemInstances(): Array<SoftwareSystemInstance> { return this.softwareSystemInstancesArray?.map(instance => new SoftwareSystemInstance(instance)); }
@@ -62,10 +60,10 @@ export class DeploymentNode implements ISupportSnapshot<IDeploymentNode> {
         this.identifier = deploymentNode.identifier;
         this.name = deploymentNode.name;
         this.description = deploymentNode.description;
-        this.technology = deploymentNode.technology;
         this.instances = deploymentNode.instances;
-        this.tags = deploymentNode.tags;
         this.url = deploymentNode.url;
+        this.technologyArray.push(deploymentNode.technology?.map(x => x.name) ?? []);
+        this.tagsArray.push(deploymentNode.tags?.map(x => x.name) ?? []);
         deploymentNode.deploymentNodes?.forEach(deploymentNode => this.addDeploymentNode().fromSnapshot(deploymentNode));
         deploymentNode.infrastructureNodes?.forEach(infrastructureNode => this.addInfrastructureNode().fromSnapshot(infrastructureNode));
         deploymentNode.softwareSystemInstances?.forEach(softwareSystemInstance => this.addSoftwareSystemInstance().fromSnapshot(softwareSystemInstance));

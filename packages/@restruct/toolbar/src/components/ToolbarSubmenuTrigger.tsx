@@ -1,4 +1,4 @@
-import { IconButton, IconButtonProps } from "@chakra-ui/react";
+import { IconButton, IconButtonProps, Tooltip } from "@chakra-ui/react";
 import { FC, useCallback } from "react";
 import { useToolbarSubmenu } from "../hooks";
 
@@ -11,10 +11,12 @@ export const ToolbarSubmenuTrigger: FC<IconButtonProps> = (props) => {
     }, [onToggle, props]);
 
     return (
-        <IconButton
-            {...props}
-            aria-selected={isOpen}
-            onClick={handleOnClickSubmenuTrigger}
-        />
+        <Tooltip label={props.title}>
+            <IconButton
+                {...props}
+                aria-selected={isOpen}
+                onClick={handleOnClickSubmenuTrigger}
+            />
+        </Tooltip>
     )
 }

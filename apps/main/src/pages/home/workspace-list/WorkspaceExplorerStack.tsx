@@ -1,8 +1,8 @@
 import { FC, useCallback, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { AppleShortcuts } from "iconoir-react";
-import { WorkspaceExplorer, WorkspaceExplorerProvider, WorkspaceSelectionProvider } from "../../../features";
-import { WorkspaceStack, WorkspaceStackBody, WorkspaceStackHeader } from "./WorkspaceStack";
+import { WorkspaceExplorer, WorkspaceSelectionProvider } from "../../../features";
+import { WorkspaceStack, WorkspaceStackBody, WorkspaceStackHeader } from "../../../features";
 
 export const WorkspaceExplorerStack: FC = () => {
     const [ queryParams, setQueryParam ] = useSearchParams();

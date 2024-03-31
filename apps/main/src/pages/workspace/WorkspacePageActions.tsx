@@ -4,45 +4,40 @@ import {
     Divider,
     HStack,
     Icon,
-    Text,
+    Text
 } from "@chakra-ui/react";
 import {
     ButtonSegmentedToggle,
     PageHeaderSectionPortal,
     PageSidebarSectionPortal,
-    usePageSidebar,
+    usePageSidebar
 } from "@restruct/ui";
+import { ViewType } from "@structurizr/dsl";
+import { useWorkspace } from "@structurizr/react";
+import { useFollowUserMode, useWorkspaceRoom } from "@workspace/live";
 import {
     ChatLines,
     Code,
     HelpCircle,
-    Settings,
+    Settings
 } from "iconoir-react";
 import {
     FC,
     useCallback,
     useEffect,
     useMemo,
-    useState,
+    useState
 } from "react";
-import { ViewType } from "@structurizr/dsl";
-import {
-    useWorkspaceNavigation,
-    useWorkspaceRoom,
-    useFollowUserMode
-} from "@workspace/react";
 import {
     Route,
     RouteList,
-} from "../../features";
-import {
-    WorkspaceSharePopover,
     UserAvatarGroup,
+    useWorkspaceNavigation,
+    WorksapceTitleBreadcrumb,
     WorkspaceMenu,
-    WorkspaceSynchronizationIcon,
-    WorksapceTitleBreadcrumb
-} from ".";
-import { useWorkspace } from "@structurizr/react";
+    WorkspaceSharePopover,
+    WorkspaceSynchronizationIcon
+} from "../../features";
 
 enum WorkspaceContentMode {
     Diagramming = "diagramming",
@@ -57,7 +52,7 @@ enum WorkspaceContentPanel {
     Versions = "versions"
 }
 
-export const WorkspacePageActions: FC<{ workspaceId: string }> = ({ workspaceId }) => {
+export const WorkspacePageActions: FC = () => {
     // SECTION: sidebar content
     const { setShowSidebarButton, setSidebarOpen } = usePageSidebar();
     
@@ -116,6 +111,8 @@ export const WorkspacePageActions: FC<{ workspaceId: string }> = ({ workspaceId 
         setCurrentView(workspace.views.deployments?.at(0));
     }, [setCurrentView, workspace]);
 
+
+    // TODO: refactor this component so that the shared page shows sync icon, but no save button
     // TODO: consider moving autosave effect to some other component
     // useWorkspaceAutoSaveEffect(workspaceId);
 

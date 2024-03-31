@@ -1,5 +1,5 @@
 import { Page } from "iconoir-react";
-import { WorkspaceApi } from "../../workspaces";
+import { WorkspaceApi } from "../../workspace-explorer";
 import { ISearchStrategy, SearchGroup } from "../types";
 
 export class WorkspaceSearchStrategy implements ISearchStrategy {

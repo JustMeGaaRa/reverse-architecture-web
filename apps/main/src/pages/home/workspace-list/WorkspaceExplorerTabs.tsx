@@ -41,11 +41,10 @@ import {
     ContentViewMode,
     useContentViewMode,
     StateMessage,
-    WorkspaceExplorerProvider,
-    WorkspaceSelectionProvider
+    WorkspaceSelectionProvider,
+    useLoaderState
 } from "../../../features";
 import * as Structurizr from "../../../features";
-import { useLoaderState } from "../../../hooks";
 
 export enum WorkspaceListTabs {
     All = "all",

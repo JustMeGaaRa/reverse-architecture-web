@@ -21,8 +21,8 @@ export class Styles implements ISupportSnapshot<IStyles> {
 
     public toSnapshot(): IStyles {
         return Object.freeze({
-            elements: this.elements,
-            relationships: this.relationships
+            elements: this.elements ?? [],
+            relationships: this.relationships ?? []
         });
     }
 }

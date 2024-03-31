@@ -1,25 +1,16 @@
 import { WorkspaceProvider } from "@structurizr/react";
-import {
-    CurrentUser,
-    WorkspaceNavigationProvider,
-    WorkspaceRoom
-} from "@workspace/react";
+import { CurrentUser, WorkspaceRoom } from "@workspace/live";
 import {
     YjsDocumentProvider,
     YjsUndoManagerProvider,
     YjsWebrtcProviderProvider
 } from "@yjs/react";
-import {
-    FC,
-    PropsWithChildren,
-    useCallback,
-    useEffect,
-    useState
-} from "react";
+import { FC, useCallback, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useAccount } from "../../features";
-import { useLoaderState } from "../../hooks";
-import { WorkspaceCollaborativeEditor, WorkspacePageActions } from "./";
+import { useAccount, WorkspaceNavigationProvider } from "../../features";
+import { WorkspaceCollaborativeEditor } from "./WorkspaceCollaborativeEditor";
+import { WorkspacePageActions } from "./WorkspacePageActions";
+import { WorkspaceSession } from "./WorkspaceSession";
 
 const SharedRoomCodeparam = "code";
 
@@ -30,73 +21,39 @@ export const WorkspaceSharedPage: FC = () => {
     const [ roomId, setRoomId ] = useState<string>();
     const [ roomPassword, setRoomPassword ] = useState<string>();
 
-    const handleOnSessionLoaded = useCallback((roomId: string, roomPassword: string) => {
+    const handleOnSessionConnected = useCallback((roomId: string, roomPassword: string) => {
         setRoomId(roomId);
         setRoomPassword(roomPassword);
     }, []);
-
-    // TODO: refactor this component so that the this page shows sync icon, not save button
     
-    // NOTE: workspace provider on this page should save changes on tha page only,
-    // as this is the page for collaborating users who do not own the workspace file
+    // NOTE: a user the receives the link to the shared workspace and opens this page.
+    // First, the workspace session needs to be connected in order to get the shared room credentials.
+    // Secondly, the WebRTC provider can establish a connection with the shared room using credentials.
     return (
-        <WorkspaceSessionLoader
-            code={queryParams.get(SharedRoomCodeparam)}
-            onSessionLoaded={handleOnSessionLoaded}
-        >
+        <YjsDocumentProvider>
+            <YjsWebrtcProviderProvider>
+                <YjsUndoManagerProvider>
 
-            <YjsDocumentProvider guid={roomId}>
-                <YjsWebrtcProviderProvider>
-                    <YjsUndoManagerProvider>
+                    <WorkspaceSession
+                        code={queryParams.get(SharedRoomCodeparam)}
+                        onSessionConnected={handleOnSessionConnected}
+                    >
+                        <WorkspaceRoom options={{ roomId: roomId, password: roomPassword }}>
 
-                        <WorkspaceProvider>
-                            <WorkspaceRoom options={{ roomId: roomId, password: roomPassword }}>
+                            <CurrentUser info={account} />
 
-                                <CurrentUser info={account} />
-
+                            <WorkspaceProvider>
                                 <WorkspaceNavigationProvider>
-                                    <WorkspacePageActions workspaceId={roomId} />
+                                    <WorkspacePageActions />
                                     <WorkspaceCollaborativeEditor />
                                 </WorkspaceNavigationProvider>
+                            </WorkspaceProvider>
 
-                            </WorkspaceRoom>
-                        </WorkspaceProvider>
-            
-                    </YjsUndoManagerProvider>
-                </YjsWebrtcProviderProvider>
-            </YjsDocumentProvider>
+                        </WorkspaceRoom>
+                    </WorkspaceSession>
 
-        </WorkspaceSessionLoader>
+                </YjsUndoManagerProvider>
+            </YjsWebrtcProviderProvider>
+        </YjsDocumentProvider>
     )
-}
-
-export const WorkspaceSessionLoader: FC<PropsWithChildren<{
-    code: string;
-    onSessionLoaded?: (roomId: string, roomPassword: string) => void;
-}>> = ({
-    children,
-    code,
-    onSessionLoaded
-}) => {
-    const [ isLoading, , onStopLoading ] = useLoaderState({ isLoading: true });
-    
-    useEffect(() => {
-        // TODO: load the session from the server
-        const roomId = code;
-        const roomPassword = undefined;
-
-        onSessionLoaded?.(roomId, roomPassword);
-        onStopLoading();
-    }, [code, onSessionLoaded, onStopLoading]);
-
-    return isLoading
-        ? (
-            <>
-                Loading...
-            </>
-        ) : (
-            <>
-                {children}
-            </>
-        );
 }

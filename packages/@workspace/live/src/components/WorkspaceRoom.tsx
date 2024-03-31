@@ -2,7 +2,7 @@ import { useYjsCollaborative } from "@yjs/react";
 import { FC, PropsWithChildren, useEffect, useState } from "react";
 import { WebrtcProvider } from "y-webrtc";
 import { WorkspaceRoomContext } from "../contexts";
-import { PresentationOptions, WorkspaceUser } from "../types";
+import { OnlineUserCollection, PresentationOptions, WorkspaceUser } from "../types";
 
 export const WorkspaceRoom: FC<PropsWithChildren<{
     options?: {
@@ -33,7 +33,8 @@ export const WorkspaceRoom: FC<PropsWithChildren<{
             const signaling = { signaling: [ "wss://restruct-webrtc-signaling-7452bb784b0b.herokuapp.com" ] };
             const connection = new WebrtcProvider(options.roomId, document, signaling);
 
-            const onAwarenessChange = () => {
+            const onUpdateCollaboratingUsers = () => {
+                // const collaboratingUsers = new OnlineUserCollection(connection.awareness).getCollaboratingUsers();
                 const collaboratingUsers = Array
                     .from(connection.awareness.getStates() ?? [])
                     .filter(([key, ]) => key !== connection.awareness.clientID)
@@ -42,16 +43,24 @@ export const WorkspaceRoom: FC<PropsWithChildren<{
                 
                 setCollaboratingUsers(collaboratingUsers);
             }
+            const onChange = () => {
+                console.debug("WorkspaceRoom: onChange");
+                onUpdateCollaboratingUsers();
+            }
+            const onUpdate = () => {
+                console.debug("WorkspaceRoom: onUpdate");
+                onUpdateCollaboratingUsers();
+            }
 
-            connection.awareness?.on("change", onAwarenessChange);
-            connection.awareness?.on("update", onAwarenessChange);
+            connection.awareness?.on("change", onChange);
+            connection.awareness?.on("update", onUpdate);
             
             setConnection(connection);
             setIsLoading(false);
 
             return () => {
-                connection.awareness?.off("change", onAwarenessChange);
-                connection.awareness?.off("update", onAwarenessChange);
+                connection.awareness?.off("change", onChange);
+                connection.awareness?.off("update", onUpdate);
                 connection.destroy();
             }
         }

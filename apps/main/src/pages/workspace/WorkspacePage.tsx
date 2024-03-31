@@ -1,8 +1,6 @@
 import { useWorkspace, WorkspaceProvider } from "@structurizr/react";
 import { Workspace } from "@structurizr/y-workspace";
-import {
-    CurrentUser, useWorkspaceNavigation, WorkspaceNavigationProvider, WorkspaceRoom
-} from "@workspace/react";
+import { CurrentUser, WorkspaceRoom } from "@workspace/live";
 import {
     useYjsCollaborative,
     YjsDocumentProvider,
@@ -13,7 +11,9 @@ import {
 import {
     FC,
     PropsWithChildren,
-    useEffect
+    useCallback,
+    useEffect,
+    useState
 } from "react";
 import { useParams } from "react-router-dom";
 import * as Y from "yjs";
@@ -21,44 +21,57 @@ import {
     CommentApi,
     createWorkspaceConnection,
     createWorkspacePersistance,
+    WorkspaceNavigationProvider,
     useAccount,
     useCommentsStore,
-    useSnackbar
+    useLoaderState,
+    useSnackbar,
+    useWorkspaceNavigation
 } from "../../features";
-import { useLoaderState } from "../../hooks";
-import {
-    WorkspaceCollaborativeEditor,
-    WorkspacePageActions
-} from "../workspace";
+import { WorkspaceCollaborativeEditor } from "./WorkspaceCollaborativeEditor";
+import { WorkspacePageActions } from "./WorkspacePageActions";
+import { WorkspaceSession } from "./WorkspaceSession";
 
 export const WorkspacePage: FC = () => {
     const { workspaceId } = useParams<{ workspaceId: string }>();
     const { account } = useAccount();
+    
+    const [ roomId, setRoomId ] = useState<string>();
+    const [ roomPassword, setRoomPassword ] = useState<string>();
 
-    // TODO: pass roomId and password to the workspace room
+    const handleOnSessionStarted = useCallback((roomId: string, roomPassword: string) => {
+        setRoomId(roomId);
+        setRoomPassword(roomPassword);
+    }, []);
 
-    // NOTE: workspace provider on this page should save changes to the persistant layer,
-    // as this is the user who shares and owns the workspace file
+    // NOTE: a user that owns the workspace file opens this page.
+    // First, the workspace file needs to be loaded and the WebRTC provider should be listening for connections.
+    // Secondly, the workspace session with room credentials needs to be created for other users to be able to join.
     return (
         <YjsDocumentProvider guid={workspaceId}>
             <YjsIndexeddbPersistanceProvider>
                 <YjsWebrtcProviderProvider>
                     <YjsUndoManagerProvider>
                         
-                        <WorkspaceProvider>
-                            <WorkspaceIndexeddbLoader workspaceId={workspaceId}>
-                                <WorkspaceRoom options={{ roomId: workspaceId }}>
-                                    
+                        <WorkspaceIndexeddbLoader workspaceId={workspaceId}>
+                            <WorkspaceSession
+                                workspaceId={workspaceId}
+                                onSessionStarted={handleOnSessionStarted}
+                            >
+                                <WorkspaceRoom options={{ roomId: roomId, password: roomPassword }}>
+
                                     <CurrentUser info={account} />
 
-                                    <WorkspaceNavigationProvider>
-                                        <WorkspacePageActions workspaceId={workspaceId} />            
-                                        <WorkspaceCollaborativeEditor />
-                                    </WorkspaceNavigationProvider>
+                                    <WorkspaceProvider>    
+                                        <WorkspaceNavigationProvider>
+                                            <WorkspacePageActions />            
+                                            <WorkspaceCollaborativeEditor />
+                                        </WorkspaceNavigationProvider>
+                                    </WorkspaceProvider>
 
                                 </WorkspaceRoom>
-                            </WorkspaceIndexeddbLoader>
-                        </WorkspaceProvider>
+                            </WorkspaceSession>
+                        </WorkspaceIndexeddbLoader>
             
                     </YjsUndoManagerProvider>
                 </YjsWebrtcProviderProvider>

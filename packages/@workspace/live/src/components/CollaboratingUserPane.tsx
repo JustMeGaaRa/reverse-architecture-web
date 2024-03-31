@@ -1,5 +1,5 @@
 import { Box } from "@chakra-ui/react";
-import { WorkspaceElementPortal } from "@workspace/diagramming";
+import { WorkspaceElementPortal } from "@structurizr/react";
 import { FC } from "react";
 import { WorkspaceUser } from "../types";
 import { CollaboratingUser } from "./CollaboratingUser";

@@ -1,4 +1,6 @@
+export * from "./CommunityPublishingModal";
 export * from "./CommunityTemplateExplorer";
-export * from "./TemplateActionBar";
+export * from "./CommunityTemplateModal";
+export * from "./WorkspaceTemplateActionBar";
 export * from "./TemplateSectionDiscussion";
 export * from "./TemplateSectionInfo";

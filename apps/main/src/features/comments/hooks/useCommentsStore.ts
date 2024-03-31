@@ -29,12 +29,3 @@ export const useOnSelectedCommentChange = (callback: (thread?: CommentThread) =>
         callback?.(commentThreads.find((thread) => thread.commentThreadId === selectedThreadId));
     }, [selectedThreadId, commentThreads, callback]);
 }
-
-export const useCommentingMode = () => {
-    const [ isCommentingModeEnabled, setIsCommentingModeEnabled ] = useState(false);
-
-    return {
-        isCommentingModeEnabled,
-        setIsCommentingModeEnabled
-    }
-}

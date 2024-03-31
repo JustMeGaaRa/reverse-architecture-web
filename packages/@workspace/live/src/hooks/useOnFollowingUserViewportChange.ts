@@ -1,4 +1,4 @@
-import { Viewport } from "@workspace/diagramming";
+import { Viewport } from "@structurizr/react";
 import { useYjsCollaborative } from "@yjs/react";
 import { useContext, useEffect } from "react";
 import { WorkspaceRoomContext } from "../contexts";

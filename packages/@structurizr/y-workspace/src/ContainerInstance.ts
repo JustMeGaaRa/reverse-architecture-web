@@ -4,7 +4,7 @@ import * as Y from "yjs";
 export class ContainerInstance implements ISupportSnapshot<IContainerInstance> {
     public constructor(private readonly propertiesMap: Y.Map<unknown>) { }
 
-    public readonly type: ElementType.ContainerInstance;
+    public get type(): ElementType.ContainerInstance { return ElementType.ContainerInstance; }
 
     public get identifier(): Identifier { return this.propertiesMap.get("identifier") as Identifier; }
     public set identifier(value: Identifier) { this.propertiesMap.set("identifier", value); }
