@@ -1,4 +1,4 @@
-import { All, Identifier, IDeploymentView, IElementPosition, IRelationshipPosition, ISupportSnapshot, ViewType } from "@structurizr/dsl";
+import { All, Identifier, IDeploymentView, IElementPosition, IRelationshipPosition, ISupportSnapshot, Position, ViewType } from "@structurizr/dsl";
 import * as Y from "yjs";
 import { AutoLayout } from "./AutoLayout";
 import { Animation } from "./Animation";
@@ -91,5 +91,10 @@ export class DeploymentView implements ISupportSnapshot<IDeploymentView> {
             animation: this.animation?.toSnapshot(),
             properties: this.properties.toSnapshot(),
         });
+    }
+
+    public includeElement(identifier: Identifier, position?: Position) {
+        // const group = this.model.addGroup();
+        throw new Error("Method not implemented.");
     }
 }

@@ -24,7 +24,7 @@ export class Workspace implements ISupportSnapshot<IWorkspaceSnapshot>, IObserva
     public set lastModifiedDate(value: string) { this.properties.lastModifiedDate = value; }
 
     public get model(): Model { return new Model(this.modelMap); }
-    public get views(): Views { return new Views(this.viewsMap); }
+    public get views(): Views { return new Views(this.viewsMap, this.model); }
     public get properties(): Properties { return new Properties(this.propertiesMap); }
 
     public fromSnapshot(workspace: IWorkspaceSnapshot) {

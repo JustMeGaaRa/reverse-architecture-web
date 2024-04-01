@@ -1,4 +1,4 @@
-import { All, IComponentView, Identifier, IElementPosition, IRelationshipPosition, ISupportSnapshot, ViewType } from "@structurizr/dsl";
+import { All, IComponentView, Identifier, IElementPosition, IRelationshipPosition, ISupportSnapshot, Position, ViewType } from "@structurizr/dsl";
 import * as Y from "yjs";
 import { AutoLayout } from "./AutoLayout";
 import { Animation } from "./Animation";
@@ -86,5 +86,10 @@ export class ComponentView implements ISupportSnapshot<IComponentView> {
             animation: this.animation?.toSnapshot(),
             properties: this.properties.toSnapshot(),
         });
+    }
+
+    public includeElement(identifier: Identifier, position?: Position) {
+        // const group = this.model.addGroup();
+        throw new Error("Method not implemented.");
     }
 }

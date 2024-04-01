@@ -1,4 +1,4 @@
-import { All, Identifier, IElementPosition, IRelationshipPosition, ISupportSnapshot, ISystemContextView, ViewType } from "@structurizr/dsl";
+import { All, Identifier, IElementPosition, IRelationshipPosition, ISupportSnapshot, ISystemContextView, Position, ViewType } from "@structurizr/dsl";
 import * as Y from "yjs";
 import { AutoLayout } from "./AutoLayout";
 import { Animation } from "./Animation";
@@ -86,5 +86,10 @@ export class SystemContextView implements ISupportSnapshot<ISystemContextView> {
             animation: this.animation?.toSnapshot(),
             properties: this.properties.toSnapshot(),
         });
+    }
+
+    public includeElement(identifier: Identifier, position?: Position) {
+        // const group = this.model.addGroup();
+        throw new Error("Method not implemented.");
     }
 }

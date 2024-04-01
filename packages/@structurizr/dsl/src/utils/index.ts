@@ -313,3 +313,31 @@ export const getDefaultChildForElement = (parentType?: ElementType): IElement =>
         name: "Software System",
     })
 }
+
+export const emptyWorkspace = (): IWorkspaceSnapshot => {
+    return {
+        version: 1,
+        name: "Empty Workspace",
+        description: "An empty workspace.",
+        model: {
+            people: [],
+            softwareSystems: [],
+            deploymentEnvironments: [],
+            relationships: [],
+            groups: []
+        },
+        views: {
+            systemContexts: [],
+            containers: [],
+            components: [],
+            deployments: [],
+            configuration: {
+                styles: {
+                    elements: [],
+                    relationships: []
+                },
+                themes: []
+            },
+        }
+    }
+}

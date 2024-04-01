@@ -1,9 +1,11 @@
 import {
+    emptyWorkspace,
     IViewDefinition,
     IWorkspaceSnapshot,
     ViewType
 } from "@structurizr/dsl";
 import {
+    ActionType,
     Component,
     ComponentView,
     Container,
@@ -28,10 +30,12 @@ import {
     Themes,
     useWorkspace,
     Views,
-    Workspace
+    Workspace,
+    workspaceReducer
 } from "@structurizr/react";
 import { Workspace as YWorkspace } from "@structurizr/y-workspace";
-import { FC, PropsWithChildren, useEffect } from "react";
+import { useYjsCollaborative } from "@yjs/react";
+import { FC, PropsWithChildren, useEffect, useReducer } from "react";
 import { CommentThread } from "../../comments";
 import { useWorkspaceEditor } from "../hooks";
 import { ElementDiagramFlowControls, ElementViewNavigationControls } from "./ElementDiagramFlowControls";
@@ -44,7 +48,6 @@ export const WorkspaceEditor: FC<PropsWithChildren<{
     discussions?: CommentThread[];
 }>> = ({
     children,
-    workspace: yworkspace,
     view,
 }) => {
     const {
@@ -57,12 +60,21 @@ export const WorkspaceEditor: FC<PropsWithChildren<{
         onViewFlowClick
     } = useWorkspaceEditor();
 
-    const { workspace, setWorkspace } = useWorkspace();
+    const { document } = useYjsCollaborative();
+    const [ workspace, dispatch ] = useReducer(workspaceReducer, emptyWorkspace());
+    // const [ workspace, dispatch ] = useReducer(collaborative(workspaceReducer, document), emptyWorkspace());
 
     useEffect(() => {
-        if (yworkspace) {
+        if (document) {
+            const yworkspace = new YWorkspace(document);
+
             const onUpdateWorksapce = () => {
-                setWorkspace(yworkspace.toSnapshot());
+                dispatch({
+                    type: ActionType.SET_WORKSPACE,
+                    payload: {
+                        workspace: yworkspace.toSnapshot()
+                    }
+                });
             }
 
             yworkspace.subscribe(onUpdateWorksapce);
@@ -71,7 +83,7 @@ export const WorkspaceEditor: FC<PropsWithChildren<{
                 yworkspace.unsubscribe(onUpdateWorksapce);
             }
         }
-    }, [setWorkspace, yworkspace]);
+    }, [document]);
 
     return (
         <Workspace

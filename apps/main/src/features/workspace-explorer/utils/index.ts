@@ -1,5 +1,4 @@
-import { IWorkspaceSnapshot } from "@structurizr/dsl";
-import { emptyWorkspace } from "@structurizr/parser";
+import { emptyWorkspace, IWorkspaceSnapshot } from "@structurizr/dsl";
 import { Workspace, WorkspaceInfo, IWorkspaceInfo } from "@structurizr/y-workspace";
 import * as Y from "yjs";
 import { IndexeddbPersistence } from "y-indexeddb";

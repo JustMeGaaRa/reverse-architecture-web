@@ -8,6 +8,8 @@ import { ComponentView } from "./ComponentView";
 import { Configuration } from "./Configuration";
 import { ContainerView } from "./ContainerView";
 import { DeploymentView } from "./DeploymentView";
+import { Model } from "./Model";
+import { Properties } from "./Properties";
 import { SystemContextView } from "./SystemContextView";
 import { SystemLandscapeView } from "./SystemLandscapeView";
 import {
@@ -25,9 +27,12 @@ export class Views implements ISupportSnapshot<IViews>, IObservable {
     private get componentsArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("componentViews") as Y.Array<Y.Map<unknown>>; }
     private get deploymentsArray(): Y.Array<Y.Map<unknown>> { return this.propertiesMap.get("deploymentViews") as Y.Array<Y.Map<unknown>>; }
 
-    constructor(private readonly propertiesMap: Y.Map<unknown>) { }
+    constructor(
+        private readonly propertiesMap: Y.Map<unknown>,
+        private readonly model: Model
+    ) { }
 
-    public get systemLandscape(): SystemLandscapeView { return this.systemLandscapeMap && new SystemLandscapeView(this.systemLandscapeMap); }
+    public get systemLandscape(): SystemLandscapeView { return this.systemLandscapeMap && new SystemLandscapeView(this.systemLandscapeMap, this.model); }
     public get systemContexts(): Array<SystemContextView> { return this.systemContextsArray?.map(view => new SystemContextView(view)) ?? []; }
     public get containers(): Array<ContainerView> { return this.containersArray?.map(view => new ContainerView(view)) ?? []; }
     public get components(): Array<ComponentView> { return this.componentsArray?.map(view => new ComponentView(view)) ?? []; }
@@ -65,7 +70,7 @@ export class Views implements ISupportSnapshot<IViews>, IObservable {
     public setSystemLandscape() {
         const systemLandscapeMap = createSystemLandscapeViewPropertiesMap();
         this.propertiesMap.set("systemLandscapeViews", systemLandscapeMap);
-        return new SystemLandscapeView(systemLandscapeMap);
+        return new SystemLandscapeView(systemLandscapeMap, this.model);
     }
 
     public addSystemContext() {

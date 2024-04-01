@@ -1,6 +1,7 @@
 import { Node } from "@reactflow/core";
 import {
     ElementType,
+    Identifier,
     IElement,
     IRelationship,
     IViewDefinition,
@@ -9,12 +10,137 @@ import {
 } from "@structurizr/dsl";
 import { useSystemLandscapeView, useWorkspace } from "@structurizr/react";
 import { Workspace } from "@structurizr/y-workspace";
+import { useYjsCollaborative } from "@yjs/react";
+import * as Y from "yjs";
 import { FC, PropsWithChildren, useCallback, useEffect, useState } from "react";
 import { CommentThread } from "../../comments";
 import { useWorkspaceActionsToolbar, useWorkspaceNavigation, WorkspaceToolName } from "../hooks";
 
+const addElementToSystemLandscapeView = (document: Y.Doc, elementType: ElementType, position: Position) => {
+    const yworkspace = new Workspace(document);
+
+    switch (elementType) {
+        case ElementType.Group:
+            const group = yworkspace.model.addGroup();
+            yworkspace.views.systemLandscape
+                ?.includeElement(group.identifier, position);
+            break;
+        case ElementType.Person:
+            const person = yworkspace.model.addPerson();
+            yworkspace.views.systemLandscape
+                ?.includeElement(person.identifier, position);
+            break;
+        case ElementType.SoftwareSystem:
+            const softwareSystem = yworkspace.model.addSoftwareSystem();
+            yworkspace.views.systemLandscape
+                ?.includeElement(softwareSystem.identifier, position);
+            break;
+    }
+}
+
+const addElementToSystemContextView = (document: Y.Doc, viewIdentifier: Identifier, elementType: ElementType, position: Position) => {
+    const yworkspace = new Workspace(document);
+
+    switch (elementType) {
+        case ElementType.Group:
+            const group = yworkspace.model.addGroup();
+            yworkspace.views.systemContexts
+                .find(view => view.identifier === view.identifier)
+                ?.includeElement(group.identifier, position);
+            break;
+        case ElementType.Person:
+            const person = yworkspace.model.addPerson();
+            yworkspace.views.systemContexts
+                .find(view => view.identifier === view.identifier)
+                ?.includeElement(person.identifier, position);
+            break;
+        case ElementType.SoftwareSystem:
+            const softwareSystem = yworkspace.model.addSoftwareSystem();
+            yworkspace.views.systemContexts
+                .find(view => view.identifier === view.identifier)
+                ?.includeElement(softwareSystem.identifier, position);
+            break;
+    }
+}
+
+const addElementToContainerView = (document: Y.Doc, viewIdentifier: Identifier, elementType: ElementType, position: Position) => {
+    const yworkspace = new Workspace(document);
+
+    switch (elementType) {
+        case ElementType.Person:
+            const person = yworkspace.model.addPerson();
+            yworkspace.views.containers
+                .find(view => view.identifier === view.identifier)
+                ?.includeElement(person.identifier, position);
+            break;
+        case ElementType.SoftwareSystem:
+            const softwareSystem = yworkspace.model.addSoftwareSystem();
+            yworkspace.views.containers
+                .find(view => view.identifier === view.identifier)
+                ?.includeElement(softwareSystem.identifier, position);
+            break;
+    }
+}
+
+const addElementToComponentView = (document: Y.Doc, viewIdentifier: Identifier, elementType: ElementType, position: Position) => {
+    const yworkspace = new Workspace(document);
+
+    switch (elementType) {
+        case ElementType.Person:
+            const person = yworkspace.model.addPerson();
+            yworkspace.views.components
+                .find(view => view.identifier === view.identifier)
+                ?.includeElement(person.identifier, position);
+            break;
+        case ElementType.SoftwareSystem:
+            const softwareSystem = yworkspace.model.addSoftwareSystem();
+            yworkspace.views.components
+                .find(view => view.identifier === view.identifier)
+                ?.includeElement(softwareSystem.identifier, position);
+            break;
+        case ElementType.Container:
+            const container = yworkspace.model.softwareSystems
+                .find(softwareSystem => softwareSystem.identifier === softwareSystem.identifier)
+                .addContainer();
+            yworkspace.views.components
+                .find(view => view.identifier === view.identifier)
+                ?.includeElement(container.identifier, position);
+            break;
+    }
+}
+
+const addElementToDeploymentView = (document: Y.Doc, viewIdentifier: Identifier, elementType: ElementType, position: Position) => {
+    throw new Error("Not implemented");
+}
+
+const addElementToView = (document: Y.Doc, viewType: ViewType, viewIdentifier: Identifier, elementType: ElementType, position: Position) => {
+    switch (viewType) {
+        case ViewType.Model:
+            break;
+        case ViewType.SystemLandscape:
+            addElementToSystemLandscapeView(document, elementType, position);
+            break;
+        case ViewType.SystemContext:
+            addElementToSystemContextView(document, viewIdentifier, elementType, position);
+            break;
+        case ViewType.Container:
+            addElementToContainerView(document, viewIdentifier, elementType, position);
+            break;
+        case ViewType.Component:
+            addElementToComponentView(document, viewIdentifier, elementType, position);
+            break;
+        case ViewType.Deployment:
+            addElementToDeploymentView(document, viewIdentifier, elementType, position);
+            break;
+    }
+}
+
+const addCommentToView = (document: Y.Doc, viewType: ViewType, viewIdentifier: Identifier, comment: CommentThread, position: Position) => {
+    throw new Error("Not implemented");
+}
+
 export const useWorkspaceEditor = () => {
-    const [ yworkspace, setYWorkspace ] = useState<Workspace>();
+    const { document } = useYjsCollaborative();
     const { workspace, setWorkspace } = useWorkspace();
     const { currentView: view } = useWorkspaceNavigation();
     const { selectedTool, selectedElementType } = useWorkspaceActionsToolbar();
@@ -74,68 +200,14 @@ export const useWorkspaceEditor = () => {
 
     const onViewClick = useCallback((event: React.MouseEvent, relativePosition: Position) => {
         if (view && selectedTool === WorkspaceToolName.ElementDrop) {
-            switch (view?.type) {
-                case ViewType.Model:
-                    break;
-                case ViewType.SystemLandscape:
-                    switch (selectedElementType) {
-                        case ElementType.Group:
-                            // systemLandscapeView.addGroup(relativePosition);
-                            break;
-                        case ElementType.SoftwareSystem:
-                            // systemLandscapeView.addSoftwareSystem(relativePosition);
-                            break;
-                        case ElementType.Person:
-                            // systemLandscapeView.addPerson(relativePosition);
-                            break;
-                    }
-                    break;
-                case ViewType.SystemContext:
-                    switch (selectedElementType) {
-                        case ElementType.Group:
-                            // addGroup(pointTranslatedFromViewport)
-                            break;
-                        case ElementType.SoftwareSystem:
-                            // addSoftwareSystem(pointTranslatedFromViewport)
-                            break;
-                        case ElementType.Person:
-                            // addPerson(pointTranslatedFromViewport)
-                            break;
-                    }
-                    break;
-                case ViewType.Container:
-                    switch (selectedElementType) {
-                        case ElementType.SoftwareSystem:
-                            // addSoftwareSystem(pointTranslatedFromViewport);
-                            break;
-                        case ElementType.Person:
-                            // addPerson(pointTranslatedFromViewport);
-                            break;
-                    }
-                    break;
-                case ViewType.Component:
-                    switch (selectedElementType) {
-                        case ElementType.SoftwareSystem:
-                            // addSoftwareSystem(pointTranslatedFromViewport);
-                            break;
-                        case ElementType.Person:
-                            // addPerson(pointTranslatedFromViewport);
-                            break;
-                        case ElementType.Container:
-                            // addContainer(pointTranslatedFromViewport);
-                            break;
-                    }
-                    break;
-                case ViewType.Deployment:
-                    break;
-            }
+            addElementToView(document, view?.type, view?.identifier, selectedElementType, relativePosition);
         }
         
-        // TODO: get viewport, translate position and save comment
-        // if (isCommentingModeEnabled) {
-        //     throw new Error("Not implemented");
-        // }
-    }, [view, selectedTool, selectedElementType]);
+        if (view && selectedTool === WorkspaceToolName.Comment) {
+            // TODO: get viewport, translate position and save comment
+            addCommentToView(document, view?.type, view?.identifier, undefined, relativePosition);
+        }
+    }, [document, selectedTool, selectedElementType, view]);
 
     const onElementDragStart = useCallback((event: React.MouseEvent, element: IElement) => {
         console.log("onElementDragStart", event, element);
