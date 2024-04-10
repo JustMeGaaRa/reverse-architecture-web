@@ -8,7 +8,7 @@ import {
     Tag,
     IElementVisitor,
     IViewDefinition,
-    IElementPosition,
+    IElementMetadata,
     IComponent,
     IContainer,
     IContainerInstance,
@@ -18,7 +18,8 @@ import {
     ISoftwareSystemInstance,
     IGroup,
     IPerson,
-    IRelationship
+    IRelationship,
+    IWorkspaceSnapshot
 } from "@structurizr/dsl";
 import { ElementHtmlUtils } from "./utils";
 import {
@@ -35,6 +36,9 @@ export class DrawioExportVisitor implements IElementVisitor {
         private parentId: string | undefined,
         private builder: DrawioDiagramBuilder
     ) {}
+
+    visitWorkspace(workspace: IWorkspaceSnapshot): void {
+    }
 
     visitGroup(group: IGroup, params?: { parentId?: string; }) {
         throw new Error("Method not implemented.");
@@ -189,7 +193,7 @@ export class DrawioExportVisitor implements IElementVisitor {
     private fromElement(
         parent: string | undefined,
         node: IElement,
-        position: IElementPosition | undefined,
+        position: IElementMetadata | undefined,
         fillColor: string,
         strokeColor: string,
     ): MxObject {
@@ -237,7 +241,7 @@ export class DrawioExportVisitor implements IElementVisitor {
     private fromElementScope(
         parent: string | undefined,
         node: IElement,
-        position: IElementPosition | undefined
+        position: IElementMetadata | undefined
     ): MxObject {
         return {
             _placeholders: "1",
