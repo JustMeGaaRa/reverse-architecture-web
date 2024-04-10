@@ -36,20 +36,20 @@ import {
 import { FC, PropsWithChildren } from "react";
 import { CommentThread } from "../../comments";
 import { ElementDiagramFlowControls, ElementViewNavigationControls } from "./ElementDiagramFlowControls";
-import { ElementModelCollapseControls } from "./ElementModelFlowControls";
+import { ElementModelCollapseControls, ElementModelFlowControls } from "./ElementModelFlowControls";
 import { ElementOptionsToolbar } from "./ElementOptionsToolbar";
 
 export const WorkspaceRenderer: FC<PropsWithChildren<{
     workspace: IWorkspaceSnapshot;
     view: IViewDefinition;
     discussions?: CommentThread[];
-    onElementClick?: (event: React.MouseEvent, element: IElement, relativePosition: Position) => void;
-    onElementDragStart?: (event: React.MouseEvent, element: IElement) => void;
-    onElementDrag?: (event: React.MouseEvent, element: IElement) => void;
-    onElementDragStop?: (event: React.MouseEvent, element: IElement, position: Position) => void;
+    onElementClick?: (element: IElement, relativePosition: Position) => void;
+    onElementDragStart?: (element: IElement) => void;
+    onElementDrag?: (element: IElement) => void;
+    onElementDragStop?: (element: IElement, position: Position) => void;
     onElementsConnect?: (relationship: IRelationship) => void;
-    onViewClick?: (event: React.MouseEvent, relativePosition: Position) => void;
-    onViewFlowClick?: (node: Node, relativePosition: Position) => void;
+    onViewClick?: (relativePosition: Position) => void;
+    onViewFlowClick?: (sourceElement: IElement, relativePosition: Position) => void;
 }>> = ({
     children,
     workspace,
@@ -127,6 +127,7 @@ export const WorkspaceRenderer: FC<PropsWithChildren<{
                     ))}
 
                     <ElementModelCollapseControls />
+                    <ElementModelFlowControls onHandleClick={onViewFlowClick} />
                     <ElementViewNavigationControls />
                 </Model>
             )}

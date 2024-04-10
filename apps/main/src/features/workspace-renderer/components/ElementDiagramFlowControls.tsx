@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/react";
 import { Node, Position as PositionSide, useViewport } from "@reactflow/core";
-import { Position } from "@structurizr/dsl";
+import { IElement, Position } from "@structurizr/dsl";
 import {
     BoundingBox,
     ReactFlowNodeTypeNames,
@@ -26,7 +26,7 @@ import { ElementSelectionBorder } from "./ElementSelectionBorder";
 import { ElementZoomControl } from "./ElementZoomControl";
 
 export const ElementDiagramFlowControls: FC<{
-    onHandleClick?: (sourceNode: Node, position: Position) => void;
+    onHandleClick?: (sourceElement: IElement, position: Position) => void;
 }> = ({
     onHandleClick
 }) => {
@@ -67,7 +67,7 @@ export const ElementDiagramFlowControls: FC<{
             x: selectedNodes[0].position.x + selectedNodes[0].width / 2 + offset.x,
             y: selectedNodes[0].position.y + selectedNodes[0].height + offset.y
         };
-        onHandleClick?.(selectedNodes[0], targetPosition);
+        onHandleClick?.(selectedNodes[0].data.element, targetPosition);
     }, [onHandleClick, selectedNodes]);
 
     const handleOnMouseLeave = useCallback(() => {

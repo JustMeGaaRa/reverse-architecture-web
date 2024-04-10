@@ -12,12 +12,12 @@ import { useWorkspace } from "../hooks";
 
 export const Workspace: FC<PropsWithChildren<{
     workspace: IWorkspaceSnapshot;
-    onElementClick?: (event: React.MouseEvent, element: IElement, relativePosition: Position) => void;
-    onElementDragStart?: (event: React.MouseEvent, element: IElement) => void;
-    onElementDrag?: (event: React.MouseEvent, element: IElement) => void;
-    onElementDragStop?: (event: React.MouseEvent, element: IElement, position: Position) => void;
+    onElementClick?: (element: IElement, relativePosition: Position) => void;
+    onElementDragStart?: (element: IElement) => void;
+    onElementDrag?: (element: IElement) => void;
+    onElementDragStop?: (element: IElement, position: Position) => void;
     onElementsConnect?: (relationship: IRelationship) => void;
-    onViewClick?: (event: React.MouseEvent, relativePosition: Position) => void;
+    onViewClick?: (relativePosition: Position) => void;
 }>> = ({
     children,
     workspace,
@@ -49,13 +49,13 @@ export const Workspace: FC<PropsWithChildren<{
 }
 
 const WorkspaceReactFlowWrapper: FC<PropsWithChildren<{
-    onElementClick?: (event: React.MouseEvent, element: IElement, relativePosition: Position) => void;
-    onElementDragStart?: (event: React.MouseEvent, element: IElement) => void;
-    onElementDrag?: (event: React.MouseEvent, element: IElement) => void;
-    onElementDragStop?: (event: React.MouseEvent, element: IElement, position: Position) => void;
+    onElementClick?: (element: IElement, relativePosition: Position) => void;
+    onElementDragStart?: (element: IElement) => void;
+    onElementDrag?: (element: IElement) => void;
+    onElementDragStop?: (element: IElement, position: Position) => void;
     onElementsConnect?: (relationship: IRelationship) => void;
-    onMouseMove?: (event: React.MouseEvent) => void;
-    onViewClick?: (event: React.MouseEvent, relativePosition: Position) => void;
+    onMouseMove?: () => void;
+    onViewClick?: (relativePosition: Position) => void;
 }>> = ({
     children,
     onElementClick,
@@ -84,24 +84,24 @@ const WorkspaceReactFlowWrapper: FC<PropsWithChildren<{
                 y: pointTranslatedFromViewport.y - node.positionAbsolute.y
             };
             const groupId = node.data.element.type === ElementType.Group ? node.id : undefined;
-            onElementClick?.(event, node.data.element, pointRelativeToNode);
+            onElementClick?.(node.data.element, pointRelativeToNode);
         }
     }, [getViewport, onElementClick]);
 
     const handleOnNodeDragStart = useCallback((event: React.MouseEvent, node: Node) => {
-        onElementDragStart?.(event, node.data.element);
+        onElementDragStart?.(node.data.element);
     }, [onElementDragStart]);
 
     const handleOnNodeDrag = useCallback((event: React.MouseEvent, node: Node) => {
-        onElementDrag?.(event, node.data.element);
+        onElementDrag?.(node.data.element);
     }, [onElementDrag]);
 
     const handleOnNodeDragStop = useCallback((event: React.MouseEvent, node: any, nodes: any[]) => {
-        onElementDragStop?.(event, node.data.element, node.position);
+        onElementDragStop?.(node.data.element, node.position);
     }, [onElementDragStop]);
 
     const handleOnMouseMove = useCallback((event: React.MouseEvent) => {
-       onMouseMove?.(event);
+       onMouseMove?.();
     }, [onMouseMove]);
 
     const handleOnPaneClick = useCallback((event: React.MouseEvent) => {
@@ -113,7 +113,7 @@ const WorkspaceReactFlowWrapper: FC<PropsWithChildren<{
                 y: mousePoint.y - parentOffset.top
             };
             const pointTranslatedFromViewport = getAbsolutePoint(getViewport(), pointRelativeToViewport);
-            onViewClick?.(event, pointTranslatedFromViewport);
+            onViewClick?.(pointTranslatedFromViewport);
         }
     }, [getViewport, onViewClick]);
 

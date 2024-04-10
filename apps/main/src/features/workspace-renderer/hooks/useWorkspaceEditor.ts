@@ -462,7 +462,7 @@ export const useWorkspaceEditorState = (dispatch: Dispatch<WorkspaceFlowAction>)
         }
     }, [dispatch]);
 
-    const onElementClick = useCallback((event: React.MouseEvent, element: IElement, relativePosition: Position) => {
+    const onElementClick = useCallback((element: IElement, relativePosition: Position) => {
         if (view && selectedTool === WorkspaceToolName.ElementDrop) {
             addElementToView(view, selectedElementType, relativePosition, element.identifier);
         }
@@ -473,7 +473,7 @@ export const useWorkspaceEditorState = (dispatch: Dispatch<WorkspaceFlowAction>)
         }
     }, [view, selectedTool, selectedElementType, addElementToView, addCommentToView]);
 
-    const onViewClick = useCallback((event: React.MouseEvent, relativePosition: Position) => {
+    const onViewClick = useCallback((relativePosition: Position) => {
         if (view && selectedTool === WorkspaceToolName.ElementDrop) {
             addElementToView(view, selectedElementType, relativePosition);
         }
@@ -484,13 +484,13 @@ export const useWorkspaceEditorState = (dispatch: Dispatch<WorkspaceFlowAction>)
         }
     }, [view, selectedTool, selectedElementType, addElementToView, addCommentToView]);
 
-    const onElementDragStart = useCallback((event: React.MouseEvent, element: IElement) => {
+    const onElementDragStart = useCallback((element: IElement) => {
     }, []);
 
-    const onElementDrag = useCallback((event: React.MouseEvent, element: IElement) => {
+    const onElementDrag = useCallback((element: IElement) => {
     }, []);
 
-    const onElementDragStop = useCallback((event: React.MouseEvent, element: IElement, position: Position) => {
+    const onElementDragStop = useCallback((element: IElement, position: Position) => {
         if (view) {
             setElementPositionInView(view?.type, view?.identifier, element.identifier, position);
         }
@@ -519,22 +519,22 @@ export const useWorkspaceEditorState = (dispatch: Dispatch<WorkspaceFlowAction>)
         }
     }, [view]);
     
-    const onViewFlowClick = useCallback((sourceNode: Node, position: Position) => {
+    const onViewFlowClick = useCallback((sourceElement: IElement, position: Position) => {
         switch (view?.type) {
             case ViewType.Model:
-                connectElementOnModelView(sourceNode.data?.element);
+                connectElementOnModelView(sourceElement);
                 break;
             case ViewType.SystemLandscape:
-                connectElementOnSystemLandscapeView(sourceNode.data?.element, position);
+                connectElementOnSystemLandscapeView(sourceElement, position);
                 break;
             case ViewType.SystemContext:
-                connectElementOnSystemContextView(sourceNode.data?.element, position);
+                connectElementOnSystemContextView(sourceElement, position);
                 break;
             case ViewType.Container:
-                connectElementOnContainerView(sourceNode.data?.element, position);
+                connectElementOnContainerView(sourceElement, position);
                 break;
             case ViewType.Component:
-                connectElementOnComponentView(sourceNode.data?.element, position);
+                connectElementOnComponentView(sourceElement, position);
                 break;
             case ViewType.Deployment:
                 break;

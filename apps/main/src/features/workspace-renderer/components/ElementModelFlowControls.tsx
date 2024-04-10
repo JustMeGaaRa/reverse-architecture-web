@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/react";
 import { Node, Position as PositionSide, useViewport } from "@reactflow/core";
-import { Position, Tag } from "@structurizr/dsl";
+import { IElement, Position, Tag } from "@structurizr/dsl";
 import {
     BoundingBox,
     useCollapsable,
@@ -23,7 +23,7 @@ import { ElementFlowHandle } from "./ElementFlowHandle";
 import { ElementSelectionBorder } from "./ElementSelectionBorder";
 
 export const ElementModelFlowControls: FC<{
-    onHandleClick?: (sourceNode: Node, position: Position) => void;
+    onHandleClick?: (sourceElement: IElement, position: Position) => void;
 }> = ({
     onHandleClick
 }) => {
@@ -60,7 +60,7 @@ export const ElementModelFlowControls: FC<{
             x: selectedNodes[0].position.x + selectedNodes[0].width / 2 + offset.x,
             y: selectedNodes[0].position.y + selectedNodes[0].height + offset.y
         };
-        onHandleClick?.(selectedNodes[0], targetPosition);
+        onHandleClick?.(selectedNodes[0].data.element, targetPosition);
     }, [onHandleClick, selectedNodes]);
 
     return (
