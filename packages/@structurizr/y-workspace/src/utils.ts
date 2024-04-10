@@ -257,6 +257,26 @@ export const createDeploymentViewPropertiesMap = () => {
     return deploymentViewMap;
 }
 
+export const createElementMetadataPropertiesMap = () => {
+    const elementMetadataMap = new Y.Map([
+        ["id", ""],
+        ["x", 0],
+        ["y", 0],
+        ["height", 0],
+        ["width", 0]
+    ]);
+    return elementMetadataMap;
+}
+
+export const createRelationshipMetadataPropertiesMap = () => {
+    const relationshipMetadataMap = new Y.Map([
+        ["id", ""],
+        ["x", 0],
+        ["y", 0]
+    ]);
+    return relationshipMetadataMap;
+}
+
 export const createAutoLayoutPropertiesMap = () => {
     const autoLayoutMap = new Y.Map([
         ["direction", AutoLayoutDirection.TopBotom],

@@ -1,12 +1,12 @@
 import { All, Identifier, ViewType } from "../types";
 import { IViewDefinition } from "./IViewDefinition";
-import { IRelationshipPosition } from "./IRelationshipPosition";
-import { IElementPosition } from "./IElementPosition";
+import { IRelationshipMetadata } from "./IRelationshipMetadata";
+import { IElementMetadata } from "./IElementMetadata";
 import { IProperties } from "./IProperties";
 import { IAutoLayout } from "./IAutoLayout";
 
 export interface IDeploymentView extends IViewDefinition {
-    type: ViewType;
+    type: ViewType.Deployment;
     identifier: Identifier;
     softwareSystemIdentifier: Identifier;
     environment: string;
@@ -18,6 +18,6 @@ export interface IDeploymentView extends IViewDefinition {
     autoLayout?: IAutoLayout;
     animation?: any;
     properties?: IProperties;
-    elements: Array<IElementPosition>;
-    relationships: Array<IRelationshipPosition>;
+    elements: Array<IElementMetadata>;
+    relationships: Array<IRelationshipMetadata>;
 }

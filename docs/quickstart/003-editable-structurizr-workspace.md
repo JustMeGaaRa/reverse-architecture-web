@@ -99,11 +99,11 @@ export const WorkspaceEditor: FC = () => {
                     </ComponentView>
                 ))}
                 {workspace.views.deployments.map(view => (
-                    <Deployment key={view.identifier} value={view}>
+                    <DeploymentView key={view.identifier} value={view}>
                         <Include value={view.include} />
                         <Animation value={view.animation} />
                         <AutoLayout value={view.autoLayout} />
-                    </Deployment>
+                    </DeploymentView>
                 ))}
             </Views>
         </Workspace>

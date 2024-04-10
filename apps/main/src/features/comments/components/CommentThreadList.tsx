@@ -1,4 +1,5 @@
 import { Box } from "@chakra-ui/react";
+import { getDefaultView } from "@structurizr/dsl";
 import { FC, useCallback } from "react";
 import {
     CommentCard,
@@ -22,7 +23,7 @@ export const CommentThreadList: FC = () => {
     const handleOnClick = useCallback((comment: CommentThread) => {
         const isCurrent = selectedThreadId === comment.commentThreadId;
         setSelectedThreadId(isCurrent ? undefined : comment.commentThreadId);
-        setCurrentView(comment.metadata.view);
+        setCurrentView(getDefaultView(comment.metadata.view.type, comment.metadata.view.identifier));
     }, [selectedThreadId, setSelectedThreadId, setCurrentView]);
 
     return (

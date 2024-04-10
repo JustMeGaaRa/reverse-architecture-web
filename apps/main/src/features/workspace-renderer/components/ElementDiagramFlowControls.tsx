@@ -4,7 +4,6 @@ import { Position } from "@structurizr/dsl";
 import {
     BoundingBox,
     ReactFlowNodeTypeNames,
-    useViewFlowBuilder,
     useWorkspace,
     ViewportStaticElement,
     WorkspaceElementPortal,
@@ -12,7 +11,7 @@ import {
     useSelectedNodes
 } from "@structurizr/react";
 import { FC, useCallback } from "react";
-import { useWorkspaceNavigation } from "../hooks";
+import { useViewFlowBuilder, useWorkspaceNavigation } from "../hooks";
 import {
     canElementHaveChildren,
     canZoomIntoElement,

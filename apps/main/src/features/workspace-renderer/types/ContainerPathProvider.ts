@@ -1,8 +1,8 @@
-import { IViewDefinition, IWorkspaceSnapshot, ViewType } from "@structurizr/dsl";
+import { IWorkspaceSnapshot, ViewDefinition, ViewType } from "@structurizr/dsl";
 import { ISupportPath } from "./ISuppportPath";
 
 export class ContainerPathProvider implements ISupportPath {
-    getPath(workspace: IWorkspaceSnapshot, view: IViewDefinition): Array<IViewDefinition> {
+    getPath(workspace: IWorkspaceSnapshot, view: ViewDefinition): Array<ViewDefinition> {
         const softwareSystems = workspace.model.groups
             .flatMap(group => group.softwareSystems)
             .concat(workspace.model.softwareSystems);
@@ -21,6 +21,7 @@ export class ContainerPathProvider implements ISupportPath {
                         type: ViewType.SystemContext,
                         identifier: softwareSystem.identifier,
                         title: softwareSystem.name,
+                        softwareSystemIdentifier: softwareSystem.identifier,
                         elements: [],
                         relationships: []
                     },
@@ -28,6 +29,7 @@ export class ContainerPathProvider implements ISupportPath {
                         type: ViewType.Container,
                         identifier: softwareSystem.identifier,
                         title: softwareSystem.name,
+                        softwareSystemIdentifier: softwareSystem.identifier,
                         elements: [],
                         relationships: []
                     }

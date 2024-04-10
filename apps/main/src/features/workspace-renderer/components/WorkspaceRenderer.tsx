@@ -1,6 +1,10 @@
+import { Node } from "@reactflow/core";
 import {
+    IElement,
+    IRelationship,
     IViewDefinition,
     IWorkspaceSnapshot,
+    Position,
     ViewType
 } from "@structurizr/dsl";
 import {
@@ -31,21 +35,45 @@ import {
 } from "@structurizr/react";
 import { FC, PropsWithChildren } from "react";
 import { CommentThread } from "../../comments";
-import { ElementViewNavigationControls } from "./ElementDiagramFlowControls";
+import { ElementDiagramFlowControls, ElementViewNavigationControls } from "./ElementDiagramFlowControls";
+import { ElementModelCollapseControls } from "./ElementModelFlowControls";
+import { ElementOptionsToolbar } from "./ElementOptionsToolbar";
 
 export const WorkspaceRenderer: FC<PropsWithChildren<{
     workspace: IWorkspaceSnapshot;
     view: IViewDefinition;
     discussions?: CommentThread[];
+    onElementClick?: (event: React.MouseEvent, element: IElement, relativePosition: Position) => void;
+    onElementDragStart?: (event: React.MouseEvent, element: IElement) => void;
+    onElementDrag?: (event: React.MouseEvent, element: IElement) => void;
+    onElementDragStop?: (event: React.MouseEvent, element: IElement, position: Position) => void;
+    onElementsConnect?: (relationship: IRelationship) => void;
+    onViewClick?: (event: React.MouseEvent, relativePosition: Position) => void;
+    onViewFlowClick?: (node: Node, relativePosition: Position) => void;
 }>> = ({
     children,
     workspace,
     view,
+    onElementClick,
+    onElementDragStart,
+    onElementDrag,
+    onElementDragStop,
+    onElementsConnect,
+    onViewClick,
+    onViewFlowClick
 }) => {
     return (
-        <Workspace workspace={workspace}>
+        <Workspace
+            workspace={workspace}
+            onElementClick={onElementClick}
+            onElementDragStart={onElementDragStart}
+            onElementDrag={onElementDrag}
+            onElementDragStop={onElementDragStop}
+            onElementsConnect={onElementsConnect}
+            onViewClick={onViewClick}
+        >
             {view !== undefined && view?.type === ViewType.Model && (
-                <Model model={workspace?.model}>
+                <Model>
                     {workspace?.model?.groups?.map(group => (
                         <Group key={group.identifier} group={group}>
 
@@ -98,6 +126,7 @@ export const WorkspaceRenderer: FC<PropsWithChildren<{
                         </Relationship>
                     ))}
 
+                    <ElementModelCollapseControls />
                     <ElementViewNavigationControls />
                 </Model>
             )}
@@ -108,6 +137,8 @@ export const WorkspaceRenderer: FC<PropsWithChildren<{
                         view={workspace?.views.systemLandscape}
                     >
                         <ElementViewNavigationControls />
+                        <ElementDiagramFlowControls onHandleClick={onViewFlowClick} />
+                        <ElementOptionsToolbar />
                     </SystemLandscapeView>
                 )}
                 {view !== undefined && view.type === ViewType.SystemContext && (
@@ -116,6 +147,8 @@ export const WorkspaceRenderer: FC<PropsWithChildren<{
                         view={workspace.views.systemContexts.find(view => view.identifier === view.identifier)}
                     >
                         <ElementViewNavigationControls />
+                        <ElementDiagramFlowControls onHandleClick={onViewFlowClick} />
+                        <ElementOptionsToolbar />
                     </SystemContextView>
                 )}
                 {view !== undefined && view.type === ViewType.Container && (
@@ -124,6 +157,8 @@ export const WorkspaceRenderer: FC<PropsWithChildren<{
                         view={workspace.views.containers.find(view => view.identifier === view.identifier)}
                     >
                         <ElementViewNavigationControls />
+                        <ElementDiagramFlowControls onHandleClick={onViewFlowClick} />
+                        <ElementOptionsToolbar />
                     </ContainerView>
                 )}
                 {view !== undefined && view.type === ViewType.Component && (
@@ -132,6 +167,8 @@ export const WorkspaceRenderer: FC<PropsWithChildren<{
                         view={workspace.views.components.find(view => view.identifier === view?.identifier)}
                     >
                         <ElementViewNavigationControls />
+                        <ElementDiagramFlowControls onHandleClick={onViewFlowClick} />
+                        <ElementOptionsToolbar />
                     </ComponentView>
                 )}
                 {view !== undefined && view.type === ViewType.Deployment && (
@@ -140,6 +177,8 @@ export const WorkspaceRenderer: FC<PropsWithChildren<{
                         view={workspace.views.deployments.find(view => view.identifier === view?.identifier)}
                     >
                         <ElementViewNavigationControls />
+                        <ElementDiagramFlowControls onHandleClick={onViewFlowClick} />
+                        <ElementOptionsToolbar />
                     </DeploymentView>
                 )}
                 <Styles>

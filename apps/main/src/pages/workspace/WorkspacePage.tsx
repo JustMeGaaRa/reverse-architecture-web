@@ -1,6 +1,6 @@
 import { useWorkspace, WorkspaceProvider } from "@structurizr/react";
 import { Workspace } from "@structurizr/y-workspace";
-import { CurrentUser, WorkspaceRoom } from "@workspace/live";
+import { CurrentUser, WorkspaceRoom } from "@structurizr/live";
 import {
     useYjsCollaborative,
     YjsDocumentProvider,
@@ -54,15 +54,12 @@ export const WorkspacePage: FC = () => {
                     <YjsUndoManagerProvider>
                         
                         <WorkspaceIndexeddbLoader workspaceId={workspaceId}>
-                            <WorkspaceSession
-                                workspaceId={workspaceId}
-                                onSessionStarted={handleOnSessionStarted}
-                            >
+                            <WorkspaceSession workspaceId={workspaceId} onSessionStarted={handleOnSessionStarted}>
                                 <WorkspaceRoom options={{ roomId: roomId, password: roomPassword }}>
 
                                     <CurrentUser info={account} />
 
-                                    <WorkspaceProvider>    
+                                    <WorkspaceProvider>
                                         <WorkspaceNavigationProvider>
                                             <WorkspacePageActions />            
                                             <WorkspaceCollaborativeEditor />

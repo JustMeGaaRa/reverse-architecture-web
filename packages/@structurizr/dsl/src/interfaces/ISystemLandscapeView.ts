@@ -1,13 +1,12 @@
 import { All, Identifier, ViewType } from "../types";
-import { IViewDefinition } from "./IViewDefinition";
-import { IRelationshipPosition } from "./IRelationshipPosition";
-import { IElementPosition } from "./IElementPosition";
-import { IProperties } from "./IProperties";
 import { IAutoLayout } from "./IAutoLayout";
+import { IElementMetadata } from "./IElementMetadata";
+import { IProperties } from "./IProperties";
+import { IRelationshipMetadata } from "./IRelationshipMetadata";
+import { IViewDefinition } from "./IViewDefinition";
 
 export interface ISystemLandscapeView extends IViewDefinition {
-    type: ViewType;
-    identifier: Identifier;
+    type: ViewType.SystemLandscape;
     key?: string;
     description?: string;
     include?: Array<Identifier | All>;
@@ -16,6 +15,6 @@ export interface ISystemLandscapeView extends IViewDefinition {
     animation?: any;
     title?: string;
     properties?: IProperties;
-    elements: Array<IElementPosition>;
-    relationships: Array<IRelationshipPosition>;
+    elements: Array<IElementMetadata>;
+    relationships: Array<IRelationshipMetadata>;
 }

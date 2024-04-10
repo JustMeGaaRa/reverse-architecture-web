@@ -1,16 +1,17 @@
-import { IGroup } from "./IGroup";
-import { IRelationship } from "./IRelationship";
-import { IInfrastructureNode } from "./IInfrastructureNode";
-import { IDeploymentNode } from "./IDeploymentNode";
-import { IContainerInstance } from "./IContainerInstance";
-import { ISoftwareSystemInstance } from "./ISoftwareSystemInstance";
 import { IComponent } from "./IComponent";
 import { IContainer } from "./IContainer";
-import { ISoftwareSystem } from "./ISoftwareSystem";
+import { IContainerInstance } from "./IContainerInstance";
+import { IDeploymentNode } from "./IDeploymentNode";
+import { IGroup } from "./IGroup";
+import { IInfrastructureNode } from "./IInfrastructureNode";
 import { IPerson } from "./IPerson";
-
+import { IRelationship } from "./IRelationship";
+import { ISoftwareSystem } from "./ISoftwareSystem";
+import { ISoftwareSystemInstance } from "./ISoftwareSystemInstance";
+import { IWorkspaceSnapshot } from "./IWorkspaceSnapshot";
 
 export interface IElementVisitor {
+    visitWorkspace(workspace: IWorkspaceSnapshot): void;
     visitGroup(
         group: IGroup,
         params?: { parentId?: string; }): void;

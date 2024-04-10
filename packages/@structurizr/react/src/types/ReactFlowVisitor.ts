@@ -18,6 +18,8 @@ import {
     IModel,
     IElement,
     foldStyles,
+    IWorkspaceSnapshot,
+    ModelViewStrategy,
 } from "@structurizr/dsl";
 import {
     createReactFlowViewNode,
@@ -36,6 +38,10 @@ export class ReactFlowVisitor implements IElementVisitor {
         private selectedView: IViewDefinition,
         private builder: ReactFlowBuilder
     ) { }
+
+    visitWorkspace(workspace: IWorkspaceSnapshot): void {
+        
+    }
 
     visitGroup(group: IGroup, params?: { parentId?: string }): void {
         const box = getElementBox(this.configuration, this.selectedView, group);
@@ -186,10 +192,31 @@ export class ReactFlowModelVisitor implements IElementVisitor {
         private configuration: IConfiguration,
         private builder: ReactFlowBuilder
     ) { }
+
+    visitWorkspace(workspace: IWorkspaceSnapshot): void {
+        const workspaceNode = createReactFlowModelNode({
+            element: {
+                type: "Workspace" as any,
+                identifier: ModelViewStrategy.PlaceholderModelWorkspaceId,
+                name: workspace.name,
+                description: "Model",
+                tags: [
+                    { name: "Element" },
+                    { name: "Workspace" }
+                ]
+            },
+            elementChildrenCount: (workspace.model.people.length + workspace.model.softwareSystems.length),
+            type: ReactFlowNodeTypeNames.ModelElementWorkspace,
+            position: { x: 0, y: 0 },
+            size: { height: 64, width: 400 }
+        });
+        this.builder.addNode(workspaceNode);
+    }
     
     visitGroup(group: IGroup, params?: { parentId?: string; }): void {
         throw new Error("Method not supported.");
     }
+
     visitPerson(person: IPerson, params?: { parentId?: string; }): void {
         const x = (-1) * (this.nodeWidth + this.nodeWidthSpacing);
         const y = 0;
@@ -201,6 +228,7 @@ export class ReactFlowModelVisitor implements IElementVisitor {
         });
         this.builder.addNode(personNode);
     }
+
     visitSoftwareSystem(softwareSystem: ISoftwareSystem, params?: { parentId?: string; }): void {
         const x = (this.nodeWidth + this.nodeWidthSpacing);
         const y = 0;
@@ -212,6 +240,7 @@ export class ReactFlowModelVisitor implements IElementVisitor {
         });
         this.builder.addNode(softwareSystemNode);
     }
+
     visitContainer(container: IContainer, params?: { parentId?: string; }): void {
         const x = (this.nodeWidth + this.nodeWidthSpacing);
         const y = this.nodeHeight + this.nodeHeightSpacing;
@@ -223,6 +252,7 @@ export class ReactFlowModelVisitor implements IElementVisitor {
         });
         this.builder.addNode(containerNode);
     }
+
     visitComponent(component: IComponent, params?: { parentId?: string; }): void {
         const x = (this.nodeWidth + this.nodeWidthSpacing);
         const y = 2 * (this.nodeHeight + this.nodeHeightSpacing);
@@ -234,18 +264,23 @@ export class ReactFlowModelVisitor implements IElementVisitor {
         });
         this.builder.addNode(componentNode);
     }
+
     visitDeploymentNode(deploymentNode: IDeploymentNode, params?: { parentId?: string; }): void {
         throw new Error("Method not supported.");
     }
+
     visitInfrastructureNode(infrastructureNode: IInfrastructureNode, params?: { parentId?: string; }): void {
         throw new Error("Method not supported.");
     }
+
     visitSoftwareSystemInstance(softwareSystemInstance: ISoftwareSystemInstance, params?: { parentId?: string; }): void {
         throw new Error("Method not supported.");
     }
+
     visitContainerInstance(containerInstance: IContainerInstance, params?: { parentId?: string; }): void {
         throw new Error("Method not supported.");
     }
+
     visitRelationship(relationship: IRelationship): void {
         const edge = createReactFlowModelEdge({ relationship: relationship });
         this.builder.addEdge(edge);

@@ -18,7 +18,22 @@ import {
     RelationshipType
 } from "../types";
 import { v4 } from "uuid";
-import { IComponent, IContainer, IElement, IModel, IRelationship, ISoftwareSystem, IViewDefinition, IWorkspaceSnapshot, IWorkspaceTheme, ViewKeys } from "../interfaces";
+import {
+    IComponent,
+    IContainer,
+    IDeploymentNode,
+    IElement,
+    IGroup,
+    IInfrastructureNode,
+    IModel,
+    IPerson,
+    IRelationship,
+    ISoftwareSystem,
+    IViewDefinition,
+    IWorkspaceSnapshot,
+    IWorkspaceTheme,
+    ViewDefinition
+} from "../interfaces";
 
 export const applyTheme = (workspace: IWorkspaceSnapshot, theme: IWorkspaceTheme): IWorkspaceSnapshot => {
     return {
@@ -46,7 +61,7 @@ export const fetchTheme = async (url: string): Promise<IWorkspaceTheme> => {
     return theme;
 }
 
-export const findViewByKeys = (workspace: IWorkspaceSnapshot, viewDefinition?: ViewKeys) => {
+export const findViewByKeys = (workspace: IWorkspaceSnapshot, viewDefinition?: { type: ViewType, identifier: Identifier }): ViewDefinition => {
     return [workspace.views.systemLandscape].find(x => x.type === viewDefinition?.type && x.identifier === viewDefinition?.identifier)
         ?? workspace.views.systemContexts.find(x => x.type === viewDefinition?.type && x.identifier === viewDefinition?.identifier)
         ?? workspace.views.containers.find(x => x.type === viewDefinition?.type && x.identifier === viewDefinition?.identifier)
@@ -54,7 +69,7 @@ export const findViewByKeys = (workspace: IWorkspaceSnapshot, viewDefinition?: V
         ?? workspace.views.deployments.find(x => x.type === viewDefinition?.type && x.identifier === viewDefinition?.identifier);
 }
 
-export const findViewByType = (workspace: IWorkspaceSnapshot, viewType?: ViewType) => {
+export const findViewByType = (workspace: IWorkspaceSnapshot, viewType?: ViewType): ViewDefinition => {
     return [workspace.views.systemLandscape].find(x => x.type === viewType)
         ?? workspace.views.systemContexts.find(x => x.type === viewType)
         ?? workspace.views.containers.find(x => x.type === viewType)
@@ -62,7 +77,7 @@ export const findViewByType = (workspace: IWorkspaceSnapshot, viewType?: ViewTyp
         ?? workspace.views.deployments.find(x => x.type === viewType);
 }
 
-export const findAnyExisting = (workspace: IWorkspaceSnapshot) => {
+export const findAnyExisting = (workspace: IWorkspaceSnapshot): ViewDefinition => {
     return workspace.views.systemLandscape
         ?? workspace.views.systemContexts[0]
         ?? workspace.views.containers[0]
@@ -70,7 +85,7 @@ export const findAnyExisting = (workspace: IWorkspaceSnapshot) => {
         ?? workspace.views.deployments[0];
 }
 
-export const getDefaultView = (type: ViewType, identifier: Identifier): IViewDefinition => {
+export const getDefaultView = (type: ViewType, identifier: Identifier): ViewDefinition => {
     switch (type) {
         case ViewType.SystemLandscape:
             return SystemLandscapeViewDefinition.default();
@@ -82,12 +97,12 @@ export const getDefaultView = (type: ViewType, identifier: Identifier): IViewDef
             return ComponentViewDefinition.default(identifier);
         case ViewType.Deployment:
             return DeploymentViewDefinition.default();
-        case ViewType.Model:
-            return { type: ViewType.Model, identifier: identifier };
+        // case ViewType.Model:
+        //     return { type: ViewType.Model, identifier: identifier };
     }
 }
 
-export const findViewOrDefault = (workspace: IWorkspaceSnapshot, viewDefinition: { type: ViewType, identifier: Identifier }) => {
+export const findViewOrDefault = (workspace: IWorkspaceSnapshot, viewDefinition: { type: ViewType, identifier: Identifier }): ViewDefinition => {
     return findViewByKeys(workspace, viewDefinition)
         ?? findViewByType(workspace, viewDefinition.type)
         ?? getDefaultView(viewDefinition.type, viewDefinition.identifier);
@@ -248,48 +263,88 @@ export const getRelationships = (model: IModel, implied: boolean) => {
     }
 }
 
-export const getDefaultElement = (type: ElementType): IElement | undefined => {
+export const createDefaultGroup = (): IGroup => {
     const uniqueId = new String(v4()).substring(0, 8);
+    return new Group({
+        identifier: `group_${uniqueId}`,
+        name: "Group"
+    }).toSnapshot();
+}
 
+export const createDefaultSoftwareSystem = (): ISoftwareSystem => {
+    const uniqueId = new String(v4()).substring(0, 8);
+    return new SoftwareSystem({
+        identifier: `softwareSystem_${uniqueId}`,
+        name: "Software System"
+    }).toSnapshot();
+}
+
+export const createDefaultContainer = (): IContainer => {
+    const uniqueId = new String(v4()).substring(0, 8);
+    return new Container({
+        identifier: `container_${uniqueId}`,
+        name: "Container"
+    }).toSnapshot();
+}
+
+export const createDefaultComponent = (): IComponent => {
+    const uniqueId = new String(v4()).substring(0, 8);
+    return new Component({
+        identifier: `component_${uniqueId}`,
+        name: "Component"
+    }).toSnapshot();
+}
+
+export const createDefaultPerson = (): IPerson => {
+    const uniqueId = new String(v4()).substring(0, 8);
+    return new Person({
+        identifier: `person_${uniqueId}`,
+        name: "Person"
+    }).toSnapshot();
+}
+
+export const createDefaultDeploymentNode = (): IDeploymentNode => {
+    const uniqueId = new String(v4()).substring(0, 8);
+    return new DeploymentNode({
+        identifier: `deployment_node_${uniqueId}`,
+        name: "Deployment Node"
+    }).toSnapshot();
+}
+
+export const createDefaultInfrastructureNode = (): IInfrastructureNode => {
+    const uniqueId = new String(v4()).substring(0, 8);
+    return new InfrastructureNode({
+        identifier: `infrastructure_node_${uniqueId}`,
+        name: "Infrastructure Node"
+    }).toSnapshot();
+}
+
+export const createRelationship = (sourceIdentifier: Identifier, targetIdentifier: Identifier): IRelationship => {
+    return new Relationship({
+        sourceIdentifier,
+        targetIdentifier
+    }).toSnapshot();
+}
+
+export const getDefaultElement = (type: ElementType): IElement | undefined => {
     switch (type) {
         case ElementType.Group:
-            return new Group({
-                identifier: `group_${uniqueId}`,
-                name: "Group",
-            })
+            return createDefaultGroup();
         case ElementType.SoftwareSystem:
-            return new SoftwareSystem({
-                identifier: `softwareSystem_${uniqueId}`,
-                name: "Software System",
-            })
+            return createDefaultSoftwareSystem();
         case ElementType.Container:
-            return new Container({
-                identifier: `container_${uniqueId}`,
-                name: "Container",
-            })
+            return createDefaultContainer();
         case ElementType.Component:
-            return new Component({
-                identifier: `component_${uniqueId}`,
-                name: "Component",
-            })
+            return createDefaultComponent();
         case ElementType.Person:
-            return new Person({
-                identifier: `person_${uniqueId}`,
-                name: "Person",
-            })
+            return createDefaultPerson();
         case ElementType.DeploymentNode:
-            return new DeploymentNode({
-                identifier: `deployment_node_${uniqueId}`,
-                name: "Deployment Node",
-        });
+            return createDefaultDeploymentNode();
         case ElementType.InfrastructureNode:
-            return new InfrastructureNode({
-                identifier: `infrastructure_node_${uniqueId}`,
-                name: "Infrastructure Node",
-            });
+            return createDefaultInfrastructureNode();
+        default:
+            return undefined;
     }
-
-    return undefined;
 }
 
 export const getDefaultChildForElement = (parentType?: ElementType): IElement => {

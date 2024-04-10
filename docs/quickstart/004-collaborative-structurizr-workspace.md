@@ -3,11 +3,10 @@
 Key Points: Ideal for building any kind of interactive real-time collaborative apps based on C4 model and structurizr.
 
 ```jsx
-import { YjsDocumentProvider, YjsWebrtcProviderProvider } from "@yjs/react";
+import { WorksapceRoom, collaborativeMiddleware, useOnWorkspaceSync } from "@structurizr/live";
 import { Workspace, WorkspaceProvider, emptyWorkspace, workspaceReducer } from "@structurizr/react";
-import { WorksapceRoom, collaborative } from "@structurizr/live";
-import type { Workspace as YWorkspace } from "@structurizr/live";
-import { FC, useEffect, useState, useReducer } from "react";
+import { YjsDocumentProvider, YjsWebrtcProviderProvider, useYjsCollaborative } from "@yjs/react";
+import { FC, useCallback, useReducer } from "react";
 
 export const App: FC = () => {
     <YjsDocumentProvider>
@@ -23,21 +22,19 @@ export const App: FC = () => {
 
 export const WorkspaceEditor: FC = () => {
     const { document } = useYjsCollaborative();
-    const [ workspace, dispatch ] = useReducer(collaborative(workspaceReducer, document), emptyWorkspace());
+    const [ workspace, dispatch ] = useReducer(
+        collaborativeMiddleware(workspaceReducer, document),
+        emptyWorkspace()
+    );
 
-    useEffect(() => {
-        const yworkspace = new YWorkspace(document);
-        
-        const onUpdateWorksapce = () => {
-            dispatch({ type: "SET_WORKSPACE", payload: yworkspace.toSnapshot() });
-        }
-
-        yworkspace.subscribe(onUpdateWorksapce);
-
-        return () => {
-            yworkspace.unsubscribe(onUpdateWorksapce);
-        }
-    }, [document]);
+    useOnWorkspaceSync(document, {
+        onWorkspaceUpdate: useCallback((workspace: IWorkspaceSnapshot) => {
+            dispatch({
+                type: ActionType.SET_WORKSPACE,
+                payload: { workspace: workspace }
+            });
+        }, [])
+    });
 
     return (
         <Workspace value={workspace}>
@@ -121,11 +118,11 @@ export const WorkspaceEditor: FC = () => {
                     </ComponentView>
                 ))}
                 {workspace.views.deployments.map(view => (
-                    <Deployment key={view.identifier} value={view}>
+                    <DeploymentView key={view.identifier} value={view}>
                         <Include value={view.include} />
                         <Animation value={view.animation} />
                         <AutoLayout value={view.autoLayout} />
-                    </Deployment>
+                    </DeploymentView>
                 ))}
             </Views>
         </Workspace>

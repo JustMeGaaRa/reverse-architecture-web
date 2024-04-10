@@ -84,36 +84,6 @@ export type ModelElementParams = {
     size?: Size;
 }
 
-export const createReactFlowWorkspaceNode = (workspace: IWorkspaceSnapshot) => {
-    const PlaceholderModelWorkspaceId = "model-workspace-default-node";
-    const nodeHeight = 70;
-    const nodeHeightSpacing = 64;
-    
-    const workspaceElement = {
-        identifier: PlaceholderModelWorkspaceId,
-        name: workspace.name,
-        description: "Model",
-        tags: [
-            { name: "Element" },
-            { name: "Workspace" }
-        ]
-    }
-
-    return createReactFlowModelNode({
-        element: workspaceElement as any,
-        elementChildrenCount: (workspace.model.people.length + workspace.model.softwareSystems.length),
-        type: ReactFlowNodeTypeNames.ModelElementWorkspace,
-        position: {
-            x: 0,
-            y: -(nodeHeight + nodeHeightSpacing)
-        },
-        size: {
-            height: 64,
-            width: 400
-        }
-    });
-}
-
 export const createReactFlowModelNode = (params: ModelElementParams): ReactFlowModelNode => {
     return {
         id: params.elementId ?? params.element.identifier,
@@ -167,10 +137,6 @@ export const getReactFlowModelObject = (
     strategy: ISupportVisitor
 ): ReactFlowJsonObject => {
     const reactFlowBuilder = new ReactFlowBuilder();
-
-    const workspaceNode = createReactFlowWorkspaceNode(workspace);
-    reactFlowBuilder.addNode(workspaceNode);
-
     const reactFlowVisitor = new ReactFlowModelVisitor(
         workspace.model,
         workspace.views.configuration,

@@ -1,6 +1,7 @@
 import { Button, HStack, VStack, Text, ButtonGroup, Box } from "@chakra-ui/react";
 import { useWorkspace, WorkspaceProvider } from "@structurizr/react";
 import { WorkspaceInfo } from "@structurizr/y-workspace";
+import { WorkspaceRoom } from "@structurizr/live";
 import { useYjsCollaborative, YjsDocumentProvider, YjsIndexeddbPersistanceProvider, YjsUndoManagerProvider, YjsWebrtcProviderProvider } from "@yjs/react";
 import { FC, PropsWithChildren, useCallback, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -96,27 +97,6 @@ export const TestWorkspaceExplorerPage: FC = () => {
     )
 }
 
-export const WorkspaceControls: FC<PropsWithChildren> = ({ children }) => {
-    const { undoManager } = useYjsCollaborative();
-    const { workspace } = useWorkspace();
-
-    const handleOnAddSoftwareSystem = useCallback(() => {
-        // const softwareSystem = workspace.model.addSoftwareSystem();
-        // const container = softwareSystem.addContainer();
-        // const component = container.addComponent();
-    }, [workspace]);
-
-    return (
-        <HStack position={"absolute"} padding={4} right={0} zIndex={1000}>
-            <ButtonGroup>
-                <Button onClick={handleOnAddSoftwareSystem}>Add</Button>
-                <Button isDisabled={!undoManager?.canUndo()} onClick={() => undoManager.undo()}>Undo</Button>
-                <Button isDisabled={!undoManager?.canRedo()} onClick={() => undoManager.redo()}>Redo</Button>
-            </ButtonGroup>
-        </HStack>
-    )
-}
-
 export const TestWorkspacePage: FC = () => {
     const { workspaceId } = useParams<{ workspaceId: string }>();
     
@@ -127,16 +107,14 @@ export const TestWorkspacePage: FC = () => {
 
                     <Box backgroundColor={"black"} height={"100vh"}>
                         
-                        <WorkspaceProvider>
-                            <WorkspaceRenderer workspace={undefined} view={undefined}>
-                                <WorkspaceIndexeddbLoader workspaceId={workspaceId}>
-                                    <WorkspaceWebrtcConnector workspaceId={workspaceId}>
-                                        <WorkspaceInitializer />
-                                    </WorkspaceWebrtcConnector>
-                                </WorkspaceIndexeddbLoader>
-                                <WorkspaceControls />
-                            </WorkspaceRenderer>
-                        </WorkspaceProvider>
+                        <WorkspaceIndexeddbLoader workspaceId={workspaceId}>
+                            <WorkspaceRoom options={{ roomId: workspaceId }}>
+                                <WorkspaceProvider>
+                                    <WorkspaceRenderer workspace={undefined} view={undefined}>
+                                    </WorkspaceRenderer>
+                                </WorkspaceProvider>
+                            </WorkspaceRoom>
+                        </WorkspaceIndexeddbLoader>
 
                     </Box>
 
@@ -158,10 +136,6 @@ export const TestSharedPage: FC = () => {
 
                         <WorkspaceProvider>
                             <WorkspaceRenderer workspace={undefined} view={undefined}>
-                                <WorkspaceWebrtcConnector workspaceId={workspaceId}>
-                                    <WorkspaceInitializer />
-                                </WorkspaceWebrtcConnector>
-                                <WorkspaceControls />
                             </WorkspaceRenderer>
                         </WorkspaceProvider>
 

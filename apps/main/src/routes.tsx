@@ -14,6 +14,7 @@ import {
     WorkspaceSharedPage,
     WorkspaceExplorerPage,
 } from "./pages";
+import { TestWorkspacePage } from "./pages/test-page";
 
 export const routes = createBrowserRouter([
     {
@@ -67,5 +68,9 @@ export const routes = createBrowserRouter([
     {
         path: "/authorize",
         element: <AuthorizePage />
+    },
+    {
+        path: "/test",
+        element: <TestWorkspacePage />
     }
 ]);

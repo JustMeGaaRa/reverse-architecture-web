@@ -5,12 +5,12 @@ import {
     BoundingBox,
     useCollapsable,
     useSelectedNodes,
-    useViewFlowBuilder,
     useWorkspace,
     ViewportStaticElement,
     WorkspaceElementPortal
 } from "@structurizr/react";
 import { FC, useCallback } from "react";
+import { useViewFlowBuilder } from "../hooks";
 import {
     canElementHaveChildren,
     doesElementHaveChildren,

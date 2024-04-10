@@ -1,12 +1,12 @@
 import { All, Identifier, ViewType } from "../types";
 import { IViewDefinition } from "./IViewDefinition";
-import { IRelationshipPosition } from "./IRelationshipPosition";
-import { IElementPosition } from "./IElementPosition";
+import { IRelationshipMetadata } from "./IRelationshipMetadata";
+import { IElementMetadata } from "./IElementMetadata";
 import { IProperties } from "./IProperties";
 import { IAutoLayout } from "./IAutoLayout";
 
 export interface IComponentView extends IViewDefinition {
-    type: ViewType;
+    type: ViewType.Component;
     identifier: Identifier;
     containerIdentifier: Identifier;
     key?: string;
@@ -17,6 +17,6 @@ export interface IComponentView extends IViewDefinition {
     title?: string;
     description?: string;
     properties?: IProperties;
-    elements: Array<IElementPosition>;
-    relationships: Array<IRelationshipPosition>;
+    elements: Array<IElementMetadata>;
+    relationships: Array<IRelationshipMetadata>;
 }

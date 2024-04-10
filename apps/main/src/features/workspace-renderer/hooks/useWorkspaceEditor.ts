@@ -1,244 +1,500 @@
 import { Node } from "@reactflow/core";
 import {
+    createDefaultComponent,
+    createDefaultContainer,
+    createDefaultGroup,
+    createDefaultPerson,
+    createDefaultSoftwareSystem,
+    createRelationship,
     ElementType,
+    IComponentView,
+    IContainerView,
     Identifier,
+    IDeploymentView,
     IElement,
     IRelationship,
-    IViewDefinition,
+    ISystemContextView,
+    ISystemLandscapeView,
     Position,
+    ViewDefinition,
     ViewType
 } from "@structurizr/dsl";
-import { useSystemLandscapeView, useWorkspace } from "@structurizr/react";
-import { Workspace } from "@structurizr/y-workspace";
-import { useYjsCollaborative } from "@yjs/react";
-import * as Y from "yjs";
-import { FC, PropsWithChildren, useCallback, useEffect, useState } from "react";
-import { CommentThread } from "../../comments";
-import { useWorkspaceActionsToolbar, useWorkspaceNavigation, WorkspaceToolName } from "../hooks";
+import { ActionType } from "@structurizr/react";
+import { Dispatch, useCallback } from "react";
+import { ActionFlowType, WorkspaceFlowAction } from "../actions";
+import {
+    useWorkspaceActionsToolbar,
+    useWorkspaceNavigation,
+    WorkspaceToolName
+} from "../hooks";
 
-const addElementToSystemLandscapeView = (document: Y.Doc, elementType: ElementType, position: Position) => {
-    const yworkspace = new Workspace(document);
-
-    switch (elementType) {
-        case ElementType.Group:
-            const group = yworkspace.model.addGroup();
-            yworkspace.views.systemLandscape
-                ?.includeElement(group.identifier, position);
-            break;
-        case ElementType.Person:
-            const person = yworkspace.model.addPerson();
-            yworkspace.views.systemLandscape
-                ?.includeElement(person.identifier, position);
-            break;
-        case ElementType.SoftwareSystem:
-            const softwareSystem = yworkspace.model.addSoftwareSystem();
-            yworkspace.views.systemLandscape
-                ?.includeElement(softwareSystem.identifier, position);
-            break;
-    }
-}
-
-const addElementToSystemContextView = (document: Y.Doc, viewIdentifier: Identifier, elementType: ElementType, position: Position) => {
-    const yworkspace = new Workspace(document);
-
-    switch (elementType) {
-        case ElementType.Group:
-            const group = yworkspace.model.addGroup();
-            yworkspace.views.systemContexts
-                .find(view => view.identifier === view.identifier)
-                ?.includeElement(group.identifier, position);
-            break;
-        case ElementType.Person:
-            const person = yworkspace.model.addPerson();
-            yworkspace.views.systemContexts
-                .find(view => view.identifier === view.identifier)
-                ?.includeElement(person.identifier, position);
-            break;
-        case ElementType.SoftwareSystem:
-            const softwareSystem = yworkspace.model.addSoftwareSystem();
-            yworkspace.views.systemContexts
-                .find(view => view.identifier === view.identifier)
-                ?.includeElement(softwareSystem.identifier, position);
-            break;
-    }
-}
-
-const addElementToContainerView = (document: Y.Doc, viewIdentifier: Identifier, elementType: ElementType, position: Position) => {
-    const yworkspace = new Workspace(document);
-
-    switch (elementType) {
-        case ElementType.Person:
-            const person = yworkspace.model.addPerson();
-            yworkspace.views.containers
-                .find(view => view.identifier === view.identifier)
-                ?.includeElement(person.identifier, position);
-            break;
-        case ElementType.SoftwareSystem:
-            const softwareSystem = yworkspace.model.addSoftwareSystem();
-            yworkspace.views.containers
-                .find(view => view.identifier === view.identifier)
-                ?.includeElement(softwareSystem.identifier, position);
-            break;
-    }
-}
-
-const addElementToComponentView = (document: Y.Doc, viewIdentifier: Identifier, elementType: ElementType, position: Position) => {
-    const yworkspace = new Workspace(document);
-
-    switch (elementType) {
-        case ElementType.Person:
-            const person = yworkspace.model.addPerson();
-            yworkspace.views.components
-                .find(view => view.identifier === view.identifier)
-                ?.includeElement(person.identifier, position);
-            break;
-        case ElementType.SoftwareSystem:
-            const softwareSystem = yworkspace.model.addSoftwareSystem();
-            yworkspace.views.components
-                .find(view => view.identifier === view.identifier)
-                ?.includeElement(softwareSystem.identifier, position);
-            break;
-        case ElementType.Container:
-            const container = yworkspace.model.softwareSystems
-                .find(softwareSystem => softwareSystem.identifier === softwareSystem.identifier)
-                .addContainer();
-            yworkspace.views.components
-                .find(view => view.identifier === view.identifier)
-                ?.includeElement(container.identifier, position);
-            break;
-    }
-}
-
-const addElementToDeploymentView = (document: Y.Doc, viewIdentifier: Identifier, elementType: ElementType, position: Position) => {
-    throw new Error("Not implemented");
-}
-
-const addElementToView = (document: Y.Doc, viewType: ViewType, viewIdentifier: Identifier, elementType: ElementType, position: Position) => {
-    switch (viewType) {
-        case ViewType.Model:
-            break;
-        case ViewType.SystemLandscape:
-            addElementToSystemLandscapeView(document, elementType, position);
-            break;
-        case ViewType.SystemContext:
-            addElementToSystemContextView(document, viewIdentifier, elementType, position);
-            break;
-        case ViewType.Container:
-            addElementToContainerView(document, viewIdentifier, elementType, position);
-            break;
-        case ViewType.Component:
-            addElementToComponentView(document, viewIdentifier, elementType, position);
-            break;
-        case ViewType.Deployment:
-            addElementToDeploymentView(document, viewIdentifier, elementType, position);
-            break;
-    }
-}
-
-const addCommentToView = (document: Y.Doc, viewType: ViewType, viewIdentifier: Identifier, comment: CommentThread, position: Position) => {
-    throw new Error("Not implemented");
-}
-
-export const useWorkspaceEditor = () => {
-    const { document } = useYjsCollaborative();
-    const { workspace, setWorkspace } = useWorkspace();
+export const useWorkspaceEditorState = (dispatch: Dispatch<WorkspaceFlowAction>) => {
     const { currentView: view } = useWorkspaceNavigation();
     const { selectedTool, selectedElementType } = useWorkspaceActionsToolbar();
 
-    // const systemLandscapeView = useSystemLandscapeView();
+    const addElementToSystemLandscapeView = useCallback((
+        view: ISystemLandscapeView,
+        elementType: ElementType,
+        position: Position
+    ) => {
+        switch (elementType) {
+            case ElementType.Group:
+                dispatch({
+                    type: ActionType.ADD_MODEL_GROUP,
+                    payload: { group: createDefaultGroup() }
+                });
+                break;
+            case ElementType.Person:
+                dispatch({
+                    type: ActionType.INCLUDE_SYSTEM_LANDSCAPE_VIEW_PERSON,
+                    payload: { person: createDefaultPerson(), position }});
+                break;
+            case ElementType.SoftwareSystem:
+                dispatch({
+                    type: ActionType.INCLUDE_SYSTEM_LANDSCAPE_VIEW_SOFTWARE_SYSTEM,
+                    payload: { softwareSystem: createDefaultSoftwareSystem(), position }
+                });
+                break;
+        }
+    }, [dispatch]);
+
+    const addElementToSystemContextView = useCallback((
+        view: ISystemContextView,
+        elementType: ElementType,
+        position: Position
+    ) => {
+        switch (elementType) {
+            case ElementType.Group:
+                dispatch({
+                    type: ActionType.ADD_MODEL_GROUP,
+                    payload: { group: createDefaultGroup() }
+                });
+                break;
+            case ElementType.Person:
+                dispatch({
+                    type: ActionType.INCLUDE_SYSTEM_CONTEXT_VIEW_PERSON,
+                    payload: {
+                        person: createDefaultPerson(),
+                        viewIdentifier: view.identifier,
+                        position
+                    }
+                });
+                break;
+            case ElementType.SoftwareSystem:
+                dispatch({
+                    type: ActionType.INCLUDE_SYSTEM_CONTEXT_VIEW_SOFTWARE_SYSTEM,
+                    payload: { softwareSystem: createDefaultSoftwareSystem(), viewIdentifier: view.identifier, position
+
+                    }
+                });
+                break;
+        }
+    }, [dispatch]);
+    
+    const addElementToContainerView = useCallback((
+        view: IContainerView,
+        elementType: ElementType,
+        position: Position
+    ) => {
+        switch (elementType) {
+            case ElementType.Person:
+                dispatch({
+                    type: ActionType.INCLUDE_CONTAINER_VIEW_PERSON,
+                    payload: {
+                        person: createDefaultPerson(),
+                        viewIdentifier: view.identifier,
+                        position
+                    }
+                });
+                break;
+            case ElementType.SoftwareSystem:
+                dispatch({
+                    type: ActionType.INCLUDE_CONTAINER_VIEW_SOFTWARE_SYSTEM,
+                    payload: {
+                        softwareSystem: createDefaultSoftwareSystem(),
+                        viewIdentifier: view.identifier,
+                        position
+                    }
+                });
+                break;
+            case ElementType.Container:
+                dispatch({
+                    type: ActionType.INCLUDE_CONTAINER_VIEW_CONTAINER,
+                    payload: {
+                        container: createDefaultContainer(),
+                        viewIdentifier: view.identifier,
+                        softwareSystemIdentifier: view.softwareSystemIdentifier,
+                        position
+                    }
+                });
+                break;
+        }
+    }, [dispatch]);
+    
+    const addElementToComponentView = useCallback((
+        view: IComponentView,
+        elementType: ElementType,
+        position: Position
+    ) => {
+        switch (elementType) {
+            case ElementType.Person:
+                dispatch({
+                    type: ActionType.INCLUDE_COMPONENT_VIEW_PERSON,
+                    payload: {
+                        person: createDefaultPerson(),
+                        viewIdentifier: view.identifier,
+                        position
+                    }
+                });
+                break;
+            case ElementType.SoftwareSystem:
+                dispatch({
+                    type: ActionType.INCLUDE_COMPONENT_VIEW_SOFTWARE_SYSTEM,
+                    payload: {
+                        softwareSystem: createDefaultSoftwareSystem(),
+                        viewIdentifier: view.identifier,
+                        position
+                    }
+                });
+                break;
+            case ElementType.Container:
+                dispatch({
+                    type: ActionType.INCLUDE_COMPONENT_VIEW_CONTAINER,
+                    payload: {
+                        container: createDefaultContainer(),
+                        viewIdentifier: view.identifier,
+                        containerIdentifier: view.containerIdentifier,
+                        position
+                    }
+                });
+                break;
+            case ElementType.Component:
+                dispatch({
+                    type: ActionType.INCLUDE_COMPONENT_VIEW_COMPONENT,
+                    payload: {
+                        component: createDefaultComponent(),
+                        viewIdentifier: view.identifier,
+                        containerIdentifier: view.containerIdentifier,
+                        position
+                    }
+                });
+                break;
+        }
+    }, [dispatch]);
+    
+    const addElementToDeploymentView = useCallback((
+        view: IDeploymentView,
+        elementType: ElementType,
+        position: Position
+    ) => {
+        throw new Error("Not implemented");
+    }, []);
+    
+    const addCommentToView = useCallback((
+        view: ViewDefinition,
+        position: Position,
+        elementId?: Identifier
+    ) => {
+        switch (view.type) {
+            case ViewType.Model:
+            case ViewType.SystemLandscape:
+            case ViewType.SystemContext:
+            case ViewType.Container:
+            case ViewType.Component:
+            case ViewType.Deployment:
+            default:
+                throw new Error("Not implemented");
+        }
+    }, []);
+
+    const addElementToView = useCallback((
+        view: ViewDefinition,
+        elementType: ElementType,
+        position: Position,
+        groupId?: Identifier
+    ) => {
+        switch (view.type) {
+            case ViewType.Model:
+                throw new Error("Not implemented");
+                break;
+            case ViewType.SystemLandscape:
+                addElementToSystemLandscapeView(view, elementType, position);
+                break;
+            case ViewType.SystemContext:
+                addElementToSystemContextView(view, elementType, position);
+                break;
+            case ViewType.Container:
+                addElementToContainerView(view, elementType, position);
+                break;
+            case ViewType.Component:
+                addElementToComponentView(view, elementType, position);
+                break;
+            case ViewType.Deployment:
+                addElementToDeploymentView(view, elementType, position);
+                break;
+        }
+    }, [addElementToComponentView, addElementToContainerView, addElementToDeploymentView, addElementToSystemContextView, addElementToSystemLandscapeView]);
+
+    const setElementPositionInView = useCallback((
+        viewType: ViewType,
+        viewIdentifier: Identifier,
+        elementIdentifier: Identifier,
+        position: Position
+    ) => {
+        switch (viewType) {
+            case ViewType.Model:
+                throw new Error("Not implemented");
+                break;
+            case ViewType.SystemLandscape:
+                dispatch({
+                    type: ActionType.SET_SYSTEM_LANDSCAPE_VIEW_ELEMENT_POSTION,
+                    payload: { viewIdentifier, elementIdentifier, position }
+                });
+                break;
+            case ViewType.SystemContext:
+                dispatch({
+                    type: ActionType.SET_SYSTEM_CONTEXT_VIEW_ELEMENT_POSTION,
+                    payload: { viewIdentifier, elementIdentifier, position }
+                });
+                break;
+            case ViewType.Container:
+                dispatch({
+                    type: ActionType.SET_CONTAINER_VIEW_ELEMENT_POSTION,
+                    payload: { viewIdentifier, elementIdentifier, position }
+                });
+                break;
+            case ViewType.Component:
+                dispatch({
+                    type: ActionType.SET_COMPONENT_VIEW_ELEMENT_POSTION,
+                    payload: { viewIdentifier, elementIdentifier, position }
+                });
+                break;
+            case ViewType.Deployment:
+                break;
+        }
+    }, [dispatch]);
+
+    const connectElementOnModelView = useCallback((sourceElement: IElement) => {
+        // TODO: add element in position on react flow pane, but not in workspace view
+        switch (sourceElement?.type) {
+            case "Workspace" as any:
+                dispatch({
+                    type: ActionType.ADD_MODEL_SOFTWARE_SYSTEM,
+                    payload: { softwareSystem: createDefaultSoftwareSystem() }
+                });
+                break;
+            case ElementType.SoftwareSystem:
+                dispatch({
+                    type: ActionType.ADD_MODEL_CONTAINER,
+                    payload: {
+                        softwareSystemIdentifier: sourceElement.identifier,
+                        container: createDefaultContainer()
+                    }
+                });
+                break;
+            case ElementType.Container:
+                dispatch({
+                    type: ActionType.ADD_MODEL_COMPONENT,
+                    payload: {
+                        containerIdentifier: sourceElement.identifier,
+                        component: createDefaultComponent()
+                    }
+                });
+                break;
+        }
+    }, [dispatch]);
+
+    const connectElementOnSystemLandscapeView = useCallback((sourceElement: IElement, position: Position) => {
+        switch (sourceElement?.type) {
+            case ElementType.Person:
+                const person = createDefaultPerson();
+                dispatch({
+                    type: ActionFlowType.CONNECT_PERSON_ON_SYSTEM_LANDSCAPE_VIEW,
+                    payload: {
+                        person,
+                        relationship: createRelationship(sourceElement.identifier, person.identifier),
+                        position
+                    }
+                })
+                break;
+            case ElementType.SoftwareSystem:
+                const softwareSystem = createDefaultSoftwareSystem();
+                dispatch({
+                    type: ActionFlowType.CONNECT_SOFTWARE_SYSTEM_ON_SYSTEM_LANDSCAPE_VIEW,
+                    payload: {
+                        softwareSystem,
+                        relationship: createRelationship(sourceElement.identifier, softwareSystem.identifier),
+                        position
+                    }
+                })
+                break;
+            default:
+        }
+    }, [dispatch]);
+
+    const connectElementOnSystemContextView = useCallback((sourceElement: IElement, position: Position) => {
+        switch (sourceElement?.type) {
+            case ElementType.Person:
+                const person = createDefaultPerson();
+                dispatch({
+                    type: ActionFlowType.CONNECT_PERSON_ON_SYSTEM_CONTEXT_VIEW,
+                    payload: {
+                        viewIdentifier: undefined,
+                        person,
+                        relationship: createRelationship(sourceElement.identifier, person.identifier),
+                        position
+                    }
+                })
+                break;
+            case ElementType.SoftwareSystem:
+                const softwareSystem = createDefaultSoftwareSystem();
+                dispatch({
+                    type: ActionFlowType.CONNECT_SOFTWARE_SYSTEM_ON_SYSTEM_CONTEXT_VIEW,
+                    payload: {
+                        viewIdentifier: undefined,
+                        softwareSystem,
+                        relationship: createRelationship(sourceElement.identifier, softwareSystem.identifier),
+                        position
+                    }
+                })
+                break;
+        }
+    }, [dispatch]);
+
+    const connectElementOnContainerView = useCallback((sourceElement: IElement, position: Position) => {
+        switch (sourceElement?.type) {
+            case ElementType.Person:
+                const person = createDefaultPerson();
+                dispatch({
+                    type: ActionFlowType.CONNECT_PERSON_ON_CONTAINER_VIEW,
+                    payload: {
+                        viewIdentifier: undefined,
+                        softwareSystemIdentifier: undefined,
+                        person,
+                        relationship: createRelationship(sourceElement.identifier, person.identifier),
+                        position
+                    }
+                })
+                break;
+            case ElementType.SoftwareSystem:
+                const softwareSystem = createDefaultSoftwareSystem();
+                dispatch({
+                    type: ActionFlowType.CONNECT_SOFTWARE_SYSTEM_ON_CONTAINER_VIEW,
+                    payload: {
+                        viewIdentifier: undefined,
+                        softwareSystemIdentifier: undefined,
+                        softwareSystem,
+                        relationship: createRelationship(sourceElement.identifier, softwareSystem.identifier),
+                        position
+                    }
+                })
+                break;
+            case ElementType.Container:
+                const container = createDefaultContainer();
+                dispatch({
+                    type: ActionFlowType.CONNECT_CONTAINER_ON_CONTAINER_VIEW,
+                    payload: {
+                        viewIdentifier: undefined,
+                        softwareSystemIdentifier: undefined,
+                        container,
+                        relationship: createRelationship(sourceElement.identifier, container.identifier),
+                        position
+                    }
+                })
+                break;
+        }
+    }, [dispatch]);
+    
+    const connectElementOnComponentView = useCallback((sourceElement: IElement, position: Position) => {
+        switch (sourceElement?.type) {
+            case ElementType.Person:
+                const person = createDefaultPerson();
+                dispatch({
+                    type: ActionFlowType.CONNECT_PERSON_ON_COMPONENT_VIEW,
+                    payload: {
+                        viewIdentifier: undefined,
+                        containerIdentifier: undefined,
+                        person,
+                        relationship: createRelationship(sourceElement.identifier, person.identifier),
+                        position
+                    }
+                })
+                break;
+            case ElementType.SoftwareSystem:
+                const softwareSystem = createDefaultSoftwareSystem();
+                dispatch({
+                    type: ActionFlowType.CONNECT_SOFTWARE_SYSTEM_ON_COMPONENT_VIEW,
+                    payload: {
+                        viewIdentifier: undefined,
+                        containerIdentifier: undefined,
+                        softwareSystem,
+                        relationship: createRelationship(sourceElement.identifier, softwareSystem.identifier),
+                        position
+                    }
+                })
+                break;
+            case ElementType.Container:
+                const container = createDefaultContainer();
+                dispatch({
+                    type: ActionFlowType.CONNECT_CONTAINER_ON_COMPONENT_VIEW,
+                    payload: {
+                        viewIdentifier: undefined,
+                        containerIdentifier: undefined,
+                        container,
+                        relationship: createRelationship(sourceElement.identifier, container.identifier),
+                        position
+                    }
+                })
+                break;
+            case ElementType.Component:
+                const component = createDefaultComponent();
+                dispatch({
+                    type: ActionFlowType.CONNECT_COMPONENT_ON_COMPONENT_VIEW,
+                    payload: {
+                        viewIdentifier: undefined,
+                        containerIdentifier: undefined,
+                        component,
+                        relationship: createRelationship(sourceElement.identifier, component.identifier),
+                        position
+                    }
+                })
+                break;
+        }
+    }, [dispatch]);
 
     const onElementClick = useCallback((event: React.MouseEvent, element: IElement, relativePosition: Position) => {
         if (view && selectedTool === WorkspaceToolName.ElementDrop) {
-            switch (view?.type) {
-                case ViewType.Model:
-                    break;
-                case ViewType.SystemLandscape:
-                    switch (selectedElementType) {
-                        case ElementType.SoftwareSystem:
-                            // systemLandscapeView.addSoftwareSystem(relativePosition, element.identifier);
-                            break;
-                        case ElementType.Person:
-                            // systemLandscapeView.addPerson(relativePosition, element.identifier);
-                            break;
-                    }
-                    break;
-                case ViewType.SystemContext:
-                    switch (selectedElementType) {
-                        case ElementType.SoftwareSystem:
-                            // addSoftwareSystem(pointRelativeToNode, node.id)
-                            break;
-                        case ElementType.Person:
-                            // addPerson(pointRelativeToNode, node.id)
-                            break;
-                    }
-                    break;
-                case ViewType.Container:
-                    switch (selectedElementType) {
-                        case ElementType.Group:
-                            // addGroup(pointRelativeToNode);
-                            break;
-                        case ElementType.Container:
-                            // addContainer(pointRelativeToNode, groupId);
-                            break;
-                    }
-                    break;
-                case ViewType.Component:
-                    switch (selectedElementType) {
-                        case ElementType.Group:
-                            // addGroup(pointRelativeToNode);
-                            break;
-                        case ElementType.Component:
-                            // addComponent(pointRelativeToNode, groupId);
-                            break;
-                    }
-                    break;
-                case ViewType.Deployment:
-                    break;
-            }
-        }
-    }, [view, selectedTool, selectedElementType]);
-
-    const onViewClick = useCallback((event: React.MouseEvent, relativePosition: Position) => {
-        if (view && selectedTool === WorkspaceToolName.ElementDrop) {
-            addElementToView(document, view?.type, view?.identifier, selectedElementType, relativePosition);
+            addElementToView(view, selectedElementType, relativePosition, element.identifier);
         }
         
         if (view && selectedTool === WorkspaceToolName.Comment) {
             // TODO: get viewport, translate position and save comment
-            addCommentToView(document, view?.type, view?.identifier, undefined, relativePosition);
+            addCommentToView(view, relativePosition, element.identifier);
         }
-    }, [document, selectedTool, selectedElementType, view]);
+    }, [view, selectedTool, selectedElementType, addElementToView, addCommentToView]);
+
+    const onViewClick = useCallback((event: React.MouseEvent, relativePosition: Position) => {
+        if (view && selectedTool === WorkspaceToolName.ElementDrop) {
+            addElementToView(view, selectedElementType, relativePosition);
+        }
+        
+        if (view && selectedTool === WorkspaceToolName.Comment) {
+            // TODO: get viewport, translate position and save comment
+            addCommentToView(view, relativePosition);
+        }
+    }, [view, selectedTool, selectedElementType, addElementToView, addCommentToView]);
 
     const onElementDragStart = useCallback((event: React.MouseEvent, element: IElement) => {
-        console.log("onElementDragStart", event, element);
     }, []);
 
     const onElementDrag = useCallback((event: React.MouseEvent, element: IElement) => {
-        console.log("onElementDrag", event, element);
     }, []);
 
     const onElementDragStop = useCallback((event: React.MouseEvent, element: IElement, position: Position) => {
         if (view) {
-            switch (view?.type) {
-                case ViewType.Model:
-                    break;
-                case ViewType.SystemLandscape:
-                    // systemLandscapeView.setElementPosition(element.identifier, position)
-                    break;
-                case ViewType.SystemContext:
-                    // setElementPosition(node.data.element.identifier, node.position);
-                    break;
-                case ViewType.Container:
-                    // setElementPosition(node.data.element.identifier, node.position);
-                    break;
-                case ViewType.Component:
-                    // setElementPosition(node.data.element.identifier, node.position);
-                    break;
-                case ViewType.Deployment:
-                    break;
-            }
+            setElementPositionInView(view?.type, view?.identifier, element.identifier, position);
         }
-    }, [view]);
+    }, [setElementPositionInView, view]);
 
     const onElementsConnect = useCallback((relationship: IRelationship) => {
         if (view) {
@@ -262,85 +518,28 @@ export const useWorkspaceEditor = () => {
             }
         }
     }, [view]);
-
-    // const { addDefaultElement } = useModelFlowBuilder();
-    // const { addSoftwareSystem, addPerson, addRelationship } = useSystemLandscapeView();
-    // const { addSoftwareSystem, addPerson, addRelationship } = useSystemContextView(view.identifier);
-    // const { addSoftwareSystem, addPerson, addContainer, addRelationship } = useContainerView(view.identifier);
-    // const { addSoftwareSystem, addPerson, addContainer, addComponent, addRelationship } = useComponentView(view.identifier);
-    // const { } = useDeploymentView(view.identifier, view["environment"]);
     
     const onViewFlowClick = useCallback((sourceNode: Node, position: Position) => {
         switch (view?.type) {
             case ViewType.Model:
-                // TODO: add element in position on react flow pane, but not in workspace view
-                // const element = addDefaultElement(
-                //     sourceNode.data.element.type,
-                //     position,
-                //     sourceNode.data.element.identifier
-                // );
-                // break;
+                connectElementOnModelView(sourceNode.data?.element);
+                break;
             case ViewType.SystemLandscape:
-                switch (sourceNode.data?.element?.type) {
-                    case ElementType.Person:
-                        // const person = systemLandscapeView.addPerson(position, sourceNode.parentNode);
-                        // const personRelationship = systemLandscapeView.addRelationship(sourceNode.data?.element.identifier, person.identifier);
-                    case ElementType.SoftwareSystem:
-                        // const softwareSystem = systemLandscapeView.addSoftwareSystem(position, sourceNode.parentNode);
-                        // const softwareSystemRelationship = systemLandscapeView.addRelationship(sourceNode.data?.element.identifier, softwareSystem.identifier);
-                        break;
-                    default:
-                }
+                connectElementOnSystemLandscapeView(sourceNode.data?.element, position);
                 break;
             case ViewType.SystemContext:
-                // switch (sourceNode.data?.element?.type) {
-                //     case ElementType.Person:
-                //         const person = addPerson(position, sourceNode.parentNode);
-                //         const personRelationship = addRelationship(sourceNode.data?.element.identifier, person.identifier);
-                //     case ElementType.SoftwareSystem:
-                //         const softwareSystem = addSoftwareSystem(position, sourceNode.parentNode);
-                //         const softwareSystemRelationship = addRelationship(sourceNode.data?.element.identifier, softwareSystem.identifier);
-                //         break;
-                // }
+                connectElementOnSystemContextView(sourceNode.data?.element, position);
                 break;
             case ViewType.Container:
-                // switch (sourceNode.data?.element?.type) {
-                //     case ElementType.Person:
-                //         const person = addPerson(position);
-                //         const personRelationship = addRelationship(sourceNode.data?.element.identifier, person.identifier);
-                //     case ElementType.SoftwareSystem:
-                //         const softwareSystem = addSoftwareSystem(position);
-                //         const softwareSystemRelationship = addRelationship(sourceNode.data?.element.identifier, softwareSystem.identifier);
-                //         break;
-                //     case ElementType.Container:
-                //         const container = addContainer(position, sourceNode.parentNode);
-                //         const containerRelationship = addRelationship(sourceNode.data?.element.identifier, container.identifier);
-                //         break;
-                // }
+                connectElementOnContainerView(sourceNode.data?.element, position);
                 break;
             case ViewType.Component:
-                // switch (sourceNode.data?.element?.type) {
-                //     case ElementType.Person:
-                //         const person = addPerson(position);
-                //         const personRelationship = addRelationship(sourceNode.data?.element.identifier, person.identifier);
-                //     case ElementType.SoftwareSystem:
-                //         const softwareSystem = addSoftwareSystem(position);
-                //         const softwareSystemRelationship = addRelationship(sourceNode.data?.element.identifier, softwareSystem.identifier);
-                //         break;
-                //     case ElementType.Container:
-                //         const container = addContainer(position);
-                //         const containerRelationship = addRelationship(sourceNode.data?.element.identifier, container.identifier);
-                //         break;
-                //     case ElementType.Component:
-                //         const component = addComponent(position, sourceNode.parentNode);
-                //         const componentRelationship = addRelationship(sourceNode.data?.element.identifier, component.identifier);
-                //         break;
-                // }
+                connectElementOnComponentView(sourceNode.data?.element, position);
                 break;
             case ViewType.Deployment:
                 break;
         }
-    }, [view]);
+    }, [connectElementOnComponentView, connectElementOnContainerView, connectElementOnModelView, connectElementOnSystemContextView, connectElementOnSystemLandscapeView, view?.type]);
     
     return {
         onElementClick,

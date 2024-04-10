@@ -1,11 +1,11 @@
-import { IViewDefinition } from "@structurizr/dsl";
+import { ViewDefinition } from "@structurizr/dsl";
 import { Viewport } from "@structurizr/react";
 import { createContext, Dispatch, SetStateAction } from "react";
 
 export type WorkspaceNavigationStore = {
-    currentView?: IViewDefinition;
+    currentView?: ViewDefinition;
     viewport?: Viewport;
-    setCurrentView?: Dispatch<SetStateAction<IViewDefinition>>;
+    setCurrentView?: Dispatch<SetStateAction<ViewDefinition>>;
     setViewport?: Dispatch<SetStateAction<Viewport>>;
 }
 

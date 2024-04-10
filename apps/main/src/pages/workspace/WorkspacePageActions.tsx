@@ -12,9 +12,9 @@ import {
     PageSidebarSectionPortal,
     usePageSidebar
 } from "@restruct/ui";
-import { ViewType } from "@structurizr/dsl";
+import { getDefaultView, ViewType } from "@structurizr/dsl";
 import { useWorkspace } from "@structurizr/react";
-import { useFollowUserMode, useWorkspaceRoom } from "@workspace/live";
+import { useFollowUserMode, useWorkspaceRoom } from "@structurizr/live";
 import {
     ChatLines,
     Code,
@@ -31,7 +31,7 @@ import {
 import {
     Route,
     RouteList,
-    UserAvatarGroup,
+    WorkspaceCollaboratingUserGroup,
     useWorkspaceNavigation,
     WorksapceTitleBreadcrumb,
     WorkspaceMenu,
@@ -85,12 +85,7 @@ export const WorkspacePageActions: FC = () => {
     // SECTION: header content
     const { workspace } = useWorkspace();
     const { setCurrentView } = useWorkspaceNavigation();
-    const { currentUser, collaboratingUsers } = useWorkspaceRoom();
-    const { followUser } = useFollowUserMode();
 
-    const users = useMemo(() => {
-        return [currentUser, ...collaboratingUsers].map(user => user.info);
-    }, [currentUser, collaboratingUsers]);
     const [ mode, setMode ] = useState(WorkspaceContentMode.Diagramming);
     const isDiagrammingMode = mode === WorkspaceContentMode.Diagramming;
     const isModelingMode = mode === WorkspaceContentMode.Modeling;
@@ -103,14 +98,13 @@ export const WorkspacePageActions: FC = () => {
 
     const handleOnClickModelingMode = useCallback(() => {
         setMode(WorkspaceContentMode.Modeling);
-        setCurrentView({ type: ViewType.Model, identifier: "" });
+        setCurrentView(getDefaultView(ViewType.Model, ""));
     }, [setCurrentView]);
 
     const handleOnClickDeploymentMode = useCallback(() => {
         setMode(WorkspaceContentMode.Deployment);
         setCurrentView(workspace.views.deployments?.at(0));
     }, [setCurrentView, workspace]);
-
 
     // TODO: refactor this component so that the shared page shows sync icon, but no save button
     // TODO: consider moving autosave effect to some other component
@@ -161,9 +155,9 @@ export const WorkspacePageActions: FC = () => {
                         height={"32px"}
                         orientation={"vertical"}
                     />
-                    <WorksapceTitleBreadcrumb workspace={workspace} />
+                    <WorksapceTitleBreadcrumb />
                     <ButtonGroup spacing={1}>
-                        <WorkspaceMenu workspace={workspace} />
+                        <WorkspaceMenu />
                         <WorkspaceSynchronizationIcon />
                     </ButtonGroup>
                 </HStack>
@@ -203,7 +197,7 @@ export const WorkspacePageActions: FC = () => {
 
             <PageHeaderSectionPortal section={"end"}>
                 <HStack gap={2} mr={4}>
-                    <UserAvatarGroup users={users} onAvatarClick={followUser} />
+                    <WorkspaceCollaboratingUserGroup />
                     <Divider
                         borderWidth={1}
                         color={"whiteAlpha.200"}

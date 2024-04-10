@@ -114,7 +114,7 @@ export const App: FC = () => {
                     <AutoLayout />
                 </ComponentView>
 
-                <Deployment value={{ softwareSystemIdentifier: "internetBankingSystem" environment: "Development", key: "DevelopmentDeployment" }}>
+                <DeploymentView value={{ softwareSystemIdentifier: "internetBankingSystem" environment: "Development", key: "DevelopmentDeployment" }}>
                     <Include value={"*"} />
                     <Animation
                         value={[
@@ -124,7 +124,7 @@ export const App: FC = () => {
                         ]}
                     />
                     <AutoLayout />
-                </Deployment>
+                </DeploymentView>
             </Views>
         </Workspace>
     )

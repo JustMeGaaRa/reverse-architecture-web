@@ -1,15 +1,18 @@
-import { IElementVisitor, IModel, ISupportVisitor } from "../interfaces";
+import { IElementVisitor, IModel, ISupportVisitor, IWorkspaceSnapshot } from "../interfaces";
 import { RelationshipType } from "../types";
 
 export class ModelViewStrategy implements ISupportVisitor {
     constructor(
-        private model: IModel,
+        private workspace: IWorkspaceSnapshot,
     ) {}
 
+    public static PlaceholderModelWorkspaceId = "model-workspace-default-node";
+
     accept(visitor: IElementVisitor): void {
-        this.model.groups
+        visitor.visitWorkspace(this.workspace)
+        this.workspace.model.groups
             .flatMap(group => group.softwareSystems)
-            .concat(this.model.softwareSystems)
+            .concat(this.workspace.model.softwareSystems)
             .forEach((softwareSystem, index) => {
                 softwareSystem.groups
                     .flatMap(group => group.containers)
@@ -40,18 +43,18 @@ export class ModelViewStrategy implements ISupportVisitor {
                 visitor.visitSoftwareSystem(softwareSystem)
                 visitor.visitRelationship({
                     type: RelationshipType.Relationship,
-                    sourceIdentifier: "workspace",
+                    sourceIdentifier: ModelViewStrategy.PlaceholderModelWorkspaceId,
                     targetIdentifier: softwareSystem.identifier,
                     tags: []
                 })
             });
         
-        this.model.people
+        this.workspace.model.people
             .forEach((person, index) => {    
                 visitor.visitPerson(person)
                 visitor.visitRelationship({
                     type: RelationshipType.Relationship,
-                    sourceIdentifier: "workspace",
+                    sourceIdentifier: ModelViewStrategy.PlaceholderModelWorkspaceId,
                     targetIdentifier: person.identifier,
                     tags: []
                 })

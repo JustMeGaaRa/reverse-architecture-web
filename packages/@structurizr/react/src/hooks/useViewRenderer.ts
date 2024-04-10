@@ -16,11 +16,6 @@ export const useViewRenderer = () => {
                 setNodes(reactFlowAuto.nodes);
                 setEdges(reactFlowAuto.edges);
             });
-
-        return () => {
-            setNodes([]);
-            setEdges([]);
-        }
     }, [setEdges, setNodes]);
 
     const renderView = useCallback((workspace: IWorkspaceSnapshot, view: IViewDefinition, strategy: ISupportVisitor) => {
@@ -37,11 +32,6 @@ export const useViewRenderer = () => {
         else {
             setNodes(reactFlowObject.nodes);
             setEdges(reactFlowObject.edges);
-        }
-        
-        return () => {
-            setNodes([]);
-            setEdges([]);
         }
     }, [setEdges, setNodes]);
 

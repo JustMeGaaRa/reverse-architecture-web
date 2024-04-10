@@ -1,5 +1,5 @@
 import { WorkspaceProvider } from "@structurizr/react";
-import { CurrentUser, WorkspaceRoom } from "@workspace/live";
+import { CurrentUser, WorkspaceRoom } from "@structurizr/live";
 import {
     YjsDocumentProvider,
     YjsUndoManagerProvider,
@@ -34,10 +34,7 @@ export const WorkspaceSharedPage: FC = () => {
             <YjsWebrtcProviderProvider>
                 <YjsUndoManagerProvider>
 
-                    <WorkspaceSession
-                        code={queryParams.get(SharedRoomCodeparam)}
-                        onSessionConnected={handleOnSessionConnected}
-                    >
+                    <WorkspaceSession code={queryParams.get(SharedRoomCodeparam)} onSessionConnected={handleOnSessionConnected}>
                         <WorkspaceRoom options={{ roomId: roomId, password: roomPassword }}>
 
                             <CurrentUser info={account} />

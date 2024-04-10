@@ -1,4 +1,4 @@
-import { ISupportSnapshot, IViewDefinitionMetadata, IElementPosition, IRelationshipPosition, IViewsMetadata, IWorkspaceMetadata } from "../interfaces";
+import { ISupportSnapshot, IViewDefinitionMetadata, IElementMetadata, IRelationshipMetadata, IViewsMetadata, IWorkspaceMetadata } from "../interfaces";
 import { Identifier } from "./Identifier";
 import { Position } from "./Position";
 
@@ -12,8 +12,8 @@ export class ViewDefinitionMetadata implements ISupportSnapshot<IViewDefinitionM
 
     public identifier: Identifier;
     public key?: string;
-    public elements: Array<IElementPosition>;
-    public relationships: Array<IRelationshipPosition>;
+    public elements: Array<IElementMetadata>;
+    public relationships: Array<IRelationshipMetadata>;
 
     public toSnapshot(): IViewDefinitionMetadata {
         return {
