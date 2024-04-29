@@ -14,7 +14,7 @@ import { useCallback } from "react";
 import { createReactFlowViewNode, createReactFlowViewEdge } from "../utils";
 import { useWorkspace } from "./useWorkspace";
 
-export const useSystemContextView = (systemSoftwareIdentifier: Identifier) => {
+export const useSystemContextView = (softwareSystemIdentifier: Identifier) => {
     const { setWorkspace } = useWorkspace();
     const { setNodes, setEdges } = useReactFlow();
     
@@ -31,13 +31,13 @@ export const useSystemContextView = (systemSoftwareIdentifier: Identifier) => {
             const builder = new Workspace(workspace);
             builder.model.addSoftwareSystem(softwareSystem, groupId);
             builder.views.systemContexts
-                .find(x => x.identifier === systemSoftwareIdentifier)
+                .find(x => x.softwareSystemIdentifier === softwareSystemIdentifier)
                 ?.addSoftwareSystem(softwareSystem, position);
             return builder.toSnapshot();
         });
 
         return softwareSystem;
-    }, [systemSoftwareIdentifier, setNodes, setWorkspace]);
+    }, [softwareSystemIdentifier, setNodes, setWorkspace]);
     
     const addPerson = useCallback((position: Position, groupId?: Identifier) => {
         const person = getDefaultElement(ElementType.Person) as Person;
@@ -52,13 +52,13 @@ export const useSystemContextView = (systemSoftwareIdentifier: Identifier) => {
             const builder = new Workspace(workspace);
             builder.model.addPerson(person, groupId);
             builder.views.systemContexts
-                .find(x => x.identifier === systemSoftwareIdentifier)
+                .find(x => x.softwareSystemIdentifier === softwareSystemIdentifier)
                 ?.addPerson(person, position);
             return builder.toSnapshot();
         });
 
         return person;
-    }, [systemSoftwareIdentifier, setNodes, setWorkspace]);
+    }, [softwareSystemIdentifier, setNodes, setWorkspace]);
 
     const addGroup = useCallback((position: Position) => {
         const group = getDefaultElement(ElementType.Group) as Group;
@@ -77,13 +77,13 @@ export const useSystemContextView = (systemSoftwareIdentifier: Identifier) => {
             const builder = new Workspace(workspace);
             builder.model.addGroup(group);
             builder.views.systemContexts
-                .find(x => x.identifier === systemSoftwareIdentifier)
+                .find(x => x.softwareSystemIdentifier === softwareSystemIdentifier)
                 ?.addGroup(group, position);
             return builder.toSnapshot();
         });
 
         return group;
-    }, [systemSoftwareIdentifier, setNodes, setWorkspace]);
+    }, [softwareSystemIdentifier, setNodes, setWorkspace]);
     
     const addRelationship = useCallback((sourceIdentifier: Identifier, targetIdentifier: Identifier) => {
         const relationship = new Relationship({
@@ -106,11 +106,11 @@ export const useSystemContextView = (systemSoftwareIdentifier: Identifier) => {
         setWorkspace(workspace => {
             const builder = new Workspace(workspace);
             builder.views.systemContexts
-                .filter(x => x.identifier === systemSoftwareIdentifier)
+                .filter(x => x.softwareSystemIdentifier === softwareSystemIdentifier)
                 .forEach(x => x.setElementPosition(elementId, position));
             return builder.toSnapshot();
         });
-    }, [systemSoftwareIdentifier, setWorkspace]);
+    }, [softwareSystemIdentifier, setWorkspace]);
 
     return {
         addPerson,

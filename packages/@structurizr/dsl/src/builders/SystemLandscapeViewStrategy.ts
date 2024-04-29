@@ -4,17 +4,17 @@ import {
     IPerson,
     ISoftwareSystem,
     ISupportVisitor,
-    IViewDefinition
+    ISystemLandscapeView
 } from "../interfaces";
 import {
-    relationshipExistsForElementsInView,
-    getRelationships
+    getRelationships,
+    relationshipExistsForElementsInView
 } from "../utils";
 
 export class SystemLandscapeViewStrategy implements ISupportVisitor {
     constructor(
         private model: IModel,
-        private view: IViewDefinition
+        private view: ISystemLandscapeView
     ) {}
 
     accept(visitor: IElementVisitor): void {

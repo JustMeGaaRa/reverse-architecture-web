@@ -31,9 +31,6 @@ export class SystemContextView implements ISupportSnapshot<ISystemContextView> {
 
     public get type(): ViewType.SystemContext { return ViewType.SystemContext; }
 
-    public get identifier(): Identifier { return this.propertiesMap.get("identifier") as Identifier; }
-    public set identifier(value: Identifier) { this.propertiesMap.set("identifier", value); }
-
     public set softwareSystemIdentifier(value: Identifier) { this.propertiesMap.set("softwareSystemIdentifier", value); }
     public get softwareSystemIdentifier(): Identifier { return this.propertiesMap.get("softwareSystemIdentifier") as Identifier; }
     
@@ -57,7 +54,6 @@ export class SystemContextView implements ISupportSnapshot<ISystemContextView> {
     public get properties(): Properties { return new Properties(this.propertiesMap.get("properties") as Y.Map<unknown>); }
 
     public fromSnapshot(systemContextView: ISystemContextView) {
-        this.identifier = systemContextView.identifier;
         this.softwareSystemIdentifier = systemContextView.softwareSystemIdentifier;
         this.key = systemContextView.key;
         this.title = systemContextView.title;
@@ -95,7 +91,6 @@ export class SystemContextView implements ISupportSnapshot<ISystemContextView> {
     public toSnapshot(): ISystemContextView {
         return Object.freeze({
             type: this.type,
-            identifier: this.identifier,
             softwareSystemIdentifier: this.softwareSystemIdentifier,
             key: this.key,
             title: this.title,

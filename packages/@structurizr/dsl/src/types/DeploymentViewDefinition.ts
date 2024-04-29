@@ -1,6 +1,5 @@
-import { IDeploymentView, IElementMetadata, IRelationshipMetadata, ISupportSnapshot, IViewDefinition, IViewDefinitionMetadata } from "../interfaces";
+import { IDeploymentView, ISupportSnapshot, IViewDefinitionMetadata } from "../interfaces";
 import { AutoLayout } from "./AutoLayout";
-import { AutoLayoutDirection } from "./AutoLayoutDirection";
 import { Container } from "./Container";
 import { DeploymentNode } from "./DeploymentNode";
 import { ElementMetadata } from "./ElementMetadata";
@@ -12,13 +11,13 @@ import { SoftwareSystem } from "./SoftwareSystem";
 import { ViewType } from "./ViewType";
 
 type DeploymentViewValues = 
-    Required<Pick<IDeploymentView, "identifier" | "environment">>
-    & Partial<Omit<IDeploymentView, "type" | "identifier" | "environment">>;
+    Required<Pick<IDeploymentView, "key" | "environment">>
+    & Partial<Omit<IDeploymentView, "type" | "environment">>;
 
-export class DeploymentViewDefinition implements IViewDefinition, ISupportSnapshot<IDeploymentView> {
+export class DeploymentViewDefinition implements ISupportSnapshot<IDeploymentView> {
     constructor(values: DeploymentViewValues) {
         this.type = ViewType.Deployment;
-        this.identifier = values.identifier;
+        this.softwareSystemIdentifier = values.softwareSystemIdentifier;
         this.environment = values.environment;
         this.key = values.key;
         this.description = values.description;
@@ -33,7 +32,6 @@ export class DeploymentViewDefinition implements IViewDefinition, ISupportSnapsh
     }
 
     public type: ViewType.Deployment;
-    public identifier: string;
     public softwareSystemIdentifier: string;
     public environment: string;
     public key?: string;
@@ -47,23 +45,9 @@ export class DeploymentViewDefinition implements IViewDefinition, ISupportSnapsh
     public elements: Array<ElementMetadata>;
     public relationships: Array<RelationshipMetadata>;
 
-    public static default() {
-        return new DeploymentViewDefinition({
-            identifier: "default_deployment",
-            title: "Deployment for New Environment",
-            environment: "New Environment",
-            autoLayout: {
-                direction: AutoLayoutDirection.TopBotom,
-                rankSeparation: 300,
-                nodeSeparation: 300
-            }
-        });
-    }
-
     public toSnapshot(): IDeploymentView {
         return {
             type: this.type,
-            identifier: this.identifier,
             softwareSystemIdentifier: this.softwareSystemIdentifier,
             environment: this.environment,
             key: this.key,

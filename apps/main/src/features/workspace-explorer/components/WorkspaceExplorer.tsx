@@ -5,7 +5,7 @@ import { useYjsCollaborative } from "@yjs/react";
 import { EmojiSad, Folder } from "iconoir-react";
 import { FC, useCallback, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useLoaderState, WorkspaceActionsToolbar } from "../../../features";
+import { useLoaderState } from "../../../features";
 import { useAccount } from "../../authentication";
 import { ErrorBoundary } from "../../error-boundary";
 import { LocaleKeys } from "../../localization";
@@ -29,6 +29,7 @@ import {
     WorkspaceTableRow,
     StateMessage,
     LoadingMessage,
+    WorkspaceExplorerActionsToolbar,
 } from "./";
 
 export const WorkspaceExplorer: FC<{
@@ -349,7 +350,7 @@ export const WorkspaceExplorer: FC<{
                 </WorkspaceTable>
             )}
             <WorkspaceActionsAutoHideWrapper>
-                <WorkspaceActionsToolbar />
+                <WorkspaceExplorerActionsToolbar />
             </WorkspaceActionsAutoHideWrapper>
         </ErrorBoundary>
     )

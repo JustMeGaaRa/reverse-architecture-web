@@ -69,7 +69,7 @@ export class CommentApi {
                 },
             ],
             metadata: {
-                view: { type: ViewType.SystemLandscape, identifier: "System Landscape" },
+                viewKey: "default_system_landscape_view",
                 position: { x: 100, y: 100 }
             }
         }
@@ -107,7 +107,7 @@ export class CommentApi {
                 },
             ],
             metadata: {
-                view: { type: ViewType.SystemLandscape, identifier: "System Landscape" },
+                viewKey: "default_system_landscape_view",
                 position: { x: 1000, y: 1000 }
             }
         }
@@ -138,7 +138,7 @@ export class CommentApi {
                 },
             ],
             metadata: {
-                view: { type: ViewType.SystemLandscape, identifier: "System Landscape" },
+                viewKey: "default_system_landscape_view",
                 position: { x: 500, y: 300 }
             },
         }
@@ -162,7 +162,7 @@ export class CommentApi {
                 }
             ],
             metadata: {
-                view: { type: ViewType.Container, identifier: "internetBankingSystem" },
+                viewKey: "default_system_landscape_view",
                 position: { x: 500, y: 300 }
             },
         }

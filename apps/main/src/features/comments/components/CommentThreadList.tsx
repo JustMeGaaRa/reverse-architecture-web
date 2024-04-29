@@ -1,5 +1,6 @@
 import { Box } from "@chakra-ui/react";
-import { getDefaultView } from "@structurizr/dsl";
+import { findViewByKey, ViewType } from "@structurizr/dsl";
+import { useWorkspace } from "@structurizr/react";
 import { FC, useCallback } from "react";
 import {
     CommentCard,
@@ -16,6 +17,7 @@ export const CommentThreadList: FC = () => {
         setCommentThreads,
         setSelectedThreadId
     } = useCommentsStore();
+    const { workspace } = useWorkspace();
     const { setCurrentView } = useWorkspaceNavigation();
 
     // useEffect(() => setCommentThreads(discussions), [discussions, setCommentThreads]);
@@ -23,8 +25,8 @@ export const CommentThreadList: FC = () => {
     const handleOnClick = useCallback((comment: CommentThread) => {
         const isCurrent = selectedThreadId === comment.commentThreadId;
         setSelectedThreadId(isCurrent ? undefined : comment.commentThreadId);
-        setCurrentView(getDefaultView(comment.metadata.view.type, comment.metadata.view.identifier));
-    }, [selectedThreadId, setSelectedThreadId, setCurrentView]);
+        setCurrentView(findViewByKey(workspace, comment.metadata.viewKey));
+    }, [workspace, selectedThreadId, setSelectedThreadId, setCurrentView]);
 
     return (
         <Box
@@ -40,7 +42,7 @@ export const CommentThreadList: FC = () => {
                         key={discussion.commentThreadId}
                         comment={discussion.comments.at(0)}
                         replyCount={discussion.comments.length}
-                        origin={discussion.metadata.view}
+                        origin={{ type: ViewType.SystemContext, identifier: discussion.metadata.viewKey }}
                         isSelected={selectedThreadId === discussion.commentThreadId}
                         showOrigin={true}
                         showResolve={true}

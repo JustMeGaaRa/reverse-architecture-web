@@ -13,7 +13,7 @@ export const parseStructurizr = (structurizr: string): IWorkspaceSnapshot => {
         return workspaceCstNode;
     }
 
-    const parseCst = (workspaceCst: any): Workspace => {
+    const parseCst = (workspaceCst: any): IWorkspaceSnapshot => {
         const structurizrVisitor = new StructurizrVisitor();
         const workspace = structurizrVisitor.visit(workspaceCst);
         return workspace;

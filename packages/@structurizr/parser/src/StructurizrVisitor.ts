@@ -28,6 +28,24 @@ import {
     Workspace,
     IElementStyleProperties,
     IRelationshipStyleProperties,
+    IWorkspaceSnapshot,
+    IModel,
+    IComponent,
+    IComponentView,
+    IContainer,
+    IContainerInstance,
+    IContainerView,
+    IDeploymentEnvironment,
+    IDeploymentNode,
+    IDeploymentView,
+    IGroup,
+    IInfrastructureNode,
+    IPerson,
+    ISoftwareSystem,
+    ISoftwareSystemInstance,
+    ISystemContextView,
+    ISystemLandscapeView,
+    IViews,
 } from "@structurizr/dsl";
 import { StructurizrParser } from "./StructurizrParser";
 import { TokenName } from "./TokenName";
@@ -58,14 +76,14 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor {
         StringLiteral?: any;
         model: any;
         views: any }
-    ): Workspace {
+    ): IWorkspaceSnapshot {
         return new Workspace({
             version: 1,
             name: trimQuotes(ctx.StringLiteral?.at(0)?.image) ?? "Empty Workspace",
             description: trimQuotes(ctx.StringLiteral?.at(1)?.image),
             model: this.visit(ctx.model),
             views: this.visit(ctx.views)
-        });
+        }).toSnapshot();
     }
 
     model(ctx: {
@@ -74,14 +92,14 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor {
         softwareSystem?: any;
         deploymentEnvironment?: any;
         relationship?: any;
-    }): Model {
+    }): IModel {
         return new Model({
             groups: ctx.group?.map(x => this.visit(x)) ?? [],
             people: ctx.person?.map(x => this.visit(x)) ?? [],
             softwareSystems: ctx.softwareSystem?.map(x => this.visit(x)) ?? [],
             deploymentEnvironments: ctx.deploymentEnvironment?.map(x => this.visit(x)) ?? [],
             relationships: ctx.relationship?.map(x => this.visit(x)) ?? []
-        });
+        }).toSnapshot();
     }
 
     group(ctx: {
@@ -90,7 +108,7 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor {
         personOrSoftwareSystem?: any[];
         container?: any[];
         component?: any[];
-    }): Group {
+    }): IGroup {
         const personOrSoftwareSystems = ctx.personOrSoftwareSystem?.map((x) => this.visit(x));
         const name = trimQuotes(ctx.StringLiteral?.at(0)?.image);
 
@@ -101,13 +119,13 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor {
             softwareSystems: personOrSoftwareSystems?.filter((x) => x.type === ElementType.SoftwareSystem) ?? [],
             containers: ctx.container?.map((x) => this.visit(x)) ?? [],
             components: ctx.component?.map((x) => this.visit(x)) ?? []
-        });
+        }).toSnapshot();
     }
 
     personOrSoftwareSystem(ctx: {
         person?: any[];
         softwareSystem?: any[] }
-    ): Person | SoftwareSystem {
+    ): IPerson | ISoftwareSystem {
         if (ctx.person) {
             return this.visit(ctx.person);
         }
@@ -118,14 +136,14 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor {
         return undefined;
     }
 
-    person(ctx: PropertyContext): Person {
+    person(ctx: PropertyContext): IPerson {
         const name = trimQuotes(ctx.StringLiteral?.at(0)?.image);
         return new Person({
             identifier: ctx.Identifier?.at(0)?.image ?? name,
             name: name,
             description: trimQuotes(ctx.StringLiteral?.at(1)?.image),
             tags: Tag.from(trimQuotes(ctx.StringLiteral?.at(2)?.image))
-        });
+        }).toSnapshot();
     }
 
     softwareSystem(ctx: {
@@ -135,7 +153,7 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor {
         container?: any[];
         relationship?: any[];
         elementProperties?: any
-    }): SoftwareSystem {
+    }): ISoftwareSystem {
         const name = trimQuotes(ctx.StringLiteral?.at(0)?.image);
         const identifier = ctx.Identifier?.at(0)?.image ?? name;
         const properties = this.visit(ctx.elementProperties);
@@ -164,7 +182,7 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor {
             groups: ctx.group?.map((x) => this.visit(x)),
             containers: ctx.container?.map((x) => this.visit(x)),
             relationships: relationships
-        });
+        }).toSnapshot();
     }
 
     container(ctx: {
@@ -174,7 +192,7 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor {
         component?: any[];
         relationship?: any[];
         elementProperties?: any
-    }): Container {
+    }): IContainer {
         const name = trimQuotes(ctx.StringLiteral?.at(0)?.image);
         const identifier = ctx.Identifier?.at(0)?.image ?? name;
         const properties = this.visit(ctx.elementProperties);
@@ -205,7 +223,7 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor {
             groups: ctx.group?.map((x) => this.visit(x)),
             components: ctx.component?.map((x) => this.visit(x)),
             relationships: relationships
-        });
+        }).toSnapshot();
     }
 
     component(ctx: {
@@ -213,7 +231,7 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor {
         StringLiteral?: any;
         relationship?: any[];
         elementProperties?: any
-    }): Component {
+    }): IComponent {
         const name = trimQuotes(ctx.StringLiteral?.at(0)?.image);
         const identifier = ctx.Identifier?.at(0)?.image ?? name;
         const properties = this.visit(ctx.elementProperties);
@@ -242,7 +260,7 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor {
                 .from(trimQuotes(ctx.StringLiteral?.at(3)?.image))
                 .concat(properties?.tags ?? []),
             relationships: relationships
-        });
+        }).toSnapshot();
     }
 
     deploymentEnvironment(ctx: {
@@ -251,7 +269,7 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor {
         group?: any[];
         deploymentNode?: any[];
         relationship?: any[];
-    }): DeploymentEnvironment {
+    }): IDeploymentEnvironment {
         const name = trimQuotes(ctx.StringLiteral?.at(0)?.image);
         
         return new DeploymentEnvironment({
@@ -261,7 +279,7 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor {
             // groups: ctx.group?.map((x) => this.visit(x)),
             deploymentNodes: ctx.deploymentNode?.map((x) => this.visit(x)),
             relationships: ctx.relationship?.map((x) => this.visit(x))
-        });
+        }).toSnapshot();
     }
 
     deploymentNode(ctx: {
@@ -273,7 +291,7 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor {
         softwareSystemInstance?: any[];
         containerInstance?: any[];
         elementProperties?: any
-    }): DeploymentNode {
+    }): IDeploymentNode {
         const name = trimQuotes(ctx.StringLiteral?.at(0)?.image);
         const properties = this.visit(ctx.elementProperties);
 
@@ -293,7 +311,7 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor {
             infrastructureNodes: ctx.infrastructureNode?.map((x) => this.visit(x)),
             softwareSystemInstances: ctx.softwareSystemInstance?.map((x) => this.visit(x)),
             containerInstances: ctx.containerInstance?.map((x) => this.visit(x))
-        });
+        }).toSnapshot();
     }
 
     infrastructureNode(ctx: {
@@ -302,7 +320,7 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor {
         NumericLiteral?: any;
         relationship?: any[];
         elementProperties?: any
-    }): InfrastructureNode {
+    }): IInfrastructureNode {
         const name = trimQuotes(ctx.StringLiteral?.at(0)?.image);
         const properties = this.visit(ctx.elementProperties);
 
@@ -318,10 +336,10 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor {
                 .from(trimQuotes(ctx.StringLiteral?.at(3)?.image))
                 .concat(properties?.tags ?? []),
             relationships: ctx.relationship?.map((x) => this.visit(x))
-        });
+        }).toSnapshot();
     }
 
-    softwareSystemInstance(ctx: PropertyContext): SoftwareSystemInstance {
+    softwareSystemInstance(ctx: PropertyContext): ISoftwareSystemInstance {
         const identifier = ctx.Identifier?.at(0)?.image;
         const softwareSystemIdentifier = ctx.Identifier?.at(1)?.image ?? identifier;
 
@@ -330,10 +348,10 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor {
             softwareSystemIdentifier: softwareSystemIdentifier,
             // deploymentGroups: ctx.StringLiteral?.at(0)?.image,
             tags: Tag.from(trimQuotes(ctx.StringLiteral?.at(1)?.image))
-        });
+        }).toSnapshot();
     }
 
-    containerInstance(ctx: PropertyContext): ContainerInstance {
+    containerInstance(ctx: PropertyContext): IContainerInstance {
         const identifier = ctx.Identifier?.at(0)?.image;
         const containerIdentifier = ctx.Identifier?.at(1)?.image ?? identifier;
 
@@ -342,17 +360,17 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor {
             containerIdentifier: containerIdentifier,
             // deploymentGroups: ctx.StringLiteral?.at(0)?.image,
             tags: Tag.from(trimQuotes(ctx.StringLiteral?.at(1)?.image))
-        });
+        }).toSnapshot();
     }
 
-    relationship(ctx: PropertyContext): Relationship {
+    relationship(ctx: PropertyContext): IRelationship {
         return new Relationship({
             description: trimQuotes(ctx.StringLiteral?.at(0)?.image),
             technology: Technology.from(trimQuotes(ctx.StringLiteral?.at(1)?.image)),
             tags: Tag.from(trimQuotes(ctx.StringLiteral?.at(2)?.image)),
             sourceIdentifier: ctx.Identifier[0].image,
             targetIdentifier: ctx.Identifier[1].image
-        });
+        }).toSnapshot();
     }
 
     elementProperties(ctx: {
@@ -397,7 +415,7 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor {
         deploymentView?: any;
         styles?: any;
         themesProperty?: any;
-    }): Views {
+    }): IViews {
         const themes = this.visit(ctx.themesProperty);
         return new Views({
             systemLandscape: this.visit(ctx.systemLandscapeView),
@@ -412,63 +430,62 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor {
                 styles: this.visit(ctx.styles),
                 themes: themes ? [themes] : []
             })
-        });
+        }).toSnapshot();
     }
 
-    systemLandscapeView(ctx: PropertyContext): SystemLandscapeViewDefinition {
+    systemLandscapeView(ctx: PropertyContext): ISystemLandscapeView {
         return new SystemLandscapeViewDefinition({
-            identifier: ctx.Identifier?.at(0)?.image,
             key: trimQuotes(ctx.StringLiteral?.at(0)?.image),
             description: trimQuotes(ctx.StringLiteral?.at(1)?.image),
             include: [],
             elements: [],
             relationships: []
-        });
+        }).toSnapshot();
     }
 
-    systemContextView(ctx: PropertyContext): SystemContextViewDefinition {
+    systemContextView(ctx: PropertyContext): ISystemContextView {
         return new SystemContextViewDefinition({
-            identifier: ctx.Identifier?.at(0)?.image,
+            softwareSystemIdentifier: ctx.Identifier?.at(0)?.image,
             key: trimQuotes(ctx.StringLiteral?.at(0)?.image),
             description: trimQuotes(ctx.StringLiteral?.at(1)?.image),
             include: [],
             elements: [],
             relationships: []
-        });
+        }).toSnapshot();
     }
 
-    containerView(ctx: PropertyContext): ContainerViewDefinition {
+    containerView(ctx: PropertyContext): IContainerView {
         return new ContainerViewDefinition({
-            identifier: ctx.Identifier?.at(0)?.image,
+            softwareSystemIdentifier: ctx.Identifier?.at(0)?.image,
             key: trimQuotes(ctx.StringLiteral?.at(0)?.image),
             description: trimQuotes(ctx.StringLiteral?.at(1)?.image),
             include: [],
             elements: [],
             relationships: []
-        });
+        }).toSnapshot();
     }
 
-    componentView(ctx: PropertyContext): ComponentViewDefinition {
+    componentView(ctx: PropertyContext): IComponentView {
         return new ComponentViewDefinition({
-            identifier: ctx.Identifier?.at(0)?.image,
+            containerIdentifier: ctx.Identifier?.at(0)?.image,
             key: trimQuotes(ctx.StringLiteral?.at(0)?.image),
             description: trimQuotes(ctx.StringLiteral?.at(1)?.image),
             include: [],
             elements: [],
             relationships: []
-        });
+        }).toSnapshot();
     }
 
-    deploymentView(ctx: PropertyContext): DeploymentViewDefinition {
+    deploymentView(ctx: PropertyContext): IDeploymentView {
         return new DeploymentViewDefinition({
-            identifier: ctx.Identifier?.at(0)?.image,
+            softwareSystemIdentifier: ctx.Identifier?.at(0)?.image,
             environment: trimQuotes(ctx.StringLiteral?.at(0)?.image),
             key: trimQuotes(ctx.StringLiteral?.at(1)?.image),
             description: trimQuotes(ctx.StringLiteral?.at(2)?.image),
             include: [],
             elements: [],
             relationships: []
-        });
+        }).toSnapshot();
     }
 
     styles(ctx: {

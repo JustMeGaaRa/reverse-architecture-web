@@ -3,9 +3,8 @@ import { IAutoLayout } from "./IAutoLayout";
 import { IElementMetadata } from "./IElementMetadata";
 import { IProperties } from "./IProperties";
 import { IRelationshipMetadata } from "./IRelationshipMetadata";
-import { IViewDefinition } from "./IViewDefinition";
 
-export interface ISystemLandscapeView extends IViewDefinition {
+export interface ISystemLandscapeView {
     type: ViewType.SystemLandscape;
     key?: string;
     description?: string;

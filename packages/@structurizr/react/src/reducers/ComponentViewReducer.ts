@@ -3,6 +3,9 @@ import { ActionType, ComponentViewAction } from "../actions";
 
 export const componentViewReducer = (state: IComponentView, action: ComponentViewAction): IComponentView => {
     switch (action.type) {
+        case ActionType.ADD_COMPONENT_VIEW:
+            return action.payload.view;
+
         case ActionType.SET_COMPONENT_VIEW_ELEMENT_POSTION:
             return {
                 ...state,

@@ -1,16 +1,14 @@
 import { All, Identifier, ViewType } from "../types";
-import { IViewDefinition } from "./IViewDefinition";
-import { IRelationshipMetadata } from "./IRelationshipMetadata";
+import { IAutoLayout } from "./IAutoLayout";
 import { IElementMetadata } from "./IElementMetadata";
 import { IProperties } from "./IProperties";
-import { IAutoLayout } from "./IAutoLayout";
+import { IRelationshipMetadata } from "./IRelationshipMetadata";
 
-export interface IDeploymentView extends IViewDefinition {
+export interface IDeploymentView {
     type: ViewType.Deployment;
-    identifier: Identifier;
     softwareSystemIdentifier: Identifier;
     environment: string;
-    key?: string;
+    key: string;
     title?: string;
     description?: string;
     include?: Array<Identifier | All>;

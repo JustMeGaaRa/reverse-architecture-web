@@ -30,11 +30,12 @@ export const DiscussionsPane: FC = () => {
     const { commentApi } = useMemo(() => ({ commentApi: new CommentCacheWrapper(new CommentApi()) }), []);
 
     const currentViewDiscussions = useMemo(() => {
-        return commentThreads.filter(x => {
-            return x.metadata?.view?.type === currentView?.type
-                && x.metadata?.view?.identifier === currentView?.identifier;
-        });
-    }, [commentThreads, currentView?.identifier, currentView?.type]);
+        // return commentThreads.filter(x => {
+        //     return x.metadata?.view?.type === currentView?.type
+        //         && x.metadata?.view?.identifier === currentView?.identifier;
+        // });
+        return [];
+    }, [commentThreads, currentView?.type]);
 
     const handleOnBadgeClick = useCallback((commentThreadId?: string) => {
         setSelectedThreadId(commentThreadId);

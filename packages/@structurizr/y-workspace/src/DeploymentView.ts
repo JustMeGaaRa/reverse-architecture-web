@@ -31,9 +31,6 @@ export class DeploymentView implements ISupportSnapshot<IDeploymentView> {
 
     public get type(): ViewType.Deployment { return ViewType.Deployment; }
 
-    public get identifier(): Identifier { return this.propertiesMap.get("identifier") as Identifier; }
-    public set identifier(value: Identifier) { this.propertiesMap.set("identifier", value); }
-
     public set softwareSystemIdentifier(value: Identifier) { this.propertiesMap.set("softwareSystemIdentifier", value); }
     public get softwareSystemIdentifier(): Identifier { return this.propertiesMap.get("softwareSystemIdentifier") as Identifier; }
 
@@ -60,7 +57,6 @@ export class DeploymentView implements ISupportSnapshot<IDeploymentView> {
     public get properties(): Properties { return new Properties(this.propertiesMap.get("properties") as Y.Map<unknown>); }
 
     public fromSnapshot(deploymentView: IDeploymentView) {
-        this.identifier = deploymentView.identifier;
         this.softwareSystemIdentifier = deploymentView.softwareSystemIdentifier;
         this.environment = deploymentView.environment;
         this.key = deploymentView.key;
@@ -98,7 +94,6 @@ export class DeploymentView implements ISupportSnapshot<IDeploymentView> {
     public toSnapshot(): IDeploymentView {
         return Object.freeze({
             type: this.type,
-            identifier: this.identifier,
             softwareSystemIdentifier: this.softwareSystemIdentifier,
             environment: this.environment,
             key: this.key,

@@ -7,25 +7,25 @@ export type AddContainerViewAction = Action<ActionType.ADD_CONTAINER_VIEW, {
 }>;
 
 export type SetContainerViewElementPositionAction = Action<ActionType.SET_CONTAINER_VIEW_ELEMENT_POSTION, {
-    viewIdentifier: string;
+    view: IContainerView;
     elementIdentifier: string;
     position: Position;
 }>;
 
 export type IncludeContainerViewPersonAction = Action<ActionType.INCLUDE_CONTAINER_VIEW_PERSON, {
-    viewIdentifier: string;
+    view: IContainerView;
     person: IPerson;
     position?: Position;
 }>;
 
 export type IncludeContainerViewSoftwareSystemAction = Action<ActionType.INCLUDE_CONTAINER_VIEW_SOFTWARE_SYSTEM, {
-    viewIdentifier: string;
+    view: IContainerView;
     softwareSystem: ISoftwareSystem;
     position?: Position;
 }>;
 
 export type IncludeContainerViewContainerAction = Action<ActionType.INCLUDE_CONTAINER_VIEW_CONTAINER, {
-    viewIdentifier: string;
+    view: IContainerView;
     softwareSystemIdentifier: string;
     container: IContainer;
     position?: Position;

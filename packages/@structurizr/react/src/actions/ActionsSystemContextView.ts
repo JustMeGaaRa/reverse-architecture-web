@@ -7,19 +7,19 @@ export type AddSystemContextViewAction = Action<ActionType.ADD_SYSTEM_CONTEXT_VI
 }>;
 
 export type SetSystemContextViewElementPositionAction = Action<ActionType.SET_SYSTEM_CONTEXT_VIEW_ELEMENT_POSTION, {
-    viewIdentifier: string;
+    view: ISystemContextView;
     elementIdentifier: string;
     position: Position;
 }>;
 
 export type IncludeSystemContextViewPersonAction = Action<ActionType.INCLUDE_SYSTEM_CONTEXT_VIEW_PERSON, {
-    viewIdentifier: string;
+    view: ISystemContextView;
     person: IPerson;
     position?: Position;
 }>;
 
 export type IncludeSystemContextViewSoftwareSystemAction = Action<ActionType.INCLUDE_SYSTEM_CONTEXT_VIEW_SOFTWARE_SYSTEM, {
-    viewIdentifier: string;
+    view: ISystemContextView;
     softwareSystem: ISoftwareSystem;
     position?: Position;
 }>;

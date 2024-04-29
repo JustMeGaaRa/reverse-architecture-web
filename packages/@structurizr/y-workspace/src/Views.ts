@@ -40,7 +40,9 @@ export class Views implements ISupportSnapshot<IViews>, IObservable {
     public get configuration(): Configuration { return this.propertiesMap && new Configuration(this.propertiesMap); }
 
     public fromSnapshot(views: IViews) {
-        views.systemLandscape && this.setSystemLandscape().fromSnapshot(views.systemLandscape);
+        if (views.systemLandscape !== null && views.systemLandscape !== undefined) {
+            this.setSystemLandscape().fromSnapshot(views.systemLandscape);
+        }
         views.systemContexts?.forEach(view => this.addSystemContext().fromSnapshot(view));
         views.containers?.forEach(view => this.addContainer().fromSnapshot(view));
         views.components?.forEach(view => this.addComponent().fromSnapshot(view));

@@ -1,6 +1,5 @@
-import { ISupportSnapshot, ISystemLandscapeView, IViewDefinition, IViewDefinitionMetadata } from "../interfaces";
+import { ISupportSnapshot, ISystemLandscapeView, IViewDefinitionMetadata } from "../interfaces";
 import { AutoLayout } from "./AutoLayout";
-import { AutoLayoutDirection } from "./AutoLayoutDirection";
 import { ElementMetadata } from "./ElementMetadata";
 import { Group } from "./Group";
 import { All, Identifier } from "./Identifier";
@@ -11,27 +10,24 @@ import { SoftwareSystem } from "./SoftwareSystem";
 import { ViewType } from "./ViewType";
 
 type SystemLandscapeViewDefinitionValues =
-    Required<Pick<ISystemLandscapeView, "identifier">>
-    & Partial<Omit<ISystemLandscapeView, "type" | "identifier">>;
+    Partial<Omit<ISystemLandscapeView, "type">>;
 
-export class SystemLandscapeViewDefinition implements IViewDefinition, ISupportSnapshot<ISystemLandscapeView> {
+export class SystemLandscapeViewDefinition implements ISupportSnapshot<ISystemLandscapeView> {
     constructor(values: SystemLandscapeViewDefinitionValues) {
         this.type = ViewType.SystemLandscape;
-        this.identifier = "System Landscape";
         this.key = values.key;
+        this.title = values.title;
         this.description = values.description;
         this.include = values.include ?? [];
         this.exclude = values.exclude ?? [];
         this.autoLayout = values.autoLayout ? new AutoLayout(values.autoLayout) : undefined;
         this.animation = values.animation;
-        this.title = values.title;
         // this.properties = values.properties;
         this.elements = values.elements ? values.elements.map(x => new ElementMetadata(x)) : [];
         this.relationships = values.relationships ? values.relationships.map(x => new RelationshipMetadata(x)) : [];
     }
 
     public type: ViewType.SystemLandscape;
-    public identifier: Identifier;
     public key?: string;
     public description?: string;
     public include: Array<Identifier | All>;
@@ -43,23 +39,9 @@ export class SystemLandscapeViewDefinition implements IViewDefinition, ISupportS
     public elements: Array<ElementMetadata>;
     public relationships: Array<RelationshipMetadata>;
 
-    public static default() {
-        return new SystemLandscapeViewDefinition({
-            identifier: undefined,
-            key: "default_system_landscape",
-            title: "System Landscape",
-            autoLayout: {
-                direction: AutoLayoutDirection.TopBotom,
-                rankSeparation: 300,
-                nodeSeparation: 300
-            }
-        });
-    }
-
     public toSnapshot(): ISystemLandscapeView {
         return {
             type: this.type,
-            identifier: this.identifier,
             key: this.key,
             description: this.description,
             include: this.include,

@@ -44,7 +44,7 @@ import {
     WorkspaceViewBreadcrumbs,
     WorkspaceZoomControls
 } from "../../features";
-import { emptyWorkspace, IWorkspaceSnapshot } from "@structurizr/dsl";
+import { createDefaultWorkspace, IWorkspaceSnapshot } from "@structurizr/dsl";
 
 export enum WorkspaceContentMode {
     Diagramming = "diagramming",
@@ -72,7 +72,7 @@ export const WorkspaceCollaborativeEditor: FC = () => {
             workspaceFlowReducer,
             // createCollaborativeWorkspaceReducer(document)
         ),
-        emptyWorkspace()
+        createDefaultWorkspace()
     );
     const handlers = useWorkspaceEditorState(dispatch);
     

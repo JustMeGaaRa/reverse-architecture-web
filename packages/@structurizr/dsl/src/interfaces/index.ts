@@ -31,7 +31,6 @@ export * from "./ISupportSnapshot";
 export * from "./ISupportVisitor";
 export * from "./ISystemContextView";
 export * from "./ISystemLandscapeView";
-export * from "./IViewDefinition";
 export * from "./IViewDefinitionMetadata";
 export * from "./IViews";
 export * from "./IViewsMetadata";

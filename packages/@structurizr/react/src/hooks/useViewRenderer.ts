@@ -1,7 +1,7 @@
 import { useReactFlow } from "@reactflow/core";
-import { ISupportVisitor, IViewDefinition, IWorkspaceSnapshot } from "@structurizr/dsl";
+import { ISupportVisitor, IWorkspaceSnapshot, ViewDefinition } from "@structurizr/dsl";
 import { useCallback } from "react";
-import { CustomAutoLayoutStrategy, DagreAutoLayoutStrategy, ElkjsAutoLayoutStrategy } from "../types";
+import { DagreAutoLayoutStrategy } from "../types";
 import { getReactFlowModelObject, getReactFlowViewObject } from "../utils";
 
 export const useViewRenderer = () => {
@@ -18,21 +18,10 @@ export const useViewRenderer = () => {
             });
     }, [setEdges, setNodes]);
 
-    const renderView = useCallback((workspace: IWorkspaceSnapshot, view: IViewDefinition, strategy: ISupportVisitor) => {
+    const renderView = useCallback((workspace: IWorkspaceSnapshot, view: ViewDefinition, strategy: ISupportVisitor) => {
         const reactFlowObject = getReactFlowViewObject(workspace, strategy, view);
-        const autoLayoutStrategy = new ElkjsAutoLayoutStrategy();
-        
-        if (!!view?.autoLayout) {
-            autoLayoutStrategy.execute(reactFlowObject)
-                .then(reactFlowAuto => {
-                    setNodes(reactFlowAuto.nodes);
-                    setEdges(reactFlowAuto.edges);
-                });
-        }
-        else {
-            setNodes(reactFlowObject.nodes);
-            setEdges(reactFlowObject.edges);
-        }
+        setNodes(reactFlowObject.nodes);
+        setEdges(reactFlowObject.edges);
     }, [setEdges, setNodes]);
 
     return { renderModel, renderView }

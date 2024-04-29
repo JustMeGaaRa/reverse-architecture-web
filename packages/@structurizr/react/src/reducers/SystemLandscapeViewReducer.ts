@@ -1,7 +1,7 @@
 import { ISystemLandscapeView } from "@structurizr/dsl";
-import { ActionType, SystemLandscapeViewAction } from "../actions";
+import { ActionType, SystemLandscapeViewAction, ViewsAction } from "../actions";
 
-export const systemLandscapeViewReducer = (state: ISystemLandscapeView, action: SystemLandscapeViewAction): ISystemLandscapeView => {
+export const systemLandscapeViewReducer = (state: ISystemLandscapeView, action: ViewsAction): ISystemLandscapeView => {
     switch (action.type) {
         case ActionType.SET_SYSTEM_LANDSCAPE_VIEW:
             return action.payload.view;

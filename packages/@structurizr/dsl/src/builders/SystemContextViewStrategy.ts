@@ -2,7 +2,7 @@ import {
     IElementVisitor,
     IModel,
     ISupportVisitor,
-    IViewDefinition
+    ISystemContextView
 } from "../interfaces";
 import {
     elementIncludedInView,
@@ -14,7 +14,7 @@ import {
 export class SystemContextViewStrategy implements ISupportVisitor {
     constructor(
         private model: IModel,
-        private view: IViewDefinition,
+        private view: ISystemContextView,
     ) {}
 
     accept(visitor: IElementVisitor): void {
@@ -28,7 +28,7 @@ export class SystemContextViewStrategy implements ISupportVisitor {
             .concat(this.model.softwareSystems);
 
         softwareSystems
-            .filter(softwareSystem => softwareSystem.identifier === this.view.identifier)
+            .filter(softwareSystem => softwareSystem.identifier === this.view.softwareSystemIdentifier)
             .forEach(softwareSystem => {
                 // 2.1.1. include the current software and all software systems
                 visitor.visitSoftwareSystem(softwareSystem);
@@ -48,7 +48,7 @@ export class SystemContextViewStrategy implements ISupportVisitor {
                 // 2.1.3. include all software systems that are directly connected to the current container
                 softwareSystems
                     .filter(softwareSystem => {
-                        return relationshipExistsOverall(relationships, this.view.identifier, softwareSystem.identifier)
+                        return relationshipExistsOverall(relationships, this.view.softwareSystemIdentifier, softwareSystem.identifier)
                             || elementIncludedInView(this.view, softwareSystem.identifier)
                     })
                     .forEach(softwareSystem => {

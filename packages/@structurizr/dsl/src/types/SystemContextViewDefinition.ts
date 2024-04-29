@@ -1,6 +1,5 @@
-import { ISystemContextView, IViewDefinition, ISupportSnapshot, IElementMetadata, IRelationshipMetadata, IViewDefinitionMetadata } from "../interfaces";
+import { ISupportSnapshot, ISystemContextView, IViewDefinitionMetadata } from "../interfaces";
 import { AutoLayout } from "./AutoLayout";
-import { AutoLayoutDirection } from "./AutoLayoutDirection";
 import { ElementMetadata } from "./ElementMetadata";
 import { Group } from "./Group";
 import { All, Identifier } from "./Identifier";
@@ -11,13 +10,13 @@ import { SoftwareSystem } from "./SoftwareSystem";
 import { ViewType } from "./ViewType";
 
 type SystemContextViewDefinitionValues =
-    Required<Pick<ISystemContextView, "identifier">>
-    & Partial<Omit<ISystemContextView, "type" | "identifier">>;
+    Required<Pick<ISystemContextView, "key">>
+    & Partial<Omit<ISystemContextView, "type">>;
 
-export class SystemContextViewDefinition implements IViewDefinition, ISupportSnapshot<ISystemContextView> {
+export class SystemContextViewDefinition implements ISupportSnapshot<ISystemContextView> {
     constructor(values: SystemContextViewDefinitionValues) {
         this.type = ViewType.SystemContext;
-        this.identifier = values.identifier;
+        this.softwareSystemIdentifier = values.softwareSystemIdentifier;
         this.key = values.key;
         this.description = values.description;
         this.include = values.include ?? [];
@@ -31,9 +30,8 @@ export class SystemContextViewDefinition implements IViewDefinition, ISupportSna
     }
 
     public type: ViewType.SystemContext;
-    public identifier: string;
     public softwareSystemIdentifier: string;
-    public key?: string;
+    public key: string;
     public include: Array<Identifier | All>;
     public exclude: Array<Identifier>;
     public autoLayout?: AutoLayout;
@@ -44,22 +42,9 @@ export class SystemContextViewDefinition implements IViewDefinition, ISupportSna
     public elements: Array<ElementMetadata>;
     public relationships: Array<RelationshipMetadata>;
 
-    public static default(softwareSystemIdentifier: Identifier) {
-        return new SystemContextViewDefinition({
-            identifier: softwareSystemIdentifier,
-            key: "default_system_context",
-            title: "System Context",
-            autoLayout: {
-                direction: AutoLayoutDirection.TopBotom, rankSeparation: 300,
-                nodeSeparation: 300
-            }
-        });
-    }
-
     public toSnapshot(): ISystemContextView {
         return {
             type: this.type,
-            identifier: this.identifier,
             softwareSystemIdentifier: this.softwareSystemIdentifier,
             key: this.key,
             include: this.include,

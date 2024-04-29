@@ -16,6 +16,7 @@ import {
     ISystemContextView,
     ISystemLandscapeView,
     Position,
+    Size,
     ViewDefinition,
     ViewType
 } from "@structurizr/dsl";
@@ -47,12 +48,12 @@ export const useWorkspaceEditorState = (dispatch: Dispatch<WorkspaceFlowAction>)
             case ElementType.Person:
                 dispatch({
                     type: ActionType.INCLUDE_SYSTEM_LANDSCAPE_VIEW_PERSON,
-                    payload: { person: createDefaultPerson(), position }});
+                    payload: { view, person: createDefaultPerson(), position }});
                 break;
             case ElementType.SoftwareSystem:
                 dispatch({
                     type: ActionType.INCLUDE_SYSTEM_LANDSCAPE_VIEW_SOFTWARE_SYSTEM,
-                    payload: { softwareSystem: createDefaultSoftwareSystem(), position }
+                    payload: { view, softwareSystem: createDefaultSoftwareSystem(), position }
                 });
                 break;
         }
@@ -75,7 +76,7 @@ export const useWorkspaceEditorState = (dispatch: Dispatch<WorkspaceFlowAction>)
                     type: ActionType.INCLUDE_SYSTEM_CONTEXT_VIEW_PERSON,
                     payload: {
                         person: createDefaultPerson(),
-                        viewIdentifier: view.identifier,
+                        view,
                         position
                     }
                 });
@@ -83,8 +84,10 @@ export const useWorkspaceEditorState = (dispatch: Dispatch<WorkspaceFlowAction>)
             case ElementType.SoftwareSystem:
                 dispatch({
                     type: ActionType.INCLUDE_SYSTEM_CONTEXT_VIEW_SOFTWARE_SYSTEM,
-                    payload: { softwareSystem: createDefaultSoftwareSystem(), viewIdentifier: view.identifier, position
-
+                    payload: {
+                        softwareSystem: createDefaultSoftwareSystem(),
+                        view,
+                        position
                     }
                 });
                 break;
@@ -102,7 +105,7 @@ export const useWorkspaceEditorState = (dispatch: Dispatch<WorkspaceFlowAction>)
                     type: ActionType.INCLUDE_CONTAINER_VIEW_PERSON,
                     payload: {
                         person: createDefaultPerson(),
-                        viewIdentifier: view.identifier,
+                        view,
                         position
                     }
                 });
@@ -112,7 +115,7 @@ export const useWorkspaceEditorState = (dispatch: Dispatch<WorkspaceFlowAction>)
                     type: ActionType.INCLUDE_CONTAINER_VIEW_SOFTWARE_SYSTEM,
                     payload: {
                         softwareSystem: createDefaultSoftwareSystem(),
-                        viewIdentifier: view.identifier,
+                        view,
                         position
                     }
                 });
@@ -122,7 +125,7 @@ export const useWorkspaceEditorState = (dispatch: Dispatch<WorkspaceFlowAction>)
                     type: ActionType.INCLUDE_CONTAINER_VIEW_CONTAINER,
                     payload: {
                         container: createDefaultContainer(),
-                        viewIdentifier: view.identifier,
+                        view,
                         softwareSystemIdentifier: view.softwareSystemIdentifier,
                         position
                     }
@@ -142,7 +145,7 @@ export const useWorkspaceEditorState = (dispatch: Dispatch<WorkspaceFlowAction>)
                     type: ActionType.INCLUDE_COMPONENT_VIEW_PERSON,
                     payload: {
                         person: createDefaultPerson(),
-                        viewIdentifier: view.identifier,
+                        view,
                         position
                     }
                 });
@@ -152,7 +155,7 @@ export const useWorkspaceEditorState = (dispatch: Dispatch<WorkspaceFlowAction>)
                     type: ActionType.INCLUDE_COMPONENT_VIEW_SOFTWARE_SYSTEM,
                     payload: {
                         softwareSystem: createDefaultSoftwareSystem(),
-                        viewIdentifier: view.identifier,
+                        view,
                         position
                     }
                 });
@@ -162,7 +165,7 @@ export const useWorkspaceEditorState = (dispatch: Dispatch<WorkspaceFlowAction>)
                     type: ActionType.INCLUDE_COMPONENT_VIEW_CONTAINER,
                     payload: {
                         container: createDefaultContainer(),
-                        viewIdentifier: view.identifier,
+                        view,
                         containerIdentifier: view.containerIdentifier,
                         position
                     }
@@ -173,7 +176,7 @@ export const useWorkspaceEditorState = (dispatch: Dispatch<WorkspaceFlowAction>)
                     type: ActionType.INCLUDE_COMPONENT_VIEW_COMPONENT,
                     payload: {
                         component: createDefaultComponent(),
-                        viewIdentifier: view.identifier,
+                        view,
                         containerIdentifier: view.containerIdentifier,
                         position
                     }
@@ -236,37 +239,36 @@ export const useWorkspaceEditorState = (dispatch: Dispatch<WorkspaceFlowAction>)
     }, [addElementToComponentView, addElementToContainerView, addElementToDeploymentView, addElementToSystemContextView, addElementToSystemLandscapeView]);
 
     const setElementPositionInView = useCallback((
-        viewType: ViewType,
-        viewIdentifier: Identifier,
+        view: ViewDefinition,
         elementIdentifier: Identifier,
         position: Position
     ) => {
-        switch (viewType) {
+        switch (view.type) {
             case ViewType.Model:
                 throw new Error("Not implemented");
                 break;
             case ViewType.SystemLandscape:
                 dispatch({
                     type: ActionType.SET_SYSTEM_LANDSCAPE_VIEW_ELEMENT_POSTION,
-                    payload: { viewIdentifier, elementIdentifier, position }
+                    payload: { view, elementIdentifier, position }
                 });
                 break;
             case ViewType.SystemContext:
                 dispatch({
                     type: ActionType.SET_SYSTEM_CONTEXT_VIEW_ELEMENT_POSTION,
-                    payload: { viewIdentifier, elementIdentifier, position }
+                    payload: { view, elementIdentifier, position }
                 });
                 break;
             case ViewType.Container:
                 dispatch({
                     type: ActionType.SET_CONTAINER_VIEW_ELEMENT_POSTION,
-                    payload: { viewIdentifier, elementIdentifier, position }
+                    payload: { view, elementIdentifier, position }
                 });
                 break;
             case ViewType.Component:
                 dispatch({
                     type: ActionType.SET_COMPONENT_VIEW_ELEMENT_POSTION,
-                    payload: { viewIdentifier, elementIdentifier, position }
+                    payload: { view, elementIdentifier, position }
                 });
                 break;
             case ViewType.Deployment:
@@ -492,32 +494,22 @@ export const useWorkspaceEditorState = (dispatch: Dispatch<WorkspaceFlowAction>)
 
     const onElementDragStop = useCallback((element: IElement, position: Position) => {
         if (view) {
-            setElementPositionInView(view?.type, view?.identifier, element.identifier, position);
+            setElementPositionInView(view, element.identifier, position);
         }
     }, [setElementPositionInView, view]);
 
+    const onElementDimensionsChange = useCallback((element: IElement, dimensions: Size) => {
+        console.log("onElementDimensionsChange", element, dimensions)
+    }, []);
+
     const onElementsConnect = useCallback((relationship: IRelationship) => {
         if (view) {
-            switch (view?.type) {
-                case ViewType.Model:
-                    break;
-                case ViewType.SystemLandscape:
-                    // addRelationship(connection.source, connection.target);
-                    break;
-                case ViewType.SystemContext:
-                    // addRelationship(connection.source, connection.target);
-                    break;
-                case ViewType.Container:
-                    // addRelationship(connection.source, connection.target);
-                    break;
-                case ViewType.Component:
-                    // addRelationship(connection.source, connection.target);
-                    break;
-                case ViewType.Deployment:
-                    break;
-            }
+            dispatch({
+                type: ActionType.ADD_MODEL_RELATIONSHIP,
+                payload: { relationship }
+            });
         }
-    }, [view]);
+    }, [view, dispatch]);
     
     const onViewFlowClick = useCallback((sourceElement: IElement, position: Position) => {
         switch (view?.type) {
@@ -546,6 +538,7 @@ export const useWorkspaceEditorState = (dispatch: Dispatch<WorkspaceFlowAction>)
         onElementDragStart,
         onElementDrag,
         onElementDragStop,
+        onElementDimensionsChange,
         onElementsConnect,
         onViewClick,
         onViewFlowClick

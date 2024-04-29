@@ -46,7 +46,7 @@ export const workspaceFlowReducer = (state: IWorkspaceSnapshot, action: Workspac
                 views: {
                     ...state.views,
                     systemContexts: state.views.systemContexts.map(systemContextView => 
-                        systemContextView.identifier === action.payload.viewIdentifier 
+                        systemContextView.key === action.payload.viewIdentifier 
                             ? {
                                 ...systemContextView,
                                 include: [...systemContextView.include, action.payload.person.identifier]
@@ -66,7 +66,7 @@ export const workspaceFlowReducer = (state: IWorkspaceSnapshot, action: Workspac
                 views: {
                     ...state.views,
                     systemContexts: state.views.systemContexts.map(systemContextView => 
-                        systemContextView.identifier === action.payload.viewIdentifier 
+                        systemContextView.key === action.payload.viewIdentifier 
                             ? {
                                 ...systemContextView,
                                 include: [...systemContextView.include, action.payload.softwareSystem.identifier]
@@ -86,7 +86,7 @@ export const workspaceFlowReducer = (state: IWorkspaceSnapshot, action: Workspac
                 views: {
                     ...state.views,
                     containers: state.views.containers.map(containerView => 
-                        containerView.identifier === action.payload.viewIdentifier 
+                        containerView.key === action.payload.viewIdentifier 
                             ? {
                                 ...containerView,
                                 include: [...containerView.include, action.payload.person.identifier]
@@ -106,7 +106,7 @@ export const workspaceFlowReducer = (state: IWorkspaceSnapshot, action: Workspac
                 views: {
                     ...state.views,
                     containers: state.views.containers.map(containerView => 
-                        containerView.identifier === action.payload.viewIdentifier 
+                        containerView.key === action.payload.viewIdentifier 
                             ? {
                                 ...containerView,
                                 include: [...containerView.include, action.payload.softwareSystem.identifier]
@@ -134,7 +134,7 @@ export const workspaceFlowReducer = (state: IWorkspaceSnapshot, action: Workspac
                 views: {
                     ...state.views,
                     containers: state.views.containers.map(containerView => 
-                        containerView.identifier === action.payload.viewIdentifier 
+                        containerView.key === action.payload.viewIdentifier 
                             ? {
                                 ...containerView,
                                 include: [...containerView.include, action.payload.container.identifier]
@@ -154,7 +154,7 @@ export const workspaceFlowReducer = (state: IWorkspaceSnapshot, action: Workspac
                 views: {
                     ...state.views,
                     components: state.views.components.map(componentView => 
-                        componentView.identifier === action.payload.viewIdentifier 
+                        componentView.key === action.payload.viewIdentifier 
                             ? {
                                 ...componentView,
                                 include: [...componentView.include, action.payload.person.identifier]
@@ -174,7 +174,7 @@ export const workspaceFlowReducer = (state: IWorkspaceSnapshot, action: Workspac
                 views: {
                     ...state.views,
                     components: state.views.components.map(componentView => 
-                        componentView.identifier === action.payload.viewIdentifier 
+                        componentView.key === action.payload.viewIdentifier 
                             ? {
                                 ...componentView,
                                 include: [...componentView.include, action.payload.softwareSystem.identifier]

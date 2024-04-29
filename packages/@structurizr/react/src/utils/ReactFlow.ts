@@ -3,11 +3,11 @@ import {
     IElement,
     IRelationship,
     ISupportVisitor,
-    IViewDefinition,
     IWorkspaceSnapshot,
     Position,
     Size,
-    Tag
+    Tag,
+    ViewDefinition
 } from "@structurizr/dsl";
 import {
     ReactFlowEdge,
@@ -119,7 +119,7 @@ export const createReactFlowModelEdge = (params: ModelRelationshipParams): React
 export const getReactFlowViewObject = (
     workspace: IWorkspaceSnapshot,
     strategy: ISupportVisitor,
-    view: IViewDefinition
+    view: ViewDefinition
 ): ReactFlowJsonObject => {
     const reactFlowBuilder = new ReactFlowBuilder();
     const reactFlowVisitor = new ReactFlowVisitor(

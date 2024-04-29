@@ -15,7 +15,7 @@ import { useCallback } from "react";
 import { createReactFlowViewEdge, createReactFlowViewNode } from "../utils";
 import { useWorkspace } from "./useWorkspace";
 
-export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
+export const useContainerView = (softwareSystemIdentifier: Identifier) => {
     const { setWorkspace } = useWorkspace();
     const { setNodes, setEdges } = useReactFlow();
     
@@ -31,13 +31,13 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
             const builder = new Workspace(workspace);
             builder.model.addPerson(person);
             builder.views.containers
-                .find(x => x.identifier === systemSoftwareIdentifier)
+                .find(x => x.softwareSystemIdentifier === softwareSystemIdentifier)
                 ?.addPerson(person, position);
             return builder.toSnapshot();
         });
 
         return person;
-    }, [systemSoftwareIdentifier, setNodes, setWorkspace]);
+    }, [softwareSystemIdentifier, setNodes, setWorkspace]);
     
     // NOTE: the software system added can either be an existing one or a new one
     // The existing system is included in the view, while the new one is also added to the model
@@ -51,13 +51,13 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
             const builder = new Workspace(workspace);
             builder.model.addSoftwareSystem(softwareSystem);
             builder.views.containers
-                .find(x => x.identifier === systemSoftwareIdentifier)
+                .find(x => x.softwareSystemIdentifier === softwareSystemIdentifier)
                 ?.addSoftwareSystem(softwareSystem, position);
             return builder.toSnapshot();
         });
 
         return softwareSystem;
-    }, [systemSoftwareIdentifier, setNodes, setWorkspace]);
+    }, [softwareSystemIdentifier, setNodes, setWorkspace]);
     
     const addContainer = useCallback((position: Position, groupId?: Identifier) => {
         const container = getDefaultElement(ElementType.Container) as Container;
@@ -66,21 +66,21 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
         const node = createReactFlowViewNode({
             element: container,
             position,
-            parentId: groupId ?? systemSoftwareIdentifier
+            parentId: groupId ?? softwareSystemIdentifier
         });
         setNodes(nodes => [...nodes, node]);
         setWorkspace(workspace => {
             const builder = new Workspace(workspace);
             builder.model
-                .findSoftwareSystem(systemSoftwareIdentifier)
+                .findSoftwareSystem(softwareSystemIdentifier)
                 .addContainer(container, groupId);
             builder.views.containers
-                .find(x => x.identifier === systemSoftwareIdentifier)
+                .find(x => x.softwareSystemIdentifier === softwareSystemIdentifier)
                 ?.addContainer(container, position);
             return builder.toSnapshot();
         });
         return container;
-    }, [systemSoftwareIdentifier, setNodes, setWorkspace]);
+    }, [softwareSystemIdentifier, setNodes, setWorkspace]);
     
     const addGroup = useCallback((position: Position) => {
         const group = getDefaultElement(ElementType.Group) as Group;
@@ -93,22 +93,22 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
                 height: 300,
                 width: 300,
             },
-            parentId: systemSoftwareIdentifier
+            parentId: softwareSystemIdentifier
         });
         setNodes(nodes => [...nodes, node]);
         setWorkspace(workspace => {
             const builder = new Workspace(workspace);
             builder.views.containers
-                .find(x => x.identifier === systemSoftwareIdentifier)
+                .find(x => x.softwareSystemIdentifier === softwareSystemIdentifier)
                 ?.addGroup(group, position);
                 builder.model
-                .findSoftwareSystem(systemSoftwareIdentifier)
+                .findSoftwareSystem(softwareSystemIdentifier)
                 .addGroup(group);
             return builder.toSnapshot();
         });
         
         return group;
-    }, [systemSoftwareIdentifier, setNodes, setWorkspace]);
+    }, [softwareSystemIdentifier, setNodes, setWorkspace]);
     
     const addRelationship = useCallback((sourceIdentifier: Identifier, targetIdentifier: Identifier) => {
         const relationship = new Relationship({
@@ -131,11 +131,11 @@ export const useContainerView = (systemSoftwareIdentifier: Identifier) => {
         setWorkspace(workspace => {
             const builder = new Workspace(workspace);
             builder.views.containers
-                .filter(x => x.identifier === systemSoftwareIdentifier)
+                .filter(x => x.softwareSystemIdentifier === softwareSystemIdentifier)
                 .forEach(x => x.setElementPosition(elementId, position));
             return builder.toSnapshot();
         });
-    }, [systemSoftwareIdentifier, setWorkspace]);
+    }, [softwareSystemIdentifier, setWorkspace]);
 
     return {
         addPerson,

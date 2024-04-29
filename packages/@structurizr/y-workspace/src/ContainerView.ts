@@ -31,9 +31,6 @@ export class ContainerView implements ISupportSnapshot<IContainerView> {
 
     public get type(): ViewType.Container { return ViewType.Container; }
 
-    public get identifier(): Identifier { return this.propertiesMap.get("identifier") as Identifier; }
-    public set identifier(value: Identifier) { this.propertiesMap.set("identifier", value); }
-
     public set softwareSystemIdentifier(value: Identifier) { this.propertiesMap.set("softwareSystemIdentifier", value); }
     public get softwareSystemIdentifier(): Identifier { return this.propertiesMap.get("softwareSystemIdentifier") as Identifier; }
     
@@ -57,7 +54,6 @@ export class ContainerView implements ISupportSnapshot<IContainerView> {
     public get properties(): Properties { return new Properties(this.propertiesMap.get("properties") as Y.Map<unknown>); }
 
     public fromSnapshot(containerView: IContainerView) {
-        this.identifier = containerView.identifier;
         this.softwareSystemIdentifier = containerView.softwareSystemIdentifier;
         this.key = containerView.key;
         this.title = containerView.title;
@@ -94,7 +90,6 @@ export class ContainerView implements ISupportSnapshot<IContainerView> {
     public toSnapshot(): IContainerView {
         return Object.freeze({
             type: this.type,
-            identifier: this.identifier,
             softwareSystemIdentifier: this.softwareSystemIdentifier,
             key: this.key,
             title: this.title,

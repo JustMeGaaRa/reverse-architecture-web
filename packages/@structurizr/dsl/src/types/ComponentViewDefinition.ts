@@ -1,6 +1,5 @@
-import { IComponentView, IElementMetadata, IRelationshipMetadata, ISupportSnapshot, IViewDefinition, IViewDefinitionMetadata } from "../interfaces";
+import { IComponentView, ISupportSnapshot, IViewDefinitionMetadata } from "../interfaces";
 import { AutoLayout } from "./AutoLayout";
-import { AutoLayoutDirection } from "./AutoLayoutDirection";
 import { Component } from "./Component";
 import { Container } from "./Container";
 import { ElementMetadata } from "./ElementMetadata";
@@ -13,13 +12,13 @@ import { SoftwareSystem } from "./SoftwareSystem";
 import { ViewType } from "./ViewType";
 
 type ComponentViewValues =
-    Required<Pick<IComponentView, "identifier">>
-    & Partial<Omit<IComponentView, "type" | "identifier">>;
+    Required<Pick<IComponentView, "key">>
+    & Partial<Omit<IComponentView, "type">>;
 
-export class ComponentViewDefinition implements IViewDefinition, ISupportSnapshot<IComponentView> {
+export class ComponentViewDefinition implements ISupportSnapshot<IComponentView> {
     constructor(values: ComponentViewValues) {
         this.type = ViewType.Component;
-        this.identifier = values.identifier;
+        this.containerIdentifier = values.containerIdentifier;
         this.key = values.key;
         this.description = values.description;
         this.include = values.include ?? [];
@@ -33,7 +32,6 @@ export class ComponentViewDefinition implements IViewDefinition, ISupportSnapsho
     }
 
     public type: ViewType.Component;
-    public identifier: string;
     public containerIdentifier: string;
     public key?: string;
     public include: Array<Identifier | All>;
@@ -46,19 +44,9 @@ export class ComponentViewDefinition implements IViewDefinition, ISupportSnapsho
     public elements: Array<ElementMetadata>;
     public relationships: Array<RelationshipMetadata>;
 
-    public static default(containerIdentifier: Identifier) {
-        return new ComponentViewDefinition({
-            identifier: containerIdentifier,
-            key: "default_system_landscape",
-            title: "System Landscape",
-            autoLayout: { direction: AutoLayoutDirection.TopBotom, rankSeparation: 300, nodeSeparation: 300 },
-        });
-    }
-
     public toSnapshot(): IComponentView {
         return {
             type: this.type,
-            identifier: this.identifier,
             containerIdentifier: this.containerIdentifier,
             key: this.key,
             include: this.include,

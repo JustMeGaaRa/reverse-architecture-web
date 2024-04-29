@@ -1,4 +1,4 @@
-import { emptyWorkspace, IWorkspaceSnapshot } from "@structurizr/dsl";
+import { createDefaultWorkspace, IWorkspaceSnapshot } from "@structurizr/dsl";
 import { Workspace, WorkspaceInfo, IWorkspaceInfo } from "@structurizr/y-workspace";
 import * as Y from "yjs";
 import { IndexeddbPersistence } from "y-indexeddb";
@@ -90,7 +90,7 @@ export const create = async (explorerDocument: Y.Doc, author: string, workspaceS
     
     // initialize workspace document with values from the snapshot
     const workspace = new Workspace(workspaceDocument);
-    workspace.fromSnapshot(workspaceSnapshot ?? emptyWorkspace());
+    workspace.fromSnapshot(workspaceSnapshot ?? createDefaultWorkspace());
 
     // add workspace documents to the root document
     const workspaceInfoMap = new Y.Map([["workspaceId", workspaceId]]);

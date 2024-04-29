@@ -7,32 +7,32 @@ export type AddComponentViewAction = Action<ActionType.ADD_COMPONENT_VIEW, {
 }>;
 
 export type SetComponentViewElementPositionAction = Action<ActionType.SET_COMPONENT_VIEW_ELEMENT_POSTION, {
-    viewIdentifier: string;
+    view: IComponentView;
     elementIdentifier: string;
     position: Position;
 }>;
 
 export type IncludeComponentViewPersonAction = Action<ActionType.INCLUDE_COMPONENT_VIEW_PERSON, {
-    viewIdentifier: string;
+    view: IComponentView;
     person: IPerson;
     position?: Position;
 }>;
 
 export type IncludeComponentViewSoftwareSystemAction = Action<ActionType.INCLUDE_COMPONENT_VIEW_SOFTWARE_SYSTEM, {
-    viewIdentifier: string;
+    view: IComponentView;
     softwareSystem: ISoftwareSystem;
     position?: Position;
 }>;
 
 export type IncludeComponentViewContainerAction = Action<ActionType.INCLUDE_COMPONENT_VIEW_CONTAINER, {
-    viewIdentifier: string;
+    view: IComponentView;
     containerIdentifier: string;
     container: IContainer;
     position?: Position;
 }>;
 
 export type IncludeComponentViewComponentAction = Action<ActionType.INCLUDE_COMPONENT_VIEW_COMPONENT, {
-    viewIdentifier: string;
+    view: IComponentView;
     containerIdentifier: string;
     component: IComponent;
     position?: Position;

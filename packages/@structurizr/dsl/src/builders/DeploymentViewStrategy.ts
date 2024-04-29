@@ -1,15 +1,15 @@
 import {
     IDeploymentNode,
+    IDeploymentView,
     IElementVisitor,
     IModel,
-    ISupportVisitor,
-    IViewDefinition
+    ISupportVisitor
 } from "../interfaces";
 
 export class DeploymentViewStrategy implements ISupportVisitor {
     constructor(
         private model: IModel,
-        private view: IViewDefinition,
+        private view: IDeploymentView,
         private environment: string
     ) {}
 

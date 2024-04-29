@@ -165,12 +165,11 @@ export const createRelationshipPropertiesMap = () => {
 export const createSystemLandscapeViewPropertiesMap = () => {
     const uniqueId = createUniqueIdentifier();
     const systemLandscapeMap = new Y.Map([
-        ["identifier", `system_landscape_${uniqueId}`],
-        ["key", ""],
-        ["description", ""],
-        ["include", ""],
-        ["exclude", ""],
+        ["key", `system_landscape_view_${uniqueId}`],
         ["title", ""],
+        ["description", ""],
+        ["include", new Y.Array<string>()],
+        ["exclude", new Y.Array<string>()],
         ["elements", new Y.Array<Y.Map<unknown>>()],
         ["relationships", new Y.Array<Y.Map<unknown>>()],
         ["autoLayout", new Y.Map<unknown>()],
@@ -183,13 +182,12 @@ export const createSystemLandscapeViewPropertiesMap = () => {
 export const createSoftwareContextViewPropertiesMap = () => {
     const uniqueId = createUniqueIdentifier();
     const systemContextMap = new Y.Map([
-        ["identifier", `system_context_${uniqueId}`],
         ["softwareSystemIdentifier", ""],
-        ["key", ""],
-        ["description", ""],
-        ["include", ""],
-        ["exclude", ""],
+        ["key", `system_context_view_${uniqueId}`],
         ["title", ""],
+        ["description", ""],
+        ["include", new Y.Array<string>()],
+        ["exclude", new Y.Array<string>()],
         ["elements", new Y.Array<Y.Map<unknown>>()],
         ["relationships", new Y.Array<Y.Map<unknown>>()],
         ["autoLayout", new Y.Map<unknown>()],
@@ -202,13 +200,12 @@ export const createSoftwareContextViewPropertiesMap = () => {
 export const createContainerViewPropertiesMap = () => {
     const uniqueId = createUniqueIdentifier();
     const containerViewMap = new Y.Map([
-        ["identifier", `container_${uniqueId}`],
         ["softwareSystemIdentifier", ""],
-        ["key", ""],
-        ["description", ""],
-        ["include", ""],
-        ["exclude", ""],
+        ["key", `container_view_${uniqueId}`],
         ["title", ""],
+        ["description", ""],
+        ["include", new Y.Array<string>()],
+        ["exclude", new Y.Array<string>()],
         ["elements", new Y.Array<Y.Map<unknown>>()],
         ["relationships", new Y.Array<Y.Map<unknown>>()],
         ["autoLayout", new Y.Map<unknown>()],
@@ -221,13 +218,12 @@ export const createContainerViewPropertiesMap = () => {
 export const createComponentViewPropertiesMap = () => {
     const uniqueId = createUniqueIdentifier();
     const componentViewMap = new Y.Map([
-        ["identifier", `component_${uniqueId}`],
         ["containerIdentifier", ""],
-        ["key", ""],
-        ["description", ""],
-        ["include", ""],
-        ["exclude", ""],
+        ["key", `component_view_${uniqueId}`],
         ["title", ""],
+        ["description", ""],
+        ["include", new Y.Array<string>()],
+        ["exclude", new Y.Array<string>()],
         ["elements", new Y.Array<Y.Map<unknown>>()],
         ["relationships", new Y.Array<Y.Map<unknown>>()],
         ["autoLayout", new Y.Map<unknown>()],
@@ -240,14 +236,13 @@ export const createComponentViewPropertiesMap = () => {
 export const createDeploymentViewPropertiesMap = () => {
     const uniqueId = createUniqueIdentifier();
     const deploymentViewMap = new Y.Map([
-        ["identifier", `deployment_${uniqueId}`],
         ["softwareSystemIdentifier", ""],
         ["environment", ""],
-        ["key", ""],
-        ["description", ""],
-        ["include", ""],
-        ["exclude", ""],
+        ["key", `deployment_view_${uniqueId}`],
         ["title", ""],
+        ["description", ""],
+        ["include", new Y.Array<string>()],
+        ["exclude", new Y.Array<string>()],
         ["elements", new Y.Array<Y.Map<unknown>>()],
         ["relationships", new Y.Array<Y.Map<unknown>>()],
         ["autoLayout", new Y.Map<unknown>()],

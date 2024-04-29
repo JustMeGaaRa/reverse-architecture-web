@@ -1,10 +1,10 @@
-import { Node } from "@reactflow/core";
 import {
     IElement,
     IRelationship,
-    IViewDefinition,
     IWorkspaceSnapshot,
     Position,
+    Size,
+    ViewDefinition,
     ViewType
 } from "@structurizr/dsl";
 import {
@@ -41,12 +41,13 @@ import { ElementOptionsToolbar } from "./ElementOptionsToolbar";
 
 export const WorkspaceRenderer: FC<PropsWithChildren<{
     workspace: IWorkspaceSnapshot;
-    view: IViewDefinition;
+    view: ViewDefinition;
     discussions?: CommentThread[];
     onElementClick?: (element: IElement, relativePosition: Position) => void;
     onElementDragStart?: (element: IElement) => void;
     onElementDrag?: (element: IElement) => void;
     onElementDragStop?: (element: IElement, position: Position) => void;
+    onElementDimensionsChange?: (element: IElement, dimensions: Size) => void;
     onElementsConnect?: (relationship: IRelationship) => void;
     onViewClick?: (relativePosition: Position) => void;
     onViewFlowClick?: (sourceElement: IElement, relativePosition: Position) => void;
@@ -58,6 +59,7 @@ export const WorkspaceRenderer: FC<PropsWithChildren<{
     onElementDragStart,
     onElementDrag,
     onElementDragStop,
+    onElementDimensionsChange,
     onElementsConnect,
     onViewClick,
     onViewFlowClick
@@ -69,6 +71,7 @@ export const WorkspaceRenderer: FC<PropsWithChildren<{
             onElementDragStart={onElementDragStart}
             onElementDrag={onElementDrag}
             onElementDragStop={onElementDragStop}
+            onElementDimensionsChange={onElementDimensionsChange}
             onElementsConnect={onElementsConnect}
             onViewClick={onViewClick}
         >
@@ -133,50 +136,35 @@ export const WorkspaceRenderer: FC<PropsWithChildren<{
             )}
             <Views>
                 {view !== undefined && view.type === ViewType.SystemLandscape && (
-                    <SystemLandscapeView
-                        key={workspace.views.systemLandscape?.identifier}
-                        view={workspace?.views.systemLandscape}
-                    >
+                    <SystemLandscapeView view={[workspace.views.systemLandscape].find(x => x.key === view.key) ?? view}>
                         <ElementViewNavigationControls />
                         <ElementDiagramFlowControls onHandleClick={onViewFlowClick} />
                         <ElementOptionsToolbar />
                     </SystemLandscapeView>
                 )}
                 {view !== undefined && view.type === ViewType.SystemContext && (
-                    <SystemContextView
-                        key={view.identifier}
-                        view={workspace.views.systemContexts.find(view => view.identifier === view.identifier)}
-                    >
+                    <SystemContextView view={workspace.views.systemContexts.find(x => x.key === view.key) ?? view}>
                         <ElementViewNavigationControls />
                         <ElementDiagramFlowControls onHandleClick={onViewFlowClick} />
                         <ElementOptionsToolbar />
                     </SystemContextView>
                 )}
                 {view !== undefined && view.type === ViewType.Container && (
-                    <ContainerView
-                        key={view.identifier}
-                        view={workspace.views.containers.find(view => view.identifier === view.identifier)}
-                    >
+                    <ContainerView view={workspace.views.containers.find(x => x.key === view.key) ?? view}>
                         <ElementViewNavigationControls />
                         <ElementDiagramFlowControls onHandleClick={onViewFlowClick} />
                         <ElementOptionsToolbar />
                     </ContainerView>
                 )}
                 {view !== undefined && view.type === ViewType.Component && (
-                    <ComponentView
-                        key={view.identifier}
-                        view={workspace.views.components.find(view => view.identifier === view?.identifier)}
-                    >
+                    <ComponentView view={workspace.views.components.find(x => x.key === view.key) ?? view}>
                         <ElementViewNavigationControls />
                         <ElementDiagramFlowControls onHandleClick={onViewFlowClick} />
                         <ElementOptionsToolbar />
                     </ComponentView>
                 )}
                 {view !== undefined && view.type === ViewType.Deployment && (
-                    <DeploymentView
-                        key={view.identifier}
-                        view={workspace.views.deployments.find(view => view.identifier === view?.identifier)}
-                    >
+                    <DeploymentView view={workspace.views.deployments.find(x => x.key === view.key) ?? view}>
                         <ElementViewNavigationControls />
                         <ElementDiagramFlowControls onHandleClick={onViewFlowClick} />
                         <ElementOptionsToolbar />

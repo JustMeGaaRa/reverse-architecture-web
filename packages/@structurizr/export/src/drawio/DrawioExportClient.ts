@@ -7,9 +7,10 @@ import {
     ContainerViewStrategy,
     DeploymentViewStrategy,
     ISupportVisitor,
-    IViewDefinition,
     IWorkspaceSnapshot,
-    SystemContextViewStrategy
+    SystemContextViewStrategy,
+    SystemLandscapeViewStrategy,
+    ViewDefinition
 } from "@structurizr/dsl";
 import { DrawioExportVisitor } from "./DrawioExportVisitor";
 import { DrawioDiagramBuilder } from "./DrawioDiagramBuilder";
@@ -19,7 +20,7 @@ import { v4 } from "uuid";
 
 export class DrawioExportClient implements IExportClient {
     export(workspace: IWorkspaceSnapshot): string {
-        const createView = (view: IViewDefinition, client: ISupportVisitor) => {
+        const createView = (view: ViewDefinition, client: ISupportVisitor) => {
             const defaultParent: MXCell = {
                 _id: v4()
             };
@@ -28,7 +29,7 @@ export class DrawioExportClient implements IExportClient {
                 _parent: defaultParent._id
             };
             
-            const builder = new DrawioDiagramBuilder(`[${view.type}] ${view.title}`);
+            const builder = new DrawioDiagramBuilder(`[${view.type}] ${view["title"]}`);
             const visitor = new DrawioExportVisitor(view, defaultParent1._id, builder);
             builder.addMxCells(defaultParent);
             builder.addMxCells(defaultParent1);
@@ -46,7 +47,7 @@ export class DrawioExportClient implements IExportClient {
                 _host: "reversearchitecture.io",
                 _type: "browser",
                 diagram: [
-                    createView(workspace.views.systemLandscape, new SystemContextViewStrategy(workspace.model, workspace.views.systemLandscape)),
+                    createView(workspace.views.systemLandscape, new SystemLandscapeViewStrategy(workspace.model, workspace.views.systemLandscape)),
                     ...workspace.views.systemContexts.map(view => {
                         return createView(view, new SystemContextViewStrategy(workspace.model, view))
                     }),

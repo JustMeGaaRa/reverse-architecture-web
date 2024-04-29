@@ -175,28 +175,28 @@ export class StructurizrExportVisitor implements IElementVisitor {
 
     visitSystemContextView(view: ISystemContextView): string[] {
         return formatStatement(
-            `systemContext ${view.identifier} "${view.key}"`,
+            `systemContext ${view.softwareSystemIdentifier} "${view.key}"`,
             ["include *", "autoLayout"]
         );
     }
 
     visitContainerView(view: IContainerView): string[] {
         return formatStatement(
-            `container ${view.identifier} "${view.key}"`,
+            `container ${view.softwareSystemIdentifier} "${view.key}"`,
             ["include *", "autoLayout"]
         );
     }
 
     visitComponentView(view: IComponentView): string[] {
         return formatStatement(
-            `component ${view.identifier} "${view.key}"`,
+            `component ${view.containerIdentifier} "${view.key}"`,
             ["include *", "autoLayout"]
         );
     }
 
     visitDeploymentView(view: IDeploymentView): string[] {
         return formatStatement(
-            `deployment ${view.identifier} "${view.environment}" "${view.key}"`,
+            `deployment ${view.softwareSystemIdentifier} "${view.environment}" "${view.key}"`,
             ["include *", "autoLayout"]
         );
     }

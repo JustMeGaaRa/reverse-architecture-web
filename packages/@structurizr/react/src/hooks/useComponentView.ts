@@ -32,7 +32,7 @@ export const useComponentView = (containerIdentifier: Identifier) => {
             const builder = new Workspace(workspace);
             builder.model.addPerson(person);
             builder.views.components
-                .find(x => x.identifier === containerIdentifier)
+                .find(x => x.containerIdentifier === containerIdentifier)
                 ?.addPerson(person, position);
             return builder.toSnapshot();
         });
@@ -52,7 +52,7 @@ export const useComponentView = (containerIdentifier: Identifier) => {
             const builder = new Workspace(workspace);
             builder.model.addSoftwareSystem(softwareSystem);
             builder.views.components
-                .find(x => x.identifier === containerIdentifier)
+                .find(x => x.containerIdentifier === containerIdentifier)
                 ?.addSoftwareSystem(softwareSystem, position);
             return builder.toSnapshot();
         });
@@ -74,7 +74,7 @@ export const useComponentView = (containerIdentifier: Identifier) => {
                 .findContainerParent(containerIdentifier)
                 .addContainer(container);
             builder.views.components
-                .find(x => x.identifier === containerIdentifier)
+                .find(x => x.containerIdentifier === containerIdentifier)
                 ?.addContainer(container, position);
             return builder.toSnapshot();
         });
@@ -98,7 +98,7 @@ export const useComponentView = (containerIdentifier: Identifier) => {
                 .findContainer(containerIdentifier)
                 .addComponent(component, groupId);
             builder.views.components
-                .find(x => x.identifier === containerIdentifier)
+                .find(x => x.containerIdentifier === containerIdentifier)
                 ?.addComponent(component, position);
             return builder.toSnapshot();
         });
@@ -126,7 +126,7 @@ export const useComponentView = (containerIdentifier: Identifier) => {
                 .findContainer(containerIdentifier)
                 .addGroup(group);
             builder.views.components
-                .find(x => x.identifier === containerIdentifier)
+                .find(x => x.containerIdentifier === containerIdentifier)
                 ?.addGroup(group, position);
             return builder.toSnapshot();
         });
@@ -155,7 +155,7 @@ export const useComponentView = (containerIdentifier: Identifier) => {
         setWorkspace(workspace => {
             const builder = new Workspace(workspace);
             builder.views.components
-                .filter(x => x.identifier === containerIdentifier)
+                .filter(x => x.containerIdentifier === containerIdentifier)
                 .forEach(x => x.setElementPosition(elementId, position));
             return builder.toSnapshot();
         });

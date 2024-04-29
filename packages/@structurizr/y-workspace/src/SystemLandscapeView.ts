@@ -34,9 +34,6 @@ export class SystemLandscapeView implements ISupportSnapshot<ISystemLandscapeVie
     ) { }
 
     public get type(): ViewType.SystemLandscape { return ViewType.SystemLandscape; }
-
-    public get identifier(): Identifier { return this.propertiesMap.get("identifier") as Identifier; }
-    public set identifier(value: Identifier) { this.propertiesMap.set("identifier", value); }
     
     public get key(): string { return this.propertiesMap.get("key") as string; }
     public set key(value: string) { this.propertiesMap.set("key", value); }
@@ -58,7 +55,6 @@ export class SystemLandscapeView implements ISupportSnapshot<ISystemLandscapeVie
     public get properties(): Properties { return new Properties(this.propertiesMap.get("properties") as Y.Map<unknown>); }
 
     public fromSnapshot(systemLandscapeView: ISystemLandscapeView) {
-        this.identifier = systemLandscapeView.identifier;
         this.key = systemLandscapeView.key;
         this.title = systemLandscapeView.title;
         this.description = systemLandscapeView.description;
@@ -94,7 +90,6 @@ export class SystemLandscapeView implements ISupportSnapshot<ISystemLandscapeVie
     public toSnapshot(): ISystemLandscapeView {
         return Object.freeze({
             type: this.type,
-            identifier: this.identifier,
             key: this.key,
             title: this.title,
             description: this.description,

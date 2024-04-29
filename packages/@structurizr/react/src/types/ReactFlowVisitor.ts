@@ -1,7 +1,6 @@
 import {
     findContainer,
     findSoftwareSystem,
-    IViewDefinition,
     IElementVisitor,
     ViewType,
     IGroup,
@@ -20,6 +19,8 @@ import {
     foldStyles,
     IWorkspaceSnapshot,
     ModelViewStrategy,
+    ViewDefinition,
+    Tag,
 } from "@structurizr/dsl";
 import {
     createReactFlowViewNode,
@@ -35,7 +36,7 @@ export class ReactFlowVisitor implements IElementVisitor {
     constructor(
         private model: IModel,
         private configuration: IConfiguration,
-        private selectedView: IViewDefinition,
+        private selectedView: ViewDefinition,
         private builder: ReactFlowBuilder
     ) { }
 
@@ -68,7 +69,7 @@ export class ReactFlowVisitor implements IElementVisitor {
     
     visitSoftwareSystem(softwareSystem: ISoftwareSystem, params?: { parentId?: string }): void {
         const isBoundary = this.selectedView.type === ViewType.Container
-            && softwareSystem.identifier === this.selectedView.identifier;
+            && softwareSystem.identifier === this.selectedView.softwareSystemIdentifier;
         const box = getElementBox(this.configuration, this.selectedView, softwareSystem);
             
         const node = createReactFlowViewNode({
@@ -76,14 +77,14 @@ export class ReactFlowVisitor implements IElementVisitor {
             isBoundary,
             parentId: params?.parentId,
             position: box,
-            size: box
+            size: isBoundary ? { height: 400, width: 400 } : box
         });
         this.builder.addNode(node);
     }
 
     visitContainer(container: IContainer, params?: { parentId?: string }): void {
         const isBoundary = this.selectedView.type === ViewType.Component
-            && container.identifier === this.selectedView.identifier;
+            && container.identifier === this.selectedView.containerIdentifier;
         const box = getElementBox(this.configuration, this.selectedView, container);
         
         const node = createReactFlowViewNode({
@@ -91,7 +92,7 @@ export class ReactFlowVisitor implements IElementVisitor {
             isBoundary,
             parentId: params?.parentId,
             position: box,
-            size: box
+            size: isBoundary ? { height: 400, width: 400 } : box
         });
         this.builder.addNode(node);
     }
@@ -159,7 +160,7 @@ export class ReactFlowVisitor implements IElementVisitor {
 
 const getElementBox = (
     configuration: IConfiguration,
-    view: IViewDefinition,
+    view: ViewDefinition,
     element: IElement,
     elementId?: string
 ) => {
@@ -201,8 +202,8 @@ export class ReactFlowModelVisitor implements IElementVisitor {
                 name: workspace.name,
                 description: "Model",
                 tags: [
-                    { name: "Element" },
-                    { name: "Workspace" }
+                    { name: Tag.Element.name },
+                    { name: Tag.Workspace.name }
                 ]
             },
             elementChildrenCount: (workspace.model.people.length + workspace.model.softwareSystems.length),

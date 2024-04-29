@@ -11,7 +11,7 @@ export class Views implements ISupportSnapshot<IViews> {
     constructor(params: IViews) {
         this.systemLandscape = params.systemLandscape
             ? new SystemLandscapeViewDefinition(params.systemLandscape)
-            : new SystemLandscapeViewDefinition({ identifier: "" });
+            : new SystemLandscapeViewDefinition({ });
         this.systemContexts = params.systemContexts
             ? params.systemContexts.map(s => new SystemContextViewDefinition(s))
             : [];

@@ -7,7 +7,6 @@ import {
     IElement,
     Tag,
     IElementVisitor,
-    IViewDefinition,
     IElementMetadata,
     IComponent,
     IContainer,
@@ -19,7 +18,8 @@ import {
     IGroup,
     IPerson,
     IRelationship,
-    IWorkspaceSnapshot
+    IWorkspaceSnapshot,
+    ViewDefinition
 } from "@structurizr/dsl";
 import { ElementHtmlUtils } from "./utils";
 import {
@@ -32,7 +32,7 @@ import { DrawioDiagramBuilder } from "./DrawioDiagramBuilder";
 
 export class DrawioExportVisitor implements IElementVisitor {
     constructor(
-        private view: IViewDefinition,
+        private view: ViewDefinition,
         private parentId: string | undefined,
         private builder: DrawioDiagramBuilder
     ) {}

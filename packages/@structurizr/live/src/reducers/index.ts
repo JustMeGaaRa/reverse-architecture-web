@@ -54,7 +54,7 @@ export const createCollaborativeWorkspaceReducer = (document: Y.Doc): Reducer<IW
                     .addPerson()
                     .fromSnapshot(action.payload.person);
                 yworkspace.views.systemContexts
-                    .find(view => view.identifier === view.identifier)
+                    .find(view => view.key === view.key)
                     ?.includeElement(action.payload.person.identifier, action.payload.position);
                 break;
             case ActionType.INCLUDE_SYSTEM_CONTEXT_VIEW_SOFTWARE_SYSTEM:
@@ -62,7 +62,7 @@ export const createCollaborativeWorkspaceReducer = (document: Y.Doc): Reducer<IW
                     .addSoftwareSystem()
                     .fromSnapshot(action.payload.softwareSystem);
                 yworkspace.views.systemContexts
-                    .find(view => view.identifier === view.identifier)
+                    .find(view => view.key === view.key)
                     ?.includeElement(action.payload.softwareSystem.identifier, action.payload.position);
                 break;
             
@@ -71,7 +71,7 @@ export const createCollaborativeWorkspaceReducer = (document: Y.Doc): Reducer<IW
                     .addPerson()
                     .fromSnapshot(action.payload.person);
                 yworkspace.views.containers
-                    .find(view => view.identifier === view.identifier)
+                    .find(view => view.key === view.key)
                     ?.includeElement(action.payload.person.identifier, action.payload.position);
                 break;
             case ActionType.INCLUDE_CONTAINER_VIEW_SOFTWARE_SYSTEM:
@@ -79,7 +79,7 @@ export const createCollaborativeWorkspaceReducer = (document: Y.Doc): Reducer<IW
                     .addSoftwareSystem()
                     .fromSnapshot(action.payload.softwareSystem);
                 yworkspace.views.containers
-                    .find(view => view.identifier === view.identifier)
+                    .find(view => view.key === view.key)
                     ?.includeElement(action.payload.softwareSystem.identifier, action.payload.position);
                 break;
 
@@ -90,7 +90,7 @@ export const createCollaborativeWorkspaceReducer = (document: Y.Doc): Reducer<IW
                     .addContainer()
                     .fromSnapshot(action.payload.container);
                 yworkspace.views.components
-                    .find(view => view.identifier === view.identifier)
+                    .find(view => view.key === view.key)
                     ?.includeElement(action.payload.container.identifier, action.payload.position);
                 break;
             default:

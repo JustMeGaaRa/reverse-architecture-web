@@ -7,7 +7,7 @@ import {
     ToolbarSubmenuTrigger
 } from "@restruct/ui";
 import { ElementType, ViewType } from "@structurizr/dsl";
-import { WorkspacePanel } from "@structurizr/react";
+import { useAutoLayout, WorkspacePanel } from "@structurizr/react";
 import { usePresentationMode, useWorkspaceRoom } from "@structurizr/live";
 import {
     ChatPlusIn,
@@ -22,7 +22,8 @@ import {
     Play,
     User,
     Text,
-    Xmark
+    Xmark,
+    LayoutLeft
 } from "iconoir-react";
 import { FC, useCallback } from "react";
 import {
@@ -72,7 +73,10 @@ export const WorkspaceActionsToolbar: FC<{ isVisible?: boolean; }> = ({ isVisibl
 
                     <TextEditModeButton />
                     {!presentationEnabled && currentView?.type !== ViewType.Model && (
-                        <ConnectModeButton />
+                        <>
+                            <AutoLayoutButton />
+                            <ConnectModeButton />
+                        </>
                     )}
                     <CommentingModeButton />
                 </ToolbarSection>
@@ -117,6 +121,25 @@ export const PresentationModeButton: FC = () => {
                 icon={<Play />}
                 title={"start presenting"}
                 onClick={handleOnStartPresenting}
+            />
+        </Tooltip>
+    )
+}
+
+export const AutoLayoutButton: FC = () => {
+    const { autoLayout } = useAutoLayout();
+
+    const handleOnAutoLayout = useCallback(() => {
+        autoLayout();
+    }, [autoLayout]);
+
+    return (
+        <Tooltip label={"Auto Layout"}>
+            <IconButton
+                aria-label={"auto layout"}
+                icon={<Icon as={LayoutLeft} boxSize={6} />}
+                title={"auto layout"}
+                onClick={handleOnAutoLayout}
             />
         </Tooltip>
     )

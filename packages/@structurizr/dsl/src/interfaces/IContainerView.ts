@@ -1,15 +1,13 @@
 import { All, Identifier, ViewType } from "../types";
-import { IViewDefinition } from "./IViewDefinition";
-import { IRelationshipMetadata } from "./IRelationshipMetadata";
+import { IAutoLayout } from "./IAutoLayout";
 import { IElementMetadata } from "./IElementMetadata";
 import { IProperties } from "./IProperties";
-import { IAutoLayout } from "./IAutoLayout";
+import { IRelationshipMetadata } from "./IRelationshipMetadata";
 
-export interface IContainerView extends IViewDefinition {
+export interface IContainerView {
     type: ViewType.Container;
-    identifier: string;
     softwareSystemIdentifier: Identifier;
-    key?: string;
+    key: string;
     include?: Array<Identifier | All>;
     exclude?: Array<Identifier>;
     autoLayout?: IAutoLayout;

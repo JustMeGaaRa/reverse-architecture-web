@@ -1,6 +1,5 @@
-import { IContainerView, IElementMetadata, IRelationshipMetadata, ISupportSnapshot, IViewDefinition, IViewDefinitionMetadata } from "../interfaces";
+import { IContainerView, ISupportSnapshot, IViewDefinitionMetadata } from "../interfaces";
 import { AutoLayout } from "./AutoLayout";
-import { AutoLayoutDirection } from "./AutoLayoutDirection";
 import { Container } from "./Container";
 import { ElementMetadata } from "./ElementMetadata";
 import { Group } from "./Group";
@@ -12,13 +11,13 @@ import { SoftwareSystem } from "./SoftwareSystem";
 import { ViewType } from "./ViewType";
 
 type ContainerViewValues =
-    Required<Pick<IContainerView, "identifier">>
-    & Partial<Omit<IContainerView, "type" | "identifier">>;
+    Required<Pick<IContainerView, "key">>
+    & Partial<Omit<IContainerView, "type">>;
 
-export class ContainerViewDefinition implements IViewDefinition, ISupportSnapshot<IContainerView> {
+export class ContainerViewDefinition implements ISupportSnapshot<IContainerView> {
     constructor(values: ContainerViewValues) {
         this.type = ViewType.Container;
-        this.identifier = values.identifier;
+        this.softwareSystemIdentifier = values.softwareSystemIdentifier;
         this.key = values.key;
         this.description = values.description;
         this.include = values.include ?? [];
@@ -32,9 +31,8 @@ export class ContainerViewDefinition implements IViewDefinition, ISupportSnapsho
     }
 
     public type: ViewType.Container;
-    public identifier: string;
     public softwareSystemIdentifier: string;
-    public key?: string;
+    public key: string;
     public include: Array<Identifier | All>;
     public exclude: Array<Identifier>;
     public autoLayout?: AutoLayout;
@@ -45,23 +43,9 @@ export class ContainerViewDefinition implements IViewDefinition, ISupportSnapsho
     public elements: Array<ElementMetadata>;
     public relationships: Array<RelationshipMetadata>;
 
-    public static default(softwareSystemIdentifier: Identifier) {
-        return new ContainerViewDefinition({
-            identifier: softwareSystemIdentifier,
-            key: "default_container",
-            title: "Container",
-            autoLayout: {
-                direction: AutoLayoutDirection.TopBotom,
-                rankSeparation: 300,
-                nodeSeparation: 300
-            }
-        });
-    }
-
     public toSnapshot(): IContainerView {
         return {
             type: this.type,
-            identifier: this.identifier,
             softwareSystemIdentifier: this.softwareSystemIdentifier,
             key: this.key,
             include: this.include,

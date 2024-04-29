@@ -1,9 +1,9 @@
-import { IViewDefinition } from "@structurizr/dsl";
+import { ViewDefinition } from "@structurizr/dsl";
 import { useEffect } from "react";
 import { useWorkspaceNavigation } from "./useWorkspaceNavigation";
 
 type CurrentViewCallbacks = {
-    onChange?: (view: IViewDefinition) => void;
+    onChange?: (view: ViewDefinition) => void;
 }
 
 export const useOnUserViewChange = (callbacks: CurrentViewCallbacks) => {

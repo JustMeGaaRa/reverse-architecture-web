@@ -31,9 +31,6 @@ export class ComponentView implements ISupportSnapshot<IComponentView> {
 
     public get type(): ViewType.Component { return ViewType.Component; }
 
-    public get identifier(): Identifier { return this.propertiesMap.get("identifier") as Identifier; }
-    public set identifier(value: Identifier) { this.propertiesMap.set("identifier", value); }
-
     public get containerIdentifier(): Identifier { return this.propertiesMap.get("containerIdentifier") as Identifier; }
     public set containerIdentifier(value: Identifier) { this.propertiesMap.set("containerIdentifier", value); }
 
@@ -57,7 +54,6 @@ export class ComponentView implements ISupportSnapshot<IComponentView> {
     public get properties(): Properties { return new Properties(this.propertiesMap.get("properties") as Y.Map<unknown>); }
 
     public fromSnapshot(componentView: IComponentView) {
-        this.identifier = componentView.identifier;
         this.containerIdentifier = componentView.containerIdentifier;
         this.key = componentView.key;
         this.title = componentView.title;
@@ -94,7 +90,6 @@ export class ComponentView implements ISupportSnapshot<IComponentView> {
     public toSnapshot(): IComponentView {
         return Object.freeze({
             type: this.type,
-            identifier: this.identifier,
             containerIdentifier: this.containerIdentifier,
             key: this.key,
             title: this.title,

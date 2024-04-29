@@ -1,23 +1,19 @@
-import { ISupportSnapshot, IViewDefinitionMetadata, IElementMetadata, IRelationshipMetadata, IViewsMetadata, IWorkspaceMetadata } from "../interfaces";
-import { Identifier } from "./Identifier";
+import { IElementMetadata, IRelationshipMetadata, ISupportSnapshot, IViewDefinitionMetadata, IViewsMetadata, IWorkspaceMetadata } from "../interfaces";
 import { Position } from "./Position";
 
 export class ViewDefinitionMetadata implements ISupportSnapshot<IViewDefinitionMetadata> {
     constructor(values: IViewDefinitionMetadata) {
-        this.identifier = values.identifier;
         this.key = values.key;
         this.elements = values.elements ?? [];
         this.relationships = values.relationships ?? [];
     }
-
-    public identifier: Identifier;
+    
     public key?: string;
     public elements: Array<IElementMetadata>;
     public relationships: Array<IRelationshipMetadata>;
 
     public toSnapshot(): IViewDefinitionMetadata {
         return {
-            identifier: this.identifier,
             key: this.key,
             elements: this.elements,
             relationships: this.relationships

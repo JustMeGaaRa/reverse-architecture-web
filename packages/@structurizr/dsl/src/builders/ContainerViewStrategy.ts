@@ -1,11 +1,11 @@
 import {
     IContainer,
+    IContainerView,
     IElementVisitor,
     IModel,
     IPerson,
     ISoftwareSystem,
-    ISupportVisitor,
-    IViewDefinition
+    ISupportVisitor
 } from "../interfaces";
 import {
     elementIncludedInView,
@@ -17,7 +17,7 @@ import {
 export class ContainerViewStrategy implements ISupportVisitor {
     constructor(
         private model: IModel,
-        private view: IViewDefinition,
+        private view: IContainerView,
     ) {}
 
     accept(visitor: IElementVisitor): void {
@@ -68,7 +68,7 @@ export class ContainerViewStrategy implements ISupportVisitor {
 
         // 2.1. iterate over all software systems and find software system for the view
         softwareSystems
-            .filter(softwareSystem => softwareSystem.identifier === this.view.identifier)
+            .filter(softwareSystem => softwareSystem.identifier === this.view.softwareSystemIdentifier)
             .forEach(softwareSystem => {
                 // 2.1.1. include the software system as a boundary element
                 visitor.visitSoftwareSystem(softwareSystem);

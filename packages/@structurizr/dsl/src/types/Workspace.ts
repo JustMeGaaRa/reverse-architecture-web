@@ -58,16 +58,16 @@ export class Workspace implements ISupportSnapshot<IWorkspaceSnapshot> {
             this.views.systemLandscape.applyMetadata(metadata.views.systemLandscape);
         }
         metadata.views.systemContexts.forEach(view => {
-            this.views.systemContexts.find(x => x.identifier === view.identifier)?.applyMetadata(view);
+            this.views.systemContexts.find(x => x.key === view.key)?.applyMetadata(view);
         })
         metadata.views.containers.forEach(view => {
-            this.views.containers.find(x => x.identifier === view.identifier)?.applyMetadata(view);
+            this.views.containers.find(x => x.key === view.key)?.applyMetadata(view);
         })
         metadata.views.components.forEach(view => {
-            this.views.components.find(x => x.identifier === view.identifier)?.applyMetadata(view);
+            this.views.components.find(x => x.key === view.key)?.applyMetadata(view);
         })
         metadata.views.deployments.forEach(view => {
-            this.views.deployments.find(x => x.identifier === view.identifier)?.applyMetadata(view);
+            this.views.deployments.find(x => x.key === view.key)?.applyMetadata(view);
         })
         return this;
     }

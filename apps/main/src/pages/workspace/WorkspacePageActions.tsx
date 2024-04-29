@@ -12,7 +12,7 @@ import {
     PageSidebarSectionPortal,
     usePageSidebar
 } from "@restruct/ui";
-import { getDefaultView, ViewType } from "@structurizr/dsl";
+import { createDefaultModelView, ViewType } from "@structurizr/dsl";
 import { useWorkspace } from "@structurizr/react";
 import { useFollowUserMode, useWorkspaceRoom } from "@structurizr/live";
 import {
@@ -98,7 +98,7 @@ export const WorkspacePageActions: FC = () => {
 
     const handleOnClickModelingMode = useCallback(() => {
         setMode(WorkspaceContentMode.Modeling);
-        setCurrentView(getDefaultView(ViewType.Model, ""));
+        setCurrentView(createDefaultModelView());
     }, [setCurrentView]);
 
     const handleOnClickDeploymentMode = useCallback(() => {

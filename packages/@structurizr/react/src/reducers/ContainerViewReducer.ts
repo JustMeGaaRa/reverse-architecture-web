@@ -3,6 +3,9 @@ import { ActionType, ContainerViewAction } from "../actions";
 
 export const containerViewReducer = (state: IContainerView, action: ContainerViewAction): IContainerView => {
     switch (action.type) {
+        case ActionType.ADD_CONTAINER_VIEW:
+            return action.payload.view;
+            
         case ActionType.SET_CONTAINER_VIEW_ELEMENT_POSTION:
             return {
                 ...state,

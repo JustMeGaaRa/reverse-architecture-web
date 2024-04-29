@@ -1,12 +1,12 @@
 import {
     IComponent,
+    IComponentView,
     IContainer,
     IElementVisitor,
     IModel,
     IPerson,
     ISoftwareSystem,
-    ISupportVisitor,
-    IViewDefinition
+    ISupportVisitor
 } from "../interfaces";
 import {
     elementIncludedInView,
@@ -18,7 +18,7 @@ import {
 export class ComponentViewStrategy implements ISupportVisitor {
     constructor(
         private model: IModel,
-        private view: IViewDefinition,
+        private view: IComponentView,
     ) {}
 
     accept(visitor: IElementVisitor): void {
@@ -82,7 +82,7 @@ export class ComponentViewStrategy implements ISupportVisitor {
         
         // 3.1. iterate over all containers to find the one for the view
         containers
-            .filter(container => container.identifier === this.view.identifier)
+            .filter(container => container.identifier === this.view.containerIdentifier)
             .forEach(container => {
                 // 3.1.1. include the current container
                 visitor.visitContainer(container);

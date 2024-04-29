@@ -3,6 +3,9 @@ import { ActionType, SystemContextViewAction } from "../actions";
 
 export const systemContextViewReducer = (state: ISystemContextView, action: SystemContextViewAction): ISystemContextView => {
     switch (action.type) {
+        case ActionType.ADD_SYSTEM_CONTEXT_VIEW:
+            return action.payload.view;
+
         case ActionType.SET_SYSTEM_CONTEXT_VIEW_ELEMENT_POSTION:
             return {
                 ...state,
