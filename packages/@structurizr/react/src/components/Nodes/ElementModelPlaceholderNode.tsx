@@ -4,7 +4,7 @@ import { FC, PropsWithChildren, useMemo } from "react";
 import { ElementVariant } from "../../contexts";
 import { getVariantStyles, useWorkspace } from "../../hooks";
 import { ReverseArchitectureElementStyle } from "../../types";
-import { ElementNumberLabel, ElementTitle, ElementTypeLabel } from "./ElementLabel";
+import { ElementNumberLabel, ElementName, ElementType } from "./ElementLabel";
 import { ElementShapeSelector } from "./ElementShapeSelector";
 
 export const ElementModelPlaceholderNode: FC<PropsWithChildren<{
@@ -34,8 +34,8 @@ export const ElementModelPlaceholderNode: FC<PropsWithChildren<{
                 width: variantStyles.container.width as number,
             }}
         >
-            <ElementTitle title={element.name} style={variantStyles.title} />
-            <ElementTypeLabel type={element.type} style={variantStyles.technology} />
+            <ElementName name={element.name} style={variantStyles.title} />
+            <ElementType type={element.type} style={variantStyles.technology} />
             <ElementNumberLabel number={elementChildrenCount} style={variantStyles.technology} />
             {children}
         </ElementShapeSelector>

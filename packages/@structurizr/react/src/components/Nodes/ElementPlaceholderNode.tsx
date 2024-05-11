@@ -3,7 +3,7 @@ import { FC, PropsWithChildren, useMemo } from "react";
 import { ElementVariant } from "../../contexts";
 import { getVariantStyles, useWorkspace } from "../../hooks";
 import { ReverseArchitectureElementStyle } from "../../types";
-import { ElementContainer, ElementTitle, ElementTypeLabel } from "./ElementLabel";
+import { ElementContainer, ElementName, ElementType } from "./ElementLabel";
 import { ElementShapeSelector } from "./ElementShapeSelector";
 
 export const ElementPlaceholderNode: FC<PropsWithChildren<{
@@ -41,8 +41,8 @@ export const ElementPlaceholderNode: FC<PropsWithChildren<{
         >
             {/* <ElementFlowShortcut shortcutKeys={"Ctrl + ↑"} /> */}
             <ElementContainer style={variantStyles.container} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-                <ElementTitle title={element?.name} style={variantStyles.title} />
-                <ElementTypeLabel type={element.type} style={variantStyles.technology} />
+                <ElementName name={element?.name} style={variantStyles.title} />
+                <ElementType type={element.type} style={variantStyles.technology} />
             </ElementContainer>
             {children}
         </ElementShapeSelector>

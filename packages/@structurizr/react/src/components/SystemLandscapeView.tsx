@@ -15,9 +15,9 @@ export const SystemLandscapeView: FC<PropsWithChildren<{ view: ISystemLandscapeV
 
     return (
         <SystemLandscapeViewContext.Provider value={{ systemLandscapeView: view }}>
-            {/* <ViewMetadataProvider metadata={view}> */}
+            <ViewMetadataProvider metadata={view}>
                 {children}
-            {/* </ViewMetadataProvider> */}
+            </ViewMetadataProvider>
         </SystemLandscapeViewContext.Provider>
     )
 }

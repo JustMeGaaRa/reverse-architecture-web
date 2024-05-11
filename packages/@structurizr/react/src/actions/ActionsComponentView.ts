@@ -1,4 +1,4 @@
-import { IComponent, IComponentView, IContainer, IPerson, ISoftwareSystem, Position } from "@structurizr/dsl";
+import { Dimensions, IComponent, IComponentView, IContainer, IPerson, ISoftwareSystem, Position, Size } from "@structurizr/dsl";
 import { Action } from "./Action";
 import { ActionType } from "./ActionType";
 
@@ -10,6 +10,12 @@ export type SetComponentViewElementPositionAction = Action<ActionType.SET_COMPON
     view: IComponentView;
     elementIdentifier: string;
     position: Position;
+}>;
+
+export type SetComponentViewElementDimensionsAction = Action<ActionType.SET_COMPONENT_VIEW_ELEMENT_DIMENSIONS, {
+    view: IComponentView;
+    elementIdentifier: string;
+    dimensions: Dimensions;
 }>;
 
 export type IncludeComponentViewPersonAction = Action<ActionType.INCLUDE_COMPONENT_VIEW_PERSON, {

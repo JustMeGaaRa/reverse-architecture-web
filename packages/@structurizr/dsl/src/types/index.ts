@@ -1,6 +1,7 @@
 export * from "./Component";
 export * from "./Container";
 export * from "./ContainerInstance";
+export * from "./Dimensions";
 export * from "./DeploymentEnvironment";
 export * from "./DeploymentGroup";
 export * from "./DeploymentNode";

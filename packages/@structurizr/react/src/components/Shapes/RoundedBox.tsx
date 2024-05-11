@@ -3,15 +3,17 @@ import { IElementStyleProperties } from "@structurizr/dsl";
 import { FC, PropsWithChildren } from "react";
 
 export const RoundedBox: FC<PropsWithChildren<{
+    isSelected?: boolean;
     style: Partial<IElementStyleProperties>;
 }>> = ({
     children,
+    isSelected,
     style,
 }) => {
     return (
         <Box
             aria-label={"rounded box outline"}
-            borderColor={"transparent"}
+            borderColor={isSelected ? "lime.600" : "transparent"}
             borderRadius={"17px"}
             borderWidth={1}
             position={"relative"}

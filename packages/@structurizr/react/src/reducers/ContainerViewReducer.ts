@@ -7,13 +7,25 @@ export const containerViewReducer = (state: IContainerView, action: ContainerVie
             return action.payload.view;
             
         case ActionType.SET_CONTAINER_VIEW_ELEMENT_POSTION:
-            return {
+            const positionMetadata = state.elements.find(x => x.id ===action.payload.elementIdentifier) ?? {};
+            return action.payload.position === undefined ? state : {
                 ...state,
                 elements: [
                     ...state.elements.filter(element => element.id !== action.payload.elementIdentifier),
-                    { id: action.payload.elementIdentifier, ...action.payload.position }
+                    { id: action.payload.elementIdentifier, ...positionMetadata, ...action.payload.position }
                 ]
             };
+        
+        case ActionType.SET_CONTAINER_VIEW_ELEMENT_DIMENSIONS:
+            const dimensionsMetadata = state.elements.find(x => x.id ===action.payload.elementIdentifier) ?? {};
+            return action.payload.dimensions === undefined ? state : {
+                ...state,
+                elements: [
+                    ...state.elements.filter(element => element.id !== action.payload.elementIdentifier),
+                    { id: action.payload.elementIdentifier, ...dimensionsMetadata, ...action.payload.dimensions }
+                ]
+            };
+        
         case ActionType.INCLUDE_CONTAINER_VIEW_PERSON:
             return {
                 ...state,
@@ -23,6 +35,7 @@ export const containerViewReducer = (state: IContainerView, action: ContainerVie
                     { id: action.payload.person.identifier, ...action.payload.position }
                 ]
             };
+        
         case ActionType.INCLUDE_CONTAINER_VIEW_SOFTWARE_SYSTEM:
             return {
                 ...state,
@@ -32,6 +45,7 @@ export const containerViewReducer = (state: IContainerView, action: ContainerVie
                     { id: action.payload.softwareSystem.identifier, ...action.payload.position }
                 ]
             };
+        
         case ActionType.INCLUDE_CONTAINER_VIEW_CONTAINER:
             return {
                 ...state,
@@ -41,6 +55,7 @@ export const containerViewReducer = (state: IContainerView, action: ContainerVie
                     { id: action.payload.container.identifier, ...action.payload.position }
                 ]
             };
+        
         default:
             return state;
     }

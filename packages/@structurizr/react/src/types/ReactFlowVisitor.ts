@@ -77,7 +77,7 @@ export class ReactFlowVisitor implements IElementVisitor {
             isBoundary,
             parentId: params?.parentId,
             position: box,
-            size: isBoundary ? { height: 400, width: 400 } : box
+            size: box
         });
         this.builder.addNode(node);
     }
@@ -92,7 +92,7 @@ export class ReactFlowVisitor implements IElementVisitor {
             isBoundary,
             parentId: params?.parentId,
             position: box,
-            size: isBoundary ? { height: 400, width: 400 } : box
+            size: box
         });
         this.builder.addNode(node);
     }
@@ -164,7 +164,7 @@ const getElementBox = (
     element: IElement,
     elementId?: string
 ) => {
-    const defaultPosition = { x: 0, y: 0, width: undefined, height: undefined };
+    const defaultPosition = { x: 0, y: 0, width: 400, height: 400 };
     const elementMetadata = view.elements.find(x => x.id === (elementId ?? element.identifier))
         ?? defaultPosition;
         

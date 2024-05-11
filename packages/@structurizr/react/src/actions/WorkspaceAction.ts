@@ -1,8 +1,8 @@
-import { AddComponentViewAction, IncludeComponentViewComponentAction, IncludeComponentViewContainerAction, IncludeComponentViewPersonAction, IncludeComponentViewSoftwareSystemAction, SetComponentViewElementPositionAction } from "./ActionsComponentView";
-import { AddContainerViewAction, IncludeContainerViewContainerAction, IncludeContainerViewPersonAction, IncludeContainerViewSoftwareSystemAction, SetContainerViewElementPositionAction } from "./ActionsContainerView";
+import { AddComponentViewAction, IncludeComponentViewComponentAction, IncludeComponentViewContainerAction, IncludeComponentViewPersonAction, IncludeComponentViewSoftwareSystemAction, SetComponentViewElementDimensionsAction, SetComponentViewElementPositionAction } from "./ActionsComponentView";
+import { AddContainerViewAction, IncludeContainerViewContainerAction, IncludeContainerViewPersonAction, IncludeContainerViewSoftwareSystemAction, SetContainerViewElementDimensionsAction, SetContainerViewElementPositionAction } from "./ActionsContainerView";
 import { AddModelComponentAction, AddModelContainerAction, AddModelContainerGroupAction, AddModelContainerInstanceToDeploymentNodeAction, AddModelDeploymentEnvironmentAction, AddModelDeploymentNodeAction, AddModelGroupAction, AddModelInfrastructureNodeToDeploymentNodeAction, AddModelPersonAction, AddModelRelationshipAction, AddModelSoftwareSystemAction, AddModelSoftwareSystemGroupAction, AddModelSoftwareSystemInstanceToDeploymentNodeAction } from "./ActionsModel";
-import { AddSystemContextViewAction, IncludeSystemContextViewPersonAction, IncludeSystemContextViewSoftwareSystemAction, SetSystemContextViewElementPositionAction } from "./ActionsSystemContextView";
-import { IncludeSystemLandscapeViewPersonAction, IncludeSystemLandscapeViewSoftwareSystemAction, SetSystemLandscapeViewAction, SetSystemLandscapeViewElementPositionAction } from "./ActionsSystemLandscapeView";
+import { AddSystemContextViewAction, IncludeSystemContextViewPersonAction, IncludeSystemContextViewSoftwareSystemAction, SetSystemContextViewElementDimensionsAction, SetSystemContextViewElementPositionAction } from "./ActionsSystemContextView";
+import { IncludeSystemLandscapeViewPersonAction, IncludeSystemLandscapeViewSoftwareSystemAction, SetSystemLandscapeViewAction, SetSystemLandscapeViewElementDimensionsAction, SetSystemLandscapeViewElementPositionAction } from "./ActionsSystemLandscapeView";
 import { SetWorkspaceAction } from "./ActionsWorkspace";
 
 export type DeploymentEnvironmentAction =
@@ -26,18 +26,21 @@ export type ModelAction =
 export type SystemLandscapeViewAction =
     | SetSystemLandscapeViewAction
     | SetSystemLandscapeViewElementPositionAction
+    | SetSystemLandscapeViewElementDimensionsAction
     | IncludeSystemLandscapeViewPersonAction
     | IncludeSystemLandscapeViewSoftwareSystemAction;
 
 export type SystemContextViewAction =
     | AddSystemContextViewAction
     | SetSystemContextViewElementPositionAction
+    | SetSystemContextViewElementDimensionsAction
     | IncludeSystemContextViewPersonAction
     | IncludeSystemContextViewSoftwareSystemAction;
 
 export type ContainerViewAction =
     | AddContainerViewAction
     | SetContainerViewElementPositionAction
+    | SetContainerViewElementDimensionsAction
     | IncludeContainerViewPersonAction
     | IncludeContainerViewSoftwareSystemAction
     | IncludeContainerViewContainerAction;
@@ -45,6 +48,7 @@ export type ContainerViewAction =
 export type ComponentViewAction =
     | AddComponentViewAction
     | SetComponentViewElementPositionAction
+    | SetComponentViewElementDimensionsAction
     | IncludeComponentViewPersonAction
     | IncludeComponentViewSoftwareSystemAction
     | IncludeComponentViewContainerAction

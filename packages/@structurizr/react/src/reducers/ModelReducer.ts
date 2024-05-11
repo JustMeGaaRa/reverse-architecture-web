@@ -1,5 +1,5 @@
 import { findContainerParent, IModel } from "@structurizr/dsl";
-import { ActionType, ModelAction, WorkspaceAction } from "../actions";
+import { ActionType, WorkspaceAction } from "../actions";
 import { deploymentEnvironmentReducer } from "./DeploymentEnvironmentReducer";
 import { softwareSystemReducer } from "./SoftwareSystemReducer";
 

@@ -1,5 +1,5 @@
 import { useContext, useCallback } from "react";
-import { ModelContext, ThemesContext, ViewMetadataContext, WorkspaceContext } from "../contexts";
+import { ElementContext, ModelContext, ThemesContext, ViewMetadataContext, WorkspaceContext } from "../contexts";
 
 export const useWorkspace = () => {
     return useContext(WorkspaceContext);
@@ -45,4 +45,8 @@ export const useViewMetadata = () => {
         getElement,
         getRelationship,
     }
+}
+
+export const useElement = () => {
+    return useContext(ElementContext);
 }

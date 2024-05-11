@@ -15,15 +15,18 @@ import {
     CoinsSwap,
     Copy,
     Cylinder,
+    FrameMinusIn,
     Hexagon,
     Keyframe,
+    KeyframeMinusIn,
     KeyframePlusIn,
     Keyframes,
     KeyframesCouple,
     Lock,
     LockSlash,
     Square,
-    User
+    User,
+    Xmark
 } from "iconoir-react";
 import { FC, useCallback } from "react";
 
@@ -56,9 +59,9 @@ export const ElementOptionsToolbar: FC = () => {
                 <ToolbarSection>
                     <ToolbarSubmenu>
                         <ToolbarSubmenuTrigger
-                            aria-label={"change shape"}
+                            aria-label={"replace element"}
                             icon={<Icon as={CoinsSwap} boxSize={6} />}
-                            title={"change Shape"}
+                            title={"replace element"}
                         />
                         <ToolbarSubmenuContent>
                             <ToolbarSection>
@@ -152,10 +155,18 @@ export const ElementOptionsToolbar: FC = () => {
                         />
                     )}
                     <IconButton
-                        aria-label={"remove element"}
-                        icon={<Icon as={BinMinusIn} boxSize={6} color={"red.600"} />}
-                        title={"remove element"}
+                        aria-label={"remove element from view"}
+                        icon={<Icon as={KeyframeMinusIn} boxSize={6} />}
+                        title={"remove element from view"}
                         onClick={handleOnRemoveElement}
+                    />
+                </ToolbarSection>
+
+                <ToolbarSection>
+                    <IconButton
+                        aria-label={"delete element"}
+                        icon={<Icon as={BinMinusIn} boxSize={6} color={"red.600"} />}
+                        title={"delete element"}
                     />
                 </ToolbarSection>
             </Toolbar>

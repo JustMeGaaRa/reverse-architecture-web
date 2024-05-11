@@ -10,6 +10,7 @@ export type StructurizrViewElementProps = PropsWithChildren<{
     isSelected?: boolean;
     isHovered?: boolean;
     isLocked?: boolean;
+    isReadonly?: boolean;
     variant?: ElementVariant;
     onMouseEnter?: () => void;
     onMouseLeave?: () => void;

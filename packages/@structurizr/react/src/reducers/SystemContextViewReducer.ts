@@ -5,13 +5,24 @@ export const systemContextViewReducer = (state: ISystemContextView, action: Syst
     switch (action.type) {
         case ActionType.ADD_SYSTEM_CONTEXT_VIEW:
             return action.payload.view;
-
+        
         case ActionType.SET_SYSTEM_CONTEXT_VIEW_ELEMENT_POSTION:
-            return {
+            const positionMetadata = state.elements.find(x => x.id ===action.payload.elementIdentifier) ?? {};
+            return action.payload.position === undefined ? state : {
                 ...state,
                 elements: [
                     ...state.elements.filter(element => element.id !== action.payload.elementIdentifier),
-                    { id: action.payload.elementIdentifier, ...action.payload.position }
+                    { id: action.payload.elementIdentifier, ...positionMetadata, ...action.payload.position }
+                ]
+            };
+        
+        case ActionType.SET_SYSTEM_CONTEXT_VIEW_ELEMENT_DIMENSIONS:
+            const dimensionsMetadata = state.elements.find(x => x.id ===action.payload.elementIdentifier) ?? {};
+            return action.payload.dimensions === undefined ? state : {
+                ...state,
+                elements: [
+                    ...state.elements.filter(element => element.id !== action.payload.elementIdentifier),
+                    { id: action.payload.elementIdentifier, ...dimensionsMetadata, ...action.payload.dimensions }
                 ]
             };
 

@@ -14,6 +14,7 @@ export function ReactFlowViewElementAdapter(ElementNodeComponent: FC<Structurizr
                 width={data.width}
                 isSelected={selected}
                 isLocked={isLocked}
+                isReadonly={!selected}
                 variant={"view"}
             >
                 <Handle

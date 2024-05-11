@@ -4,7 +4,8 @@ import {
     ToolbarSection,
     ToolbarSubmenu,
     ToolbarSubmenuContent,
-    ToolbarSubmenuTrigger
+    ToolbarSubmenuTrigger,
+    useToolbar
 } from "@restruct/ui";
 import { ElementType, ViewType } from "@structurizr/dsl";
 import { useAutoLayout, WorkspacePanel } from "@structurizr/react";
@@ -66,6 +67,7 @@ export const WorkspaceActionsToolbar: FC<{ isVisible?: boolean; }> = ({ isVisibl
                                     <ElementComponentModeButton />
                                     <ElementInfrastructureNodeModeButton />
                                     <ElementDeploymentNodeModeButton />
+                                    <ElementGroupModeButton />
                                 </ToolbarSection>
                             </ToolbarSubmenuContent>
                         </ToolbarSubmenu>
@@ -91,6 +93,7 @@ export const WorkspaceActionsToolbar: FC<{ isVisible?: boolean; }> = ({ isVisibl
 
 export const PresentationModeButton: FC = () => {
     const { currentUser } = useWorkspaceRoom();
+    const { setSelectedIndex } = useToolbar();
     const { presentationEnabled, presenterInfo, startPresenting, stopPresenting } = usePresentationMode();
     const { enableSelectMode } = useElementSelectMode();
     const { enableExploreMode } = useExploreMode();
@@ -146,7 +149,13 @@ export const AutoLayoutButton: FC = () => {
 }
 
 export const SelectModeButton: FC = () => {
+    const { setSelectedIndex } = useToolbar();
     const { isSelectMode, enableSelectMode } = useElementSelectMode();
+
+    const handleOnEnableSelectMode = useCallback(() => {
+        enableSelectMode();
+        setSelectedIndex(null);
+    }, [enableSelectMode, setSelectedIndex]);
 
     return (
         <Tooltip label={"Select"}>
@@ -155,14 +164,20 @@ export const SelectModeButton: FC = () => {
                 aria-selected={isSelectMode}
                 icon={<CursorPointer />}
                 title={"selection mode"}
-                onClick={() => enableSelectMode()}
+                onClick={handleOnEnableSelectMode}
             />
         </Tooltip>
     )
 }
 
 export const ExploreModeButton: FC = () => {
+    const { setSelectedIndex } = useToolbar();
     const { isExploreMode, enableExploreMode } = useExploreMode();
+
+    const handleOnEnableExploreMode = useCallback(() => {
+        enableExploreMode();
+        setSelectedIndex(null);
+    }, [enableExploreMode, setSelectedIndex]);
 
     return (
         <Tooltip label={"Explore"}>
@@ -171,14 +186,20 @@ export const ExploreModeButton: FC = () => {
                 aria-selected={isExploreMode}
                 icon={<DragHandGesture />}
                 title={"explore mode"}
-                onClick={enableExploreMode}
+                onClick={handleOnEnableExploreMode}
             />
         </Tooltip>
     )
 }
 
 export const TextEditModeButton: FC = () => {
+    const { setSelectedIndex } = useToolbar();
     const { isTextEditMode, enableTextEditMode } = useTextEditMode();
+
+    const handleOnEnableTextEditMode = useCallback(() => {
+        enableTextEditMode();
+        setSelectedIndex(null);
+    }, [enableTextEditMode, setSelectedIndex]);
 
     return (
         <Tooltip label={"Edit text"}>
@@ -187,14 +208,20 @@ export const TextEditModeButton: FC = () => {
                 aria-selected={isTextEditMode}
                 icon={<Text />}
                 title={"text edit mode"}
-                onClick={enableTextEditMode}
+                onClick={handleOnEnableTextEditMode}
             />
         </Tooltip>
     )
 }
 
 export const ConnectModeButton: FC = () => {
+    const { setSelectedIndex } = useToolbar();
     const { isConnectMode, enableConnectMode } = useElementConnectMode();
+
+    const handleOnEnableConnectMode = useCallback(() => {
+        enableConnectMode();
+        setSelectedIndex(null);
+    }, [enableConnectMode, setSelectedIndex]);
 
     return (
         <Tooltip label={"Connect"}>
@@ -203,14 +230,20 @@ export const ConnectModeButton: FC = () => {
                 aria-selected={isConnectMode}
                 icon={<Linear />}
                 title={"connection mode"}
-                onClick={enableConnectMode}
+                onClick={handleOnEnableConnectMode}
             />
         </Tooltip>
     )
 }
 
 export const CommentingModeButton: FC = () => {
+    const { setSelectedIndex } = useToolbar();
     const { isCommentMode, enableCommentMode } = useCommentingMode();
+
+    const handleOnEnableCommentMode = useCallback(() => {
+        enableCommentMode();
+        setSelectedIndex(null);
+    }, [enableCommentMode, setSelectedIndex]);
 
     return (
         <Tooltip label={"Comment"}>
@@ -219,7 +252,7 @@ export const CommentingModeButton: FC = () => {
                 aria-selected={isCommentMode}
                 icon={<ChatPlusIn />}
                 title={"add comment"}
-                onClick={enableCommentMode}
+                onClick={handleOnEnableCommentMode}
             />
         </Tooltip>
     )

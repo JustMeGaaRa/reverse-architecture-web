@@ -1,4 +1,5 @@
 import {
+    Dimensions,
     IElement,
     IRelationship,
     IWorkspaceSnapshot,
@@ -44,10 +45,8 @@ export const WorkspaceRenderer: FC<PropsWithChildren<{
     view: ViewDefinition;
     discussions?: CommentThread[];
     onElementClick?: (element: IElement, relativePosition: Position) => void;
-    onElementDragStart?: (element: IElement) => void;
-    onElementDrag?: (element: IElement) => void;
-    onElementDragStop?: (element: IElement, position: Position) => void;
-    onElementDimensionsChange?: (element: IElement, dimensions: Size) => void;
+    onElementPositionChange?: (element: IElement, position: Position) => void;
+    onElementDimensionsChange?: (element: IElement, dimensions: Dimensions) => void;
     onElementsConnect?: (relationship: IRelationship) => void;
     onViewClick?: (relativePosition: Position) => void;
     onViewFlowClick?: (sourceElement: IElement, relativePosition: Position) => void;
@@ -56,9 +55,7 @@ export const WorkspaceRenderer: FC<PropsWithChildren<{
     workspace,
     view,
     onElementClick,
-    onElementDragStart,
-    onElementDrag,
-    onElementDragStop,
+    onElementPositionChange,
     onElementDimensionsChange,
     onElementsConnect,
     onViewClick,
@@ -68,9 +65,7 @@ export const WorkspaceRenderer: FC<PropsWithChildren<{
         <Workspace
             workspace={workspace}
             onElementClick={onElementClick}
-            onElementDragStart={onElementDragStart}
-            onElementDrag={onElementDrag}
-            onElementDragStop={onElementDragStop}
+            onElementPositionChange={onElementPositionChange}
             onElementDimensionsChange={onElementDimensionsChange}
             onElementsConnect={onElementsConnect}
             onViewClick={onViewClick}

@@ -1,4 +1,4 @@
-import { IContainer, IContainerView, IPerson, ISoftwareSystem, Position } from "@structurizr/dsl";
+import { Dimensions, IContainer, IContainerView, IPerson, ISoftwareSystem, Position, Size } from "@structurizr/dsl";
 import { Action } from "./Action";
 import { ActionType } from "./ActionType";
 
@@ -10,6 +10,12 @@ export type SetContainerViewElementPositionAction = Action<ActionType.SET_CONTAI
     view: IContainerView;
     elementIdentifier: string;
     position: Position;
+}>;
+
+export type SetContainerViewElementDimensionsAction = Action<ActionType.SET_CONTAINER_VIEW_ELEMENT_DIMENSIONS, {
+    view: IContainerView;
+    elementIdentifier: string;
+    dimensions: Dimensions;
 }>;
 
 export type IncludeContainerViewPersonAction = Action<ActionType.INCLUDE_CONTAINER_VIEW_PERSON, {

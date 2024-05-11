@@ -18,6 +18,7 @@ export interface ISoftwareSystem extends IElement {
     name: string;
     groups: IGroup[];
     containers: IContainer[];
+    // TODO: remove technology property
     technology: Technology[];
     description?: string;
     tags: Tag[];

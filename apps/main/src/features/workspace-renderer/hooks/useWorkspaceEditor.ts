@@ -6,6 +6,7 @@ import {
     createDefaultPerson,
     createDefaultSoftwareSystem,
     createRelationship,
+    Dimensions,
     ElementType,
     IComponentView,
     IContainerView,
@@ -238,44 +239,6 @@ export const useWorkspaceEditorState = (dispatch: Dispatch<WorkspaceFlowAction>)
         }
     }, [addElementToComponentView, addElementToContainerView, addElementToDeploymentView, addElementToSystemContextView, addElementToSystemLandscapeView]);
 
-    const setElementPositionInView = useCallback((
-        view: ViewDefinition,
-        elementIdentifier: Identifier,
-        position: Position
-    ) => {
-        switch (view.type) {
-            case ViewType.Model:
-                throw new Error("Not implemented");
-                break;
-            case ViewType.SystemLandscape:
-                dispatch({
-                    type: ActionType.SET_SYSTEM_LANDSCAPE_VIEW_ELEMENT_POSTION,
-                    payload: { view, elementIdentifier, position }
-                });
-                break;
-            case ViewType.SystemContext:
-                dispatch({
-                    type: ActionType.SET_SYSTEM_CONTEXT_VIEW_ELEMENT_POSTION,
-                    payload: { view, elementIdentifier, position }
-                });
-                break;
-            case ViewType.Container:
-                dispatch({
-                    type: ActionType.SET_CONTAINER_VIEW_ELEMENT_POSTION,
-                    payload: { view, elementIdentifier, position }
-                });
-                break;
-            case ViewType.Component:
-                dispatch({
-                    type: ActionType.SET_COMPONENT_VIEW_ELEMENT_POSTION,
-                    payload: { view, elementIdentifier, position }
-                });
-                break;
-            case ViewType.Deployment:
-                break;
-        }
-    }, [dispatch]);
-
     const connectElementOnModelView = useCallback((sourceElement: IElement) => {
         // TODO: add element in position on react flow pane, but not in workspace view
         switch (sourceElement?.type) {
@@ -486,21 +449,67 @@ export const useWorkspaceEditorState = (dispatch: Dispatch<WorkspaceFlowAction>)
         }
     }, [view, selectedTool, selectedElementType, addElementToView, addCommentToView]);
 
-    const onElementDragStart = useCallback((element: IElement) => {
-    }, []);
-
-    const onElementDrag = useCallback((element: IElement) => {
-    }, []);
-
-    const onElementDragStop = useCallback((element: IElement, position: Position) => {
-        if (view) {
-            setElementPositionInView(view, element.identifier, position);
+    const onElementPositionChange = useCallback((element: IElement, position: Position) => {
+        switch (view.type) {
+            case ViewType.SystemLandscape:
+                dispatch({
+                    type: ActionType.SET_SYSTEM_LANDSCAPE_VIEW_ELEMENT_POSTION,
+                    payload: { view, elementIdentifier: element.identifier, position }
+                });
+                break;
+            case ViewType.SystemContext:
+                dispatch({
+                    type: ActionType.SET_SYSTEM_CONTEXT_VIEW_ELEMENT_POSTION,
+                    payload: { view, elementIdentifier: element.identifier, position }
+                });
+                break;
+            case ViewType.Container:
+                dispatch({
+                    type: ActionType.SET_CONTAINER_VIEW_ELEMENT_POSTION,
+                    payload: { view, elementIdentifier: element.identifier, position }
+                });
+                break;
+            case ViewType.Component:
+                dispatch({
+                    type: ActionType.SET_COMPONENT_VIEW_ELEMENT_POSTION,
+                    payload: { view, elementIdentifier: element.identifier, position }
+                });
+                break;
+            case ViewType.Deployment:
+                break;
         }
-    }, [setElementPositionInView, view]);
+    }, [view, dispatch]);
 
-    const onElementDimensionsChange = useCallback((element: IElement, dimensions: Size) => {
-        console.log("onElementDimensionsChange", element, dimensions)
-    }, []);
+    const onElementDimensionsChange = useCallback((element: IElement, dimensions: Dimensions) => {
+        switch (view.type) {
+            case ViewType.SystemLandscape:
+                dispatch({
+                    type: ActionType.SET_SYSTEM_LANDSCAPE_VIEW_ELEMENT_DIMENSIONS,
+                    payload: { view, elementIdentifier: element.identifier, dimensions }
+                });
+                break;
+            case ViewType.SystemContext:
+                dispatch({
+                    type: ActionType.SET_SYSTEM_CONTEXT_VIEW_ELEMENT_DIMENSIONS,
+                    payload: { view, elementIdentifier: element.identifier, dimensions }
+                });
+                break;
+            case ViewType.Container:
+                dispatch({
+                    type: ActionType.SET_CONTAINER_VIEW_ELEMENT_DIMENSIONS,
+                    payload: { view, elementIdentifier: element.identifier, dimensions }
+                });
+                break;
+            case ViewType.Component:
+                dispatch({
+                    type: ActionType.SET_COMPONENT_VIEW_ELEMENT_DIMENSIONS,
+                    payload: { view, elementIdentifier: element.identifier, dimensions }
+                });
+                break;
+            case ViewType.Deployment:
+                break;
+        }
+    }, [view, dispatch]);
 
     const onElementsConnect = useCallback((relationship: IRelationship) => {
         if (view) {
@@ -535,9 +544,7 @@ export const useWorkspaceEditorState = (dispatch: Dispatch<WorkspaceFlowAction>)
     
     return {
         onElementClick,
-        onElementDragStart,
-        onElementDrag,
-        onElementDragStop,
+        onElementPositionChange,
         onElementDimensionsChange,
         onElementsConnect,
         onViewClick,

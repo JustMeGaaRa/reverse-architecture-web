@@ -1,4 +1,4 @@
-import { IPerson, ISoftwareSystem, ISystemLandscapeView, Position } from "@structurizr/dsl";
+import { Dimensions, IPerson, ISoftwareSystem, ISystemLandscapeView, Position, Size } from "@structurizr/dsl";
 import { Action } from "./Action";
 import { ActionType } from "./ActionType";
 
@@ -10,6 +10,12 @@ export type SetSystemLandscapeViewElementPositionAction = Action<ActionType.SET_
     view: ISystemLandscapeView;
     elementIdentifier: string;
     position: Position;
+}>;
+
+export type SetSystemLandscapeViewElementDimensionsAction = Action<ActionType.SET_SYSTEM_LANDSCAPE_VIEW_ELEMENT_DIMENSIONS, {
+    view: ISystemLandscapeView;
+    elementIdentifier: string;
+    dimensions: Dimensions;
 }>;
 
 export type IncludeSystemLandscapeViewPersonAction = Action<ActionType.INCLUDE_SYSTEM_LANDSCAPE_VIEW_PERSON, {

@@ -1,4 +1,4 @@
-import { IPerson, ISoftwareSystem, ISystemContextView, Position } from "@structurizr/dsl";
+import { Dimensions, IPerson, ISoftwareSystem, ISystemContextView, Position, Size } from "@structurizr/dsl";
 import { Action } from "./Action";
 import { ActionType } from "./ActionType";
 
@@ -10,6 +10,12 @@ export type SetSystemContextViewElementPositionAction = Action<ActionType.SET_SY
     view: ISystemContextView;
     elementIdentifier: string;
     position: Position;
+}>;
+
+export type SetSystemContextViewElementDimensionsAction = Action<ActionType.SET_SYSTEM_CONTEXT_VIEW_ELEMENT_DIMENSIONS, {
+    view: ISystemContextView;
+    elementIdentifier: string;
+    dimensions: Dimensions;
 }>;
 
 export type IncludeSystemContextViewPersonAction = Action<ActionType.INCLUDE_SYSTEM_CONTEXT_VIEW_PERSON, {

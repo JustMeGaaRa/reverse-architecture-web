@@ -1,4 +1,4 @@
-import { createDefaultContainerView, IComponentView, IContainerView, ISystemContextView, IViews } from "@structurizr/dsl";
+import { IComponentView, IContainerView, ISystemContextView, IViews } from "@structurizr/dsl";
 import { ActionType, ViewsAction, WorkspaceAction } from "../actions";
 import { componentViewReducer } from "./ComponentViewReducer";
 import { containerViewReducer } from "./ContainerViewReducer";
@@ -9,22 +9,26 @@ export const viewsReducer = (state: IViews, action: WorkspaceAction): IViews => 
     switch (action.type) {
         case ActionType.SET_SYSTEM_LANDSCAPE_VIEW:
         case ActionType.SET_SYSTEM_LANDSCAPE_VIEW_ELEMENT_POSTION:
+        case ActionType.SET_SYSTEM_LANDSCAPE_VIEW_ELEMENT_DIMENSIONS:
         case ActionType.INCLUDE_SYSTEM_LANDSCAPE_VIEW_PERSON:
         case ActionType.INCLUDE_SYSTEM_LANDSCAPE_VIEW_SOFTWARE_SYSTEM:
 
         case ActionType.ADD_SYSTEM_CONTEXT_VIEW:
         case ActionType.SET_SYSTEM_CONTEXT_VIEW_ELEMENT_POSTION:
+        case ActionType.SET_SYSTEM_CONTEXT_VIEW_ELEMENT_DIMENSIONS:
         case ActionType.INCLUDE_SYSTEM_CONTEXT_VIEW_PERSON:
         case ActionType.INCLUDE_SYSTEM_CONTEXT_VIEW_SOFTWARE_SYSTEM:
         
         case ActionType.ADD_CONTAINER_VIEW:
         case ActionType.SET_CONTAINER_VIEW_ELEMENT_POSTION:
+        case ActionType.SET_CONTAINER_VIEW_ELEMENT_DIMENSIONS:
         case ActionType.INCLUDE_CONTAINER_VIEW_PERSON:
         case ActionType.INCLUDE_CONTAINER_VIEW_SOFTWARE_SYSTEM:
         case ActionType.INCLUDE_CONTAINER_VIEW_CONTAINER:
             
         case ActionType.ADD_COMPONENT_VIEW:
         case ActionType.SET_COMPONENT_VIEW_ELEMENT_POSTION:
+        case ActionType.SET_COMPONENT_VIEW_ELEMENT_DIMENSIONS:
         case ActionType.INCLUDE_COMPONENT_VIEW_PERSON:
         case ActionType.INCLUDE_COMPONENT_VIEW_SOFTWARE_SYSTEM:
         case ActionType.INCLUDE_COMPONENT_VIEW_CONTAINER:
@@ -46,6 +50,7 @@ export const systemContextViewArrayReducer = (state: ISystemContextView[], actio
     switch (action.type) {
         case ActionType.ADD_SYSTEM_CONTEXT_VIEW:
         case ActionType.SET_SYSTEM_CONTEXT_VIEW_ELEMENT_POSTION:
+        case ActionType.SET_SYSTEM_CONTEXT_VIEW_ELEMENT_DIMENSIONS:
         case ActionType.INCLUDE_SYSTEM_CONTEXT_VIEW_PERSON:
         case ActionType.INCLUDE_SYSTEM_CONTEXT_VIEW_SOFTWARE_SYSTEM:
             return state.find(x => x.key === action.payload.view.key)
@@ -68,6 +73,7 @@ export const containerViewArrayReducer = (state: IContainerView[], action: Views
     switch (action.type) {
         case ActionType.ADD_CONTAINER_VIEW:
         case ActionType.SET_CONTAINER_VIEW_ELEMENT_POSTION:
+        case ActionType.SET_CONTAINER_VIEW_ELEMENT_DIMENSIONS:
         case ActionType.INCLUDE_CONTAINER_VIEW_PERSON:
         case ActionType.INCLUDE_CONTAINER_VIEW_SOFTWARE_SYSTEM:
         case ActionType.INCLUDE_CONTAINER_VIEW_CONTAINER:
@@ -91,6 +97,7 @@ export const componentViewArrayReducer = (state: IComponentView[], action: Views
     switch (action.type) {
         case ActionType.ADD_COMPONENT_VIEW:
         case ActionType.SET_COMPONENT_VIEW_ELEMENT_POSTION:
+        case ActionType.SET_COMPONENT_VIEW_ELEMENT_DIMENSIONS:
         case ActionType.INCLUDE_COMPONENT_VIEW_PERSON:
         case ActionType.INCLUDE_COMPONENT_VIEW_SOFTWARE_SYSTEM:
         case ActionType.INCLUDE_COMPONENT_VIEW_CONTAINER:

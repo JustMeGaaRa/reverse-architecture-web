@@ -2,30 +2,45 @@ import "@reactflow/core/dist/style.css";
 import '@reactflow/node-resizer/dist/style.css';
 
 import { Background, BackgroundVariant } from "@reactflow/background";
-import { Connection, ConnectionMode, Node, NodeChange, NodeDimensionChange, ReactFlow, ReactFlowProvider, useReactFlow } from "@reactflow/core";
-import { ElementType, IElement, IRelationship, IWorkspaceSnapshot, Position, RelationshipType, Size } from "@structurizr/dsl";
+import {
+    Connection,
+    ConnectionMode,
+    Node,
+    NodeChange,
+    NodeDimensionChange,
+    NodePositionChange,
+    ReactFlow,
+    ReactFlowProvider,
+    useReactFlow
+} from "@reactflow/core";
+import {
+    Dimensions,
+    ElementType,
+    IElement,
+    IRelationship,
+    IWorkspaceSnapshot,
+    Position,
+    RelationshipType,
+    Size
+} from "@structurizr/dsl";
 import { FC, PropsWithChildren, useCallback, useEffect, useRef } from "react";
+import { useWorkspace } from "../hooks";
 import { getAbsolutePoint } from "../utils";
 import { MarkerArrowClosed, MarkerCircleOutline, MarkerRefs } from "./Edges";
 import { ReactFlowEdgeTypes, ReactFlowNodeTypes } from "./ReactFlow";
-import { useWorkspace } from "../hooks";
 
 export const Workspace: FC<PropsWithChildren<{
     workspace: IWorkspaceSnapshot;
     onElementClick?: (element: IElement, relativePosition: Position) => void;
-    onElementDragStart?: (element: IElement) => void;
-    onElementDrag?: (element: IElement) => void;
-    onElementDragStop?: (element: IElement, position: Position) => void;
-    onElementDimensionsChange?: (element: IElement, dimensions: Size) => void;
+    onElementPositionChange?: (element: IElement, position: Position) => void;
+    onElementDimensionsChange?: (element: IElement, dimensions: Dimensions) => void;
     onElementsConnect?: (relationship: IRelationship) => void;
     onViewClick?: (relativePosition: Position) => void;
 }>> = ({
     children,
     workspace,
     onElementClick,
-    onElementDragStart,
-    onElementDrag,
-    onElementDragStop,
+    onElementPositionChange,
     onElementDimensionsChange,
     onElementsConnect,
     onViewClick
@@ -38,9 +53,7 @@ export const Workspace: FC<PropsWithChildren<{
         <ReactFlowProvider>
             <WorkspaceReactFlowWrapper
                 onElementClick={onElementClick}
-                onElementDragStart={onElementDragStart}
-                onElementDrag={onElementDrag}
-                onElementDragStop={onElementDragStop}
+                onElementPositionChange={onElementPositionChange}
                 onElementDimensionsChange={onElementDimensionsChange}
                 onElementsConnect={onElementsConnect}
                 onViewClick={onViewClick}
@@ -53,19 +66,15 @@ export const Workspace: FC<PropsWithChildren<{
 
 const WorkspaceReactFlowWrapper: FC<PropsWithChildren<{
     onElementClick?: (element: IElement, relativePosition: Position) => void;
-    onElementDragStart?: (element: IElement) => void;
-    onElementDrag?: (element: IElement) => void;
-    onElementDragStop?: (element: IElement, position: Position) => void;
-    onElementDimensionsChange?: (element: IElement, dimensions: Size) => void;
+    onElementPositionChange?: (element: IElement, position: Position) => void;
+    onElementDimensionsChange?: (element: IElement, dimensions: Dimensions) => void;
     onElementsConnect?: (relationship: IRelationship) => void;
     onMouseMove?: () => void;
     onViewClick?: (relativePosition: Position) => void;
 }>> = ({
     children,
     onElementClick,
-    onElementDragStart,
-    onElementDrag,
-    onElementDragStop,
+    onElementPositionChange,
     onElementDimensionsChange,
     onElementsConnect,
     onMouseMove,
@@ -93,27 +102,24 @@ const WorkspaceReactFlowWrapper: FC<PropsWithChildren<{
         }
     }, [getViewport, onElementClick]);
 
-    const handleOnNodeDragStart = useCallback((event: React.MouseEvent, node: Node) => {
-        onElementDragStart?.(node.data.element);
-    }, [onElementDragStart]);
-
-    const handleOnNodeDrag = useCallback((event: React.MouseEvent, node: Node) => {
-        onElementDrag?.(node.data.element);
-    }, [onElementDrag]);
-
-    const handleOnNodeDragStop = useCallback((event: React.MouseEvent, node: any, nodes: any[]) => {
-        onElementDragStop?.(node.data.element, node.position);
-    }, [onElementDragStop]);
-
     const handleOnNodesChange = useCallback((changes: NodeChange[]) => {
         changes
-            .filter(change => change.type === "dimensions")
+            .filter(change => change.type === "dimensions" && change.resizing === false)
             .forEach(change => {
                 const dimensionChange = change as NodeDimensionChange;
-                const element = getNode(dimensionChange.id)?.data.element;
-                onElementDimensionsChange?.(element, dimensionChange.dimensions);
+                const node = getNode(dimensionChange.id);
+                const element = node?.data.element;
+                onElementDimensionsChange?.(element, { x: node.position.x, y: node.position.y, height: node.height, width: node.width });
             });
-    }, [onElementDimensionsChange, getNode]);
+        changes
+            .filter(change => change.type === "position")
+            .forEach(change => {
+                const positionChange = change as NodePositionChange;
+                const node = getNode(positionChange.id);
+                const element = node?.data.element;
+                onElementPositionChange?.(element, { x: node.position.x, y: node.position.y });
+            });
+    }, [onElementDimensionsChange, onElementPositionChange, getNode]);
 
     const handleOnMouseMove = useCallback((event: React.MouseEvent) => {
        onMouseMove?.();
@@ -159,9 +165,6 @@ const WorkspaceReactFlowWrapper: FC<PropsWithChildren<{
             proOptions={{ hideAttribution: true }}
             snapGrid={[50, 50]}
             onNodeClick={handleOnNodeClick}
-            onNodeDragStart={handleOnNodeDragStart}
-            onNodeDrag={handleOnNodeDrag}
-            onNodeDragStop={handleOnNodeDragStop}
             onNodesChange={handleOnNodesChange}
             onMouseMove={handleOnMouseMove}
             onPaneClick={handleOnPaneClick}

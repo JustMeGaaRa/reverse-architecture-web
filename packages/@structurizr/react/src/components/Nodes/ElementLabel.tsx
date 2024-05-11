@@ -1,5 +1,6 @@
-import { Box, HStack, Text, VStack } from "@chakra-ui/react";
+import { Box, Editable, EditableInput, EditablePreview, EditableTextarea, HStack, Text, VStack } from "@chakra-ui/react";
 import { CSSProperties, FC, PropsWithChildren } from "react";
+import { useElement } from "../../hooks";
 
 export const ElementContainer: FC<PropsWithChildren<{
     style?: CSSProperties;
@@ -24,13 +25,15 @@ export const ElementContainer: FC<PropsWithChildren<{
     )
 }
 
-export const ElementTitle: FC<{
-    title: string;
+export const ElementName: FC<{
+    name: string;
     style?: CSSProperties;
 }> = ({
-    title,
+    name,
     style
 }) => {
+    const { isReadonly } = useElement();
+
     return (
         <Box
             flexGrow={0}
@@ -39,19 +42,37 @@ export const ElementTitle: FC<{
             height={"40px"}
             width={"100%"}
         >
-            <Text
+            <Editable
+                borderRadius={12}
                 color={"gray.1000"}
+                defaultValue={name}
+                isPreviewFocusable={!isReadonly}
                 noOfLines={1}
                 textStyle={"b3"}
-                title={title}
+                title={name}
             >
-                {title}
-            </Text>
+                <EditablePreview
+                    noOfLines={1}
+                    width={"100%"}
+                    _hover={{
+                        backgroundColor: "surface.tinted-white-5",
+                    }}
+                />
+                <EditableInput
+                    borderRadius={12}
+                    noOfLines={1}
+                    _focus={{
+                        backgroundColor: "surface.tinted-black-40",
+                        borderColor: "lime.600",
+                        borderWidth: 2
+                    }}
+                />
+            </Editable>
         </Box>
     )
 }
 
-export const ElementTypeLabel: FC<{ type: string; style?: CSSProperties; }> = ({ type, style }) => {
+export const ElementType: FC<{ type: string; style?: CSSProperties; }> = ({ type, style }) => {
     return (
         <Box
             flexGrow={0}
@@ -78,6 +99,8 @@ export const ElementDescription: FC<{
     description,
     style
 }) => {
+    const { isReadonly } = useElement();
+
     return (
         <Box
             flexGrow={1}
@@ -87,16 +110,36 @@ export const ElementDescription: FC<{
             textAlign={style?.textAlign ?? "center"}
             width={"100%"}
         >
-            {style.display && (
-                <Text
-                    color={"gray.1000"}
-                    textStyle={"b4"}
+            <Editable
+                borderRadius={12}
+                isPreviewFocusable={!isReadonly}
+                color={"gray.1000"}
+                textStyle={"b4"}
+                noOfLines={5}
+                title={description}
+                defaultValue={description}
+            >
+                <EditablePreview
                     noOfLines={5}
-                    title={description}
-                >
-                    {description}
-                </Text>
-            )}
+                    height={"100%"}
+                    width={"100%"}
+                    _hover={{
+                        backgroundColor: "surface.tinted-white-5"
+                    }}
+                />
+                <EditableTextarea
+                    borderRadius={12}
+                    noOfLines={1}
+                    height={"100%"}
+                    width={"100%"}
+                    resize={"none"}
+                    _focus={{
+                        backgroundColor: "surface.tinted-black-40",
+                        borderColor: "lime.600",
+                        borderWidth: 2
+                    }}
+                />
+            </Editable>
         </Box>
     )
 }
