@@ -31,11 +31,13 @@ import {
     SystemLandscapeView,
     Theme,
     Themes,
+    useWorkspace,
     Views,
     Workspace
 } from "@structurizr/react";
-import { FC, PropsWithChildren } from "react";
+import { FC, PropsWithChildren, useEffect } from "react";
 import { CommentThread } from "../../comments";
+import { useWorkspaceNavigation } from "../hooks";
 import { ElementDiagramFlowControls, ElementViewNavigationControls } from "./ElementDiagramFlowControls";
 import { ElementModelCollapseControls, ElementModelFlowControls } from "./ElementModelFlowControls";
 import { ElementOptionsToolbar } from "./ElementOptionsToolbar";
@@ -52,8 +54,8 @@ export const WorkspaceRenderer: FC<PropsWithChildren<{
     onViewFlowClick?: (sourceElement: IElement, relativePosition: Position) => void;
 }>> = ({
     children,
-    workspace,
-    view,
+    workspace: initialWorkspace,
+    view: initialView,
     onElementClick,
     onElementPositionChange,
     onElementDimensionsChange,
@@ -61,6 +63,12 @@ export const WorkspaceRenderer: FC<PropsWithChildren<{
     onViewClick,
     onViewFlowClick
 }) => {
+    const { workspace, setWorkspace } = useWorkspace();
+    const { currentView, setCurrentView } = useWorkspaceNavigation();
+    
+    useEffect(() => setWorkspace(initialWorkspace), [initialWorkspace, setWorkspace]);
+    useEffect(() => setCurrentView(initialView), [initialView, setCurrentView]);
+
     return (
         <Workspace
             workspace={workspace}
@@ -70,7 +78,7 @@ export const WorkspaceRenderer: FC<PropsWithChildren<{
             onElementsConnect={onElementsConnect}
             onViewClick={onViewClick}
         >
-            {view !== undefined && view?.type === ViewType.Model && (
+            {currentView !== undefined && currentView?.type === ViewType.Model && (
                 <Model>
                     {workspace?.model?.groups?.map(group => (
                         <Group key={group.identifier} group={group}>
@@ -130,36 +138,36 @@ export const WorkspaceRenderer: FC<PropsWithChildren<{
                 </Model>
             )}
             <Views>
-                {view !== undefined && view.type === ViewType.SystemLandscape && (
-                    <SystemLandscapeView view={[workspace.views.systemLandscape].find(x => x.key === view.key) ?? view}>
+                {currentView !== undefined && currentView.type === ViewType.SystemLandscape && (
+                    <SystemLandscapeView view={[workspace.views.systemLandscape].find(x => x.key === currentView.key) ?? currentView}>
                         <ElementViewNavigationControls />
                         <ElementDiagramFlowControls onHandleClick={onViewFlowClick} />
                         <ElementOptionsToolbar />
                     </SystemLandscapeView>
                 )}
-                {view !== undefined && view.type === ViewType.SystemContext && (
-                    <SystemContextView view={workspace.views.systemContexts.find(x => x.key === view.key) ?? view}>
+                {currentView !== undefined && currentView.type === ViewType.SystemContext && (
+                    <SystemContextView view={workspace.views.systemContexts.find(x => x.key === currentView.key) ?? currentView}>
                         <ElementViewNavigationControls />
                         <ElementDiagramFlowControls onHandleClick={onViewFlowClick} />
                         <ElementOptionsToolbar />
                     </SystemContextView>
                 )}
-                {view !== undefined && view.type === ViewType.Container && (
-                    <ContainerView view={workspace.views.containers.find(x => x.key === view.key) ?? view}>
+                {currentView !== undefined && currentView.type === ViewType.Container && (
+                    <ContainerView view={workspace.views.containers.find(x => x.key === currentView.key) ?? currentView}>
                         <ElementViewNavigationControls />
                         <ElementDiagramFlowControls onHandleClick={onViewFlowClick} />
                         <ElementOptionsToolbar />
                     </ContainerView>
                 )}
-                {view !== undefined && view.type === ViewType.Component && (
-                    <ComponentView view={workspace.views.components.find(x => x.key === view.key) ?? view}>
+                {currentView !== undefined && currentView.type === ViewType.Component && (
+                    <ComponentView view={workspace.views.components.find(x => x.key === currentView.key) ?? currentView}>
                         <ElementViewNavigationControls />
                         <ElementDiagramFlowControls onHandleClick={onViewFlowClick} />
                         <ElementOptionsToolbar />
                     </ComponentView>
                 )}
-                {view !== undefined && view.type === ViewType.Deployment && (
-                    <DeploymentView view={workspace.views.deployments.find(x => x.key === view.key) ?? view}>
+                {currentView !== undefined && currentView.type === ViewType.Deployment && (
+                    <DeploymentView view={workspace.views.deployments.find(x => x.key === currentView.key) ?? currentView}>
                         <ElementViewNavigationControls />
                         <ElementDiagramFlowControls onHandleClick={onViewFlowClick} />
                         <ElementOptionsToolbar />

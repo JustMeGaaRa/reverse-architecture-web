@@ -45,10 +45,6 @@ export const Workspace: FC<PropsWithChildren<{
     onElementsConnect,
     onViewClick
 }) => {
-    const { setWorkspace } = useWorkspace();
-    
-    useEffect(() => setWorkspace(workspace), [workspace, setWorkspace]);
-
     return (
         <ReactFlowProvider>
             <WorkspaceReactFlowWrapper
@@ -156,7 +152,6 @@ const WorkspaceReactFlowWrapper: FC<PropsWithChildren<{
                 maxZoom: 5,
                 minZoom: 0.1
             }}
-            fitView
             nodeTypes={ReactFlowNodeTypes}
             defaultNodes={[]}
             nodeDragThreshold={5}

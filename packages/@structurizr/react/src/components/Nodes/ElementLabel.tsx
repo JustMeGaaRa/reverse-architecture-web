@@ -45,7 +45,7 @@ export const ElementName: FC<{
             <Editable
                 borderRadius={12}
                 color={"gray.1000"}
-                defaultValue={name}
+                value={name}
                 isPreviewFocusable={!isReadonly}
                 noOfLines={1}
                 textStyle={"b3"}
@@ -117,7 +117,7 @@ export const ElementDescription: FC<{
                 textStyle={"b4"}
                 noOfLines={5}
                 title={description}
-                defaultValue={description}
+                value={description}
             >
                 <EditablePreview
                     noOfLines={5}
