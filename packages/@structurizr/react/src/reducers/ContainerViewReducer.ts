@@ -10,6 +10,7 @@ export const containerViewReducer = (state: IContainerView, action: ContainerVie
             const positionMetadata = state.elements.find(x => x.id ===action.payload.elementIdentifier) ?? {};
             return action.payload.position === undefined ? state : {
                 ...state,
+                autoLayout: undefined,
                 elements: [
                     ...state.elements.filter(element => element.id !== action.payload.elementIdentifier),
                     { id: action.payload.elementIdentifier, ...positionMetadata, ...action.payload.position }
@@ -20,6 +21,7 @@ export const containerViewReducer = (state: IContainerView, action: ContainerVie
             const dimensionsMetadata = state.elements.find(x => x.id ===action.payload.elementIdentifier) ?? {};
             return action.payload.dimensions === undefined ? state : {
                 ...state,
+                autoLayout: undefined,
                 elements: [
                     ...state.elements.filter(element => element.id !== action.payload.elementIdentifier),
                     { id: action.payload.elementIdentifier, ...dimensionsMetadata, ...action.payload.dimensions }

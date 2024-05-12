@@ -8,32 +8,32 @@ export class StructurizrParser extends CstParser {
     }
 
     workspace = this.RULE("workspace", () => {
-        this.CONSUME(Tokens.Workspace);
+        this.CONSUME(Tokens.Workspace, { LABEL: "workspaceLiteral" });
         // consume optional name and description
-        this.OPTION(() => this.CONSUME(Tokens.StringLiteral));
-        this.OPTION1(() => this.CONSUME1(Tokens.StringLiteral));
+        this.OPTION(() => this.CONSUME(Tokens.StringLiteral, { LABEL: "nameParameter" }));
+        this.OPTION1(() => this.CONSUME1(Tokens.StringLiteral, { LABEL: "descriptionParameter" }));
         this.CONSUME(Tokens.LCurly);
         // optional children
         this.OPTION2(() => this.SUBRULE1(this.name));
         this.OPTION3(() => this.SUBRULE1(this.description));
         this.OPTION4(() => this.SUBRULE1(this.properties));
         // required children
-        this.SUBRULE(this.model);
-        this.SUBRULE(this.views);
+        this.SUBRULE(this.model, { LABEL: "modelNode" });
+        this.SUBRULE(this.views, { LABEL: "viewsNode" });
         // TODO: consume optional configuration
         this.CONSUME(Tokens.RCurly);
     });
 
     model = this.RULE("model", () => {
-        this.CONSUME(Tokens.Model);
+        this.CONSUME(Tokens.Model, { LABEL: "modelLiteral" });
         this.CONSUME(Tokens.LCurly);
         this.MANY(() => {
             this.OR([
-                { ALT: () => this.SUBRULE(this.group) },
-                { ALT: () => this.SUBRULE(this.person) },
-                { ALT: () => this.SUBRULE(this.softwareSystem) },
-                { ALT: () => this.SUBRULE(this.deploymentEnvironment) },
-                { ALT: () => this.SUBRULE(this.relationship) }
+                { ALT: () => this.SUBRULE(this.group, { LABEL: "groupNodes" }) },
+                { ALT: () => this.SUBRULE(this.person, { LABEL: "peopleNodes" }) },
+                { ALT: () => this.SUBRULE(this.softwareSystem, { LABEL: "softwareSystemNodes" }) },
+                { ALT: () => this.SUBRULE(this.deploymentEnvironment, { LABEL: "deploymentEnvironmentNodes" }) },
+                { ALT: () => this.SUBRULE(this.relationship, { LABEL: "relationshipNodes" }) }
             ]);
         });
         this.CONSUME(Tokens.RCurly);
@@ -41,74 +41,72 @@ export class StructurizrParser extends CstParser {
 
     group = this.RULE("group", () => {
         this.OPTION(() => {
-            this.CONSUME(Tokens.Identifier);
+            this.CONSUME(Tokens.Identifier, { LABEL: "elementIdentifier" });
             this.CONSUME(Tokens.Equals);
         });
-        this.CONSUME(Tokens.Group);
+        this.CONSUME(Tokens.Group, { LABEL: "groupLiteral" });
         // consume required name
-        this.CONSUME(Tokens.StringLiteral);
+        this.CONSUME(Tokens.StringLiteral, { LABEL: "nameParameter" });
         this.CONSUME(Tokens.LCurly);
         this.OR([
             {
-                GATE: this.BACKTRACK(this.personOrSoftwareSystem),
-                ALT: () => this.MANY(() => this.SUBRULE(this.personOrSoftwareSystem))
+                // TODO: check if this order works with case where person and software system are shuffled in order
+                // GATE: this.BACKTRACK(this.personOrSoftwareSystem),
+                // ALT: () => this.MANY(() => this.SUBRULE(this.personOrSoftwareSystem, { LABEL: "personOrSoftwareSystemNodes" }))
+                ALT: () => {
+                    this.MANY1(() => this.SUBRULE(this.person, { LABEL: "personNodes" }));
+                    this.MANY2(() => this.SUBRULE(this.softwareSystem, { LABEL: "softwareSystemNodes" }));
+                }
             },
             {
                 GATE: this.BACKTRACK(this.container),
-                ALT: () => this.MANY1(() => this.SUBRULE(this.container))
+                ALT: () => this.MANY3(() => this.SUBRULE(this.container, { LABEL: "containerNodes" }))
             },
             {
                 GATE: this.BACKTRACK(this.component),
-                ALT: () => this.MANY2(() => this.SUBRULE(this.component))
+                ALT: () => this.MANY4(() => this.SUBRULE(this.component, { LABEL: "componentNodes" }))
             }
         ]);
         this.CONSUME(Tokens.RCurly);
     });
 
-    personOrSoftwareSystem = this.RULE("personOrSoftwareSystem", () => {
-        this.OR([
-            { ALT: () => this.SUBRULE(this.person) },
-            { ALT: () => this.SUBRULE(this.softwareSystem) }
-        ]);
-    });
-
     person = this.RULE("person", () => {
         this.OPTION(() => {
-            this.CONSUME(Tokens.Identifier);
+            this.CONSUME(Tokens.Identifier, { LABEL: "elementIdentifier" });
             this.CONSUME(Tokens.Equals);
         });
-        this.CONSUME(Tokens.Person);
+        this.CONSUME(Tokens.Person, { LABEL: "personLiteral" });
         // consume required name
-        this.CONSUME(Tokens.StringLiteral);
+        this.CONSUME(Tokens.StringLiteral, { LABEL: "nameParameter" });
         // consume optional description and tags
-        this.OPTION2(() => this.CONSUME2(Tokens.StringLiteral));
-        this.OPTION3(() => this.CONSUME3(Tokens.StringLiteral));
+        this.OPTION2(() => this.CONSUME2(Tokens.StringLiteral, { LABEL: "descriptionParameter" }));
+        this.OPTION3(() => this.CONSUME3(Tokens.StringLiteral, { LABEL: "tagsParameter" }));
         this.OPTION4(() => {
             this.CONSUME(Tokens.LCurly);
-            this.SUBRULE(this.elementProperties);
+            this.SUBRULE(this.elementProperties, { LABEL: "elementProperties" });
             this.CONSUME(Tokens.RCurly);
         });
     });
 
     softwareSystem = this.RULE("softwareSystem", () => {
         this.OPTION(() => {
-            this.CONSUME(Tokens.Identifier);
+            this.CONSUME(Tokens.Identifier, { LABEL: "elementIdentifier" });
             this.CONSUME(Tokens.Equals);
         });
-        this.CONSUME(Tokens.SoftwareSystem);
+        this.CONSUME(Tokens.SoftwareSystem, { LABEL: "softwareSystemLiteral" });
         // consume required name
-        this.CONSUME(Tokens.StringLiteral);
+        this.CONSUME(Tokens.StringLiteral, { LABEL: "nameParameter" });
         // consume optional description and tags
-        this.OPTION2(() => this.CONSUME2(Tokens.StringLiteral));
-        this.OPTION3(() => this.CONSUME3(Tokens.StringLiteral));
+        this.OPTION2(() => this.CONSUME2(Tokens.StringLiteral, { LABEL: "descriptionParameter" }));
+        this.OPTION3(() => this.CONSUME3(Tokens.StringLiteral, { LABEL: "tagsParameter" }));
         this.OPTION4(() => {
             this.CONSUME(Tokens.LCurly);
             this.MANY(() => {
                 this.OR([
-                    { ALT: () => this.SUBRULE(this.group) },
-                    { ALT: () => this.SUBRULE(this.container) },
-                    { ALT: () => this.SUBRULE(this.relationship) },
-                    { ALT: () => this.SUBRULE(this.elementProperties) }
+                    { ALT: () => this.SUBRULE(this.group, { LABEL: "groupNodes" }) },
+                    { ALT: () => this.SUBRULE(this.container, { LABEL: "containerNodes" }) },
+                    { ALT: () => this.SUBRULE(this.relationship, { LABEL: "relationshipNodes" }) },
+                    { ALT: () => this.SUBRULE(this.elementProperties, { LABEL: "elementProperties" }) }
                 ]);
             });
             this.CONSUME(Tokens.RCurly);
@@ -117,24 +115,24 @@ export class StructurizrParser extends CstParser {
 
     container = this.RULE("container", () => {
         this.OPTION(() => {
-            this.CONSUME(Tokens.Identifier);
+            this.CONSUME(Tokens.Identifier, { LABEL: "elementIdentifier" });
             this.CONSUME(Tokens.Equals);
         });
-        this.CONSUME(Tokens.Container);
+        this.CONSUME(Tokens.Container, { LABEL: "containerLiteral" });
         // consume required name
-        this.CONSUME(Tokens.StringLiteral);
+        this.CONSUME(Tokens.StringLiteral, { LABEL: "nameParameter" });
         // consume optional description, technology and tags
-        this.OPTION2(() => this.CONSUME2(Tokens.StringLiteral));
-        this.OPTION3(() => this.CONSUME3(Tokens.StringLiteral));
-        this.OPTION4(() => this.CONSUME4(Tokens.StringLiteral));
+        this.OPTION2(() => this.CONSUME2(Tokens.StringLiteral, { LABEL: "descriptionParameter" }));
+        this.OPTION3(() => this.CONSUME3(Tokens.StringLiteral, { LABEL: "technologyParameter" }));
+        this.OPTION4(() => this.CONSUME4(Tokens.StringLiteral, { LABEL: "tagsParameter" }));
         this.OPTION5(() => {
             this.CONSUME(Tokens.LCurly);
             this.MANY(() => {
                 this.OR([
-                    { ALT: () => this.SUBRULE(this.group) },
-                    { ALT: () => this.SUBRULE(this.component) },
-                    { ALT: () => this.SUBRULE(this.relationship) },
-                    { ALT: () => this.SUBRULE(this.elementProperties) }
+                    { ALT: () => this.SUBRULE(this.group, { LABEL: "groupNodes" }) },
+                    { ALT: () => this.SUBRULE(this.component, { LABEL: "componentNodes" }) },
+                    { ALT: () => this.SUBRULE(this.relationship, { LABEL: "relationshipNodes" }) },
+                    { ALT: () => this.SUBRULE(this.elementProperties, { LABEL: "elementProperties" }) }
                 ]);
             });
             this.CONSUME(Tokens.RCurly);
@@ -143,38 +141,43 @@ export class StructurizrParser extends CstParser {
 
     component = this.RULE("component", () => {
         this.OPTION(() => {
-            this.CONSUME(Tokens.Identifier);
+            this.CONSUME(Tokens.Identifier, { LABEL: "elementIdentifier" });
             this.CONSUME(Tokens.Equals);
         });
-        this.CONSUME(Tokens.Component);
+        this.CONSUME(Tokens.Component, { LABEL: "componentLiteral" });
         // consume required name
-        this.CONSUME(Tokens.StringLiteral);
+        this.CONSUME(Tokens.StringLiteral, { LABEL: "nameParameter" });
         // consume optional description, technology and tags
-        this.OPTION2(() => this.CONSUME2(Tokens.StringLiteral));
-        this.OPTION3(() => this.CONSUME3(Tokens.StringLiteral));
-        this.OPTION4(() => this.CONSUME4(Tokens.StringLiteral));
+        this.OPTION2(() => this.CONSUME2(Tokens.StringLiteral, { LABEL: "descriptionParameter" }));
+        this.OPTION3(() => this.CONSUME3(Tokens.StringLiteral, { LABEL: "technologyParameter" }));
+        this.OPTION4(() => this.CONSUME4(Tokens.StringLiteral, { LABEL: "tagsParameter" }));
         this.OPTION5(() => {
             this.CONSUME(Tokens.LCurly);
-            this.SUBRULE(this.elementProperties);
+            this.MANY(() => {
+                this.OR([
+                    { ALT: () => this.SUBRULE(this.relationship, { LABEL: "relationshipNodes" }) },
+                    { ALT: () => this.SUBRULE(this.elementProperties, { LABEL: "elementProperties" }) }
+                ]);
+            });
             this.CONSUME(Tokens.RCurly);
         });
     });
 
     deploymentEnvironment = this.RULE("deploymentEnvironment", () => {
         this.OPTION(() => {
-            this.CONSUME(Tokens.Identifier);
+            this.CONSUME(Tokens.Identifier, { LABEL: "elementIdentifier" });
             this.CONSUME(Tokens.Equals);
         });
-        this.CONSUME(Tokens.DeploymentEnvironment);
+        this.CONSUME(Tokens.DeploymentEnvironment, { LABEL: "deploymentEnvironmentLiteral" });
         // consume required name
-        this.CONSUME(Tokens.StringLiteral);
+        this.CONSUME(Tokens.StringLiteral, { LABEL: "nameParameter" });
         this.CONSUME(Tokens.LCurly);
         this.SUBRULE(this.elementProperties);
         this.MANY(() => {
             this.OR([
-                { ALT: () => this.SUBRULE(this.group) },
-                { ALT: () => this.SUBRULE(this.deploymentNode) },
-                { ALT: () => this.SUBRULE(this.relationship) }
+                { ALT: () => this.SUBRULE(this.group, { LABEL: "groupNodes" }) },
+                { ALT: () => this.SUBRULE(this.deploymentNode, { LABEL: "deploymentNodeNodes" }) },
+                { ALT: () => this.SUBRULE(this.relationship, { LABEL: "relationshipNodes" }) }
             ]);
         });
         this.CONSUME(Tokens.RCurly);
@@ -182,25 +185,26 @@ export class StructurizrParser extends CstParser {
 
     deploymentNode = this.RULE("deploymentNode", () => {
         this.OPTION(() => {
-            this.CONSUME(Tokens.Identifier);
+            this.CONSUME(Tokens.Identifier, { LABEL: "elementIdentifier" });
             this.CONSUME(Tokens.Equals);
         });
-        this.CONSUME(Tokens.DeploymentNode);
+        this.CONSUME(Tokens.DeploymentNode, { LABEL: "deploymentNodeLiteral" });
         // consume required name
-        this.CONSUME(Tokens.StringLiteral);
+        this.CONSUME(Tokens.StringLiteral, { LABEL: "nameParameter" });
         // consume optional description, technology, tags and instances
-        this.OPTION1(() => this.CONSUME1(Tokens.StringLiteral));
-        this.OPTION2(() => this.CONSUME2(Tokens.StringLiteral));
-        this.OPTION3(() => this.CONSUME3(Tokens.StringLiteral));
-        this.OPTION4(() => this.CONSUME4(Tokens.NumericLiteral));
+        this.OPTION1(() => this.CONSUME1(Tokens.StringLiteral, { LABEL: "descriptionParameter" }));
+        this.OPTION2(() => this.CONSUME2(Tokens.StringLiteral, { LABEL: "technologyParameter" }));
+        this.OPTION3(() => this.CONSUME3(Tokens.StringLiteral, { LABEL: "tagsParameter" }));
+        this.OPTION4(() => this.CONSUME4(Tokens.NumericLiteral, { LABEL: "instancesParameter" }));
         this.CONSUME(Tokens.LCurly);
-        this.SUBRULE(this.elementProperties);
         this.MANY(() => {
             this.OR([
-                { ALT: () => this.SUBRULE1(this.deploymentNode) },
-                { ALT: () => this.SUBRULE1(this.infrastructureNode) },
-                { ALT: () => this.SUBRULE1(this.softwareSystemInstance) },
-                { ALT: () => this.SUBRULE1(this.containerInstance) }
+                { ALT: () => this.SUBRULE1(this.deploymentNode, { LABEL: "deploymentNodeNodes" }) },
+                { ALT: () => this.SUBRULE1(this.infrastructureNode, { LABEL: "infrastructureNodeNodes" }) },
+                { ALT: () => this.SUBRULE1(this.softwareSystemInstance, { LABEL: "softwareSystemInstanceNodes" }) },
+                { ALT: () => this.SUBRULE1(this.containerInstance, { LABEL: "containerInstanceNodes" }) },
+                { ALT: () => this.SUBRULE1(this.relationship, { LABEL: "relationshipNodes" }) },
+                { ALT: () => this.SUBRULE1(this.elementProperties, { LABEL: "elementProperties" }) }
             ]);
         });
         this.CONSUME(Tokens.RCurly);
@@ -208,52 +212,79 @@ export class StructurizrParser extends CstParser {
 
     infrastructureNode = this.RULE("infrastructureNode", () => {
         this.OPTION(() => {
-            this.CONSUME(Tokens.Identifier);
+            this.CONSUME(Tokens.Identifier, { LABEL: "elementIdentifier" });
             this.CONSUME(Tokens.Equals);
         });
-        this.CONSUME(Tokens.InfrastructureNode);
+        this.CONSUME(Tokens.InfrastructureNode, { LABEL: "infrastructureNodeLiteral" });
         // consume required name
-        this.CONSUME(Tokens.StringLiteral);
-        this.OPTION1(() => this.CONSUME1(Tokens.StringLiteral));
-        this.OPTION2(() => this.CONSUME2(Tokens.StringLiteral));
-        this.OPTION3(() => this.CONSUME3(Tokens.StringLiteral));
-        this.CONSUME(Tokens.LCurly);
-        this.SUBRULE(this.elementProperties);
-        this.CONSUME(Tokens.RCurly);
+        this.CONSUME(Tokens.StringLiteral, { LABEL: "nameParameter" });
+        this.OPTION1(() => this.CONSUME1(Tokens.StringLiteral, { LABEL: "descriptionParameter" }));
+        this.OPTION2(() => this.CONSUME2(Tokens.StringLiteral, { LABEL: "technologyParameter" }));
+        this.OPTION3(() => this.CONSUME3(Tokens.StringLiteral, { LABEL: "tagsParameter" }));
+        this.OPTION4(() => {
+            this.CONSUME(Tokens.LCurly);
+            this.MANY(() => {
+                this.OR([
+                    { ALT: () => this.SUBRULE1(this.relationship, { LABEL: "relationshipNodes" }) },
+                    { ALT: () => this.SUBRULE1(this.elementProperties, { LABEL: "elementProperties" }) }
+                ]);
+            });
+            this.CONSUME(Tokens.RCurly);
+        });
     });
 
     softwareSystemInstance = this.RULE("softwareSystemInstance", () => {
         this.OPTION(() => {
-            this.CONSUME(Tokens.Identifier);
+            this.CONSUME(Tokens.Identifier, { LABEL: "elementIdentifier" });
             this.CONSUME(Tokens.Equals);
         });
-        this.CONSUME(Tokens.SoftwareSystemInstance);
-        this.CONSUME1(Tokens.Identifier);
+        this.CONSUME(Tokens.SoftwareSystemInstance, { LABEL: "softwareSystemInstanceLiteral" });
+        this.CONSUME1(Tokens.Identifier, { LABEL: "softwareSystemIdentifier" });
         // consume optional deployment groups and tags
-        this.OPTION1(() => this.CONSUME1(Tokens.StringLiteral));
-        this.OPTION2(() => this.CONSUME2(Tokens.StringLiteral));
+        this.OPTION1(() => this.CONSUME1(Tokens.StringLiteral, { LABEL: "deploymentGroupsParameter" }));
+        this.OPTION2(() => this.CONSUME2(Tokens.StringLiteral, { LABEL: "tagsParameter" }));
+        this.OPTION3(() => {
+            this.CONSUME(Tokens.LCurly);
+            this.MANY(() => {
+                this.OR([
+                    { ALT: () => this.SUBRULE1(this.relationship, { LABEL: "relationshipNodes" }) },
+                    { ALT: () => this.SUBRULE1(this.elementProperties, { LABEL: "elementProperties" }) }
+                ]);
+            });
+            this.CONSUME(Tokens.RCurly);
+        });
     });
 
     containerInstance = this.RULE("containerInstance", () => {
         this.OPTION(() => {
-            this.CONSUME(Tokens.Identifier);
+            this.CONSUME(Tokens.Identifier, { LABEL: "elementIdentifier" });
             this.CONSUME(Tokens.Equals);
         });
-        this.CONSUME(Tokens.ContainerInstance);
-        this.CONSUME1(Tokens.Identifier);
+        this.CONSUME(Tokens.ContainerInstance, { LABEL: "containerInstanceLiteral" });
+        this.CONSUME1(Tokens.Identifier, { LABEL: "containerIdentifier" });
         // consume optional deployment groups and tags
-        this.OPTION1(() => this.CONSUME1(Tokens.StringLiteral));
-        this.OPTION2(() => this.CONSUME2(Tokens.StringLiteral));
+        this.OPTION1(() => this.CONSUME1(Tokens.StringLiteral, { LABEL: "deploymentGroupsParameter" }));
+        this.OPTION2(() => this.CONSUME2(Tokens.StringLiteral, { LABEL: "tagsParameter" }));
+        this.OPTION3(() => {
+            this.CONSUME(Tokens.LCurly);
+            this.MANY(() => {
+                this.OR([
+                    { ALT: () => this.SUBRULE1(this.relationship, { LABEL: "relationshipNodes" }) },
+                    { ALT: () => this.SUBRULE1(this.elementProperties, { LABEL: "elementProperties" }) }
+                ]);
+            });
+            this.CONSUME(Tokens.RCurly);
+        });
     });
 
     relationship = this.RULE("relationship", () => {
-        this.CONSUME(Tokens.Identifier);
-        this.CONSUME(Tokens.RelationshipArrow);
-        this.CONSUME2(Tokens.Identifier);
+        this.CONSUME(Tokens.Identifier, { LABEL: "sourceIdentifier" });
+        this.CONSUME(Tokens.RelationshipArrow, { LABEL: "relationshipArrowLiteral" });
+        this.CONSUME2(Tokens.Identifier, { LABEL: "targetIdentifier" });
         // consume optional description, technology and tags
-        this.OPTION(() => this.CONSUME(Tokens.StringLiteral));
-        this.OPTION1(() => this.CONSUME1(Tokens.StringLiteral));
-        this.OPTION2(() => this.CONSUME2(Tokens.StringLiteral));
+        this.OPTION(() => this.CONSUME(Tokens.StringLiteral, { LABEL: "descriptionParameter" }));
+        this.OPTION1(() => this.CONSUME1(Tokens.StringLiteral, { LABEL: "technologyParameter" }));
+        this.OPTION2(() => this.CONSUME2(Tokens.StringLiteral, { LABEL: "tagsParameter" }));
     });
 
     elementProperties = this.RULE("elementProperties", () => {
@@ -324,26 +355,26 @@ export class StructurizrParser extends CstParser {
         let hasStyles = false;
         let hasThemes = false;
 
-        this.CONSUME(Tokens.Views);
+        this.CONSUME(Tokens.Views, { LABEL: "viewsLiteral" });
         this.CONSUME(Tokens.LCurly);
         this.MANY(() => {
             this.OR([
-                { ALT: () => this.SUBRULE1(this.systemLandscapeView) },
-                { ALT: () => this.SUBRULE1(this.systemContextView) },
-                { ALT: () => this.SUBRULE1(this.containerView) },
-                { ALT: () => this.SUBRULE1(this.componentView) },
-                { ALT: () => this.SUBRULE1(this.deploymentView) },
+                { ALT: () => this.SUBRULE1(this.systemLandscapeView, { LABEL: "systemLandscapeViewNodes" }) },
+                { ALT: () => this.SUBRULE1(this.systemContextView, { LABEL: "systemContextViewNodes" }) },
+                { ALT: () => this.SUBRULE1(this.containerView, { LABEL: "containerViewNodes" }) }, 
+                { ALT: () => this.SUBRULE1(this.componentView, { LABEL: "componentViewNodes" }) },
+                { ALT: () => this.SUBRULE1(this.deploymentView, { LABEL: "deploymentViewNodes" }) },
                 {
                     GATE: () => !hasStyles,
                     ALT: () => {
-                        this.SUBRULE(this.styles);
+                        this.SUBRULE(this.styles, { LABEL: "stylesNodes" });
                         hasStyles = true;
                     }
                 },
                 {
                     GATE: () => !hasThemes,
                     ALT: () => {
-                        this.SUBRULE(this.themes),
+                        this.SUBRULE(this.themes, { LABEL: "themesNodes" }),
                         hasThemes = true;
                     }
                 }
@@ -353,58 +384,58 @@ export class StructurizrParser extends CstParser {
     });
 
     systemLandscapeView = this.RULE("systemLandscapeView", () => {
-        this.CONSUME(Tokens.SystemLandscape);
+        this.CONSUME(Tokens.SystemLandscape, { LABEL: "systemLandscapeLiteral" });
         // consume optional key and description
-        this.OPTION(() => this.CONSUME(Tokens.StringLiteral));
-        this.OPTION1(() => this.CONSUME1(Tokens.StringLiteral));
+        this.OPTION(() => this.CONSUME(Tokens.StringLiteral, { LABEL: "keyParameter" }));
+        this.OPTION1(() => this.CONSUME1(Tokens.StringLiteral, { LABEL: "descriptionParameter" }));
         this.CONSUME(Tokens.LCurly);
-        this.SUBRULE(this.viewProperties);
+        this.SUBRULE(this.viewProperties, { LABEL: "viewProperties" });
         this.CONSUME(Tokens.RCurly);
     });
 
     systemContextView = this.RULE("systemContextView", () => {
-        this.CONSUME(Tokens.SystemContext);
-        this.CONSUME(Tokens.Identifier);
+        this.CONSUME(Tokens.SystemContext, { LABEL: "systemContextLiteral" });
+        this.CONSUME(Tokens.Identifier, { LABEL: "softwareSystemIdentifier" });
         // consume optional key and description
-        this.OPTION(() => this.CONSUME(Tokens.StringLiteral));
-        this.OPTION1(() => this.CONSUME1(Tokens.StringLiteral));
+        this.OPTION(() => this.CONSUME(Tokens.StringLiteral, { LABEL: "keyParameter" }));
+        this.OPTION1(() => this.CONSUME1(Tokens.StringLiteral, { LABEL: "descriptionParameter" }));
         this.CONSUME(Tokens.LCurly);
-        this.SUBRULE(this.viewProperties);
+        this.SUBRULE(this.viewProperties, { LABEL: "viewProperties" });
         this.CONSUME(Tokens.RCurly);
     });
 
     containerView = this.RULE("containerView", () => {
-        this.CONSUME(Tokens.Container);
-        this.CONSUME(Tokens.Identifier);
+        this.CONSUME(Tokens.Container, { LABEL: "containerLiteral" });
+        this.CONSUME(Tokens.Identifier, { LABEL: "softwareSystemIdentifier" });
         // consume optional key and description
-        this.OPTION(() => this.CONSUME(Tokens.StringLiteral));
-        this.OPTION1(() => this.CONSUME1(Tokens.StringLiteral));
+        this.OPTION(() => this.CONSUME(Tokens.StringLiteral, { LABEL: "keyParameter" }));
+        this.OPTION1(() => this.CONSUME1(Tokens.StringLiteral, { LABEL: "descriptionParameter" }));
         this.CONSUME(Tokens.LCurly);
-        this.SUBRULE(this.viewProperties);
+        this.SUBRULE(this.viewProperties, { LABEL: "viewProperties" });
         this.CONSUME(Tokens.RCurly);
     });
 
     componentView = this.RULE("componentView", () => {
-        this.CONSUME(Tokens.Component);
-        this.CONSUME(Tokens.Identifier);
+        this.CONSUME(Tokens.Component, { LABEL: "componentLiteral" });
+        this.CONSUME(Tokens.Identifier, { LABEL: "containerIdentifier" });
         // consume optional key and description
-        this.OPTION(() => this.CONSUME(Tokens.StringLiteral));
-        this.OPTION1(() => this.CONSUME1(Tokens.StringLiteral));
+        this.OPTION(() => this.CONSUME(Tokens.StringLiteral, { LABEL: "keyParameter" }));
+        this.OPTION1(() => this.CONSUME1(Tokens.StringLiteral, { LABEL: "descriptionParameter" }));
         this.CONSUME(Tokens.LCurly);
-        this.SUBRULE(this.viewProperties);
+        this.SUBRULE(this.viewProperties, { LABEL: "viewProperties" });
         this.CONSUME(Tokens.RCurly);
     });
 
     deploymentView = this.RULE("deploymentView", () => {
-        this.CONSUME(Tokens.Deployment);
-        this.CONSUME(Tokens.Identifier);
+        this.CONSUME(Tokens.Deployment, { LABEL: "deploymentLiteral" });
+        this.CONSUME(Tokens.Identifier, { LABEL: "softwareSystemIdentifier" });
         // consume required environment
-        this.CONSUME(Tokens.StringLiteral);
+        this.CONSUME(Tokens.StringLiteral, { LABEL: "environmentParameter" });
         // consume optional key and description
-        this.OPTION1(() => this.CONSUME1(Tokens.StringLiteral));
-        this.OPTION2(() => this.CONSUME2(Tokens.StringLiteral));
+        this.OPTION1(() => this.CONSUME1(Tokens.StringLiteral, { LABEL: "keyParameter" }));
+        this.OPTION2(() => this.CONSUME2(Tokens.StringLiteral, { LABEL: "descriptionParameter" }));
         this.CONSUME(Tokens.LCurly);
-        this.SUBRULE(this.viewProperties);
+        this.SUBRULE(this.viewProperties, { LABEL: "viewProperties" });
         this.CONSUME(Tokens.RCurly);
     });
 
@@ -531,6 +562,9 @@ export class StructurizrParser extends CstParser {
 
     autolayout = this.RULE("autoLayoutProperty", () => {
         this.CONSUME(Tokens.AutoLayout);
+        this.OPTION(() => this.CONSUME(Tokens.Identifier));
+        this.OPTION1(() => this.CONSUME1(Tokens.NumericLiteral));
+        this.OPTION2(() => this.CONSUME2(Tokens.NumericLiteral));
     });
 
     default = this.RULE("defaultProperty", () => {

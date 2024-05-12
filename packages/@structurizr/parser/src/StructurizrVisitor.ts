@@ -1,3 +1,4 @@
+import { CstNode, IToken } from "@chevrotain/types";
 import {
     Component,
     ComponentViewDefinition,
@@ -46,6 +47,8 @@ import {
     ISystemContextView,
     ISystemLandscapeView,
     IViews,
+    IAutoLayout,
+    AutoLayout,
 } from "@structurizr/dsl";
 import { StructurizrParser } from "./StructurizrParser";
 import { TokenName } from "./TokenName";
@@ -66,98 +69,257 @@ interface PropertyContext {
     UrlLiteral?: Array<{ image?: string }>;
 }
 
+interface WorkspaceContext {
+    workspaceLiteral?: Array<IToken>;
+    nameParameter?: Array<IToken>;
+    descriptionParameter?: Array<IToken>;
+    modelNode?: Array<CstNode>;
+    viewsNode?: Array<CstNode>;
+}
+
+interface ModelContext {
+    modelLiteral?: Array<IToken>;
+    groupNodes?: Array<CstNode>;
+    peopleNodes?: Array<CstNode>;
+    softwareSystemNodes?: Array<CstNode>;
+    deploymentEnvironmentNodes?: Array<CstNode>;
+    relationshipNodes?: Array<CstNode>;
+}
+
+interface PersonContext {
+    elementIdentifier?: Array<IToken>;
+    personLiteral?: Array<IToken>;
+    nameParameter?: Array<IToken>;
+    descriptionParameter?: Array<IToken>;
+    tagsParameter?: Array<IToken>;
+    elementProperties?: Array<CstNode>;
+}
+
+interface GroupContext {
+    elementIdentifier?: Array<IToken>;
+    groupLiteral?: Array<IToken>;
+    nameParameter?: Array<IToken>;
+    personNodes?: Array<CstNode>;
+    softwareSystemNodes?: Array<CstNode>;
+    containerNodes?: Array<CstNode>;
+    componentNodes?: Array<CstNode>;
+}
+
+interface SoftwareSystemContext {
+    elementIdentifier?: Array<IToken>;
+    softwareSystemLiteral?: Array<IToken>;
+    nameParameter?: Array<IToken>;
+    descriptionParameter?: Array<IToken>;
+    tagsParameter?: Array<IToken>;
+    groupNodes?: Array<CstNode>;
+    containerNodes?: Array<CstNode>;
+    relationshipNodes?: Array<CstNode>;
+    elementProperties?: Array<CstNode>;
+}
+
+interface ContainerContext {
+    elementIdentifier?: Array<IToken>;
+    containerLiteral?: Array<IToken>;
+    nameParameter?: Array<IToken>;
+    descriptionParameter?: Array<IToken>;
+    technologyParameter?: Array<IToken>;
+    tagsParameter?: Array<IToken>;
+    groupNodes?: Array<CstNode>;
+    componentNodes?: Array<CstNode>;
+    relationshipNodes?: Array<CstNode>;
+    elementProperties?: Array<CstNode>;
+}
+
+interface ComponentContext {
+    elementIdentifier?: Array<IToken>;
+    componentLiteral?: Array<IToken>;
+    nameParameter?: Array<IToken>;
+    descriptionParameter?: Array<IToken>;
+    technologyParameter?: Array<IToken>;
+    tagsParameter?: Array<IToken>;
+    relationshipNodes?: Array<CstNode>;
+    elementProperties?: Array<CstNode>;
+}
+
+interface DeploymentEnvironmentContext {
+    elementIdentifier?: Array<IToken>;
+    deploymentEnvironmentLiteral?: Array<IToken>;
+    nameParameter?: Array<IToken>;
+    groupNodes?: Array<CstNode>;
+    deploymentNodeNodes?: Array<CstNode>;
+    relationshipNodes?: Array<CstNode>;
+}
+
+interface DeploymentNodeContext {
+    elementIdentifier?: Array<IToken>;
+    deploymentNodeLiteral?: Array<IToken>;
+    nameParameter?: Array<IToken>;
+    descriptionParameter?: Array<IToken>;
+    technologyParameter?: Array<IToken>;
+    tagsParameter?: Array<IToken>;
+    instancesParameter?: Array<IToken>;
+    deploymentNodeNodes?: Array<CstNode>;
+    infrastructureNodeNodes?: Array<CstNode>;
+    softwareSystemInstanceNodes?: Array<CstNode>;
+    containerInstanceNodes?: Array<CstNode>;
+    relationshipNodes?: Array<CstNode>;
+    elementProperties?: Array<CstNode>;
+}
+
+interface InfrastructureNodeContext {
+    elementIdentifier?: Array<IToken>;
+    infrastructureNodeLiteral?: Array<IToken>;
+    nameParameter?: Array<IToken>;
+    descriptionParameter?: Array<IToken>;
+    technologyParameter?: Array<IToken>;
+    tagsParameter?: Array<IToken>;
+    relationshipNodes?: Array<CstNode>;
+    elementProperties?: Array<CstNode>;
+}
+
+interface SoftwareSystemInstanceContext {
+    elementIdentifier?: Array<IToken>;
+    softwareSystemIdentifier?: Array<IToken>;
+    softwareSystemInstanceLiteral?: Array<IToken>;
+    deploymentGroupsParameter?: Array<IToken>;
+    tagsParameter?: Array<IToken>;
+    relationshipNodes?: Array<CstNode>;
+    elementProperties?: Array<CstNode>;
+}
+
+interface ContainerInstanceContext {
+    elementIdentifier?: Array<IToken>;
+    containerIdentifier?: Array<IToken>;
+    containerInstanceLiteral?: Array<IToken>;
+    deploymentGroupsParameter?: Array<IToken>;
+    tagsParameter?: Array<IToken>;
+    relationshipNodes?: Array<CstNode>;
+    elementProperties?: Array<CstNode>;
+}
+
+interface RelationshipContext {
+    sourceIdentifier?: Array<IToken>;
+    targetIdentifier?: Array<IToken>;
+    descriptionParameter?: Array<IToken>;
+    technologyParameter?: Array<IToken>;
+    tagsParameter?: Array<IToken>;
+}
+
+interface ViewsContext {
+    viewsLiteral?: Array<IToken>;
+    systemLandscapeViewNodes?: Array<CstNode>;
+    systemContextViewNodes?: Array<CstNode>;
+    containerViewNodes?: Array<CstNode>;
+    componentViewNodes?: Array<CstNode>;
+    deploymentViewNodes?: Array<CstNode>;
+    stylesNodes?: Array<CstNode>;
+    themesNodes?: Array<CstNode>;
+}
+
+interface SystemLandscapeViewContext {
+    systemLandscapeLiteral?: Array<IToken>;
+    keyParameter?: Array<IToken>;
+    descriptionParameter?: Array<IToken>;
+    viewProperties?: Array<CstNode>;
+}
+
+interface SystemContextViewContext {
+    systemContextLiteral?: Array<IToken>;
+    softwareSystemIdentifier?: Array<IToken>;
+    keyParameter?: Array<IToken>;
+    descriptionParameter?: Array<IToken>;
+    viewProperties?: Array<CstNode>;
+}
+
+interface ContainerViewContext {
+    containerLiteral?: Array<IToken>;
+    softwareSystemIdentifier?: Array<IToken>;
+    keyParameter?: Array<IToken>;
+    descriptionParameter?: Array<IToken>;
+    viewProperties?: Array<CstNode>;
+}
+
+interface ComponentViewContext {
+    componentLiteral?: Array<IToken>;
+    containerIdentifier?: Array<IToken>;
+    keyParameter?: Array<IToken>;
+    descriptionParameter?: Array<IToken>;
+    viewProperties?: Array<CstNode>;
+}
+
+interface DeploymentViewContext {
+    deploymentLiteral?: Array<IToken>;
+    softwareSystemIdentifier?: Array<IToken>;
+    environmentParameter?: Array<IToken>;
+    keyParameter?: Array<IToken>;
+    descriptionParameter?: Array<IToken>;
+    viewProperties?: Array<CstNode>;
+}
+
+interface ViewPropertiesContext {
+    includeProperty?: Array<CstNode>;
+    excludeProperty?: Array<CstNode>;
+    autoLayoutProperty?: Array<CstNode>;
+}
+
+interface AutoLayoutPropertyContext {
+    
+}
+
 export class StructurizrVisitor extends WorkspaceVisitorCtor {
     constructor() {
         super();
         this.validateVisitor();
     }
 
-    workspace(ctx: {
-        StringLiteral?: any;
-        model: any;
-        views: any }
-    ): IWorkspaceSnapshot {
+    workspace(ctx: WorkspaceContext): IWorkspaceSnapshot {
         return new Workspace({
             version: 1,
-            name: trimQuotes(ctx.StringLiteral?.at(0)?.image) ?? "Empty Workspace",
-            description: trimQuotes(ctx.StringLiteral?.at(1)?.image),
-            model: this.visit(ctx.model),
-            views: this.visit(ctx.views)
+            name: trimQuotes(ctx.nameParameter?.at(0)?.image) ?? "Workspace",
+            description: trimQuotes(ctx.descriptionParameter?.at(0)?.image),
+            model: this.visit(ctx.modelNode),
+            views: this.visit(ctx.viewsNode)
         }).toSnapshot();
     }
 
-    model(ctx: {
-        person?: any;
-        group?: any;
-        softwareSystem?: any;
-        deploymentEnvironment?: any;
-        relationship?: any;
-    }): IModel {
+    model(ctx: ModelContext): IModel {
         return new Model({
-            groups: ctx.group?.map(x => this.visit(x)) ?? [],
-            people: ctx.person?.map(x => this.visit(x)) ?? [],
-            softwareSystems: ctx.softwareSystem?.map(x => this.visit(x)) ?? [],
-            deploymentEnvironments: ctx.deploymentEnvironment?.map(x => this.visit(x)) ?? [],
-            relationships: ctx.relationship?.map(x => this.visit(x)) ?? []
+            groups: ctx.groupNodes?.map(x => this.visit(x)) ?? [],
+            people: ctx.peopleNodes?.map(x => this.visit(x)) ?? [],
+            softwareSystems: ctx.softwareSystemNodes?.map(x => this.visit(x)) ?? [],
+            deploymentEnvironments: ctx.deploymentEnvironmentNodes?.map(x => this.visit(x)) ?? [],
+            relationships: ctx.relationshipNodes?.map(x => this.visit(x)) ?? []
         }).toSnapshot();
     }
 
-    group(ctx: {
-        Identifier?: any;
-        StringLiteral?: any;
-        personOrSoftwareSystem?: any[];
-        container?: any[];
-        component?: any[];
-    }): IGroup {
-        const personOrSoftwareSystems = ctx.personOrSoftwareSystem?.map((x) => this.visit(x));
-        const name = trimQuotes(ctx.StringLiteral?.at(0)?.image);
+    group(ctx: GroupContext): IGroup {
+        const name = trimQuotes(ctx.nameParameter?.at(0)?.image);
 
         return new Group({
-            identifier: ctx.Identifier?.at(0)?.image ?? name,
+            identifier: ctx.elementIdentifier?.at(0)?.image ?? name,
             name: name,
-            people: personOrSoftwareSystems?.filter((x) => x.type === ElementType.Person) ?? [],
-            softwareSystems: personOrSoftwareSystems?.filter((x) => x.type === ElementType.SoftwareSystem) ?? [],
-            containers: ctx.container?.map((x) => this.visit(x)) ?? [],
-            components: ctx.component?.map((x) => this.visit(x)) ?? []
+            people: ctx.personNodes?.map((x) => this.visit(x)) ?? [],
+            softwareSystems: ctx.softwareSystemNodes?.map((x) => this.visit(x)) ?? [],
+            containers: ctx.containerNodes?.map((x) => this.visit(x)) ?? [],
+            components: ctx.componentNodes?.map((x) => this.visit(x)) ?? []
         }).toSnapshot();
     }
 
-    personOrSoftwareSystem(ctx: {
-        person?: any[];
-        softwareSystem?: any[] }
-    ): IPerson | ISoftwareSystem {
-        if (ctx.person) {
-            return this.visit(ctx.person);
-        }
-        if (ctx.softwareSystem) {
-            return this.visit(ctx.softwareSystem);
-        }
-
-        return undefined;
-    }
-
-    person(ctx: PropertyContext): IPerson {
-        const name = trimQuotes(ctx.StringLiteral?.at(0)?.image);
+    person(ctx: PersonContext): IPerson {
+        const name = trimQuotes(ctx.nameParameter?.at(0)?.image);
         return new Person({
-            identifier: ctx.Identifier?.at(0)?.image ?? name,
+            identifier: ctx.elementIdentifier?.at(0)?.image ?? name,
             name: name,
-            description: trimQuotes(ctx.StringLiteral?.at(1)?.image),
-            tags: Tag.from(trimQuotes(ctx.StringLiteral?.at(2)?.image))
+            description: trimQuotes(ctx.descriptionParameter?.at(0)?.image),
+            tags: Tag.from(trimQuotes(ctx.tagsParameter?.at(0)?.image))
         }).toSnapshot();
     }
 
-    softwareSystem(ctx: {
-        Identifier?: any;
-        StringLiteral?: any;
-        group?: any[];
-        container?: any[];
-        relationship?: any[];
-        elementProperties?: any
-    }): ISoftwareSystem {
-        const name = trimQuotes(ctx.StringLiteral?.at(0)?.image);
-        const identifier = ctx.Identifier?.at(0)?.image ?? name;
+    softwareSystem(ctx: SoftwareSystemContext): ISoftwareSystem {
+        const name = trimQuotes(ctx.nameParameter?.at(0)?.image);
+        const identifier = ctx.elementIdentifier?.at(0)?.image ?? name;
         const properties = this.visit(ctx.elementProperties);
-        const relationships = ctx.relationship
+        const relationships = ctx.relationshipNodes
             ?.map<Relationship>((x) => this.visit(x))
             ?.map<IRelationship>((x) => {
                 return {
@@ -175,28 +337,21 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor {
             name: properties?.name ?? name,
             technology: [],
             description: properties?.description
-                ?? trimQuotes(ctx.StringLiteral?.at(1)?.image),
+                ?? trimQuotes(ctx.descriptionParameter?.at(0)?.image),
             tags: Tag
-                .from(trimQuotes(ctx.StringLiteral?.at(2)?.image))
+                .from(trimQuotes(ctx.tagsParameter?.at(0)?.image))
                 .concat(properties?.tags ?? []),
-            groups: ctx.group?.map((x) => this.visit(x)),
-            containers: ctx.container?.map((x) => this.visit(x)),
+            groups: ctx.groupNodes?.map((x) => this.visit(x)),
+            containers: ctx.containerNodes?.map((x) => this.visit(x)),
             relationships: relationships
         }).toSnapshot();
     }
 
-    container(ctx: {
-        Identifier?: any;
-        StringLiteral?: any;
-        group?: any[];
-        component?: any[];
-        relationship?: any[];
-        elementProperties?: any
-    }): IContainer {
-        const name = trimQuotes(ctx.StringLiteral?.at(0)?.image);
-        const identifier = ctx.Identifier?.at(0)?.image ?? name;
+    container(ctx: ContainerContext): IContainer {
+        const name = trimQuotes(ctx.nameParameter?.at(0)?.image);
+        const identifier = ctx.elementIdentifier?.at(0)?.image ?? name;
         const properties = this.visit(ctx.elementProperties);
-        const relationships = ctx.relationship
+        const relationships = ctx.relationshipNodes
             ?.map<Relationship>((x) => this.visit(x))
             ?.map<IRelationship>((x) => {
                 return {
@@ -213,163 +368,127 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor {
             identifier: identifier,
             name: properties?.name ?? name,
             description: properties?.description
-                ?? trimQuotes(ctx.StringLiteral?.at(1)?.image),
+                ?? trimQuotes(ctx.descriptionParameter?.at(0)?.image),
             technology: Technology
-                .from(trimQuotes(ctx.StringLiteral?.at(2)?.image))
+                .from(trimQuotes(ctx.technologyParameter?.at(0)?.image))
                 .concat(properties?.technology ?? []),
             tags: Tag
-                .from(trimQuotes(ctx.StringLiteral?.at(3)?.image))
+                .from(trimQuotes(ctx.tagsParameter?.at(0)?.image))
                 .concat(properties?.tags ?? []),
-            groups: ctx.group?.map((x) => this.visit(x)),
-            components: ctx.component?.map((x) => this.visit(x)),
+            groups: ctx.groupNodes?.map((x) => this.visit(x)),
+            components: ctx.componentNodes?.map((x) => this.visit(x)),
             relationships: relationships
         }).toSnapshot();
     }
 
-    component(ctx: {
-        Identifier?: any;
-        StringLiteral?: any;
-        relationship?: any[];
-        elementProperties?: any
-    }): IComponent {
-        const name = trimQuotes(ctx.StringLiteral?.at(0)?.image);
-        const identifier = ctx.Identifier?.at(0)?.image ?? name;
+    component(ctx: ComponentContext): IComponent {
+        const name = trimQuotes(ctx.nameParameter?.at(0)?.image);
+        const identifier = ctx.elementIdentifier?.at(0)?.image ?? name;
         const properties = this.visit(ctx.elementProperties);
-        const relationships = ctx.relationship
-            ?.map<Relationship>((x) => this.visit(x))
-            ?.map<IRelationship>((x) => {
-                return {
-                    ...x,
-                    type: RelationshipType.Relationship,
-                    sourceIdentifier: x.sourceIdentifier.toLocaleUpperCase() === TokenName.ThisLiteral.toLocaleUpperCase() ? identifier : x.sourceIdentifier,
-                    targetIdentifier: x.targetIdentifier.toLocaleUpperCase() === TokenName.ThisLiteral.toLocaleUpperCase() ? identifier : x.targetIdentifier,
-                    tags: x.tags ?? [],
-                    technology: x.technology ?? []
-                };
-            });
 
         return new Component({
             identifier: identifier,
             name: properties?.name ?? name,
             description: properties?.description
-                ?? trimQuotes(ctx.StringLiteral?.at(1)?.image),
+                ?? trimQuotes(ctx.descriptionParameter?.at(0)?.image),
             technology: Technology
-                .from(trimQuotes(ctx.StringLiteral?.at(2)?.image))
+                .from(trimQuotes(ctx.technologyParameter?.at(0)?.image))
                 .concat(properties?.technology ?? []),
             tags: Tag
-                .from(trimQuotes(ctx.StringLiteral?.at(3)?.image))
-                .concat(properties?.tags ?? []),
-            relationships: relationships
+                .from(trimQuotes(ctx.tagsParameter?.at(0)?.image))
+                .concat(properties?.tags ?? [])
         }).toSnapshot();
     }
 
-    deploymentEnvironment(ctx: {
-        Identifier?: any;
-        StringLiteral?: any;
-        group?: any[];
-        deploymentNode?: any[];
-        relationship?: any[];
-    }): IDeploymentEnvironment {
-        const name = trimQuotes(ctx.StringLiteral?.at(0)?.image);
+    deploymentEnvironment(ctx: DeploymentEnvironmentContext): IDeploymentEnvironment {
+        const name = trimQuotes(ctx.nameParameter?.at(0)?.image);
         
         return new DeploymentEnvironment({
-            identifier: ctx.Identifier?.at(0)?.image ?? name,
+            identifier: ctx.elementIdentifier?.at(0)?.image ?? name,
             name: name,
-            deploymentGroups: ctx.group?.map((x) => this.visit(x)),
+            deploymentGroups: ctx.groupNodes?.map((x) => this.visit(x)),
             // groups: ctx.group?.map((x) => this.visit(x)),
-            deploymentNodes: ctx.deploymentNode?.map((x) => this.visit(x)),
-            relationships: ctx.relationship?.map((x) => this.visit(x))
+            deploymentNodes: ctx.deploymentNodeNodes?.map((x) => this.visit(x)),
+            relationships: ctx.relationshipNodes?.map((x) => this.visit(x))
         }).toSnapshot();
     }
 
-    deploymentNode(ctx: {
-        Identifier?: any;
-        StringLiteral?: any;
-        NumericLiteral?: any;
-        deploymentNode?: any[];
-        infrastructureNode?: any[];
-        softwareSystemInstance?: any[];
-        containerInstance?: any[];
-        elementProperties?: any
-    }): IDeploymentNode {
-        const name = trimQuotes(ctx.StringLiteral?.at(0)?.image);
+    deploymentNode(ctx: DeploymentNodeContext): IDeploymentNode {
+        const name = trimQuotes(ctx.nameParameter?.at(0)?.image);
         const properties = this.visit(ctx.elementProperties);
 
         return new DeploymentNode({
-            identifier: ctx.Identifier?.at(0)?.image ?? name,
+            identifier: ctx.elementIdentifier?.at(0)?.image ?? name,
             name: name,
             description: properties?.description
-                ?? trimQuotes(ctx.StringLiteral?.at(1)?.image),
+                ?? trimQuotes(ctx.descriptionParameter?.at(0)?.image),
             technology: Technology
-                .from(trimQuotes(ctx.StringLiteral?.at(2)?.image))
+                .from(trimQuotes(ctx.technologyParameter?.at(0)?.image))
                 .concat(properties?.technology ?? []),
             tags: Tag
-                .from(trimQuotes(ctx.StringLiteral?.at(3)?.image))
+                .from(trimQuotes(ctx.tagsParameter?.at(0)?.image))
                 .concat(properties?.tags ?? []),
-            instances: ctx.NumericLiteral?.at(0)?.image,
-            deploymentNodes: ctx.deploymentNode?.map((x) => this.visit(x)),
-            infrastructureNodes: ctx.infrastructureNode?.map((x) => this.visit(x)),
-            softwareSystemInstances: ctx.softwareSystemInstance?.map((x) => this.visit(x)),
-            containerInstances: ctx.containerInstance?.map((x) => this.visit(x))
+            instances: ctx.instancesParameter?.at(0)?.image
+                ? Number.parseInt(ctx.instancesParameter?.at(0)?.image)
+                : undefined,
+            deploymentNodes: ctx.deploymentNodeNodes?.map((x) => this.visit(x)),
+            infrastructureNodes: ctx.infrastructureNodeNodes?.map((x) => this.visit(x)),
+            softwareSystemInstances: ctx.softwareSystemInstanceNodes?.map((x) => this.visit(x)),
+            containerInstances: ctx.containerInstanceNodes?.map((x) => this.visit(x)),
+            relationships: ctx.relationshipNodes?.map((x) => this.visit(x))
         }).toSnapshot();
     }
 
-    infrastructureNode(ctx: {
-        Identifier?: any;
-        StringLiteral?: any;
-        NumericLiteral?: any;
-        relationship?: any[];
-        elementProperties?: any
-    }): IInfrastructureNode {
-        const name = trimQuotes(ctx.StringLiteral?.at(0)?.image);
+    infrastructureNode(ctx: InfrastructureNodeContext): IInfrastructureNode {
+        const name = trimQuotes(ctx.nameParameter?.at(0)?.image);
         const properties = this.visit(ctx.elementProperties);
 
         return new InfrastructureNode({
-            identifier: ctx.Identifier?.at(0)?.image ?? name,
+            identifier: ctx.elementIdentifier?.at(0)?.image ?? name,
             name: name,
             description: properties?.description
-                ?? trimQuotes(ctx.StringLiteral?.at(1)?.image),
+                ?? trimQuotes(ctx.descriptionParameter?.at(0)?.image),
             technology: Technology
-                .from(trimQuotes(ctx.StringLiteral?.at(2)?.image))
+                .from(trimQuotes(ctx.technologyParameter?.at(0)?.image))
                 .concat(properties?.technology ?? []),
             tags: Tag
-                .from(trimQuotes(ctx.StringLiteral?.at(3)?.image))
+                .from(trimQuotes(ctx.tagsParameter?.at(0)?.image))
                 .concat(properties?.tags ?? []),
-            relationships: ctx.relationship?.map((x) => this.visit(x))
+            relationships: ctx.relationshipNodes?.map((x) => this.visit(x))
         }).toSnapshot();
     }
 
-    softwareSystemInstance(ctx: PropertyContext): ISoftwareSystemInstance {
-        const identifier = ctx.Identifier?.at(0)?.image;
-        const softwareSystemIdentifier = ctx.Identifier?.at(1)?.image ?? identifier;
+    softwareSystemInstance(ctx: SoftwareSystemInstanceContext): ISoftwareSystemInstance {
+        const identifier = ctx.elementIdentifier?.at(0)?.image;
+        const softwareSystemIdentifier = ctx.softwareSystemIdentifier?.at(1)?.image ?? identifier;
 
         return new SoftwareSystemInstance({
-            identifier: identifier ?? softwareSystemIdentifier,
+            identifier: identifier ?? `${softwareSystemIdentifier}_instance`,
             softwareSystemIdentifier: softwareSystemIdentifier,
             // deploymentGroups: ctx.StringLiteral?.at(0)?.image,
-            tags: Tag.from(trimQuotes(ctx.StringLiteral?.at(1)?.image))
+            tags: Tag.from(trimQuotes(ctx.tagsParameter?.at(0)?.image))
         }).toSnapshot();
     }
 
-    containerInstance(ctx: PropertyContext): IContainerInstance {
-        const identifier = ctx.Identifier?.at(0)?.image;
-        const containerIdentifier = ctx.Identifier?.at(1)?.image ?? identifier;
+    containerInstance(ctx: ContainerInstanceContext): IContainerInstance {
+        const identifier = ctx.elementIdentifier?.at(0)?.image;
+        const containerIdentifier = ctx.containerIdentifier?.at(1)?.image ?? identifier;
 
         return new ContainerInstance({
-            identifier: identifier ?? containerIdentifier,
+            identifier: identifier ?? `${containerIdentifier}_instance`,
             containerIdentifier: containerIdentifier,
             // deploymentGroups: ctx.StringLiteral?.at(0)?.image,
-            tags: Tag.from(trimQuotes(ctx.StringLiteral?.at(1)?.image))
+            tags: Tag.from(trimQuotes(ctx.tagsParameter?.at(0)?.image))
         }).toSnapshot();
     }
 
-    relationship(ctx: PropertyContext): IRelationship {
+    relationship(ctx: RelationshipContext): IRelationship {
         return new Relationship({
-            description: trimQuotes(ctx.StringLiteral?.at(0)?.image),
-            technology: Technology.from(trimQuotes(ctx.StringLiteral?.at(1)?.image)),
-            tags: Tag.from(trimQuotes(ctx.StringLiteral?.at(2)?.image)),
-            sourceIdentifier: ctx.Identifier[0].image,
-            targetIdentifier: ctx.Identifier[1].image
+            description: trimQuotes(ctx.descriptionParameter?.at(0)?.image),
+            technology: Technology.from(trimQuotes(ctx.technologyParameter?.at(0)?.image)),
+            tags: Tag.from(trimQuotes(ctx.tagsParameter?.at(0)?.image)),
+            sourceIdentifier: ctx.sourceIdentifier?.at(0)?.image,
+            targetIdentifier: ctx.targetIdentifier?.at(0)?.image
         }).toSnapshot();
     }
 
@@ -407,85 +526,105 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor {
         return ctx.UrlLiteral?.at(0)?.image ?? "";
     }
 
-    views(ctx: {
-        systemLandscapeView?: any;
-        systemContextView?: any;
-        containerView?: any;
-        componentView?: any;
-        deploymentView?: any;
-        styles?: any;
-        themesProperty?: any;
-    }): IViews {
-        const themes = this.visit(ctx.themesProperty);
+    views(ctx: ViewsContext): IViews {
         return new Views({
-            systemLandscape: this.visit(ctx.systemLandscapeView),
-            systemContexts: ctx.systemContextView?.map((x) => this.visit(x)) ?? [],
-            containers: ctx.containerView?.map((x) => this.visit(x)) ?? [],
-            components: ctx.componentView?.map((x) => this.visit(x)) ?? [],
-            deployments: ctx.deploymentView?.map((x) => this.visit(x)) ?? [],
-            // filtered: [],
-            // custom: [],
-            // dynamics: [],
+            systemLandscape: this.visit(ctx.systemLandscapeViewNodes?.at(0)),
+            systemContexts: ctx.systemContextViewNodes?.map((x) => this.visit(x)) ?? [],
+            containers: ctx.containerViewNodes?.map((x) => this.visit(x)) ?? [],
+            components: ctx.componentViewNodes?.map((x) => this.visit(x)) ?? [],
+            deployments: ctx.deploymentViewNodes?.map((x) => this.visit(x)) ?? [],
             configuration: new Configuration({
-                styles: this.visit(ctx.styles),
-                themes: themes ? [themes] : []
+                styles: this.visit(ctx.stylesNodes?.at(0)),
+                themes: this.visit(ctx.themesNodes) ?? []
             })
         }).toSnapshot();
     }
 
-    systemLandscapeView(ctx: PropertyContext): ISystemLandscapeView {
+    systemLandscapeView(ctx: SystemLandscapeViewContext): ISystemLandscapeView {
+        const viewProperties = this.visit(ctx.viewProperties?.at(0));
+
         return new SystemLandscapeViewDefinition({
-            key: trimQuotes(ctx.StringLiteral?.at(0)?.image),
-            description: trimQuotes(ctx.StringLiteral?.at(1)?.image),
-            include: [],
+            key: trimQuotes(ctx.keyParameter?.at(0)?.image),
+            description: trimQuotes(ctx.descriptionParameter?.at(0)?.image),
+            autoLayout: viewProperties.autoLayout,
+            include: viewProperties.include ?? [],
+            exclude: viewProperties.exclude ?? [],
             elements: [],
             relationships: []
         }).toSnapshot();
     }
 
-    systemContextView(ctx: PropertyContext): ISystemContextView {
+    systemContextView(ctx: SystemContextViewContext): ISystemContextView {
+        const viewProperties = this.visit(ctx.viewProperties?.at(0));
+
         return new SystemContextViewDefinition({
-            softwareSystemIdentifier: ctx.Identifier?.at(0)?.image,
-            key: trimQuotes(ctx.StringLiteral?.at(0)?.image),
-            description: trimQuotes(ctx.StringLiteral?.at(1)?.image),
-            include: [],
+            softwareSystemIdentifier: ctx.softwareSystemIdentifier?.at(0)?.image,
+            key: trimQuotes(ctx.keyParameter?.at(0)?.image),
+            description: trimQuotes(ctx.descriptionParameter?.at(0)?.image),
+            autoLayout: viewProperties.autoLayout,
+            include: viewProperties.include ?? [],
+            exclude: viewProperties.exclude ?? [],
             elements: [],
             relationships: []
         }).toSnapshot();
     }
 
-    containerView(ctx: PropertyContext): IContainerView {
+    containerView(ctx: ContainerViewContext): IContainerView {
+        const viewProperties = this.visit(ctx.viewProperties?.at(0));
+        
         return new ContainerViewDefinition({
-            softwareSystemIdentifier: ctx.Identifier?.at(0)?.image,
-            key: trimQuotes(ctx.StringLiteral?.at(0)?.image),
-            description: trimQuotes(ctx.StringLiteral?.at(1)?.image),
-            include: [],
+            softwareSystemIdentifier: ctx.softwareSystemIdentifier?.at(0)?.image,
+            key: trimQuotes(ctx.keyParameter?.at(0)?.image),
+            description: trimQuotes(ctx.descriptionParameter?.at(0)?.image),
+            autoLayout: viewProperties.autoLayout,
+            include: viewProperties.include ?? [],
+            exclude: viewProperties.exclude ?? [],
             elements: [],
             relationships: []
         }).toSnapshot();
     }
 
-    componentView(ctx: PropertyContext): IComponentView {
+    componentView(ctx: ComponentViewContext): IComponentView {
+        const viewProperties = this.visit(ctx.viewProperties?.at(0));
+        
         return new ComponentViewDefinition({
-            containerIdentifier: ctx.Identifier?.at(0)?.image,
-            key: trimQuotes(ctx.StringLiteral?.at(0)?.image),
-            description: trimQuotes(ctx.StringLiteral?.at(1)?.image),
-            include: [],
+            containerIdentifier: ctx.containerIdentifier?.at(0)?.image,
+            key: trimQuotes(ctx.keyParameter?.at(0)?.image),
+            description: trimQuotes(ctx.descriptionParameter?.at(0)?.image),
+            autoLayout: viewProperties.autoLayout,
+            include: viewProperties.include ?? [],
+            exclude: viewProperties.exclude ?? [],
             elements: [],
             relationships: []
         }).toSnapshot();
     }
 
-    deploymentView(ctx: PropertyContext): IDeploymentView {
+    deploymentView(ctx: DeploymentViewContext): IDeploymentView {
+        const viewProperties = this.visit(ctx.viewProperties?.at(0));
+        
         return new DeploymentViewDefinition({
-            softwareSystemIdentifier: ctx.Identifier?.at(0)?.image,
-            environment: trimQuotes(ctx.StringLiteral?.at(0)?.image),
-            key: trimQuotes(ctx.StringLiteral?.at(1)?.image),
-            description: trimQuotes(ctx.StringLiteral?.at(2)?.image),
-            include: [],
+            softwareSystemIdentifier: ctx.softwareSystemIdentifier?.at(0)?.image,
+            environment: trimQuotes(ctx.environmentParameter?.at(0)?.image),
+            key: trimQuotes(ctx.keyParameter?.at(0)?.image),
+            description: trimQuotes(ctx.descriptionParameter?.at(0)?.image),
+            autoLayout: viewProperties.autoLayout,
+            include: viewProperties.include ?? [],
+            exclude: viewProperties.exclude ?? [],
             elements: [],
             relationships: []
         }).toSnapshot();
+    }
+
+    viewProperties(ctx: ViewPropertiesContext): any {
+        return {
+            autoLayout: ctx.autoLayoutProperty ? this.visit(ctx.autoLayoutProperty?.at(0)) : undefined,
+            include: ctx.includeProperty?.map((x) => this.visit(x)) ?? [],
+            exclude: ctx.excludeProperty?.map((x) => this.visit(x)) ?? []
+        }
+    }
+
+    autoLayoutProperty(ctx: AutoLayoutPropertyContext): IAutoLayout {
+        return new AutoLayout().toSnapshot();
     }
 
     styles(ctx: {

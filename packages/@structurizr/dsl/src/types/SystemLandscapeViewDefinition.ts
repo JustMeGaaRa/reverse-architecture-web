@@ -20,7 +20,7 @@ export class SystemLandscapeViewDefinition implements ISupportSnapshot<ISystemLa
         this.description = values.description;
         this.include = values.include ?? [];
         this.exclude = values.exclude ?? [];
-        this.autoLayout = values.autoLayout ? new AutoLayout(values.autoLayout) : undefined;
+        this.autoLayout = values.autoLayout ? new AutoLayout(values.autoLayout) : new AutoLayout();
         this.animation = values.animation;
         // this.properties = values.properties;
         this.elements = values.elements ? values.elements.map(x => new ElementMetadata(x)) : [];

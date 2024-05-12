@@ -175,12 +175,12 @@ export const WorkspaceRenderer: FC<PropsWithChildren<{
                 )}
                 <Styles>
                     {workspace?.views.configuration?.styles?.elements?.map(elementStyle => (
-                        <ElementStyle key={""} style={elementStyle}>
+                        <ElementStyle key={elementStyle.tag} style={elementStyle}>
 
                         </ElementStyle>
                     ))}
                     {workspace?.views.configuration?.styles?.relationships?.map(relationshipStyle => (
-                        <RelationshipStyle key={""} style={relationshipStyle}>
+                        <RelationshipStyle key={relationshipStyle.tag} style={relationshipStyle}>
 
                         </RelationshipStyle>
                     ))}
