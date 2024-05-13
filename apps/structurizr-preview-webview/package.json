@@ -41,6 +41,7 @@
     "@structurizr/parser": "*",
     "@structurizr/react": "*",
     "@restruct/ui": "*",
+    "@restruct/workspace-renderer": "*",
     "@dagrejs/dagre": "^1.1.1",
     "@reactflow/background": "^11.3.9",
     "@reactflow/core": "^11.10.4",

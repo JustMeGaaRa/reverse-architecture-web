@@ -5,8 +5,13 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import reportWebVitals from "./reportWebVitals";
 import { ApplicationContainer } from "./ApplicationContainer";
-import { WorkspaceRenderer } from "./WorkspaceRenderer";
-import { WorkspaceNavigationProvider } from "./WorkspaceNavigationProvider";
+import {
+    WorkspaceNavigationProvider,
+    WorkspaceRenderer,
+    WorkspaceViewBreadcrumbs,
+    WorkspaceZoomControls
+} from "@restruct/workspace-renderer";
+import { createDefaultWorkspace } from "@structurizr/dsl";
 
 const root = createRoot(document.getElementById('root') as HTMLElement);
 root.render(
@@ -15,7 +20,10 @@ root.render(
             <WorkspaceProvider>
                 <WorkspaceNavigationProvider>
                     <ApplicationContainer>
-                        <WorkspaceRenderer />
+                        <WorkspaceRenderer isReadonly workspace={createDefaultWorkspace()} view={undefined}>
+                            <WorkspaceViewBreadcrumbs />
+                            <WorkspaceZoomControls />
+                        </WorkspaceRenderer>
                     </ApplicationContainer>
                 </WorkspaceNavigationProvider>
             </WorkspaceProvider>
