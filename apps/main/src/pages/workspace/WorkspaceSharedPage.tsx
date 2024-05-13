@@ -7,10 +7,11 @@ import {
 } from "@yjs/react";
 import { FC, useCallback, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useAccount, WorkspaceNavigationProvider } from "../../features";
+import { useAccount } from "../../features";
 import { WorkspaceCollaborativeEditor } from "./WorkspaceCollaborativeEditor";
 import { WorkspacePageActions } from "./WorkspacePageActions";
 import { WorkspaceSession } from "./WorkspaceSession";
+import { WorkspaceNavigationProvider } from "@restruct/workspace-renderer";
 
 const SharedRoomCodeparam = "code";
 

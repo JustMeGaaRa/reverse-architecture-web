@@ -1,4 +1,5 @@
 import { Box, ScaleFade } from "@chakra-ui/react";
+import { useWorkspaceNavigation } from "@restruct/workspace-renderer";
 import { useWorkspace } from "@structurizr/react";
 import {
     NodeRelativeElement,
@@ -11,12 +12,10 @@ import {
     CommentApi,
     CommentBadge,
     CommentCacheWrapper,
-    CommentThread,
     CommentThreadCard,
     useAccount,
-    useCommentsStore,
-    useWorkspaceNavigation
-} from "../../../features";
+    useCommentsStore
+} from "../../features";
 
 export const DiscussionsPane: FC = () => {
     const { workspace } = useWorkspace();

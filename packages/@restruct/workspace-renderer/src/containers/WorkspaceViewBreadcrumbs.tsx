@@ -9,7 +9,7 @@ import { findElement, findElementPath, IElement, ViewType } from "@structurizr/d
 import { useWorkspace, WorkspacePanel } from "@structurizr/react";
 import { AppleShortcuts } from "iconoir-react";
 import { FC, useEffect, useState } from "react";
-import { useWorkspaceNavigation } from "../../../features";
+import { useWorkspaceNavigation } from "../hooks";
 
 export const WorkspaceViewBreadcrumbs: FC<{ isVisible?: boolean; }> = ({ isVisible = true }) => {
     const { workspace } = useWorkspace();

@@ -7,4 +7,3 @@ export * from "./navigation";
 export * from "./search";
 export * from "./snackbar";
 export * from "./workspace-explorer";
-export * from "./workspace-renderer";

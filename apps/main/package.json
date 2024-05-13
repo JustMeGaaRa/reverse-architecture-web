@@ -30,6 +30,7 @@
     "@reactflow/node-resizer": "^2.2.9",
     "@reactflow/node-toolbar": "^1.3.9",
     "@restruct/ui": "*",
+    "@restruct/workspace-renderer": "*",
     "@structurizr/dsl": "*",
     "@structurizr/export": "*",
     "@structurizr/live": "*",

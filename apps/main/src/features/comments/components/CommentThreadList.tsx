@@ -1,4 +1,5 @@
 import { Box } from "@chakra-ui/react";
+import { useWorkspaceNavigation } from "@restruct/workspace-renderer";
 import { findViewByKey, ViewType } from "@structurizr/dsl";
 import { useWorkspace } from "@structurizr/react";
 import { FC, useCallback } from "react";
@@ -6,8 +7,7 @@ import {
     CommentCard,
     CommentGroup,
     CommentThread,
-    useCommentsStore,
-    useWorkspaceNavigation
+    useCommentsStore
 } from "../../../features";
 
 export const CommentThreadList: FC = () => {

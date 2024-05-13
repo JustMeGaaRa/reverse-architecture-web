@@ -18,11 +18,11 @@ import {
     ShellCloseButton,
     ShellTabContent
 } from "@restruct/ui";
+import { WorkspaceNavigationProvider, WorkspaceRenderer, WorkspaceViewBreadcrumbs } from "@restruct/workspace-renderer";
 import { Workspace } from "@structurizr/dsl";
 import { parseStructurizr } from "@structurizr/parser";
 import { WorkspaceProvider, WorkspacePanel } from "@structurizr/react";
 import { IWorkspaceInfo } from "@structurizr/y-workspace";
-import { WorkspaceRenderer, WorkspaceViewBreadcrumbs } from "../../../features";
 import {
     Bookmark,
     ChatLines,
@@ -44,12 +44,11 @@ import {
     WorkspaceTemplateActionBar,
     TemplateSectionDiscussion,
     TemplateSectionInfo,
-    WorkspaceNavigationProvider,
     useAccount,
-    useLoaderState,
     useSnackbar,
     useWorkspaceExplorer
 } from "../../../features";
+import { useLoaderState } from "../hooks";
 
 // TODO: come up with a convention or a way to identify the main thread discussion
 const discussionThreadId = "workspace-discussion";
@@ -216,7 +215,7 @@ export const CommunityTemplateModal: FC<{
                                         >
                                             <WorkspaceProvider>
                                                 <WorkspaceNavigationProvider>
-                                                    <WorkspaceRenderer workspace={template} view={template.views.systemLandscape}>
+                                                    <WorkspaceRenderer isReadonly workspace={template} view={template.views.systemLandscape}>
                                                         <WorkspaceViewBreadcrumbs />
                                                         <WorkspaceTemplateActionBar
                                                             workspace={information}

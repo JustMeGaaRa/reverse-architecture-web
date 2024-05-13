@@ -30,14 +30,14 @@ import {
 } from "react";
 import {
     Route,
-    RouteList,
-    WorkspaceCollaboratingUserGroup,
-    useWorkspaceNavigation,
-    WorksapceTitleBreadcrumb,
-    WorkspaceMenu,
-    WorkspaceSharePopover,
-    WorkspaceSynchronizationIcon
+    RouteList
 } from "../../features";
+import { useWorkspaceNavigation } from "@restruct/workspace-renderer";
+import { WorksapceTitleBreadcrumb } from "./WorkspaceTitleBreadcrumb";
+import { WorkspaceMenu } from "./WorkspaceMenu";
+import { WorkspaceSynchronizationIcon } from "./WorkspaceSynchronizationIcon";
+import { WorkspaceCollaboratingUserGroup } from "./WorkspaceCollaboratingUserGroup";
+import { WorkspaceSharePopover } from "./WorkspaceSharePopover";
 
 enum WorkspaceContentMode {
     Diagramming = "diagramming",

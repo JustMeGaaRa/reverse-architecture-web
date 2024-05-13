@@ -42,32 +42,15 @@ export const ElementName: FC<{
             height={"40px"}
             width={"100%"}
         >
-            <Editable
+            <Text
                 borderRadius={12}
                 color={"gray.1000"}
-                value={name}
-                isPreviewFocusable={!isReadonly}
                 noOfLines={1}
                 textStyle={"b3"}
                 title={name}
             >
-                <EditablePreview
-                    noOfLines={1}
-                    width={"100%"}
-                    _hover={{
-                        backgroundColor: "surface.tinted-white-5",
-                    }}
-                />
-                <EditableInput
-                    borderRadius={12}
-                    noOfLines={1}
-                    _focus={{
-                        backgroundColor: "surface.tinted-black-40",
-                        borderColor: "lime.600",
-                        borderWidth: 2
-                    }}
-                />
-            </Editable>
+                {name}
+            </Text>
         </Box>
     )
 }
@@ -110,36 +93,14 @@ export const ElementDescription: FC<{
             textAlign={style?.textAlign ?? "center"}
             width={"100%"}
         >
-            <Editable
+            <Text
                 borderRadius={12}
-                isPreviewFocusable={!isReadonly}
                 color={"gray.1000"}
                 textStyle={"b4"}
                 noOfLines={5}
-                title={description}
-                value={description}
             >
-                <EditablePreview
-                    noOfLines={5}
-                    height={"100%"}
-                    width={"100%"}
-                    _hover={{
-                        backgroundColor: "surface.tinted-white-5"
-                    }}
-                />
-                <EditableTextarea
-                    borderRadius={12}
-                    noOfLines={1}
-                    height={"100%"}
-                    width={"100%"}
-                    resize={"none"}
-                    _focus={{
-                        backgroundColor: "surface.tinted-black-40",
-                        borderColor: "lime.600",
-                        borderWidth: 2
-                    }}
-                />
-            </Editable>
+                {description}
+            </Text>
         </Box>
     )
 }

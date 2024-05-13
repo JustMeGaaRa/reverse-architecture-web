@@ -4,7 +4,7 @@ import { Workspace } from "@structurizr/y-workspace";
 import { useYjsCollaborative } from "@yjs/react";
 import { CloudSync } from "iconoir-react";
 import { FC, useCallback, useEffect } from "react"
-import { useLoaderState } from "../hooks";
+import { useLoaderState } from "../../features";
 
 export const WorkspaceSynchronizationIcon: FC = () => {
     const { document, persistance } = useYjsCollaborative();

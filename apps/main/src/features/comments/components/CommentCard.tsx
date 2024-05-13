@@ -1,5 +1,5 @@
 import { Avatar, ButtonGroup, Flex, Icon, IconButton, Text } from "@chakra-ui/react";
-import { useWorkspaceTheme } from "../../";
+import { useWorkspaceTheme } from "@restruct/workspace-renderer";
 import { Check, MoreHoriz } from "iconoir-react";
 import { FC } from "react";
 import { CommentInfo } from "../types";

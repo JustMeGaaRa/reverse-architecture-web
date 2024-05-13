@@ -1,5 +1,6 @@
 import { Divider } from "@chakra-ui/react";
 import { StructurizrEditor } from "@monaco-editor/structurizr";
+import { createDefaultWorkspace, IWorkspaceSnapshot } from "@structurizr/dsl";
 import {
     Shell,
     ShellBody,
@@ -32,19 +33,18 @@ import {
     useState
 } from "react";
 import * as Y from "yjs";
+import { CommentThreadList } from "../../features";
 import {
-    CommentThreadList,
-    WorkspacePresenterInfo,
     useWorkspaceEditorState,
     useWorkspaceNavigation,
     WorkspaceActionsToolbar,
     workspaceFlowReducer,
+    WorkspacePresenterInfo,
     WorkspaceRenderer,
     WorkspaceUndoRedoControls,
     WorkspaceViewBreadcrumbs,
     WorkspaceZoomControls
-} from "../../features";
-import { createDefaultWorkspace, IWorkspaceSnapshot } from "@structurizr/dsl";
+} from "@restruct/workspace-renderer";
 
 export enum WorkspaceContentMode {
     Diagramming = "diagramming",
@@ -173,7 +173,7 @@ export const WorkspaceCollaborativeEditor: FC = () => {
                     outline={presentationEnabled ? `${presenterInfo?.color}.600` : undefined}
                     outlineWidth={presentationEnabled ? [2, 2, 2, 2] : [2, 2, 0, 0]}
                 >
-                    <WorkspaceRenderer {...handlers} workspace={workspace} view={currentView} discussions={[]}>
+                    <WorkspaceRenderer {...handlers} workspace={workspace} view={currentView}>
                         <WorkspaceViewBreadcrumbs isVisible={isDiagrammingMode} />
                         <WorkspacePresenterInfo isVisible={presentationEnabled} />
                         <WorkspaceUndoRedoControls isVisible={!presentationEnabled} />

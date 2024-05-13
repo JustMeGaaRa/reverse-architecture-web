@@ -31,6 +31,7 @@ import { ReactFlowEdgeTypes, ReactFlowNodeTypes } from "./ReactFlow";
 
 export const Workspace: FC<PropsWithChildren<{
     workspace: IWorkspaceSnapshot;
+    isReadonly?: boolean;
     onElementClick?: (element: IElement, relativePosition: Position) => void;
     onElementPositionChange?: (element: IElement, position: Position) => void;
     onElementDimensionsChange?: (element: IElement, dimensions: Dimensions) => void;
@@ -39,6 +40,7 @@ export const Workspace: FC<PropsWithChildren<{
 }>> = ({
     children,
     workspace,
+    isReadonly,
     onElementClick,
     onElementPositionChange,
     onElementDimensionsChange,
@@ -48,6 +50,7 @@ export const Workspace: FC<PropsWithChildren<{
     return (
         <ReactFlowProvider>
             <WorkspaceReactFlowWrapper
+                isReadonly={isReadonly}
                 onElementClick={onElementClick}
                 onElementPositionChange={onElementPositionChange}
                 onElementDimensionsChange={onElementDimensionsChange}
@@ -61,6 +64,7 @@ export const Workspace: FC<PropsWithChildren<{
 }
 
 const WorkspaceReactFlowWrapper: FC<PropsWithChildren<{
+    isReadonly?: boolean;
     onElementClick?: (element: IElement, relativePosition: Position) => void;
     onElementPositionChange?: (element: IElement, position: Position) => void;
     onElementDimensionsChange?: (element: IElement, dimensions: Dimensions) => void;
@@ -69,6 +73,7 @@ const WorkspaceReactFlowWrapper: FC<PropsWithChildren<{
     onViewClick?: (relativePosition: Position) => void;
 }>> = ({
     children,
+    isReadonly,
     onElementClick,
     onElementPositionChange,
     onElementDimensionsChange,
@@ -159,6 +164,9 @@ const WorkspaceReactFlowWrapper: FC<PropsWithChildren<{
             defaultEdges={[]}
             proOptions={{ hideAttribution: true }}
             snapGrid={[50, 50]}
+            nodesConnectable={!isReadonly}
+            nodesDraggable={!isReadonly}
+            nodesFocusable={!isReadonly}
             onNodeClick={handleOnNodeClick}
             onNodesChange={handleOnNodesChange}
             onMouseMove={handleOnMouseMove}

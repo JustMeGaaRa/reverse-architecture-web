@@ -21,16 +21,15 @@ import {
     CommentApi,
     createWorkspaceConnection,
     createWorkspacePersistance,
-    WorkspaceNavigationProvider,
     useAccount,
     useCommentsStore,
     useLoaderState,
     useSnackbar,
-    useWorkspaceNavigation
 } from "../../features";
 import { WorkspaceCollaborativeEditor } from "./WorkspaceCollaborativeEditor";
 import { WorkspacePageActions } from "./WorkspacePageActions";
 import { WorkspaceSession } from "./WorkspaceSession";
+import { useWorkspaceNavigation, WorkspaceNavigationProvider } from "@restruct/workspace-renderer";
 
 export const WorkspacePage: FC = () => {
     const { workspaceId } = useParams<{ workspaceId: string }>();

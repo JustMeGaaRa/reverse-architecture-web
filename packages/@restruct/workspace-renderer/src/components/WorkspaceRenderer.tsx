@@ -36,7 +36,6 @@ import {
     Workspace
 } from "@structurizr/react";
 import { FC, PropsWithChildren, useEffect } from "react";
-import { CommentThread } from "../../comments";
 import { useWorkspaceNavigation } from "../hooks";
 import { ElementDiagramFlowControls, ElementViewNavigationControls } from "./ElementDiagramFlowControls";
 import { ElementModelCollapseControls, ElementModelFlowControls } from "./ElementModelFlowControls";
@@ -45,7 +44,7 @@ import { ElementOptionsToolbar } from "./ElementOptionsToolbar";
 export const WorkspaceRenderer: FC<PropsWithChildren<{
     workspace: IWorkspaceSnapshot;
     view: ViewDefinition;
-    discussions?: CommentThread[];
+    isReadonly?: boolean;
     onElementClick?: (element: IElement, relativePosition: Position) => void;
     onElementPositionChange?: (element: IElement, position: Position) => void;
     onElementDimensionsChange?: (element: IElement, dimensions: Dimensions) => void;
@@ -56,6 +55,7 @@ export const WorkspaceRenderer: FC<PropsWithChildren<{
     children,
     workspace: initialWorkspace,
     view: initialView,
+    isReadonly,
     onElementClick,
     onElementPositionChange,
     onElementDimensionsChange,
@@ -72,6 +72,7 @@ export const WorkspaceRenderer: FC<PropsWithChildren<{
     return (
         <Workspace
             workspace={workspace}
+            isReadonly={isReadonly}
             onElementClick={onElementClick}
             onElementPositionChange={onElementPositionChange}
             onElementDimensionsChange={onElementDimensionsChange}
@@ -133,44 +134,44 @@ export const WorkspaceRenderer: FC<PropsWithChildren<{
                     ))}
 
                     <ElementModelCollapseControls />
-                    <ElementModelFlowControls onHandleClick={onViewFlowClick} />
-                    <ElementViewNavigationControls />
+                    {!isReadonly && (<ElementModelFlowControls onHandleClick={onViewFlowClick} />)}
+                    {!isReadonly && (<ElementViewNavigationControls />)}
                 </Model>
             )}
             <Views>
                 {currentView !== undefined && currentView.type === ViewType.SystemLandscape && (
                     <SystemLandscapeView view={[workspace.views.systemLandscape].find(x => x.key === currentView.key) ?? currentView}>
                         <ElementViewNavigationControls />
-                        <ElementDiagramFlowControls onHandleClick={onViewFlowClick} />
-                        <ElementOptionsToolbar />
+                        {!isReadonly && (<ElementDiagramFlowControls onHandleClick={onViewFlowClick} />)}
+                        {!isReadonly && (<ElementOptionsToolbar />)}
                     </SystemLandscapeView>
                 )}
                 {currentView !== undefined && currentView.type === ViewType.SystemContext && (
                     <SystemContextView view={workspace.views.systemContexts.find(x => x.key === currentView.key) ?? currentView}>
                         <ElementViewNavigationControls />
-                        <ElementDiagramFlowControls onHandleClick={onViewFlowClick} />
-                        <ElementOptionsToolbar />
+                        {!isReadonly && (<ElementDiagramFlowControls onHandleClick={onViewFlowClick} />)}
+                        {!isReadonly && (<ElementOptionsToolbar />)}
                     </SystemContextView>
                 )}
                 {currentView !== undefined && currentView.type === ViewType.Container && (
                     <ContainerView view={workspace.views.containers.find(x => x.key === currentView.key) ?? currentView}>
                         <ElementViewNavigationControls />
-                        <ElementDiagramFlowControls onHandleClick={onViewFlowClick} />
-                        <ElementOptionsToolbar />
+                        {!isReadonly && (<ElementDiagramFlowControls onHandleClick={onViewFlowClick} />)}
+                        {!isReadonly && (<ElementOptionsToolbar />)}
                     </ContainerView>
                 )}
                 {currentView !== undefined && currentView.type === ViewType.Component && (
                     <ComponentView view={workspace.views.components.find(x => x.key === currentView.key) ?? currentView}>
                         <ElementViewNavigationControls />
-                        <ElementDiagramFlowControls onHandleClick={onViewFlowClick} />
-                        <ElementOptionsToolbar />
+                        {!isReadonly && (<ElementDiagramFlowControls onHandleClick={onViewFlowClick} />)}
+                        {!isReadonly && (<ElementOptionsToolbar />)}
                     </ComponentView>
                 )}
                 {currentView !== undefined && currentView.type === ViewType.Deployment && (
                     <DeploymentView view={workspace.views.deployments.find(x => x.key === currentView.key) ?? currentView}>
                         <ElementViewNavigationControls />
-                        <ElementDiagramFlowControls onHandleClick={onViewFlowClick} />
-                        <ElementOptionsToolbar />
+                        {!isReadonly && (<ElementDiagramFlowControls onHandleClick={onViewFlowClick} />)}
+                        {!isReadonly && (<ElementOptionsToolbar />)}
                     </DeploymentView>
                 )}
                 <Styles>
