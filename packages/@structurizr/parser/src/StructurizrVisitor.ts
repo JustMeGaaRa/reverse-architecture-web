@@ -116,6 +116,10 @@ function trimQuotes(text: string): string {
     return text?.replace(/^"(.*)"$/, '$1');
 }
 
+function formatIdentifier(identifier: string): string {
+    return identifier.replace(/[^a-zA-Z0-9_$]/g, '');
+}
+
 export class StructurizrVisitor extends WorkspaceVisitorCtor implements ICstNodeVisitor {
     constructor() {
         super();
@@ -146,7 +150,7 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor implements ICstNode
         const name = trimQuotes(ctx.nameParameter?.at(0)?.image);
 
         return new Group({
-            identifier: ctx.elementIdentifier?.at(0)?.image ?? name,
+            identifier: ctx.elementIdentifier?.at(0)?.image ?? formatIdentifier(name),
             name: name,
             people: ctx.personNodes?.map((x) => this.visit(x)) ?? [],
             softwareSystems: ctx.softwareSystemNodes?.map((x) => this.visit(x)) ?? [],
@@ -156,7 +160,7 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor implements ICstNode
     person(ctx: PersonCstChildren): IPerson {
         const name = trimQuotes(ctx.nameParameter?.at(0)?.image);
         return new Person({
-            identifier: ctx.elementIdentifier?.at(0)?.image ?? name,
+            identifier: ctx.elementIdentifier?.at(0)?.image ?? formatIdentifier(name),
             name: name,
             description: trimQuotes(ctx.descriptionParameter?.at(0)?.image),
             tags: Tag.from(trimQuotes(ctx.tagsParameter?.at(0)?.image))
@@ -165,7 +169,7 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor implements ICstNode
 
     softwareSystem(ctx: SoftwareSystemCstChildren): ISoftwareSystem {
         const name = trimQuotes(ctx.nameParameter?.at(0)?.image);
-        const identifier = ctx.elementIdentifier?.at(0)?.image ?? name;
+        const identifier = ctx.elementIdentifier?.at(0)?.image ?? formatIdentifier(name);
         const properties = this.visit(ctx.elementProperties);
         const relationships = ctx.relationshipNodes
             ?.map<Relationship>((x) => this.visit(x))
@@ -207,7 +211,7 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor implements ICstNode
 
     container(ctx: ContainerCstChildren): IContainer {
         const name = trimQuotes(ctx.nameParameter?.at(0)?.image);
-        const identifier = ctx.elementIdentifier?.at(0)?.image ?? name;
+        const identifier = ctx.elementIdentifier?.at(0)?.image ?? formatIdentifier(name);
         const properties = this.visit(ctx.elementProperties);
         const relationships = ctx.relationshipNodes
             ?.map<Relationship>((x) => this.visit(x))
@@ -224,7 +228,7 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor implements ICstNode
         
         return new Container({
             identifier: identifier,
-            name: properties?.name ?? name,
+            name: properties?.name ?? formatIdentifier(name),
             description: properties?.description
                 ?? trimQuotes(ctx.descriptionParameter?.at(0)?.image),
             technology: Technology
@@ -251,7 +255,7 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor implements ICstNode
 
     component(ctx: ComponentCstChildren): IComponent {
         const name = trimQuotes(ctx.nameParameter?.at(0)?.image);
-        const identifier = ctx.elementIdentifier?.at(0)?.image ?? name;
+        const identifier = ctx.elementIdentifier?.at(0)?.image ?? formatIdentifier(name);
         const properties = this.visit(ctx.elementProperties);
 
         return new Component({
@@ -272,7 +276,7 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor implements ICstNode
         const name = trimQuotes(ctx.nameParameter?.at(0)?.image);
         
         return new DeploymentEnvironment({
-            identifier: ctx.elementIdentifier?.at(0)?.image ?? name,
+            identifier: ctx.elementIdentifier?.at(0)?.image ?? formatIdentifier(name),
             name: name,
             // deploymentGroups: ctx.groupNodes?.map((x) => this.visit(x)),
             // groups: ctx.group?.map((x) => this.visit(x)),
@@ -286,7 +290,7 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor implements ICstNode
         const properties = this.visit(ctx.elementProperties);
 
         return new DeploymentNode({
-            identifier: ctx.elementIdentifier?.at(0)?.image ?? name,
+            identifier: ctx.elementIdentifier?.at(0)?.image ?? formatIdentifier(name),
             name: name,
             description: properties?.description
                 ?? trimQuotes(ctx.descriptionParameter?.at(0)?.image),
@@ -312,7 +316,7 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor implements ICstNode
         const properties = this.visit(ctx.elementProperties);
 
         return new InfrastructureNode({
-            identifier: ctx.elementIdentifier?.at(0)?.image ?? name,
+            identifier: ctx.elementIdentifier?.at(0)?.image ?? formatIdentifier(name),
             name: name,
             description: properties?.description
                 ?? trimQuotes(ctx.descriptionParameter?.at(0)?.image),

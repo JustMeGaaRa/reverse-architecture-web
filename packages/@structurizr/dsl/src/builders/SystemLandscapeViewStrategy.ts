@@ -26,24 +26,24 @@ export class SystemLandscapeViewStrategy implements ISupportVisitor {
             // 2.1. include all people
             people.forEach(person => {
                 visitor.visitPerson(person, { parentId });
-                elementsInView.push(person.identifier);
+                visitedElements.add(person.identifier);
             });
 
             // 2.1. include all software systems
             softwareSystems.forEach(softwareSystem => {
                 visitor.visitSoftwareSystem(softwareSystem, { parentId });
-                elementsInView.push(softwareSystem.identifier);
+                visitedElements.add(softwareSystem.identifier);
             });
         }
 
-        const elementsInView = [];
+        const visitedElements = new Set<string>();
         const relationships = getRelationships(this.model, true);
 
         // 1.1. iterate over all groups and find software system for the view
         this.model.groups.forEach(group => {
             // 1.1.1.1. include the software system group as a boundary element
             visitor.visitGroup(group);
-            elementsInView.push(group.identifier);
+            visitedElements.add(group.identifier);
 
             // 1.1.1.2. include people and software systems in the group
             visitSoftwareSystems(
@@ -60,7 +60,7 @@ export class SystemLandscapeViewStrategy implements ISupportVisitor {
         );
         
         relationships
-            .filter(relationship => relationshipExistsForElementsInView(elementsInView, relationship))
+            .filter(relationship => relationshipExistsForElementsInView(Array.from(visitedElements), relationship))
             .forEach(relationship => visitor.visitRelationship(relationship));
     }
 }

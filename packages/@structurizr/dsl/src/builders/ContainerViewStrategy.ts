@@ -21,7 +21,8 @@ export class ContainerViewStrategy implements ISupportVisitor {
     ) {}
 
     accept(visitor: IElementVisitor): void {
-        const visitContainer = (
+
+        const visitContainerArray = (
             people: Array<IPerson>,
             softwareSystems: Array<ISoftwareSystem>,
             containers: Array<IContainer>,
@@ -31,7 +32,7 @@ export class ContainerViewStrategy implements ISupportVisitor {
             containers.forEach(container => {
                 // 3.1.1. include the container
                 visitor.visitContainer(container, { parentId });
-                elementsInView.push(container.identifier);
+                visitedElements.add(container.identifier);
 
                 // 3.1.2. include all people that are directly connected to the current container
                 people
@@ -39,9 +40,10 @@ export class ContainerViewStrategy implements ISupportVisitor {
                         return relationshipExistsOverall(relationships, container.identifier, person.identifier)
                             || elementIncludedInView(this.view, person.identifier)
                     })
+                    .filter(person => !visitedElements.has(person.identifier))
                     .forEach(person => {
                         visitor.visitPerson(person);
-                        elementsInView.push(person.identifier);
+                        visitedElements.add(person.identifier);
                     });
                 
                 // 3.1.3. include all software systems that are directly connected to the current container
@@ -50,14 +52,15 @@ export class ContainerViewStrategy implements ISupportVisitor {
                         return relationshipExistsOverall(relationships, container.identifier, softwareSystem.identifier)
                             || elementIncludedInView(this.view, softwareSystem.identifier)
                     })
+                    .filter(softwareSystem => !visitedElements.has(softwareSystem.identifier))
                     .forEach(softwareSystem => {
                         visitor.visitSoftwareSystem(softwareSystem);
-                        elementsInView.push(softwareSystem.identifier);
+                        visitedElements.add(softwareSystem.identifier);
                     });
             });
         }
-
-        const elementsInView = [];
+        
+        const visitedElements = new Set<string>();
         const relationships = getRelationships(this.model, true);
         const people = this.model.groups
             .flatMap(x => x.people)
@@ -72,16 +75,16 @@ export class ContainerViewStrategy implements ISupportVisitor {
             .forEach(softwareSystem => {
                 // 2.1.1. include the software system as a boundary element
                 visitor.visitSoftwareSystem(softwareSystem);
-                elementsInView.push(softwareSystem.identifier);
+                visitedElements.add(softwareSystem.identifier);
 
                 // 2.1.2. iterate over all groups in the software system
                 softwareSystem.groups.forEach(group => {
                     // 2.1.2.1 include the container group as a boundary element
                     visitor.visitGroup(group, { parentId: softwareSystem.identifier });
-                    elementsInView.push(group.identifier);
+                    visitedElements.add(group.identifier);
                     
                     // 2.1.2.2 include all containers in the group
-                    visitContainer(
+                    visitContainerArray(
                         people,
                         softwareSystems,
                         group.containers,
@@ -90,7 +93,7 @@ export class ContainerViewStrategy implements ISupportVisitor {
                 });
 
                 // 2.1.3. include all containers in the software system
-                visitContainer(
+                visitContainerArray(
                     people,
                     softwareSystems,
                     softwareSystem.containers,
@@ -99,7 +102,7 @@ export class ContainerViewStrategy implements ISupportVisitor {
             })
         
         relationships
-            .filter(relationship => relationshipExistsForElementsInView(elementsInView, relationship))
+            .filter(relationship => relationshipExistsForElementsInView(Array.from(visitedElements), relationship))
             .forEach(relationship => visitor.visitRelationship(relationship));
     }
 }

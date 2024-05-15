@@ -1,0 +1,29 @@
+{
+  "name": "@justmegaara/graphviz-dot",
+  "version": "0.1.0",
+  "description": "",
+  "main": "dist/index.js",
+  "keywords": [
+    "maxgraph",
+    "drawio",
+    "vector",
+    "diagram"
+  ],
+  "author": "JustMeGaaRa",
+  "license": "MIT",
+  "scripts": {
+    "build": "npx tsc",
+    "dev": "npx tsc -w"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JustMeGaaRa/reverse-architecture-web.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JustMeGaaRa/reverse-architecture-web/issues"
+  }
+}

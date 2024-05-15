@@ -18,7 +18,7 @@ export class SystemContextViewStrategy implements ISupportVisitor {
     ) {}
 
     accept(visitor: IElementVisitor): void {
-        const elementsInView = [];
+        const visitedElements = new Set<string>();
         const relationships = getRelationships(this.model, true);
         const people = this.model.groups
             .flatMap(x => x.people)
@@ -32,7 +32,7 @@ export class SystemContextViewStrategy implements ISupportVisitor {
             .forEach(softwareSystem => {
                 // 2.1.1. include the current software and all software systems
                 visitor.visitSoftwareSystem(softwareSystem);
-                elementsInView.push(softwareSystem.identifier);
+                visitedElements.add(softwareSystem.identifier);
                 
                 // 2.1.2. include all people that are directly connected to the current software system
                 people
@@ -42,7 +42,7 @@ export class SystemContextViewStrategy implements ISupportVisitor {
                     })
                     .forEach(person => {
                         visitor.visitPerson(person);
-                        elementsInView.push(person.identifier);
+                        visitedElements.add(person.identifier);
                     });
                 
                 // 2.1.3. include all software systems that are directly connected to the current container
@@ -53,12 +53,12 @@ export class SystemContextViewStrategy implements ISupportVisitor {
                     })
                     .forEach(softwareSystem => {
                         visitor.visitSoftwareSystem(softwareSystem);
-                        elementsInView.push(softwareSystem.identifier);
+                        visitedElements.add(softwareSystem.identifier);
                     });
             });
 
         relationships
-            .filter(relationship => relationshipExistsForElementsInView(elementsInView, relationship))
+            .filter(relationship => relationshipExistsForElementsInView(Array.from(visitedElements), relationship))
             .forEach(relationship => visitor.visitRelationship(relationship));
     }
 }

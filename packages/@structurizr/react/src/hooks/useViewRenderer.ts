@@ -1,7 +1,7 @@
 import { useReactFlow } from "@reactflow/core";
 import { ISupportVisitor, IWorkspaceSnapshot, ViewDefinition } from "@structurizr/dsl";
 import { useCallback } from "react";
-import { DagreAutoLayoutStrategy, ElkjsAutoLayoutStrategy } from "../types";
+import { DagreAutoLayoutStrategy, GraphvizLayoutStrategy } from "../types";
 import { getReactFlowModelObject, getReactFlowViewObject } from "../utils";
 
 export const useViewRenderer = () => {
@@ -20,7 +20,7 @@ export const useViewRenderer = () => {
 
     const renderView = useCallback((workspace: IWorkspaceSnapshot, view: ViewDefinition, strategy: ISupportVisitor) => {
         const reactFlowObject = getReactFlowViewObject(workspace, strategy, view);
-        const autoLayoutStrategy = new ElkjsAutoLayoutStrategy();
+        const autoLayoutStrategy = new GraphvizLayoutStrategy();
 
         if (view.autoLayout) {
             autoLayoutStrategy.execute(reactFlowObject)

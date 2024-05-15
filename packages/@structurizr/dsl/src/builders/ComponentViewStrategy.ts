@@ -33,7 +33,7 @@ export class ComponentViewStrategy implements ISupportVisitor {
             components.forEach(component => {
                 // 4.1.1. include the component
                 visitor.visitComponent(component, { parentId });
-                elementsInView.push(component.identifier);
+                visitedElements.add(component.identifier);
                 
                 // 4.1.2. include all people that are directly connected to the current component
                 people
@@ -41,9 +41,10 @@ export class ComponentViewStrategy implements ISupportVisitor {
                         return relationshipExistsOverall(relationships, component.identifier, person.identifier)
                             || elementIncludedInView(this.view, person.identifier)
                     })
+                    .filter(person => !visitedElements.has(person.identifier))
                     .forEach(person => {
                         visitor.visitPerson(person);
-                        elementsInView.push(person.identifier);
+                        visitedElements.add(person.identifier);
                     });
 
                 // 4.1.3. include all software systems that are directly connected to the current component
@@ -52,9 +53,10 @@ export class ComponentViewStrategy implements ISupportVisitor {
                         return relationshipExistsOverall(relationships, component.identifier, softwareSystem.identifier)
                             || elementIncludedInView(this.view, softwareSystem.identifier)
                     })
+                    .filter(softwareSystem => !visitedElements.has(softwareSystem.identifier))
                     .forEach(softwareSystem => {
                         visitor.visitSoftwareSystem(softwareSystem);
-                        elementsInView.push(softwareSystem.identifier);
+                        visitedElements.add(softwareSystem.identifier);
                     });
 
                 // 4.1.4. include all containers that are directly connected to the current container
@@ -63,14 +65,15 @@ export class ComponentViewStrategy implements ISupportVisitor {
                         return relationshipExistsOverall(relationships, component.identifier, container.identifier)
                             || elementIncludedInView(this.view, container.identifier)
                     })
+                    .filter(container => !visitedElements.has(container.identifier))
                     .forEach(container => {
                         visitor.visitContainer(container);
-                        elementsInView.push(container.identifier);
+                        visitedElements.add(container.identifier);
                     });
             });
         }
         
-        const elementsInView = [];
+        const visitedElements = new Set<string>();
         const relationships = getRelationships(this.model, true);
         const people = this.model.people
             .concat(this.model.groups.flatMap(x => x.people));
@@ -86,13 +89,13 @@ export class ComponentViewStrategy implements ISupportVisitor {
             .forEach(container => {
                 // 3.1.1. include the current container
                 visitor.visitContainer(container);
-                elementsInView.push(container.identifier);
+                visitedElements.add(container.identifier);
 
                 // 3.1.2. iterate over all groups in the container 
                 container.groups.forEach(group => {
                     // 3.1.2.1. include the component group as a boundary element
                     visitor.visitGroup(group, { parentId: container.identifier });
-                    elementsInView.push(group.identifier);
+                    visitedElements.add(group.identifier);
 
                     // 3.1.2.2. include all components in the group
                     visitComponent(
@@ -115,7 +118,7 @@ export class ComponentViewStrategy implements ISupportVisitor {
             })
         
         relationships
-            .filter(relationship => relationshipExistsForElementsInView(elementsInView, relationship))
+            .filter(relationship => relationshipExistsForElementsInView(Array.from(visitedElements), relationship))
             .forEach(relationship => visitor.visitRelationship(relationship));
     }
 }
