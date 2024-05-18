@@ -1,4 +1,4 @@
-import { CstParser, IToken } from "chevrotain";
+import { CstParser, generateCstDts, IOrAlt, IToken } from "chevrotain";
 import {
     Animation,
     AutoLayout,
@@ -66,6 +66,8 @@ import {
 
 export class StructurizrParser extends CstParser {
     private static _instance: StructurizrParser;
+    private modelChildren: Array<IOrAlt<any>>;
+    private groupChildren: Array<IOrAlt<any>>;
 
     constructor() {
         super(TokenTypes);
@@ -98,7 +100,7 @@ export class StructurizrParser extends CstParser {
         this.CONSUME(LCurly);
         this.MANY(() => {
             this.OR([
-                { ALT: () => this.SUBRULE(this.group, { LABEL: "groupNodes" }) },
+                { ALT: () => this.SUBRULE(this.modelGroup, { LABEL: "groupNodes" }) },
                 { ALT: () => this.SUBRULE(this.person, { LABEL: "peopleNodes" }) },
                 { ALT: () => this.SUBRULE(this.softwareSystem, { LABEL: "softwareSystemNodes" }) },
                 { ALT: () => this.SUBRULE(this.deploymentEnvironment, { LABEL: "deploymentEnvironmentNodes" }) },
@@ -108,7 +110,7 @@ export class StructurizrParser extends CstParser {
         this.CONSUME(RCurly);
     });
 
-    group = this.RULE("group", () => {
+    modelGroup = this.RULE("modelGroup", () => {
         this.OPTION(() => {
             this.CONSUME(Identifier, { LABEL: "elementIdentifier" });
             this.CONSUME(Equals);
@@ -117,25 +119,12 @@ export class StructurizrParser extends CstParser {
         // consume required name
         this.CONSUME(StringLiteral, { LABEL: "nameParameter" });
         this.CONSUME(LCurly);
-        this.OR([
-            {
-                // TODO: check if this order works with case where person and software system are shuffled in order
-                // GATE: this.BACKTRACK(this.personOrSoftwareSystem),
-                // ALT: () => this.MANY(() => this.SUBRULE(this.personOrSoftwareSystem, { LABEL: "personOrSoftwareSystemNodes" }))
-                ALT: () => {
-                    this.MANY1(() => this.SUBRULE(this.person, { LABEL: "personNodes" }));
-                    this.MANY2(() => this.SUBRULE(this.softwareSystem, { LABEL: "softwareSystemNodes" }));
-                }
-            },
-            {
-                GATE: this.BACKTRACK(this.container),
-                ALT: () => this.MANY3(() => this.SUBRULE(this.container, { LABEL: "containerNodes" }))
-            },
-            {
-                GATE: this.BACKTRACK(this.component),
-                ALT: () => this.MANY4(() => this.SUBRULE(this.component, { LABEL: "componentNodes" }))
-            }
-        ]);
+        this.MANY(() => {
+            this.OR([
+                { ALT: () => this.SUBRULE(this.person, { LABEL: "personNodes" }) },
+                { ALT: () => this.SUBRULE(this.softwareSystem, { LABEL: "softwareSystemNodes" }) }
+            ]);
+        })
         this.CONSUME(RCurly);
     });
 
@@ -172,7 +161,7 @@ export class StructurizrParser extends CstParser {
             this.CONSUME(LCurly);
             this.MANY(() => {
                 this.OR([
-                    { ALT: () => this.SUBRULE(this.group, { LABEL: "groupNodes" }) },
+                    { ALT: () => this.SUBRULE(this.softwareSystemGroup, { LABEL: "groupNodes" }) },
                     { ALT: () => this.SUBRULE(this.container, { LABEL: "containerNodes" }) },
                     { ALT: () => this.SUBRULE(this.relationship, { LABEL: "relationshipNodes" }) },
                     { ALT: () => this.SUBRULE(this.elementProperties, { LABEL: "elementProperties" }) }
@@ -180,6 +169,19 @@ export class StructurizrParser extends CstParser {
             });
             this.CONSUME(RCurly);
         });
+    });
+
+    softwareSystemGroup = this.RULE("softwareSystemGroup", () => {
+        this.OPTION(() => {
+            this.CONSUME(Identifier, { LABEL: "elementIdentifier" });
+            this.CONSUME(Equals);
+        });
+        this.CONSUME(Group, { LABEL: "groupLiteral" });
+        // consume required name
+        this.CONSUME(StringLiteral, { LABEL: "nameParameter" });
+        this.CONSUME(LCurly);
+        this.MANY3(() => this.SUBRULE(this.container, { LABEL: "containerNodes" }))
+        this.CONSUME(RCurly);
     });
 
     container = this.RULE("container", () => {
@@ -198,7 +200,7 @@ export class StructurizrParser extends CstParser {
             this.CONSUME(LCurly);
             this.MANY(() => {
                 this.OR([
-                    { ALT: () => this.SUBRULE(this.group, { LABEL: "groupNodes" }) },
+                    { ALT: () => this.SUBRULE(this.containerGroup, { LABEL: "groupNodes" }) },
                     { ALT: () => this.SUBRULE(this.component, { LABEL: "componentNodes" }) },
                     { ALT: () => this.SUBRULE(this.relationship, { LABEL: "relationshipNodes" }) },
                     { ALT: () => this.SUBRULE(this.elementProperties, { LABEL: "elementProperties" }) }
@@ -206,6 +208,19 @@ export class StructurizrParser extends CstParser {
             });
             this.CONSUME(RCurly);
         });
+    });
+
+    containerGroup = this.RULE("containerGroup", () => {
+        this.OPTION(() => {
+            this.CONSUME(Identifier, { LABEL: "elementIdentifier" });
+            this.CONSUME(Equals);
+        });
+        this.CONSUME(Group, { LABEL: "groupLiteral" });
+        // consume required name
+        this.CONSUME(StringLiteral, { LABEL: "nameParameter" });
+        this.CONSUME(LCurly);
+        this.MANY4(() => this.SUBRULE(this.component, { LABEL: "componentNodes" }))
+        this.CONSUME(RCurly);
     });
 
     component = this.RULE("component", () => {
@@ -244,7 +259,7 @@ export class StructurizrParser extends CstParser {
         this.SUBRULE(this.elementProperties);
         this.MANY(() => {
             this.OR([
-                { ALT: () => this.SUBRULE(this.group, { LABEL: "groupNodes" }) },
+                // { ALT: () => this.SUBRULE(this.group, { LABEL: "groupNodes" }) },
                 { ALT: () => this.SUBRULE(this.deploymentNode, { LABEL: "deploymentNodeNodes" }) },
                 { ALT: () => this.SUBRULE(this.relationship, { LABEL: "relationshipNodes" }) }
             ]);
@@ -629,7 +644,10 @@ export class StructurizrParser extends CstParser {
 
     exclude = this.RULE("excludeProperty", () => {
         this.CONSUME(Exclude);
-        this.MANY(() => this.CONSUME(Identifier));
+        this.OR([
+            { ALT: () => this.CONSUME(Wildcard) },
+            { ALT: () => this.MANY(() => this.CONSUME(Identifier)) }
+        ]);
     });
 
     autolayout = this.RULE("autoLayoutProperty", () => {
@@ -933,7 +951,7 @@ export class StructurizrParser extends CstParser {
         this.CONSUME(HexColor);
     });
 
-    fontSize = this.RULE("fonSize", () => {
+    fontSize = this.RULE("fontSize", () => {
         this.CONSUME(FontSize);
         this.CONSUME(Number);
     });

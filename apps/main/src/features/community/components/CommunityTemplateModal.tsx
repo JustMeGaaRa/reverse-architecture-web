@@ -99,7 +99,7 @@ export const CommunityTemplateModal: FC<{
                         errors => {
                             onStopLoading();
                             snackbar({
-                                title: "Error parsing workspace",
+                                title: errors[0].name,
                                 description: errors[0].message,
                                 status: "error"
                             })
