@@ -1,12 +1,10 @@
 import { Box } from "@chakra-ui/react";
-import { useWorkspaceNavigation, WorkspaceRenderer } from "@restruct/workspace-renderer";
-import { IWorkspaceSnapshot } from "@structurizr/dsl";
-import { parseStructurizr } from "@structurizr/parser";
+import { useWorkspaceNavigation } from "@restruct/workspace-renderer";
+import { parseStructurizr, structurizrLexer, visitWorkspace } from "@structurizr/parser";
 import { useWorkspace } from "@structurizr/react";
-import { FC, PropsWithChildren, useEffect } from "react";
-
-// import "@reactflow/core/dist/style.css";
-// import '@reactflow/node-resizer/dist/style.css';
+import { chain, fold } from "fp-ts/Either";
+import { pipe } from "fp-ts/lib/function";
+import { FC, PropsWithChildren, useEffect, useState } from "react";
 
 type Message = {
     command: "update";
@@ -14,37 +12,42 @@ type Message = {
 }
 
 export const ApplicationContainer: FC<PropsWithChildren> = ({ children }) => {
+    const [ workspace, setWorkspaceCst ] = useState<any>();
     const { setWorkspace } = useWorkspace();
     const { setCurrentView } = useWorkspaceNavigation();
 
     useEffect(() => {
-        const tryParseWorkspace = (structurizr: string): [boolean, IWorkspaceSnapshot] => {
-            let successfull = false;
-            let workspace: IWorkspaceSnapshot;
-
-            try {
-                workspace = parseStructurizr(structurizr);
-                successfull = true;
-            } catch (error) {
-                workspace = undefined;
-                successfull = false;
-            }
-
-            return [successfull, workspace];
-        }
-
         const eventHandler = (event: MessageEvent<Message>) => {
-            switch (event.data.command) {
-                case "update":
-                    console.log("Received update message");
-                    const [successfull, workspace] = tryParseWorkspace(event.data.content);
-
-                    if (successfull) {
-                        console.log("Parsed workspace", workspace);
-                        setWorkspace(workspace);
-                        setCurrentView(workspace.views.systemLandscape);
-                    }
-                    break;
+            try {
+                switch (event.data.command) {
+                    case "update":
+                        pipe(
+                            structurizrLexer(event.data.content),
+                            chain(tokens => {
+                                console.debug("Structurizr Preview: received update message");
+                                return parseStructurizr(tokens);
+                            }),
+                            chain(workspaceCst => {
+                                console.debug("Structurizr Preview: parsed structurizr successfully");
+                                setWorkspaceCst(workspaceCst);
+                                return visitWorkspace(workspaceCst);
+                            }),
+                            fold(
+                                errors => {
+                                    console.error("Structurizr Preview: error while parsing structurizr", errors);
+                                },
+                                workspace => {
+                                    console.debug("Structurizr Preview: parsing workspace successfully")
+                                    setWorkspace(workspace);
+                                    setCurrentView(workspace.views.systemLandscape);
+                                }
+                            )
+                        );
+                        break;
+                }
+            }
+            catch (error) {
+                console.error("Structurizr Preview: error while handling message", error);
             }
         }
 

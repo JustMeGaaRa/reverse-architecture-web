@@ -1,14 +1,14 @@
 import {
     Box,
     Divider,
+    Icon,
     IconButton,
-    Tabs,
     Tab,
     TabList,
     TabPanel,
     TabPanels,
-    Icon,
-    useDisclosure,
+    Tabs,
+    useDisclosure
 } from "@chakra-ui/react";
 import {
     ButtonSegmentedToggle,
@@ -17,34 +17,34 @@ import {
     ShellHeader,
     ShellOverlay,
     ShellTitle,
-    useLocale,
+    useLocale
 } from "@restruct/ui";
-import { isStructurizrValid, parseStructurizr } from "@structurizr/parser";
+import { parseWorkspace } from "@structurizr/parser";
 import { useYjsCollaborative } from "@yjs/react";
 import {
     List,
     Upload,
-    ViewGrid,
+    ViewGrid
 } from "iconoir-react";
 import {
     FC,
     PropsWithChildren,
     useCallback,
-    useMemo,
+    useMemo
 } from "react";
 import { useSearchParams } from "react-router-dom";
-import {
-    LocaleKeys,
-    WorkspaceExplorer,
-    useAccount,
-    useSnackbar,
-    ContentViewMode,
-    useContentViewMode,
-    StateMessage,
-    WorkspaceSelectionProvider,
-    useLoaderState
-} from "../../../features";
 import * as Structurizr from "../../../features";
+import {
+    ContentViewMode,
+    LocaleKeys,
+    StateMessage,
+    useAccount,
+    useContentViewMode,
+    useLoaderState,
+    useSnackbar,
+    WorkspaceExplorer,
+    WorkspaceSelectionProvider
+} from "../../../features";
 
 export enum WorkspaceListTabs {
     All = "all",
@@ -82,14 +82,23 @@ export const WorkspaceExplorerTabs: FC<PropsWithChildren> = () => {
         event.dataTransfer.files[0].text()
             .then(content => {
                 onStartImporting();
-                
-                if (isStructurizrValid(content)) {
-                    Structurizr.create(document, account.fullname, parseStructurizr(content));
-                    // create(account.fullname, parseStructurizr(content));
-                }
-                else {
-                    // TODO: show error message because workspace file is not valid
-                }
+                parseWorkspace(
+                    content,
+                    errors => {
+                        // TODO: show error message because workspace file is not valid
+                        snackbar({
+                            title: "An error occurred when importing the workspace",
+                            description: errors[0].message,
+                            status: "error",
+                            duration: 9000
+                        })
+                        onClose();
+                    },
+                    workspace => {
+                        Structurizr.create(document, account.fullname, workspace);
+                        // create(account.fullname, parseStructurizr(content));
+                    }
+                );
         
                 onStopImporting();
                 onClose();

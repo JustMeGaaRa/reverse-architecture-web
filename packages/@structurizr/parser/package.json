@@ -20,7 +20,8 @@
   },
   "dependencies": {
     "@structurizr/dsl": "*",
-    "chevrotain": "^11.0.3"
+    "chevrotain": "^11.0.3",
+    "fp-ts": "^2.16.5"
   },
   "devDependencies": {
     "typescript": "^5.2.2"

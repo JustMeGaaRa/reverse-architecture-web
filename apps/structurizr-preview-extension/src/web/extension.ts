@@ -32,11 +32,11 @@ export function activate(context: vscode.ExtensionContext) {
 			"restruct",
 			"Structurizr Preview by Restruct",
 			vscode.ViewColumn.Beside,
-			{ enableScripts: true }
+			{ enableScripts: true, retainContextWhenHidden: true }
 		);
 		
 		const cssUri = previewPanel.webview.asWebviewUri(vscode.Uri.joinPath(context.extensionUri, "dist", "webview", "static", "css", "main.7045b1c9.css"));
-		const scriptUri = previewPanel.webview.asWebviewUri(vscode.Uri.joinPath(context.extensionUri, "dist", "webview", "static", "js", "main.13b3244b.js"));
+		const scriptUri = previewPanel.webview.asWebviewUri(vscode.Uri.joinPath(context.extensionUri, "dist", "webview", "static", "js", "main.01aeba05.js"));
 
 		previewPanel.webview.html = `
 			<!doctype html>

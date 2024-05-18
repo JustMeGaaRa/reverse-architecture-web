@@ -1,4 +1,3 @@
-import { CstNode, IToken } from "@chevrotain/types";
 import {
     Component,
     ComponentViewDefinition,
@@ -9,7 +8,6 @@ import {
     DeploymentEnvironment,
     DeploymentNode,
     DeploymentViewDefinition,
-    ElementType,
     Group,
     InfrastructureNode,
     IRelationship,
@@ -51,219 +49,35 @@ import {
     AutoLayout,
 } from "@structurizr/dsl";
 import { StructurizrParser } from "./StructurizrParser";
-import { TokenName } from "./TokenName";
+import {
+    AutoLayoutPropertyContext,
+    ComponentContext,
+    ComponentViewContext,
+    ContainerContext,
+    ContainerInstanceContext,
+    ContainerViewContext,
+    DeploymentEnvironmentContext,
+    DeploymentNodeContext,
+    DeploymentViewContext,
+    GroupContext,
+    InfrastructureNodeContext,
+    ModelContext,
+    PersonContext,
+    PropertyContext,
+    RelationshipContext,
+    SoftwareSystemContext,
+    SoftwareSystemInstanceContext,
+    SystemContextViewContext,
+    SystemLandscapeViewContext,
+    ViewPropertiesContext,
+    ViewsContext,
+    WorkspaceContext
+} from "./Types";
 
-const structurizrParser = new StructurizrParser();
-const WorkspaceVisitorCtor = structurizrParser.getBaseCstVisitorConstructorWithDefaults();
+const WorkspaceVisitorCtor = StructurizrParser.instance.getBaseCstVisitorConstructorWithDefaults();
 
 function trimQuotes(text: string): string {
     return text?.replace(/^"(.*)"$/, '$1');
-}
-
-interface PropertyContext {
-    Identifier?: Array<{ image?: string }>;
-    StringLiteral?: Array<{ image?: string }>;
-    NumericLiteral?: Array<{ image?: string }>;
-    HexColorLiteral?: Array<{ image?: string }>;
-    BooleanLiteral?: Array<{ image?: string }>;
-    UrlLiteral?: Array<{ image?: string }>;
-}
-
-interface WorkspaceContext {
-    workspaceLiteral?: Array<IToken>;
-    nameParameter?: Array<IToken>;
-    descriptionParameter?: Array<IToken>;
-    modelNode?: Array<CstNode>;
-    viewsNode?: Array<CstNode>;
-}
-
-interface ModelContext {
-    modelLiteral?: Array<IToken>;
-    groupNodes?: Array<CstNode>;
-    peopleNodes?: Array<CstNode>;
-    softwareSystemNodes?: Array<CstNode>;
-    deploymentEnvironmentNodes?: Array<CstNode>;
-    relationshipNodes?: Array<CstNode>;
-}
-
-interface PersonContext {
-    elementIdentifier?: Array<IToken>;
-    personLiteral?: Array<IToken>;
-    nameParameter?: Array<IToken>;
-    descriptionParameter?: Array<IToken>;
-    tagsParameter?: Array<IToken>;
-    elementProperties?: Array<CstNode>;
-}
-
-interface GroupContext {
-    elementIdentifier?: Array<IToken>;
-    groupLiteral?: Array<IToken>;
-    nameParameter?: Array<IToken>;
-    personNodes?: Array<CstNode>;
-    softwareSystemNodes?: Array<CstNode>;
-    containerNodes?: Array<CstNode>;
-    componentNodes?: Array<CstNode>;
-}
-
-interface SoftwareSystemContext {
-    elementIdentifier?: Array<IToken>;
-    softwareSystemLiteral?: Array<IToken>;
-    nameParameter?: Array<IToken>;
-    descriptionParameter?: Array<IToken>;
-    tagsParameter?: Array<IToken>;
-    groupNodes?: Array<CstNode>;
-    containerNodes?: Array<CstNode>;
-    relationshipNodes?: Array<CstNode>;
-    elementProperties?: Array<CstNode>;
-}
-
-interface ContainerContext {
-    elementIdentifier?: Array<IToken>;
-    containerLiteral?: Array<IToken>;
-    nameParameter?: Array<IToken>;
-    descriptionParameter?: Array<IToken>;
-    technologyParameter?: Array<IToken>;
-    tagsParameter?: Array<IToken>;
-    groupNodes?: Array<CstNode>;
-    componentNodes?: Array<CstNode>;
-    relationshipNodes?: Array<CstNode>;
-    elementProperties?: Array<CstNode>;
-}
-
-interface ComponentContext {
-    elementIdentifier?: Array<IToken>;
-    componentLiteral?: Array<IToken>;
-    nameParameter?: Array<IToken>;
-    descriptionParameter?: Array<IToken>;
-    technologyParameter?: Array<IToken>;
-    tagsParameter?: Array<IToken>;
-    relationshipNodes?: Array<CstNode>;
-    elementProperties?: Array<CstNode>;
-}
-
-interface DeploymentEnvironmentContext {
-    elementIdentifier?: Array<IToken>;
-    deploymentEnvironmentLiteral?: Array<IToken>;
-    nameParameter?: Array<IToken>;
-    groupNodes?: Array<CstNode>;
-    deploymentNodeNodes?: Array<CstNode>;
-    relationshipNodes?: Array<CstNode>;
-}
-
-interface DeploymentNodeContext {
-    elementIdentifier?: Array<IToken>;
-    deploymentNodeLiteral?: Array<IToken>;
-    nameParameter?: Array<IToken>;
-    descriptionParameter?: Array<IToken>;
-    technologyParameter?: Array<IToken>;
-    tagsParameter?: Array<IToken>;
-    instancesParameter?: Array<IToken>;
-    deploymentNodeNodes?: Array<CstNode>;
-    infrastructureNodeNodes?: Array<CstNode>;
-    softwareSystemInstanceNodes?: Array<CstNode>;
-    containerInstanceNodes?: Array<CstNode>;
-    relationshipNodes?: Array<CstNode>;
-    elementProperties?: Array<CstNode>;
-}
-
-interface InfrastructureNodeContext {
-    elementIdentifier?: Array<IToken>;
-    infrastructureNodeLiteral?: Array<IToken>;
-    nameParameter?: Array<IToken>;
-    descriptionParameter?: Array<IToken>;
-    technologyParameter?: Array<IToken>;
-    tagsParameter?: Array<IToken>;
-    relationshipNodes?: Array<CstNode>;
-    elementProperties?: Array<CstNode>;
-}
-
-interface SoftwareSystemInstanceContext {
-    elementIdentifier?: Array<IToken>;
-    softwareSystemIdentifier?: Array<IToken>;
-    softwareSystemInstanceLiteral?: Array<IToken>;
-    deploymentGroupsParameter?: Array<IToken>;
-    tagsParameter?: Array<IToken>;
-    relationshipNodes?: Array<CstNode>;
-    elementProperties?: Array<CstNode>;
-}
-
-interface ContainerInstanceContext {
-    elementIdentifier?: Array<IToken>;
-    containerIdentifier?: Array<IToken>;
-    containerInstanceLiteral?: Array<IToken>;
-    deploymentGroupsParameter?: Array<IToken>;
-    tagsParameter?: Array<IToken>;
-    relationshipNodes?: Array<CstNode>;
-    elementProperties?: Array<CstNode>;
-}
-
-interface RelationshipContext {
-    sourceIdentifier?: Array<IToken>;
-    targetIdentifier?: Array<IToken>;
-    descriptionParameter?: Array<IToken>;
-    technologyParameter?: Array<IToken>;
-    tagsParameter?: Array<IToken>;
-}
-
-interface ViewsContext {
-    viewsLiteral?: Array<IToken>;
-    systemLandscapeViewNodes?: Array<CstNode>;
-    systemContextViewNodes?: Array<CstNode>;
-    containerViewNodes?: Array<CstNode>;
-    componentViewNodes?: Array<CstNode>;
-    deploymentViewNodes?: Array<CstNode>;
-    stylesNodes?: Array<CstNode>;
-    themesNodes?: Array<CstNode>;
-}
-
-interface SystemLandscapeViewContext {
-    systemLandscapeLiteral?: Array<IToken>;
-    keyParameter?: Array<IToken>;
-    descriptionParameter?: Array<IToken>;
-    viewProperties?: Array<CstNode>;
-}
-
-interface SystemContextViewContext {
-    systemContextLiteral?: Array<IToken>;
-    softwareSystemIdentifier?: Array<IToken>;
-    keyParameter?: Array<IToken>;
-    descriptionParameter?: Array<IToken>;
-    viewProperties?: Array<CstNode>;
-}
-
-interface ContainerViewContext {
-    containerLiteral?: Array<IToken>;
-    softwareSystemIdentifier?: Array<IToken>;
-    keyParameter?: Array<IToken>;
-    descriptionParameter?: Array<IToken>;
-    viewProperties?: Array<CstNode>;
-}
-
-interface ComponentViewContext {
-    componentLiteral?: Array<IToken>;
-    containerIdentifier?: Array<IToken>;
-    keyParameter?: Array<IToken>;
-    descriptionParameter?: Array<IToken>;
-    viewProperties?: Array<CstNode>;
-}
-
-interface DeploymentViewContext {
-    deploymentLiteral?: Array<IToken>;
-    softwareSystemIdentifier?: Array<IToken>;
-    environmentParameter?: Array<IToken>;
-    keyParameter?: Array<IToken>;
-    descriptionParameter?: Array<IToken>;
-    viewProperties?: Array<CstNode>;
-}
-
-interface ViewPropertiesContext {
-    includeProperty?: Array<CstNode>;
-    excludeProperty?: Array<CstNode>;
-    autoLayoutProperty?: Array<CstNode>;
-}
-
-interface AutoLayoutPropertyContext {
-    
 }
 
 export class StructurizrVisitor extends WorkspaceVisitorCtor {
@@ -273,6 +87,7 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor {
     }
 
     workspace(ctx: WorkspaceContext): IWorkspaceSnapshot {
+        console.log("workspace", ctx);
         return new Workspace({
             version: 1,
             name: trimQuotes(ctx.nameParameter?.at(0)?.image) ?? "Workspace",
@@ -325,8 +140,8 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor {
                 return {
                     ...x,
                     type: RelationshipType.Relationship,
-                    sourceIdentifier: x.sourceIdentifier.toLocaleUpperCase() === TokenName.ThisLiteral.toLocaleUpperCase() ? identifier : x.sourceIdentifier,
-                    targetIdentifier: x.targetIdentifier.toLocaleUpperCase() === TokenName.ThisLiteral.toLocaleUpperCase() ? identifier : x.targetIdentifier,
+                    sourceIdentifier: x.sourceIdentifier.toUpperCase() === "THIS" ? identifier : x.sourceIdentifier,
+                    targetIdentifier: x.targetIdentifier.toUpperCase() === "THIS" ? identifier : x.targetIdentifier,
                     tags: x.tags ?? [],
                     technology: x.technology ?? []
                 };
@@ -357,8 +172,8 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor {
                 return {
                     ...x,
                     type: RelationshipType.Relationship,
-                    sourceIdentifier: x.sourceIdentifier.toLocaleUpperCase() === TokenName.ThisLiteral.toLocaleUpperCase() ? identifier : x.sourceIdentifier,
-                    targetIdentifier: x.targetIdentifier.toLocaleUpperCase() === TokenName.ThisLiteral.toLocaleUpperCase() ? identifier : x.targetIdentifier,
+                    sourceIdentifier: x.sourceIdentifier.toUpperCase() === "THIS" ? identifier : x.sourceIdentifier,
+                    targetIdentifier: x.targetIdentifier.toUpperCase() === "THIS" ? identifier : x.targetIdentifier,
                     tags: x.tags ?? [],
                     technology: x.technology ?? []
                 };

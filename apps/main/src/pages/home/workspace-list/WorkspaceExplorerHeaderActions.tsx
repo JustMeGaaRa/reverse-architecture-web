@@ -1,6 +1,6 @@
 import { Button, ButtonGroup, Icon, IconButton, Text } from "@chakra-ui/react";
 import { PageHeaderSectionPortal } from "@restruct/ui";
-import { isStructurizrValid } from "@structurizr/parser";
+import { parseWorkspace } from "@structurizr/parser";
 import { PagePlus, Upload } from "iconoir-react";
 import { FC, useCallback } from "react";
 import { useFilePicker } from "use-file-picker";
@@ -14,13 +14,21 @@ export const WorkspaceExplorerHeaderActions: FC = () => {
     // TODO: wrap creation button into separate component to avoid re-rendering
     const createWorkspaceFromFile = useCallback((content: string) => {
         // TODO: when loading a workspace file, we shoul show a loading indicator
-        if (isStructurizrValid(content)) {
-            create(account.fullname);
-        }
-        else {
-            // TODO: workspace file is not valid, so show error message
-        }
-    }, [account.fullname, create]);
+        parseWorkspace(
+            content,
+            errors => {
+                // TODO: workspace file is not valid, so show error message
+                snackbar({
+                    title: "Error importing workspace",
+                    description: errors[0].message,
+                    status: "error",
+                })
+            },
+            workspace => {
+                create(account.fullname, workspace);
+            }
+        )
+    }, [account.fullname, create, snackbar]);
     
     const { openFilePicker } = useFilePicker({
         accept: ".dsl",

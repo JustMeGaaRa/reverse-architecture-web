@@ -13,15 +13,17 @@ import {
     Tooltip
 } from "@chakra-ui/react";
 import {
-    ShellProvider,
     Shell,
-    ShellCloseButton,
-    ShellTabContent
+    ShellCloseButton, ShellProvider, ShellTabContent
 } from "@restruct/ui";
-import { WorkspaceNavigationProvider, WorkspaceRenderer, WorkspaceViewBreadcrumbs } from "@restruct/workspace-renderer";
-import { Workspace } from "@structurizr/dsl";
-import { parseStructurizr } from "@structurizr/parser";
-import { WorkspaceProvider, WorkspacePanel } from "@structurizr/react";
+import {
+    WorkspaceNavigationProvider,
+    WorkspaceRenderer,
+    WorkspaceViewBreadcrumbs
+} from "@restruct/workspace-renderer";
+import { IWorkspaceMetadata, Workspace } from "@structurizr/dsl";
+import { parseWorkspace } from "@structurizr/parser";
+import { WorkspaceProvider } from "@structurizr/react";
 import { IWorkspaceInfo } from "@structurizr/y-workspace";
 import {
     Bookmark,
@@ -40,27 +42,24 @@ import { v4 } from "uuid";
 import {
     CommentApi,
     CommentThread,
-    CommunityApi,
-    WorkspaceTemplateActionBar,
-    TemplateSectionDiscussion,
+    CommunityApi, TemplateSectionDiscussion,
     TemplateSectionInfo,
     useAccount,
     useSnackbar,
-    useWorkspaceExplorer
+    useWorkspaceExplorer, WorkspaceTemplateActionBar
 } from "../../../features";
 import { useLoaderState } from "../hooks";
 
 // TODO: come up with a convention or a way to identify the main thread discussion
 const discussionThreadId = "workspace-discussion";
 
-const loadTemplate = async (workspaceId: string) => {
+const loadTemplate = async (workspaceId: string): Promise<[IWorkspaceInfo, string, IWorkspaceMetadata]> => {
     const communityApi = new CommunityApi()
     const information = await communityApi.getWorkspaceById(workspaceId);
     const structurizrText = await communityApi.getWorkspaceContent(workspaceId);
     const metadata = await communityApi.getWorkspaceMetadata(workspaceId);
-    const template = new Workspace(parseStructurizr(structurizrText));
-    const workspace = template.applyMetadata(metadata).toSnapshot();
-    return { information, workspace };
+    
+    return [information, structurizrText, metadata];
 }
 
 const loadComments = async (workspaceId: string) => {
@@ -94,10 +93,26 @@ export const CommunityTemplateModal: FC<{
             onStartLoading();
     
             loadTemplate(workspaceId)
-                .then(({ information, workspace }) => {
-                    setInformation(information);
-                    setTemplate(workspace);
-                    onStopLoading();
+                .then(([ information, structurizr, metadata ]) => {
+                    parseWorkspace(
+                        structurizr,
+                        errors => {
+                            onStopLoading();
+                            snackbar({
+                                title: "Error parsing workspace",
+                                description: errors[0].message,
+                                status: "error"
+                            })
+                        },
+                        result => {
+                            const workspace = new Workspace(result)
+                                .applyMetadata(metadata)
+                                .toSnapshot();
+                            setInformation(information);
+                            setTemplate(workspace);
+                            onStopLoading();
+                        }
+                    )
                 })
                 .catch(error => {
                     onStopLoading();
@@ -121,10 +136,26 @@ export const CommunityTemplateModal: FC<{
         onStartLoading();
 
         loadTemplate(workspaceId)
-            .then(({ information, workspace }) => {
-                setInformation(information);
-                setTemplate(workspace);
-                onStopLoading();
+            .then(([ information, structurizr, metadata ]) => {
+                parseWorkspace(
+                    structurizr,
+                    errors => {
+                        onStopLoading();
+                        snackbar({
+                            title: "Error parsing workspace",
+                            description: errors[0].message,
+                            status: "error"
+                        })
+                    },
+                    result => {
+                        const workspace = new Workspace(result)
+                            .applyMetadata(metadata)
+                            .toSnapshot();
+                        setInformation(information);
+                        setTemplate(workspace);
+                        onStopLoading();
+                    }
+                )
             })
             .catch(error => {
                 onStopLoading();
