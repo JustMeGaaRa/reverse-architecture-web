@@ -35,8 +35,8 @@ export function activate(context: vscode.ExtensionContext) {
 			{ enableScripts: true, retainContextWhenHidden: true }
 		);
 		
-		const cssUri = previewPanel.webview.asWebviewUri(vscode.Uri.joinPath(context.extensionUri, "dist", "webview", "static", "css", "main.7045b1c9.css"));
-		const scriptUri = previewPanel.webview.asWebviewUri(vscode.Uri.joinPath(context.extensionUri, "dist", "webview", "static", "js", "main.01aeba05.js"));
+		const cssUri = previewPanel.webview.asWebviewUri(vscode.Uri.joinPath(context.extensionUri, "dist", "webview", "static", "css", "main.css"));
+		const scriptUri = previewPanel.webview.asWebviewUri(vscode.Uri.joinPath(context.extensionUri, "dist", "webview", "static", "js", "main.js"));
 
 		previewPanel.webview.html = `
 			<!doctype html>

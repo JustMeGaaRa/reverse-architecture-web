@@ -35,7 +35,7 @@ export function ReactFlowViewElementBoundaryAdapter(ElementBoundaryComponent: FC
                 isSelected={selected}
                 isLocked={isLocked}
             >
-                <NodeResizer
+                {/* <NodeResizer
                     isVisible={selected && selectedNodes.length === 1}
                     color={"#E3FB51"}
                     minWidth={300}
@@ -49,7 +49,7 @@ export function ReactFlowViewElementBoundaryAdapter(ElementBoundaryComponent: FC
                     }}
                     lineStyle={{ borderWidth: 0 }}
                     onResize={onResize}
-                />
+                /> */}
             </ElementBoundaryComponent>
         )
     }

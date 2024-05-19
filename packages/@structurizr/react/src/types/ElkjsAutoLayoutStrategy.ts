@@ -46,11 +46,6 @@ export class ElkjsAutoLayoutStrategy implements IAutoLayoutStrategy<ReactFlowJso
             layoutOptions: {
                 "elk.algorithm": "layered",
                 "elk.direction": "DOWN",
-                "elk.layered.spacing.edgeNodeBetweenLayers": "100",
-                "elk.layered.spacing.nodeNodeBetweenLayers": "100",
-                "elk.layered.spacing.edgeNode": "100",
-                "elk.layered.spacing.nodeNode": "100",
-                "elk.layered.spacing.edgeEdge": "100",
             },
             children: mapChildren(undefined),
             edges: mapEdges()
