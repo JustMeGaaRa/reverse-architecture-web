@@ -1,5 +1,5 @@
 import { useBreakpointValue } from "@chakra-ui/react";
-import { useLocale } from "@restruct/ui";
+import { useLocale, useSnackbar } from "@restruct/ui";
 import { IWorkspaceInfo, WorkspaceInfo } from "@structurizr/y-workspace";
 import { EmojiSad, Folder } from "iconoir-react";
 import { FC, useCallback, useEffect, useState } from "react";
@@ -10,7 +10,6 @@ import {
     LocaleKeys,
     StateMessage,
     useLoaderState,
-    useSnackbar,
     useWorkspaceExplorer,
     WorkspaceGrid,
     WorkspaceTemplateCard

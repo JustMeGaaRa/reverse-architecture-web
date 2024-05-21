@@ -5,5 +5,4 @@ export * from "./error-boundary";
 export * from "./localization";
 export * from "./navigation";
 export * from "./search";
-export * from "./snackbar";
 export * from "./workspace-explorer";

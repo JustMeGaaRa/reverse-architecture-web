@@ -1,17 +1,11 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import { WorkspaceProvider } from "@structurizr/react";
-import { RestructTheme } from "@restruct/ui";
+import { RestructTheme } from "@restruct/theme";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import reportWebVitals from "./reportWebVitals";
 import { ApplicationContainer } from "./ApplicationContainer";
-import {
-    WorkspaceNavigationProvider,
-    WorkspaceRenderer,
-    WorkspaceViewBreadcrumbs,
-    WorkspaceZoomControls
-} from "@restruct/workspace-renderer";
-import { createDefaultWorkspace } from "@structurizr/dsl";
+import { WorkspaceNavigationProvider } from "@restruct/workspace-renderer";
 
 const root = createRoot(document.getElementById('root') as HTMLElement);
 root.render(
@@ -19,12 +13,7 @@ root.render(
         <ChakraProvider resetCSS theme={RestructTheme}>
             <WorkspaceProvider>
                 <WorkspaceNavigationProvider>
-                    <ApplicationContainer>
-                        <WorkspaceRenderer isReadonly workspace={createDefaultWorkspace()} view={undefined}>
-                            <WorkspaceViewBreadcrumbs />
-                            <WorkspaceZoomControls />
-                        </WorkspaceRenderer>
-                    </ApplicationContainer>
+                    <ApplicationContainer />
                 </WorkspaceNavigationProvider>
             </WorkspaceProvider>
         </ChakraProvider>

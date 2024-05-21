@@ -1,53 +1,73 @@
 import { Box } from "@chakra-ui/react";
-import { useWorkspaceNavigation } from "@restruct/workspace-renderer";
-import { parseStructurizr, structurizrLexer, visitWorkspace } from "@structurizr/parser";
+import {
+    parseStructurizr,
+    structurizrLexer,
+    visitWorkspace,
+    WorkspaceCstNode
+} from "@structurizr/parser";
 import { useWorkspace } from "@structurizr/react";
+import {
+    MessageType,
+    TextEditorEvent,
+} from "@structurizr-preview/communication";
+import { useSnackbar } from "@restruct/snackbar";
+import {
+    WorkspaceRenderer,
+    WorkspaceViewBreadcrumbs,
+    WorkspaceZoomControls,
+    useWorkspaceNavigation
+} from "@restruct/workspace-renderer";
 import { chain, fold } from "fp-ts/Either";
 import { pipe } from "fp-ts/lib/function";
-import { FC, PropsWithChildren, useEffect, useState } from "react";
-
-type Message = {
-    command: "update";
-    content?: string;
-}
+import {
+    FC,
+    PropsWithChildren,
+    useEffect,
+    useState
+} from "react";
 
 export const ApplicationContainer: FC<PropsWithChildren> = ({ children }) => {
-    const [ workspace, setWorkspaceCst ] = useState<any>();
-    const { setWorkspace } = useWorkspace();
-    const { setCurrentView } = useWorkspaceNavigation();
+    const [ workspaceCst, setWorkspaceCst ] = useState<WorkspaceCstNode>();
+    const { workspace, setWorkspace } = useWorkspace();
+    const { currentView, setCurrentView } = useWorkspaceNavigation();
+    const { snackbar } = useSnackbar();
 
     useEffect(() => {
-        const eventHandler = (event: MessageEvent<Message>) => {
+        const handleStructurizrChanged = (structurizr: string) => {
+            pipe(
+                structurizrLexer(structurizr),
+                chain(parseStructurizr),
+                chain(workspaceCst => {
+                    setWorkspaceCst(workspaceCst);
+                    return visitWorkspace(workspaceCst);
+                }),
+                fold(
+                    errors => {
+                        console.debug("Error while parsing the structurizr", errors);
+                    },
+                    workspace => {
+                        setWorkspace(workspace);
+                        setCurrentView(workspace.views.systemLandscape);
+                    }
+                )
+            );
+        }
+
+        const eventHandler = (event: MessageEvent<TextEditorEvent>) => {
             try {
-                switch (event.data.command) {
-                    case "update":
-                        pipe(
-                            structurizrLexer(event.data.content),
-                            chain(tokens => {
-                                console.debug("Structurizr Preview: received update message");
-                                return parseStructurizr(tokens);
-                            }),
-                            chain(workspaceCst => {
-                                console.debug("Structurizr Preview: parsed structurizr successfully");
-                                setWorkspaceCst(workspaceCst);
-                                return visitWorkspace(workspaceCst);
-                            }),
-                            fold(
-                                errors => {
-                                    console.error("Structurizr Preview: error while parsing structurizr", errors);
-                                },
-                                workspace => {
-                                    console.debug("Structurizr Preview: parsing workspace successfully")
-                                    setWorkspace(workspace);
-                                    setCurrentView(workspace.views.systemLandscape);
-                                }
-                            )
-                        );
+                switch (event.data.type) {
+                    case MessageType.DOCUMENT_CHANGED:
+                        handleStructurizrChanged(event.data.structurizr);
                         break;
                 }
             }
             catch (error) {
-                console.error("Structurizr Preview: error while handling message", error);
+                snackbar({
+                    id: "error-handling-message",
+                    title: "Error while handling the message",
+                    description: error.message,
+                    status: "error",
+                });
             }
         }
 
@@ -56,11 +76,14 @@ export const ApplicationContainer: FC<PropsWithChildren> = ({ children }) => {
         return () => {
             window.removeEventListener("message", eventHandler);
         }
-    }, [setCurrentView, setWorkspace]);
+    }, [setCurrentView, setWorkspace, snackbar]);
 
     return (
         <Box backgroundColor={"gray.100"} height={"100vh"} width={"100vw"}>
-            {children}
+            <WorkspaceRenderer isReadonly workspace={workspace} view={currentView}>
+                <WorkspaceViewBreadcrumbs />
+                <WorkspaceZoomControls />
+            </WorkspaceRenderer>
         </Box>
     )
 }

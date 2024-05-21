@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import {
     Shell,
-    ShellCloseButton, ShellProvider, ShellTabContent
+    ShellCloseButton, ShellProvider, ShellTabContent, useSnackbar
 } from "@restruct/ui";
 import {
     WorkspaceNavigationProvider,
@@ -45,7 +45,6 @@ import {
     CommunityApi, TemplateSectionDiscussion,
     TemplateSectionInfo,
     useAccount,
-    useSnackbar,
     useWorkspaceExplorer, WorkspaceTemplateActionBar
 } from "../../../features";
 import { useLoaderState } from "../hooks";

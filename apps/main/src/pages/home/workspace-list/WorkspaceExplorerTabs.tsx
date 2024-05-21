@@ -17,7 +17,8 @@ import {
     ShellHeader,
     ShellOverlay,
     ShellTitle,
-    useLocale
+    useLocale,
+    useSnackbar
 } from "@restruct/ui";
 import { parseWorkspace } from "@structurizr/parser";
 import { useYjsCollaborative } from "@yjs/react";
@@ -41,7 +42,6 @@ import {
     useAccount,
     useContentViewMode,
     useLoaderState,
-    useSnackbar,
     WorkspaceExplorer,
     WorkspaceSelectionProvider
 } from "../../../features";

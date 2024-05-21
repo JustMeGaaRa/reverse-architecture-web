@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { Workspace } from "@structurizr/dsl";
-import { useSnackbar } from "../../snackbar";
 import { saveWorkspaceContent } from "../services";
 import { useWorkspaceExplorer } from "./useWorkspaceExplorer";
 import { useWorkspace } from "@structurizr/react";
+import { useSnackbar } from "@restruct/ui";
 
 export type WorkspaceAutoSaveOptions = {
     interval?: number;

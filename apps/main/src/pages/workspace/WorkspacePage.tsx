@@ -1,6 +1,7 @@
 import { useWorkspace, WorkspaceProvider } from "@structurizr/react";
 import { Workspace } from "@structurizr/y-workspace";
 import { CurrentUser, WorkspaceRoom } from "@structurizr/live";
+import { useSnackbar } from "@restruct/ui";
 import {
     useYjsCollaborative,
     YjsDocumentProvider,
@@ -23,8 +24,7 @@ import {
     createWorkspacePersistance,
     useAccount,
     useCommentsStore,
-    useLoaderState,
-    useSnackbar,
+    useLoaderState
 } from "../../features";
 import { WorkspaceCollaborativeEditor } from "./WorkspaceCollaborativeEditor";
 import { WorkspacePageActions } from "./WorkspacePageActions";

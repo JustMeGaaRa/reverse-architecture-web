@@ -1,5 +1,5 @@
 import { useBreakpointValue } from "@chakra-ui/react";
-import { useLocale } from "@restruct/ui";
+import { useLocale, useSnackbar } from "@restruct/ui";
 import { WorkspaceInfo } from "@structurizr/y-workspace";
 import { useYjsCollaborative } from "@yjs/react";
 import { EmojiSad, Folder } from "iconoir-react";
@@ -9,7 +9,6 @@ import { useLoaderState } from "../../../features";
 import { useAccount } from "../../authentication";
 import { ErrorBoundary } from "../../error-boundary";
 import { LocaleKeys } from "../../localization";
-import { useSnackbar } from "../../snackbar";
 import { useWorkspaceExplorer, useWorkspaceSelection } from "../hooks";
 import { WorkspaceLoadFilters } from "../services";
 import { TableColumnInfo, IWorkspaceGroupInfo } from "../types";

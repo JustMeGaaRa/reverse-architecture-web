@@ -7,6 +7,14 @@ const destination = path.resolve(__dirname, '../../structurizr-preview-extension
 
 async function copyAndRename(sourceDir, destinationDir) {
     try {
+        // Cleanup the destination directory
+        await fs.remove(destinationDir);
+        console.log(`Removed ${destinationDir}`);
+
+        // Recreate the destination directory
+        await fs.ensureDir(destinationDir);
+        console.log(`Recreated ${destinationDir}`);
+        
         // Copy the directory
         await fs.copy(sourceDir, destinationDir);
         console.log(`Copied ${sourceDir} to ${destinationDir}`);

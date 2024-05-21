@@ -1,10 +1,10 @@
 import { Button, ButtonGroup, Icon, IconButton, Text } from "@chakra-ui/react";
-import { PageHeaderSectionPortal } from "@restruct/ui";
+import { PageHeaderSectionPortal, useSnackbar } from "@restruct/ui";
 import { parseWorkspace } from "@structurizr/parser";
 import { PagePlus, Upload } from "iconoir-react";
 import { FC, useCallback } from "react";
 import { useFilePicker } from "use-file-picker";
-import { useAccount, useSnackbar, useWorkspaceExplorer } from "../../../features";
+import { useAccount, useWorkspaceExplorer } from "../../../features";
 
 export const WorkspaceExplorerHeaderActions: FC = () => {
     const { account } = useAccount();

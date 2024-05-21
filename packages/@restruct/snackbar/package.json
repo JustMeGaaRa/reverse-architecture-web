@@ -1,14 +1,11 @@
 {
-  "name": "@restruct/ui",
+  "name": "@restruct/snackbar",
   "version": "0.1.0",
-  "description": "A meta package for all shared ui components.",
   "main": "dist/index.js",
   "keywords": [
     "reverse-architecture",
     "restruct",
-    "shared",
-    "ui",
-    "components"
+    "toolbar"
   ],
   "author": "JustMeGaaRa",
   "license": "MIT",
@@ -21,15 +18,7 @@
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@restruct/icons": "^0.1.0",
-    "@restruct/localization": "^0.1.0",
-    "@restruct/page": "^0.1.0",
-    "@restruct/search-menu": "^0.1.0",
-    "@restruct/segmented-toggle": "^0.1.0",
-    "@restruct/shell": "^0.1.0",
-    "@restruct/snackbar": "^0.1.0",
-    "@restruct/theme": "^0.1.0",
-    "@restruct/toolbar": "^0.1.0",
+    "iconoir-react": "^7.1.0",
     "framer-motion": "^10.16.4",
     "react": "^18.0.0",
     "react-dom": "^18.0.0"

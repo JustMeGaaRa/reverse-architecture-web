@@ -16,7 +16,8 @@ import {
     Shell,
     ShellBody,
     ShellHeader,
-    ShellTitle
+    ShellTitle,
+    useSnackbar
 } from "@restruct/ui";
 import { IWorkspaceInfo } from "@structurizr/y-workspace";
 import {
@@ -39,7 +40,6 @@ import {
     CommunityApi,
     useWorkspaceExplorer,
     useLoaderState,
-    useSnackbar,
     CommunityTemplateModal,
 } from "../../../features";
 import { HomeNavigationActions } from "../HomeNavigationActions";

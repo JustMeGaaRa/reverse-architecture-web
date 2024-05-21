@@ -38,13 +38,11 @@ export class LexingError extends Error implements ILexingErrorExt {
 export const structurizrLexer = (structurizr: string): Either<Array<Error>, Array<IToken>> => {
     try {
         const lexingResult = StructurizrLexer.tokenize(structurizr);
-        console.log(lexingResult);
         return lexingResult.errors.length === 0
             ? right(lexingResult.tokens)
             : left(lexingResult.errors.map(error => new LexingError(error)));
     }
     catch (error) {
-        console.debug(error);
         return left([new Error("Error while lexing structurizr")]);
     }
 }
@@ -55,13 +53,11 @@ export const parseStructurizr = (tokens: Array<IToken>): Either<Array<Error>, Wo
         structurizrParser.reset();
         structurizrParser.input = tokens;
         const workspaceCstNode = structurizrParser.workspace() as WorkspaceCstNode;
-        console.log(structurizrParser.errors)
         return structurizrParser.errors.length === 0
             ? right(workspaceCstNode)
             : left(structurizrParser.errors.map(error => error));
     }
     catch (error) {
-        console.debug(error);
         return left([new Error("Error while parsing structurizr")]);
     }
 };
@@ -74,7 +70,6 @@ export const visitWorkspace = (workspaceCst: WorkspaceCstNode): Either<Array<Err
         return right(workspace);
     }
     catch (error) {
-        console.debug(error);
         return left([new Error("Error while parsing workspace")]);
     }
 }
