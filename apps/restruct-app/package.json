@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "@reversearchitecture/main",
+  "name": "restruct-app",
   "version": "0.1.0",
   "description": "A collaboration tool for drafting the architecture in real time.",
   "keywords": [

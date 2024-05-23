@@ -1,0 +1,29 @@
+import { FC, SVGProps, useEffect, useRef } from "react";
+
+export const Text: FC<SVGProps<SVGTextElement>> = (props) => {
+    const textRef = useRef<SVGTextElement>(null);
+
+    useEffect(() => {
+        const truncateText = () => {
+            const svgText = textRef.current;
+            if (svgText && svgText.getComputedTextLength() > props.width) {
+                let truncatedText = props.children as string;
+                while (
+                    svgText.getComputedTextLength() > props.width &&
+                    truncatedText.length > 0
+                ) {
+                    truncatedText = truncatedText.slice(0, -1);
+                    svgText.textContent = truncatedText + "...";
+                }
+            }
+        };
+
+        truncateText();
+    }, [props.children, props.width]);
+
+    return (
+        <text ref={textRef} {...props}>
+            {props.children}
+        </text>
+    );
+};

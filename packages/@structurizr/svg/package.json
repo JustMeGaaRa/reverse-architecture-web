@@ -1,0 +1,44 @@
+{
+  "name": "@structurizr/svg",
+  "version": "0.1.0",
+  "description": "A set of React components for visualizing and collaborating on the workspace.",
+  "main": "dist/index.js",
+  "keywords": [
+    "structurizr",
+    "dsl",
+    "c4-model",
+    "c4",
+    "architecture",
+    "diagram"
+  ],
+  "author": "JustMeGaaRa",
+  "license": "MIT",
+  "scripts": {
+    "build": "npx tsc",
+    "dev": "npx tsc -w"
+  },
+  "dependencies": {
+    "@justmegaara/graphviz-dot": "*",
+    "@structurizr/dsl": "*",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "eslint": "^8.51.0",
+    "eslint-config-custom": "*",
+    "tsconfig": "*",
+    "typescript": "^5.2.2"
+  },
+  "peerDependencies": {
+    "@hpcc-js/wasm": "^2.16.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JustMeGaaRa/reverse-architecture-web.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JustMeGaaRa/reverse-architecture-web/issues"
+  }
+}
