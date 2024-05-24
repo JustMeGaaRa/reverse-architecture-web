@@ -38,7 +38,6 @@ export const Viewport: FC<PropsWithChildren> = ({ children }) => {
     const svgRef = useRef<SVGSVGElement>(null);
     const [isPointerDown, setIsPointerDown] = useState(false);
     const [pointerOrigin, setPointerOrigin] = useState({ x: 0, y: 0 });
-    const [scale, setScale] = useState(1);
     const { zoom, viewbox, setZoom, setViewbox } = useViewport();
 
     useEffect(() => {
@@ -81,18 +80,18 @@ export const Viewport: FC<PropsWithChildren> = ({ children }) => {
 
         setViewbox((prev) => ({
             ...prev,
-            x: prev.x - (pointerTarget.x - pointerOrigin.x) * zoom,
-            y: prev.y - (pointerTarget.y - pointerOrigin.y) * zoom,
+            x: prev.x - (pointerTarget.x - pointerOrigin.x), // * zoom
+            y: prev.y - (pointerTarget.y - pointerOrigin.y), // * zoom
         }));
         setPointerOrigin(pointerTarget);
-    }, [isPointerDown, setViewbox, pointerOrigin.x, pointerOrigin.y, zoom]);
+    }, [setViewbox, isPointerDown, pointerOrigin.x, pointerOrigin.y]);
 
     const handleOnWheel = useCallback((event: any) => {
         if (!svgRef?.current) return;
 
         event.preventDefault();
         const zoomIntensity = 0.1;
-        const scale = Math.pow(1 + zoomIntensity, event.deltaY / 100);
+        const deltaScale = Math.pow(1 + zoomIntensity, event.deltaY / 100);
 
         // Get cursor position relative to the SVG element
         const rect = svgRef.current.getBoundingClientRect();
@@ -100,15 +99,15 @@ export const Viewport: FC<PropsWithChildren> = ({ children }) => {
         const cursorY = event.clientY - rect.top;
 
         // Calculate new viewBox dimensions
-        const newWidth = viewbox.width * scale;
-        const newHeight = viewbox.height * scale;
-        const newX = viewbox.x + (cursorX - viewbox.x) * (1 - scale);
-        const newY = viewbox.y + (cursorY - viewbox.y) * (1 - scale);
+        const newWidth = viewbox.width * deltaScale;
+        const newHeight = viewbox.height * deltaScale;
+        const newX = viewbox.x + (cursorX - viewbox.x) * (1 - deltaScale);
+        const newY = viewbox.y + (cursorY - viewbox.y) * (1 - deltaScale);
 
         // Update viewBox with new values
-        setViewbox({ x: newX, y: newY, width: newWidth, height: newHeight });
-        setZoom((zoom) => zoom * scale);
-    }, [setViewbox, setZoom, viewbox.height, viewbox.width, viewbox.x, viewbox.y]);
+        // setViewbox({ x: newX, y: newY, width: newWidth, height: newHeight });
+        setZoom((scale) => scale / deltaScale);
+    }, [setZoom, viewbox.height, viewbox.width, viewbox.x, viewbox.y]);
 
     return (
         <svg
@@ -136,7 +135,7 @@ export const Viewport: FC<PropsWithChildren> = ({ children }) => {
                 <MarkerArrowClosed />
                 <MarkerCircleOutline />
             </defs>
-            <g transform={`scale(${scale})`}>
+            <g transform={`scale(${zoom})`}>
                 {children}
             </g>
         </svg>

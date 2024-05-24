@@ -5,12 +5,12 @@
   "workspaces": [
     "apps/*",
     "packages/*",
-    "packages/@yjs/*",
     "packages/@justmegaara/*",
     "packages/@monaco-editor/*",
     "packages/@restruct/*",
     "packages/@structurizr/*",
-    "packages/@workspace/*"
+    "packages/@structurizr-preview/*",
+    "packages/@yjs/*"
   ],
   "scripts": {
     "build": "turbo run build",

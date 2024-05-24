@@ -34,12 +34,6 @@ export function App() {
         description: "Provides a limited subset of the Internet banking functionality to customers via their mobile devices. Provides a limit.",
         technology: ".NET",
     };
-    const relationship: IRelationship = {
-        identifier: "customer_internetBankingSystem",
-        sourceIdentifier: "customer",
-        targetIdentifier: "internetBankingSystem",
-        description: "Views account balances, and makes payments using",
-    };
     const spa: IContainer = {
         type: "Container",
         identifier: "singlePageApplication",
@@ -88,6 +82,17 @@ export function App() {
         identifier: "apache",
         name: "Apache Tomcat",
     };
+    const relationCustomerBanking: IRelationship = {
+        identifier: "customer_internetBankingSystem",
+        sourceIdentifier: "customer",
+        targetIdentifier: "internetBankingSystem",
+        description: "Views account balances, and makes payments using",
+    };
+    const relationApiWeb: IRelationship = {
+        identifier: "apiApplication_webApplication",
+        sourceIdentifier: "apiApplication",
+        targetIdentifier: "webApplication",
+    }
 
     const systemLandscapeViewMetadata: IViewMetadata = {
         elements: {
@@ -142,7 +147,7 @@ export function App() {
                     >
                         <Person value={customer}></Person>
                         <SoftwareSystem value={softwareSystem}></SoftwareSystem>
-                        <Relationship value={relationship}></Relationship>
+                        <Relationship value={relationCustomerBanking}></Relationship>
                     </SystemLandscapeView>
 
                     <ContainerView
@@ -178,13 +183,7 @@ export function App() {
                                 </DeploymentNode>
                             </DeploymentNode>
                         </DeploymentNode>
-                        {/* <Relationship
-                        value={{
-                            identifier: "1",
-                            sourceIdentifier: "apiApplication",
-                            targetIdentifier: "webApplication",
-                        }}
-                        ></Relationship> */}
+                        <Relationship value={relationApiWeb}></Relationship>
                     </DeploymentView>
                 </Views>
             </Workspace>

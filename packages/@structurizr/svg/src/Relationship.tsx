@@ -17,13 +17,17 @@ function calculateAbsolutePosition(
 ) {
     if (!element) return { x: 0, y: 0 };
 
-    const bbox = element.getBBox();
     const ctm = element.getCTM();
+    const bbox = element.getBBox();
 
     if (!ctm) return { x: 0, y: 0 };
 
-    const x = ctm.e + viewbox.x / zoom + bbox.x * ctm.a + bbox.y * ctm.c;
-    const y = ctm.f + viewbox.y / zoom + bbox.x * ctm.b + bbox.y * ctm.d;
+    // e / zoom + viewbox.x, f / zoom + viewbox.y
+    // a: 1, b: 0, c: 0, d: 1, e: absolute x, f: absolute y
+    // const x = ctm.e + bbox.x * ctm.a + bbox.y * ctm.c;
+    // const y = ctm.f + bbox.x * ctm.b + bbox.y * ctm.d;
+    const x = ctm.e / zoom + viewbox.x / zoom;
+    const y = ctm.f / zoom + viewbox.y / zoom;
     return { x, y, height: bbox.height, width: bbox.width };
 }
 
