@@ -10,12 +10,12 @@ export const ZoomControls: FC<PropsWithChildren<{
     const { zoom } = useViewport();
     const [isHovered, setIsHovered] = useState(false);
 
-    const handleOnMouseEnter = useCallback((event: React.MouseEvent<SVGSVGElement>) => {
+    const handleOnMouseOver = useCallback((event: React.MouseEvent<SVGSVGElement>) => {
         setIsHovered(true);
         event.stopPropagation();
     }, []);
 
-    const handleOnMouseLeave = useCallback((event: React.MouseEvent<SVGSVGElement>) => {
+    const handleOnMouseOut = useCallback((event: React.MouseEvent<SVGSVGElement>) => {
         setIsHovered(false);
         event.stopPropagation();
     }, []);
@@ -25,19 +25,19 @@ export const ZoomControls: FC<PropsWithChildren<{
             data-x={position.x}
             data-y={position.y}
             transform={`translate(${position.x},${position.y})`}
-            onMouseEnter={handleOnMouseEnter}
-            onMouseLeave={handleOnMouseLeave}
+            onMouseOver={handleOnMouseOver}
+            onMouseOut={handleOnMouseOut}
         >
-            {isHovered && zoom > 0.7 && (
+            {isHovered && zoom > 0.5 && zoom < 2.5 && (
                 <rect
                     cursor={"pointer"}
                     fill={"white"}
-                    height={30 * zoom}
-                    width={60 * zoom}
-                    x={-30 * zoom}
-                    y={15 * zoom}
-                    rx={7 * zoom}
-                    ry={7 * zoom}
+                    height={30 / zoom}
+                    width={60 / zoom}
+                    x={-30 / zoom}
+                    y={15 / zoom}
+                    rx={7 / zoom}
+                    ry={7 / zoom}
                 />
             )}
             {children}

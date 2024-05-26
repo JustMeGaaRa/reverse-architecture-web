@@ -18,7 +18,10 @@ import {
     Views,
     Workspace,
     IComponent,
+    useViewport,
 } from "@structurizr/svg";
+import { useCallback } from "react";
+import { createPortal } from "react-dom";
 
 export function App() {
     const customer: IPerson = {
@@ -132,7 +135,9 @@ export function App() {
 
     return (
         <div
+            id={"structurizr-page"}
             style={{
+                position: "relative",
                 margin: "0px",
                 padding: "0px",
                 height: "100vh",
@@ -185,8 +190,48 @@ export function App() {
                         </DeploymentNode>
                         <Relationship value={relationApiWeb}></Relationship>
                     </DeploymentView>
+            
+                    {createPortal(<Controls />, document.body as HTMLElement)}
                 </Views>
             </Workspace>
         </div>
     );
+}
+
+function Controls() {
+    const { setZoom, getBounds, fitBounds, centerViewbox } = useViewport();
+
+    const handleResetZoom = useCallback(() => {
+        setZoom(1);
+    }, [setZoom]);
+
+    const handleCenterView = useCallback(() => {
+        centerViewbox(getBounds());
+    }, [getBounds, centerViewbox]);
+
+    const handleFitBounds = useCallback(() => {
+        fitBounds(getBounds());
+    }, [getBounds, fitBounds]);
+    
+    const handleExportToSvg = useCallback(() => {
+        console.log(document.getElementById("structurizr-svg")?.outerHTML);
+    }, []);
+
+    return (
+        <div
+            style={{
+                position: "absolute",
+                top: "0px",
+                left: "0px",
+                height: "30px",
+                width: "100px",
+                backgroundColor: "#292B2C",
+            }}
+        >
+            <button onClick={handleResetZoom}>reset view</button>
+            <button onClick={handleCenterView}>center view</button>
+            <button onClick={handleFitBounds}>fit view</button>
+            <button onClick={handleExportToSvg}>export to svt</button>
+        </div>
+    )
 }

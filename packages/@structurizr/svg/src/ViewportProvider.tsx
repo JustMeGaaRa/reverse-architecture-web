@@ -3,6 +3,7 @@ import {
     FC,
     PropsWithChildren,
     SetStateAction,
+    useCallback,
     useContext,
     useState,
 } from "react";
@@ -43,5 +44,50 @@ export const ViewportProvider: FC<PropsWithChildren> = ({ children }) => {
 };
 
 export const useViewport = () => {
-    return useContext(ViewportContext);
+    const { viewbox, zoom, setViewbox, setZoom } = useContext(ViewportContext);
+
+    const getBounds = useCallback(() => {
+        const htmlElement = document.getElementById("structurizr-svg") as HTMLElement;
+        if (!htmlElement) throw new Error("Element not found");
+        return htmlElement instanceof SVGSVGElement
+            ? (htmlElement as SVGSVGElement).getBBox()
+            : htmlElement.getBoundingClientRect();
+    }, []);
+
+    const fitBounds = useCallback((bounds: DOMRect) => {
+        const scale = Math.min(viewbox.height / bounds.height, viewbox.width / bounds.width);
+        const scaledBounds = {
+            x: bounds.x * scale,
+            y: bounds.y * scale,
+            height: bounds.height * scale,
+            width: bounds.width * scale
+        };
+        const offsetX = (viewbox.width - scaledBounds.width) / 2;
+        const offsetY = (viewbox.height - scaledBounds.height) / 2;
+        const centeredBounds = {
+            ...scaledBounds,
+            x: scaledBounds.x - offsetX,
+            y: scaledBounds.y - offsetY
+        };
+        setViewbox((state) => ({ ...state, x: centeredBounds.x, y: centeredBounds.y }));
+        setZoom(scale);
+    }, [setViewbox, setZoom, viewbox.height, viewbox.width]);
+
+    const centerViewbox = useCallback((bounds: DOMRect) => {
+        setViewbox((state) => ({
+            ...state,
+            x: bounds.x - (state.width - bounds.width) / 2,
+            y: bounds.y - (state.height - bounds.height) / 2
+        }));
+    }, [setViewbox]);
+
+    return {
+        viewbox,
+        zoom,
+        setViewbox,
+        setZoom,
+        getBounds,
+        fitBounds,
+        centerViewbox
+    }
 };
