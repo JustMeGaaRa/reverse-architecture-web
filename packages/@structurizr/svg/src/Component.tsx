@@ -1,4 +1,5 @@
 import { FC, PropsWithChildren } from "react";
+import { Connector } from "./components";
 import { Element } from "./Element";
 import { useViewMetadata } from "./ViewMetadataProvider";
 
@@ -29,15 +30,30 @@ export const Component: FC<PropsWithChildren<{
         height: 200,
         width: 200,
     };
+    // TODO: pass these default values to the Element component directly
+    const { height = 200, width = 200 } = dimensions;
 
     return (
-        <Element
-            value={value}
-            borderRadius={borderRadius}
-            borderWidth={borderWidth}
-            position={dimensions}
-            height={dimensions.height}
-            width={dimensions.width}
-        />
+        <g
+            data-x={dimensions.x}
+            data-y={dimensions.y}
+            transform={`translate(${dimensions.x},${dimensions.y})`}
+        >
+            <Element
+                value={value}
+                borderRadius={borderRadius}
+                borderWidth={borderWidth}
+                height={dimensions.height}
+                width={dimensions.width}
+            />
+            <Connector height={height} width={width} placement={"top-left"} />
+            <Connector height={height} width={width} placement={"top-center"} />
+            <Connector height={height} width={width} placement={"top-right"} />
+            <Connector height={height} width={width} placement={"middle-left"} />
+            <Connector height={height} width={width} placement={"middle-right"} />
+            <Connector height={height} width={width} placement={"bottom-left"} />
+            <Connector height={height} width={width} placement={"bottom-center"} />
+            <Connector height={height} width={width} placement={"bottom-right"} />
+        </g>
     );
 };

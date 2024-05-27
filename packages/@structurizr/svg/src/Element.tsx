@@ -9,6 +9,7 @@ export interface IElement {
     technology?: string;
 }
 
+// TODO: make position, height and width required
 export const Element: FC<{
     value: IElement;
     position?: { x: number; y: number };

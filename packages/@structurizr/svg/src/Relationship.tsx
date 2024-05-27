@@ -1,7 +1,6 @@
 import { FC, useEffect, useState } from "react";
-import { MarkerType, Text } from "./components";
+import { ConnectorId, MarkerType, Text, useViewport, Viewbox } from "./components";
 import { useViewMetadata } from "./ViewMetadataProvider";
-import { useViewport, Viewbox } from "./ViewportProvider";
 
 export interface IRelationship {
     identifier: string;
@@ -10,25 +9,66 @@ export interface IRelationship {
     description?: string;
 }
 
+const defaultDimensions = { x: 0, y: 0, height: 200, width: 200 };
+
+function getSvgElementById(identifier: string) {
+    const htmlElement = document.getElementById(identifier) as HTMLElement;
+    const svgElement = htmlElement instanceof SVGGraphicsElement ? htmlElement : null;
+    return svgElement;
+}
+
+function getSvgElementByClassName(element: HTMLElement, className: string) {
+    const htmlElement = element.getElementsByClassName(className)[0] as HTMLElement;
+    const svgElement = htmlElement instanceof SVGGraphicsElement ? htmlElement : null;
+    return svgElement;
+}
+
 function calculateAbsolutePosition(
     viewbox: Viewbox,
     zoom: number,
-    element: SVGSVGElement
+    element: SVGGraphicsElement
 ) {
-    if (!element) return { x: 0, y: 0 };
+    if (!element) return defaultDimensions;
 
     const ctm = element.getCTM();
     const bbox = element.getBBox();
 
-    if (!ctm) return { x: 0, y: 0 };
+    if (!ctm) return defaultDimensions;
 
     // e / zoom + viewbox.x, f / zoom + viewbox.y
     // a: 1, b: 0, c: 0, d: 1, e: absolute x, f: absolute y
     // const x = ctm.e + bbox.x * ctm.a + bbox.y * ctm.c;
     // const y = ctm.f + bbox.x * ctm.b + bbox.y * ctm.d;
-    const x = ctm.e / zoom + viewbox.x / zoom;
-    const y = ctm.f / zoom + viewbox.y / zoom;
+    const x = ctm.e / zoom + viewbox.x / zoom + bbox.x;
+    const y = ctm.f / zoom + viewbox.y / zoom + bbox.y;
     return { x, y, height: bbox.height, width: bbox.width };
+}
+
+function calculateCenterPosition(
+    viewbox: Viewbox,
+    zoom: number,
+    element: SVGGraphicsElement
+) {
+    const absolutePosition = calculateAbsolutePosition(viewbox, zoom, element);
+    const centeredPosition = {
+        x: absolutePosition.x + absolutePosition.width / 2,
+        y: absolutePosition.y + absolutePosition.height / 2,
+    };
+    return centeredPosition;
+}
+
+function getPlacement(
+    source: { x: number; y: number },
+    target: { x: number; y: number }
+) {
+    const horizontalDiff = Math.abs(source.x - target.x);
+    const verticalDiff = Math.abs(source.y - target.y);
+
+    const placement: ConnectorId = horizontalDiff > verticalDiff
+        ? (source.x > target.x ? "middle-left" : "middle-right")
+        : (source.y > target.y ? "top-center" : "bottom-center");
+
+    return placement;
 }
 
 export const Relationship: FC<{
@@ -48,38 +88,28 @@ export const Relationship: FC<{
     const [labelCenter, setLabelCenter] = useState({ x: 0, y: 0 });
 
     useEffect(() => {
-        const sourceElement = document.getElementById(value.sourceIdentifier) as any;
-        const targetElement = document.getElementById(value.targetIdentifier) as any;
-        const source = calculateAbsolutePosition(viewbox, zoom, sourceElement);
-        const target = calculateAbsolutePosition(viewbox, zoom, targetElement);
         const points = metadata?.relationships?.[value.identifier] ?? [];
+        
+        const sourceNode = getSvgElementById(value.sourceIdentifier);
+        const targetNode = getSvgElementById(value.targetIdentifier);
+        const sourceCenter = calculateCenterPosition(viewbox, zoom, sourceNode);
+        const targetCenter = calculateCenterPosition(viewbox, zoom, targetNode);
+        const sourceConnectorPlacement = getPlacement(sourceCenter, targetCenter);
+        const targetConnectorPlacement = getPlacement(targetCenter, sourceCenter);
+        const sourceConnector = getSvgElementByClassName(sourceNode.parentElement, sourceConnectorPlacement);
+        const targetConnector = getSvgElementByClassName(targetNode.parentElement, targetConnectorPlacement);
+        const sourceConnectorCenter = calculateCenterPosition(viewbox, zoom, sourceConnector);
+        const targetConnectorCenter = calculateCenterPosition(viewbox, zoom, targetConnector);
 
-        const sourceOffset = {
-            x: (source?.width ?? 200) / 2,
-            y: (source?.height ?? 200) / 2,
-        };
-        const targetOffset = {
-            x: (target?.width ?? 200) / 2,
-            y: (target?.height ?? 200) / 2,
-        };
-
-        const sourceCenter = {
-            x: source.x + sourceOffset.x,
-            y: source.y + sourceOffset.y,
-        };
-        const targetCenter = {
-            x: target.x + targetOffset.x,
-            y: target.y + targetOffset.y,
-        };
         const labelCenter = {
-            x: (sourceCenter.x + targetCenter.x) / 2,
-            y: (sourceCenter.y + targetCenter.y) / 2,
+            x: (sourceConnectorCenter.x + targetConnectorCenter.x) / 2,
+            y: (sourceConnectorCenter.y + targetConnectorCenter.y) / 2,
         };
         const path = points
-            .concat(targetCenter)
+            .concat(targetConnectorCenter)
             .reduce(
                 (path, point) => `${path} L${point.x},${point.y}`,
-                `M${sourceCenter.x},${sourceCenter.y}`
+                `M${sourceConnectorCenter.x},${sourceConnectorCenter.y}`
             );
 
         setPath(path);

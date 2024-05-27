@@ -130,7 +130,13 @@ export function App() {
             ["apiApplication"]: { x: 50, y: 50 },
             ["webApplication"]: { x: 50, y: 50 },
         },
-        relationships: {},
+        relationships: {
+            ["apiApplication_webApplication"]: [
+                { x: -400, y: 400 },
+                { x: 0, y: 400 },
+                { x: 100, y: 400 },
+            ],
+        },
     };
 
     return (
@@ -150,9 +156,9 @@ export function App() {
                         value={{ key: "system landscape" }}
                         metadata={systemLandscapeViewMetadata}
                     >
-                        <Person value={customer}></Person>
-                        <SoftwareSystem value={softwareSystem}></SoftwareSystem>
-                        <Relationship value={relationCustomerBanking}></Relationship>
+                        <Person value={customer} />
+                        <SoftwareSystem value={softwareSystem} />
+                        <Relationship value={relationCustomerBanking} />
                     </SystemLandscapeView>
 
                     <ContainerView
@@ -170,7 +176,7 @@ export function App() {
                         metadata={componentViewMetadata}
                     >
                         <Container value={api}>
-                            <Component value={account}></Component>
+                            <Component value={account} />
                         </Container>
                     </ComponentView>
 
@@ -180,15 +186,15 @@ export function App() {
                     >
                         <DeploymentNode value={devLaptop}>
                             <DeploymentNode value={webBrowser}>
-                                <Container value={api}></Container>
+                                <Container value={api} />
                             </DeploymentNode>
                             <DeploymentNode value={webServer}>
                                 <DeploymentNode value={apache}>
-                                    <Container value={web}></Container>
+                                    <Container value={web} />
                                 </DeploymentNode>
                             </DeploymentNode>
                         </DeploymentNode>
-                        <Relationship value={relationApiWeb}></Relationship>
+                        <Relationship value={relationApiWeb} />
                     </DeploymentView>
             
                     {createPortal(<Controls />, document.body as HTMLElement)}

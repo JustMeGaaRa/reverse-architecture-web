@@ -1,9 +1,9 @@
-import { FC, SVGProps, useEffect, useRef } from "react";
+import { FC, SVGProps, useLayoutEffect, useRef } from "react";
 
 export const Text: FC<SVGProps<SVGTextElement>> = (props) => {
     const textRef = useRef<SVGTextElement>(null);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const truncateText = () => {
             const svgText = textRef.current;
             if (svgText && svgText.getComputedTextLength() > props.width) {
