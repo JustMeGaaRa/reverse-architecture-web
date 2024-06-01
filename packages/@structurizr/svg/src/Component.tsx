@@ -13,15 +13,8 @@ export interface IComponent {
 
 export const Component: FC<PropsWithChildren<{
     value: IComponent;
-    position?: { x: number; y: number };
-    height?: number;
-    width?: number;
-    borderWidth?: number;
-    borderRadius?: number;
 }>> = ({
     value,
-    borderWidth = 2,
-    borderRadius = 16
 }) => {
     const { metadata } = useViewMetadata();
     const dimensions = metadata?.elements[value.identifier] ?? {
@@ -41,8 +34,6 @@ export const Component: FC<PropsWithChildren<{
         >
             <Element
                 value={value}
-                borderRadius={borderRadius}
-                borderWidth={borderWidth}
                 height={dimensions.height}
                 width={dimensions.width}
             />

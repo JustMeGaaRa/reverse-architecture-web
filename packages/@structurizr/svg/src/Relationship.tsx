@@ -18,7 +18,7 @@ function getSvgElementById(identifier: string) {
 }
 
 function getSvgElementByClassName(element: HTMLElement, className: string) {
-    const htmlElement = element.getElementsByClassName(className)[0] as HTMLElement;
+    const htmlElement = element?.getElementsByClassName(className)[0] as HTMLElement;
     const svgElement = htmlElement instanceof SVGGraphicsElement ? htmlElement : null;
     return svgElement;
 }
@@ -84,7 +84,7 @@ export const Relationship: FC<{
 }) => {
     const { metadata } = useViewMetadata();
     const { zoom, viewbox } = useViewport();
-    const [path, setPath] = useState("");
+    const [path, setPath] = useState(undefined);
     const [labelCenter, setLabelCenter] = useState({ x: 0, y: 0 });
 
     useEffect(() => {
@@ -96,8 +96,8 @@ export const Relationship: FC<{
         const targetCenter = calculateCenterPosition(viewbox, zoom, targetNode);
         const sourceConnectorPlacement = getPlacement(sourceCenter, targetCenter);
         const targetConnectorPlacement = getPlacement(targetCenter, sourceCenter);
-        const sourceConnector = getSvgElementByClassName(sourceNode.parentElement, sourceConnectorPlacement);
-        const targetConnector = getSvgElementByClassName(targetNode.parentElement, targetConnectorPlacement);
+        const sourceConnector = getSvgElementByClassName(sourceNode?.parentElement, sourceConnectorPlacement);
+        const targetConnector = getSvgElementByClassName(targetNode?.parentElement, targetConnectorPlacement);
         const sourceConnectorCenter = calculateCenterPosition(viewbox, zoom, sourceConnector);
         const targetConnectorCenter = calculateCenterPosition(viewbox, zoom, targetConnector);
 
@@ -105,7 +105,7 @@ export const Relationship: FC<{
             x: (sourceConnectorCenter.x + targetConnectorCenter.x) / 2,
             y: (sourceConnectorCenter.y + targetConnectorCenter.y) / 2,
         };
-        const path = points
+        const path = sourceNode && targetNode && points
             .concat(targetConnectorCenter)
             .reduce(
                 (path, point) => `${path} L${point.x},${point.y}`,
@@ -116,7 +116,7 @@ export const Relationship: FC<{
         setLabelCenter(labelCenter);
     }, [metadata, value.identifier, value.sourceIdentifier, value.targetIdentifier, viewbox, zoom]);
 
-    return (
+    return path && (
         <g>
             <path
                 stroke={stroke}
@@ -133,6 +133,7 @@ export const Relationship: FC<{
                 fontSize={12}
                 fontFamily={"Inter"}
                 textAnchor={"middle"}
+                width={200}
             >
                 {value.description}
             </Text>

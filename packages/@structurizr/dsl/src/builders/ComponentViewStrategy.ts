@@ -21,58 +21,7 @@ export class ComponentViewStrategy implements ISupportVisitor {
         private view: IComponentView,
     ) {}
 
-    accept(visitor: IElementVisitor): void {
-        const visitComponent = (
-            people: Array<IPerson>,
-            softwareSystems: Array<ISoftwareSystem>,
-            containers: Array<IContainer>,
-            components: Array<IComponent>,
-            parentId?: string
-        ) => {
-            // 4.1. iterate over all components and include them
-            components.forEach(component => {
-                // 4.1.1. include the component
-                visitor.visitComponent(component, { parentId });
-                visitedElements.add(component.identifier);
-                
-                // 4.1.2. include all people that are directly connected to the current component
-                people
-                    .filter(person => {
-                        return relationshipExistsOverall(relationships, component.identifier, person.identifier)
-                            || elementIncludedInView(this.view, person.identifier)
-                    })
-                    .filter(person => !visitedElements.has(person.identifier))
-                    .forEach(person => {
-                        visitor.visitPerson(person);
-                        visitedElements.add(person.identifier);
-                    });
-
-                // 4.1.3. include all software systems that are directly connected to the current component
-                softwareSystems
-                    .filter(softwareSystem => {
-                        return relationshipExistsOverall(relationships, component.identifier, softwareSystem.identifier)
-                            || elementIncludedInView(this.view, softwareSystem.identifier)
-                    })
-                    .filter(softwareSystem => !visitedElements.has(softwareSystem.identifier))
-                    .forEach(softwareSystem => {
-                        visitor.visitSoftwareSystem(softwareSystem);
-                        visitedElements.add(softwareSystem.identifier);
-                    });
-
-                // 4.1.4. include all containers that are directly connected to the current container
-                containers
-                    .filter(container => {
-                        return relationshipExistsOverall(relationships, component.identifier, container.identifier)
-                            || elementIncludedInView(this.view, container.identifier)
-                    })
-                    .filter(container => !visitedElements.has(container.identifier))
-                    .forEach(container => {
-                        visitor.visitContainer(container);
-                        visitedElements.add(container.identifier);
-                    });
-            });
-        }
-        
+    accept<T>(visitor: IElementVisitor<T>): Array<T> {
         const visitedElements = new Set<string>();
         const relationships = getRelationships(this.model, true);
         const people = this.model.people
@@ -82,43 +31,95 @@ export class ComponentViewStrategy implements ISupportVisitor {
         const containers = softwareSystems
             .flatMap(x => x.groups.flatMap(y => y.containers))
             .concat(softwareSystems.flatMap(x => x.containers));
+
+        // 4.1.2. include all people that are directly connected to the current component
+        const visitConnectedPeople = (component: IComponent) => {
+            return people
+                .filter(person => {
+                    return relationshipExistsOverall(relationships, component.identifier, person.identifier)
+                        || elementIncludedInView(this.view, person.identifier)
+                })
+                .filter(person => !visitedElements.has(person.identifier))
+                .map(person => {
+                    visitedElements.add(person.identifier);
+                    return visitor.visitPerson(person);
+                });
+        }
+
+        // 4.1.3. include all software systems that are directly connected to the current component
+        const visitConnectedSoftwareSystems = (component: IComponent) => {
+            return softwareSystems
+                .filter(softwareSystem => {
+                    return relationshipExistsOverall(relationships, component.identifier, softwareSystem.identifier)
+                        || elementIncludedInView(this.view, softwareSystem.identifier)
+                })
+                .filter(softwareSystem => !visitedElements.has(softwareSystem.identifier))
+                .map(softwareSystem => {
+                    visitedElements.add(softwareSystem.identifier);
+                    return visitor.visitSoftwareSystem(softwareSystem);
+                });
+        }
+
+        // 4.1.4. include all containers that are directly connected to the current container
+        const visitConnectedContainers = (component: IComponent) => {
+            return containers
+                .filter(container => {
+                    return relationshipExistsOverall(relationships, component.identifier, container.identifier)
+                        || elementIncludedInView(this.view, container.identifier)
+                })
+                .filter(container => !visitedElements.has(container.identifier))
+                .map(container => {
+                    visitedElements.add(container.identifier);
+                    return visitor.visitContainer(container);
+                });
+        }
+        
+        // 4.1. iterate over all components and include them
+        const visitComponentArray = (components: Array<IComponent>, parentId?: string) => {
+            return components.map(component => {
+                visitedElements.add(component.identifier);
+                return visitor.visitComponent(component, { parentId });
+            });
+        }
         
         // 3.1. iterate over all containers to find the one for the view
-        containers
+        const visitedContainer = containers
             .filter(container => container.identifier === this.view.containerIdentifier)
-            .forEach(container => {
-                // 3.1.1. include the current container
-                visitor.visitContainer(container);
-                visitedElements.add(container.identifier);
-
-                // 3.1.2. iterate over all groups in the container 
-                container.groups.forEach(group => {
-                    // 3.1.2.1. include the component group as a boundary element
-                    visitor.visitGroup(group, { parentId: container.identifier });
+            .flatMap(container => {
+                const components = container.groups
+                    .flatMap(x => x.components)
+                    .concat(container.components);
+                
+                // 3.1.2. iterate over all groups in the container and the group itself
+                const visitedGroups = container.groups.map(group => {
                     visitedElements.add(group.identifier);
-
-                    // 3.1.2.2. include all components in the group
-                    visitComponent(
-                        people,
-                        softwareSystems,
-                        containers,
-                        group.components,
-                        group.identifier
-                    );
+                    const visitedComponents = visitComponentArray(group.components, group.identifier);
+                    return visitor.visitGroup(group, { parentId: container.identifier, children: visitedComponents });
                 });
 
                 // 3.1.3. include all components in the container
-                visitComponent(
-                    people,
-                    softwareSystems,
-                    containers,
-                    container.components,
-                    container.identifier
-                );
-            })
+                const visitedComponents = visitComponentArray(container.components, container.identifier);
+                
+                const visitedConnectedPeople = components.flatMap(visitConnectedPeople);
+                const visitedConnectedSoftwareSystems = components.flatMap(visitConnectedSoftwareSystems);
+                const visitedConnectedContainers = components.flatMap(visitConnectedContainers);
+                
+                // 3.1.1. include the current container
+                visitedElements.add(container.identifier);
+                const visitedContainer = visitor.visitContainer(container, {
+                    children: visitedGroups.concat(visitedComponents)
+                });
+
+                return [visitedContainer]
+                    .concat(visitedConnectedPeople)
+                    .concat(visitedConnectedSoftwareSystems)
+                    .concat(visitedConnectedContainers);
+            });
         
-        relationships
+        const visitedRelationships = relationships
             .filter(relationship => relationshipExistsForElementsInView(Array.from(visitedElements), relationship))
-            .forEach(relationship => visitor.visitRelationship(relationship));
+            .map(relationship => visitor.visitRelationship(relationship));
+
+        return visitedContainer.concat(visitedRelationships);
     }
 }

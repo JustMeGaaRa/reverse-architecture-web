@@ -8,56 +8,65 @@ export class ModelViewStrategy implements ISupportVisitor {
 
     public static PlaceholderModelWorkspaceId = "model-workspace-default-node";
 
-    accept(visitor: IElementVisitor): void {
-        visitor.visitWorkspace(this.workspace)
-        this.workspace.model.groups
+    accept<T>(visitor: IElementVisitor<T>): Array<T> {
+        const visitedWorkspace = visitor.visitWorkspace(this.workspace);
+
+        const visitedGroups = this.workspace.model.groups
             .flatMap(group => group.softwareSystems)
             .concat(this.workspace.model.softwareSystems)
-            .forEach((softwareSystem, index) => {
-                softwareSystem.groups
+            .flatMap((softwareSystem, index) => {
+                const visitedGroups = softwareSystem.groups
                     .flatMap(group => group.containers)
                     .concat(softwareSystem.containers)
-                    .forEach((container, index) => {
-                        container.groups
+                    .flatMap((container, index) => {
+                        const visitedGroups = container.groups
                             .flatMap(group => group.components)
                             .concat(container.components)
-                            .forEach((component, index) => {
-                                visitor.visitComponent(component)
-                                visitor.visitRelationship({
+                            .flatMap((component, index) => {
+                                const visistedComponent = visitor.visitComponent(component);
+                                const visitedRelationships = visitor.visitRelationship({
                                     type: RelationshipType.Relationship,
                                     sourceIdentifier: container.identifier,
                                     targetIdentifier: component.identifier,
                                     tags: []
-                                })
+                                });
+                                return [visistedComponent].concat(visitedRelationships);
                             });
                         
-                        visitor.visitContainer(container)
-                        visitor.visitRelationship({
+                        const visitedContainer = visitor.visitContainer(container);
+                        const visitedRelationships = visitor.visitRelationship({
                             type: RelationshipType.Relationship,
                             sourceIdentifier: softwareSystem.identifier,
                             targetIdentifier: container.identifier,
                             tags: []
-                        })
+                        });
+
+                        return [visitedContainer].concat(visitedGroups).concat(visitedRelationships);
                     });
                 
-                visitor.visitSoftwareSystem(softwareSystem)
-                visitor.visitRelationship({
+                const visitedSoftwareSystem = visitor.visitSoftwareSystem(softwareSystem);
+                const visitedRelationships = visitor.visitRelationship({
                     type: RelationshipType.Relationship,
                     sourceIdentifier: ModelViewStrategy.PlaceholderModelWorkspaceId,
                     targetIdentifier: softwareSystem.identifier,
                     tags: []
-                })
+                });
+                
+                return [visitedSoftwareSystem].concat(visitedGroups).concat(visitedRelationships);
             });
         
-        this.workspace.model.people
-            .forEach((person, index) => {    
-                visitor.visitPerson(person)
-                visitor.visitRelationship({
+        const visitedPeople = this.workspace.model.people
+            .flatMap((person, index) => {    
+                const visitedPerson = visitor.visitPerson(person);
+                const visitedRelationships = visitor.visitRelationship({
                     type: RelationshipType.Relationship,
                     sourceIdentifier: ModelViewStrategy.PlaceholderModelWorkspaceId,
                     targetIdentifier: person.identifier,
                     tags: []
-                })
+                });
+                return [visitedPerson].concat(visitedRelationships);
             });
+
+        return [visitedWorkspace].concat(visitedGroups).concat(visitedPeople);
     }
 }

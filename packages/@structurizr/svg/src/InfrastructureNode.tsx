@@ -1,19 +1,19 @@
-import { FC, PropsWithChildren } from "react";
+import { FC } from "react";
 import { Boundary } from "./Element";
+import { Group } from "./Group";
 import { useViewMetadata } from "./ViewMetadataProvider";
 
-export interface IDeploymentNode {
-    type: "Deployment Node";
+export interface IInfrastructureNode {
+    type: "Infrastructure Node";
     identifier: string;
     name: string;
     description?: string;
     instances?: string;
 }
 
-export const DeploymentNode: FC<PropsWithChildren<{
-    value: IDeploymentNode;
-}>> = ({
-    children,
+export const InfrastructureNode: FC<{
+    value: IInfrastructureNode;
+}> = ({
     value,
 }) => {
     const { metadata } = useViewMetadata();
@@ -33,8 +33,6 @@ export const DeploymentNode: FC<PropsWithChildren<{
             backgroundColor={"none"}
             borderColor={"#535354"}
             borderDash={false}
-        >
-            {children}
-        </Boundary>
+        />
     );
 };

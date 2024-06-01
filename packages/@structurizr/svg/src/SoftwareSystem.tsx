@@ -14,16 +14,9 @@ export interface ISoftwareSystem {
 
 export const SoftwareSystem: FC<PropsWithChildren<{
     value: ISoftwareSystem;
-    position?: { x: number; y: number };
-    height?: number;
-    width?: number;
-    borderWidth?: number;
-    borderRadius?: number;
 }>> = ({
     children,
     value,
-    borderWidth = 2,
-    borderRadius = 16
 }) => {
     const { metadata } = useViewMetadata();
     const dimensions = metadata?.elements[value.identifier] ?? {
@@ -39,8 +32,6 @@ export const SoftwareSystem: FC<PropsWithChildren<{
         <ZoomControls position={dimensions}>
             <Boundary
                 value={value}
-                borderRadius={borderRadius}
-                borderWidth={borderWidth}
                 height={dimensions.height}
                 width={dimensions.width}
             >
@@ -51,8 +42,6 @@ export const SoftwareSystem: FC<PropsWithChildren<{
         <ZoomControls position={dimensions}>
             <Element
                 value={value}
-                borderRadius={borderRadius}
-                borderWidth={borderWidth}
                 height={dimensions.height}
                 width={dimensions.width}
             />

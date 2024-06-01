@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren, useCallback, useState } from "react";
-import { useViewport } from "../ViewportProvider";
+import { useViewport } from "../components";
 
 export const ZoomControls: FC<PropsWithChildren<{
     position?: { x: number; y: number };

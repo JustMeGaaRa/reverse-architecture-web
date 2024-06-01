@@ -6,6 +6,8 @@ import {
     useRef,
     useState
 } from "react";
+import { BackgroundDotPattern } from "./BackgroundDotPattern";
+import { BackgroundType } from "./BackgroundType";
 import { MarkerArrowClosed } from "./MarkerArrowClosed";
 import { MarkerCircleOutline } from "./MarkerCircleOutline";
 import { useViewport } from "./ViewportProvider";
@@ -123,6 +125,7 @@ export const Viewport: FC<PropsWithChildren> = ({ children }) => {
             onWheel={handleOnWheel}
         >
             <defs>
+                <BackgroundDotPattern />
                 <MarkerArrowClosed />
                 <MarkerCircleOutline />
             </defs>

@@ -1,143 +1,105 @@
+import { createDefaultWorkspace, IWorkspaceMetadata, IWorkspaceSnapshot } from "@structurizr/dsl";
+import { parseWorkspace } from "@structurizr/parser";
 import {
-    ComponentView,
-    Component,
-    Container,
-    ContainerView,
-    DeploymentNode,
-    DeploymentView,
-    IContainer,
-    IDeploymentNode,
-    IPerson,
-    IRelationship,
-    ISoftwareSystem,
+    AutoLayout,
     IViewMetadata,
-    Person,
-    Relationship,
-    SoftwareSystem,
+    Styles,
     SystemLandscapeView,
+    Themes,
     Views,
     Workspace,
-    IComponent,
+    WorkspaceContext,
     useViewport,
+    SystemContextView,
+    ContainerView,
+    ComponentView,
+    DeploymentView,
 } from "@structurizr/svg";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 export function App() {
-    const customer: IPerson = {
-        type: "Person",
-        identifier: "customer",
-        name: "Personal Banking Customer",
-        description: "A customer of the bank, with personal bank accounts.",
-    };
-    const softwareSystem: ISoftwareSystem = {
-        type: "Software System",
-        identifier: "internetBankingSystem",
-        name: "Internet Banking System",
-        description: "Provides a limited subset of the Internet banking functionality to customers via their mobile devices. Provides a limit.",
-        technology: ".NET",
-    };
-    const spa: IContainer = {
-        type: "Container",
-        identifier: "singlePageApplication",
-        name: "Single-Page Application",
-        description: "Provides all of the Internet banking functionality to customers via their web browser.",
-        technology: "JavaScript and Angular",
-    };
-    const web: IContainer = {
-        type: "Container",
-        identifier: "webApplication",
-        name: "Web Application",
-        description: "Delivers the static content and the Internet banking single page application.",
-        technology: "Java and Spring MVC",
-    };
-    const api: IContainer = {
-        type: "Container",
-        identifier: "apiApplication",
-        name: "API Application",
-        description: "Provides Internet banking functionality via a JSON/HTTPS API.",
-        technology: "Java and Spring MVC",
-    };
-    const account: IComponent = {
-        type: "Component",
-        identifier: "accountsSummaryController",
-        name: "Accounts Summary Controller",
-        description: "Provides customers with a summary of their bank accounts.",
-        technology: "Spring MVC Rest Controller",
-    };
-    const devLaptop: IDeploymentNode = {
-        type: "Deployment Node",
-        identifier: "devLaptop",
-        name: "Developer Laptop",
-    };
-    const webBrowser: IDeploymentNode = {
-        type: "Deployment Node",
-        identifier: "webBrowser",
-        name: "Web Browser",
-    };
-    const webServer: IDeploymentNode = {
-        type: "Deployment Node",
-        identifier: "webServer",
-        name: "Docker Container - Web Server",
-    };
-    const apache: IDeploymentNode = {
-        type: "Deployment Node",
-        identifier: "apache",
-        name: "Apache Tomcat",
-    };
-    const relationCustomerBanking: IRelationship = {
-        identifier: "customer_internetBankingSystem",
-        sourceIdentifier: "customer",
-        targetIdentifier: "internetBankingSystem",
-        description: "Views account balances, and makes payments using",
-    };
-    const relationApiWeb: IRelationship = {
-        identifier: "apiApplication_webApplication",
-        sourceIdentifier: "apiApplication",
-        targetIdentifier: "webApplication",
+    const [ workspace, setWorkspace ] = useState<IWorkspaceSnapshot>(createDefaultWorkspace());
+    const [ metadata, setMetadata ] = useState<IWorkspaceMetadata>();
+
+    useEffect(() => {
+        const fetchWorkspace = async () => {
+            const url = "https://raw.githubusercontent.com//JustMeGaaRa/reverse-architecture-community/main/workspaces/big-bank-plc/workspace.dsl";
+            const response = await fetch(url);
+            const structurizr = await response.text();
+            return structurizr;
+        }
+
+        const fetchMetadata = async () => {
+            const url = "https://raw.githubusercontent.com/JustMeGaaRa/reverse-architecture-community/main/workspaces/big-bank-plc/workspace.metadata.json";
+            const response = await fetch(url);
+            const metadata = await response.json();
+            return metadata;
+        }
+        
+        fetchWorkspace()
+            .then(structurizr => {
+                parseWorkspace(
+                    structurizr,
+                    (error) => console.debug(error),
+                    (workspace) => setWorkspace(workspace)
+                );
+            })
+            .catch(error => {
+                console.debug(error);
+            });
+
+        fetchMetadata()
+            .then(metadata => {
+                setMetadata(metadata);
+            })
+            .catch(error => {
+                console.debug(error);
+            });
+    }, []);
+    
+    const systemLandscapeViewMetadata: IViewMetadata = {
+        elements: metadata?.views?.systemLandscape?.elements?.reduce((acc, element) => ({ ...acc, [element.id]: element }), {}) ?? {},
+        relationships: metadata?.views?.systemLandscape?.relationships?.reduce((acc, relationship) => ({ ...acc, [relationship.id]: relationship }), {}) ?? {}
     }
 
-    const systemLandscapeViewMetadata: IViewMetadata = {
-        elements: {
-            ["customer"]: { x: 100, y: -250 },
-            ["internetBankingSystem"]: { x: 600, y: -350 },
-        },
-        relationships: {
-            ["customer_internetBankingSystem"]: [],
-        },
-    };
-    const containerViewMetadata: IViewMetadata = {
-        elements: {
-            ["internetBankingSystem"]: { x: 100, y: 40, height: 500, width: 600 },
-            ["singlePageApplication"]: { x: 50, y: 100 },
-            ["webApplication"]: { x: 350, y: 50 },
-        },
-        relationships: {},
-    };
-    const componentViewMetadata: IViewMetadata = {
-        elements: {
-            ["apiApplication"]: { x: 900, y: 150, height: 350, width: 400 },
-            ["accountsSummaryController"]: { x: 100, y: 50 },
-        },
-        relationships: {},
-    };
-    const deploymentViewMetadata: IViewMetadata = {
-        elements: {
-            ["devLaptop"]: { x: -1100, y: -100, height: 800, width: 1000 },
-            ["webBrowser"]: { x: 50, y: 200, height: 350, width: 300 },
-            ["webServer"]: { x: 450, y: 50, height: 650, width: 500 },
-            ["apache"]: { x: 50, y: 50, height: 350, width: 300 },
-            ["apiApplication"]: { x: 50, y: 50 },
-            ["webApplication"]: { x: 50, y: 50 },
-        },
-        relationships: {
-            ["apiApplication_webApplication"]: [
-                { x: -400, y: 400 },
-                { x: 0, y: 400 },
-                { x: 100, y: 400 },
-            ],
-        },
-    };
+    // const systemLandscapeViewMetadata: IViewMetadata = {
+    //     elements: {
+    //         "customer": { x: 100, y: -250 },
+    //         "internetBankingSystem": { x: 600, y: -350 },
+    //     },
+    //     relationships: {
+    //         "customer_internetBankingSystem": [],
+    //     },
+    // };
+    // const containerViewMetadata: IViewMetadata = {
+    //     elements: {
+    //         "internetBankingSystem": { x: 100, y: 40, height: 500, width: 600 },
+    //         "singlePageApplication": { x: 50, y: 100 },
+    //         "webApplication1": { x: 350, y: 50 },
+    //     },
+    //     relationships: {},
+    // };
+    // const componentViewMetadata: IViewMetadata = {
+    //     elements: {
+    //         "apiApplication": { x: 900, y: 150, height: 350, width: 400 },
+    //         "accountsSummaryController": { x: 100, y: 50 },
+    //     },
+    //     relationships: {},
+    // };
+    // const deploymentViewMetadata: IViewMetadata = {
+    //     elements: {
+    //         "devLaptop": { x: -1100, y: -100, height: 800, width: 1000 },
+    //         "webBrowser": { x: 50, y: 200, height: 350, width: 300 },
+    //         "webServer": { x: 450, y: 50, height: 500, width: 500 },
+    //         "apache": { x: 50, y: 50, height: 350, width: 300 },
+    //         "apiApplication": { x: 50, y: 50 },
+    //         "webApplication": { x: 50, y: 50 },
+    //     },
+    //     relationships: {},
+    // };
+    const defaultThemeUrl = "https://static.structurizr.com/themes/default/theme.json";
+    const awsThemeUrl = "https://static.structurizr.com/themes/amazon-web-services-2023.01.31/theme.json";
 
     return (
         <div
@@ -150,56 +112,103 @@ export function App() {
                 width: "100vw",
             }}
         >
-            <Workspace>
-                <Views>
-                    <SystemLandscapeView
-                        value={{ key: "system landscape" }}
-                        metadata={systemLandscapeViewMetadata}
-                    >
-                        <Person value={customer} />
-                        <SoftwareSystem value={softwareSystem} />
-                        <Relationship value={relationCustomerBanking} />
-                    </SystemLandscapeView>
+            <WorkspaceContext.Provider value={{ workspace, setWorkspace }}>
+                <Workspace value={{ title: workspace.name, description: workspace.description }}>
+                    <Views>
+                        {/* {workspace.views.systemLandscape && (
+                            <SystemLandscapeView
+                                value={{ key: workspace.views.systemLandscape.key }}
+                                metadata={{
+                                    elements: metadata?.views?.systemLandscape?.elements
+                                        ?.reduce((acc, element) => ({ ...acc, [element.id]: element }), {}) ?? {},
+                                    relationships: metadata?.views?.systemLandscape?.relationships
+                                        ?.reduce((acc, relationship) => ({ ...acc, [relationship.id]: relationship }), {}) ?? {}
+                                }}
+                            >
+                                <AutoLayout value={{}} />
+                            </SystemLandscapeView>
+                        )} */}
 
-                    <ContainerView
-                        value={{ key: "container" }}
-                        metadata={containerViewMetadata}
-                    >
-                        <SoftwareSystem value={softwareSystem}>
-                            <Container value={spa} />
-                            <Container value={web} />
-                        </SoftwareSystem>
-                    </ContainerView>
+                        {/* {workspace.views.systemContexts.map((systemContext, index) => (
+                            <SystemContextView
+                                key={index}
+                                value={{
+                                    key: systemContext.key,
+                                    softwareSystemIdentifier: systemContext.softwareSystemIdentifier,
+                                }}
+                                metadata={{
+                                    elements: metadata?.views?.systemContexts[index]?.elements
+                                        ?.reduce((acc, element) => ({ ...acc, [element.id]: element }), {}) ?? {},
+                                    relationships: metadata?.views?.systemContexts[index]?.relationships
+                                        ?.reduce((acc, relationship) => ({ ...acc, [relationship.id]: relationship }), {}) ?? {}
+                                }}
+                            >
+                                <AutoLayout value={{}} />
+                            </SystemContextView>
+                        ))} */}
 
-                    <ComponentView
-                        value={{ key: "component" }}
-                        metadata={componentViewMetadata}
-                    >
-                        <Container value={api}>
-                            <Component value={account} />
-                        </Container>
-                    </ComponentView>
+                        {/* {workspace.views.containers.map((container, index) => (
+                            <ContainerView
+                                key={index}
+                                value={{
+                                    key: container.key,
+                                    softwareSystemIdentifier: container.softwareSystemIdentifier,
+                                }}
+                                metadata={{
+                                    elements: metadata?.views?.containers[index]?.elements
+                                        ?.reduce((acc, element) => ({ ...acc, [element.id]: element }), {}) ?? {},
+                                    relationships: metadata?.views?.containers[index]?.relationships
+                                        ?.reduce((acc, relationship) => ({ ...acc, [relationship.id]: relationship }), {}) ?? {}
+                                }}
+                            >
+                                <AutoLayout value={{}} />
+                            </ContainerView>
+                        ))} */}
+                        
+                        {/* {workspace.views.components.map((component, index) => (
+                            <ComponentView
+                                key={index}
+                                value={{
+                                    key: component.key,
+                                    containerIdentifier: component.containerIdentifier,
+                                }}
+                                metadata={{
+                                    elements: metadata?.views?.components[index]?.elements
+                                        ?.reduce((acc, element) => ({ ...acc, [element.id]: element }), {}) ?? {},
+                                    relationships: metadata?.views?.components[index]?.relationships
+                                        ?.reduce((acc, relationship) => ({ ...acc, [relationship.id]: relationship }), {}) ?? {}
+                                }}
+                            >
+                                <AutoLayout value={{}} />
+                            </ComponentView>
+                        ))} */}
 
-                    <DeploymentView
-                        value={{ key: "deployment", environment: "Development" }}
-                        metadata={deploymentViewMetadata}
-                    >
-                        <DeploymentNode value={devLaptop}>
-                            <DeploymentNode value={webBrowser}>
-                                <Container value={api} />
-                            </DeploymentNode>
-                            <DeploymentNode value={webServer}>
-                                <DeploymentNode value={apache}>
-                                    <Container value={web} />
-                                </DeploymentNode>
-                            </DeploymentNode>
-                        </DeploymentNode>
-                        <Relationship value={relationApiWeb} />
-                    </DeploymentView>
-            
-                    {createPortal(<Controls />, document.body as HTMLElement)}
-                </Views>
-            </Workspace>
+                        {workspace.views.deployments.map((deployment, index) => (
+                            <DeploymentView
+                                key={index}
+                                value={{
+                                    key: deployment.key,
+                                    softwareSystemIdentifier: deployment.softwareSystemIdentifier,
+                                    environment: deployment.environment,
+                                }}
+                                metadata={{
+                                    elements: metadata?.views?.deployments[index]?.elements
+                                        ?.reduce((acc, element) => ({ ...acc, [element.id]: element }), {}) ?? {},
+                                    relationships: metadata?.views?.deployments[index]?.relationships
+                                        ?.reduce((acc, relationship) => ({ ...acc, [relationship.id]: relationship }), {}) ?? {}
+                                }}
+                            >
+                                <AutoLayout value={{}} />
+                            </DeploymentView>
+                        ))}
+
+                        <Styles value={{ elements: [], relationships: [] }} />
+                        <Themes urls={[defaultThemeUrl, awsThemeUrl]} />
+                
+                        {createPortal(<Controls />, document.body as HTMLElement)}
+                    </Views>
+                </Workspace>
+            </WorkspaceContext.Provider>
         </div>
     );
 }

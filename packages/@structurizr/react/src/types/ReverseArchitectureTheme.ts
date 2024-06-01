@@ -1,7 +1,7 @@
 import {
     IElementStyleProperties,
     IRelationshipStyleProperties,
-    IWorkspaceTheme,
+    ITheme,
     LineStyle,
     RoutingStyle,
     ShapeType,
@@ -37,20 +37,15 @@ export const ReverseArchitectureRelationshipStyle: IRelationshipStyleProperties 
     properties: new Map(),
 }
 
-export const ReverseArchitectureTheme: IWorkspaceTheme = {
+export const ReverseArchitectureTheme: ITheme = {
     name: "Reverse Architecture Theme",
     description: "Default theme for elements and relationships in Reverse Architecture application",
-    lastModifiedDate: new Date(),
-    elements: [
-        {
-            tag: Tag.Element.name,
-            ...ReverseArchitectureElementStyle
-        },
-    ],
-    relationships: [
-        {
-            tag: Tag.Relationship.name,
-            ...ReverseArchitectureRelationshipStyle
-        }
-    ]
+    elements: [{
+        tag: Tag.Element.name,
+        ...ReverseArchitectureElementStyle
+    }],
+    relationships: [{
+        tag: Tag.Relationship.name,
+        ...ReverseArchitectureRelationshipStyle
+    }]
 }

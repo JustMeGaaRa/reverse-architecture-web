@@ -1,17 +1,16 @@
 import { FC, PropsWithChildren } from "react";
+import { Text } from "./components";
 import { Boundary } from "./Element";
 import { useViewMetadata } from "./ViewMetadataProvider";
 
-export interface IDeploymentNode {
-    type: "Deployment Node";
+export interface IGroup {
+    type: string;
     identifier: string;
     name: string;
-    description?: string;
-    instances?: string;
 }
 
-export const DeploymentNode: FC<PropsWithChildren<{
-    value: IDeploymentNode;
+export const Group: FC<PropsWithChildren<{
+    value: IGroup;
 }>> = ({
     children,
     value,
@@ -20,16 +19,18 @@ export const DeploymentNode: FC<PropsWithChildren<{
     const dimensions = metadata?.elements[value.identifier] ?? {
         x: 0,
         y: 0,
-        height: 350,
-        width: 300,
+        height: 200,
+        width: 200,
     };
+    // TODO: pass these default values to the Element component directly
+    const { height = 400, width = 400 } = dimensions;
 
     return (
         <Boundary
             value={value}
             position={dimensions}
-            height={dimensions.height}
-            width={dimensions.width}
+            height={height}
+            width={width}
             backgroundColor={"none"}
             borderColor={"#535354"}
             borderDash={false}

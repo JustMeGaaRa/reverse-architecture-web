@@ -120,6 +120,9 @@ export const Boundary: FC<PropsWithChildren<{
     position?: { x: number; y: number };
     height?: number;
     width?: number;
+    backgroundColor?: string;
+    borderColor?: string;
+    borderDash?: boolean;
     borderWidth?: number;
     borderRadius?: number;
     padding?: number;
@@ -129,6 +132,9 @@ export const Boundary: FC<PropsWithChildren<{
     position = { x: 0, y: 0 },
     height = 400,
     width = 400,
+    backgroundColor = "#161819",
+    borderColor = "#535354",
+    borderDash = true,
     borderWidth = 2,
     borderRadius = 32,
     padding = 16,
@@ -139,71 +145,9 @@ export const Boundary: FC<PropsWithChildren<{
                 cursor={"pointer"}
                 height={height}
                 width={width}
-                fill={"#161819"}
-                stroke={"#535354"}
-                strokeDasharray={"20 10"}
-                strokeWidth={borderWidth}
-                rx={borderRadius}
-                ry={borderRadius}
-            />
-            <Text
-                x={borderWidth + padding}
-                y={height - borderWidth - padding - 16}
-                fontSize={14}
-                fontFamily={"Inter"}
-                fill={"#E8E8E8"}
-                style={{ whiteSpace: "pre" }}
-                width={width - padding * 2 - borderWidth * 2}
-            >
-                {value.name}
-            </Text>
-            <Text
-                x={borderWidth + padding}
-                y={height - borderWidth - padding}
-                fontSize={11}
-                fontFamily={"Inter"}
-                fill={"#A1A2A3"}
-                style={{ whiteSpace: "pre" }}
-                width={width - padding * 2 - borderWidth * 2}
-            >
-                {value.type}
-            </Text>
-            {children}
-        </g>
-    );
-};
-
-export interface IGroup {
-    type: string;
-    name: string;
-}
-
-export const Group: FC<PropsWithChildren<{
-    value: IGroup;
-    position?: { x: number; y: number };
-    height?: number;
-    width?: number;
-    borderWidth?: number;
-    borderRadius?: number;
-    padding?: number;
-}>> = ({
-    children,
-    value,
-    position = { x: 0, y: 0 },
-    height = 400,
-    width = 400,
-    borderWidth = 2,
-    borderRadius = 32,
-    padding = 16,
-}) => {
-    return (
-        <g transform={`translate(${position.x}, ${position.y})`}>
-            <rect
-                cursor={"pointer"}
-                height={height}
-                width={width}
-                fill={"none"}
-                stroke={"#535354"}
+                fill={backgroundColor}
+                stroke={borderColor}
+                strokeDasharray={borderDash ? "20 10" : undefined}
                 strokeWidth={borderWidth}
                 rx={borderRadius}
                 ry={borderRadius}

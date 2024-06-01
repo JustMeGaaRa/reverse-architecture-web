@@ -39,11 +39,11 @@ import {
     ISystemContextView,
     ISystemLandscapeView,
     IWorkspaceSnapshot,
-    IWorkspaceTheme,
+    ITheme,
     ViewDefinition
 } from "../interfaces";
 
-export const applyTheme = (workspace: IWorkspaceSnapshot, theme: IWorkspaceTheme): IWorkspaceSnapshot => {
+export const applyTheme = (workspace: IWorkspaceSnapshot, theme: ITheme): IWorkspaceSnapshot => {
     return {
         ...workspace,
         views: {
@@ -60,13 +60,10 @@ export const applyTheme = (workspace: IWorkspaceSnapshot, theme: IWorkspaceTheme
     };
 }
 
-export const fetchTheme = async (url: string): Promise<IWorkspaceTheme> => {
+export const fetchTheme = async (url: string): Promise<ITheme> => {
     const themeResponse = await fetch(url);
-    if (!themeResponse.ok) {
-        throw new Error(`Theme not found`);
-    }
-    const theme = await themeResponse.json() as IWorkspaceTheme;
-    return theme;
+    if (!themeResponse.ok) throw new Error(`Theme not found`);
+    return await themeResponse.json() as ITheme;
 }
 
 export const findViewByKey = (workspace: IWorkspaceSnapshot, viewKey: string): ViewDefinition => {

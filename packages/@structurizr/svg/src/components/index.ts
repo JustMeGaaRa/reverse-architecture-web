@@ -1,3 +1,5 @@
+export * from "./BackgroundDotPattern";
+export * from "./BackgroundType";
 export * from "./Connector";
 export * from "./MarkerArrowClosed";
 export * from "./MarkerCircleOutline";

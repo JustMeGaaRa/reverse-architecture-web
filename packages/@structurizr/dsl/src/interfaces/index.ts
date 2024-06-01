@@ -36,5 +36,5 @@ export * from "./IViews";
 export * from "./IViewsMetadata";
 export * from "./IWorkspaceMetadata";
 export * from "./IWorkspaceSnapshot";
-export * from "./IWorkspaceTheme";
+export * from "./ITheme";
 export * from "./ViewDefinition";

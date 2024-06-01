@@ -3,11 +3,9 @@ import {
     RelationshipStyleCollection
 } from "../types";
 
-
-export interface IWorkspaceTheme {
+export interface ITheme {
     name: string;
     description: string;
-    lastModifiedDate: Date;
     elements: ElementStyleCollection;
     relationships: RelationshipStyleCollection;
 }

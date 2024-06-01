@@ -20,89 +20,84 @@ export class ContainerViewStrategy implements ISupportVisitor {
         private view: IContainerView,
     ) {}
 
-    accept(visitor: IElementVisitor): void {
-
-        const visitContainerArray = (
-            people: Array<IPerson>,
-            softwareSystems: Array<ISoftwareSystem>,
-            containers: Array<IContainer>,
-            parentId?: string
-        ) => {
-            // 3.1. iterate over all containers and include them
-            containers.forEach(container => {
-                // 3.1.1. include the container
-                visitor.visitContainer(container, { parentId });
-                visitedElements.add(container.identifier);
-
-                // 3.1.2. include all people that are directly connected to the current container
-                people
-                    .filter(person => {
-                        return relationshipExistsOverall(relationships, container.identifier, person.identifier)
-                            || elementIncludedInView(this.view, person.identifier)
-                    })
-                    .filter(person => !visitedElements.has(person.identifier))
-                    .forEach(person => {
-                        visitor.visitPerson(person);
-                        visitedElements.add(person.identifier);
-                    });
-                
-                // 3.1.3. include all software systems that are directly connected to the current container
-                softwareSystems
-                    .filter(softwareSystem => {
-                        return relationshipExistsOverall(relationships, container.identifier, softwareSystem.identifier)
-                            || elementIncludedInView(this.view, softwareSystem.identifier)
-                    })
-                    .filter(softwareSystem => !visitedElements.has(softwareSystem.identifier))
-                    .forEach(softwareSystem => {
-                        visitor.visitSoftwareSystem(softwareSystem);
-                        visitedElements.add(softwareSystem.identifier);
-                    });
-            });
-        }
-        
+    accept<T>(visitor: IElementVisitor<T>): Array<T> {
         const visitedElements = new Set<string>();
         const relationships = getRelationships(this.model, true);
-        const people = this.model.groups
-            .flatMap(x => x.people)
-            .concat(this.model.people);
-        const softwareSystems = this.model.groups
-            .flatMap(x => x.softwareSystems)
-            .concat(this.model.softwareSystems);
+        const people = this.model.groups.flatMap(x => x.people).concat(this.model.people);
+        const softwareSystems = this.model.groups.flatMap(x => x.softwareSystems).concat(this.model.softwareSystems);
+        
+        // 3.1.3. include all software systems that are directly connected to the current container
+        const visitConnectedSoftwareSystems = (container: IContainer) => {
+            return softwareSystems
+                .filter(softwareSystem => {
+                    return relationshipExistsOverall(relationships, container.identifier, softwareSystem.identifier)
+                        || elementIncludedInView(this.view, softwareSystem.identifier)
+                })
+                .filter(softwareSystem => !visitedElements.has(softwareSystem.identifier))
+                .map(softwareSystem => {
+                    visitedElements.add(softwareSystem.identifier);
+                    return visitor.visitSoftwareSystem(softwareSystem);
+                });
+        }
+
+        // 3.1.2. include all people that are directly connected to the current container
+        const visitConnectedPeople = (container: IContainer) => {
+            return people
+                .filter(person => {
+                    return relationshipExistsOverall(relationships, container.identifier, person.identifier)
+                        || elementIncludedInView(this.view, person.identifier)
+                })
+                .filter(person => !visitedElements.has(person.identifier))
+                .map(person => {
+                    visitedElements.add(person.identifier);
+                    return visitor.visitPerson(person);
+                });
+        }
+        
+        // 3.1. iterate over all containers and include them
+        const visitContainerArray = (containers: Array<IContainer>, parentId?: string) => {
+            return containers.map(container => {
+                visitedElements.add(container.identifier);
+                return visitor.visitContainer(container, { parentId });
+            });
+        }
 
         // 2.1. iterate over all software systems and find software system for the view
-        softwareSystems
+        const visitedSoftwareSystem = softwareSystems
             .filter(softwareSystem => softwareSystem.identifier === this.view.softwareSystemIdentifier)
-            .forEach(softwareSystem => {
-                // 2.1.1. include the software system as a boundary element
-                visitor.visitSoftwareSystem(softwareSystem);
-                visitedElements.add(softwareSystem.identifier);
-
-                // 2.1.2. iterate over all groups in the software system
-                softwareSystem.groups.forEach(group => {
-                    // 2.1.2.1 include the container group as a boundary element
-                    visitor.visitGroup(group, { parentId: softwareSystem.identifier });
+            .flatMap(softwareSystem => {
+                const containers = softwareSystem.groups
+                    .flatMap(x => x.containers)
+                    .concat(softwareSystem.containers);
+                
+                // 2.1.2.2 include all containers in the group and the group itself
+                const visitedGroups = softwareSystem.groups.map(group => {
                     visitedElements.add(group.identifier);
-                    
-                    // 2.1.2.2 include all containers in the group
-                    visitContainerArray(
-                        people,
-                        softwareSystems,
-                        group.containers,
-                        group.identifier
-                    );
+                    const visitedContainers = visitContainerArray(group.containers, group.identifier);
+                    return visitor.visitGroup(group, { parentId: softwareSystem.identifier, children: visitedContainers });
                 });
 
                 // 2.1.3. include all containers in the software system
-                visitContainerArray(
-                    people,
-                    softwareSystems,
-                    softwareSystem.containers,
-                    softwareSystem.identifier
-                );
-            })
+                const visitedContainers = visitContainerArray(softwareSystem.containers, softwareSystem.identifier);
+
+                const visitedConnectedPeople = containers.flatMap(visitConnectedPeople);
+                const visitedConnectedSoftwareSystems = containers.flatMap(visitConnectedSoftwareSystems);
+                
+                // 2.1.1. include the software system as a boundary element
+                visitedElements.add(softwareSystem.identifier);
+                const visitedSoftwareSystem = visitor.visitSoftwareSystem(softwareSystem, {
+                    children: visitedGroups.concat(visitedContainers)
+                });
+
+                return [visitedSoftwareSystem]
+                    .concat(visitedConnectedSoftwareSystems)
+                    .concat(visitedConnectedPeople);
+            });
         
-        relationships
+        const visitedRelationships = relationships
             .filter(relationship => relationshipExistsForElementsInView(Array.from(visitedElements), relationship))
-            .forEach(relationship => visitor.visitRelationship(relationship));
+            .map(relationship => visitor.visitRelationship(relationship));
+
+        return visitedSoftwareSystem.concat(visitedRelationships);
     }
 }

@@ -1,4 +1,4 @@
-import { IWorkspaceTheme } from "../interfaces"
+import { ITheme } from "../interfaces"
 import { IElementStyleProperties } from "./ElementStyleProperties"
 import { LineStyle } from "./LineStyle"
 import { IRelationshipStyleProperties } from "./RelationshipStyleProperties"
@@ -35,10 +35,9 @@ export const StructurizrRelationshipTagDefaultStyle: IRelationshipStylePropertie
     width: 200,
 }
 
-export const StructurizrDefaultTheme: IWorkspaceTheme = {
+export const StructurizrDefaultTheme: ITheme = {
     name: "Structurizr Default Theme",
     description: "Default theme defined in Structurizr specification",
-    lastModifiedDate: new Date(),
     elements: [
         {
             tag: Tag.Element.name,

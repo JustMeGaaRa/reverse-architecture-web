@@ -2,6 +2,7 @@ import {
     IElementVisitor,
     IModel,
     IPerson,
+    IRelationship,
     ISoftwareSystem,
     ISupportVisitor,
     ISystemLandscapeView
@@ -17,50 +18,51 @@ export class SystemLandscapeViewStrategy implements ISupportVisitor {
         private view: ISystemLandscapeView
     ) {}
 
-    accept(visitor: IElementVisitor): void {
-        const visitSoftwareSystems = (
-            people: Array<IPerson>,
-            softwareSystems: Array<ISoftwareSystem>,
-            parentId?: string
-        ) => {
-            // 2.1. include all people
-            people.forEach(person => {
-                visitor.visitPerson(person, { parentId });
-                visitedElements.add(person.identifier);
-            });
-
-            // 2.1. include all software systems
-            softwareSystems.forEach(softwareSystem => {
-                visitor.visitSoftwareSystem(softwareSystem, { parentId });
-                visitedElements.add(softwareSystem.identifier);
-            });
-        }
-
+    accept<T>(visitor: IElementVisitor<T>): Array<T> {
         const visitedElements = new Set<string>();
         const relationships = getRelationships(this.model, true);
 
-        // 1.1. iterate over all groups and find software system for the view
-        this.model.groups.forEach(group => {
-            // 1.1.1.1. include the software system group as a boundary element
-            visitor.visitGroup(group);
-            visitedElements.add(group.identifier);
+        // 2.1. include all software systems
+        const visitSoftwareSystemArray = (softwareSystems: Array<ISoftwareSystem>, parentId?: string) => {
+            return softwareSystems.map(softwareSystem => {
+                visitedElements.add(softwareSystem.identifier);
+                return visitor.visitSoftwareSystem(softwareSystem, { parentId });
+            });
+        }
 
+        // 2.1. include all people
+        const visitPersonArray = (people: Array<IPerson>, parentId?: string) => {
+            return people.map(person => {
+                visitedElements.add(person.identifier);
+                return visitor.visitPerson(person, { parentId });
+            });
+        }
+
+        const visitRelationshipArray = (relationships: Array<IRelationship>) => {
+            return relationships
+                .filter(relationship => relationshipExistsForElementsInView(Array.from(visitedElements), relationship))
+                .map(relationship => visitor.visitRelationship(relationship));
+        }
+
+        // 1.1. iterate over all groups and find software system for the view
+        const visitedGroups = this.model.groups.map(group => {
             // 1.1.1.2. include people and software systems in the group
-            visitSoftwareSystems(
-                group.people,
-                group.softwareSystems,
-                group.identifier
-            );
+            const visitedSoftwareSystems = visitSoftwareSystemArray(group.softwareSystems, group.identifier);
+            const visitedPeople = visitPersonArray(group.people, group.identifier);
+            
+            // 1.1.1.1. include the software system group as a boundary element
+            visitedElements.add(group.identifier);
+            return visitor.visitGroup(group, { children: visitedSoftwareSystems.concat(visitedPeople) });
         });
 
         // 1.2. iterate over all software systems and find software system for the view
-        visitSoftwareSystems(
-            this.model.people,
-            this.model.softwareSystems
-        );
-        
-        relationships
-            .filter(relationship => relationshipExistsForElementsInView(Array.from(visitedElements), relationship))
-            .forEach(relationship => visitor.visitRelationship(relationship));
+        const visitedSoftwareSystems = visitSoftwareSystemArray(this.model.softwareSystems);
+        const visitedPeople = visitPersonArray(this.model.people);
+        const visitedRelationships = visitRelationshipArray(relationships);
+
+        return visitedGroups
+            .concat(visitedSoftwareSystems)
+            .concat(visitedPeople)
+            .concat(visitedRelationships);
     }
 }

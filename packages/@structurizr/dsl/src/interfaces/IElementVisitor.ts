@@ -10,34 +10,50 @@ import { ISoftwareSystem } from "./ISoftwareSystem";
 import { ISoftwareSystemInstance } from "./ISoftwareSystemInstance";
 import { IWorkspaceSnapshot } from "./IWorkspaceSnapshot";
 
-export interface IElementVisitor {
-    visitWorkspace(workspace: IWorkspaceSnapshot): void;
+export interface IElementVisitor<T = any> {
+    visitWorkspace(
+        workspace: IWorkspaceSnapshot,
+        params?: { children?: Array<T>; }
+    ): T;
     visitGroup(
         group: IGroup,
-        params?: { parentId?: string; }): void;
+        params?: { parentId?: string; children?: Array<T>; }
+    ): T;
     visitPerson(
         person: IPerson,
-        params?: { parentId?: string; }): void;
+        params?: { parentId?: string; children?: Array<T>; }
+    ): T;
     visitSoftwareSystem(
         softwareSystem: ISoftwareSystem,
-        params?: { parentId?: string; }): void;
+        params?: { parentId?: string; children?: Array<T>; }
+    ): T;
     visitContainer(
         container: IContainer,
-        params?: { parentId?: string; }): void;
+        params?: { parentId?: string; children?: Array<T>; }
+    ): T;
     visitComponent(
         component: IComponent,
-        params?: { parentId?: string; }): void;
+
+        params?: { parentId?: string; children?: Array<T>; }
+    ): T;
     visitDeploymentNode(
         deploymentNode: IDeploymentNode,
-        params?: { parentId?: string; }): void;
+        params?: { parentId?: string; children?: Array<T>; }
+    ): T;
     visitInfrastructureNode(
         infrastructureNode: IInfrastructureNode,
-        params?: { parentId?: string; }): void;
+        params?: { parentId?: string; children?: Array<T>; }
+    ): T;
     visitSoftwareSystemInstance(
         softwareSystemInstance: ISoftwareSystemInstance,
-        params?: { parentId?: string; }): void;
+        params?: { parentId?: string; children?: Array<T>; }
+    ): T;
     visitContainerInstance(
         containerInstance: IContainerInstance,
-        params?: { parentId?: string; }): void;
-    visitRelationship(relationship: IRelationship): void;
+        params?: { parentId?: string; children?: Array<T>; }
+    ): T;
+    visitRelationship(
+        relationship: IRelationship,
+        params?: {  children?: Array<T>; }
+    ): T;
 }

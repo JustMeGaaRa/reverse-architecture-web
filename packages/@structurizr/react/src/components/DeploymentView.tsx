@@ -10,7 +10,7 @@ export const DeploymentView: FC<PropsWithChildren<{ view: IDeploymentView }>> = 
 
     // NOTE: we need to re-render the view ONLY when the selected view changes
     useEffect(() => {
-        const strategy = new DeploymentViewStrategy(workspace.model, view, view["environment"]);
+        const strategy = new DeploymentViewStrategy(workspace.model, view);
         return renderView(workspace, view, strategy);
     }, [workspace, view, renderView]);
 
