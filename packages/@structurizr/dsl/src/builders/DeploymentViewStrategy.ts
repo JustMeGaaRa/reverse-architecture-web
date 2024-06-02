@@ -19,6 +19,11 @@ export class DeploymentViewStrategy implements ISupportVisitor {
     accept<T>(visitor: IElementVisitor<T>): Array<T> {
         const visitedElements = new Set<string>();
         const relationships = getRelationships(this.model, true);
+        const softwareSystems = this.model.softwareSystems
+            .concat(this.model.groups.flatMap(x => x.softwareSystems));
+        const containers = softwareSystems
+            .flatMap(x => x.groups.flatMap(y => y.containers))
+            .concat(softwareSystems.flatMap(x => x.containers));
         
         const visitDeploymentNode = (deploymentNode: IDeploymentNode, parentId?: string) => {
             const visitedInfrastructureNodes = deploymentNode.infrastructureNodes?.map(infrastructureNode => {
@@ -27,13 +32,25 @@ export class DeploymentViewStrategy implements ISupportVisitor {
             });
 
             const visitedSoftwareSystemInstances = deploymentNode.softwareSystemInstances?.map(softwareSystemInstance => {
+                const softwareSystem = softwareSystems.find(softwareSystem => softwareSystem.identifier === softwareSystemInstance.softwareSystemIdentifier);
+                const visitedSoftwareSystem = visitor.visitSoftwareSystem(softwareSystem);
+
                 visitedElements.add(softwareSystemInstance.identifier);
-                return visitor.visitSoftwareSystemInstance(softwareSystemInstance, { parentId: deploymentNode.identifier });
+                return visitor.visitSoftwareSystemInstance(softwareSystemInstance, {
+                    parentId: deploymentNode.identifier,
+                    children: [visitedSoftwareSystem]
+                });
             });
 
             const visitedContainerInstances = deploymentNode.containerInstances?.map(containerInstance => {
+                const container = containers.find(container => container.identifier === containerInstance.containerIdentifier);
+                const visitedContainer = visitor.visitContainer(container);
+
                 visitedElements.add(containerInstance.identifier);
-                return visitor.visitContainerInstance(containerInstance, { parentId: deploymentNode.identifier });
+                return visitor.visitContainerInstance(containerInstance, {
+                    parentId: deploymentNode.identifier,
+                    children: [visitedContainer]
+                });
             });
 
             const visistedDeploymentNodes = deploymentNode.deploymentNodes?.map(subNode => {
@@ -52,9 +69,7 @@ export class DeploymentViewStrategy implements ISupportVisitor {
 
         // TODO: handle the deployment view scoped to a specific software system instance
         const visitedDeploymentEnvironment = this.model.deploymentEnvironments
-            // .filter(deploymentEnvironment => deploymentEnvironment.identifier == this.view.softwareSystemIdentifier)
             .filter(deploymentEnvironment => deploymentEnvironment.name === this.view.environment)
-            // .filter(deploymentEnvironment => deploymentEnvironment.identifier === this.view.identifier)
             .flatMap(deploymentEnvironment => {
                 return deploymentEnvironment.deploymentNodes.map(deploymentNode => {
                     return visitDeploymentNode(deploymentNode);
@@ -64,8 +79,7 @@ export class DeploymentViewStrategy implements ISupportVisitor {
         const visitedRelationships = relationships
             .filter(relationship => relationshipExistsForElementsInView(Array.from(visitedElements), relationship))
             .map(relationship => visitor.visitRelationship(relationship));
-            
-        console.log(visitedDeploymentEnvironment);
+        
         return visitedDeploymentEnvironment.concat(visitedRelationships);
     }
 }

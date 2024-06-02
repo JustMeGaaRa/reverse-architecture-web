@@ -1,5 +1,6 @@
 import { FC } from "react";
-import { Boundary } from "./Element";
+import { Connector } from "./components";
+import { Boundary, Element } from "./Element";
 import { Group } from "./Group";
 import { useViewMetadata } from "./ViewMetadataProvider";
 
@@ -23,16 +24,28 @@ export const InfrastructureNode: FC<{
         height: 350,
         width: 300,
     };
+    // TODO: pass these default values to the Element component directly
+    const { height = 200, width = 200 } = dimensions;
 
     return (
-        <Boundary
-            value={value}
-            position={dimensions}
-            height={dimensions.height}
-            width={dimensions.width}
-            backgroundColor={"none"}
-            borderColor={"#535354"}
-            borderDash={false}
-        />
+        <g
+            data-x={dimensions.x}
+            data-y={dimensions.y}
+            transform={`translate(${dimensions.x},${dimensions.y})`}
+        >
+            <Element
+                value={value}
+                height={dimensions.height}
+                width={dimensions.width}
+            />
+            <Connector height={height} width={width} placement={"top-left"} />
+            <Connector height={height} width={width} placement={"top-center"} />
+            <Connector height={height} width={width} placement={"top-right"} />
+            <Connector height={height} width={width} placement={"middle-left"} />
+            <Connector height={height} width={width} placement={"middle-right"} />
+            <Connector height={height} width={width} placement={"bottom-left"} />
+            <Connector height={height} width={width} placement={"bottom-center"} />
+            <Connector height={height} width={width} placement={"bottom-right"} />
+        </g>
     );
 };

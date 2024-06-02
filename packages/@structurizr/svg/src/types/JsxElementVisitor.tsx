@@ -1,15 +1,18 @@
 import { IComponent, IContainer, IContainerInstance, IDeploymentNode, IElementVisitor, IGroup, IInfrastructureNode, IPerson, IRelationship, ISoftwareSystem, ISoftwareSystemInstance, IWorkspaceSnapshot } from "@structurizr/dsl";
 import { Component } from "../Component";
 import { Container } from "../Container";
+import { ContainerInstance } from "../ContainerInstance";
 import { DeploymentNode } from "../DeploymentNode";
 import { Group } from "../Group";
+import { InfrastructureNode } from "../InfrastructureNode";
 import { Person } from "../Person";
 import { Relationship } from "../Relationship";
 import { SoftwareSystem } from "../SoftwareSystem";
+import { SoftwareSystemInstance } from "../SoftwareSystemInstance";
 
 export class JsxElementVisitor implements IElementVisitor<JSX.Element> {
     visitWorkspace(workspace: IWorkspaceSnapshot, params?: { children?: JSX.Element[]; }): JSX.Element {
-        throw new Error("Method not implemented.");
+        return (<></>);
     }
     visitGroup(group: IGroup, params?: { parentId?: string; children?: JSX.Element[]; }): JSX.Element {
         return (
@@ -87,6 +90,7 @@ export class JsxElementVisitor implements IElementVisitor<JSX.Element> {
     visitDeploymentNode(deploymentNode: IDeploymentNode, params?: { parentId?: string; children?: JSX.Element[]; }): JSX.Element {
         return (
             <DeploymentNode
+                key={deploymentNode.identifier}
                 value={{
                     type: "Deployment Node",
                     identifier: deploymentNode.identifier,
@@ -100,16 +104,45 @@ export class JsxElementVisitor implements IElementVisitor<JSX.Element> {
         );
     }
     visitInfrastructureNode(infrastructureNode: IInfrastructureNode, params?: { parentId?: string; children?: JSX.Element[]; }): JSX.Element {
-        // throw new Error("Method not implemented.");
-        return null;
+        return (
+            <InfrastructureNode
+                key={infrastructureNode.identifier}
+                value={{
+                    type: "Infrastructure Node",
+                    identifier: infrastructureNode.identifier,
+                    name: infrastructureNode.name,
+                    description: infrastructureNode.description,
+                }}
+            />
+        )
     }
     visitSoftwareSystemInstance(softwareSystemInstance: ISoftwareSystemInstance, params?: { parentId?: string; children?: JSX.Element[]; }): JSX.Element {
-        // throw new Error("Method not implemented.");
-        return null;
+        return (
+            <SoftwareSystemInstance
+                key={softwareSystemInstance.identifier}
+                value={{
+                    type: "Software System Instance",
+                    identifier: softwareSystemInstance.identifier,
+                    softwareSystemIdentifier: softwareSystemInstance.softwareSystemIdentifier,
+                }}
+            >
+                {params?.children}
+            </SoftwareSystemInstance>
+        )
     }
     visitContainerInstance(containerInstance: IContainerInstance, params?: { parentId?: string; children?: JSX.Element[]; }): JSX.Element {
-        // throw new Error("Method not implemented.");
-        return null;
+        return (
+            <ContainerInstance
+                key={containerInstance.identifier}
+                value={{
+                    type: "Container Instance",
+                    identifier: containerInstance.identifier,
+                    containerIdentifier: containerInstance.containerIdentifier,
+                }}
+            >
+                {params?.children}
+            </ContainerInstance>
+        )
     }
     visitRelationship(relationship: IRelationship, params?: { children?: JSX.Element[]; }): JSX.Element {
         return (

@@ -332,7 +332,7 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor implements ICstNode
 
     softwareSystemInstance(ctx: SoftwareSystemInstanceCstChildren): ISoftwareSystemInstance {
         const identifier = ctx.elementIdentifier?.at(0)?.image;
-        const softwareSystemIdentifier = ctx.softwareSystemIdentifier?.at(1)?.image ?? identifier;
+        const softwareSystemIdentifier = ctx.softwareSystemIdentifier?.at(0)?.image;
 
         return new SoftwareSystemInstance({
             identifier: identifier ?? `${softwareSystemIdentifier}_instance`,
@@ -344,7 +344,7 @@ export class StructurizrVisitor extends WorkspaceVisitorCtor implements ICstNode
 
     containerInstance(ctx: ContainerInstanceCstChildren): IContainerInstance {
         const identifier = ctx.elementIdentifier?.at(0)?.image;
-        const containerIdentifier = ctx.containerIdentifier?.at(1)?.image ?? identifier;
+        const containerIdentifier = ctx.containerIdentifier?.at(0)?.image;
 
         return new ContainerInstance({
             identifier: identifier ?? `${containerIdentifier}_instance`,

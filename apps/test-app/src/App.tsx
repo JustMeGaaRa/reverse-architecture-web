@@ -58,46 +58,6 @@ export function App() {
             });
     }, []);
     
-    const systemLandscapeViewMetadata: IViewMetadata = {
-        elements: metadata?.views?.systemLandscape?.elements?.reduce((acc, element) => ({ ...acc, [element.id]: element }), {}) ?? {},
-        relationships: metadata?.views?.systemLandscape?.relationships?.reduce((acc, relationship) => ({ ...acc, [relationship.id]: relationship }), {}) ?? {}
-    }
-
-    // const systemLandscapeViewMetadata: IViewMetadata = {
-    //     elements: {
-    //         "customer": { x: 100, y: -250 },
-    //         "internetBankingSystem": { x: 600, y: -350 },
-    //     },
-    //     relationships: {
-    //         "customer_internetBankingSystem": [],
-    //     },
-    // };
-    // const containerViewMetadata: IViewMetadata = {
-    //     elements: {
-    //         "internetBankingSystem": { x: 100, y: 40, height: 500, width: 600 },
-    //         "singlePageApplication": { x: 50, y: 100 },
-    //         "webApplication1": { x: 350, y: 50 },
-    //     },
-    //     relationships: {},
-    // };
-    // const componentViewMetadata: IViewMetadata = {
-    //     elements: {
-    //         "apiApplication": { x: 900, y: 150, height: 350, width: 400 },
-    //         "accountsSummaryController": { x: 100, y: 50 },
-    //     },
-    //     relationships: {},
-    // };
-    // const deploymentViewMetadata: IViewMetadata = {
-    //     elements: {
-    //         "devLaptop": { x: -1100, y: -100, height: 800, width: 1000 },
-    //         "webBrowser": { x: 50, y: 200, height: 350, width: 300 },
-    //         "webServer": { x: 450, y: 50, height: 500, width: 500 },
-    //         "apache": { x: 50, y: 50, height: 350, width: 300 },
-    //         "apiApplication": { x: 50, y: 50 },
-    //         "webApplication": { x: 50, y: 50 },
-    //     },
-    //     relationships: {},
-    // };
     const defaultThemeUrl = "https://static.structurizr.com/themes/default/theme.json";
     const awsThemeUrl = "https://static.structurizr.com/themes/amazon-web-services-2023.01.31/theme.json";
 
@@ -115,7 +75,7 @@ export function App() {
             <WorkspaceContext.Provider value={{ workspace, setWorkspace }}>
                 <Workspace value={{ title: workspace.name, description: workspace.description }}>
                     <Views>
-                        {/* {workspace.views.systemLandscape && (
+                        {workspace.views.systemLandscape && (
                             <SystemLandscapeView
                                 value={{ key: workspace.views.systemLandscape.key }}
                                 metadata={{
@@ -127,9 +87,9 @@ export function App() {
                             >
                                 <AutoLayout value={{}} />
                             </SystemLandscapeView>
-                        )} */}
+                        )}
 
-                        {/* {workspace.views.systemContexts.map((systemContext, index) => (
+                        {workspace.views.systemContexts.map((systemContext, index) => (
                             <SystemContextView
                                 key={index}
                                 value={{
@@ -145,9 +105,9 @@ export function App() {
                             >
                                 <AutoLayout value={{}} />
                             </SystemContextView>
-                        ))} */}
+                        ))}
 
-                        {/* {workspace.views.containers.map((container, index) => (
+                        {workspace.views.containers.map((container, index) => (
                             <ContainerView
                                 key={index}
                                 value={{
@@ -163,9 +123,9 @@ export function App() {
                             >
                                 <AutoLayout value={{}} />
                             </ContainerView>
-                        ))} */}
+                        ))}
                         
-                        {/* {workspace.views.components.map((component, index) => (
+                        {workspace.views.components.map((component, index) => (
                             <ComponentView
                                 key={index}
                                 value={{
@@ -181,7 +141,7 @@ export function App() {
                             >
                                 <AutoLayout value={{}} />
                             </ComponentView>
-                        ))} */}
+                        ))}
 
                         {workspace.views.deployments.map((deployment, index) => (
                             <DeploymentView
