@@ -1,5 +1,5 @@
 import { Icon, IconButton } from "@chakra-ui/react"
-import { useWorkspace } from "@structurizr/react";
+import { useWorkspace } from "@workspace/core";
 import { Workspace } from "@structurizr/y-workspace";
 import { useYjsCollaborative } from "@yjs/react";
 import { CloudSync } from "iconoir-react";

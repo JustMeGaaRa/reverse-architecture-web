@@ -5,7 +5,7 @@ import {
     visitWorkspace,
     WorkspaceCstNode
 } from "@structurizr/parser";
-import { useWorkspace } from "@structurizr/react";
+import { useWorkspace } from "@workspace/core";
 import {
     MessageType,
     TextEditorEvent,
@@ -16,7 +16,7 @@ import {
     WorkspaceViewBreadcrumbs,
     WorkspaceZoomControls,
     useWorkspaceNavigation
-} from "@restruct/workspace-renderer";
+} from "@workspace/controls";
 import { chain, fold } from "fp-ts/Either";
 import { pipe } from "fp-ts/lib/function";
 import {

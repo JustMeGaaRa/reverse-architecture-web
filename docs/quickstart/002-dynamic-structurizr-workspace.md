@@ -3,7 +3,7 @@
 Key Points: Ideal for inline documentation or presentation of the existing architecture stored as.
 
 ```jsx
-import { IWorkspaceSnapshot, Workspace, emptyWorkspace, parseStructurizr } from "@structurizr/react";
+import { IWorkspaceSnapshot, Workspace, emptyWorkspace, parseStructurizr } from "@workspace/core";
 import { FC, useEffect, useState } from "react";
 
 export const App: FC = () => {

@@ -1,5 +1,5 @@
 import { Avatar, Box, Button, Flex, Skeleton, SkeletonCircle, Tag, TagLabel, TagLeftIcon, Text } from "@chakra-ui/react";
-import { WorkspacePanel } from "@structurizr/react";
+import { WorkspacePanel } from "@workspace/core";
 import { IWorkspaceInfo } from "@structurizr/y-workspace";
 import { ArrowUpRightCircle, Heart, UserCircle } from "iconoir-react";
 import { FC } from "react";

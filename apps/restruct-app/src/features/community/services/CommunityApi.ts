@@ -1,4 +1,4 @@
-import { IWorkspaceMetadata, IWorkspaceTheme } from "@structurizr/dsl";
+import { IWorkspaceMetadata, ITheme } from "@structurizr/dsl";
 import { IWorkspaceInfo, WorkspaceInfo } from "@structurizr/y-workspace";
 
 type CommunityTemplate = {
@@ -102,9 +102,9 @@ export class CommunityApi {
         return metadata;
     }
 
-    async getWorkspaceTheme(workspaceId: string, options?: CommunityLoadOptions): Promise<IWorkspaceTheme> {
+    async getWorkspaceTheme(workspaceId: string, options?: CommunityLoadOptions): Promise<ITheme> {
         const themeResponse = await withTimeout(fetch(`${this.baseUrl}/${workspaceId}/workspace.theme.json`), this.timeout);
-        const theme = themeResponse.ok ? await themeResponse.json() as IWorkspaceTheme : undefined;
+        const theme = themeResponse.ok ? await themeResponse.json() as ITheme : undefined;
         return theme;
     }
 

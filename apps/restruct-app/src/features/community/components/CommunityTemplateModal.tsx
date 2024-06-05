@@ -20,10 +20,10 @@ import {
     WorkspaceNavigationProvider,
     WorkspaceRenderer,
     WorkspaceViewBreadcrumbs
-} from "@restruct/workspace-renderer";
+} from "@workspace/controls";
 import { IWorkspaceMetadata, Workspace } from "@structurizr/dsl";
 import { parseWorkspace } from "@structurizr/parser";
-import { WorkspaceProvider } from "@structurizr/react";
+import { WorkspaceProvider } from "@workspace/core";
 import { IWorkspaceInfo } from "@structurizr/y-workspace";
 import {
     Bookmark,

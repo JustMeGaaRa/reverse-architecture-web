@@ -13,8 +13,8 @@ import {
     usePageSidebar
 } from "@restruct/ui";
 import { createDefaultModelView, ViewType } from "@structurizr/dsl";
-import { useWorkspace } from "@structurizr/react";
-import { useFollowUserMode, useWorkspaceRoom } from "@structurizr/live";
+import { useWorkspace } from "@workspace/core";
+import { useFollowUserMode, useWorkspaceRoom } from "@workspace/live";
 import {
     ChatLines,
     Code,
@@ -32,7 +32,7 @@ import {
     Route,
     RouteList
 } from "../../features";
-import { useWorkspaceNavigation } from "@restruct/workspace-renderer";
+import { useWorkspaceNavigation } from "@workspace/controls";
 import { WorksapceTitleBreadcrumb } from "./WorkspaceTitleBreadcrumb";
 import { WorkspaceMenu } from "./WorkspaceMenu";
 import { WorkspaceSynchronizationIcon } from "./WorkspaceSynchronizationIcon";

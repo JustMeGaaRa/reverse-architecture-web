@@ -3,7 +3,7 @@
 Key Points: Ideal for documentation or presentation of the existing architecture materials.
 
 ```jsx
-import { Workspace } from "@structurizr/react";
+import { Workspace } from "@workspace/core";
 import { FC } from "react";
 
 export const App: FC = () => {

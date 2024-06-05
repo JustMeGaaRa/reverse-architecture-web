@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Workspace } from "@structurizr/dsl";
 import { saveWorkspaceContent } from "../services";
 import { useWorkspaceExplorer } from "./useWorkspaceExplorer";
-import { useWorkspace } from "@structurizr/react";
+import { useWorkspace } from "@workspace/core";
 import { useSnackbar } from "@restruct/ui";
 
 export type WorkspaceAutoSaveOptions = {

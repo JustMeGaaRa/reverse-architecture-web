@@ -1,5 +1,5 @@
 import { Avatar, AvatarGroup } from "@chakra-ui/react";
-import { useFollowUserMode, UserInfo, useWorkspaceRoom } from "@structurizr/live";
+import { useFollowUserMode, UserInfo, useWorkspaceRoom } from "@workspace/live";
 import { FC, useCallback, useMemo } from "react";
 
 export const WorkspaceCollaboratingUserGroup: FC = () => {

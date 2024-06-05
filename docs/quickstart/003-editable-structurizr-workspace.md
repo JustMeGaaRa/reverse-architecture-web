@@ -3,7 +3,7 @@
 Key Points: Ideal for building any kind of interactive apps based on C4 model and structurizr.
 
 ```jsx
-import { Workspace, WorkspaceProvider, emptyWorkspace, workspaceReducer } from "@structurizr/react";
+import { Workspace, WorkspaceProvider, emptyWorkspace, workspaceReducer } from "@workspace/core";
 import { FC, useEffect, useState, useReducer } from "react";
 
 export const App: FC = () => {

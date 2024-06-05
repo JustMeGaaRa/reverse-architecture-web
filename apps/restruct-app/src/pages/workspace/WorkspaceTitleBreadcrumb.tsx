@@ -7,7 +7,7 @@ import {
     EditablePreview,
     Text
 } from "@chakra-ui/react"
-import { useWorkspace } from "@structurizr/react";
+import { useWorkspace } from "@workspace/core";
 import { FC, useCallback } from "react"
 import { NavLink } from "react-router-dom";
 

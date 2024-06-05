@@ -1,6 +1,6 @@
-import { useWorkspace, WorkspaceProvider } from "@structurizr/react";
+import { useWorkspace, WorkspaceProvider } from "@workspace/core";
 import { Workspace } from "@structurizr/y-workspace";
-import { CurrentUser, WorkspaceRoom } from "@structurizr/live";
+import { CurrentUser, WorkspaceRoom } from "@workspace/live";
 import { useSnackbar } from "@restruct/ui";
 import {
     useYjsCollaborative,
@@ -29,7 +29,7 @@ import {
 import { WorkspaceCollaborativeEditor } from "./WorkspaceCollaborativeEditor";
 import { WorkspacePageActions } from "./WorkspacePageActions";
 import { WorkspaceSession } from "./WorkspaceSession";
-import { useWorkspaceNavigation, WorkspaceNavigationProvider } from "@restruct/workspace-renderer";
+import { useWorkspaceNavigation, WorkspaceNavigationProvider } from "@workspace/controls";
 
 export const WorkspacePage: FC = () => {
     const { workspaceId } = useParams<{ workspaceId: string }>();

@@ -3,8 +3,8 @@
 Key Points: Ideal for building any kind of interactive real-time collaborative apps based on C4 model and structurizr.
 
 ```jsx
-import { WorksapceRoom, collaborativeMiddleware, useOnWorkspaceSync } from "@structurizr/live";
-import { Workspace, WorkspaceProvider, emptyWorkspace, workspaceReducer } from "@structurizr/react";
+import { WorksapceRoom, collaborativeMiddleware, useOnWorkspaceSync } from "@workspace/live";
+import { Workspace, WorkspaceProvider, emptyWorkspace, workspaceReducer } from "@workspace/core";
 import { YjsDocumentProvider, YjsWebrtcProviderProvider, useYjsCollaborative } from "@yjs/react";
 import { FC, useCallback, useReducer } from "react";
 

@@ -1,5 +1,5 @@
-import { WorkspaceProvider } from "@structurizr/react";
-import { CurrentUser, WorkspaceRoom } from "@structurizr/live";
+import { WorkspaceProvider } from "@workspace/core";
+import { CurrentUser, WorkspaceRoom } from "@workspace/live";
 import {
     YjsDocumentProvider,
     YjsUndoManagerProvider,
@@ -11,7 +11,7 @@ import { useAccount } from "../../features";
 import { WorkspaceCollaborativeEditor } from "./WorkspaceCollaborativeEditor";
 import { WorkspacePageActions } from "./WorkspacePageActions";
 import { WorkspaceSession } from "./WorkspaceSession";
-import { WorkspaceNavigationProvider } from "@restruct/workspace-renderer";
+import { WorkspaceNavigationProvider } from "@workspace/controls";
 
 const SharedRoomCodeparam = "code";
 

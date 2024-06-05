@@ -10,6 +10,7 @@
     "packages/@restruct/*",
     "packages/@structurizr/*",
     "packages/@structurizr-preview/*",
+    "packages/@workspace/*",
     "packages/@yjs/*"
   ],
   "scripts": {

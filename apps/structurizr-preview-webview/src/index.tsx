@@ -1,11 +1,11 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import { WorkspaceProvider } from "@structurizr/react";
+import { WorkspaceProvider } from "@workspace/core";
 import { RestructTheme } from "@restruct/theme";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import reportWebVitals from "./reportWebVitals";
 import { ApplicationContainer } from "./ApplicationContainer";
-import { WorkspaceNavigationProvider } from "@restruct/workspace-renderer";
+import { WorkspaceNavigationProvider } from "@workspace/controls";
 
 const root = createRoot(document.getElementById('root') as HTMLElement);
 root.render(

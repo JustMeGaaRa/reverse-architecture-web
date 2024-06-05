@@ -1,7 +1,7 @@
 import { Box } from "@chakra-ui/react";
-import { useWorkspaceNavigation } from "@restruct/workspace-renderer";
+import { useWorkspaceNavigation } from "@workspace/controls";
 import { findViewByKey, ViewType } from "@structurizr/dsl";
-import { useWorkspace } from "@structurizr/react";
+import { useWorkspace } from "@workspace/core";
 import { FC, useCallback } from "react";
 import {
     CommentCard,

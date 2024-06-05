@@ -14,7 +14,7 @@ import {
     ActionType,
     combineReducers,
     workspaceReducer
-} from "@structurizr/react";
+} from "@workspace/core";
 import { Workspace } from "@structurizr/y-workspace";
 import {
     CollaboratingUserPane,
@@ -22,7 +22,7 @@ import {
     usePresentationMode,
     useUserAwareness,
     useWorkspaceRoom
-} from "@structurizr/live";
+} from "@workspace/live";
 import { useYjsCollaborative } from "@yjs/react";
 import {
     FC,
@@ -44,7 +44,7 @@ import {
     WorkspaceUndoRedoControls,
     WorkspaceViewBreadcrumbs,
     WorkspaceZoomControls
-} from "@restruct/workspace-renderer";
+} from "@workspace/controls";
 
 export enum WorkspaceContentMode {
     Diagramming = "diagramming",
