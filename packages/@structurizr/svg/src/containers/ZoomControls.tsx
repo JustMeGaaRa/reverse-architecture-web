@@ -22,8 +22,7 @@ export const ZoomControls: FC<PropsWithChildren<{
     
     return (
         <g
-            data-x={position.x}
-            data-y={position.y}
+            className={"structurizr__zoom-controls"}
             transform={`translate(${position.x},${position.y})`}
             onMouseOver={handleOnMouseOver}
             onMouseOut={handleOnMouseOut}

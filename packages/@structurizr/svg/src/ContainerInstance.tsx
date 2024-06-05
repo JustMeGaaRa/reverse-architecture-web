@@ -1,4 +1,5 @@
 import { FC, PropsWithChildren } from "react";
+import { Box } from "./components";
 import { useViewMetadata } from "./ViewMetadataProvider";
 
 export interface IContainerInstance {
@@ -22,12 +23,8 @@ export const ContainerInstance: FC<PropsWithChildren<{
     };
 
     return (
-        <g
-            data-x={dimensions.x}
-            data-y={dimensions.y}
-            transform={`translate(${dimensions.x},${dimensions.y})`}
-        >
+        <Box position={dimensions} id={value.identifier}>
             {children}
-        </g>
+        </Box>
     );
 };

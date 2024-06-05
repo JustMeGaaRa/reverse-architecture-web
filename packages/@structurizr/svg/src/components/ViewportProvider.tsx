@@ -47,7 +47,7 @@ export const useViewport = () => {
     const { viewbox, zoom, setViewbox, setZoom } = useContext(ViewportContext);
 
     const getBounds = useCallback(() => {
-        const htmlElement = document.getElementById("structurizr-svg") as HTMLElement;
+        const htmlElement = document.getElementsByClassName("structurizr__viewport").item(0) as HTMLElement;
         if (!htmlElement) throw new Error("Element not found");
         return htmlElement instanceof SVGSVGElement
             ? (htmlElement as SVGSVGElement).getBBox()

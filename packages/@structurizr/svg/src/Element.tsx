@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren } from "react";
-import { Text } from "./components";
+import { Box, Text } from "./components";
 
 export interface IElement {
     type: string;
@@ -28,19 +28,16 @@ export const Element: FC<{
     padding = 4,
 }) => {
     return (
-        <g
-            id={value.identifier}
-            transform={`translate(${position.x}, ${position.y})`}
-        >
+        <Box className={"structurizr__element"} id={value.identifier} position={position}>
             <defs>
                 <clipPath id="clip">
                     <rect
-                    x={borderWidth + padding}
-                    y={borderWidth + padding}
-                    width={width - padding * 2}
-                    height={height - padding * 2}
-                    rx={borderRadius}
-                    ry={borderRadius}
+                        x={borderWidth + padding}
+                        y={borderWidth + padding}
+                        width={width - padding * 2}
+                        height={height - padding * 2}
+                        rx={borderRadius}
+                        ry={borderRadius}
                     />
                 </clipPath>
             </defs>
@@ -106,7 +103,7 @@ export const Element: FC<{
             >
                 {value.technology}
             </Text>
-        </g>
+        </Box>
     );
 };
 
@@ -140,7 +137,7 @@ export const Boundary: FC<PropsWithChildren<{
     padding = 16,
 }) => {
     return (
-        <g transform={`translate(${position.x}, ${position.y})`}>
+        <Box position={position}>
             <rect
                 cursor={"pointer"}
                 height={height}
@@ -175,6 +172,6 @@ export const Boundary: FC<PropsWithChildren<{
                 {value.type}
             </Text>
             {children}
-        </g>
+        </Box>
     );
 };

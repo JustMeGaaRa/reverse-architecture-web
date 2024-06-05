@@ -1,5 +1,6 @@
 import { FC, useEffect, useState } from "react";
-import { ConnectorId, MarkerType, Text, useViewport, Viewbox } from "./components";
+import { Box, ConnectorId, MarkerType, Text, useBox, useViewport, Viewbox } from "./components";
+import { calculateCenterPosition, getSvgElementByClassName, getSvgElementById } from "./utils";
 import { useViewMetadata } from "./ViewMetadataProvider";
 
 export interface IRelationship {
@@ -7,54 +8,6 @@ export interface IRelationship {
     sourceIdentifier: string;
     targetIdentifier: string;
     description?: string;
-}
-
-const defaultDimensions = { x: 0, y: 0, height: 200, width: 200 };
-
-function getSvgElementById(identifier: string) {
-    const htmlElement = document.getElementById(identifier) as HTMLElement;
-    const svgElement = htmlElement instanceof SVGGraphicsElement ? htmlElement : null;
-    return svgElement;
-}
-
-function getSvgElementByClassName(element: HTMLElement, className: string) {
-    const htmlElement = element?.getElementsByClassName(className)[0] as HTMLElement;
-    const svgElement = htmlElement instanceof SVGGraphicsElement ? htmlElement : null;
-    return svgElement;
-}
-
-function calculateAbsolutePosition(
-    viewbox: Viewbox,
-    zoom: number,
-    element: SVGGraphicsElement
-) {
-    if (!element) return defaultDimensions;
-
-    const ctm = element.getCTM();
-    const bbox = element.getBBox();
-
-    if (!ctm) return defaultDimensions;
-
-    // e / zoom + viewbox.x, f / zoom + viewbox.y
-    // a: 1, b: 0, c: 0, d: 1, e: absolute x, f: absolute y
-    // const x = ctm.e + bbox.x * ctm.a + bbox.y * ctm.c;
-    // const y = ctm.f + bbox.x * ctm.b + bbox.y * ctm.d;
-    const x = ctm.e / zoom + viewbox.x / zoom + bbox.x;
-    const y = ctm.f / zoom + viewbox.y / zoom + bbox.y;
-    return { x, y, height: bbox.height, width: bbox.width };
-}
-
-function calculateCenterPosition(
-    viewbox: Viewbox,
-    zoom: number,
-    element: SVGGraphicsElement
-) {
-    const absolutePosition = calculateAbsolutePosition(viewbox, zoom, element);
-    const centeredPosition = {
-        x: absolutePosition.x + absolutePosition.width / 2,
-        y: absolutePosition.y + absolutePosition.height / 2,
-    };
-    return centeredPosition;
 }
 
 function getPlacement(
@@ -84,11 +37,13 @@ export const Relationship: FC<{
 }) => {
     const { metadata } = useViewMetadata();
     const { zoom, viewbox } = useViewport();
+    const { getAbsolutePosition } = useBox();
     const [path, setPath] = useState(undefined);
     const [labelCenter, setLabelCenter] = useState({ x: 0, y: 0 });
 
     useEffect(() => {
-        const points = metadata?.relationships?.[value.identifier] ?? [];
+        const bendingPoints = metadata?.relationships?.[value.identifier] ?? [];
+        const absolutePosition = getAbsolutePosition();
         
         const sourceNode = getSvgElementById(value.sourceIdentifier);
         const targetNode = getSvgElementById(value.targetIdentifier);
@@ -100,29 +55,37 @@ export const Relationship: FC<{
         const targetConnector = getSvgElementByClassName(targetNode?.parentElement, targetConnectorPlacement);
         const sourceConnectorCenter = calculateCenterPosition(viewbox, zoom, sourceConnector);
         const targetConnectorCenter = calculateCenterPosition(viewbox, zoom, targetConnector);
+        const sourcePoint = {
+            x: sourceConnectorCenter.x - absolutePosition.x,
+            y: sourceConnectorCenter.y - absolutePosition.y,
+        };
+        const targetPoint = {
+            x: targetConnectorCenter.x - absolutePosition.x,
+            y: targetConnectorCenter.y - absolutePosition.y,
+        };
 
         const labelCenter = {
-            x: (sourceConnectorCenter.x + targetConnectorCenter.x) / 2,
-            y: (sourceConnectorCenter.y + targetConnectorCenter.y) / 2,
+            x: (sourcePoint.x + targetPoint.x) / 2,
+            y: (sourcePoint.y + targetPoint.y) / 2,
         };
-        const path = sourceNode && targetNode && points
-            .concat(targetConnectorCenter)
+        const path = sourceNode && targetNode && bendingPoints
+            .concat(targetPoint)
             .reduce(
-                (path, point) => `${path} L${point.x},${point.y}`,
-                `M${sourceConnectorCenter.x},${sourceConnectorCenter.y}`
+                (path, point) => `${path} ${point.x},${point.y}`,
+                `${sourcePoint.x},${sourcePoint.y}`
             );
 
         setPath(path);
         setLabelCenter(labelCenter);
-    }, [metadata, value.identifier, value.sourceIdentifier, value.targetIdentifier, viewbox, zoom]);
+    }, [getAbsolutePosition, metadata, value.identifier, value.sourceIdentifier, value.targetIdentifier, viewbox, zoom]);
 
-    return path && (
-        <g>
-            <path
+    return (
+        <Box className={"structurizr__relationship"}>
+            <polyline
                 stroke={stroke}
                 strokeWidth={strokeWidth}
                 fill={"none"}
-                d={path}
+                points={path}
                 markerStart={`url(#${MarkerType.CircleOutline})`}
                 markerEnd={`url(#${MarkerType.ArrowClosed})`}
             />
@@ -137,6 +100,6 @@ export const Relationship: FC<{
             >
                 {value.description}
             </Text>
-        </g>
+        </Box>
     );
 };

@@ -30,7 +30,7 @@ import {
 } from "./types";
 import { DrawioDiagramBuilder } from "./DrawioDiagramBuilder";
 
-export class DrawioExportVisitor implements IElementVisitor {
+export class DrawioExportVisitor implements IElementVisitor<void> {
     constructor(
         private view: ViewDefinition,
         private parentId: string | undefined,
@@ -139,7 +139,7 @@ export class DrawioExportVisitor implements IElementVisitor {
         throw new Error("Method not implemented.");
     }
 
-    visitRelationship(relationship: IRelationship, params?: { parentId?: string }) {
+    visitRelationship(relationship: IRelationship, params?: { parentId?: string; children: void[] }) {
         const mxObject: MxObject = {
             _placeholders: "1",
             _c4Type: "Relationship",

@@ -1,5 +1,5 @@
-import { createDefaultWorkspace, IWorkspaceSnapshot } from "@structurizr/dsl";
-import { createContext, Dispatch, FC, PropsWithChildren, SetStateAction, useContext, useState } from "react";
+import { IWorkspaceSnapshot } from "@structurizr/dsl";
+import { createContext, Dispatch, FC, PropsWithChildren, SetStateAction, useContext } from "react";
 import { ThemeProvider } from "./Themes";
 
 export interface IWorkspace {
@@ -20,9 +20,14 @@ export const Workspace: FC<PropsWithChildren<{
     );
 };
 
-export const WorkspaceProvider: FC<PropsWithChildren> = ({ children }) => {
-    const [ workspace, setWorkspace ] = useState(createDefaultWorkspace());
-
+export const WorkspaceProvider: FC<PropsWithChildren<{
+    workspace: IWorkspaceSnapshot;
+    setWorkspace: Dispatch<SetStateAction<IWorkspaceSnapshot>>;
+}>> = ({
+    children,
+    workspace,
+    setWorkspace
+}) => {
     return (
         <WorkspaceContext.Provider value={{ workspace, setWorkspace }}>
             {children}

@@ -58,7 +58,7 @@ export class DrawioExportClient implements IExportClient {
                         return createView(view, new ComponentViewStrategy(workspace.model, view))
                     }),
                     ...workspace.views.deployments.map(view => {
-                        return createView(view, new DeploymentViewStrategy(workspace.model, view, view.environment))
+                        return createView(view, new DeploymentViewStrategy(workspace.model, view))
                     })
                 ]
             }

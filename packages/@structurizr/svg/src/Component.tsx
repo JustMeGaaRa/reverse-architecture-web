@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren } from "react";
-import { Connector } from "./components";
+import { Box, Connector } from "./components";
 import { Element } from "./Element";
 import { useViewMetadata } from "./ViewMetadataProvider";
 
@@ -27,11 +27,7 @@ export const Component: FC<PropsWithChildren<{
     const { height = 200, width = 200 } = dimensions;
 
     return (
-        <g
-            data-x={dimensions.x}
-            data-y={dimensions.y}
-            transform={`translate(${dimensions.x},${dimensions.y})`}
-        >
+        <Box position={dimensions}>
             <Element
                 value={value}
                 height={dimensions.height}
@@ -45,6 +41,6 @@ export const Component: FC<PropsWithChildren<{
             <Connector height={height} width={width} placement={"bottom-left"} />
             <Connector height={height} width={width} placement={"bottom-center"} />
             <Connector height={height} width={width} placement={"bottom-right"} />
-        </g>
+        </Box>
     );
 };

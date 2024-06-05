@@ -23,7 +23,7 @@ export const DeploymentView: FC<PropsWithChildren<{
             const elements = strategy.accept(visitor);
             setElements(elements);
         }
-    }, [workspace, value.key, value.environment]);
+    }, [workspace, value.key]);
     
     return (
         <ViewMetadataProvider metadata={metadata}>

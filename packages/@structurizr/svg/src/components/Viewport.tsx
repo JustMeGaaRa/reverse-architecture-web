@@ -105,7 +105,7 @@ export const Viewport: FC<PropsWithChildren> = ({ children }) => {
     return (
         <svg
             ref={svgRef}
-            id={"structurizr-svg"}
+            className={"structurizr__viewport"}
             cursor={"grab"}
             height={"100%"}
             width={"100%"}
@@ -129,7 +129,7 @@ export const Viewport: FC<PropsWithChildren> = ({ children }) => {
                 <MarkerArrowClosed />
                 <MarkerCircleOutline />
             </defs>
-            <g transform={`scale(${zoom})`}>
+            <g className={"structurizr__viewport-zoom"} transform={`scale(${zoom})`}>
                 {children}
             </g>
         </svg>

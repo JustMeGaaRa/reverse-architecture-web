@@ -1,4 +1,17 @@
-import { IComponent, IContainer, IContainerInstance, IDeploymentNode, IElementVisitor, IGroup, IInfrastructureNode, IPerson, IRelationship, ISoftwareSystem, ISoftwareSystemInstance, IWorkspaceSnapshot } from "@structurizr/dsl";
+import {
+    IComponent,
+    IContainer,
+    IContainerInstance,
+    IDeploymentNode,
+    IElementVisitor,
+    IGroup,
+    IInfrastructureNode,
+    IPerson,
+    IRelationship,
+    ISoftwareSystem,
+    ISoftwareSystemInstance,
+    IWorkspaceSnapshot
+} from "@structurizr/dsl";
 import { Component } from "../Component";
 import { Container } from "../Container";
 import { ContainerInstance } from "../ContainerInstance";
@@ -12,7 +25,7 @@ import { SoftwareSystemInstance } from "../SoftwareSystemInstance";
 
 export class JsxElementVisitor implements IElementVisitor<JSX.Element> {
     visitWorkspace(workspace: IWorkspaceSnapshot, params?: { children?: JSX.Element[]; }): JSX.Element {
-        return (<></>);
+        return (<>{params?.children}</>);
     }
     visitGroup(group: IGroup, params?: { parentId?: string; children?: JSX.Element[]; }): JSX.Element {
         return (
