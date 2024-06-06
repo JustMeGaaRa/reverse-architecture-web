@@ -26,6 +26,7 @@
     "@reactflow/node-toolbar": "^1.3.9",
     "@restruct/toolbar": "*",
     "@workspace/core": "*",
+    "@workspace/live": "*",
     "framer-motion": "^10.16.4",
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
