@@ -6,17 +6,19 @@ import {
 import { parseWorkspace } from "@structurizr/parser";
 import {
     AutoLayout,
-    Box,
     Styles,
     SystemLandscapeView,
     ThemeProvider,
     Themes,
-    useViewport,
     Viewport,
     ViewportProvider,
     WorkspaceProvider
 } from "@structurizr/svg";
-import { useCallback, useEffect, useState } from "react";
+import {
+    ViewSwitcherToggle,
+    ZoomToolbar
+} from "@structurizr-preview/controls";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 export function App() {
@@ -177,7 +179,10 @@ export function App() {
                             <Styles value={{ elements: [], relationships: [] }} />
                             <Themes urls={[defaultThemeUrl, awsThemeUrl]} />
                     
-                            {createPortal(<Controls />, document.body as HTMLElement)}
+                            <Breadcrumbs />
+                            <ViewSwitcher />
+                            <Zoom />
+
                         </Viewport>
                     </ViewportProvider>
                 </ThemeProvider>
@@ -186,40 +191,61 @@ export function App() {
     );
 }
 
-function Controls() {
-    const { setZoom, getBounds, fitBounds, centerViewbox } = useViewport();
+function Breadcrumbs() {
+    return createPortal((
+            <div
+                style={{
+                    position: "absolute",
+                    top: "0px",
+                    left: "0px",
+                    height: "auto",
+                    width: "auto",
+                    margin: "16px",
+                    overflow: "hidden",
+                }}
+            >
+            </div>
+        ),
+        document.body as HTMLElement
+    );
+}
 
-    const handleResetZoom = useCallback(() => {
-        setZoom(1);
-    }, [setZoom]);
+function ViewSwitcher() {
+    return createPortal((
+            <div
+                style={{
+                    position: "absolute",
+                    top: "0px",
+                    right: "0px",
+                    height: "auto",
+                    width: "auto",
+                    margin: "16px",
+                    overflow: "hidden",
+                }}
+            >
+                <ViewSwitcherToggle />
+            </div>
+        ),
+        document.body as HTMLElement
+    );
+}
 
-    const handleCenterView = useCallback(() => {
-        centerViewbox(getBounds());
-    }, [getBounds, centerViewbox]);
-
-    const handleFitBounds = useCallback(() => {
-        fitBounds(getBounds());
-    }, [getBounds, fitBounds]);
-    
-    const handleExportToSvg = useCallback(() => {
-        console.log(document.getElementById("structurizr-svg")?.outerHTML);
-    }, []);
-
-    return (
-        <div
-            style={{
-                position: "absolute",
-                top: "0px",
-                left: "0px",
-                height: "30px",
-                width: "100px",
-                backgroundColor: "#292B2C",
-            }}
-        >
-            <button onClick={handleResetZoom}>reset view</button>
-            <button onClick={handleCenterView}>center view</button>
-            <button onClick={handleFitBounds}>fit view</button>
-            <button onClick={handleExportToSvg}>export to svt</button>
-        </div>
-    )
+function Zoom() {
+    return createPortal((
+            <div
+                style={{
+                    position: "absolute",
+                    bottom: "0px",
+                    right: "0px",
+                    height: "auto",
+                    width: "auto",
+                    margin: "16px",
+                    overflow: "hidden",
+                }}
+            >
+                <ZoomToolbar />
+            </div>
+        ),
+        document.body as HTMLElement
+    );
 }

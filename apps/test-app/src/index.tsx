@@ -1,12 +1,16 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { App } from './App';
+import { ChakraProvider } from "@chakra-ui/react";
+import { RestructTheme } from "@restruct/theme";
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { App } from "./App";
 
-const rootElement = document.getElementById('root') as HTMLElement;
+const rootElement = document.getElementById("root") as HTMLElement;
 const root = ReactDOM.createRoot(rootElement);
 
 root.render(
     <React.StrictMode>
-        <App />
+        <ChakraProvider resetCSS theme={RestructTheme}>
+            <App />
+        </ChakraProvider>
     </React.StrictMode>
 );

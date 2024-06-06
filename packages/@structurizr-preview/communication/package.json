@@ -1,7 +1,6 @@
 {
   "name": "@structurizr-preview/communication",
   "version": "0.1.0",
-  "description": "A react app with structurizr preview.",
   "main": "dist/index.js",
   "keywords": [
     "structurizr",

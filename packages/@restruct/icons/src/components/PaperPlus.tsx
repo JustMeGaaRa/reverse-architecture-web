@@ -26,8 +26,16 @@ export const UpLine = () => {
 export const Plus = () => {
     return (
         <svg width="24px"  height="24px"  viewBox="0 0 24 24"  fill="none" color="currentColor" xmlns="http://www.w3.org/2000/svg">
-            <path d="M6 12H18" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M12 6V18" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M6 12H18" stroke="currentColor"  strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M12 6V18" stroke="currentColor"  strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+    )
+}
+
+export const Minus = () => {
+    return (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" color="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 12H18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
     )
 }
@@ -219,6 +227,41 @@ export const UnsuccessDocument = () => {
             <path fillRule="evenodd" clipRule="evenodd" d="M6.76305 9.96484C5.34688 9.96484 4.19922 11.1121 4.19922 12.5277V17.6843C4.19922 19.1002 5.34716 20.2481 6.76305 20.2481H17.2367C18.6515 20.2481 19.7996 19.1003 19.7996 17.6843V12.5277C19.7996 11.112 18.6518 9.96484 17.2367 9.96484H6.76305ZM2.69922 12.5277C2.69922 10.2831 4.51902 8.46484 6.76305 8.46484H17.2367C19.4799 8.46484 21.2996 10.2832 21.2996 12.5277V17.6843C21.2996 19.9284 19.4802 21.7481 17.2367 21.7481H6.76305C4.51874 21.7481 2.69922 19.9286 2.69922 17.6843V12.5277Z" fill="#000000" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round" />
             <path fillRule="evenodd" clipRule="evenodd" d="M7.9685 3C7.9685 2.58579 8.30429 2.25 8.7185 2.25H15.28C15.6942 2.25 16.03 2.58579 16.03 3C16.03 3.41421 15.6942 3.75 15.28 3.75H8.7185C8.30429 3.75 7.9685 3.41421 7.9685 3ZM5.43164 6.11169C5.43164 5.69748 5.76743 5.36169 6.18164 5.36169H17.817C18.2312 5.36169 18.567 5.69748 18.567 6.11169C18.567 6.52591 18.2312 6.86169 17.817 6.86169H6.18164C5.76743 6.86169 5.43164 6.52591 5.43164 6.11169Z" fill="#000000" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round" />
             <path fillRule="evenodd" clipRule="evenodd" d="M9.85686 12.9658C10.1498 12.6729 10.6246 12.6729 10.9175 12.9658L11.9987 14.0469L13.0798 12.9658C13.3727 12.6729 13.8476 12.6729 14.1405 12.9658C14.4334 13.2587 14.4334 13.7335 14.1405 14.0264L13.0593 15.1076L14.141 16.1892C14.4338 16.4821 14.4338 16.957 14.141 17.2499C13.8481 17.5427 13.3732 17.5427 13.0803 17.2499L11.9987 16.1682L10.917 17.2499C10.6242 17.5427 10.1493 17.5427 9.85639 17.2499C9.5635 16.957 9.5635 16.4821 9.85639 16.1892L10.938 15.1076L9.85686 14.0264C9.56397 13.7335 9.56397 13.2587 9.85686 12.9658Z" fill="#000000" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+    )
+}
+
+export const NodesDistributed = () => {
+    return (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" color="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="18.375" cy="5.625" r="2.125" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <circle cx="5.625" cy="5.625" r="2.125" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <circle cx="18.375" cy="18.375" r="2.125" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <circle cx="5.625" cy="18.375" r="2.125" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M16.25 5.625H14.125C12.9514 5.625 12 6.57639 12 7.75V16.25C12 17.4236 11.0486 18.375 9.875 18.375H7.75" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+    )
+}
+
+export const FlowChart = () => {
+    return (
+        <svg width="24" height="24" viewBox="0 0 25 25" fill="none" color="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fillRule="evenodd" clipRule="evenodd" d="M9 6.63385L9 5.10242C9 4.28318 9.662 3.61865 10.4791 3.61865L14.5219 3.61865C15.339 3.61865 16 4.28318 16 5.10242V6.63386C16 7.45406 15.339 8.11859 14.5219 8.11859H10.4791C9.662 8.11859 9 7.45406 9 6.63385Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <path fillRule="evenodd" clipRule="evenodd" d="M3.5 19.1339L3.5 17.6024C3.5 16.7832 4.162 16.1187 4.97909 16.1187L9.02188 16.1187C9.83897 16.1187 10.5 16.7832 10.5 17.6024V19.1339C10.5 19.9541 9.83897 20.6186 9.02188 20.6186H4.97909C4.162 20.6186 3.5 19.9541 3.5 19.1339Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <path fillRule="evenodd" clipRule="evenodd" d="M14.5 19.1339L14.5 17.6024C14.5 16.7832 15.162 16.1187 15.9791 16.1187L20.0219 16.1187C20.839 16.1187 21.5 16.7832 21.5 17.6024V19.1339C21.5 19.9541 20.839 20.6186 20.0219 20.6186H15.9791C15.162 20.6186 14.5 19.9541 14.5 19.1339Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M12.5 8.11865L12.5 12.1187" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+            <path d="M18 16.1187V14.1187C18 13.0141 17.1046 12.1187 16 12.1187H9C7.89543 12.1187 7 13.0141 7 14.1187V16.1187" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+        </svg>
+    )
+}
+
+export const ArrowsSplitDown = () => {
+    return (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" color="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 21L6 15.603C6.00015 13.9714 6.95555 12.4425 8.5596 11.507L9.4404 10.993C11.0444 10.0575 11.9999 8.52857 12 6.897V3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M18 21L18 15.605C18.0001 13.9724 17.0437 12.4425 15.438 11.507L14.562 10.997C12.9567 10.0617 12.0003 8.53229 12 6.9L12 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M15.5 18.5L18 21L20.5 18.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M3.5 18.5L6 21L8.5 18.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
     )
 }
