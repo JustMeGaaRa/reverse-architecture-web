@@ -25,9 +25,8 @@ export const ButtonSegmentedToggle: FC<PropsWithChildren<{
                 key={"workspace-page-mode"}
                 backgroundColor={"surface.tinted-black-60"}
                 backdropFilter={"blur(16px)"}
-                borderRadius={size === "xs" ? "12px" : size === "sm" ? "16px" : size === "md" ? "20px" : "24px"}
+                borderRadius={size === "xs" ? "16px" : size === "sm" ? "20px" : size === "md" ? "20px" : "24px"}
                 borderColor={"transparent"}
-                borderWidth={1}
                 boxShadow={"1px 1.5px 4px 0px rgba(0, 0, 0, 0.24) inset, 1px 1.5px 4px 0px rgba(0, 0, 0, 0.16) inset, 0px -0.5px 1px 0px rgba(255, 255, 255, 0.24) inset, 0px -0.2px 1px 0px rgba(255, 255, 255, 0.32) inset"}
                 spacing={"2px"}
                 padding={1}

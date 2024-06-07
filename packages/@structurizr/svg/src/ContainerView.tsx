@@ -1,4 +1,4 @@
-import { ContainerViewStrategy } from "@structurizr/dsl";
+import { ContainerViewStrategy, createDefaultContainerView } from "@structurizr/dsl";
 import { FC, PropsWithChildren, useEffect, useState } from "react";
 import { JsxElementVisitor } from "./types";
 import { IViewMetadata, ViewMetadataProvider } from "./ViewMetadataProvider";
@@ -18,12 +18,13 @@ export const ContainerView: FC<PropsWithChildren<{
     useEffect(() => {
         if (workspace) {
             const visitor = new JsxElementVisitor();
-            const containerView = workspace.views.containers.find(x => x.key === value.key);
+            const containerView = workspace.views.containers.find(x => x.key === value.key)
+                ?? createDefaultContainerView(value.softwareSystemIdentifier);
             const strategy = new ContainerViewStrategy(workspace.model, containerView);
             const elements = strategy.accept(visitor);
             setElements(elements);
         }
-    }, [workspace, value.key]);
+    }, [workspace, value.key, value.softwareSystemIdentifier]);
     
     return (
         <ViewMetadataProvider metadata={metadata}>

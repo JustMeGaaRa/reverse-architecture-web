@@ -8,3 +8,4 @@ export * from "./MarkerType";
 export * from "./Text";
 export * from "./Viewport";
 export * from "./ViewportProvider";
+export * from "./WorkspaceNavigationProvider";

@@ -1,4 +1,4 @@
-import { SystemContextViewStrategy } from "@structurizr/dsl";
+import { createDefaultSystemContextView, SystemContextViewStrategy } from "@structurizr/dsl";
 import { FC, PropsWithChildren, useEffect, useState } from "react";
 import { JsxElementVisitor } from "./types";
 import { IViewMetadata, ViewMetadataProvider } from "./ViewMetadataProvider";
@@ -18,12 +18,13 @@ export const SystemContextView: FC<PropsWithChildren<{
     useEffect(() => {
         if (workspace) {
             const visitor = new JsxElementVisitor();
-            const systemContextView = workspace.views.systemContexts.find(x => x.key === value.key);
+            const systemContextView = workspace.views.systemContexts.find(x => x.key === value.key)
+                ?? createDefaultSystemContextView(value.softwareSystemIdentifier);
             const strategy = new SystemContextViewStrategy(workspace.model, systemContextView);
             const elements = strategy.accept(visitor);
             setElements(elements);
         }
-    }, [workspace, value.key]);
+    }, [workspace, value.key, value.softwareSystemIdentifier]);
     
     return (
         <ViewMetadataProvider metadata={metadata}>
