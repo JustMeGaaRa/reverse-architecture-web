@@ -1,6 +1,6 @@
 import { createDefaultSystemLandscapeView, SystemLandscapeViewStrategy } from "@structurizr/dsl";
 import { FC, PropsWithChildren, useEffect, useState } from "react";
-import { JsxElementVisitor } from "./types";
+import { ViewElementJsxVisitor } from "./types";
 import { IViewMetadata, ViewMetadataProvider } from "./ViewMetadataProvider";
 import { useWorkspace } from "./Workspace";
 
@@ -17,7 +17,7 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
 
     useEffect(() => {
         if (workspace) {
-            const visitor = new JsxElementVisitor();
+            const visitor = new ViewElementJsxVisitor();
             const systemLandscapeView = workspace.views.systemLandscape ?? createDefaultSystemLandscapeView();
             const strategy = new SystemLandscapeViewStrategy(workspace.model, systemLandscapeView);
             const elements = strategy.accept(visitor);

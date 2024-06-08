@@ -12,149 +12,128 @@ import {
     ISoftwareSystemInstance,
     IWorkspaceSnapshot
 } from "@structurizr/dsl";
-import { Component } from "../Component";
-import { Container } from "../Container";
-import { ContainerInstance } from "../ContainerInstance";
-import { DeploymentNode } from "../DeploymentNode";
-import { Group } from "../Group";
-import { InfrastructureNode } from "../InfrastructureNode";
-import { Person } from "../Person";
+import { ModelElement } from "../ModelElement";
 import { Relationship } from "../Relationship";
-import { SoftwareSystem } from "../SoftwareSystem";
-import { SoftwareSystemInstance } from "../SoftwareSystemInstance";
 
-export class JsxElementVisitor implements IElementVisitor<JSX.Element> {
+export class ModelElementJsxVisitor implements IElementVisitor<JSX.Element> {
     visitWorkspace(workspace: IWorkspaceSnapshot, params?: { children?: JSX.Element[]; }): JSX.Element {
-        return (<>{params?.children}</>);
+        return (
+            <ModelElement
+                key={workspace.name}
+                value={{
+                    type: "Model",
+                    identifier: workspace.name,
+                    name: workspace.name
+                }}
+            />
+        )
     }
     visitGroup(group: IGroup, params?: { parentId?: string; children?: JSX.Element[]; }): JSX.Element {
         return (
-            <Group
+            <ModelElement
                 key={group.name}
                 value={{
                     type: "Group",
                     identifier: group.name,
-                    name: group.name,
+                    name: group.name
                 }}
-            >
-                {params?.children}
-            </Group>
+            />
         )
     }
     visitPerson(person: IPerson, params?: { parentId?: string; children?: JSX.Element[]; }): JSX.Element {
         return (
-            <Person
+            <ModelElement
                 key={person.identifier}
                 value={{
                     type: "Person",
                     identifier: person.identifier,
-                    name: person.name,
-                    description: person.description,
+                    name: person.name
                 }}
             />
         )
     }
     visitSoftwareSystem(softwareSystem: ISoftwareSystem, params?: { parentId?: string; children?: JSX.Element[]; }): JSX.Element {
         return (
-            <SoftwareSystem
+            <ModelElement
                 key={softwareSystem.identifier}
                 value={{
                     type: "Software System",
                     identifier: softwareSystem.identifier,
                     name: softwareSystem.name,
-                    description: softwareSystem.description,
-                    technology: softwareSystem.technology.map(x => x.name).join(", ")
                 }}
-            >
-                {params?.children}
-            </SoftwareSystem>
+            />
         );
     }
     visitContainer(container: IContainer, params?: { parentId?: string; children?: JSX.Element[]; }): JSX.Element {
         return (
-            <Container
+            <ModelElement
                 key={container.identifier}
                 value={{
                     type: "Container",
                     identifier: container.identifier,
-                    name: container.name,
-                    description: container.description,
-                    technology: container.technology.map(x => x.name).join(", ")
+                    name: container.name
                 }}
-            >
-                {params?.children}
-            </Container>
+            />
         );
     }
     visitComponent(component: IComponent, params?: { parentId?: string; children?: JSX.Element[]; }): JSX.Element {
         return (
-            <Component
+            <ModelElement
                 key={component.identifier}
                 value={{
                     type: "Component",
                     identifier: component.identifier,
-                    name: component.name,
-                    description: component.description,
-                    technology: component.technology.map(x => x.name).join(", ")
+                    name: component.name
                 }}
             />
         );
     }
     visitDeploymentNode(deploymentNode: IDeploymentNode, params?: { parentId?: string; children?: JSX.Element[]; }): JSX.Element {
         return (
-            <DeploymentNode
+            <ModelElement
                 key={deploymentNode.identifier}
                 value={{
                     type: "Deployment Node",
                     identifier: deploymentNode.identifier,
-                    name: deploymentNode.name,
-                    description: deploymentNode.description,
-                    instances: deploymentNode.instances ? `x${deploymentNode.instances}` : undefined
+                    name: deploymentNode.name
                 }}
-            >
-                {params?.children}
-            </DeploymentNode>
+            />
         );
     }
     visitInfrastructureNode(infrastructureNode: IInfrastructureNode, params?: { parentId?: string; children?: JSX.Element[]; }): JSX.Element {
         return (
-            <InfrastructureNode
+            <ModelElement
                 key={infrastructureNode.identifier}
                 value={{
                     type: "Infrastructure Node",
                     identifier: infrastructureNode.identifier,
-                    name: infrastructureNode.name,
-                    description: infrastructureNode.description,
+                    name: infrastructureNode.name
                 }}
             />
         )
     }
     visitSoftwareSystemInstance(softwareSystemInstance: ISoftwareSystemInstance, params?: { parentId?: string; children?: JSX.Element[]; }): JSX.Element {
         return (
-            <SoftwareSystemInstance
+            <ModelElement
                 key={softwareSystemInstance.identifier}
                 value={{
                     type: "Software System Instance",
                     identifier: softwareSystemInstance.identifier,
-                    softwareSystemIdentifier: softwareSystemInstance.softwareSystemIdentifier,
+                    name: ""
                 }}
-            >
-                {params?.children}
-            </SoftwareSystemInstance>
+            />
         )
     }
     visitContainerInstance(containerInstance: IContainerInstance, params?: { parentId?: string; children?: JSX.Element[]; }): JSX.Element {
         return (
-            <ContainerInstance
+            <ModelElement
                 key={containerInstance.identifier}
                 value={{
                     type: "Container Instance",
                     identifier: containerInstance.identifier,
-                    containerIdentifier: containerInstance.containerIdentifier,
+                    name: ""
                 }}
-            >
-                {params?.children}
-            </ContainerInstance>
+            />
         )
     }
     visitRelationship(relationship: IRelationship, params?: { children?: JSX.Element[]; }): JSX.Element {

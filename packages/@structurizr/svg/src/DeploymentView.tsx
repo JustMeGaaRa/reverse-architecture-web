@@ -1,6 +1,6 @@
 import { createDefaultDeploymentView, DeploymentViewStrategy } from "@structurizr/dsl";
 import { FC, PropsWithChildren, useEffect, useState } from "react";
-import { JsxElementVisitor } from "./types";
+import { ViewElementJsxVisitor } from "./types";
 import { IViewMetadata, ViewMetadataProvider } from "./ViewMetadataProvider";
 import { useWorkspace } from "./Workspace";
 
@@ -17,7 +17,7 @@ export const DeploymentView: FC<PropsWithChildren<{
 
     useEffect(() => {
         if (workspace) {
-            const visitor = new JsxElementVisitor();
+            const visitor = new ViewElementJsxVisitor();
             const deploymentView = workspace.views.deployments.find(x => x.key === value.key)
                 ?? createDefaultDeploymentView();
             const strategy = new DeploymentViewStrategy(workspace.model, deploymentView);

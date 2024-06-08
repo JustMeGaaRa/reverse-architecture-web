@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren } from "react";
-import { Boundary } from "./Element";
+import { Boundary } from "./components";
 import { useViewMetadata } from "./ViewMetadataProvider";
 
 export interface IDeploymentNode {

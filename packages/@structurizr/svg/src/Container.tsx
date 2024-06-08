@@ -1,7 +1,7 @@
 import { Children, FC, PropsWithChildren } from "react";
-import { Connector } from "./components";
+import { Boundary, Connector } from "./components";
 import { ZoomControls } from "./containers";
-import { Boundary, Element } from "./Element";
+import { Element } from "./Element";
 import { useViewMetadata } from "./ViewMetadataProvider";
 
 export interface IContainer {

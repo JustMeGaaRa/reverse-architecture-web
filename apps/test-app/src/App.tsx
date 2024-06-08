@@ -1,6 +1,7 @@
 import {
     createDefaultSystemLandscapeView,
     createDefaultWorkspace,
+    IViewDefinitionMetadata,
     IWorkspaceMetadata,
     IWorkspaceSnapshot,
     ViewType
@@ -11,6 +12,8 @@ import {
     ComponentView,
     ContainerView,
     DeploymentView,
+    IViewMetadata,
+    ModelView,
     Styles,
     SystemContextView,
     SystemLandscapeView,
@@ -29,6 +32,15 @@ import {
 } from "@structurizr-preview/controls";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+
+function transformMetadata(metadata?: IViewDefinitionMetadata): IViewMetadata {
+    return {
+        elements: metadata?.elements
+            ?.reduce((acc, element) => ({ ...acc, [element.id]: element }), {}) ?? {},
+        relationships: metadata?.relationships
+            ?.reduce((acc, relationship) => ({ ...acc, [relationship.id]: relationship }), {}) ?? {}
+    };
+}
 
 export function App() {
     const { currentView, setCurrentView } = useWorkspaceNavigation();
@@ -97,15 +109,16 @@ export function App() {
                 <ThemeProvider>
                     <ViewportProvider>
                         <Viewport>
+                            {currentView?.type === ViewType.Model && (
+                                <ModelView>
+                                    <AutoLayout value={{}} />
+                                </ModelView>
+                            )}
+
                             {currentView?.type === ViewType.SystemLandscape && (
                                 <SystemLandscapeView
                                     value={{ key: currentView?.key }}
-                                    metadata={{
-                                        elements: metadata?.views?.systemLandscape?.elements
-                                            ?.reduce((acc, element) => ({ ...acc, [element.id]: element }), {}) ?? {},
-                                        relationships: metadata?.views?.systemLandscape?.relationships
-                                            ?.reduce((acc, relationship) => ({ ...acc, [relationship.id]: relationship }), {}) ?? {}
-                                    }}
+                                    metadata={transformMetadata(metadata?.views?.systemLandscape)}
                                 >
                                     <AutoLayout value={{}} />
                                 </SystemLandscapeView>
@@ -118,12 +131,7 @@ export function App() {
                                         key: currentView.key,
                                         softwareSystemIdentifier: currentView.softwareSystemIdentifier,
                                     }}
-                                    metadata={{
-                                        elements: metadata?.views?.systemContexts.find(x => x.key === currentView.key)?.elements
-                                            ?.reduce((acc, element) => ({ ...acc, [element.id]: element }), {}) ?? {},
-                                        relationships: metadata?.views?.systemContexts.find(x => x.key === currentView.key)?.relationships
-                                            ?.reduce((acc, relationship) => ({ ...acc, [relationship.id]: relationship }), {}) ?? {}
-                                    }}
+                                    metadata={transformMetadata(metadata?.views?.systemContexts.find(x => x.key === currentView.key))}
                                 >
                                     <AutoLayout value={{}} />
                                 </SystemContextView>
@@ -136,12 +144,7 @@ export function App() {
                                         key: currentView.key,
                                         softwareSystemIdentifier: currentView.softwareSystemIdentifier,
                                     }}
-                                    metadata={{
-                                        elements: metadata?.views?.containers.find(x => x.key === currentView.key)?.elements
-                                            ?.reduce((acc, element) => ({ ...acc, [element.id]: element }), {}) ?? {},
-                                        relationships: metadata?.views?.containers.find(x => x.key === currentView.key)?.relationships
-                                            ?.reduce((acc, relationship) => ({ ...acc, [relationship.id]: relationship }), {}) ?? {}
-                                    }}
+                                    metadata={transformMetadata(metadata?.views?.containers.find(x => x.key === currentView.key))}
                                 >
                                     <AutoLayout value={{}} />
                                 </ContainerView>
@@ -154,12 +157,7 @@ export function App() {
                                         key: currentView.key,
                                         containerIdentifier: currentView.containerIdentifier,
                                     }}
-                                    metadata={{
-                                        elements: metadata?.views?.components.find(x => x.key === currentView.key)?.elements
-                                            ?.reduce((acc, element) => ({ ...acc, [element.id]: element }), {}) ?? {},
-                                        relationships: metadata?.views?.components.find(x => x.key === currentView.key)?.relationships
-                                            ?.reduce((acc, relationship) => ({ ...acc, [relationship.id]: relationship }), {}) ?? {}
-                                    }}
+                                    metadata={transformMetadata(metadata?.views?.components.find(x => x.key === currentView.key))}
                                 >
                                     <AutoLayout value={{}} />
                                 </ComponentView>
@@ -173,12 +171,7 @@ export function App() {
                                         softwareSystemIdentifier: currentView.softwareSystemIdentifier,
                                         environment: currentView.environment,
                                     }}
-                                    metadata={{
-                                        elements: metadata?.views?.deployments.find(x => x.key === currentView.key)?.elements
-                                            ?.reduce((acc, element) => ({ ...acc, [element.id]: element }), {}) ?? {},
-                                        relationships: metadata?.views?.deployments.find(x => x.key === currentView.key)?.relationships
-                                            ?.reduce((acc, relationship) => ({ ...acc, [relationship.id]: relationship }), {}) ?? {}
-                                    }}
+                                    metadata={transformMetadata(metadata?.views?.deployments.find(x => x.key === currentView.key))}
                                 >
                                     <AutoLayout value={{}} />
                                 </DeploymentView>

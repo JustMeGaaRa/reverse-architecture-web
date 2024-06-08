@@ -1,1 +1,2 @@
-export * from "./JsxElementVisitor";
+export * from "./ModelElementJsxVisitor";
+export * from "./ViewElementJsxVisitor";

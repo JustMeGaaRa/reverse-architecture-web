@@ -13,6 +13,8 @@ export * from "./DeploymentNode";
 export * from "./DeploymentView";
 export * from "./InfrastructureNode";
 export * from "./Model";
+export * from "./ModelElement";
+export * from "./ModelView";
 export * from "./Person";
 export * from "./Relationship";
 export * from "./SoftwareSystem";

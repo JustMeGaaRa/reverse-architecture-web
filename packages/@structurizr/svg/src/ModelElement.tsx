@@ -1,37 +1,35 @@
 import { FC } from "react";
-import { Box, Connector } from "./components";
-import { Element } from "./Element";
+import { Box, Connector, TreeNode } from "./components";
 import { useViewMetadata } from "./ViewMetadataProvider";
 
-export interface IInfrastructureNode {
-    type: "Infrastructure Node";
+export interface IModelElement {
+    type: string;
     identifier: string;
     name: string;
-    description?: string;
-    instances?: string;
+    children?: number;
 }
 
-export const InfrastructureNode: FC<{
-    value: IInfrastructureNode;
+export const ModelElement: FC<{
+    value: IModelElement;
 }> = ({
-    value,
+    value
 }) => {
     const { metadata } = useViewMetadata();
     const dimensions = metadata?.elements[value.identifier] ?? {
         x: 0,
         y: 0,
-        height: 350,
-        width: 300,
+        height: 200,
+        width: 200,
     };
-    // TODO: pass these default values to the Element component directly
-    const { height = 200, width = 200 } = dimensions;
+    const height = 70;
+    const width = 280;
 
     return (
         <Box position={dimensions}>
-            <Element
+            <TreeNode
                 value={value}
-                height={dimensions.height}
-                width={dimensions.width}
+                height={height}
+                width={width}
             />
             <Connector height={height} width={width} placement={"top-left"} />
             <Connector height={height} width={width} placement={"top-center"} />
@@ -42,5 +40,5 @@ export const InfrastructureNode: FC<{
             <Connector height={height} width={width} placement={"bottom-center"} />
             <Connector height={height} width={width} placement={"bottom-right"} />
         </Box>
-    );
-};
+    )
+}

@@ -1,6 +1,5 @@
 import { FC, PropsWithChildren } from "react";
-import { Text } from "./components";
-import { Boundary } from "./Element";
+import { Boundary } from "./components";
 import { useViewMetadata } from "./ViewMetadataProvider";
 
 export interface IGroup {
