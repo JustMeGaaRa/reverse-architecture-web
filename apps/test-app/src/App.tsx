@@ -195,32 +195,26 @@ export function App() {
 function Breadcrumbs() {
     if (document.getElementById("structurizr-page") === null) return null;
     return createPortal((
-            <WorkspacePanel placement={"top-left"}>
-                <BreadcrumbsNavigation />
-            </WorkspacePanel>
-        ),
-        document.getElementById("structurizr-page") as HTMLElement
-    );
+        <WorkspacePanel placement={"top-left"}>
+            <BreadcrumbsNavigation />
+        </WorkspacePanel>
+    ), document.getElementById("structurizr-page") as HTMLElement);
 }
 
 function ViewSwitcher() {
     if (document.getElementById("structurizr-page") === null) return null;
     return createPortal((
-            <WorkspacePanel placement={"top-right"}>
-                <ViewSwitcherToggle />
-            </WorkspacePanel>
-        ),
-        document.getElementById("structurizr-page") as HTMLElement
-    );
+        <WorkspacePanel placement={"top-right"}>
+            <ViewSwitcherToggle />
+        </WorkspacePanel>
+    ), document.getElementById("structurizr-page") as HTMLElement);
 }
 
 function Zoom() {
     if (document.getElementById("structurizr-page") === null) return null;
     return createPortal((
-            <WorkspacePanel placement={"bottom-right"}>
-                <ZoomToolbar />
-            </WorkspacePanel>
-        ),
-        document.getElementById("structurizr-page") as HTMLElement
-    );
+        <WorkspacePanel placement={"bottom-right"}>
+            <ZoomToolbar />
+        </WorkspacePanel>
+    ), document.getElementById("structurizr-page") as HTMLElement);
 }

@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Box, Text } from "./components";
+import { Node, Text } from "./components";
 
 export interface IElement {
     type: string;
@@ -16,7 +16,6 @@ export const Element: FC<{
     height?: number;
     width?: number;
     borderWidth?: number;
-    borderRadius?: number;
     padding?: number;
 }> = ({
     value,
@@ -24,33 +23,10 @@ export const Element: FC<{
     height = 200,
     width = 200,
     borderWidth = 2,
-    borderRadius = 16,
     padding = 4,
 }) => {
     return (
-        <Box className={"structurizr__element"} id={value.identifier} position={position}>
-            <defs>
-                <clipPath id="clip">
-                    <rect
-                        x={borderWidth + padding}
-                        y={borderWidth + padding}
-                        width={width - padding * 2}
-                        height={height - padding * 2}
-                        rx={borderRadius}
-                        ry={borderRadius}
-                    />
-                </clipPath>
-            </defs>
-            <rect
-                cursor={"pointer"}
-                height={height}
-                width={width}
-                fill={"#222425"}
-                stroke={"#535354"}
-                strokeWidth={borderWidth}
-                rx={borderRadius}
-                ry={borderRadius}
-            />
+        <Node id={value.identifier} position={position}>
             <Text
                 x={borderWidth + width / 2}
                 y={borderWidth + padding + 20}
@@ -103,6 +79,6 @@ export const Element: FC<{
             >
                 {value.technology}
             </Text>
-        </Box>
+        </Node>
     );
 };

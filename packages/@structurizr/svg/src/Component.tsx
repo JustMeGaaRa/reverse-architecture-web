@@ -11,11 +11,7 @@ export interface IComponent {
     technology?: string;
 }
 
-export const Component: FC<PropsWithChildren<{
-    value: IComponent;
-}>> = ({
-    value,
-}) => {
+export const Component: FC<PropsWithChildren<{ value: IComponent }>> = ({ value }) => {
     const { metadata } = useViewMetadata();
     const dimensions = metadata?.elements[value.identifier] ?? {
         x: 0,

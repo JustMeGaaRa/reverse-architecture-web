@@ -27,6 +27,7 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
 
     return (
         <ViewMetadataProvider metadata={metadata}>
+            {/* TODO: figure out how to combine algorithm and event handlers */}
             {elements}
             {children}
         </ViewMetadataProvider>

@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren } from "react";
-import { Boundary } from "./components";
+import { GroupNode, Text } from "./components";
 import { useViewMetadata } from "./ViewMetadataProvider";
 
 export interface IGroup {
@@ -10,9 +10,16 @@ export interface IGroup {
 
 export const Group: FC<PropsWithChildren<{
     value: IGroup;
+    position?: { x: number; y: number };
+    height?: number;
+    width?: number;
+    borderWidth?: number;
+    padding?: number;
 }>> = ({
     children,
     value,
+    borderWidth = 2,
+    padding = 16,
 }) => {
     const { metadata } = useViewMetadata();
     const dimensions = metadata?.elements[value.identifier] ?? {
@@ -25,8 +32,7 @@ export const Group: FC<PropsWithChildren<{
     const { height = 400, width = 400 } = dimensions;
 
     return (
-        <Boundary
-            value={value}
+        <GroupNode
             position={dimensions}
             height={height}
             width={width}
@@ -34,7 +40,29 @@ export const Group: FC<PropsWithChildren<{
             borderColor={"#535354"}
             borderDash={false}
         >
+            <Text
+                x={borderWidth + padding}
+                y={height - borderWidth - padding - 16}
+                fontSize={14}
+                fontFamily={"Inter"}
+                fill={"#E8E8E8"}
+                style={{ whiteSpace: "pre" }}
+                width={width - padding * 2 - borderWidth * 2}
+            >
+                {value.name}
+            </Text>
+            <Text
+                x={borderWidth + padding}
+                y={height - borderWidth - padding}
+                fontSize={11}
+                fontFamily={"Inter"}
+                fill={"#A1A2A3"}
+                style={{ whiteSpace: "pre" }}
+                width={width - padding * 2 - borderWidth * 2}
+            >
+                {value.type}
+            </Text>
             {children}
-        </Boundary>
+        </GroupNode>
     );
 };

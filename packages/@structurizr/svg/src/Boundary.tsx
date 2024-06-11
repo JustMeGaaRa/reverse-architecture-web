@@ -1,9 +1,10 @@
 import { FC, PropsWithChildren } from "react";
-import { Box } from "./Box";
-import { Text } from "./Text";
+import { GroupNode, Text } from "./components";
+import { useViewMetadata } from "./ViewMetadataProvider";
 
 export interface IBoundary {
     type: string;
+    identifier: string;
     name: string;
 }
 
@@ -12,38 +13,26 @@ export const Boundary: FC<PropsWithChildren<{
     position?: { x: number; y: number };
     height?: number;
     width?: number;
-    backgroundColor?: string;
-    borderColor?: string;
-    borderDash?: boolean;
     borderWidth?: number;
-    borderRadius?: number;
     padding?: number;
 }>> = ({
     children,
     value,
-    position = { x: 0, y: 0 },
-    height = 400,
-    width = 400,
-    backgroundColor = "#161819",
-    borderColor = "#535354",
-    borderDash = true,
     borderWidth = 2,
-    borderRadius = 32,
     padding = 16,
 }) => {
+    const { metadata } = useViewMetadata();
+    const dimensions = metadata?.elements[value.identifier] ?? {
+        x: 0,
+        y: 0,
+        height: 200,
+        width: 200,
+    };
+    // TODO: pass these default values to the Element component directly
+    const { height = 400, width = 400 } = dimensions;
+
     return (
-        <Box position={position}>
-            <rect
-                cursor={"pointer"}
-                height={height}
-                width={width}
-                fill={backgroundColor}
-                stroke={borderColor}
-                strokeDasharray={borderDash ? "20 10" : undefined}
-                strokeWidth={borderWidth}
-                rx={borderRadius}
-                ry={borderRadius}
-            />
+        <GroupNode position={dimensions}>
             <Text
                 x={borderWidth + padding}
                 y={height - borderWidth - padding - 16}
@@ -67,6 +56,6 @@ export const Boundary: FC<PropsWithChildren<{
                 {value.type}
             </Text>
             {children}
-        </Box>
+        </GroupNode>
     );
 };

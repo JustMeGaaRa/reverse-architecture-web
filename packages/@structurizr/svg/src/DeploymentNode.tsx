@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren } from "react";
-import { Boundary } from "./components";
+import { Group } from "./Group";
 import { useViewMetadata } from "./ViewMetadataProvider";
 
 export interface IDeploymentNode {
@@ -10,12 +10,7 @@ export interface IDeploymentNode {
     instances?: string;
 }
 
-export const DeploymentNode: FC<PropsWithChildren<{
-    value: IDeploymentNode;
-}>> = ({
-    children,
-    value,
-}) => {
+export const DeploymentNode: FC<PropsWithChildren<{ value: IDeploymentNode }>> = ({ children, value }) => {
     const { metadata } = useViewMetadata();
     const dimensions = metadata?.elements[value.identifier] ?? {
         x: 0,
@@ -25,16 +20,13 @@ export const DeploymentNode: FC<PropsWithChildren<{
     };
 
     return (
-        <Boundary
+        <Group
             value={value}
             position={dimensions}
             height={dimensions.height}
             width={dimensions.width}
-            backgroundColor={"none"}
-            borderColor={"#535354"}
-            borderDash={false}
         >
             {children}
-        </Boundary>
+        </Group>
     );
 };
