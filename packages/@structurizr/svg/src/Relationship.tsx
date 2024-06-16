@@ -20,7 +20,7 @@ export const Relationship: FC<{
             id={value.identifier}
             sourceNodeId={value.sourceIdentifier}
             targetNodeId={value.targetIdentifier}
-            bendingPoints={metadata?.relationships?.[value.identifier]}
+            points={metadata?.relationships?.[value.identifier]}
             markerStart={MarkerType.CircleOutline}
             markerEnd={MarkerType.ArrowClosed}
         >

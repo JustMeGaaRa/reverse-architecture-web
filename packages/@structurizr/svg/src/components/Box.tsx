@@ -6,18 +6,29 @@ export const Box: FC<PropsWithChildren<{
     id?: string;
     className?: string;
     position?: { x: number; y: number };
+    onMouseOver?: (event: React.MouseEvent<SVGGraphicsElement>) => void;
+    onMouseOut?: (event: React.MouseEvent<SVGGraphicsElement>) => void;
 }>> = ({
     children,
     id,
     className,
-    position
+    position,
+    onMouseOver,
+    onMouseOut
 }) => {
     const domNode = useRef<SVGGraphicsElement>(null);
     const transform = useMemo(() => position && `translate(${position.x}, ${position.y})`, [position]);
 
     return (
         <BoxContext.Provider value={{ domNode }}>
-            <g ref={domNode} id={id} className={className} transform={transform}>
+            <g
+                ref={domNode}
+                id={id}
+                className={className}
+                transform={transform}
+                onMouseOver={onMouseOver}
+                onMouseOut={onMouseOut}
+            >
                 {children}
             </g>
         </BoxContext.Provider>

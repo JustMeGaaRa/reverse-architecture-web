@@ -30,11 +30,12 @@ import {
     WorkspacePanel,
     ZoomToolbar
 } from "@structurizr-preview/controls";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 
 function transformMetadata(metadata?: IViewDefinitionMetadata): IViewMetadata {
     return {
+        key: metadata?.key,
         elements: metadata?.elements
             ?.reduce((acc, element) => ({ ...acc, [element.id]: element }), {}) ?? {},
         relationships: metadata?.relationships
@@ -92,6 +93,16 @@ export function App() {
 
     const defaultThemeUrl = "https://static.structurizr.com/themes/default/theme.json";
     const awsThemeUrl = "https://static.structurizr.com/themes/amazon-web-services-2023.01.31/theme.json";
+    
+    const transformedMetadata = useMemo(() => {
+        return {
+            systemLandscape: transformMetadata(metadata?.views?.systemLandscape),
+            systemContexts: metadata?.views?.systemContexts.map(transformMetadata),
+            containers: metadata?.views?.containers.map(transformMetadata),
+            components: metadata?.views?.components.map(transformMetadata),
+            deployments: metadata?.views?.deployments.map(transformMetadata),
+        };
+    }, [metadata])
 
     return (
         <div
@@ -118,7 +129,7 @@ export function App() {
                             {currentView?.type === ViewType.SystemLandscape && (
                                 <SystemLandscapeView
                                     value={{ key: currentView?.key }}
-                                    metadata={transformMetadata(metadata?.views?.systemLandscape)}
+                                    metadata={transformedMetadata?.systemLandscape}
                                 >
                                     <AutoLayout value={{}} />
                                 </SystemLandscapeView>
@@ -131,7 +142,7 @@ export function App() {
                                         key: currentView.key,
                                         softwareSystemIdentifier: currentView.softwareSystemIdentifier,
                                     }}
-                                    metadata={transformMetadata(metadata?.views?.systemContexts.find(x => x.key === currentView.key))}
+                                    metadata={transformedMetadata?.systemContexts?.find(x => x.key === currentView.key)}
                                 >
                                     <AutoLayout value={{}} />
                                 </SystemContextView>
@@ -144,7 +155,7 @@ export function App() {
                                         key: currentView.key,
                                         softwareSystemIdentifier: currentView.softwareSystemIdentifier,
                                     }}
-                                    metadata={transformMetadata(metadata?.views?.containers.find(x => x.key === currentView.key))}
+                                    metadata={transformedMetadata?.containers?.find(x => x.key === currentView.key)}
                                 >
                                     <AutoLayout value={{}} />
                                 </ContainerView>
@@ -157,7 +168,7 @@ export function App() {
                                         key: currentView.key,
                                         containerIdentifier: currentView.containerIdentifier,
                                     }}
-                                    metadata={transformMetadata(metadata?.views?.components.find(x => x.key === currentView.key))}
+                                    metadata={transformedMetadata?.components?.find(x => x.key === currentView.key)}
                                 >
                                     <AutoLayout value={{}} />
                                 </ComponentView>
@@ -171,7 +182,7 @@ export function App() {
                                         softwareSystemIdentifier: currentView.softwareSystemIdentifier,
                                         environment: currentView.environment,
                                     }}
-                                    metadata={transformMetadata(metadata?.views?.deployments.find(x => x.key === currentView.key))}
+                                    metadata={transformedMetadata?.deployments?.find(x => x.key === currentView.key)}
                                 >
                                     <AutoLayout value={{}} />
                                 </DeploymentView>

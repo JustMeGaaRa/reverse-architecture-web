@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren, useCallback, useState } from "react";
-import { ButtonGroup, IconButton, useViewport } from "../components";
+import { Box, ButtonGroup, IconButton, useViewport } from "../components";
 
 export const ZoomButtonGroup: FC<PropsWithChildren<{
     position?: { x: number; y: number };
@@ -33,9 +33,9 @@ export const ZoomButtonGroup: FC<PropsWithChildren<{
     }, []);
     
     return (
-        <g
+        <Box
             className={"structurizr__zoom-controls"}
-            transform={`translate(${position.x},${position.y})`}
+            position={position}
             onMouseOver={handleOnMouseOver}
             onMouseOut={handleOnMouseOut}
         >
@@ -46,7 +46,7 @@ export const ZoomButtonGroup: FC<PropsWithChildren<{
                 </ButtonGroup>
             )}
             {children}
-        </g>
+        </Box>
     );
 };
 

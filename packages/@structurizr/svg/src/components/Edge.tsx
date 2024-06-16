@@ -23,7 +23,7 @@ export const Edge: FC<PropsWithChildren<{
     id: string;
     sourceNodeId: string;
     targetNodeId: string;
-    bendingPoints?: Array<{ x: number; y: number }>;
+    points?: Array<{ x: number; y: number }>;
     stroke?: string;
     strokeWidth?: number;
     markerStart?: MarkerType | string;
@@ -33,7 +33,7 @@ export const Edge: FC<PropsWithChildren<{
     id: id,
     sourceNodeId,
     targetNodeId,
-    bendingPoints = [],
+    points,
     stroke = "#535354",
     strokeWidth = 2,
     markerStart = MarkerType.CircleOutline,
@@ -46,6 +46,7 @@ export const Edge: FC<PropsWithChildren<{
 
     useEffect(() => {
         const absolutePosition = getAbsolutePosition();
+        const bendingPoints = points ?? [];
         
         const sourceNode = getSvgElementById(sourceNodeId);
         const targetNode = getSvgElementById(targetNodeId);
@@ -79,7 +80,7 @@ export const Edge: FC<PropsWithChildren<{
 
         setPath(path);
         setLabelCenter(labelCenter);
-    }, [getAbsolutePosition, id, sourceNodeId, targetNodeId, viewbox, zoom, bendingPoints]);
+    }, [getAbsolutePosition, id, sourceNodeId, targetNodeId, points, viewbox, zoom]);
 
     return (
         <Box id={id} className={"structurizr__edge"}>
