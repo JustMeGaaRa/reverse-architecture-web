@@ -1,6 +1,5 @@
 import { FC, PropsWithChildren } from "react";
-import { Box } from "./components";
-import { useViewMetadata } from "./ViewMetadataProvider";
+import { Box, useViewMetadata } from "./components";
 
 export interface ISoftwareSystemInstance {
     type: "Software System Instance";

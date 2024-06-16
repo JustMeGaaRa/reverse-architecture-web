@@ -1,7 +1,7 @@
 import { createDefaultDeploymentView, DeploymentViewStrategy } from "@structurizr/dsl";
 import { FC, PropsWithChildren, useEffect, useState } from "react";
+import { IViewMetadata, ViewMetadataProvider } from "./components";
 import { ViewElementJsxVisitor } from "./types";
-import { IViewMetadata, ViewMetadataProvider } from "./ViewMetadataProvider";
 import { useWorkspace } from "./Workspace";
 
 export const DeploymentView: FC<PropsWithChildren<{

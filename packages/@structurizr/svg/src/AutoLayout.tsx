@@ -1,5 +1,5 @@
 import { FC, useEffect } from "react";
-import { useViewMetadata } from "./ViewMetadataProvider";
+import { useViewMetadata } from "./components";
 
 export interface IAutoLayout {
 

@@ -1,7 +1,7 @@
 import { ModelViewStrategy } from "@structurizr/dsl";
 import { FC, PropsWithChildren, useEffect, useState } from "react";
+import { ViewMetadataProvider } from "./components";
 import { ModelElementJsxVisitor } from "./types";
-import { ViewMetadataProvider } from "./ViewMetadataProvider";
 import { useWorkspace } from "./Workspace";
 
 export const ModelView: FC<PropsWithChildren> = ({ children }) => {

@@ -1,7 +1,6 @@
 import { FC, PropsWithChildren } from "react";
-import { Box, Connector } from "./components";
+import { Box, Connector, useViewMetadata } from "./components";
 import { Element } from "./Element";
-import { useViewMetadata } from "./ViewMetadataProvider";
 
 export interface IComponent {
     type: "Component";

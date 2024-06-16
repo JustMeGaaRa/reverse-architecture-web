@@ -1,6 +1,5 @@
 import { FC, PropsWithChildren } from "react";
-import { GroupNode, Text } from "./components";
-import { useViewMetadata } from "./ViewMetadataProvider";
+import { GroupNode, Text, useViewMetadata } from "./components";
 
 export interface IGroup {
     type: string;

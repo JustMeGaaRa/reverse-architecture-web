@@ -1,6 +1,6 @@
 import { FC, PropsWithChildren } from "react";
+import { useViewMetadata } from "./components";
 import { Group } from "./Group";
-import { useViewMetadata } from "./ViewMetadataProvider";
 
 export interface IDeploymentNode {
     type: "Deployment Node";

@@ -1,7 +1,6 @@
 import { FC } from "react";
-import { Box, Connector } from "./components";
+import { Box, Connector, useViewMetadata } from "./components";
 import { Element } from "./Element";
-import { useViewMetadata } from "./ViewMetadataProvider";
 
 export interface IInfrastructureNode {
     type: "Infrastructure Node";

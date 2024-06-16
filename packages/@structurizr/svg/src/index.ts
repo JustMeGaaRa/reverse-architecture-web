@@ -24,6 +24,5 @@ export * from "./SoftwareSystemInstance";
 export * from "./SystemContextView";
 export * from "./SystemLandscapeView";
 export * from "./Themes";
-export * from "./ViewMetadataProvider";
 export * from "./Views";
 export * from "./Workspace";

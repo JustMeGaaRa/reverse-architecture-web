@@ -1,6 +1,5 @@
 import { FC } from "react";
-import { Box, Connector, Node, Text } from "./components";
-import { useViewMetadata } from "./ViewMetadataProvider";
+import { Connector, Node, Text, useViewMetadata } from "./components";
 
 export interface IModelElement {
     type: string;
