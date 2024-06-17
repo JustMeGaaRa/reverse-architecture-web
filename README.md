@@ -9,14 +9,16 @@ This turborepo uses [npm](https://www.npmjs.com/) as a package manager. It inclu
 ### Apps and Packages
 
 - `apps/restruct-app`: an application for creating and managing arhitecture workspaces and projects using C4 model and Structurizr language syntax.
-- `apps/structurizr-preview-extensions`: a Visual Studio Code extension for previewing the diagrams of a code written in Structurizr language.
-- `apps/structurizr-preview-webview`: a React app that is hosted inside the webview of the Visual Studio Code extension.
+- `apps/restruct-vscode-extensions`: a Visual Studio Code extension for previewing the diagrams of a code written in Structurizr language.
+- `apps/restruct-vscode-webview`: a React app that is hosted inside the webview of the Visual Studio Code extension.
+- `packages/*`: a set of common packages shared between Visual Studio Code extension project and React webview app.
 - `packages/@justmegaara/mxgraph`: a TypeScript library that defines types for MXGrap vector diagrams (draw.io diagrams).
 - `packages/@justmegaara/graphviz-dot`: a very simple and limited builder of the Graphviz graphs in dot syntax (used internally).
 - `packages/@monaco-editor/structurizr`: a Structurizr DSL language definition types for Monaco editor.
-- `packages/@restruct`: a set of packages with common commponents and styles for the product suite.
-- `packages/@structurizr/`: a set of packages to work with Structurizr DSL and C4 model.
-- `packages/@structurizr-preview`: a set of common packages shared between Visual Studio Code extension project and React webview app.
+- `packages/@restruct/*`: a set of packages with common commponents and styles for the product suite.
+- `packages/@structurizr/*`: a set of packages to work with Structurizr DSL and C4 model (native SVG implementation).
+- `packages/@workspace/*`: a set of packages to work with Structurizr DSL and C4 model (react flow implementation).
+- `packages/@yjs/react`: a package to work with Yjs framework in React.
 - `@yjs/react`: a set of components and providers to work with Yjs framework in React.
 - `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
 - `tsconfig`: `tsconfig.json`s used throughout the monorepo

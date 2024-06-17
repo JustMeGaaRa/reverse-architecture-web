@@ -164,7 +164,7 @@ const getElementBox = (
     element: IElement,
     elementId?: string
 ) => {
-    const defaultPosition = { x: 0, y: 0, width: 400, height: 400 };
+    const defaultPosition = { x: 0, y: 0, width: 200, height: 200 };
     const elementMetadata = view.elements.find(x => x.id === (elementId ?? element.identifier))
         ?? defaultPosition;
         

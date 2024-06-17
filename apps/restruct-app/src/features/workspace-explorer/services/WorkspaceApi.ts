@@ -1,5 +1,5 @@
 import { IWorkspaceMetadata, Workspace } from "@structurizr/dsl";
-import { StructurizrExportClient } from "@structurizr/export";
+import { StructurizrExportClient } from "@structurizr/export-drawio";
 import { IWorkspaceInfo } from "@structurizr/y-workspace";
 
 export type WorkspaceLoadFilters = {

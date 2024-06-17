@@ -1,6 +1,6 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import { RestructTheme } from "@restruct/theme";
-import { WorkspaceNavigationProvider } from "@structurizr/svg";
+import { WorkspaceNavigationProvider } from "@structurizr/react";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { App } from "./App";

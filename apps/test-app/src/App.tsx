@@ -4,6 +4,7 @@ import {
     IViewDefinitionMetadata,
     IWorkspaceMetadata,
     IWorkspaceSnapshot,
+    SystemLandscapeViewStrategy,
     ViewType
 } from "@structurizr/dsl";
 import { parseWorkspace } from "@structurizr/parser";
@@ -23,14 +24,15 @@ import {
     Viewport,
     ViewportProvider,
     WorkspaceProvider
-} from "@structurizr/svg";
+} from "@structurizr/react";
 import {
     BreadcrumbsNavigation,
     ViewSwitcherToggle,
     WorkspacePanel,
     ZoomToolbar
-} from "@structurizr-preview/controls";
-import { useEffect, useMemo, useState } from "react";
+} from "@structurizr/controls";
+import { getReactFlowViewObject, GraphvizLayoutStrategy } from "@structurizr/graphviz-layout";
+import { SetStateAction, useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 function transformMetadata(metadata?: IViewDefinitionMetadata): IViewMetadata {
@@ -46,7 +48,31 @@ function transformMetadata(metadata?: IViewDefinitionMetadata): IViewMetadata {
 export function App() {
     const { currentView, setCurrentView } = useWorkspaceNavigation();
     const [ workspace, setWorkspace ] = useState<IWorkspaceSnapshot>(createDefaultWorkspace());
-    const [ metadata, setMetadata ] = useState<IWorkspaceMetadata>();
+    const [ metadata, setMetadata ] = useState<{
+        views: {
+            systemLandscape?: IViewMetadata,
+            systemContexts?: IViewMetadata[],
+            containers?: IViewMetadata[],
+            components?: IViewMetadata[],
+            deployments?: IViewMetadata[],
+        }
+    }>();
+
+    const setSystemLandScapeViewMetadata = useCallback((action: SetStateAction<IViewMetadata>) => {
+        setMetadata(metadata => {
+            if (!metadata?.views?.systemLandscape) return metadata;
+            
+            return ({
+                ...metadata,
+                views: {
+                    ...metadata.views,
+                    systemLandscape: typeof action === "function"
+                        ? action(metadata.views.systemLandscape)
+                        : action
+                }
+            });
+        });
+    }, []);
 
     useEffect(() => {
         const fetchWorkspace = async () => {
@@ -84,25 +110,50 @@ export function App() {
 
         fetchMetadata()
             .then(metadata => {
-                setMetadata(metadata);
+                setMetadata({
+                    views: {
+                        systemLandscape: transformMetadata(metadata?.views?.systemLandscape),
+                        systemContexts: metadata?.views?.systemContexts.map(transformMetadata),
+                        containers: metadata?.views?.containers.map(transformMetadata),
+                        components: metadata?.views?.components.map(transformMetadata),
+                        deployments: metadata?.views?.deployments.map(transformMetadata),
+                    }
+                });
             })
             .catch(error => {
                 console.debug(error);
             });
     }, [setCurrentView]);
 
+    useEffect(() => {
+        if (workspace.views.systemLandscape) {
+            const viewStrategy = new SystemLandscapeViewStrategy(workspace.model, workspace.views.systemLandscape);
+            const reactFlowObject = getReactFlowViewObject(workspace, viewStrategy, workspace.views.systemLandscape);
+            const layoutStrategy = new GraphvizLayoutStrategy();
+            layoutStrategy
+                .execute(reactFlowObject)
+                .then(reactFlowAuto => {
+                    console.log("autolayout", reactFlowAuto)
+                    setSystemLandScapeViewMetadata(metadata => ({
+                        ...metadata,
+                        elements: reactFlowAuto.nodes.reduce((elements, node) => ({
+                            ...elements,
+                            [node.id]: {
+                                x: node.position.x,
+                                y: -node.position.y,
+                                height: node.height,
+                                width: node.width,
+                            }
+                        }), {}),
+                    }))
+                })
+        }
+    }, [workspace, setSystemLandScapeViewMetadata]);
+
+    console.log(metadata?.views?.systemLandscape?.elements)
+
     const defaultThemeUrl = "https://static.structurizr.com/themes/default/theme.json";
     const awsThemeUrl = "https://static.structurizr.com/themes/amazon-web-services-2023.01.31/theme.json";
-    
-    const transformedMetadata = useMemo(() => {
-        return {
-            systemLandscape: transformMetadata(metadata?.views?.systemLandscape),
-            systemContexts: metadata?.views?.systemContexts.map(transformMetadata),
-            containers: metadata?.views?.containers.map(transformMetadata),
-            components: metadata?.views?.components.map(transformMetadata),
-            deployments: metadata?.views?.deployments.map(transformMetadata),
-        };
-    }, [metadata])
 
     return (
         <div
@@ -128,8 +179,9 @@ export function App() {
 
                             {currentView?.type === ViewType.SystemLandscape && (
                                 <SystemLandscapeView
-                                    value={{ key: currentView?.key }}
-                                    metadata={transformedMetadata?.systemLandscape}
+                                    value={{ key: currentView?.key }}  
+                                    metadata={metadata?.views?.systemLandscape}
+                                    setMetadata={setSystemLandScapeViewMetadata}
                                 >
                                     <AutoLayout value={{}} />
                                 </SystemLandscapeView>
@@ -142,7 +194,7 @@ export function App() {
                                         key: currentView.key,
                                         softwareSystemIdentifier: currentView.softwareSystemIdentifier,
                                     }}
-                                    metadata={transformedMetadata?.systemContexts?.find(x => x.key === currentView.key)}
+                                    metadata={metadata?.views?.systemContexts?.find(x => x.key === currentView.key)}
                                 >
                                     <AutoLayout value={{}} />
                                 </SystemContextView>
@@ -155,7 +207,7 @@ export function App() {
                                         key: currentView.key,
                                         softwareSystemIdentifier: currentView.softwareSystemIdentifier,
                                     }}
-                                    metadata={transformedMetadata?.containers?.find(x => x.key === currentView.key)}
+                                    metadata={metadata?.views?.containers?.find(x => x.key === currentView.key)}
                                 >
                                     <AutoLayout value={{}} />
                                 </ContainerView>
@@ -168,7 +220,7 @@ export function App() {
                                         key: currentView.key,
                                         containerIdentifier: currentView.containerIdentifier,
                                     }}
-                                    metadata={transformedMetadata?.components?.find(x => x.key === currentView.key)}
+                                    metadata={metadata?.views?.components?.find(x => x.key === currentView.key)}
                                 >
                                     <AutoLayout value={{}} />
                                 </ComponentView>
@@ -182,7 +234,7 @@ export function App() {
                                         softwareSystemIdentifier: currentView.softwareSystemIdentifier,
                                         environment: currentView.environment,
                                     }}
-                                    metadata={transformedMetadata?.deployments?.find(x => x.key === currentView.key)}
+                                    metadata={metadata?.views?.deployments?.find(x => x.key === currentView.key)}
                                 >
                                     <AutoLayout value={{}} />
                                 </DeploymentView>

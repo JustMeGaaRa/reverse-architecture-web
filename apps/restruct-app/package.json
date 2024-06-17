@@ -31,7 +31,7 @@
     "@reactflow/node-toolbar": "^1.3.9",
     "@restruct/ui": "*",
     "@structurizr/dsl": "*",
-    "@structurizr/export": "*",
+    "@structurizr/export-drawio": "*",
     "@structurizr/parser": "*",
     "@structurizr/y-workspace": "*",
     "@workspace/core": "*",

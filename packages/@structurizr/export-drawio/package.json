@@ -1,0 +1,39 @@
+{
+  "name": "@structurizr/export-drawio",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "keywords": [
+    "reverse-architecture",
+    "diagram",
+    "architecture",
+    "c4",
+    "c4-model",
+    "structurizr",
+    "export",
+    "drawio",
+    "json"
+  ],
+  "author": "JustMeGaaRa",
+  "license": "MIT",
+  "scripts": {
+    "build": "npx tsc",
+    "dev": "npx tsc -w"
+  },
+  "dependencies": {
+    "@justmegaara/mxgraph": "*",
+    "@structurizr/dsl": "*",
+    "chevrotain": "^11.0.3",
+    "fast-xml-parser": "^4.3.2",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JustMeGaaRa/reverse-architecture-web.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JustMeGaaRa/reverse-architecture-web/issues"
+  }
+}

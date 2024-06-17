@@ -69,8 +69,8 @@ export const createWorkspaceConnection = (workspaceId: string, document: Y.Doc):
 }
 
 export const getWorkspaces = (explorerDocument: Y.Doc) => {
-    const workspacesMap = explorerDocument.getMap("workspaces");
-
+    const workspacesMap = explorerDocument.getMap<Y.Map<unknown>>("workspaces");
+    
     const workspaces = Array
         .from<Y.Map<unknown>>(workspacesMap.values())
         .map(workspaceInfoMap => new WorkspaceInfo(workspaceInfoMap));

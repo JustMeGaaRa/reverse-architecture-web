@@ -11,7 +11,7 @@ import {
     DrawioExportClient,
     StructurizrExportClient,
     WorkspaceJsonExportClient
-} from "@structurizr/export";
+} from "@structurizr/export-drawio";
 import { useWorkspace } from "@workspace/core";
 import { Download, InputField, MoreHoriz } from "iconoir-react";
 import { FC, useCallback } from "react";

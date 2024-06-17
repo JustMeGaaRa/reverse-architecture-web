@@ -1,0 +1,30 @@
+{
+  "name": "@structurizr/graphviz-layout",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "keywords": [
+    "structurizr",
+    "dsl",
+    "c4-model",
+    "c4",
+    "architecture",
+    "diagram"
+  ],
+  "author": "JustMeGaaRa",
+  "license": "MIT",
+  "scripts": {
+    "build": "npx tsc",
+    "dev": "npx tsc -w"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JustMeGaaRa/reverse-architecture-web.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JustMeGaaRa/reverse-architecture-web/issues"
+  }
+}
