@@ -24,7 +24,7 @@ export const SoftwareSystem: FC<PropsWithChildren<{ value: ISoftwareSystem }>> =
     const { height = 200, width = 200 } = dimensions;
 
     return Children.count(children) > 0 ? (
-        <ZoomButtonGroup position={dimensions} zoomOut>
+        <ZoomButtonGroup className={"structurizr__boundary-system"} position={dimensions} zoomOut>
             <Boundary
                 value={value}
                 height={dimensions.height}
@@ -34,7 +34,7 @@ export const SoftwareSystem: FC<PropsWithChildren<{ value: ISoftwareSystem }>> =
             </Boundary>
         </ZoomButtonGroup>
     ) : (
-        <ZoomButtonGroup position={dimensions} zoomIn>
+        <ZoomButtonGroup className={"structurizr__element-system"} position={dimensions} zoomIn>
             <Element
                 value={value}
                 height={dimensions.height}

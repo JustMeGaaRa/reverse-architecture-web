@@ -18,7 +18,8 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
     useEffect(() => {
         if (workspace) {
             const visitor = new ViewElementJsxVisitor();
-            const systemLandscapeView = workspace.views.systemLandscape ?? createDefaultSystemLandscapeView();
+            const systemLandscapeView = workspace.views.systemLandscape
+                ?? createDefaultSystemLandscapeView();
             const strategy = new SystemLandscapeViewStrategy(workspace.model, systemLandscapeView);
             const elements = strategy.accept(visitor);
             setElements(elements);

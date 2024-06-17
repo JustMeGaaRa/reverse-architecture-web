@@ -25,7 +25,7 @@ export const Person: FC<PropsWithChildren<{
     const { height = 200, width = 200 } = dimensions;
 
     return (
-        <Box position={dimensions}>
+        <Box className={"structurizr__element-person"} position={dimensions}>
             <Element
                 value={value}
                 height={dimensions.height}

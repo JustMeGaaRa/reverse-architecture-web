@@ -8,11 +8,7 @@ export interface IRelationship {
     description?: string;
 }
 
-export const Relationship: FC<{
-    value: IRelationship;
-}> = ({
-    value
-}) => {
+export const Relationship: FC<{ value: IRelationship }> = ({ value }) => {
     const { metadata } = useViewMetadata();
 
     return (

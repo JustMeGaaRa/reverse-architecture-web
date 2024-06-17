@@ -22,7 +22,7 @@ export const Component: FC<PropsWithChildren<{ value: IComponent }>> = ({ value 
     const { height = 200, width = 200 } = dimensions;
 
     return (
-        <Box position={dimensions}>
+        <Box className={"structurizr__element-component"} position={dimensions}>
             <Element
                 value={value}
                 height={dimensions.height}
