@@ -16,7 +16,11 @@
     "build": "npx tsc",
     "dev": "npx tsc -w"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@hpcc-js/wasm": "^2.16.2",
+    "@justmegaara/graphviz-dot": "*",
+    "@structurizr/dsl": "^0.1.0"
+  },
   "devDependencies": {
     "typescript": "^5.2.2"
   },

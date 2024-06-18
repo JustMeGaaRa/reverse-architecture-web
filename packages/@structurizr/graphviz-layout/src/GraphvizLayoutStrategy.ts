@@ -2,7 +2,6 @@ import { Graphviz } from "@hpcc-js/wasm";
 import { Graph, Subgraph } from "@justmegaara/graphviz-dot";
 import { Node, ReactFlowJsonObject } from "@reactflow/core";
 import { Dimensions, IAutoLayoutStrategy } from "@structurizr/dsl";
-import { ReactFlowNodeTypeNames } from "./ReactFlowNodeTypeNames";
 
 type DotDraw = {
     op: "c" | "p";
@@ -112,7 +111,7 @@ export class GraphvizLayoutStrategy implements IAutoLayoutStrategy<ReactFlowJson
                     x: dimensionsAbsolute[node.id].x,
                     y: dimensionsAbsolute[node.id].y
                 };
-            const size = node.type === ReactFlowNodeTypeNames.ViewElementGroup || node.type === ReactFlowNodeTypeNames.ViewElementBoundary
+            const size = nodes.some(x => x.parentNode === node.id)
                 ? {
                     width: dimensionsAbsolute[node.id].width,
                     height: dimensionsAbsolute[node.id].height

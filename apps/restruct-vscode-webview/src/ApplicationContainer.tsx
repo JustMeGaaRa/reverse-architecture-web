@@ -7,7 +7,7 @@ import {
 } from "@structurizr/parser";
 import { useWorkspace } from "@workspace/core";
 import {
-    MessageType,
+    EventName,
     TextEditorEvent,
 } from "@restruct/vscode-communication";
 import { useSnackbar } from "@restruct/snackbar";
@@ -56,7 +56,7 @@ export const ApplicationContainer: FC<PropsWithChildren> = ({ children }) => {
         const eventHandler = (event: MessageEvent<TextEditorEvent>) => {
             try {
                 switch (event.data.type) {
-                    case MessageType.DOCUMENT_CHANGED:
+                    case EventName.DOCUMENT_CHANGED:
                         handleStructurizrChanged(event.data.structurizr);
                         break;
                 }

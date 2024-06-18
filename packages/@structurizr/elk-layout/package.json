@@ -17,7 +17,10 @@
     "build": "npx tsc",
     "dev": "npx tsc -w"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@structurizr/dsl": "^0.1.0",
+    "elkjs": "^0.8.2"
+  },
   "devDependencies": {
     "typescript": "^5.2.2"
   },

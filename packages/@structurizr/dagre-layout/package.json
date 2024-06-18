@@ -16,7 +16,10 @@
     "build": "npx tsc",
     "dev": "npx tsc -w"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@dagrejs/dagre": "^1.1.1",
+    "@structurizr/dsl": "^0.1.0"
+  },
   "devDependencies": {
     "typescript": "^5.2.2"
   },

@@ -21,7 +21,6 @@
   "dependencies": {
     "@chakra-ui/icons": "2.0.13",
     "@chakra-ui/react": "^2.8.2",
-    "@dagrejs/dagre": "^1.1.1",
     "@emotion/react": "11.10.5",
     "@emotion/styled": "11.10.5",
     "@monaco-editor/structurizr": "*",

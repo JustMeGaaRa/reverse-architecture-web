@@ -28,7 +28,6 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
 
             const graphVisitor = new GraphElementVisitor();
             const graphElements = strategy.accept(graphVisitor);
-            console.log(graphElements)
             setElements(elements);
         }
     }, [workspace]);

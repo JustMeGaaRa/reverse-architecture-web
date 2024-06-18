@@ -2,12 +2,12 @@ import {
     createDefaultSystemLandscapeView,
     createDefaultWorkspace,
     IViewDefinitionMetadata,
-    IWorkspaceMetadata,
     IWorkspaceSnapshot,
     SystemLandscapeViewStrategy,
     ViewType
 } from "@structurizr/dsl";
 import { parseWorkspace } from "@structurizr/parser";
+import { GraphvizLayoutStrategy } from "@structurizr/graphviz-layout";
 import {
     AutoLayout,
     ComponentView,
@@ -30,10 +30,10 @@ import {
     ViewSwitcherToggle,
     WorkspacePanel,
     ZoomToolbar
-} from "@structurizr/controls";
-import { getReactFlowViewObject, GraphvizLayoutStrategy } from "@structurizr/graphviz-layout";
+} from "@restruct/structurizr-controls";
 import { SetStateAction, useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { ReactFlowBuilder, ReactFlowVisitor } from "@workspace/core";
 
 function transformMetadata(metadata?: IViewDefinitionMetadata): IViewMetadata {
     return {
@@ -68,6 +68,22 @@ export function App() {
                     ...metadata.views,
                     systemLandscape: typeof action === "function"
                         ? action(metadata.views.systemLandscape)
+                        : action
+                }
+            });
+        });
+    }, []);
+
+    const setSystemContextViewMetadata = useCallback((action: SetStateAction<Array<IViewMetadata>>) => {
+        setMetadata(metadata => {
+            if (!metadata?.views?.systemContexts) return metadata;
+            
+            return ({
+                ...metadata,
+                views: {
+                    ...metadata.views,
+                    systemContexts: typeof action === "function"
+                        ? action(metadata.views.systemContexts)
                         : action
                 }
             });
@@ -128,29 +144,35 @@ export function App() {
     useEffect(() => {
         if (workspace.views.systemLandscape) {
             const viewStrategy = new SystemLandscapeViewStrategy(workspace.model, workspace.views.systemLandscape);
-            const reactFlowObject = getReactFlowViewObject(workspace, viewStrategy, workspace.views.systemLandscape);
+            const reactFlowBuilder = new ReactFlowBuilder();
+            const reactFlowVisitor = new ReactFlowVisitor(
+                workspace.model,
+                workspace.views.configuration,
+                workspace.views.systemLandscape,
+                reactFlowBuilder
+            );
+            viewStrategy?.accept(reactFlowVisitor);
+            const reactFlowObject = reactFlowBuilder.build();
+            
             const layoutStrategy = new GraphvizLayoutStrategy();
             layoutStrategy
                 .execute(reactFlowObject)
                 .then(reactFlowAuto => {
-                    console.log("autolayout", reactFlowAuto)
                     setSystemLandScapeViewMetadata(metadata => ({
                         ...metadata,
                         elements: reactFlowAuto.nodes.reduce((elements, node) => ({
                             ...elements,
                             [node.id]: {
                                 x: node.position.x,
-                                y: -node.position.y,
-                                height: node.height,
-                                width: node.width,
+                                y: node.position.y,
+                                height: node.data.height,
+                                width: node.data.width,
                             }
                         }), {}),
                     }))
                 })
         }
     }, [workspace, setSystemLandScapeViewMetadata]);
-
-    console.log(metadata?.views?.systemLandscape?.elements)
 
     const defaultThemeUrl = "https://static.structurizr.com/themes/default/theme.json";
     const awsThemeUrl = "https://static.structurizr.com/themes/amazon-web-services-2023.01.31/theme.json";
@@ -181,7 +203,6 @@ export function App() {
                                 <SystemLandscapeView
                                     value={{ key: currentView?.key }}  
                                     metadata={metadata?.views?.systemLandscape}
-                                    setMetadata={setSystemLandScapeViewMetadata}
                                 >
                                     <AutoLayout value={{}} />
                                 </SystemLandscapeView>

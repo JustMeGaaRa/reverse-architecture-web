@@ -22,7 +22,6 @@
   "dependencies": {
     "@chakra-ui/icons": "2.0.13",
     "@chakra-ui/react": "^2.8.2",
-    "@dagrejs/dagre": "^1.1.1",
     "@emotion/react": "11.10.5",
     "@emotion/styled": "11.10.5",
     "@reactflow/background": "^11.3.9",
@@ -44,7 +43,6 @@
     "@types/react-dom": "^18.3.0",
     "@types/vscode-webview": "^1.57.5",
     "@types/vscode": "^1.89.0",
-    "elkjs": "0.8.2",
     "fp-ts": "^2.16.5",
     "framer-motion": "7.9.1",
     "iconoir-react": "^7.1.0",

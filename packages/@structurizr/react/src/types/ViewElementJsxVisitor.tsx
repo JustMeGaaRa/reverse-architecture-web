@@ -33,7 +33,7 @@ export class ViewElementJsxVisitor implements IElementVisitor<JSX.Element> {
                 key={group.name}
                 value={{
                     type: "Group",
-                    identifier: group.name,
+                    identifier: group.identifier,
                     name: group.name,
                 }}
             >

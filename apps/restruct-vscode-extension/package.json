@@ -39,6 +39,7 @@
     "run-in-browser": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. ."
   },
   "dependencies": {
+    "@structurizr/graphviz-layout": "*",
     "@restruct/vscode-communication": "*"
   },
   "devDependencies": {

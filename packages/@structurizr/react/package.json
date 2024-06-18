@@ -30,9 +30,6 @@
     "tsconfig": "*",
     "typescript": "^5.2.2"
   },
-  "peerDependencies": {
-    "@hpcc-js/wasm": "^2.16.2"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/JustMeGaaRa/reverse-architecture-web.git"
