@@ -1,5 +1,13 @@
+import {
+    parseStructurizr,
+    structurizrLexer,
+    visitWorkspace,
+    WorkspaceCstNode
+} from "@structurizr/parser";
 import { EventName, IObservable, TextEditorEvent } from "@restruct/vscode-communication";
 import * as vscode from "vscode";
+import { fold, chain } from "fp-ts/lib/Either";
+import { pipe } from "fp-ts/lib/function";
 
 export class TextEditorDocumentChangedHandler implements IObservable<TextEditorEvent> {
     constructor(
@@ -7,12 +15,24 @@ export class TextEditorDocumentChangedHandler implements IObservable<TextEditorE
     ) {}
 
     onNext(event: TextEditorEvent) {
-        if (event.type === EventName.DOCUMENT_CHANGED) {
-            console.log("Document changed", event);
-
+        if (event.type === EventName.EDITOR_DOCUMENT_CHANGED) {
             if (vscode.window.activeTextEditor) {
-                const structurizr = vscode.window.activeTextEditor.document.getText();
-                this.panel.webview.postMessage({ type: EventName.DOCUMENT_CHANGED, structurizr });
+                pipe(
+                    structurizrLexer(event.structurizr),
+                    chain(parseStructurizr),
+                    chain(visitWorkspace),
+                    fold(
+                        errors => {
+                            console.debug("Error while parsing the structurizr", errors);
+                        },
+                        workspace => {
+                            this.panel.webview.postMessage({
+                                type: EventName.EDITOR_WORKSPACE_CHANGED,
+                                workspace
+                            });
+                        }
+                    )
+                );
             }
         }
     }

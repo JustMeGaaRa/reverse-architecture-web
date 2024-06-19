@@ -1,6 +1,6 @@
 import { IWorkspaceSnapshot } from "@structurizr/dsl";
 import { ILexingError, IToken } from "chevrotain";
-import { Either, left, right, chain, fold } from "fp-ts/Either";
+import { Either, left, right, chain, fold } from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
 import { StructurizrLexer } from "./StructurizrLexer";
 import { StructurizrParser } from "./StructurizrParser";

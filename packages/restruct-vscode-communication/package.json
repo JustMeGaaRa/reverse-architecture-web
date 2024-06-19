@@ -17,6 +17,7 @@
     "dev": "npx tsc -w"
   },
   "dependencies": {
+    "@structurizr/dsl": "*",
     "@types/vscode": "^1.89.0"
   },
   "devDependencies": {

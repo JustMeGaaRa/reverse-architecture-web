@@ -1,18 +1,5 @@
-import * as vscode from 'vscode';
-import { EventName, TextEditorEvent, WorkspacePreviewEvent } from './EventName';
-
-export interface IDisposable {
-    dispose: () => void;
-}
-
-export interface IObservable<TEvent> {
-    onNext: (event: TEvent) => void;
-    onError: (error: Error) => void;
-}
-
-export interface IObserver<TEvent> {
-    subscribe: (handler: IObservable<TEvent>) => IDisposable;
-}
+import { IObservable, IObserver, WorkspacePreviewEvent } from "@restruct/vscode-communication";
+import * as vscode from "vscode";
 
 export class WorkspacePreviewEventObserver implements IObserver<WorkspacePreviewEvent> {
     constructor(

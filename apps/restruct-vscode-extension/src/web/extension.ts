@@ -1,14 +1,14 @@
-import {
-	EventName,
-	WorkspacePreviewEventObserver
-} from "@restruct/vscode-communication";
+import { EventName } from "@restruct/vscode-communication";
 import * as vscode from "vscode";
 import {
 	TextEditorDocumentChangedHandler,
 	WorkspaceElementHoveredHandler,
 	WorkspaceViewChangedHandler
 } from "./handlers";
-import { TextEditorDocumentObserver } from "./observers";
+import {
+	TextEditorDocumentObserver,
+	WorkspacePreviewEventObserver
+} from "./observers";
 
 export function activate(context: vscode.ExtensionContext) {
 	let panel: vscode.WebviewPanel;
@@ -72,7 +72,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 		if (vscode.window.activeTextEditor) {
 			const structurizr = vscode.window.activeTextEditor.document.getText();
-			panel.webview.postMessage({ type: EventName.DOCUMENT_CHANGED, structurizr });
+			panel.webview.postMessage({ type: EventName.EDITOR_DOCUMENT_CHANGED, structurizr });
 		}
 	});
 

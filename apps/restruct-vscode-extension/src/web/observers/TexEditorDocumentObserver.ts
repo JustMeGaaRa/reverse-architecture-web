@@ -9,7 +9,7 @@ export class TextEditorDocumentObserver implements IObserver<TextEditorEvent> {
     subscribe(handler: IObservable<TextEditorEvent>) {
         const handlerAdapter = (event: vscode.TextDocumentChangeEvent) => {
             handler.onNext({
-                type: EventName.DOCUMENT_CHANGED,
+                type: EventName.EDITOR_DOCUMENT_CHANGED,
                 structurizr: event.document?.getText()
             });
         };

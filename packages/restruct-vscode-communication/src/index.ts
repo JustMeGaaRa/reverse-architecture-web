@@ -1,2 +1,2 @@
-export * from "./WorkspacePreviewEventObserver";
+export * from "./Observer";
 export * from "./EventName";

@@ -3,7 +3,7 @@ import * as vscode from "vscode";
 
 export class WorkspaceElementHoveredHandler implements IObservable<WorkspacePreviewEvent> {
     onNext(event: WorkspacePreviewEvent) {
-        if (event.type === EventName.ELEMENT_HOVERED) {
+        if (event.type === EventName.WORKSPACE_ELEMENT_HOVERED) {
             console.log("Element hovered", event);
             
             if (vscode.window.activeTextEditor) {
