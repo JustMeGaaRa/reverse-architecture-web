@@ -1,6 +1,6 @@
-# structurizr-preview-restruct README
+# Restruct Structurizr README
 
-This is the README for your extension "structurizr-preview-restruct". After writing up a brief description, we recommend including the following sections.
+This is the README for your extension "restruct-structurizr". After writing up a brief description, we recommend including the following sections.
 
 ## Features
 

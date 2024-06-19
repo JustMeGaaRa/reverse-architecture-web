@@ -13,7 +13,7 @@
   "contributes": {
     "commands": [
       {
-        "command": "structurizr-preview-restruct.preview",
+        "command": "restruct-structurizr.preview",
         "title": "Structurizr Preview",
         "icon": "$(open-preview)"
       }
@@ -21,7 +21,7 @@
     "menus": {
       "editor/title": [
         {
-          "command": "structurizr-preview-restruct.preview",
+          "command": "restruct-structurizr.preview",
           "group": "navigation",
           "when": "editorLangId == structurizr"
         }
@@ -42,7 +42,9 @@
     "@structurizr/graphviz-layout": "*",
     "@structurizr/parser": "*",
     "@restruct/vscode-communication": "*",
-    "fp-ts": "^2.16.5"
+    "@workspace/core": "*",
+    "fp-ts": "^2.16.5",
+    "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@types/vscode": "^1.89.0",

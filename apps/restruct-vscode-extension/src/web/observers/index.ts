@@ -1,2 +1,3 @@
-export * from "./TexEditorDocumentObserver";
-export * from "./WorkspacePreviewEventObserver";
+export * from "./TextEditorDocumentChangedObserver";
+export * from "./WorkspaceElementHoveredObserver";
+export * from "./WorkspaceViewChangedObserver";

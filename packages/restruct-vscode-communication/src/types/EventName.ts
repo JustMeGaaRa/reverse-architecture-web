@@ -1,4 +1,4 @@
-import { IWorkspaceSnapshot } from "@structurizr/dsl";
+import { IViewDefinitionMetadata, IWorkspaceSnapshot } from "@structurizr/dsl";
 import { Range } from "vscode";
 
 export enum EventName {
@@ -15,9 +15,9 @@ export type Event<T extends string, P = any> = { type: T } & P;
 export type TextEditorEvent = 
 	| Event<EventName.EDITOR_DOCUMENT_CHANGED, { structurizr: string }>
 	| Event<EventName.EDITOR_SELECTION_CHANGED, { range: Array<Range> }>
-	| Event<EventName.WORKSPACE_LAYOUT_COMPUTED, { nodes: Array<any>; edges: Array<any> }>
+	| Event<EventName.WORKSPACE_LAYOUT_COMPUTED, { metadata: IViewDefinitionMetadata }>
 	| Event<EventName.EDITOR_WORKSPACE_CHANGED, { workspace: IWorkspaceSnapshot }>;
 
 export type WorkspacePreviewEvent =
 	| Event<EventName.WORKSPACE_ELEMENT_HOVERED, { range: Array<Range> }>
-	| Event<EventName.WORKSPACE_VIEW_CHANGED, { nodes: Array<any>; edges: Array<any> }>;
+	| Event<EventName.WORKSPACE_VIEW_CHANGED, { workspace: IWorkspaceSnapshot }>;

@@ -1,11 +1,10 @@
-import { EventName, IObservable, WorkspacePreviewEvent } from "@restruct/vscode-communication";
+import { EventName, WorkspacePreviewEvent } from "@restruct/vscode-communication";
+import { Observer } from "rxjs";
 import * as vscode from "vscode";
 
-export class WorkspaceElementHoveredHandler implements IObservable<WorkspacePreviewEvent> {
-    onNext(event: WorkspacePreviewEvent) {
+export class WorkspaceElementHoveredObserver implements Observer<WorkspacePreviewEvent> {
+    next(event: WorkspacePreviewEvent) {
         if (event.type === EventName.WORKSPACE_ELEMENT_HOVERED) {
-            console.log("Element hovered", event);
-            
             if (vscode.window.activeTextEditor) {
                 const decorationType = vscode.window.createTextEditorDecorationType({
                     backgroundColor: 'rgba(255,255,0,0.3)',
@@ -20,7 +19,11 @@ export class WorkspaceElementHoveredHandler implements IObservable<WorkspacePrev
         }
     }
 
-    onError(error: Error) {
-        console.error(error);
+    error(error: Error) {
+        vscode.window.showErrorMessage(error.message);
+    }
+
+    complete() {
+        console.debug("WorkspaceElementHoveredHandler completed");
     }
 }
