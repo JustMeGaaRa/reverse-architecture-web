@@ -7,7 +7,7 @@ import {
     ViewType
 } from "@structurizr/dsl";
 import { parseWorkspace } from "@structurizr/parser";
-import { GraphvizLayoutStrategy } from "@structurizr/graphviz-layout";
+import { GraphBuilder, GraphElementVisitor, GraphvizLayoutStrategy } from "@structurizr/graphviz-layout";
 import {
     AutoLayout,
     ComponentView,
@@ -33,7 +33,6 @@ import {
 } from "@restruct/structurizr-controls";
 import { SetStateAction, useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { ReactFlowBuilder, ReactFlowVisitor } from "@workspace/core";
 
 function transformMetadata(metadata?: IViewDefinitionMetadata): IViewMetadata {
     return {
@@ -144,13 +143,8 @@ export function App() {
     useEffect(() => {
         if (workspace.views.systemLandscape) {
             const viewStrategy = new SystemLandscapeViewStrategy(workspace.model, workspace.views.systemLandscape);
-            const reactFlowBuilder = new ReactFlowBuilder();
-            const reactFlowVisitor = new ReactFlowVisitor(
-                workspace.model,
-                workspace.views.configuration,
-                workspace.views.systemLandscape,
-                reactFlowBuilder
-            );
+            const reactFlowBuilder = new GraphBuilder();
+            const reactFlowVisitor = new GraphElementVisitor(reactFlowBuilder);
             viewStrategy?.accept(reactFlowVisitor);
             const reactFlowObject = reactFlowBuilder.build();
             
@@ -163,10 +157,10 @@ export function App() {
                         elements: reactFlowAuto.nodes.reduce((elements, node) => ({
                             ...elements,
                             [node.id]: {
-                                x: node.position.x,
-                                y: node.position.y,
-                                height: node.data.height,
-                                width: node.data.width,
+                                x: node.x,
+                                y: node.y,
+                                height: node.height,
+                                width: node.width,
                             }
                         }), {}),
                     }))
@@ -262,7 +256,7 @@ export function App() {
                             )}
 
                             <Styles value={{ elements: [], relationships: [] }} />
-                            <Themes urls={[defaultThemeUrl, awsThemeUrl]} />
+                            {/* <Themes urls={[defaultThemeUrl, awsThemeUrl]} /> */}
                     
                             <Breadcrumbs />
                             <ViewSwitcher />

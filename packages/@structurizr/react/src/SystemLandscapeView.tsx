@@ -2,7 +2,6 @@ import { createDefaultSystemLandscapeView, SystemLandscapeViewStrategy } from "@
 import { FC, PropsWithChildren, SetStateAction, useEffect, useState } from "react";
 import { IViewMetadata, ViewMetadataProvider } from "./components";
 import { ViewElementJsxVisitor } from "./types";
-import { GraphElementVisitor } from "./types/GraphElementVisitor";
 import { useWorkspace } from "./Workspace";
 
 export const SystemLandscapeView: FC<PropsWithChildren<{
@@ -25,9 +24,6 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
             const visitor = new ViewElementJsxVisitor();
             const strategy = new SystemLandscapeViewStrategy(workspace.model, systemLandscapeView);
             const elements = strategy.accept(visitor);
-
-            const graphVisitor = new GraphElementVisitor();
-            const graphElements = strategy.accept(graphVisitor);
             setElements(elements);
         }
     }, [workspace]);

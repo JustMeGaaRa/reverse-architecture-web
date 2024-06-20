@@ -1,21 +1,10 @@
-import {
-	createEditorDocumentChangedEvent, createWorkspaceViewChangedEvent, TextEditorEvent, WorkspacePreviewEvent
-} from "@restruct/vscode-communication";
-import { Observable } from "rxjs";
 import * as vscode from "vscode";
-import {
-	createTextEditorDocumentObservable,
-	createWorkspacePreviewObservable
-} from "./observables";
-import {
-	TextEditorDocumentChangedObserver,
-	WorkspaceElementHoveredObserver,
-	WorkspaceViewChangedObserver
-} from "./observers";
+import { WorkspacePreviewSynchronizer } from "./WorkspacePreviewSynchronizer";
 
 export class WorkspacePreviewPanel {
     private _panel?: vscode.WebviewPanel;
     private _context: vscode.ExtensionContext;
+	private _synchonizer?: WorkspacePreviewSynchronizer;
 
     constructor(context: vscode.ExtensionContext) {
         this._context = context;
@@ -29,16 +18,35 @@ export class WorkspacePreviewPanel {
 		}
 
 		this._panel = vscode.window.createWebviewPanel(
-			"restruct",
-			"Structurizr Preview by Restruct",
+			"structurizr.preview",
+			"Structurizr Preview",
 			vscode.ViewColumn.Beside,
 			{ enableScripts: true, retainContextWhenHidden: true }
 		);
 		
-		// const cssUri = panel.webview.asWebviewUri(vscode.Uri.joinPath(context.extensionUri, "dist", "webview", "static", "css", "main.css"));
-		const scriptUri = this._panel.webview.asWebviewUri(vscode.Uri.joinPath(this._context.extensionUri, "dist", "webview", "static", "js", "main.js"));
+		// const cssPath = vscode.Uri.joinPath(this._context.extensionUri, "dist", "webview", "static", "css", "main.css");
+		// const cssUri = panel.webview.asWebviewUri(cssPath);
+		const scriptPath = vscode.Uri.joinPath(this._context.extensionUri, "dist", "webview", "static", "js", "main.js");
+		const scriptUri = this._panel.webview.asWebviewUri(scriptPath);
 
-		this._panel.webview.html = `
+		this._panel.webview.html = this.getHtmlContent(scriptUri);
+		this._synchonizer = new WorkspacePreviewSynchronizer(this._panel);
+		this._context.subscriptions.push(this._synchonizer);
+
+		if (vscode.window.activeTextEditor) {
+			const structurizr = vscode.window.activeTextEditor.document?.getText();
+			this._synchonizer.initialize(structurizr);
+		}
+
+		this._panel.onDidDispose(() => {
+            this._synchonizer?.dispose();
+			this._synchonizer = undefined;
+            this._panel = undefined;
+		});
+    }
+	
+	private getHtmlContent(scriptUri: vscode.Uri) {
+		return `
 			<!doctype html>
 			<html lang="en">
 				<head>
@@ -64,34 +72,5 @@ export class WorkspacePreviewPanel {
 				</body>
 			</html>
 		`;
-
-        const subscriptions: any[] = [];
-        
-		const workspaceViewObserver = new WorkspaceViewChangedObserver(this._panel);
-		const workspaceElementHoverObserver = new WorkspaceElementHoveredObserver();
-		const workspaceObservable = createWorkspacePreviewObservable(this._panel);
-		subscriptions.push(workspaceObservable.subscribe(workspaceViewObserver));
-		subscriptions.push(workspaceObservable.subscribe(workspaceElementHoverObserver));
-
-		const textDocumentObserver = new TextEditorDocumentChangedObserver(this._panel);
-		const textEditorObservable = createTextEditorDocumentObservable();
-		subscriptions.push(textEditorObservable.subscribe());
-
-		if (vscode.window.activeTextEditor) {
-			// NOTE: push syntetic event for initial parsing and publishing to the webview
-			const structurizr = vscode.window.activeTextEditor.document?.getText();
-			textDocumentObserver.next(createEditorDocumentChangedEvent(structurizr));
-			
-			// NOTE: push syntetic event for initial workspace view auto layout
-			workspaceViewObserver.next(createWorkspaceViewChangedEvent(undefined as any));
-		}
-
-		const disposables = subscriptions.map(x => new vscode.Disposable(() => x.unsubscribe()));
-		this._context.subscriptions.push(...disposables);
-
-		this._panel.onDidDispose(() => {
-            subscriptions.forEach(x => x.unsubscribe());
-            this._panel = undefined;
-		});
-    }
+	}
 }

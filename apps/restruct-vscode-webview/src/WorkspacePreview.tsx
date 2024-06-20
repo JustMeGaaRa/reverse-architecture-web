@@ -7,7 +7,7 @@ import {
 } from "@restruct/structurizr-controls";
 import {
     EventName,
-    TextEditorEvent
+    VscodeExtensionEvent
 } from "@restruct/vscode-communication";
 import {
     createDefaultWorkspace,
@@ -34,14 +34,16 @@ import {
 } from "@structurizr/react";
 import {
     FC,
-    PropsWithChildren,
+    useCallback,
     useEffect,
     useRef,
     useState
 } from "react";
 import { createPortal } from "react-dom";
-import { Subscribable } from "rxjs";
-import { createExtensionEventObservable } from "./createExtensionEventObservable";
+import { Observable } from "rxjs";
+import { createExtensionEventObservable } from "./utils";
+
+const vscode = acquireVsCodeApi();
 
 function transformMetadata(metadata?: IViewDefinitionMetadata): IViewMetadata {
     return {
@@ -53,8 +55,8 @@ function transformMetadata(metadata?: IViewDefinitionMetadata): IViewMetadata {
     };
 }
 
-export const ApplicationContainer: FC<PropsWithChildren> = ({ children }) => {
-    const eventObservable = useRef<Subscribable<TextEditorEvent>>();
+export const WorkspacePreview: FC = () => {
+    const eventObservable = useRef<Observable<VscodeExtensionEvent>>();
     // const [ workspaceCst, setWorkspaceCst ] = useState<WorkspaceCstNode>();
     const [ workspace, setWorkspace ] = useState<IWorkspaceSnapshot>(createDefaultWorkspace());
     const [ metadata, setMetadata ] = useState<{
@@ -69,38 +71,46 @@ export const ApplicationContainer: FC<PropsWithChildren> = ({ children }) => {
     const { currentView, setCurrentView } = useWorkspaceNavigation();
 
     const defaultThemeUrl = "https://static.structurizr.com/themes/default/theme.json";
-    const restructThemeUrl = "https://static.restruct.io/themes/default/theme.json";
+
+    const workspaceParsedHandler = useCallback((event: VscodeExtensionEvent) => {
+        if (event.type === EventName.EDITOR_WORKSPACE_PARSED) {
+            setWorkspace(event.workspace);
+            
+            if (!currentView) {
+                setCurrentView(event.workspace.views.systemLandscape);
+            }
+        }
+    }, [currentView, setCurrentView]);
+    
+    const workspaceLayoutComputedHandler = useCallback((event: VscodeExtensionEvent) => {
+        if (event.type === EventName.EDITOR_WORKSPACE_LAYOUT_COMPUTED) {
+            setMetadata(metadata => ({
+                ...metadata,
+                views: {
+                    ...metadata?.views,
+                    systemLandscape: transformMetadata(event.metadata)
+                }
+            }));
+        }
+    }, []);
 
     useEffect(() => {
         eventObservable.current = createExtensionEventObservable();
-        const subscription = eventObservable.current.subscribe({
-            next: (event) => {
-                if (event.type === EventName.EDITOR_WORKSPACE_CHANGED) {
-                    setWorkspace(event.workspace);
-                    setCurrentView(event.workspace.views.systemLandscape);
-                }
-                if (event.type === EventName.WORKSPACE_LAYOUT_COMPUTED) {
-                    setMetadata(metadata => ({
-                        ...metadata,
-                        views: {
-                            ...metadata.views,
-                            systemLandscape: transformMetadata(event.metadata)
-                        }
-                    }));
-                }
-            },
-            error: (error) => {
-                console.debug("Error while parsing the structurizr", error);
-            },
-            complete: () => {
-                console.debug("TextEditorDocumentChangedHandler completed");
-            }
-        });
+        const workspaceParsedSubscription = eventObservable.current.subscribe(workspaceParsedHandler);
+        const workspaceLayoutSubscription = eventObservable.current.subscribe(workspaceLayoutComputedHandler);
 
         return () => {
-            subscription.unsubscribe();
+            workspaceParsedSubscription.unsubscribe();
+            workspaceLayoutSubscription.unsubscribe();
         }
-    }, [setCurrentView]);
+    }, [setCurrentView, workspaceLayoutComputedHandler, workspaceParsedHandler]);
+    
+    useEffect(() => {
+        vscode.postMessage({
+            type: EventName.WORKSPACE_VIEW_CHANGED,
+            view: currentView
+        })
+    }, [currentView]);
 
     return (
         <Box

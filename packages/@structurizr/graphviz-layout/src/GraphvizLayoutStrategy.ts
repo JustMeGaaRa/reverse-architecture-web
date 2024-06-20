@@ -1,7 +1,7 @@
 import { Graphviz } from "@hpcc-js/wasm";
 import { Graph, Subgraph } from "@justmegaara/graphviz-dot";
-import { Node, ReactFlowJsonObject } from "@reactflow/core";
 import { Dimensions, IAutoLayoutStrategy } from "@structurizr/dsl";
+import { Edge, Vertex } from "./GraphElementVisitor";
 
 type DotDraw = {
     op: "c" | "p";
@@ -18,7 +18,6 @@ type DotEdge = {
 
 type DotCluster = {
     _draw_: Array<DotDraw>;
-    bb: string;
     cluster: boolean;
     name: string;
     nodes: Array<number>;
@@ -27,7 +26,6 @@ type DotCluster = {
 
 type DotNode = {
     _draw_: Array<DotDraw>;
-    bb: string;
     name: string;
     pos: string;
 }
@@ -35,49 +33,46 @@ type DotNode = {
 type DotGraph = {
     directed: boolean;
     name: string;
-    strict: boolean;
-    bb: string;
-    xdotversion: string;
     edges: Array<DotEdge>;
     objects: Array<DotCluster | DotNode>;
 }
 
-export class GraphvizLayoutStrategy implements IAutoLayoutStrategy<ReactFlowJsonObject> {
+export class GraphvizLayoutStrategy implements IAutoLayoutStrategy<{ nodes: Vertex[]; edges: Edge[] }> {
     constructor() { }
 
-    async execute(reactFlow: ReactFlowJsonObject): Promise<ReactFlowJsonObject> {
-        const { nodes, edges } = reactFlow;
+    async execute(graph: { nodes: Vertex[]; edges: Edge[] }): Promise<{ nodes: Vertex[]; edges: Edge[] }> {
+        const { nodes, edges } = graph;
 
-        const buildSubgraph = (node: Node, graph: Subgraph) => {
+        const buildSubgraph = (node: Vertex, graph: Subgraph) => {
             const children = nodes.filter(x => x.parentNode === node.id);
 
             if (children.length > 0) {
-                const subgraph = graph.addSubgraph(node.id, node.data?.label, true);
+                const subgraph = graph.addSubgraph(node.id, node.label, true);
                 children.forEach(child => buildSubgraph(child, subgraph));
             }
             else {
-                graph.addNode(node.id, node.data?.label);
+                graph.addNode(node.id, node.label);
             }
         }
 
-        const graph = new Graph("G");
+        const graphvizGraph = new Graph("G");
         nodes.filter(node => node.parentNode === undefined).forEach(node => {
             const children = nodes.filter(x => x.parentNode === node.id);
 
             if (children.length > 0) {
-                const subgraph = graph.addSubgraph(node.id, node.data?.label, true);
+                const subgraph = graphvizGraph.addSubgraph(node.id, node.label, true);
                 children.forEach(child => buildSubgraph(child, subgraph));
             }
             else {
-                graph.addNode(node.id, node.data?.label);
+                graphvizGraph.addNode(node.id, node.label);
             }
         });
         edges.forEach(edge => {
-            graph.addEdge(edge.source, edge.target, edge.data?.label);
+            graphvizGraph.addEdge(edge.sourceId, edge.targetId, edge.label);
         });
         
         const graphviz = await Graphviz.load();
-        const graphDotSrc = graph.toString();
+        const graphDotSrc = graphvizGraph.toString();
         const graphAutoLayout = JSON.parse(graphviz.dot(graphDotSrc, "json")) as DotGraph;
 
         const dimensionsAbsolute = graphAutoLayout.objects?.reduce((dimensions, obj) => {
@@ -121,9 +116,9 @@ export class GraphvizLayoutStrategy implements IAutoLayoutStrategy<ReactFlowJson
                     height: node.height
                 };
             
-            return { ...node, position, data: { ...node.data, ...size } };
+            return { ...node, ...position, ...size };
         });
 
-        return { ...reactFlow, nodes: positionedNodes, edges };
+        return { ...graph, nodes: positionedNodes, edges };
     }
 }

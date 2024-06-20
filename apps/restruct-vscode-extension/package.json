@@ -42,7 +42,6 @@
     "@structurizr/graphviz-layout": "*",
     "@structurizr/parser": "*",
     "@restruct/vscode-communication": "*",
-    "@workspace/core": "*",
     "fp-ts": "^2.16.5",
     "rxjs": "^7.8.1"
   },
