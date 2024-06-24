@@ -1,7 +1,7 @@
 import { createDefaultComponentView, createDefaultContainerView, createDefaultSystemContextView, createDefaultSystemLandscapeView, ElementType, findContainerParent, findViewForElement, IElement, IWorkspaceSnapshot, ViewDefinition, ViewType } from "@structurizr/dsl";
 import { createContext, Dispatch, FC, PropsWithChildren, SetStateAction, useCallback, useContext, useState } from "react";
 
-export const WorkspaceNavigationContext = createContext<{
+export const ViewNavigationContext = createContext<{
     currentView?: ViewDefinition;
     setCurrentView?: Dispatch<SetStateAction<ViewDefinition>>;
 }>({
@@ -9,18 +9,18 @@ export const WorkspaceNavigationContext = createContext<{
     setCurrentView: () => { console.debug("WorkspaceNavigationContext: setCurrentView not implemented") },
 });
 
-export const WorkspaceNavigationProvider: FC<PropsWithChildren> = ({ children }) => {
+export const ViewNavigationProvider: FC<PropsWithChildren> = ({ children }) => {
     const [ currentView, setCurrentView ] = useState<ViewDefinition>();
 
     return (
-        <WorkspaceNavigationContext.Provider value={{ currentView, setCurrentView }}>
+        <ViewNavigationContext.Provider value={{ currentView, setCurrentView }}>
             {children}
-        </WorkspaceNavigationContext.Provider>
+        </ViewNavigationContext.Provider>
     );
 };
 
-export const useWorkspaceNavigation = () => {
-    const { currentView, setCurrentView } = useContext(WorkspaceNavigationContext);
+export const useViewNavigation = () => {
+    const { currentView, setCurrentView } = useContext(ViewNavigationContext);
 
     const openView = useCallback((workspace: IWorkspaceSnapshot, currentView: ViewDefinition) => {
         if (currentView === undefined) {

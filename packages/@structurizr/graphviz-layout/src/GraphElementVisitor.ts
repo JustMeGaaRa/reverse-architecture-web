@@ -56,7 +56,14 @@ export class GraphElementVisitor implements IElementVisitor<GraphElement> {
     ) {}
     
     visitWorkspace(workspace: IWorkspaceSnapshot, params?: { children?: any[]; }): GraphElement {
-        return undefined as any;
+        return this.builder.addNode({ 
+            id: "workspace",
+            label: workspace.name,
+            x: 0,
+            y: 0,
+            height: 200,
+            width: 200
+        });
     }
     visitGroup(group: IGroup, params?: { parentId?: string; children?: any[]; }): GraphElement {
         return this.builder.addNode({ 

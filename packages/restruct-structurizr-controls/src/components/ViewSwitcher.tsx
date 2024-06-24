@@ -2,13 +2,13 @@ import { IconButton, Tooltip } from "@chakra-ui/react";
 import { ArrowsSplitDown, FlowChart, NodesDistributed } from "@restruct/icons";
 import { ButtonSegmentedToggle } from "@restruct/segmented-toggle";
 import { createDefaultModelView } from "@structurizr/dsl";
-import { useWorkspace, useWorkspaceNavigation } from "@structurizr/react";
+import { useWorkspace, useViewNavigation } from "@structurizr/react";
 import { FC, useCallback, useState } from "react";
 
 export const ViewSwitcherToggle: FC = () => {
     const [ mode, setMode ] = useState("diagramming");
     const { workspace } = useWorkspace();
-    const { setCurrentView } = useWorkspaceNavigation();
+    const { setCurrentView } = useViewNavigation();
 
     const handleOnClickDiagrammingMode = useCallback(() => {
         setMode("diagramming");

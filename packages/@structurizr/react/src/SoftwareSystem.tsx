@@ -1,7 +1,6 @@
 import { Children, FC, PropsWithChildren } from "react";
 import { Boundary } from "./Boundary";
-import { Connector, useViewMetadata } from "./components";
-import { ZoomButtonGroup } from "./containers";
+import { Box, Connector, useViewMetadata } from "./components";
 import { Element } from "./Element";
 
 export interface ISoftwareSystem {
@@ -24,7 +23,7 @@ export const SoftwareSystem: FC<PropsWithChildren<{ value: ISoftwareSystem }>> =
     const { height = 200, width = 200 } = dimensions;
 
     return Children.count(children) > 0 ? (
-        <ZoomButtonGroup className={"structurizr__boundary-system"} position={dimensions} zoomOut>
+        <Box className={"structurizr__boundary-system"} position={dimensions}>
             <Boundary
                 value={value}
                 height={dimensions.height}
@@ -32,9 +31,9 @@ export const SoftwareSystem: FC<PropsWithChildren<{ value: ISoftwareSystem }>> =
             >
                 {children}
             </Boundary>
-        </ZoomButtonGroup>
+        </Box>
     ) : (
-        <ZoomButtonGroup className={"structurizr__element-system"} position={dimensions} zoomIn>
+        <Box className={"structurizr__element-system"} position={dimensions}>
             <Element
                 value={value}
                 height={dimensions.height}
@@ -48,6 +47,6 @@ export const SoftwareSystem: FC<PropsWithChildren<{ value: ISoftwareSystem }>> =
             <Connector height={height} width={width} placement={"bottom-left"} />
             <Connector height={height} width={width} placement={"bottom-center"} />
             <Connector height={height} width={width} placement={"bottom-right"} />
-        </ZoomButtonGroup>
+        </Box>
     );
 };

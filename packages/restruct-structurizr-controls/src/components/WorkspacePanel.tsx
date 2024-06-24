@@ -48,7 +48,7 @@ export const WorkspacePanel: FC<PropsWithChildren<{
 
     return (
         <Box
-            className={`workspace__panel-${placement}`}
+            className={`structurizr__panel panel__${placement}`}
             position={"absolute"}
             {...styles[placement]}
             zIndex={1000}

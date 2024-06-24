@@ -1,4 +1,3 @@
-import { Box } from "@chakra-ui/react";
 import {
     BreadcrumbsNavigation,
     ViewSwitcherToggle,
@@ -27,9 +26,11 @@ import {
     SystemLandscapeView,
     ThemeProvider,
     Themes,
-    useWorkspaceNavigation,
+    useViewNavigation,
+    useWorkspace,
     Viewport,
     ViewportProvider,
+    Workspace,
     WorkspaceProvider
 } from "@structurizr/react";
 import {
@@ -68,7 +69,7 @@ export const WorkspacePreview: FC = () => {
             deployments?: IViewMetadata[],
         }
     }>();
-    const { currentView, setCurrentView } = useWorkspaceNavigation();
+    const { currentView, setCurrentView } = useViewNavigation();
 
     const defaultThemeUrl = "https://static.structurizr.com/themes/default/theme.json";
 
@@ -113,19 +114,10 @@ export const WorkspacePreview: FC = () => {
     }, [currentView]);
 
     return (
-        <Box
-            id={"structurizr-page"}
-            position={"relative"}
-            margin={0}
-            padding={0}
-            backgroundColor={"gray.100"}
-            height={"100vh"}
-            width={"100vw"}
-            overflow={"hidden"}
-        >
-            <WorkspaceProvider workspace={workspace} setWorkspace={setWorkspace}>
-                <ThemeProvider>
-                    <ViewportProvider>
+        <WorkspaceProvider workspace={workspace} setWorkspace={setWorkspace}>
+            <ThemeProvider>
+                <ViewportProvider>
+                    <Workspace>
                         <Viewport>
                             {currentView?.type === ViewType.Model && (
                                 <ModelView>
@@ -203,36 +195,45 @@ export const WorkspacePreview: FC = () => {
                             <Zoom />
 
                         </Viewport>
-                    </ViewportProvider>
-                </ThemeProvider>
-            </WorkspaceProvider>
-        </Box>
+                    </Workspace>
+                </ViewportProvider>
+            </ThemeProvider>
+        </WorkspaceProvider>
     )
 }
 
 function Breadcrumbs() {
-    if (document.getElementById("structurizr-page") === null) return null;
+    const { workspaceDomNode } = useWorkspace();
+
+    if (!workspaceDomNode) return null;
+
     return createPortal((
         <WorkspacePanel placement={"top-left"}>
             <BreadcrumbsNavigation />
         </WorkspacePanel>
-    ), document.getElementById("structurizr-page") as HTMLElement);
+    ), workspaceDomNode);
 }
 
 function ViewSwitcher() {
-    if (document.getElementById("structurizr-page") === null) return null;
+    const { workspaceDomNode } = useWorkspace();
+
+    if (!workspaceDomNode) return null;
+
     return createPortal((
         <WorkspacePanel placement={"top-right"}>
             <ViewSwitcherToggle />
         </WorkspacePanel>
-    ), document.getElementById("structurizr-page") as HTMLElement);
+    ), workspaceDomNode);
 }
 
 function Zoom() {
-    if (document.getElementById("structurizr-page") === null) return null;
+    const { workspaceDomNode } = useWorkspace();
+
+    if (!workspaceDomNode) return null;
+
     return createPortal((
         <WorkspacePanel placement={"bottom-right"}>
             <ZoomToolbar />
         </WorkspacePanel>
-    ), document.getElementById("structurizr-page") as HTMLElement);
+    ), workspaceDomNode);
 }

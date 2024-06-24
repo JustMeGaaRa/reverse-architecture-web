@@ -1,13 +1,18 @@
 import {
+    ComponentViewStrategy,
+    ContainerViewStrategy,
     createDefaultSystemLandscapeView,
     createDefaultWorkspace,
+    IElement,
     IViewDefinitionMetadata,
     IWorkspaceSnapshot,
+    ModelViewStrategy,
+    SystemContextViewStrategy,
     SystemLandscapeViewStrategy,
     ViewType
 } from "@structurizr/dsl";
 import { parseWorkspace } from "@structurizr/parser";
-import { GraphBuilder, GraphElementVisitor, GraphvizLayoutStrategy } from "@structurizr/graphviz-layout";
+import { GraphBuilder, GraphElementVisitor, GraphvizLayoutStrategy, Vertex } from "@structurizr/graphviz-layout";
 import {
     AutoLayout,
     ComponentView,
@@ -20,9 +25,11 @@ import {
     SystemLandscapeView,
     ThemeProvider,
     Themes,
-    useWorkspaceNavigation,
+    useWorkspace,
+    useViewNavigation,
     Viewport,
     ViewportProvider,
+    Workspace,
     WorkspaceProvider
 } from "@structurizr/react";
 import {
@@ -44,11 +51,10 @@ function transformMetadata(metadata?: IViewDefinitionMetadata): IViewMetadata {
     };
 }
 
-export function App() {
-    const { currentView, setCurrentView } = useWorkspaceNavigation();
-    const [ workspace, setWorkspace ] = useState<IWorkspaceSnapshot>(createDefaultWorkspace());
+const useViewMetadata = () => {
     const [ metadata, setMetadata ] = useState<{
         views: {
+            model: IViewMetadata,
             systemLandscape?: IViewMetadata,
             systemContexts?: IViewMetadata[],
             containers?: IViewMetadata[],
@@ -56,6 +62,22 @@ export function App() {
             deployments?: IViewMetadata[],
         }
     }>();
+
+    const setModelViewMetadata = useCallback((action: SetStateAction<IViewMetadata>) => {
+        setMetadata(metadata => {
+            if (!metadata?.views?.model) return metadata;
+
+            return ({
+                ...metadata,
+                views: {
+                    ...metadata.views,
+                    model: typeof action === "function"
+                        ? action(metadata.views.model)
+                        : action
+                }
+            });
+        });
+    }, []);
 
     const setSystemLandScapeViewMetadata = useCallback((action: SetStateAction<IViewMetadata>) => {
         setMetadata(metadata => {
@@ -88,6 +110,80 @@ export function App() {
             });
         });
     }, []);
+
+    const setContainerViewMetadata = useCallback((action: SetStateAction<Array<IViewMetadata>>) => {
+        setMetadata(metadata => {
+            if (!metadata?.views?.containers) return metadata;
+            
+            return ({
+                ...metadata,
+                views: {
+                    ...metadata.views,
+                    containers: typeof action === "function"
+                        ? action(metadata.views.containers)
+                        : action
+                }
+            });
+        });
+    }, []);
+
+    const setComponentViewMetadata = useCallback((action: SetStateAction<Array<IViewMetadata>>) => {
+        setMetadata(metadata => {
+            if (!metadata?.views?.components) return metadata;
+            
+            return ({
+                ...metadata,
+                views: {
+                    ...metadata.views,
+                    containers: typeof action === "function"
+                        ? action(metadata.views.components)
+                        : action
+                }
+            });
+        });
+    }, []);
+
+    const setDeploymentViewMetadata = useCallback((action: SetStateAction<Array<IViewMetadata>>) => {
+        setMetadata(metadata => {
+            if (!metadata?.views?.deployments) return metadata;
+            
+            return ({
+                ...metadata,
+                views: {
+                    ...metadata.views,
+                    containers: typeof action === "function"
+                        ? action(metadata.views.deployments)
+                        : action
+                }
+            });
+        });
+    }, []);
+
+    return {
+        metadata,
+        setMetadata,
+        setModelViewMetadata,
+        setSystemLandScapeViewMetadata,
+        setSystemContextViewMetadata,
+        setContainerViewMetadata,
+        setComponentViewMetadata,
+        setDeploymentViewMetadata
+    }
+}
+
+export function App() {
+    const { currentView, setCurrentView } = useViewNavigation();
+    const [ workspace, setWorkspace ] = useState<IWorkspaceSnapshot>(createDefaultWorkspace());
+    const {
+        metadata,
+        setMetadata,
+        setModelViewMetadata,
+        setSystemLandScapeViewMetadata,
+        setSystemContextViewMetadata,
+        setContainerViewMetadata,
+        setComponentViewMetadata,
+        setDeploymentViewMetadata
+    } = useViewMetadata();
 
     useEffect(() => {
         const fetchWorkspace = async () => {
@@ -127,6 +223,7 @@ export function App() {
             .then(metadata => {
                 setMetadata({
                     views: {
+                        model: transformMetadata(metadata?.views?.model),
                         systemLandscape: transformMetadata(metadata?.views?.systemLandscape),
                         systemContexts: metadata?.views?.systemContexts.map(transformMetadata),
                         containers: metadata?.views?.containers.map(transformMetadata),
@@ -138,57 +235,130 @@ export function App() {
             .catch(error => {
                 console.debug(error);
             });
-    }, [setCurrentView]);
+    }, [setCurrentView, setMetadata]);
+
+    const { zoomIntoElement, zoomOutOfElement } = useViewNavigation();
+
+    const handleOnZoomInClick = useCallback((event: React.MouseEvent<HTMLButtonElement>, element: IElement) => {
+        zoomIntoElement(workspace, element);
+    }, [workspace, zoomIntoElement]);
+
+    const handleOnZoomOutClick = useCallback((event: React.MouseEvent<HTMLButtonElement>, element: IElement) => {
+        zoomOutOfElement(workspace, element);
+    }, [workspace, zoomOutOfElement]);
 
     useEffect(() => {
-        if (workspace.views.systemLandscape) {
-            const viewStrategy = new SystemLandscapeViewStrategy(workspace.model, workspace.views.systemLandscape);
-            const reactFlowBuilder = new GraphBuilder();
-            const reactFlowVisitor = new GraphElementVisitor(reactFlowBuilder);
-            viewStrategy?.accept(reactFlowVisitor);
-            const reactFlowObject = reactFlowBuilder.build();
-            
-            const layoutStrategy = new GraphvizLayoutStrategy();
-            layoutStrategy
-                .execute(reactFlowObject)
-                .then(reactFlowAuto => {
-                    setSystemLandScapeViewMetadata(metadata => ({
-                        ...metadata,
-                        elements: reactFlowAuto.nodes.reduce((elements, node) => ({
-                            ...elements,
-                            [node.id]: {
-                                x: node.x,
-                                y: node.y,
-                                height: node.height,
-                                width: node.width,
-                            }
-                        }), {}),
-                    }))
-                })
+        const reactFlowBuilder = new GraphBuilder();
+        const reactFlowVisitor = new GraphElementVisitor(reactFlowBuilder);
+        const layoutStrategy = new GraphvizLayoutStrategy();
+
+        const reduceNodes = (nodes: Vertex[]) => {
+            return nodes.reduce((elements, node) => ({
+                ...elements,
+                [node.id]: {
+                    x: node.x,
+                    y: node.y,
+                    height: node.height,
+                    width: node.width,
+                }
+            }), {});
         }
-    }, [workspace, setSystemLandScapeViewMetadata]);
+
+        switch (currentView?.type) {
+            case ViewType.Model:
+                const viewStrategy = new ModelViewStrategy(workspace);
+                viewStrategy?.accept(reactFlowVisitor);
+                layoutStrategy
+                    .execute(reactFlowBuilder.build())
+                    .then(reactFlowAuto => {
+                        console.log(reactFlowAuto)
+                        setModelViewMetadata(metadata => ({
+                            ...metadata,
+                            elements: reduceNodes(reactFlowAuto.nodes),
+                        }));
+                    });
+                break;
+            case ViewType.SystemLandscape:
+                if (workspace.views.systemLandscape) {
+                    const viewStrategy = new SystemLandscapeViewStrategy(workspace.model, workspace.views.systemLandscape);
+                    viewStrategy?.accept(reactFlowVisitor);
+                    layoutStrategy
+                        .execute(reactFlowBuilder.build())
+                        .then(reactFlowAuto => {
+                            setSystemLandScapeViewMetadata(metadata => ({
+                                ...metadata,
+                                elements: reduceNodes(reactFlowAuto.nodes),
+                            }))
+                        });
+                }
+                break;
+            case ViewType.SystemContext:
+                const systemContext = workspace.views.systemContexts.find(x => x.key === currentView.key);
+                if (systemContext) {
+                    const viewStrategy = new SystemContextViewStrategy(workspace.model, systemContext);
+                    viewStrategy?.accept(reactFlowVisitor);
+                    layoutStrategy
+                        .execute(reactFlowBuilder.build())
+                        .then(reactFlowAuto => {
+                            setSystemContextViewMetadata(metadata => {
+                                return metadata.map(view => view.key === systemContext.key
+                                    ? { ...view, elements: reduceNodes(reactFlowAuto.nodes) }
+                                    : view
+                                );
+                            });
+                        });
+                }
+                break;
+            case ViewType.Container:
+                const container = workspace.views.containers.find(x => x.key === currentView.key);
+                if (container) {
+                    const viewStrategy = new ContainerViewStrategy(workspace.model, container);
+                    viewStrategy?.accept(reactFlowVisitor);
+                    layoutStrategy
+                        .execute(reactFlowBuilder.build())
+                        .then(reactFlowAuto => {
+                            setContainerViewMetadata(metadata => {
+                                return metadata.map(view => view.key === container.key
+                                    ? { ...view, elements: reduceNodes(reactFlowAuto.nodes) }
+                                    : view
+                                );
+                            });
+                        });
+                }
+                break;
+            case ViewType.Component:
+                const component = workspace.views.components.find(x => x.key === currentView.key);
+                if (component) {
+                    const viewStrategy = new ComponentViewStrategy(workspace.model, component);
+                    viewStrategy?.accept(reactFlowVisitor);
+                    layoutStrategy
+                        .execute(reactFlowBuilder.build())
+                        .then(reactFlowAuto => {
+                            setComponentViewMetadata(metadata => {
+                                return metadata.map(view => view.key === component.key
+                                    ? { ...view, elements: reduceNodes(reactFlowAuto.nodes) }
+                                    : view
+                                );
+                            });
+                        });
+                }
+                break;
+        }
+    }, [workspace, currentView, setSystemLandScapeViewMetadata, setContainerViewMetadata, setComponentViewMetadata, setModelViewMetadata, setSystemContextViewMetadata]);
 
     const defaultThemeUrl = "https://static.structurizr.com/themes/default/theme.json";
     const awsThemeUrl = "https://static.structurizr.com/themes/amazon-web-services-2023.01.31/theme.json";
 
     return (
-        <div
-            id={"structurizr-page"}
-            style={{
-                position: "relative",
-                margin: "0px",
-                padding: "0px",
-                height: "100vh",
-                width: "100vw",
-                overflow: "hidden",
-            }}
-        >
-            <WorkspaceProvider workspace={workspace} setWorkspace={setWorkspace}>
-                <ThemeProvider>
-                    <ViewportProvider>
+        <WorkspaceProvider workspace={workspace} setWorkspace={setWorkspace}>
+            <ThemeProvider>
+                <ViewportProvider>
+                    <Workspace>
                         <Viewport>
                             {currentView?.type === ViewType.Model && (
-                                <ModelView>
+                                <ModelView
+                                    metadata={metadata?.views?.model}
+                                >
                                     <AutoLayout value={{}} />
                                 </ModelView>
                             )}
@@ -197,6 +367,8 @@ export function App() {
                                 <SystemLandscapeView
                                     value={{ key: currentView?.key }}  
                                     metadata={metadata?.views?.systemLandscape}
+                                    onZoomInClick={handleOnZoomInClick}
+                                    onZoomOutClick={handleOnZoomOutClick}
                                 >
                                     <AutoLayout value={{}} />
                                 </SystemLandscapeView>
@@ -210,6 +382,8 @@ export function App() {
                                         softwareSystemIdentifier: currentView.softwareSystemIdentifier,
                                     }}
                                     metadata={metadata?.views?.systemContexts?.find(x => x.key === currentView.key)}
+                                    onZoomInClick={handleOnZoomInClick}
+                                    onZoomOutClick={handleOnZoomOutClick}
                                 >
                                     <AutoLayout value={{}} />
                                 </SystemContextView>
@@ -223,6 +397,8 @@ export function App() {
                                         softwareSystemIdentifier: currentView.softwareSystemIdentifier,
                                     }}
                                     metadata={metadata?.views?.containers?.find(x => x.key === currentView.key)}
+                                    onZoomInClick={handleOnZoomInClick}
+                                    onZoomOutClick={handleOnZoomOutClick}
                                 >
                                     <AutoLayout value={{}} />
                                 </ContainerView>
@@ -236,6 +412,8 @@ export function App() {
                                         containerIdentifier: currentView.containerIdentifier,
                                     }}
                                     metadata={metadata?.views?.components?.find(x => x.key === currentView.key)}
+                                    onZoomInClick={handleOnZoomInClick}
+                                    onZoomOutClick={handleOnZoomOutClick}
                                 >
                                     <AutoLayout value={{}} />
                                 </ComponentView>
@@ -250,49 +428,60 @@ export function App() {
                                         environment: currentView.environment,
                                     }}
                                     metadata={metadata?.views?.deployments?.find(x => x.key === currentView.key)}
+                                    onZoomInClick={handleOnZoomInClick}
+                                    onZoomOutClick={handleOnZoomOutClick}
                                 >
                                     <AutoLayout value={{}} />
                                 </DeploymentView>
                             )}
 
                             <Styles value={{ elements: [], relationships: [] }} />
-                            {/* <Themes urls={[defaultThemeUrl, awsThemeUrl]} /> */}
+                            <Themes urls={[defaultThemeUrl, awsThemeUrl]} />
                     
                             <Breadcrumbs />
                             <ViewSwitcher />
                             <Zoom />
 
                         </Viewport>
-                    </ViewportProvider>
-                </ThemeProvider>
-            </WorkspaceProvider>
-        </div>
+                    </Workspace>
+                </ViewportProvider>
+            </ThemeProvider>
+        </WorkspaceProvider>
     );
 }
 
 function Breadcrumbs() {
-    if (document.getElementById("structurizr-page") === null) return null;
+    const { workspaceDomNode } = useWorkspace();
+
+    if (!workspaceDomNode) return null;
+
     return createPortal((
         <WorkspacePanel placement={"top-left"}>
             <BreadcrumbsNavigation />
         </WorkspacePanel>
-    ), document.getElementById("structurizr-page") as HTMLElement);
+    ), workspaceDomNode);
 }
 
 function ViewSwitcher() {
-    if (document.getElementById("structurizr-page") === null) return null;
+    const { workspaceDomNode } = useWorkspace();
+
+    if (!workspaceDomNode) return null;
+
     return createPortal((
         <WorkspacePanel placement={"top-right"}>
             <ViewSwitcherToggle />
         </WorkspacePanel>
-    ), document.getElementById("structurizr-page") as HTMLElement);
+    ), workspaceDomNode);
 }
 
 function Zoom() {
-    if (document.getElementById("structurizr-page") === null) return null;
+    const { workspaceDomNode } = useWorkspace();
+
+    if (!workspaceDomNode) return null;
+
     return createPortal((
         <WorkspacePanel placement={"bottom-right"}>
             <ZoomToolbar />
         </WorkspacePanel>
-    ), document.getElementById("structurizr-page") as HTMLElement);
+    ), workspaceDomNode);
 }

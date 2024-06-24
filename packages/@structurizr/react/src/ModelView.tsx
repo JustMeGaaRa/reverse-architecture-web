@@ -1,10 +1,15 @@
 import { ModelViewStrategy } from "@structurizr/dsl";
 import { FC, PropsWithChildren, useEffect, useState } from "react";
-import { ViewMetadataProvider } from "./components";
+import { IViewMetadata, ViewMetadataProvider } from "./components";
 import { ModelElementJsxVisitor } from "./types";
 import { useWorkspace } from "./Workspace";
 
-export const ModelView: FC<PropsWithChildren> = ({ children }) => {
+export const ModelView: FC<PropsWithChildren<{
+    metadata?: IViewMetadata;
+}>> = ({
+    children,
+    metadata
+}) => {
     const { workspace } = useWorkspace();
     const [ elements, setElements ] = useState<JSX.Element[]>([]);
 
@@ -18,7 +23,7 @@ export const ModelView: FC<PropsWithChildren> = ({ children }) => {
     }, [workspace]);
     
     return (
-        <ViewMetadataProvider>
+        <ViewMetadataProvider metadata={metadata}>
             {elements}
             {children}
         </ViewMetadataProvider>

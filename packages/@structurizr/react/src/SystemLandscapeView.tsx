@@ -1,5 +1,5 @@
-import { createDefaultSystemLandscapeView, SystemLandscapeViewStrategy } from "@structurizr/dsl";
-import { FC, PropsWithChildren, SetStateAction, useEffect, useState } from "react";
+import { createDefaultSystemLandscapeView, IElement, SystemLandscapeViewStrategy } from "@structurizr/dsl";
+import { FC, PropsWithChildren, useEffect, useState } from "react";
 import { IViewMetadata, ViewMetadataProvider } from "./components";
 import { ViewElementJsxVisitor } from "./types";
 import { useWorkspace } from "./Workspace";
@@ -7,12 +7,14 @@ import { useWorkspace } from "./Workspace";
 export const SystemLandscapeView: FC<PropsWithChildren<{
     value?: { key?: string };
     metadata?: IViewMetadata;
-    setMetadata?: React.Dispatch<SetStateAction<IViewMetadata>>;
+    onZoomInClick?: (event: React.MouseEvent<HTMLButtonElement>, element: IElement) => void;
+    onZoomOutClick?: (event: React.MouseEvent<HTMLButtonElement>, element: IElement) => void;
 }>> = ({
     children,
     value,
     metadata,
-    setMetadata = () => { console.debug("setMetadata not implemented"); },
+    onZoomInClick,
+    onZoomOutClick,
 }) => {
     const { workspace } = useWorkspace();
     const [ elements, setElements ] = useState<JSX.Element[]>([]);
@@ -21,16 +23,15 @@ export const SystemLandscapeView: FC<PropsWithChildren<{
         if (workspace) {
             const systemLandscapeView = workspace.views.systemLandscape
                 ?? createDefaultSystemLandscapeView();
-            const visitor = new ViewElementJsxVisitor();
+            const visitor = new ViewElementJsxVisitor(onZoomInClick, onZoomOutClick);
             const strategy = new SystemLandscapeViewStrategy(workspace.model, systemLandscapeView);
             const elements = strategy.accept(visitor);
             setElements(elements);
         }
-    }, [workspace]);
+    }, [workspace, onZoomInClick, onZoomOutClick]);
 
     return (
-        <ViewMetadataProvider metadata={metadata} setMetadata={setMetadata}>
-            {/* TODO: figure out how to combine algorithm and event handlers */}
+        <ViewMetadataProvider metadata={metadata}>
             {elements}
             {children}
         </ViewMetadataProvider>

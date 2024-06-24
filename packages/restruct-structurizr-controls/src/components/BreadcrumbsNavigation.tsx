@@ -1,12 +1,12 @@
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, Icon, Text } from "@chakra-ui/react";
 import { Categories } from "@restruct/icons";
 import { findElement, findElementPath, IElement, ViewType } from "@structurizr/dsl";
-import { useWorkspace, useWorkspaceNavigation } from "@structurizr/react";
+import { useWorkspace, useViewNavigation } from "@structurizr/react";
 import { FC, useEffect, useState } from "react";
 
 export const BreadcrumbsNavigation: FC = () => {
     const { workspace } = useWorkspace();
-    const { currentView, zoomIntoElement } = useWorkspaceNavigation();
+    const { currentView, zoomIntoElement } = useViewNavigation();
     const [ links, setLinks ] = useState<Array<{ title: string, isCurrentPage: boolean, element: IElement }>>([]);
 
     useEffect(() => {

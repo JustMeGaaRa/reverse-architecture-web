@@ -6,7 +6,7 @@ export class ModelViewStrategy implements ISupportVisitor {
         private workspace: IWorkspaceSnapshot,
     ) {}
 
-    public static PlaceholderModelWorkspaceId = "model-workspace-default-node";
+    public static PlaceholderModelWorkspaceId = "workspace";
 
     accept<T>(visitor: IElementVisitor<T>): Array<T> {
         const visitedWorkspace = visitor.visitWorkspace(this.workspace);

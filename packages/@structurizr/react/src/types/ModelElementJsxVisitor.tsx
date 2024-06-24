@@ -19,10 +19,10 @@ export class ModelElementJsxVisitor implements IElementVisitor<JSX.Element> {
     visitWorkspace(workspace: IWorkspaceSnapshot, params?: { children?: JSX.Element[]; }): JSX.Element {
         return (
             <ModelElement
-                key={workspace.name}
+                key={"workspace"}
                 value={{
                     type: "Model",
-                    identifier: workspace.name,
+                    identifier: "workspace",
                     name: workspace.name
                 }}
             />

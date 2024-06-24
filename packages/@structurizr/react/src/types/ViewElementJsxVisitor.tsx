@@ -3,6 +3,7 @@ import {
     IContainer,
     IContainerInstance,
     IDeploymentNode,
+    IElement,
     IElementVisitor,
     IGroup,
     IInfrastructureNode,
@@ -12,9 +13,11 @@ import {
     ISoftwareSystemInstance,
     IWorkspaceSnapshot
 } from "@structurizr/dsl";
+import { Children } from "react";
 import { Component } from "../Component";
 import { Container } from "../Container";
 import { ContainerInstance } from "../ContainerInstance";
+import { ZoomButtonsHoverPanel } from "../containers";
 import { DeploymentNode } from "../DeploymentNode";
 import { Group } from "../Group";
 import { InfrastructureNode } from "../InfrastructureNode";
@@ -23,7 +26,14 @@ import { Relationship } from "../Relationship";
 import { SoftwareSystem } from "../SoftwareSystem";
 import { SoftwareSystemInstance } from "../SoftwareSystemInstance";
 
+type ZoomCallback = (event: React.MouseEvent<HTMLButtonElement>, element: IElement) => void;
+
 export class ViewElementJsxVisitor implements IElementVisitor<JSX.Element> {
+    constructor(
+        private readonly onZoomInClick?: ZoomCallback,
+        private readonly onZoomOutClick?: ZoomCallback
+    ) {}
+
     visitWorkspace(workspace: IWorkspaceSnapshot, params?: { children?: JSX.Element[]; }): JSX.Element {
         return (<>{params?.children}</>);
     }
@@ -56,34 +66,48 @@ export class ViewElementJsxVisitor implements IElementVisitor<JSX.Element> {
     }
     visitSoftwareSystem(softwareSystem: ISoftwareSystem, params?: { parentId?: string; children?: JSX.Element[]; }): JSX.Element {
         return (
-            <SoftwareSystem
+            <ZoomButtonsHoverPanel
                 key={softwareSystem.identifier}
-                value={{
-                    type: "Software System",
-                    identifier: softwareSystem.identifier,
-                    name: softwareSystem.name,
-                    description: softwareSystem.description,
-                    technology: softwareSystem.technology.map(x => x.name).join(", ")
-                }}
+                zoomIn={Children.count(params?.children) === 0}
+                zoomOut={Children.count(params?.children) > 0}
+                onZoomInClick={(event) => this.onZoomInClick?.(event, softwareSystem)}
+                onZoomOutClick={(event) => this.onZoomOutClick?.(event, softwareSystem)}
             >
-                {params?.children}
-            </SoftwareSystem>
+                <SoftwareSystem
+                    value={{
+                        type: "Software System",
+                        identifier: softwareSystem.identifier,
+                        name: softwareSystem.name,
+                        description: softwareSystem.description,
+                        technology: softwareSystem.technology.map(x => x.name).join(", ")
+                    }}
+                >
+                    {params?.children}
+                </SoftwareSystem>
+            </ZoomButtonsHoverPanel>
         );
     }
     visitContainer(container: IContainer, params?: { parentId?: string; children?: JSX.Element[]; }): JSX.Element {
         return (
-            <Container
+            <ZoomButtonsHoverPanel
                 key={container.identifier}
-                value={{
-                    type: "Container",
-                    identifier: container.identifier,
-                    name: container.name,
-                    description: container.description,
-                    technology: container.technology.map(x => x.name).join(", ")
-                }}
+                zoomIn={Children.count(params?.children) === 0}
+                zoomOut={Children.count(params?.children) > 0}
+                onZoomInClick={(event) => this.onZoomInClick?.(event, container)}
+                onZoomOutClick={(event) => this.onZoomOutClick?.(event, container)}
             >
-                {params?.children}
-            </Container>
+                <Container
+                    value={{
+                        type: "Container",
+                        identifier: container.identifier,
+                        name: container.name,
+                        description: container.description,
+                        technology: container.technology.map(x => x.name).join(", ")
+                    }}
+                >
+                    {params?.children}
+                </Container>
+            </ZoomButtonsHoverPanel>
         );
     }
     visitComponent(component: IComponent, params?: { parentId?: string; children?: JSX.Element[]; }): JSX.Element {
