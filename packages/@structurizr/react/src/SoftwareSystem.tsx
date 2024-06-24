@@ -22,6 +22,7 @@ export const SoftwareSystem: FC<PropsWithChildren<{ value: ISoftwareSystem }>> =
     // TODO: pass these default values to the Element component directly
     const { height = 200, width = 200 } = dimensions;
 
+    // TODO: unwrap boundary and element from the box and just pass the className and position 
     return Children.count(children) > 0 ? (
         <Box className={"structurizr__boundary-system"} position={dimensions}>
             <Boundary

@@ -17,21 +17,14 @@ export const Boundary: FC<PropsWithChildren<{
 }>> = ({
     children,
     value,
+    position,
+    height,
+    width,
     borderWidth = 2,
     padding = 16,
 }) => {
-    const { metadata } = useViewMetadata();
-    const dimensions = metadata?.elements[value.identifier] ?? {
-        x: 0,
-        y: 0,
-        height: 200,
-        width: 200,
-    };
-    // TODO: pass these default values to the Element component directly
-    const { height = 400, width = 400 } = dimensions;
-
     return (
-        <GroupNode position={dimensions}>
+        <GroupNode position={position} height={height} width={width}>
             <Text
                 x={borderWidth + padding}
                 y={height - borderWidth - padding - 16}

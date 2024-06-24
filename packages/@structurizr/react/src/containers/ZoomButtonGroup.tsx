@@ -44,7 +44,7 @@ export const ZoomButtonGroup: FC<{
                 <IconButton
                     aria-label={"zoom into element"}
                     color={"gray.100"}
-                    icon={<Icon as={ZoomPlus} color={"gray.100"} boxSize={4} />}
+                    icon={<ZoomPlus color={"gray.100"} boxSize={5} />}
                     title={"Zoom in"}
                     onClick={onZoomInClick}
                 />
@@ -53,7 +53,7 @@ export const ZoomButtonGroup: FC<{
                 <IconButton
                     aria-label={"zoom out from element"}
                     color={"gray.100"}
-                    icon={<Icon as={ZoomMinus} color={"gray.100"} boxSize={4} />}
+                    icon={<ZoomMinus color={"gray.100"} boxSize={5} />}
                     title={"Zoom out"}
                     onClick={onZoomOutClick}
                 />
