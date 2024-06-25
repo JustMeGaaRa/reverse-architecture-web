@@ -1,9 +1,11 @@
 import { FC, PropsWithChildren } from "react";
+import { cssCompose } from "../utils";
 import { Box } from "./Box";
 
 export const GroupNode: FC<PropsWithChildren<{
-    position?: { x: number; y: number };
     id?: string;
+    className?: string;
+    position?: { x: number; y: number };
     height?: number;
     width?: number;
     backgroundColor?: string;
@@ -14,6 +16,7 @@ export const GroupNode: FC<PropsWithChildren<{
 }>> = ({
     children,
     id,
+    className,
     position = { x: 0, y: 0 },
     height = 400,
     width = 400,
@@ -24,7 +27,11 @@ export const GroupNode: FC<PropsWithChildren<{
     borderRadius = 32,
 }) => {
     return (
-        <Box id={id} className={"structurizr__group-node"} position={position}>
+        <Box
+            id={id}
+            className={cssCompose("structurizr__group-node", className)}
+            position={position}
+        >
             <rect
                 cursor={"pointer"}
                 height={height}

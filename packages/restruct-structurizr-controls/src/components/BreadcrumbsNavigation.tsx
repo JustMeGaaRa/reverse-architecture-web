@@ -39,7 +39,7 @@ export const BreadcrumbsNavigation: FC = () => {
         }
     }, [currentView, workspace]);
     
-    return (
+    return currentView?.type !== ViewType.Deployment && currentView?.type !== ViewType.Model && (
         <Breadcrumb separator={"/"}>
             {links.map(link => (
                 <BreadcrumbItem
@@ -53,10 +53,9 @@ export const BreadcrumbsNavigation: FC = () => {
                         marginX={1}
                         alignItems={"center"}
                         justifyContent={"center"}
-                        title={link.title}
                         onClick={() => zoomIntoElement(workspace, link.element)}
                     >
-                        <Icon as={Categories} boxSize={4} />
+                        <Categories boxSize={5} />
                         <Text noOfLines={1}>{link.title}</Text>
                     </BreadcrumbLink>
                 </BreadcrumbItem>

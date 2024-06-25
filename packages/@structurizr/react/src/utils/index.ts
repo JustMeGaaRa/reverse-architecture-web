@@ -2,6 +2,10 @@ import { Viewbox } from "../components";
 
 const defaultDimensions = { x: 0, y: 0, height: 200, width: 200 };
 
+export function cssCompose(...classNames: string[]) {
+    return classNames.filter(x => x !== null && x != undefined).join(" ").trim();
+}
+
 export function getSvgElementById(identifier: string) {
     const htmlElement = document.getElementById(identifier) as HTMLElement;
     const svgElement = htmlElement instanceof SVGGraphicsElement ? htmlElement : null;

@@ -32,8 +32,7 @@ export const ViewSwitcherToggle: FC = () => {
                     aria-label={"diagramming"}
                     colorScheme={"lime"}
                     isActive={mode === "diagramming"}
-                    icon={<NodesDistributed />}
-                    title={"diagramming"}
+                    icon={<NodesDistributed boxSize={5} />}
                     onClick={handleOnClickDiagrammingMode}
                 />
             </Tooltip>
@@ -42,8 +41,7 @@ export const ViewSwitcherToggle: FC = () => {
                     aria-label={"modeling"}
                     colorScheme={"lime"}
                     isActive={mode === "modeling"}
-                    icon={<FlowChart />}
-                    title={"modeling"}
+                    icon={<FlowChart boxSize={5} />}
                     onClick={handleOnClickModelingMode}
                 />
             </Tooltip>
@@ -52,8 +50,7 @@ export const ViewSwitcherToggle: FC = () => {
                     aria-label={"deployment"}
                     colorScheme={"lime"}
                     isActive={mode === "deployment"}
-                    icon={<ArrowsSplitDown />}
-                    title={"deployment"}
+                    icon={<ArrowsSplitDown boxSize={5} />}
                     onClick={handleOnClickDeploymentMode}
                 />
             </Tooltip>

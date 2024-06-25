@@ -1,8 +1,10 @@
 import { memo } from "react"
 
-export const PaperPlus = ({ color }) => {
+export const PaperPlus = (props: IconProps) => {
+    const { boxSize, color, height, width } = props;
+
     return (
-        <svg width="24px"  height="24px"  viewBox="0 0 24 24"  fill="none" color={`${color ?? "currentColor"}`}  version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+        <svg width={width ?? boxSize * 4} height={height ?? boxSize * 4} viewBox="0 0 24 24"  fill="none" color={`${color ?? "currentColor"}`}  version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
             <title>Iconly/Light/Paper Plus</title>
             <g id="Iconly/Light/Paper-Plus" stroke="currentColor"  strokeWidth="1.5"  fill="none" color="currentColor" fillRule="evenodd" strokeLinecap="round" strokeLinejoin="round">
                 <g id="Paper-Plus" transform="translate(3.500000, 2.000000)" stroke="currentColor"  strokeWidth="1.5" >
@@ -16,35 +18,43 @@ export const PaperPlus = ({ color }) => {
     )
 }
 
-export const UpLine = ({ color }) => {
+export const UpLine = (props: IconProps) => {
+    const { boxSize, color, height, width } = props;
+
     return (
-        <svg width="24px"  height="24px"  viewBox="0 0 24 24"  fill="none" color={`${color ?? "currentColor"}`} xmlns="http://www.w3.org/2000/svg">
+        <svg width={width ?? boxSize * 4} height={height ?? boxSize * 4} viewBox="0 0 24 24"  fill="none" color={`${color ?? "currentColor"}`} xmlns="http://www.w3.org/2000/svg">
             <path d="M12.0008 8.47754V18.9999M7.66406 12.8315L12.004 8.47754L16.3394 12.8315" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M17.2634 5H6.73828" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
     )
 }
 
-export const Plus = ({ color }) => {
+export const Plus = (props: IconProps) => {
+    const { boxSize, color, height, width } = props;
+
     return (
-        <svg width="24px"  height="24px"  viewBox="0 0 24 24"  fill="none" color={`${color ?? "currentColor"}`} xmlns="http://www.w3.org/2000/svg">
+        <svg width={width ?? boxSize * 4} height={height ?? boxSize * 4} viewBox="0 0 24 24"  fill="none" color={`${color ?? "currentColor"}`} xmlns="http://www.w3.org/2000/svg">
             <path d="M6 12H18" stroke="currentColor"  strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M12 6V18" stroke="currentColor"  strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
     )
 }
 
-export const Minus = ({ color }) => {
+export const Minus = (props: IconProps) => {
+    const { boxSize, color, height, width } = props;
+
     return (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" color={`${color ?? "currentColor"}`} xmlns="http://www.w3.org/2000/svg">
+        <svg width={width ?? boxSize * 4} height={height ?? boxSize * 4} viewBox="0 0 24 24" fill="none" color={`${color ?? "currentColor"}`} xmlns="http://www.w3.org/2000/svg">
             <path d="M6 12H18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
     )
 }
 
-export const AddUser = ({ color }) => {
+export const AddUser = (props: IconProps) => {
+    const { boxSize, color, height, width } = props;
+
     return (
-        <svg width="24px"  height="24px"  viewBox="0 0 24 24"  fill="none" color={`${color ?? "currentColor"}`} xmlns="http://www.w3.org/2000/svg">
+        <svg width={width ?? boxSize * 4} height={height ?? boxSize * 4} viewBox="0 0 24 24"  fill="none" color={`${color ?? "currentColor"}`} xmlns="http://www.w3.org/2000/svg">
             <path d="M19.0782 8.80469V13.3674M21.4 11.0864H16.7578" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M3.40039 19.9996C3.40039 17.891 5.06403 15.2656 9.85917 15.2656C14.6534 15.2656 16.317 17.8719 16.317 19.9815" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round"/>
             <path fillRule="evenodd" clipRule="evenodd" d="M13.9848 8.12567C13.9848 10.4043 12.1378 12.2513 9.85909 12.2513C7.58138 12.2513 5.73438 10.4043 5.73438 8.12567C5.73438 5.847 7.58138 4 9.85909 4C12.1378 4 13.9848 5.847 13.9848 8.12567Z" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round"/>
@@ -52,18 +62,22 @@ export const AddUser = ({ color }) => {
     )
 }
 
-export const Close = ({ color }) => {
+export const Close = (props: IconProps) => {
+    const { boxSize, color, height, width } = props;
+
     return (
-        <svg width="24px"  height="24px"  viewBox="0 0 24 24"  fill="none" color={`${color ?? "currentColor"}`}  xmlns="http://www.w3.org/2000/svg">
+        <svg width={width ?? boxSize * 4} height={height ?? boxSize * 4} viewBox="0 0 24 24"  fill="none" color={`${color ?? "currentColor"}`}  xmlns="http://www.w3.org/2000/svg">
             <path d="M6 6L18 18" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M18 6L6 18" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
     )
 }
 
-export const ArrowRight = ({ color }) => {
+export const ArrowRight = (props: IconProps) => {
+    const { boxSize, color, height, width } = props;
+
     return (
-        <svg width="24px"  height="24px"  viewBox="0 0 24 24"  fill="none" color={`${color ?? "currentColor"}`}  version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+        <svg width={width ?? boxSize * 4} height={height ?? boxSize * 4} viewBox="0 0 24 24"  fill="none" color={`${color ?? "currentColor"}`}  version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
             <title>Iconly/Light/Arrow - Right 2</title>
             <g id="Iconly/Light/Arrow---Right-2" stroke="currentColor"  strokeWidth="1.5"  fill="none" color="currentColor" fillRule="evenodd" strokeLinecap="round" strokeLinejoin="round">
                 <g id="Arrow---Right-2" transform="translate(12.000000, 12.000000) rotate(-90.000000) translate(-12.000000, -12.000000) translate(5.000000, 8.500000)" stroke="currentColor"  strokeWidth="1.5" >
@@ -74,9 +88,11 @@ export const ArrowRight = ({ color }) => {
     )
 }
 
-export const ArrowLeft = ({ color }) => {
+export const ArrowLeft = (props: IconProps) => {
+    const { boxSize, color, height, width } = props;
+
     return (
-        <svg width="24px"  height="24px"  viewBox="0 0 24 24"  fill="none" color={`${color ?? "currentColor"}`}  version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+        <svg width={width ?? boxSize * 4} height={height ?? boxSize * 4} viewBox="0 0 24 24"  fill="none" color={`${color ?? "currentColor"}`}  version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
             <title>Iconly/Light/Arrow - Left 2</title>
             <g id="Iconly/Light/Arrow---Left-2" stroke="currentColor"  strokeWidth="1.5"  fill="none" color="currentColor" fillRule="evenodd" strokeLinecap="round" strokeLinejoin="round">
                 <g id="Arrow---Left-2" transform="translate(12.000000, 12.000000) rotate(-270.000000) translate(-12.000000, -12.000000) translate(5.000000, 8.500000)" stroke="currentColor"  strokeWidth="1.5" >
@@ -87,9 +103,11 @@ export const ArrowLeft = ({ color }) => {
     )
 }
 
-export const ArrowUp = ({ color }) => {
+export const ArrowUp = (props: IconProps) => {
+    const { boxSize, color, height, width } = props;
+
     return (
-        <svg width="24px"  height="24px"  viewBox="0 0 24 24"  fill="none" color={`${color ?? "currentColor"}`}  version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+        <svg width={width ?? boxSize * 4} height={height ?? boxSize * 4} viewBox="0 0 24 24"  fill="none" color={`${color ?? "currentColor"}`}  version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
             <title>Iconly/Light/Arrow - Up 2</title>
             <g id="Iconly/Light/Arrow---Up-2" stroke="currentColor"  strokeWidth="1.5"  fill="none" color="currentColor" fillRule="evenodd" strokeLinecap="round" strokeLinejoin="round">
                 <g id="Arrow---Up-2" transform="translate(12.000000, 12.000000) rotate(-180.000000) translate(-12.000000, -12.000000) translate(5.000000, 8.500000)" stroke="currentColor"  strokeWidth="1.5" >
@@ -100,9 +118,11 @@ export const ArrowUp = ({ color }) => {
     )
 }
 
-export const ArrowDown = ({ color }) => {
+export const ArrowDown = (props: IconProps) => {
+    const { boxSize, color, height, width } = props;
+
     return (
-        <svg width="24px"  height="24px"  viewBox="0 0 24 24"  fill="none" color={`${color ?? "currentColor"}`}  version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+        <svg width={width ?? boxSize * 4} height={height ?? boxSize * 4} viewBox="0 0 24 24"  fill="none" color={`${color ?? "currentColor"}`}  version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
             <title>Iconly/Light/Arrow - Down 2</title>
             <g id="Iconly/Light/Arrow---Down-2" stroke="currentColor"  strokeWidth="1.5"  fill="none" color="currentColor" fillRule="evenodd" strokeLinecap="round" strokeLinejoin="round">
                 <g id="Arrow---Down-2" transform="translate(5.000000, 8.500000)" stroke="currentColor"  strokeWidth="1.5" >
@@ -113,36 +133,44 @@ export const ArrowDown = ({ color }) => {
     )
 }
 
-export const DoubleArrowLeft = ({ color }) => {
+export const DoubleArrowLeft = memo(function DoubleArrowLeft(props: IconProps) {
+    const { boxSize, color, height, width } = props;
+
     return (
-        <svg width="24px"  height="24px"  viewBox="0 0 24 24"  fill="none" color={`${color ?? "currentColor"}`} xmlns="http://www.w3.org/2000/svg">
+        <svg width={width ?? boxSize * 4} height={height ?? boxSize * 4} viewBox="0 0 24 24"  fill="none" color={`${color ?? "currentColor"}`} xmlns="http://www.w3.org/2000/svg">
             <path d="M11 7.63672L6.00028 12.0004L11 16.364" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round"/>
             <path fillRule="evenodd" clipRule="evenodd" d="M18 7.63672L13.0003 12.0004L18 16.364" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
     )
-}
+})
 
-export const DoubleArrowRight = ({ color }) => {
+export const DoubleArrowRight = memo(function DoubleArrowRight(props: IconProps) {
+    const { boxSize, color, height, width } = props;
+
     return (
-        <svg width="24px"  height="24px"  viewBox="0 0 24 24"  fill="none" color={`${color ?? "currentColor"}`} xmlns="http://www.w3.org/2000/svg">
+        <svg width={width ?? boxSize * 4} height={height ?? boxSize * 4} viewBox="0 0 24 24"  fill="none" color={`${color ?? "currentColor"}`} xmlns="http://www.w3.org/2000/svg">
             <path d="M13 7.63672L17.9997 12.0004L13 16.364" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round"/>
             <path fillRule="evenodd" clipRule="evenodd" d="M6 7.63672L10.9997 12.0004L6 16.364" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
     )
-}
+})
 
-export const Home = ({ color }) => {
+export const Home = (props: IconProps) => {
+    const { boxSize, color, height, width } = props;
+
     return (
-        <svg width="24px"  height="24px"  viewBox="0 0 24 24"  fill="none" color={`${color ?? "currentColor"}`} xmlns="http://www.w3.org/2000/svg">
+        <svg width={width ?? boxSize * 4} height={height ?? boxSize * 4} viewBox="0 0 24 24"  fill="none" color={`${color ?? "currentColor"}`} xmlns="http://www.w3.org/2000/svg">
             <path d="M6.78462 21H17.2159C19.0509 21 20.5376 19.5123 20.5376 17.6783V10.5045C20.5376 9.6133 20.1367 8.76973 19.4459 8.20638L13.8718 3.66551C12.782 2.77816 11.2185 2.77816 10.1287 3.66551L4.55457 8.20638C3.86376 8.76973 3.46289 9.6133 3.46289 10.5045V17.6783C3.46289 19.5123 4.94959 21 6.78462 21Z" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M9.36523 15.834H14.6378" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
     )
 }
 
-export const DocumentCopy = ({ color }) => {
+export const DocumentCopy = (props: IconProps) => {
+    const { boxSize, color, height, width } = props;
+
     return (
-        <svg width="24px"  height="24px"  viewBox="0 0 24 24"  fill="none" color={`${color ?? "currentColor"}`} xmlns="http://www.w3.org/2000/svg">
+        <svg width={width ?? boxSize * 4} height={height ?? boxSize * 4} viewBox="0 0 24 24"  fill="none" color={`${color ?? "currentColor"}`} xmlns="http://www.w3.org/2000/svg">
             <path d="M11.3548 7.06253C11.7868 7.06253 12.2003 7.23864 12.5 7.54999L15.4354 10.6081C15.7196 10.9039 15.8782 11.2979 15.8782 11.7075V18.03C15.8889 19.6208 14.6366 20.9353 13.0458 20.9995C13.0458 20.9995 6.93255 20.9995 6.9092 20.9986C5.30475 20.9635 4.03208 19.6344 4.06711 18.03V9.89391C4.10506 8.31476 5.39913 7.05572 6.97925 7.06253H11.3548Z" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M15.8758 16.9371H17.1056C18.6955 16.8767 19.9555 15.5574 19.9351 13.9675V7.64897C19.9351 7.23934 19.7852 6.83945 19.4953 6.5495L16.5656 3.48947C16.266 3.18006 15.8456 3.00006 15.4156 3.00006H11.0371C9.45702 2.99033 8.16782 4.24937 8.12695 5.82852V7.05934" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M15.2109 3.04688V5.6029C15.2109 6.85124 16.2199 7.86314 17.4673 7.86606H19.889" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round"/>
@@ -151,9 +179,11 @@ export const DocumentCopy = ({ color }) => {
     )
 }
 
-export const Document3Lines = ({ color }) => {
+export const Document3Lines = (props: IconProps) => {
+    const { boxSize, color, height, width } = props;
+
     return (
-        <svg width="24px"  height="24px"  viewBox="0 0 24 24"  fill="none" color={`${color ?? "currentColor"}`} xmlns="http://www.w3.org/2000/svg">
+        <svg width={width ?? boxSize * 4} height={height ?? boxSize * 4} viewBox="0 0 24 24"  fill="none" color={`${color ?? "currentColor"}`} xmlns="http://www.w3.org/2000/svg">
             <path d="M8.04403 20.999C5.9716 20.9533 4.32825 19.236 4.37398 17.1636V6.65646C4.42263 4.61711 6.09419 2.99128 8.13451 3.00004H13.7855C14.344 3.00004 14.8782 3.22674 15.2644 3.62955L19.0561 7.57884C19.4219 7.96121 19.6272 8.47008 19.6272 8.9984V17.1636C19.6409 19.2185 18.0238 20.9163 15.9698 21M8.04403 20.999C8.07419 20.999 8.10435 21 8.13451 21H15.9698M8.04403 20.999C8.07419 20.999 15.9698 21 15.9698 21" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M14.2695 3.0625V5.95514C14.2686 7.36692 15.4118 8.51211 16.8236 8.51503H19.5625" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M8.51562 16.4818H12.9748M8.51562 13.0612H15.2427M8.51562 9.64062H11.4579" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round"/>
@@ -161,9 +191,11 @@ export const Document3Lines = ({ color }) => {
     )
 }
 
-export const Share = ({ color }) => {
+export const Share = (props: IconProps) => {
+    const { boxSize, color, height, width } = props;
+
     return (
-        <svg width="24px"  height="24px"  viewBox="0 0 24 24"  fill="none" color={`${color ?? "currentColor"}`} xmlns="http://www.w3.org/2000/svg">
+        <svg width={width ?? boxSize * 4} height={height ?? boxSize * 4} viewBox="0 0 24 24"  fill="none" color={`${color ?? "currentColor"}`} xmlns="http://www.w3.org/2000/svg">
             <path d="M19.4959 15.0279V15.0367M14.3025 5.69944C14.3025 4.4278 13.2712 3.39648 11.9995 3.39648C10.7279 3.39648 9.69657 4.4278 9.69657 5.69944C9.69657 6.97107 10.7279 8.00239 11.9995 8.00239C13.2712 8.00239 14.3025 6.97107 14.3025 5.69944ZM7.6059 17.1876C7.6059 15.9159 6.57459 14.8846 5.30295 14.8846C4.03132 14.8846 3 15.9159 3 17.1876C3 18.4592 4.03132 19.4905 5.30295 19.4905C6.57459 19.4905 7.6059 18.4592 7.6059 17.1876ZM21 17.1876C21 15.9159 19.9687 14.8846 18.697 14.8846C17.4254 14.8846 16.3941 15.9159 16.3941 17.1876C16.3941 18.4592 17.4254 19.4905 18.697 19.4905C19.9687 19.4905 21 18.4592 21 17.1876Z" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M13.9844 20.5845C15.183 20.2761 16.264 19.6855 17.1532 18.8867" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M4.50209 11.2676C4.35712 11.8669 4.27539 12.4847 4.27539 13.1201C4.27539 13.7739 4.35712 14.4189 4.51084 15.027" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round"/>
@@ -175,9 +207,11 @@ export const Share = ({ color }) => {
     )
 }
 
-export const NotificationBell = ({ color }) => {
+export const NotificationBell = (props: IconProps) => {
+    const { boxSize, color, height, width } = props;
+
     return (
-        <svg width="24px"  height="24px"  viewBox="0 0 24 24" color={`${color ?? "currentColor"}`} version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+        <svg width={width ?? boxSize * 4} height={height ?? boxSize * 4} viewBox="0 0 24 24" color={`${color ?? "currentColor"}`} version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
             <title>Iconly/Light/Notification</title>
             <g id="Iconly/Light/Notification" stroke="currentColor"  strokeWidth="1.5"  fill="none" color="currentColor" fillRule="evenodd" strokeLinecap="round" strokeLinejoin="round">
                 <g id="Notification" transform="translate(3.500000, 2.000000)" stroke="currentColor"  strokeWidth="1.5" >
@@ -189,9 +223,11 @@ export const NotificationBell = ({ color }) => {
     )
 }
 
-export const Settings = ({ color }) => {
+export const Settings = (props: IconProps) => {
+    const { boxSize, color, height, width } = props;
+
     return (
-        <svg width="24px"  height="24px"  viewBox="0 0 24 24" color={`${color ?? "currentColor"}`} version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+        <svg width={width ?? boxSize * 4} height={height ?? boxSize * 4} viewBox="0 0 24 24" color={`${color ?? "currentColor"}`} version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
             <title>Iconly/Light/Setting</title>
             <g id="Iconly/Light/Setting" stroke="currentColor"  strokeWidth="1.5"  fill="none" color="currentColor" fillRule="evenodd" strokeLinecap="round" strokeLinejoin="round">
                 <g id="Setting" transform="translate(2.500000, 1.500000)" stroke="currentColor"  strokeWidth="1.5" >
@@ -203,9 +239,11 @@ export const Settings = ({ color }) => {
     )
 }
 
-export const QuestionMarkCircle = ({ color }) => {
+export const QuestionMarkCircle = (props: IconProps) => {
+    const { boxSize, color, height, width } = props;
+
     return (
-        <svg width="24px"  height="24px"  viewBox="0 0 24 24"  fill="none" color={`${color ?? "currentColor"}`} xmlns="http://www.w3.org/2000/svg">
+        <svg width={width ?? boxSize * 4} height={height ?? boxSize * 4} viewBox="0 0 24 24"  fill="none" color={`${color ?? "currentColor"}`} xmlns="http://www.w3.org/2000/svg">
             <path d="M21 12C21 7.02908 16.9709 3 12 3C7.02908 3 3 7.02908 3 12C3 16.9699 7.02908 21 12 21C16.9709 21 21 16.9699 21 12Z" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M11.9473 16.2245V16.1963" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M11.9462 13.7496C11.9345 12.8583 12.745 12.4808 13.3473 12.1373C14.0819 11.7326 14.5791 11.0875 14.5791 10.1933C14.5791 8.86815 13.5078 7.80469 12.1914 7.80469C10.8662 7.80469 9.80273 8.86815 9.80273 10.1933" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round"/>
@@ -213,9 +251,11 @@ export const QuestionMarkCircle = ({ color }) => {
     )
 }
 
-export const SuccessDocument = ({ color }) => {
+export const SuccessDocument = (props: IconProps) => {
+    const { boxSize, color, height, width } = props;
+
     return (
-        <svg width="24px"  height="24px"  viewBox="0 0 24 24" fill="none" color={`${color ?? "currentColor"}`} xmlns="http://www.w3.org/2000/svg">
+        <svg width={width ?? boxSize * 4} height={height ?? boxSize * 4} viewBox="0 0 24 24" fill="none" color={`${color ?? "currentColor"}`} xmlns="http://www.w3.org/2000/svg">
             <path d="M6.76305 9.96484C5.34688 9.96484 4.19922 11.1121 4.19922 12.5277V17.6843C4.19922 19.1002 5.34716 20.2481 6.76305 20.2481H17.2367C18.6515 20.2481 19.7996 19.1003 19.7996 17.6843V12.5277C19.7996 11.112 18.6518 9.96484 17.2367 9.96484H6.76305ZM2.69922 12.5277C2.69922 10.2831 4.51902 8.46484 6.76305 8.46484H17.2367C19.4799 8.46484 21.2996 10.2832 21.2996 12.5277V17.6843C21.2996 19.9284 19.4802 21.7481 17.2367 21.7481H6.76305C4.51874 21.7481 2.69922 19.9286 2.69922 17.6843V12.5277Z" fill="#000000" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round" />
             <path fillRule="evenodd" clipRule="evenodd" d="M15.2255 13.0087C15.5184 13.3015 15.5185 13.7764 15.2256 14.0693L12.0908 17.2051C11.9502 17.3458 11.7594 17.4248 11.5605 17.4248C11.3615 17.4249 11.1707 17.3458 11.0301 17.2052L9.41694 15.592C9.12404 15.2991 9.12404 14.8243 9.41694 14.5314C9.70983 14.2385 10.1847 14.2385 10.4776 14.5314L11.5603 15.6141L14.1648 13.0088C14.4576 12.7159 14.9325 12.7158 15.2255 13.0087Z" fill="#000000" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round" />
             <path fillRule="evenodd" clipRule="evenodd" d="M7.9685 3C7.9685 2.58579 8.30429 2.25 8.7185 2.25H15.28C15.6942 2.25 16.03 2.58579 16.03 3C16.03 3.41421 15.6942 3.75 15.28 3.75H8.7185C8.30429 3.75 7.9685 3.41421 7.9685 3ZM5.43164 6.11169C5.43164 5.69748 5.76743 5.36169 6.18164 5.36169H17.817C18.2312 5.36169 18.567 5.69748 18.567 6.11169C18.567 6.52591 18.2312 6.86169 17.817 6.86169H6.18164C5.76743 6.86169 5.43164 6.52591 5.43164 6.11169Z" fill="#000000" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round" />
@@ -223,9 +263,11 @@ export const SuccessDocument = ({ color }) => {
     )
 }
 
-export const UnsuccessDocument = ({ color }) => {
+export const UnsuccessDocument = (props: IconProps) => {
+    const { boxSize, color, height, width } = props;
+
     return (
-        <svg width="24px"  height="24px"  viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width={width ?? boxSize * 4} height={height ?? boxSize * 4} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fillRule="evenodd" clipRule="evenodd" d="M6.76305 9.96484C5.34688 9.96484 4.19922 11.1121 4.19922 12.5277V17.6843C4.19922 19.1002 5.34716 20.2481 6.76305 20.2481H17.2367C18.6515 20.2481 19.7996 19.1003 19.7996 17.6843V12.5277C19.7996 11.112 18.6518 9.96484 17.2367 9.96484H6.76305ZM2.69922 12.5277C2.69922 10.2831 4.51902 8.46484 6.76305 8.46484H17.2367C19.4799 8.46484 21.2996 10.2832 21.2996 12.5277V17.6843C21.2996 19.9284 19.4802 21.7481 17.2367 21.7481H6.76305C4.51874 21.7481 2.69922 19.9286 2.69922 17.6843V12.5277Z" fill="#000000" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round" />
             <path fillRule="evenodd" clipRule="evenodd" d="M7.9685 3C7.9685 2.58579 8.30429 2.25 8.7185 2.25H15.28C15.6942 2.25 16.03 2.58579 16.03 3C16.03 3.41421 15.6942 3.75 15.28 3.75H8.7185C8.30429 3.75 7.9685 3.41421 7.9685 3ZM5.43164 6.11169C5.43164 5.69748 5.76743 5.36169 6.18164 5.36169H17.817C18.2312 5.36169 18.567 5.69748 18.567 6.11169C18.567 6.52591 18.2312 6.86169 17.817 6.86169H6.18164C5.76743 6.86169 5.43164 6.52591 5.43164 6.11169Z" fill="#000000" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round" />
             <path fillRule="evenodd" clipRule="evenodd" d="M9.85686 12.9658C10.1498 12.6729 10.6246 12.6729 10.9175 12.9658L11.9987 14.0469L13.0798 12.9658C13.3727 12.6729 13.8476 12.6729 14.1405 12.9658C14.4334 13.2587 14.4334 13.7335 14.1405 14.0264L13.0593 15.1076L14.141 16.1892C14.4338 16.4821 14.4338 16.957 14.141 17.2499C13.8481 17.5427 13.3732 17.5427 13.0803 17.2499L11.9987 16.1682L10.917 17.2499C10.6242 17.5427 10.1493 17.5427 9.85639 17.2499C9.5635 16.957 9.5635 16.4821 9.85639 16.1892L10.938 15.1076L9.85686 14.0264C9.56397 13.7335 9.56397 13.2587 9.85686 12.9658Z" fill="#000000" stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round" strokeLinejoin="round" />
@@ -233,9 +275,11 @@ export const UnsuccessDocument = ({ color }) => {
     )
 }
 
-export const NodesDistributed = ({ color }) => {
+export const NodesDistributed = (props: IconProps) => {
+    const { boxSize, color, height, width } = props;
+
     return (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" color={`${color ?? "currentColor"}`} xmlns="http://www.w3.org/2000/svg">
+        <svg width={width ?? boxSize * 4} height={height ?? boxSize * 4} viewBox="0 0 24 24" fill="none" color={`${color ?? "currentColor"}`} xmlns="http://www.w3.org/2000/svg">
             <circle cx="18.375" cy="5.625" r="2.125" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             <circle cx="5.625" cy="5.625" r="2.125" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             <circle cx="18.375" cy="18.375" r="2.125" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -245,9 +289,11 @@ export const NodesDistributed = ({ color }) => {
     )
 }
 
-export const FlowChart = ({ color }) => {
+export const FlowChart = (props: IconProps) => {
+    const { boxSize, color, height, width } = props;
+
     return (
-        <svg width="24" height="24" viewBox="0 0 25 25" fill="none" color={`${color ?? "currentColor"}`} xmlns="http://www.w3.org/2000/svg">
+        <svg width={width ?? boxSize * 4} height={height ?? boxSize * 4} viewBox="0 0 25 25" fill="none" color={`${color ?? "currentColor"}`} xmlns="http://www.w3.org/2000/svg">
             <path fillRule="evenodd" clipRule="evenodd" d="M9 6.63385L9 5.10242C9 4.28318 9.662 3.61865 10.4791 3.61865L14.5219 3.61865C15.339 3.61865 16 4.28318 16 5.10242V6.63386C16 7.45406 15.339 8.11859 14.5219 8.11859H10.4791C9.662 8.11859 9 7.45406 9 6.63385Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             <path fillRule="evenodd" clipRule="evenodd" d="M3.5 19.1339L3.5 17.6024C3.5 16.7832 4.162 16.1187 4.97909 16.1187L9.02188 16.1187C9.83897 16.1187 10.5 16.7832 10.5 17.6024V19.1339C10.5 19.9541 9.83897 20.6186 9.02188 20.6186H4.97909C4.162 20.6186 3.5 19.9541 3.5 19.1339Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             <path fillRule="evenodd" clipRule="evenodd" d="M14.5 19.1339L14.5 17.6024C14.5 16.7832 15.162 16.1187 15.9791 16.1187L20.0219 16.1187C20.839 16.1187 21.5 16.7832 21.5 17.6024V19.1339C21.5 19.9541 20.839 20.6186 20.0219 20.6186H15.9791C15.162 20.6186 14.5 19.9541 14.5 19.1339Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -257,9 +303,11 @@ export const FlowChart = ({ color }) => {
     )
 }
 
-export const ArrowsSplitDown = ({ color }) => {
+export const ArrowsSplitDown = (props: IconProps) => {
+    const { boxSize, color, height, width } = props;
+
     return (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" color={`${color ?? "currentColor"}`} xmlns="http://www.w3.org/2000/svg">
+        <svg width={width ?? boxSize * 4} height={height ?? boxSize * 4} viewBox="0 0 24 24" fill="none" color={`${color ?? "currentColor"}`} xmlns="http://www.w3.org/2000/svg">
             <path d="M6 21L6 15.603C6.00015 13.9714 6.95555 12.4425 8.5596 11.507L9.4404 10.993C11.0444 10.0575 11.9999 8.52857 12 6.897V3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M18 21L18 15.605C18.0001 13.9724 17.0437 12.4425 15.438 11.507L14.562 10.997C12.9567 10.0617 12.0003 8.53229 12 6.9L12 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M15.5 18.5L18 21L20.5 18.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -268,9 +316,11 @@ export const ArrowsSplitDown = ({ color }) => {
     )
 }
 
-export const Categories = ({ color }) => {
+export const Categories = (props: IconProps) => {
+    const { boxSize, color, height, width } = props;
+
     return (
-        <svg width="24" height="24" viewBox="0 0 26 24" fill="none" color={`${color ?? "currentColor"}`} xmlns="http://www.w3.org/2000/svg">
+        <svg width={width ?? boxSize * 4} height={height ?? boxSize * 4} viewBox="0 0 26 24" fill="none" color={`${color ?? "currentColor"}`} xmlns="http://www.w3.org/2000/svg">
             <path fillRule="evenodd" clipRule="evenodd" d="M14.598 3.43639L20.1431 6.68715C21.1978 7.305 21.1978 8.8287 20.1431 9.44655L14.598 12.6973C13.6056 13.2792 12.3767 13.2792 11.3842 12.6973L5.83914 9.44655C4.78539 8.8287 4.78539 7.305 5.83914 6.68715L11.3842 3.43639C12.3767 2.85454 13.6056 2.85454 14.598 3.43639Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M9.76832 11.75L5.61073 14.5152C4.62801 15.1701 4.66985 16.6286 5.68857 17.225L11.3825 20.5633C12.375 21.1452 13.6048 21.1452 14.5963 20.5633L20.2708 17.2367C21.2953 16.6364 21.3313 15.1701 20.3389 14.5191L16.1531 11.7841" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>

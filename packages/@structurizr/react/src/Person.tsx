@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren } from "react";
-import { Box, Connector, useViewMetadata } from "./components";
+import { Connector, useViewMetadata } from "./components";
 import { Element } from "./Element";
 
 export interface IPerson {
@@ -25,12 +25,13 @@ export const Person: FC<PropsWithChildren<{
     const { height = 200, width = 200 } = dimensions;
 
     return (
-        <Box className={"structurizr__element-person"} position={dimensions}>
-            <Element
-                value={value}
-                height={dimensions.height}
-                width={dimensions.width}
-            />
+        <Element
+            className={"structurizr__element-person"}
+            value={value}
+            position={dimensions}
+            height={dimensions.height}
+            width={dimensions.width}
+        >
             <Connector height={height} width={width} placement={"top-left"} />
             <Connector height={height} width={width} placement={"top-center"} />
             <Connector height={height} width={width} placement={"top-right"} />
@@ -39,6 +40,6 @@ export const Person: FC<PropsWithChildren<{
             <Connector height={height} width={width} placement={"bottom-left"} />
             <Connector height={height} width={width} placement={"bottom-center"} />
             <Connector height={height} width={width} placement={"bottom-right"} />
-        </Box>
+        </Element>
     );
 };

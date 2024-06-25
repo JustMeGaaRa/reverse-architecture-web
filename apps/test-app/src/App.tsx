@@ -3,6 +3,7 @@ import {
     ContainerViewStrategy,
     createDefaultSystemLandscapeView,
     createDefaultWorkspace,
+    DeploymentViewStrategy,
     IElement,
     IViewDefinitionMetadata,
     IWorkspaceSnapshot,
@@ -135,7 +136,7 @@ const useViewMetadata = () => {
                 ...metadata,
                 views: {
                     ...metadata.views,
-                    containers: typeof action === "function"
+                    components: typeof action === "function"
                         ? action(metadata.views.components)
                         : action
                 }
@@ -151,7 +152,7 @@ const useViewMetadata = () => {
                 ...metadata,
                 views: {
                     ...metadata.views,
-                    containers: typeof action === "function"
+                    deployments: typeof action === "function"
                         ? action(metadata.views.deployments)
                         : action
                 }
@@ -271,7 +272,6 @@ export function App() {
                 layoutStrategy
                     .execute(reactFlowBuilder.build())
                     .then(reactFlowAuto => {
-                        console.log(reactFlowAuto)
                         setModelViewMetadata(metadata => ({
                             ...metadata,
                             elements: reduceNodes(reactFlowAuto.nodes),
@@ -343,8 +343,25 @@ export function App() {
                         });
                 }
                 break;
+            case ViewType.Deployment:
+                const deployment = workspace.views.deployments.find(x => x.key === currentView.key);
+                if (deployment) {
+                    const viewStrategy = new DeploymentViewStrategy(workspace.model, deployment);
+                    viewStrategy?.accept(reactFlowVisitor);
+                    layoutStrategy
+                        .execute(reactFlowBuilder.build())
+                        .then(reactFlowAuto => {
+                            setDeploymentViewMetadata(metadata => {
+                                return metadata.map(view => view.key === deployment.key
+                                    ? { ...view, elements: reduceNodes(reactFlowAuto.nodes) }
+                                    : view
+                                );
+                            });
+                        });
+                }
+                break;
         }
-    }, [workspace, currentView, setSystemLandScapeViewMetadata, setContainerViewMetadata, setComponentViewMetadata, setModelViewMetadata, setSystemContextViewMetadata]);
+    }, [workspace, currentView, setSystemLandScapeViewMetadata, setContainerViewMetadata, setComponentViewMetadata, setModelViewMetadata, setSystemContextViewMetadata, setDeploymentViewMetadata]);
 
     const defaultThemeUrl = "https://static.structurizr.com/themes/default/theme.json";
     const awsThemeUrl = "https://static.structurizr.com/themes/amazon-web-services-2023.01.31/theme.json";

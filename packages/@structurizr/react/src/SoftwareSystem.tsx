@@ -1,6 +1,6 @@
 import { Children, FC, PropsWithChildren } from "react";
 import { Boundary } from "./Boundary";
-import { Box, Connector, useViewMetadata } from "./components";
+import { Connector, useViewMetadata } from "./components";
 import { Element } from "./Element";
 
 export interface ISoftwareSystem {
@@ -21,25 +21,25 @@ export const SoftwareSystem: FC<PropsWithChildren<{ value: ISoftwareSystem }>> =
     };
     // TODO: pass these default values to the Element component directly
     const { height = 200, width = 200 } = dimensions;
-
-    // TODO: unwrap boundary and element from the box and just pass the className and position 
+    
     return Children.count(children) > 0 ? (
-        <Box className={"structurizr__boundary-system"} position={dimensions}>
-            <Boundary
-                value={value}
-                height={dimensions.height}
-                width={dimensions.width}
-            >
-                {children}
-            </Boundary>
-        </Box>
+        <Boundary
+            className={"structurizr__boundary-system"}
+            value={value}
+            position={dimensions}
+            height={dimensions.height}
+            width={dimensions.width}
+        >
+            {children}
+        </Boundary>
     ) : (
-        <Box className={"structurizr__element-system"} position={dimensions}>
-            <Element
-                value={value}
-                height={dimensions.height}
-                width={dimensions.width}
-            />
+        <Element
+            className={"structurizr__element-system"}
+            value={value}
+            position={dimensions}
+            height={dimensions.height}
+            width={dimensions.width}
+        >
             <Connector height={height} width={width} placement={"top-left"} />
             <Connector height={height} width={width} placement={"top-center"} />
             <Connector height={height} width={width} placement={"top-right"} />
@@ -48,6 +48,6 @@ export const SoftwareSystem: FC<PropsWithChildren<{ value: ISoftwareSystem }>> =
             <Connector height={height} width={width} placement={"bottom-left"} />
             <Connector height={height} width={width} placement={"bottom-center"} />
             <Connector height={height} width={width} placement={"bottom-right"} />
-        </Box>
+        </Element>
     );
 };

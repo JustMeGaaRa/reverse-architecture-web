@@ -2,16 +2,13 @@ import { FC, PropsWithChildren } from "react";
 import { GroupNode, Text, useViewMetadata } from "./components";
 
 export interface IGroup {
-    type: string;
+    type: "Group";
     identifier: string;
     name: string;
 }
 
 export const Group: FC<PropsWithChildren<{
     value: IGroup;
-    position?: { x: number; y: number };
-    height?: number;
-    width?: number;
     borderWidth?: number;
     padding?: number;
 }>> = ({
@@ -32,6 +29,8 @@ export const Group: FC<PropsWithChildren<{
 
     return (
         <GroupNode
+            id={value.identifier}
+            className={"structurizr__element-group"}
             position={dimensions}
             height={height}
             width={width}

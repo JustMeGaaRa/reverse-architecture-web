@@ -1,6 +1,6 @@
 import { useReactFlow } from "@reactflow/core";
+import { ElkjsAutoLayoutStrategy } from "@structurizr/elk-layout";
 import { useCallback } from "react";
-import { ElkjsAutoLayoutStrategy } from "../types";
 
 export const useAutoLayout = () => {
     const { setNodes, setEdges, toObject } = useReactFlow();

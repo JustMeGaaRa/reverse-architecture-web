@@ -36,6 +36,7 @@ export class DeploymentViewStrategy implements ISupportVisitor {
                 const visitedSoftwareSystem = visitor.visitSoftwareSystem(softwareSystem);
 
                 visitedElements.add(softwareSystemInstance.identifier);
+                visitedElements.add(softwareSystem.identifier);
                 return visitor.visitSoftwareSystemInstance(softwareSystemInstance, {
                     parentId: deploymentNode.identifier,
                     children: [visitedSoftwareSystem]
@@ -47,6 +48,7 @@ export class DeploymentViewStrategy implements ISupportVisitor {
                 const visitedContainer = visitor.visitContainer(container);
 
                 visitedElements.add(containerInstance.identifier);
+                visitedElements.add(container.identifier);
                 return visitor.visitContainerInstance(containerInstance, {
                     parentId: deploymentNode.identifier,
                     children: [visitedContainer]
@@ -79,7 +81,6 @@ export class DeploymentViewStrategy implements ISupportVisitor {
         const visitedRelationships = relationships
             .filter(relationship => relationshipExistsForElementsInView(Array.from(visitedElements), relationship))
             .map(relationship => visitor.visitRelationship(relationship));
-        
         return visitedDeploymentEnvironment.concat(visitedRelationships);
     }
 }

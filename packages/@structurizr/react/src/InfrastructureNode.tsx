@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Box, Connector, useViewMetadata } from "./components";
+import { Connector, useViewMetadata } from "./components";
 import { Element } from "./Element";
 
 export interface IInfrastructureNode {
@@ -26,12 +26,13 @@ export const InfrastructureNode: FC<{
     const { height = 200, width = 200 } = dimensions;
 
     return (
-        <Box position={dimensions}>
-            <Element
-                value={value}
-                height={dimensions.height}
-                width={dimensions.width}
-            />
+        <Element
+            className={"structurizr__element-infrastructure-node"}
+            position={dimensions}
+            value={value}
+            height={dimensions.height}
+            width={dimensions.width}
+        >
             <Connector height={height} width={width} placement={"top-left"} />
             <Connector height={height} width={width} placement={"top-center"} />
             <Connector height={height} width={width} placement={"top-right"} />
@@ -40,6 +41,6 @@ export const InfrastructureNode: FC<{
             <Connector height={height} width={width} placement={"bottom-left"} />
             <Connector height={height} width={width} placement={"bottom-center"} />
             <Connector height={height} width={width} placement={"bottom-right"} />
-        </Box>
+        </Element>
     );
 };

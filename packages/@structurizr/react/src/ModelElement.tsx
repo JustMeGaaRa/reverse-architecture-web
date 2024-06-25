@@ -56,14 +56,8 @@ export const ModelElement: FC<{
             >
                 {value.type}
             </Text>
-            <Connector height={height} width={width} placement={"top-left"} />
             <Connector height={height} width={width} placement={"top-center"} />
-            <Connector height={height} width={width} placement={"top-right"} />
-            <Connector height={height} width={width} placement={"middle-left"} />
-            <Connector height={height} width={width} placement={"middle-right"} />
-            <Connector height={height} width={width} placement={"bottom-left"} />
             <Connector height={height} width={width} placement={"bottom-center"} />
-            <Connector height={height} width={width} placement={"bottom-right"} />
         </Node>
     )
 }

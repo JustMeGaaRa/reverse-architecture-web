@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren } from "react";
-import { GroupNode, Text, useViewMetadata } from "./components";
+import { GroupNode, Text } from "./components";
 
 export interface IBoundary {
     type: string;
@@ -9,6 +9,7 @@ export interface IBoundary {
 
 export const Boundary: FC<PropsWithChildren<{
     value: IBoundary;
+    className?: string;
     position?: { x: number; y: number };
     height?: number;
     width?: number;
@@ -17,6 +18,7 @@ export const Boundary: FC<PropsWithChildren<{
 }>> = ({
     children,
     value,
+    className,
     position,
     height,
     width,
@@ -24,7 +26,13 @@ export const Boundary: FC<PropsWithChildren<{
     padding = 16,
 }) => {
     return (
-        <GroupNode position={position} height={height} width={width}>
+        <GroupNode
+            id={value.identifier}
+            className={className}
+            position={position}
+            height={height}
+            width={width}
+        >
             <Text
                 x={borderWidth + padding}
                 y={height - borderWidth - padding - 16}

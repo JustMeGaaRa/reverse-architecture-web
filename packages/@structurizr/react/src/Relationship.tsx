@@ -11,6 +11,7 @@ export interface IRelationship {
 export const Relationship: FC<{ value: IRelationship }> = ({ value }) => {
     const { metadata } = useViewMetadata();
 
+    // TODO: create a portal to the viewport so that edges are not scoped
     return (
         <Edge
             id={value.identifier}

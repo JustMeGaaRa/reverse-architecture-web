@@ -37,8 +37,7 @@ export const ZoomToolbar: FC = () => {
                 <Tooltip label={"Zoom Out"} openDelay={500}>
                     <IconButton
                         aria-label={"zoom out"}
-                        icon={<Minus />}
-                        title={"zoom out"}
+                        icon={<Minus boxSize={5} />}
                         onClick={handleZoomMinus}
                     />
                 </Tooltip>
@@ -71,8 +70,7 @@ export const ZoomToolbar: FC = () => {
                 <Tooltip label={"Zoom In"} openDelay={500}>
                     <IconButton
                         aria-label={"zoom in"}
-                        title={"zoom in"}
-                        icon={<Plus />}
+                        icon={<Plus boxSize={5} />}
                         onClick={handleZoomPlus}
                     />
                 </Tooltip>

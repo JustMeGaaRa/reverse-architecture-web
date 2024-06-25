@@ -1,7 +1,8 @@
 import { useReactFlow } from "@reactflow/core";
+import { DagreAutoLayoutStrategy } from "@structurizr/dagre-layout";
 import { ISupportVisitor, IWorkspaceSnapshot, ViewDefinition } from "@structurizr/dsl";
+import { ElkjsAutoLayoutStrategy } from "@structurizr/elk-layout";
 import { useCallback } from "react";
-import { DagreAutoLayoutStrategy, ElkjsAutoLayoutStrategy, GraphvizLayoutStrategy } from "../types";
 import { getReactFlowModelObject, getReactFlowViewObject } from "../utils";
 
 export const useViewRenderer = () => {

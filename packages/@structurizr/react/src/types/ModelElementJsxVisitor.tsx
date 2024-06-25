@@ -31,7 +31,7 @@ export class ModelElementJsxVisitor implements IElementVisitor<JSX.Element> {
     visitGroup(group: IGroup, params?: { parentId?: string; children?: JSX.Element[]; }): JSX.Element {
         return (
             <ModelElement
-                key={group.name}
+                key={group.identifier}
                 value={{
                     type: "Group",
                     identifier: group.identifier,

@@ -10,6 +10,7 @@ import {
 } from "@restruct/vscode-communication";
 import {
     createDefaultWorkspace,
+    IElement,
     IViewDefinitionMetadata,
     IWorkspaceSnapshot,
     ViewType
@@ -35,6 +36,7 @@ import {
 } from "@structurizr/react";
 import {
     FC,
+    SetStateAction,
     useCallback,
     useEffect,
     useRef,
@@ -56,12 +58,10 @@ function transformMetadata(metadata?: IViewDefinitionMetadata): IViewMetadata {
     };
 }
 
-export const WorkspacePreview: FC = () => {
-    const eventObservable = useRef<Observable<VscodeExtensionEvent>>();
-    // const [ workspaceCst, setWorkspaceCst ] = useState<WorkspaceCstNode>();
-    const [ workspace, setWorkspace ] = useState<IWorkspaceSnapshot>(createDefaultWorkspace());
+const useViewMetadata = () => {
     const [ metadata, setMetadata ] = useState<{
         views: {
+            model: IViewMetadata,
             systemLandscape?: IViewMetadata,
             systemContexts?: IViewMetadata[],
             containers?: IViewMetadata[],
@@ -69,6 +69,129 @@ export const WorkspacePreview: FC = () => {
             deployments?: IViewMetadata[],
         }
     }>();
+
+    const setModelViewMetadata = useCallback((action: SetStateAction<IViewMetadata>) => {
+        setMetadata(metadata => {
+            if (!metadata?.views?.model) return metadata;
+
+            return ({
+                ...metadata,
+                views: {
+                    ...metadata.views,
+                    model: typeof action === "function"
+                        ? action(metadata.views.model)
+                        : action
+                }
+            });
+        });
+    }, []);
+
+    const setSystemLandScapeViewMetadata = useCallback((action: SetStateAction<IViewMetadata>) => {
+        setMetadata(metadata => {
+            if (!metadata?.views?.systemLandscape) return metadata;
+            
+            return ({
+                ...metadata,
+                views: {
+                    ...metadata.views,
+                    systemLandscape: typeof action === "function"
+                        ? action(metadata.views.systemLandscape)
+                        : action
+                }
+            });
+        });
+    }, []);
+
+    const setSystemContextViewMetadata = useCallback((action: SetStateAction<Array<IViewMetadata>>) => {
+        setMetadata(metadata => {
+            if (!metadata?.views?.systemContexts) return metadata;
+            
+            return ({
+                ...metadata,
+                views: {
+                    ...metadata.views,
+                    systemContexts: typeof action === "function"
+                        ? action(metadata.views.systemContexts)
+                        : action
+                }
+            });
+        });
+    }, []);
+
+    const setContainerViewMetadata = useCallback((action: SetStateAction<Array<IViewMetadata>>) => {
+        setMetadata(metadata => {
+            if (!metadata?.views?.containers) return metadata;
+            
+            return ({
+                ...metadata,
+                views: {
+                    ...metadata.views,
+                    containers: typeof action === "function"
+                        ? action(metadata.views.containers)
+                        : action
+                }
+            });
+        });
+    }, []);
+
+    const setComponentViewMetadata = useCallback((action: SetStateAction<Array<IViewMetadata>>) => {
+        setMetadata(metadata => {
+            if (!metadata?.views?.components) return metadata;
+            
+            return ({
+                ...metadata,
+                views: {
+                    ...metadata.views,
+                    components: typeof action === "function"
+                        ? action(metadata.views.components)
+                        : action
+                }
+            });
+        });
+    }, []);
+
+    const setDeploymentViewMetadata = useCallback((action: SetStateAction<Array<IViewMetadata>>) => {
+        setMetadata(metadata => {
+            if (!metadata?.views?.deployments) return metadata;
+            
+            return ({
+                ...metadata,
+                views: {
+                    ...metadata.views,
+                    deployments: typeof action === "function"
+                        ? action(metadata.views.deployments)
+                        : action
+                }
+            });
+        });
+    }, []);
+
+    return {
+        metadata,
+        setMetadata,
+        setModelViewMetadata,
+        setSystemLandScapeViewMetadata,
+        setSystemContextViewMetadata,
+        setContainerViewMetadata,
+        setComponentViewMetadata,
+        setDeploymentViewMetadata
+    }
+}
+
+export const WorkspacePreview: FC = () => {
+    const eventObservable = useRef<Observable<VscodeExtensionEvent>>();
+    // const [ workspaceCst, setWorkspaceCst ] = useState<WorkspaceCstNode>();
+    const [ workspace, setWorkspace ] = useState<IWorkspaceSnapshot>(createDefaultWorkspace());
+    const {
+        metadata,
+        setMetadata,
+        setModelViewMetadata,
+        setSystemLandScapeViewMetadata,
+        setSystemContextViewMetadata,
+        setContainerViewMetadata,
+        setComponentViewMetadata,
+        setDeploymentViewMetadata
+    } = useViewMetadata();
     const { currentView, setCurrentView } = useViewNavigation();
 
     const defaultThemeUrl = "https://static.structurizr.com/themes/default/theme.json";
@@ -93,7 +216,7 @@ export const WorkspacePreview: FC = () => {
                 }
             }));
         }
-    }, []);
+    }, [setMetadata]);
 
     useEffect(() => {
         eventObservable.current = createExtensionEventObservable();
@@ -113,6 +236,16 @@ export const WorkspacePreview: FC = () => {
         })
     }, [currentView]);
 
+    const { zoomIntoElement, zoomOutOfElement } = useViewNavigation();
+
+    const handleOnZoomInClick = useCallback((event: React.MouseEvent<HTMLButtonElement>, element: IElement) => {
+        zoomIntoElement(workspace, element);
+    }, [workspace, zoomIntoElement]);
+
+    const handleOnZoomOutClick = useCallback((event: React.MouseEvent<HTMLButtonElement>, element: IElement) => {
+        zoomOutOfElement(workspace, element);
+    }, [workspace, zoomOutOfElement]);
+
     return (
         <WorkspaceProvider workspace={workspace} setWorkspace={setWorkspace}>
             <ThemeProvider>
@@ -120,7 +253,9 @@ export const WorkspacePreview: FC = () => {
                     <Workspace>
                         <Viewport>
                             {currentView?.type === ViewType.Model && (
-                                <ModelView>
+                                <ModelView
+                                    metadata={metadata?.views?.model}
+                                >
                                     <AutoLayout value={{}} />
                                 </ModelView>
                             )}
@@ -129,6 +264,8 @@ export const WorkspacePreview: FC = () => {
                                 <SystemLandscapeView
                                     value={{ key: currentView?.key }}  
                                     metadata={metadata?.views?.systemLandscape}
+                                    onZoomInClick={handleOnZoomInClick}
+                                    onZoomOutClick={handleOnZoomOutClick}
                                 >
                                     <AutoLayout value={{}} />
                                 </SystemLandscapeView>
@@ -142,6 +279,8 @@ export const WorkspacePreview: FC = () => {
                                         softwareSystemIdentifier: currentView.softwareSystemIdentifier,
                                     }}
                                     metadata={metadata?.views?.systemContexts?.find(x => x.key === currentView.key)}
+                                    onZoomInClick={handleOnZoomInClick}
+                                    onZoomOutClick={handleOnZoomOutClick}
                                 >
                                     <AutoLayout value={{}} />
                                 </SystemContextView>
@@ -155,6 +294,8 @@ export const WorkspacePreview: FC = () => {
                                         softwareSystemIdentifier: currentView.softwareSystemIdentifier,
                                     }}
                                     metadata={metadata?.views?.containers?.find(x => x.key === currentView.key)}
+                                    onZoomInClick={handleOnZoomInClick}
+                                    onZoomOutClick={handleOnZoomOutClick}
                                 >
                                     <AutoLayout value={{}} />
                                 </ContainerView>
@@ -168,6 +309,8 @@ export const WorkspacePreview: FC = () => {
                                         containerIdentifier: currentView.containerIdentifier,
                                     }}
                                     metadata={metadata?.views?.components?.find(x => x.key === currentView.key)}
+                                    onZoomInClick={handleOnZoomInClick}
+                                    onZoomOutClick={handleOnZoomOutClick}
                                 >
                                     <AutoLayout value={{}} />
                                 </ComponentView>
@@ -182,6 +325,8 @@ export const WorkspacePreview: FC = () => {
                                         environment: currentView.environment,
                                     }}
                                     metadata={metadata?.views?.deployments?.find(x => x.key === currentView.key)}
+                                    onZoomInClick={handleOnZoomInClick}
+                                    onZoomOutClick={handleOnZoomOutClick}
                                 >
                                     <AutoLayout value={{}} />
                                 </DeploymentView>

@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, useEffect, useState } from "react";
+import { FC, PropsWithChildren, useEffect, useLayoutEffect, useState } from "react";
 import { calculateCenterPosition, getSvgElementByClassName, getSvgElementById } from "../utils";
 import { Box, useBox } from "./Box";
 import { ConnectorId } from "./Connector";
@@ -16,7 +16,7 @@ function getPlacement(
         ? (source.x > target.x ? "middle-left" : "middle-right")
         : (source.y > target.y ? "top-center" : "bottom-center");
 
-    return placement;
+    return source.y > target.y ? "top-center" : "bottom-center";
 }
 
 export const Edge: FC<PropsWithChildren<{
@@ -44,7 +44,7 @@ export const Edge: FC<PropsWithChildren<{
     const [path, setPath] = useState(undefined);
     const [labelCenter, setLabelCenter] = useState({ x: 0, y: 0 });
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const absolutePosition = getAbsolutePosition();
         const bendingPoints = points ?? [];
         
@@ -54,8 +54,8 @@ export const Edge: FC<PropsWithChildren<{
         const targetCenter = calculateCenterPosition(viewbox, zoom, targetNode);
         const sourceConnectorPlacement = getPlacement(sourceCenter, targetCenter);
         const targetConnectorPlacement = getPlacement(targetCenter, sourceCenter);
-        const sourceConnector = getSvgElementByClassName(sourceNode?.parentElement, sourceConnectorPlacement);
-        const targetConnector = getSvgElementByClassName(targetNode?.parentElement, targetConnectorPlacement);
+        const sourceConnector = getSvgElementByClassName(sourceNode, sourceConnectorPlacement);
+        const targetConnector = getSvgElementByClassName(targetNode, targetConnectorPlacement);
         const sourceConnectorCenter = calculateCenterPosition(viewbox, zoom, sourceConnector);
         const targetConnectorCenter = calculateCenterPosition(viewbox, zoom, targetConnector);
         const sourcePoint = {
@@ -64,7 +64,7 @@ export const Edge: FC<PropsWithChildren<{
         };
         const targetPoint = {
             x: targetConnectorCenter.x - absolutePosition.x,
-            y: targetConnectorCenter.y - absolutePosition.y,
+            y: targetConnectorCenter.y - absolutePosition.y,  
         };
 
         const labelCenter = {
