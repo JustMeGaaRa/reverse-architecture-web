@@ -4,6 +4,7 @@ export const Text: FC<SVGProps<SVGTextElement>> = (props) => {
     const textRef = useRef<SVGTextElement>(null);
 
     useLayoutEffect(() => {
+        // TODO: support the text word wrapping into multiple lines
         const truncateText = () => {
             const svgText = textRef.current;
             if (svgText && svgText.getComputedTextLength() > props.width) {

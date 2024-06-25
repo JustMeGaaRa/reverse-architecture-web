@@ -80,6 +80,7 @@ export const Viewport: FC<PropsWithChildren> = ({ children }) => {
     }, [setViewbox, isPointerDown, pointerOrigin.x, pointerOrigin.y]);
 
     const handleOnWheel = useCallback((event: any) => {
+        // TODO: zooming center should be where the cursor is
         if (!svgRef?.current) return;
 
         event.preventDefault();

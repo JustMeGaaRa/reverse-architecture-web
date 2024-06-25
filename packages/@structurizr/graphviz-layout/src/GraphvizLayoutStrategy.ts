@@ -119,6 +119,8 @@ export class GraphvizLayoutStrategy implements IAutoLayoutStrategy<{ nodes: Vert
             return { ...node, ...position, ...size };
         });
 
+        // TODO: flip the y axis on the layout
+        // TODO: parse ajd return bending points for edges
         return { ...graph, nodes: positionedNodes, edges };
     }
 }

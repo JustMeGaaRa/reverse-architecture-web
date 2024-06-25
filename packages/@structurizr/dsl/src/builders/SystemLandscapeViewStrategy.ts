@@ -20,7 +20,7 @@ export class SystemLandscapeViewStrategy implements ISupportVisitor {
 
     accept<T>(visitor: IElementVisitor<T>): Array<T> {
         const visitedElements = new Set<string>();
-        const relationships = getRelationships(this.model, true);
+        const relationships = getRelationships(this.model, false);
 
         // 2.1. include all software systems
         const visitSoftwareSystemArray = (softwareSystems: Array<ISoftwareSystem>, parentId?: string) => {

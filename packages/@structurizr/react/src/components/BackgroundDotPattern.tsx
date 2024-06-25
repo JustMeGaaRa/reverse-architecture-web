@@ -6,6 +6,7 @@ export const BackgroundDotPattern: FC<{
 }> = ({
     fill = "#91919a"
 }) => {
+    // TODO: implement and use background pattern
     return (
         <pattern
             id={BackgroundType.Dot}

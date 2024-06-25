@@ -8,6 +8,7 @@ export const MarkerCircleOutline: FC<{
     fill = "#454647",
     stroke = "#8A8B8C"
 }) => {
+    // TODO: fix edge marker alignment
     return (
         <marker
             id={MarkerType.CircleOutline}

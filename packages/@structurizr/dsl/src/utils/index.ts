@@ -235,99 +235,136 @@ export const elementIncludedInView = (view: ViewDefinition, elementIdentifier: I
 export const getRelationships = (model: IModel, implied: boolean) => {
     const relationships = Array.from<IRelationship>([]);
 
-    for (const relationship of model.relationships) {
-        // add relationship
-        relationships.push(relationship);
+    // TODO: optimize performance by caching the relationships
+    // TODO: implied relationships should have same attributes as the original relationship
+    // TODO: exclude implied relationships from child to it's own parent
+    // TODO: include implied relationships from element scope with this template 'someId -> this'
+
+    function addRelationship(source: Identifier, target: Identifier, description: string) {
+        if (!relationships.some(x => x.sourceIdentifier === source && x.targetIdentifier === target)) {
+            relationships.push({
+                type: RelationshipType.Relationship,
+                sourceIdentifier: source,
+                targetIdentifier: target,
+                description,
+                tags: []
+            });
+        }
     }
+
+    model.groups.flatMap(x => x.softwareSystems).concat(model.softwareSystems).forEach(system => {
+        // Implied relationships from current system to target
+        system.groups.flatMap(x => x.containers).concat(system.containers).forEach(container => {
+            // Implied relationships from current container to target
+            container.groups.flatMap(x => x.components).concat(container.components).forEach(component => {
+                // Implied relationships from component scope to target
+                component.relationships.forEach(relationship => {
+                    addRelationship(component.identifier, relationship.targetIdentifier, relationship.description);
+
+                    if (implied) {
+                        addRelationship(container.identifier, relationship.targetIdentifier, relationship.description);
+                        addRelationship(system.identifier, relationship.targetIdentifier, relationship.description);
+                    }
+                });
+
+                // Implied relationships outgoing from current component
+                model.relationships.filter(relationship => relationship.sourceIdentifier === component.identifier).forEach(relationship => {
+                    addRelationship(component.identifier, relationship.targetIdentifier, relationship.description);
+
+                    if (implied) {
+                        addRelationship(container.identifier, relationship.targetIdentifier, relationship.description);
+                        addRelationship(system.identifier, relationship.targetIdentifier, relationship.description);
+                    }
+                });
+                
+                // Implied relationships incoming into current component
+                model.relationships.filter(relationship => relationship.targetIdentifier === component.identifier).forEach(relationship => {
+                    addRelationship(relationship.sourceIdentifier, component.identifier, relationship.description);
+
+                    if (implied) {
+                        addRelationship(relationship.sourceIdentifier, container.identifier, relationship.description);
+                        addRelationship(relationship.sourceIdentifier, system.identifier, relationship.description);
+                    }
+                });
+            });
+
+            // Implied relationships from container scope to target
+            container.relationships.forEach(relationship => {
+                addRelationship(container.identifier, relationship.targetIdentifier, relationship.description);
+
+                if (implied) {
+                    addRelationship(system.identifier, relationship.targetIdentifier, relationship.description);
+                }
+            });
+
+            // Implied relationships outgoing from current container
+            model.relationships.filter(relationship => relationship.sourceIdentifier === container.identifier).forEach(relationship => {
+                addRelationship(container.identifier, relationship.targetIdentifier, relationship.description);
+
+                if (implied) {
+                    addRelationship(system.identifier, relationship.targetIdentifier, relationship.description);
+                }
+            });
+            
+            // Implied relationships incoming into current container
+            model.relationships.filter(relationship => relationship.targetIdentifier === container.identifier).forEach(relationship => {
+                addRelationship(relationship.sourceIdentifier, container.identifier, relationship.description);
+
+                if (implied) {
+                    addRelationship(relationship.sourceIdentifier, system.identifier, relationship.description);
+                }
+            });
+        });
+
+        // Implied relationships from system scope to target
+        system.relationships.forEach(relationship => {
+            addRelationship(system.identifier, relationship.targetIdentifier, relationship.description);
+        });
+        
+        // Implied relationships outgoing from current system
+        model.relationships.filter(relationship => relationship.sourceIdentifier === system.identifier).forEach(relationship => {
+            addRelationship(system.identifier, relationship.targetIdentifier, relationship.description);
+        });
+        
+        // Implied relationships incoming into current system
+        model.relationships.filter(relationship => relationship.targetIdentifier === system.identifier).forEach(relationship => {
+            addRelationship(relationship.sourceIdentifier, system.identifier, relationship.description);
+        });
+    });
     
-    getSoftwareSystemImpliedRelationships(
-        model.groups.flatMap(x => x.softwareSystems).concat(model.softwareSystems)
-    );
+    model.groups.flatMap(x => x.people).concat(model.people).forEach(person => {
+        person.relationships.forEach(relationship => {
+            // Implied relationships from people to systems
+            model.groups.flatMap(x => x.softwareSystems).concat(model.softwareSystems).forEach(system => {
+                if (relationship.targetIdentifier === system.identifier) {
+                    addRelationship(person.identifier, system.identifier, relationship.description);
+                }
+                
+                system.groups.flatMap(x => x.containers).concat(system.containers).forEach(container => {
+                    if (relationship.targetIdentifier === container.identifier) {
+                        addRelationship(person.identifier, container.identifier, relationship.description);
+
+                        if (implied) {
+                            addRelationship(person.identifier, system.identifier, relationship.description);
+                        }
+                    }
+
+                    container.groups.flatMap(x => x.components).concat(container.components).forEach(component => {
+                        if (relationship.targetIdentifier === component.identifier) {
+                            addRelationship(person.identifier, component.identifier, relationship.description);
+
+                            if (implied) {
+                                addRelationship(person.identifier, container.identifier, relationship.description);
+                                addRelationship(person.identifier, system.identifier, relationship.description);
+                            }
+                        }
+                    });
+                });
+            });
+        });
+    });
 
     return relationships;
-
-    function getSoftwareSystemImpliedRelationships(
-        softwareSystems: ISoftwareSystem[]
-    ) {
-        for (const softwareSystem of softwareSystems) {
-            for (const relationship of softwareSystem.relationships) {
-                // add software system relationship
-                relationships.push(relationship);
-            }
-
-            getContainerImpliedRelationships(
-                softwareSystem.groups.flatMap(x => x.containers).concat(softwareSystem.containers),
-                softwareSystem.identifier
-            );
-        }
-    }
-
-    function getContainerImpliedRelationships(
-        containers: IContainer[],
-        softwareSystemIdentifier: Identifier
-    ) {
-        for (const container of containers) {
-            for (const relationship of container.relationships) {
-                // add container relationship
-                relationships.push(relationship);
-
-                // add implied software system relationship
-                relationships.push({
-                    type: RelationshipType.Relationship,
-                    sourceIdentifier: relationship.sourceIdentifier === container.identifier
-                        ? softwareSystemIdentifier
-                        : relationship.sourceIdentifier,
-                    targetIdentifier: relationship.targetIdentifier === container.identifier
-                        ? softwareSystemIdentifier
-                        : relationship.targetIdentifier,
-                    tags: []
-                });
-            }
-
-            getComponentImpliedRelationships(
-                container.groups.flatMap(x => x.components).concat(container.components),
-                container.identifier,
-                softwareSystemIdentifier
-            );
-        }
-    }
-
-    function getComponentImpliedRelationships(
-        components: IComponent[],
-        containerIdentifier: Identifier,
-        softwareSystemIdentifier: Identifier
-    ) {
-        for (const component of components) {
-            for (const relationship of component.relationships) {
-                // add component relationsip
-                relationships.push(relationship);
-
-                // add implied container relationship
-                relationships.push({
-                    type: RelationshipType.Relationship,
-                    sourceIdentifier: relationship.sourceIdentifier === component.identifier
-                        ? containerIdentifier
-                        : relationship.sourceIdentifier,
-                    targetIdentifier: relationship.targetIdentifier === component.identifier
-                        ? containerIdentifier
-                        : relationship.targetIdentifier,
-                    tags: []
-                });
-
-                // add implied software system relationship
-                relationships.push({
-                    type: RelationshipType.Relationship,
-                    sourceIdentifier: relationship.sourceIdentifier === component.identifier
-                        ? softwareSystemIdentifier
-                        : relationship.sourceIdentifier,
-                    targetIdentifier: relationship.targetIdentifier === component.identifier
-                        ? softwareSystemIdentifier
-                        : relationship.targetIdentifier,
-                    tags: []
-                });
-            }
-        }
-    }
 }
 
 export const createDefaultGroup = (): IGroup => {

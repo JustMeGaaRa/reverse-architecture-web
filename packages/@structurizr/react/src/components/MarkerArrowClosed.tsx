@@ -8,6 +8,7 @@ export const MarkerArrowClosed: FC<{
     fill = "#8A8B8C",
     stroke = "#8A8B8C"
 }) => {
+    // TODO: fix edge marker alignment
     return (
         <marker
             id={MarkerType.ArrowClosed}

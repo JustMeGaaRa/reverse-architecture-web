@@ -39,6 +39,7 @@ export const BreadcrumbsNavigation: FC = () => {
         }
     }, [currentView, workspace]);
     
+    // TODO: breadcrumbs should be visible for deployment but in form of dropdown
     return currentView?.type !== ViewType.Deployment && currentView?.type !== ViewType.Model && (
         <Breadcrumb separator={"/"}>
             {links.map(link => (

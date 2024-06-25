@@ -12,6 +12,7 @@ function getPlacement(
     const horizontalDiff = Math.abs(source.x - target.x);
     const verticalDiff = Math.abs(source.y - target.y);
 
+    // TODO: edge shortest path should choose between vertical or horizontal
     const placement: ConnectorId = horizontalDiff > verticalDiff
         ? (source.x > target.x ? "middle-left" : "middle-right")
         : (source.y > target.y ? "top-center" : "bottom-center");

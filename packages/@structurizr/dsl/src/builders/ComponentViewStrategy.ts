@@ -23,7 +23,7 @@ export class ComponentViewStrategy implements ISupportVisitor {
 
     accept<T>(visitor: IElementVisitor<T>): Array<T> {
         const visitedElements = new Set<string>();
-        const relationships = getRelationships(this.model, true);
+        const relationships = getRelationships(this.model, false);
         const people = this.model.people
             .concat(this.model.groups.flatMap(x => x.people));
         const softwareSystems = this.model.softwareSystems
@@ -63,6 +63,7 @@ export class ComponentViewStrategy implements ISupportVisitor {
         // 4.1.4. include all containers that are directly connected to the current container
         const visitConnectedContainers = (component: IComponent) => {
             return containers
+                .filter(container => container.identifier !== this.view.containerIdentifier)
                 .filter(container => {
                     return relationshipExistsOverall(relationships, component.identifier, container.identifier)
                         || elementIncludedInView(this.view, container.identifier)
@@ -117,6 +118,8 @@ export class ComponentViewStrategy implements ISupportVisitor {
             });
         
         const visitedRelationships = relationships
+            .filter(relationship => relationship.sourceIdentifier !== this.view.containerIdentifier)
+            .filter(relationship => relationship.targetIdentifier !== this.view.containerIdentifier)
             .filter(relationship => relationshipExistsForElementsInView(Array.from(visitedElements), relationship))
             .map(relationship => visitor.visitRelationship(relationship));
 
