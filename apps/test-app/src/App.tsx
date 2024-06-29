@@ -5,11 +5,13 @@ import {
     createDefaultWorkspace,
     DeploymentViewStrategy,
     IElement,
+    ISupportVisitor,
     IViewDefinitionMetadata,
     IWorkspaceSnapshot,
     ModelViewStrategy,
     SystemContextViewStrategy,
     SystemLandscapeViewStrategy,
+    ViewDefinition,
     ViewType
 } from "@structurizr/dsl";
 import { parseWorkspace } from "@structurizr/parser";
@@ -249,9 +251,60 @@ export function App() {
     }, [workspace, zoomOutOfElement]);
 
     useEffect(() => {
-        const reactFlowBuilder = new GraphBuilder();
-        const reactFlowVisitor = new GraphElementVisitor(reactFlowBuilder);
-        const layoutStrategy = new GraphvizLayoutStrategy();
+        const getReactFlow = (viewStrategy: ISupportVisitor) => {
+            const reactFlowBuilder = new GraphBuilder();
+            const reactFlowVisitor = new GraphElementVisitor(reactFlowBuilder);
+            const layoutStrategy = new GraphvizLayoutStrategy();
+            viewStrategy?.accept(reactFlowVisitor);
+            return layoutStrategy.execute(reactFlowBuilder.build());
+        };
+
+        const getReactFlowAuto = (workspace: IWorkspaceSnapshot, view: ViewDefinition) => {
+            switch (view.type) {
+                case ViewType.Model:
+                    const viewStrategy = new ModelViewStrategy(workspace);
+                    return getReactFlow(viewStrategy);
+                case ViewType.SystemLandscape:
+                    if (workspace.views.systemLandscape) {
+                        const viewStrategy = new SystemLandscapeViewStrategy(workspace.model, workspace.views.systemLandscape as any);
+                        return getReactFlow(viewStrategy);
+                    }
+                    break;
+                case ViewType.SystemContext:
+                    const systemContext = workspace.views.systemContexts.find(v => v.key === view.key);
+                    if (systemContext) {
+                        const viewStrategy = new SystemContextViewStrategy(workspace.model, systemContext);
+                        return getReactFlow(viewStrategy);
+                    }
+                    break;
+                case ViewType.Container:
+                    const container = workspace.views.containers.find(v => v.key === view.key);
+                    if (container) {
+                        const viewStrategy = new ContainerViewStrategy(workspace.model, container);
+                        return getReactFlow(viewStrategy);
+                    }
+                    break;
+                case ViewType.Component:
+                    const component = workspace.views.components.find(v => v.key === view.key);
+                    if (component) {
+                        const viewStrategy = new ComponentViewStrategy(workspace.model, component);
+                        return getReactFlow(viewStrategy);
+                    }
+                    break;
+                case ViewType.Deployment:
+                    const deployment = workspace.views.deployments.find(v => v.key === view.key);
+                    if (deployment) {
+                        const viewStrategy = new DeploymentViewStrategy(workspace.model, deployment);
+                        return getReactFlow(viewStrategy);
+                    }
+                    break;
+            }
+
+            return Promise.resolve({
+                nodes: [],
+                edges: []
+            });
+        };
 
         const reduceNodes = (nodes: Vertex[]) => {
             return nodes.reduce((elements, node) => ({
@@ -267,10 +320,7 @@ export function App() {
 
         switch (currentView?.type) {
             case ViewType.Model:
-                const viewStrategy = new ModelViewStrategy(workspace);
-                viewStrategy?.accept(reactFlowVisitor);
-                layoutStrategy
-                    .execute(reactFlowBuilder.build())
+                getReactFlowAuto(workspace, currentView)
                     .then(reactFlowAuto => {
                         setModelViewMetadata(metadata => ({
                             ...metadata,
@@ -279,86 +329,57 @@ export function App() {
                     });
                 break;
             case ViewType.SystemLandscape:
-                if (workspace.views.systemLandscape) {
-                    const viewStrategy = new SystemLandscapeViewStrategy(workspace.model, workspace.views.systemLandscape);
-                    viewStrategy?.accept(reactFlowVisitor);
-                    layoutStrategy
-                        .execute(reactFlowBuilder.build())
-                        .then(reactFlowAuto => {
-                            setSystemLandScapeViewMetadata(metadata => ({
-                                ...metadata,
-                                elements: reduceNodes(reactFlowAuto.nodes),
-                            }))
-                        });
-                }
+                getReactFlowAuto(workspace, currentView)
+                    .then(reactFlowAuto => {
+                        setSystemLandScapeViewMetadata(metadata => ({
+                            ...metadata,
+                            elements: reduceNodes(reactFlowAuto.nodes),
+                        }))
+                    });
                 break;
             case ViewType.SystemContext:
-                const systemContext = workspace.views.systemContexts.find(x => x.key === currentView.key);
-                if (systemContext) {
-                    const viewStrategy = new SystemContextViewStrategy(workspace.model, systemContext);
-                    viewStrategy?.accept(reactFlowVisitor);
-                    layoutStrategy
-                        .execute(reactFlowBuilder.build())
-                        .then(reactFlowAuto => {
-                            setSystemContextViewMetadata(metadata => {
-                                return metadata.map(view => view.key === systemContext.key
-                                    ? { ...view, elements: reduceNodes(reactFlowAuto.nodes) }
-                                    : view
-                                );
-                            });
+                getReactFlowAuto(workspace, currentView)
+                    .then(reactFlowAuto => {
+                        setSystemContextViewMetadata(metadata => {
+                            return metadata.map(view => view.key === currentView.key
+                                ? { ...view, elements: reduceNodes(reactFlowAuto.nodes) }
+                                : view
+                            );
                         });
-                }
+                    });
                 break;
             case ViewType.Container:
-                const container = workspace.views.containers.find(x => x.key === currentView.key);
-                if (container) {
-                    const viewStrategy = new ContainerViewStrategy(workspace.model, container);
-                    viewStrategy?.accept(reactFlowVisitor);
-                    layoutStrategy
-                        .execute(reactFlowBuilder.build())
-                        .then(reactFlowAuto => {
-                            setContainerViewMetadata(metadata => {
-                                return metadata.map(view => view.key === container.key
-                                    ? { ...view, elements: reduceNodes(reactFlowAuto.nodes) }
-                                    : view
-                                );
-                            });
+                getReactFlowAuto(workspace, currentView)
+                    .then(reactFlowAuto => {
+                        setContainerViewMetadata(metadata => {
+                            return metadata.map(view => view.key === currentView.key
+                                ? { ...view, elements: reduceNodes(reactFlowAuto.nodes) }
+                                : view
+                            );
                         });
-                }
+                    });
                 break;
             case ViewType.Component:
-                const component = workspace.views.components.find(x => x.key === currentView.key);
-                if (component) {
-                    const viewStrategy = new ComponentViewStrategy(workspace.model, component);
-                    viewStrategy?.accept(reactFlowVisitor);
-                    layoutStrategy
-                        .execute(reactFlowBuilder.build())
-                        .then(reactFlowAuto => {
-                            setComponentViewMetadata(metadata => {
-                                return metadata.map(view => view.key === component.key
-                                    ? { ...view, elements: reduceNodes(reactFlowAuto.nodes) }
-                                    : view
-                                );
-                            });
+                getReactFlowAuto(workspace, currentView)
+                    .then(reactFlowAuto => {
+                        setComponentViewMetadata(metadata => {
+                            return metadata.map(view => view.key === currentView.key
+                                ? { ...view, elements: reduceNodes(reactFlowAuto.nodes) }
+                                : view
+                            );
                         });
-                }
+                    });
                 break;
             case ViewType.Deployment:
-                const deployment = workspace.views.deployments.find(x => x.key === currentView.key);
-                if (deployment) {
-                    const viewStrategy = new DeploymentViewStrategy(workspace.model, deployment);
-                    viewStrategy?.accept(reactFlowVisitor);
-                    layoutStrategy
-                        .execute(reactFlowBuilder.build())
-                        .then(reactFlowAuto => {
-                            setDeploymentViewMetadata(metadata => {
-                                return metadata.map(view => view.key === deployment.key
-                                    ? { ...view, elements: reduceNodes(reactFlowAuto.nodes) }
-                                    : view
-                                );
-                            });
+                getReactFlowAuto(workspace, currentView)
+                    .then(reactFlowAuto => {
+                        setDeploymentViewMetadata(metadata => {
+                            return metadata.map(view => view.key === currentView.key
+                                ? { ...view, elements: reduceNodes(reactFlowAuto.nodes) }
+                                : view
+                            );
                         });
-                }
+                    });
                 break;
         }
     }, [workspace, currentView, setSystemLandScapeViewMetadata, setContainerViewMetadata, setComponentViewMetadata, setModelViewMetadata, setSystemContextViewMetadata, setDeploymentViewMetadata]);

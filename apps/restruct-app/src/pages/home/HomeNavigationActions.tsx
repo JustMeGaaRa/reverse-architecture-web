@@ -37,17 +37,17 @@ export const HomeNavigationActions: FC = () => {
             <PageSidebarSectionPortal section={"start"}>
                 <RouteList>
                     <Route
-                        icon={<Icon as={Home} boxSize={5} />}
+                        icon={<Home boxSize={6} />}
                         title={"Dashboard"}
                         to={"/dashboard"}
                     />
                     <Route
-                        icon={<Icon as={Document3Lines} boxSize={5} />}
+                        icon={<Document3Lines boxSize={6} />}
                         title={"Workspaces"}
                         to={"/workspaces"}
                     />
                     <Route
-                        icon={<Icon as={Share} boxSize={5} />}
+                        icon={<Share boxSize={6} />}
                         title={"Community"}
                         to={"/community"}
                     />
@@ -56,19 +56,19 @@ export const HomeNavigationActions: FC = () => {
             <PageSidebarSectionPortal section={"end"}>
                 <RouteList>
                     <Route
-                        icon={<Icon as={NotificationBell} boxSize={5} />}
+                        icon={<NotificationBell boxSize={6} />}
                         isDisabled
                         title={"Notifications"}
                         to={"/notifications"}
                     />
                     <Route
-                        icon={<Icon as={Settings} boxSize={5} />}
+                        icon={<Settings boxSize={6} />}
                         isDisabled
                         title={"Settings"}
                         to={"/settings"}
                     />
                     <Route
-                        icon={<Icon as={QuestionMarkCircle} boxSize={5} />}
+                        icon={<QuestionMarkCircle boxSize={6} />}
                         isDisabled
                         title={"Help & Feedback"}
                         to={"/help"}

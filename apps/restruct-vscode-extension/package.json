@@ -1,7 +1,7 @@
 {
   "name": "restruct-vscode-extension",
   "displayName": "Structurizr Preview by Restruct",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "engines": {
     "vscode": "^1.89.0"
   },
@@ -61,5 +61,9 @@
     "webpack-cli": "^5.1.4",
     "assert": "^2.1.0",
     "process": "^0.11.10"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JustMeGaaRa/reverse-architecture-web.git"
   }
 }

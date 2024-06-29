@@ -68,19 +68,28 @@ const useViewMetadata = () => {
             components?: IViewMetadata[],
             deployments?: IViewMetadata[],
         }
-    }>();
+    }>({
+        views: {
+            model: { key: "", elements: {}, relationships: {} },
+            systemLandscape: { key: "", elements: {}, relationships: {} },
+            systemContexts: [],
+            containers: [],
+            components: [],
+            deployments: []
+        }
+    });
 
     const setModelViewMetadata = useCallback((action: SetStateAction<IViewMetadata>) => {
         setMetadata(metadata => {
             if (!metadata?.views?.model) return metadata;
-
+            
             return ({
                 ...metadata,
                 views: {
                     ...metadata.views,
                     model: typeof action === "function"
-                        ? action(metadata.views.model)
-                        : action
+                    ? action(metadata?.views?.model)
+                    : action
                 }
             });
         });
@@ -95,8 +104,8 @@ const useViewMetadata = () => {
                 views: {
                     ...metadata.views,
                     systemLandscape: typeof action === "function"
-                        ? action(metadata.views.systemLandscape)
-                        : action
+                    ? action(metadata?.views?.systemLandscape)
+                    : action
                 }
             });
         });
@@ -208,15 +217,40 @@ export const WorkspacePreview: FC = () => {
     
     const workspaceLayoutComputedHandler = useCallback((event: VscodeExtensionEvent) => {
         if (event.type === EventName.EDITOR_WORKSPACE_LAYOUT_COMPUTED) {
-            setMetadata(metadata => ({
-                ...metadata,
-                views: {
-                    ...metadata?.views,
-                    systemLandscape: transformMetadata(event.metadata)
-                }
-            }));
+            switch (event.view.type) {
+                case ViewType.Model:
+                    setModelViewMetadata(transformMetadata(event.metadata));
+                    break;
+                case ViewType.SystemLandscape:
+                    setSystemLandScapeViewMetadata(transformMetadata(event.metadata));
+                    break;
+                case ViewType.SystemContext:
+                    setSystemContextViewMetadata(metadata => [
+                        ...metadata.filter(view => view.key === event.view.key),
+                        transformMetadata(event.metadata)
+                    ]);
+                    break;
+                case ViewType.Container:
+                    setContainerViewMetadata(metadata => [
+                        ...metadata.filter(view => view.key === event.view.key),
+                        transformMetadata(event.metadata)
+                    ]);
+                    break;
+                case ViewType.Component:
+                    setComponentViewMetadata(metadata => [
+                        ...metadata.filter(view => view.key === event.view.key),
+                        transformMetadata(event.metadata)
+                    ]);
+                    break;
+                case ViewType.Deployment:
+                    setDeploymentViewMetadata(metadata => [
+                        ...metadata.filter(view => view.key === event.view.key),
+                        transformMetadata(event.metadata)
+                    ]);
+                    break;
+            }
         }
-    }, [setMetadata]);
+    }, [setComponentViewMetadata, setContainerViewMetadata, setDeploymentViewMetadata, setModelViewMetadata, setSystemContextViewMetadata, setSystemLandScapeViewMetadata]);
 
     useEffect(() => {
         eventObservable.current = createExtensionEventObservable();

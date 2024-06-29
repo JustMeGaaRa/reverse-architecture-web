@@ -14,7 +14,7 @@ import {
     PageSidebarSectionOutlet,
     ShellProvider,
     PageHomeButton,
-    ReverseArchitectureSvg,
+    RestructLogo,
     usePageSidebar,
     useShellLevel,
 } from "@restruct/ui";
@@ -32,7 +32,7 @@ export const LayoutPage: FC<PropsWithChildren> = () => {
             <PageHeader>
                 <Flex padding={3}>
                     <PageHomeButton
-                        icon={ReverseArchitectureSvg}
+                        icon={RestructLogo}
                         title={"RE:STRUCT"}
                         onClick={() => navigate("/")}
                     />

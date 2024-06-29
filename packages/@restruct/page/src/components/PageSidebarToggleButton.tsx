@@ -13,7 +13,7 @@ export const PageSidebarToggleButton: FC<{ isVisible?: boolean }> = ({ isVisible
             colorScheme={"gray"}
             justifyContent={"right"}
             paddingRight={2}
-            rightIcon={<DoubleArrowLeft />}
+            rightIcon={<DoubleArrowLeft boxSize={6} />}
             size={"sm"}
             variant={"ghost"}
             width={"100%"}
@@ -24,7 +24,7 @@ export const PageSidebarToggleButton: FC<{ isVisible?: boolean }> = ({ isVisible
             aria-label={"page sidebar toggle"}
             borderRadius={0}
             colorScheme={"gray"}
-            icon={<DoubleArrowRight />}
+            icon={<DoubleArrowRight boxSize={6} />}
             size={"sm"}
             variant={"ghost"}
             width={"100%"}

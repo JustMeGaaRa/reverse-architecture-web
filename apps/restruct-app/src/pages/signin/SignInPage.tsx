@@ -10,7 +10,7 @@ import {
     Text,
     VStack,
 } from "@chakra-ui/react";
-import { ReverseArchitectureSvg } from "@restruct/ui";
+import { RestructLogo } from "@restruct/ui";
 import { Github } from "iconoir-react";
 import { FC, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
@@ -52,7 +52,7 @@ export const SignInPage: FC = () => {
                     padding={16}
                 >
                     <CardHeader>
-                        <ReverseArchitectureSvg />
+                        <RestructLogo />
                     </CardHeader>
                     <CardBody>
                         <VStack spacing={8}>

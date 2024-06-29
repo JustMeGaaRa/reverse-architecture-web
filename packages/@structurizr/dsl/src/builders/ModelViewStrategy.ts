@@ -55,7 +55,9 @@ export class ModelViewStrategy implements ISupportVisitor {
                 return [visitedSoftwareSystem].concat(visitedGroups).concat(visitedRelationships);
             });
         
-        const visitedPeople = this.workspace.model.people
+        const visitedPeople = this.workspace.model.groups
+            .flatMap(group => group.people)
+            .concat(this.workspace.model.people)
             .flatMap((person, index) => {    
                 const visitedPerson = visitor.visitPerson(person);
                 const visitedRelationships = visitor.visitRelationship({
@@ -67,6 +69,7 @@ export class ModelViewStrategy implements ISupportVisitor {
                 return [visitedPerson].concat(visitedRelationships);
             });
 
+        // TODO: add environments with deployment nodes to model view
         return [visitedWorkspace].concat(visitedGroups).concat(visitedPeople);
     }
 }
